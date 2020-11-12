@@ -1,6 +1,6 @@
 package util.miscUtil;
 
-import com.sun.management.OperatingSystemMXBean;
+//import com.sun.management.OperatingSystemMXBean;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import org.lwjgl.opengl.GL11;
@@ -11,7 +11,7 @@ import util.storageUtil.StorageBoxHolder;
 /** Utility class which returns information on the current running system. */
 public final class ESystemInfo {
 
-	private static OperatingSystemMXBean bean;
+//	private static OperatingSystemMXBean bean;
 	private static ESystemInfo instance;
 	
 	//private static Processor[] processors;
@@ -29,14 +29,14 @@ public final class ESystemInfo {
 	//hide constructor
 	@SuppressWarnings("deprecation")
 	private ESystemInfo() {
-		bean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+		//bean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 		
 		//processors = new SystemInfo().getHardware().getProcessors();
 		//cpu = (processors.length > 0) ? processors[0] : null;
 		//coreNum = processors.length;
         //cpuName = String.format("%dx %s", new Object[] {Integer.valueOf(processors.length), processors[0]}).replaceAll("\\s+", " ");
 		
-		memTotal = bean.getTotalPhysicalMemorySize();
+	//	memTotal = bean.getTotalPhysicalMemorySize();
 		jvmMemTotal = Runtime.getRuntime().maxMemory();
 	}
 	
@@ -56,7 +56,7 @@ public final class ESystemInfo {
 	/** Returns the static instance of ESystemInfo. */
 	public static ESystemInfo instance() { return instance; }
 	/** Returns an object which gathers certain system information. */
-	public static OperatingSystemMXBean getInfoBean() { return bean; }
+	//public static OperatingSystemMXBean getInfoBean() { return bean; }
 	
 	//operating system
 	
@@ -96,10 +96,10 @@ public final class ESystemInfo {
 	/** Returns the total amount of system ram in bytes. */
 	public static long getRAM_Total() { return memTotal; }
 	/** Returns the total amount of free system ram in bytes. */
-	@SuppressWarnings("deprecation")
-	public static long getRAM_Free() { return bean.getFreePhysicalMemorySize(); }
+	//@SuppressWarnings("deprecation")
+	//public static long getRAM_Free() { return bean.getFreePhysicalMemorySize(); }
 	/** Returns the total amoutn of used system ram in bytes. */
-	public static long getRAM_Used() { return memTotal - getRAM_Free(); }
+	//public static long getRAM_Used() { return memTotal - getRAM_Free(); }
 	
 	//jvm memory
 	

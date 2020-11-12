@@ -5,7 +5,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
@@ -109,13 +108,13 @@ public class Keyboard extends GLFWKeyCallback {
 	}
 	
 	public static void setClipboard(String in) {
-		if (!StringUtils.isEmpty(in)) {
-			try {
-				StringSelection stringselection = new StringSelection(in);
-                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, null);
-			}
-			catch (Exception e) {}
-		}
+		//if (!StringUtils.isEmpty(in)) {
+		//try {
+		//		StringSelection stringselection = new StringSelection(in);
+          //      Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, null);
+		//	}
+			//catch (Exception e) {}
+		//}
 	}
 	
 	public static String getClipboard() {
