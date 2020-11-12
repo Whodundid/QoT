@@ -3,6 +3,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Utility {
 	
+	// These are clamps
     public static int clamp(int num, int min, int max) { return (num <= min) ? min : (num >= max ? max : num); }
     public static long clamp(long num, long min, long max) { return (num <= min) ? min : (num >= max ? max : num); }
     public static float clamp(float num, float min, float max) { return (num <= min) ? min : (num >= max ? max : num); }
