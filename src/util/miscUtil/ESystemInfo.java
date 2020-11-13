@@ -2,7 +2,6 @@ package util.miscUtil;
 
 //import com.sun.management.OperatingSystemMXBean;
 import java.io.File;
-import java.lang.management.ManagementFactory;
 import org.lwjgl.opengl.GL11;
 import util.EUtil;
 import util.storageUtil.StorageBox;
@@ -27,7 +26,6 @@ public final class ESystemInfo {
 	//------------------------
 	
 	//hide constructor
-	@SuppressWarnings("deprecation")
 	private ESystemInfo() {
 		//bean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 		

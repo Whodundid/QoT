@@ -1,6 +1,6 @@
 package input;
 
-import WindowCreation.Window;
+import main.Game;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -81,7 +81,7 @@ public class Mouse extends GLFWMouseButtonCallback {
 	//----------------------
 	
 	public static boolean isButtonDown(int button) {
-		return GLFW.glfwGetMouseButton(Window.getWindowHandle(), button) == 1;
+		return GLFW.glfwGetMouseButton(Game.getWindowHandle(), button) == 1;
 	}
 	
 	//--------------------

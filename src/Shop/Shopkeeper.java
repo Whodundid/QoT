@@ -1,7 +1,7 @@
-package Entities;
+package shop;
 
-import Items.*;
-import Shop.Shop;
+import entities.Entity;
+import items.*;
 
 public class Shopkeeper extends Entity {
 	

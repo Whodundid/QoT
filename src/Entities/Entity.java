@@ -1,6 +1,6 @@
-package Entities;
+package entities;
 
-import Aspects.Utility;
+import util.mathUtil.NumUtil;
 
 public abstract class Entity {
 	
@@ -37,17 +37,17 @@ public abstract class Entity {
 	public void hurt(double amount) {
 		System.out.println(name + " takes " + amount + " damage!");
 		double damage = amount;
-		health = Utility.clamp(health - damage, 0, health);
+		health = NumUtil.clamp(health - damage, 0, health);
 		if (health <= 0) { kill(); }
 	}
 	
 	public void heal(double amount) {
 		System.out.println(name + " heals for " + amount + " damage?!");
-		health = Utility.clamp(health + amount, 0, maxHealth);
+		health = NumUtil.clamp(health + amount, 0, maxHealth);
 	}
 	
 	public void drainMana(double amount) {
-		mana = Utility.clamp(mana - amount, 0, Double.MAX_VALUE);
+		mana = NumUtil.clamp(mana - amount, 0, Double.MAX_VALUE);
 	}
 	
 	public void kill() {

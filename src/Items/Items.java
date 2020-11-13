@@ -1,4 +1,7 @@
-package Items;
+package items;
+
+import items.types.LesserHealing;
+import items.types.WoodSword;
 
 public class Items {
 	

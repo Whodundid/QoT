@@ -1,5 +1,6 @@
-package Items;
+package items.types;
 
+import items.Potion;
 
 public class LesserHealing extends Potion {
 	

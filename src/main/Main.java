@@ -1,15 +1,14 @@
 package main;
 
 import java.util.Scanner;
-import Battling.Battle;
-import Entities.Enemy;
-import Entities.Goblin;
-import Entities.Player;
-import Entities.Shopkeeper;
-import Entities.Whodundid;
-import Items.LesserHealing;
-import Sound.Songs;
-import WindowCreation.Window;
+import shop.Shopkeeper;
+import sound.Songs;
+import battleSystem.Battle;
+import entities.enemy.Enemy;
+import entities.enemy.types.Goblin;
+import entities.enemy.types.Whodundid;
+import entities.player.Player;
+import items.types.LesserHealing;
 
 public class Main implements Runnable {
 	
@@ -17,7 +16,7 @@ public class Main implements Runnable {
 	
 	public static void main(String[] args) {
 		m = new Main();
-		Window.getInstance().runGame();
+		Game.getInstance().runGame();
 	}
 	
 	@Override
@@ -47,14 +46,14 @@ public class Main implements Runnable {
 		System.out.println("Your character's name is: " + mainCharacter.getName() + ", and he is level " + mainCharacter.getLevel() + " with " + mainCharacter.getHealth() +
 				 " HP and " + mainCharacter.getMana() + " MP.");
 
-		mainCharacter.getInventory().storeItems(Items.Items.woodSword);
+		mainCharacter.getInventory().storeItems(items.Items.woodSword);
 		
 		System.out.println("Your character has: ");
 		mainCharacter.displayInventory();
 		//System.out.println(Swords.Items.woodSword.getWeight());
 		
 		//System.out.println(mainCharacter.getTrueDamage());
-		mainCharacter.equipWeapon(Items.Items.woodSword);
+		mainCharacter.equipWeapon(items.Items.woodSword);
 		//System.out.println(mainCharacter.getTrueDamage());
 		
 		Songs.stopSong(Songs.theme);
@@ -69,6 +68,6 @@ public class Main implements Runnable {
 		shopKeeper.displayShop();
 	}
 	
-	public static Window getWindow() { return Window.getInstance(); }
+	public static Game getWindow() { return Game.getInstance(); }
 	
 }

@@ -1,31 +1,33 @@
-package WindowCreation;
+package main;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+
+import eWindow.Button;
 import input.Keyboard;
 import input.Mouse;
 import input.WindowResizeListener;
 import java.util.Scanner;
-import main.Main;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
+import util.renderUtil.WindowSize;
 
-public class Window {
+public class Game {
 	
 	public static long handle = -1;
-	private static Window instance = null;
+	private static Game instance = null;
 	
 	private int width;
 	private int height;
 	
-	public static Window getInstance() {
+	public static Game getInstance() {
 		if (instance == null) {
-			instance = new Window();
+			instance = new Game();
 		}
 		return instance;
 	}
 	
-	private Window() {
+	private Game() {
 		
 		if (!glfwInit()) {
 			System.err.println("GLFW Failed to initialize.");
@@ -155,5 +157,7 @@ public class Window {
 	
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
+	
+	public static WindowSize getWindowSize() { return new WindowSize(Game.getInstance()); }
 	
 }

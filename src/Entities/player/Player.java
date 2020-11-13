@@ -1,11 +1,13 @@
-package Entities;
+package entities.player;
 
-import Inventory.Inventory;
-import Items.Item;
-import Items.Weapon;
-import Aspects.Utility;
+import entities.Entity;
+import entities.enemy.Enemy;
+import items.Item;
+import items.Weapon;
+import util.mathUtil.NumUtil;
 
 public class Player extends Entity {
+	
 	public double EXP;
 	public Inventory inventory;
 	public boolean isDead;
@@ -40,7 +42,7 @@ public class Player extends Entity {
 	}
 	
 	public double getDamage() {
-		double damage = Utility.getRoll(0, 3);
+		double damage = NumUtil.getRoll(0, 3);
 		if (damage == 0) {
 			System.out.println(name + " missed!");
 		}

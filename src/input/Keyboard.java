@@ -1,10 +1,9 @@
 package input;
 
-import WindowCreation.Window;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import main.Game;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
@@ -77,7 +76,7 @@ public class Keyboard extends GLFWKeyCallback {
 	//-------------------------
 	
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(Window.getWindowHandle(), key) == 1;
+		return GLFW.glfwGetKey(Game.getWindowHandle(), key) == 1;
 	}
 	
 	public static String getKeyName(int key) {

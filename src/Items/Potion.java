@@ -1,6 +1,4 @@
-package Items;
-
-import Items.*;
+package items;
 
 public class Potion extends Item {
 	

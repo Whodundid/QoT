@@ -1,9 +1,8 @@
-package Shop;
+package shop;
 
+import items.Item;
+import items.types.LesserHealing;
 import java.util.ArrayList;
-
-import Items.Item;
-import Items.LesserHealing;
 
 public class Shop {
 	ArrayList<Item> shopInventory = new ArrayList();

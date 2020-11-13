@@ -1,4 +1,4 @@
-package Sound;
+package sound;
 
 import util.storageUtil.EArrayList;
 

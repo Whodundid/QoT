@@ -1,10 +1,10 @@
-package Inventory;
-import java.util.ArrayList;
+package entities.player;
 
-import Entities.Player;
-import Items.Item;
+import java.util.ArrayList;
+import items.Item;
 
 public class Inventory {
+	
 	ArrayList<Item> content = new ArrayList();
 	Player thePlayer;
 	

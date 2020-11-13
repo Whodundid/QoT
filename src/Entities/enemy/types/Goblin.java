@@ -1,4 +1,6 @@
-package Entities;
+package entities.enemy.types;
+
+import entities.enemy.Enemy;
 
 public class Goblin extends Enemy {
 	public int treasure;
