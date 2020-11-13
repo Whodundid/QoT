@@ -1,12 +1,12 @@
-package main;
+package mainT;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import eWindow.Button;
-import input.Keyboard;
-import input.Mouse;
-import input.WindowResizeListener;
+import inputT.Keyboard;
+import inputT.Mouse;
+import inputT.WindowResizeListener;
 import java.util.Scanner;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;

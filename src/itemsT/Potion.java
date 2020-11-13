@@ -1,4 +1,4 @@
-package items;
+package itemsT;
 
 public class Potion extends Item {
 	

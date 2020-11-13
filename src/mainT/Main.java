@@ -1,14 +1,14 @@
-package main;
+package mainT;
 
 import java.util.Scanner;
-import shop.Shopkeeper;
-import sound.Songs;
+import shopT.Shopkeeper;
+import soundT.Songs;
 import battleSystem.Battle;
-import entities.enemy.Enemy;
-import entities.enemy.types.Goblin;
-import entities.enemy.types.Whodundid;
-import entities.player.Player;
-import items.types.LesserHealing;
+import entitiesT.enemy.Enemy;
+import entitiesT.enemy.types.Goblin;
+import entitiesT.enemy.types.Whodundid;
+import entitiesT.player.Player;
+import itemsT.types.LesserHealing;
 
 public class Main implements Runnable {
 	
@@ -46,14 +46,14 @@ public class Main implements Runnable {
 		System.out.println("Your character's name is: " + mainCharacter.getName() + ", and he is level " + mainCharacter.getLevel() + " with " + mainCharacter.getHealth() +
 				 " HP and " + mainCharacter.getMana() + " MP.");
 
-		mainCharacter.getInventory().storeItems(items.Items.woodSword);
+		mainCharacter.getInventory().storeItems(itemsT.Items.woodSword);
 		
 		System.out.println("Your character has: ");
 		mainCharacter.displayInventory();
 		//System.out.println(Swords.Items.woodSword.getWeight());
 		
 		//System.out.println(mainCharacter.getTrueDamage());
-		mainCharacter.equipWeapon(items.Items.woodSword);
+		mainCharacter.equipWeapon(itemsT.Items.woodSword);
 		//System.out.println(mainCharacter.getTrueDamage());
 		
 		Songs.stopSong(Songs.theme);

@@ -1,6 +1,6 @@
-package items.types;
+package itemsT.types;
 
-import items.Weapon;
+import itemsT.Weapon;
 
 public class WoodSword extends Weapon {
 	// Wooden Sword

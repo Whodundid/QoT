@@ -1,7 +1,7 @@
-package shop;
+package shopT;
 
-import items.Item;
-import items.types.LesserHealing;
+import itemsT.Item;
+import itemsT.types.LesserHealing;
 import java.util.ArrayList;
 
 public class Shop {

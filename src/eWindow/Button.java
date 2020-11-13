@@ -5,8 +5,9 @@ import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2d;
-import input.Mouse;
-import main.Main;
+
+import inputT.Mouse;
+import mainT.Main;
 import org.lwjgl.opengl.GL11;
 
 public class Button {

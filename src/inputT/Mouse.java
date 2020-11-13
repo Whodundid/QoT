@@ -1,6 +1,6 @@
-package input;
+package inputT;
 
-import main.Game;
+import mainT.Game;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;

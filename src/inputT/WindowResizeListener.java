@@ -1,6 +1,6 @@
-package input;
+package inputT;
 
-import main.Main;
+import mainT.Main;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 public class WindowResizeListener extends GLFWWindowSizeCallback {

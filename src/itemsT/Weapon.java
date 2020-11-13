@@ -1,4 +1,4 @@
-package items;
+package itemsT;
 
 public class Weapon extends Item {
 	public double damage;

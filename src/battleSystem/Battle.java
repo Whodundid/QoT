@@ -1,10 +1,10 @@
 package battleSystem;
 
-import entities.enemy.Enemy;
-import entities.enemy.types.Whodundid;
-import entities.player.Player;
+import entitiesT.enemy.Enemy;
+import entitiesT.enemy.types.Whodundid;
+import entitiesT.player.Player;
 import java.util.Scanner;
-import sound.Songs;
+import soundT.Songs;
 
 public class Battle {
 	

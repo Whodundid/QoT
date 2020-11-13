@@ -1,6 +1,6 @@
 package openGL_Util;
 
-import main.Game;
+import mainT.Game;
 import org.lwjgl.opengl.GL11;
 import util.renderUtil.EColors;
 
