@@ -1,6 +1,6 @@
 package util.renderUtil;
 
-import mainT.Game;
+import main.Game;
 import org.lwjgl.glfw.GLFW;
 
 public class WindowSize {
