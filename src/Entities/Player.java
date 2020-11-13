@@ -1,8 +1,8 @@
 package Entities;
 
 import Inventory.Inventory;
-import Swords.Item;
-import Swords.Weapon;
+import Items.Item;
+import Items.Weapon;
 import Aspects.Utility;
 
 public class Player extends Entity {

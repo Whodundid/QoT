@@ -1,12 +1,13 @@
-package Swords;
+package Items;
 
 public abstract class Item {
-	public String name;
-	public double price;
-	public String description;
-	public int weight;
+	
+	protected String name;
+	private double price;
+	private String description;
+	private double weight;
 
-	public Item (String nameIn, double priceIn, String descriptionIn, int weightIn) {
+	public Item (String nameIn, double priceIn, String descriptionIn, double weightIn) {
 		name = nameIn;
 		price = priceIn;
 		description = descriptionIn;
@@ -25,7 +26,7 @@ public abstract class Item {
 		return description;
 	}
 	
-	public int getWeight() {
+	public double getWeight() {
 		return weight;
 	}
 	

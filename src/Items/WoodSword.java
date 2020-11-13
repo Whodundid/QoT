@@ -1,4 +1,4 @@
-package Swords;
+package Items;
 
 public class WoodSword extends Weapon {
 	// Wooden Sword

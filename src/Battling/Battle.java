@@ -16,7 +16,7 @@ public class Battle {
 	}
 	
 	public static void battle(Player player1, Enemy enemy1) {
-		Songs.playSong((enemy1 instanceof Whodundid) ? Songs.darkCave : Songs.nightfall);
+		Songs.playSong((enemy1 instanceof Whodundid) ? Songs.darkCave : Songs.battleTheme);
 		
 		while (!player1.isDead && !enemy1.isDead) {
 			int command = printActions(player1, enemy1);
@@ -50,7 +50,7 @@ public class Battle {
 			System.out.println("Victory!");
 		}
 		
-		Songs.stopSong((enemy1 instanceof Whodundid) ? Songs.darkCave : Songs.nightfall);
+		Songs.stopSong((enemy1 instanceof Whodundid) ? Songs.darkCave : Songs.battleTheme);
 		
 	}
 	

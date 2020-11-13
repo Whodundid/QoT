@@ -1,4 +1,4 @@
-package Swords;
+package Items;
 
 public class Items {
 	
@@ -7,6 +7,7 @@ public class Items {
 	public static Weapon woodSword = new WoodSword();
 	
 	// All Potions
+	public static Potion lesserHealing = new LesserHealing();
 	
 	
 	// All Armor

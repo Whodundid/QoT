@@ -1,22 +1,31 @@
-package Inventory;
+package Shop;
+
 import java.util.ArrayList;
 
-import Entities.Player;
 import Items.Item;
+import Items.LesserHealing;
 
-public class Inventory {
-	ArrayList<Item> content = new ArrayList();
-	Player thePlayer;
+public class Shop {
+	ArrayList<Item> shopInventory = new ArrayList();
+	Item lesserHealingPotion = new LesserHealing();
 	
-	public Inventory(Player playerIn) {
-		thePlayer = playerIn;
+	public Shop() {
+		
 	}
 	
-	// Inventory Methods
+	public void buyItem() {
+		
+	}
+	
+	public void sellItem() {
+		
+	}
+	
+	// Shop Methods
 	
 	public void addItem(Item in) {
 		if (in != null) {
-			content.add(in);
+			shopInventory.add(in);
 		}
 	}
 	
@@ -28,7 +37,7 @@ public class Inventory {
 	}
 	
 	public Item getItem(String nameIn) {
-		for (Item i : content) {
+		for (Item i : shopInventory) {
 			if (i.getName().contentEquals(nameIn)) {
 				return i;
 			}
@@ -39,27 +48,18 @@ public class Inventory {
 	public Item removeItem(String nameIn) {
 		Item theItem = null;
 		
-		for (Item i : content) {
+		for (Item i : shopInventory) {
 			if (i.getName().contentEquals(nameIn)) {
 				theItem = i;
 				break;
 			}
 		}
-		content.remove(theItem);
+		shopInventory.remove(theItem);
 		
 		return theItem;
 	}
 	
 	public ArrayList<Item> getItems() {
-		return content;
+		return shopInventory;
 	}
-	
-	
-	
-	// Inventory Getters
-	
-	public Player getPlayer() {
-		return thePlayer;
-	}
-	
 }

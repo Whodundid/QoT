@@ -5,7 +5,9 @@ import Battling.Battle;
 import Entities.Enemy;
 import Entities.Goblin;
 import Entities.Player;
+import Entities.Shopkeeper;
 import Entities.Whodundid;
+import Items.LesserHealing;
 import Sound.Songs;
 import WindowCreation.Window;
 
@@ -36,7 +38,7 @@ public class Main implements Runnable {
 		pressingEnter = reader.nextLine();
 		System.out.println("What is your name?");
 		String name = reader.nextLine();
-		Player mainCharacter = new Player(name, 1, 20, 20, 10, 10, 0, 4, 0);
+		Player mainCharacter = new Player(name, 1, 40, 40, 15, 15, 0, 25, 0);
 		
 		Enemy goblin = new Goblin();
 		System.out.println(goblin.getName() + " has " + goblin.getHealth() + " HP.");
@@ -45,14 +47,14 @@ public class Main implements Runnable {
 		System.out.println("Your character's name is: " + mainCharacter.getName() + ", and he is level " + mainCharacter.getLevel() + " with " + mainCharacter.getHealth() +
 				 " HP and " + mainCharacter.getMana() + " MP.");
 
-		mainCharacter.getInventory().storeItems(Swords.Items.woodSword);
+		mainCharacter.getInventory().storeItems(Items.Items.woodSword);
 		
 		System.out.println("Your character has: ");
 		mainCharacter.displayInventory();
 		//System.out.println(Swords.Items.woodSword.getWeight());
 		
 		//System.out.println(mainCharacter.getTrueDamage());
-		mainCharacter.equipWeapon(Swords.Items.woodSword);
+		mainCharacter.equipWeapon(Items.Items.woodSword);
 		//System.out.println(mainCharacter.getTrueDamage());
 		
 		Songs.stopSong(Songs.theme);
@@ -60,6 +62,11 @@ public class Main implements Runnable {
 		Battle theOne = new Battle(mainCharacter, new Whodundid());
 		
 		Songs.playSong(Songs.lithinburg);
+		
+		Shopkeeper shopKeeper = new Shopkeeper("Whodundid's Brother", 350);
+		shopKeeper.getShop().addItem(new LesserHealing());
+		System.out.println("------------");
+		shopKeeper.displayShop();
 	}
 	
 	public static Window getWindow() { return Window.getInstance(); }
