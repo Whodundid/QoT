@@ -23,8 +23,13 @@ public class Audio {
 	}
 		
 	public void start() {
-		clip.setFramePosition(0);
-		clip.start();
+		try {
+			clip.setFramePosition(0);
+			clip.start();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 		
 	public void loop() {

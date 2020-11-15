@@ -1,15 +1,15 @@
 package main;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-
 import eWindow.Button;
 import input.Keyboard;
 import input.Mouse;
 import input.WindowResizeListener;
-import java.util.Scanner;
+import openGL_Util.GLObject;
+import openGL_Util.shader.Shaders;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import util.renderUtil.EColors;
 import util.renderUtil.WindowSize;
 
 public class Game {
@@ -20,6 +20,12 @@ public class Game {
 	private int width;
 	private int height;
 	
+	public long startTime = 0l;
+	public long runningTime = 0l;
+	private long frameTime = 0l;
+	private int frames = 0;
+	private int curFrameRate = 0;
+	
 	public static Game getInstance() {
 		if (instance == null) {
 			instance = new Game();
@@ -29,39 +35,18 @@ public class Game {
 	
 	private Game() {
 		
-		if (!glfwInit()) {
+		if (!GLFW.glfwInit()) {
 			System.err.println("GLFW Failed to initialize.");
 			System.exit(1);
 		}
 		
-		Scanner reader = new Scanner(System.in);
-		int response1 = 0;
+		width = 1080;
+		height = 720;
 		
-		Boolean active = true;
+		handle = GLFW.glfwCreateWindow(width, height, "LWJGL Program", 0, 0);
 		
-		while (active) {
-			System.out.println("What resolution would you like the screen to be? 640x480 = [1] 1080x720 = [2]");
-			response1 = reader.nextInt();
-			if (response1 == 1) {
-				width = 640;
-				height = 480;
-				active = false;
-			}
-			else if (response1 == 2) {
-				width = 1080;
-				height = 720;
-				active = false;
-			}
-			else {
-				active = true;
-				System.out.println("Please try again. Type 1 or 2. " + response1 + " was invalid.");
-			}
-		}
-		
-		handle = glfwCreateWindow(width, height, "LWJGL Program", 0, 0);
-		
-		glfwShowWindow(handle);
-		glfwMakeContextCurrent(handle);
+		GLFW.glfwShowWindow(handle);
+		GLFW.glfwMakeContextCurrent(handle);
 		
 		GL.createCapabilities();
 		
@@ -70,6 +55,9 @@ public class Game {
 		GLFW.glfwSetCursorPosCallback(handle, Mouse.getInstance().getCursorPosCallBack());
 		GLFW.glfwSetScrollCallback(handle, Mouse.getInstance().getScrollCallBack());
 		GLFW.glfwSetWindowSizeCallback(handle, WindowResizeListener.getInstance());
+		
+		//initialize shaders
+		Shaders.init();
 	}
 	
 	public void runGame() {
@@ -84,27 +72,36 @@ public class Game {
 		float yf = 0;
 		
 		Button b = new Button(50, 50, 150, 100);
-		Button b1 = new Button(250, 50, 150, 100);
+		//Button b1 = new Button(250, 50, 150, 100);
 		
-		while (!glfwWindowShouldClose(handle)) {
+		while (!GLFW.glfwWindowShouldClose(handle)) {
 			
-			glfwPollEvents();
+			GLFW.glfwPollEvents();
+			updateFramerate();
 			
-			if (glfwGetKey(handle, GLFW_KEY_W) == GL_TRUE) {
+			int mX = Mouse.getMx();
+			int mY = Mouse.getMy();
+			String mouseCoords = "(" + mX + ", " + mY + ")";
+			
+			GLFW.glfwSetWindowTitle(Game.getWindowHandle(), "QoT      FPS: " + curFrameRate + "              " + mouseCoords);
+			
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			
+			if (GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_W) == GL11.GL_TRUE) {
 				yf += 0.01f;
 			}
-			if (glfwGetKey(handle, GLFW_KEY_A) == GL_TRUE) {
+			if (GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_A) == GL11.GL_TRUE) {
 				xf -= 0.01f;
 			}
-			if (glfwGetKey(handle, GLFW_KEY_S) == GL_TRUE) {
+			if (GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_S) == GL11.GL_TRUE) {
 				yf -= 0.01f;
 			}
-			if (glfwGetKey(handle, GLFW_KEY_D) == GL_TRUE) {
+			if (GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_D) == GL11.GL_TRUE) {
 				xf += 0.01f;
 			}
 			
-			if (glfwGetKey(handle, GLFW_KEY_ESCAPE) == GL_TRUE) {
-				glfwTerminate();
+			if (GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_ESCAPE) == GL11.GL_TRUE) {
+				GLFW.glfwTerminate();
 			}
 			
 			if (Mouse.isButtonDown(0)) {
@@ -118,41 +115,46 @@ public class Game {
 				val3 = 1;
 			}
 			
-			glClear(GL_COLOR_BUFFER_BIT);
+			GLObject.drawRect(0, 0, width, height, EColors.lgray);
 			
-			glBegin(GL_QUADS);
-			glColor4f(1, 1, 1, 0);
-			glVertex2d(-1, 1);
-			glVertex2d(1, 1);
-			glVertex2d(1, -1);
-			glVertex2d(-1, -1);
-			glEnd();
-			
-			glBegin(GL_QUADS);
-			glColor4f(val1, 0, 0, 0);
-			glVertex2f(-0.5f+xf, 0.5f+yf);
-			glColor4f(0, val2, 0, 0);
-			glVertex2f(0.5f+xf, 0.5f+yf);
-			glColor4f(0, 0, val3, 0);
-			glVertex2f(0.5f+xf, -0.5f+yf);
-			glColor4f(val1, val2, val3, 0);
-			glVertex2f(-0.5f+xf, -0.5f+yf);
-			glEnd();
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glColor4f(val1, 0, 0, 0);
+			GL11.glVertex2f(-0.5f+xf, 0.5f+yf);
+			GL11.glColor4f(0, val2, 0, 0);
+			GL11.glVertex2f(0.5f+xf, 0.5f+yf);
+			GL11.glColor4f(0, 0, val3, 0);
+			GL11.glVertex2f(0.5f+xf, -0.5f+yf);
+			GL11.glColor4f(val1, val2, val3, 0);
+			GL11.glVertex2f(-0.5f+xf, -0.5f+yf);
+			GL11.glEnd();
 			
 			b.draw(Mouse.getMx(), Mouse.getMy());
-			b1.draw(Mouse.getMx(), Mouse.getMy());
-			
-			glfwSwapBuffers(handle);
+			//b1.draw(Mouse.getMx(), Mouse.getMy());
+
+			GLFW.glfwSwapBuffers(handle);
 		}
 		
-		glfwTerminate();
+		GLFW.glfwTerminate();
 		
+	}
+	
+	/** Simple framerate calculator. */
+	private void updateFramerate() {
+		frames++;
+		if (System.currentTimeMillis() > frameTime + 1000) {
+			curFrameRate = frames;
+			frameTime = System.currentTimeMillis();
+			frames = 0;
+		}
 	}
 	
 	public static long getWindowHandle() { return handle; }
 	
 	public void onWindowResize() {
-		
+		WindowResizeListener w = WindowResizeListener.getInstance();
+		width = w.getWidth();
+		height = w.getHeight();
+		GL11.glViewport(0, 0, width, height);
 	}
 	
 	public int getWidth() { return width; }

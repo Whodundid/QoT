@@ -5,6 +5,7 @@ import items.types.LesserHealing;
 import java.util.ArrayList;
 
 public class Shop {
+	
 	ArrayList<Item> shopInventory = new ArrayList();
 	Item lesserHealingPotion = new LesserHealing();
 	
