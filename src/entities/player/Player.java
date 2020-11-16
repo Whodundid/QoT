@@ -1,12 +1,18 @@
 package entities.player;
 
+import java.util.Scanner;
+
 import entities.Entity;
 import entities.enemy.Enemy;
 import items.Item;
+import items.Potion;
 import items.Weapon;
+import items.types.LesserHealing;
 import util.mathUtil.NumUtil;
 
 public class Player extends Entity {
+	
+	Scanner reader = new Scanner(System.in);
 	
 	public double EXP;
 	public Inventory inventory;
@@ -56,6 +62,10 @@ public class Player extends Entity {
 		damage = damage + damageIn;
 	}
 	
+	public void setHealth (double healthIn) {
+		health = health + healthIn;
+	}
+	
 	// Player Methods
 	
 	public void displayInventory() {
@@ -71,20 +81,24 @@ public class Player extends Entity {
 		}
 	}
 	
-	public void useFlame(Enemy enemy) {
-		if (enemy != null && manaCheck(flameCost)) {
+	public void useFlame(Entity enemy1) {
+		if (enemy1 != null && manaCheck(flameCost)) {
 			System.out.println("You cast Flame!");
-			enemy.hurt(flameDamage);
+			enemy1.hurt(flameDamage);
 		}
 	}
 	
-	// Use or get rid of a weapon within your inventory!
+	// Use or get rid of a weapon in your hand!
 	public void equipWeapon(Weapon weapon) {
-		weaponDamage = weaponDamage + weapon.getDamage();
+		damage = damage + weapon.getDamage();
 	}
 	
 	public void unequipWeapon(Weapon weapon) {
-		weaponDamage = weaponDamage - weapon.getDamage();
+		damage = damage - weapon.getDamage();
+	}
+	
+	public void statusOfWeapon() {
+		
 	}
 	
 	
@@ -92,6 +106,30 @@ public class Player extends Entity {
 	
 	public Inventory getInventory() {
 		return inventory;
+	}
+	
+	public void utilizeInventory(String nameIn) {
+		System.out.println("What item would you like to use?");
+		displayInventory();
+		String slot = reader.nextLine();
+		Item itemInUse = inventory.getItem(slot);
+		if (itemInUse instanceof Potion) {
+			if (itemInUse instanceof LesserHealing) {
+				System.out.println("Temporary version of Healing and removing the potion from the inventory! :D");
+				System.out.println("This is hard coded in Player.java rather than LesserHealing.java so I need to fix that somehow. ): But it's okay it works for now! :D");
+				if (maxHealth <= (health + 30)) {
+					health = maxHealth;
+				}
+				else {
+					setHealth(30);
+				}
+			}
+			inventory.removeItem(slot);
+		}
+		else {
+			System.out.println("The item you specified is not usable.");
+		}
+		
 	}
 	
 	

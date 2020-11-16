@@ -34,6 +34,10 @@ public abstract class Entity {
 	public double getGold() { return gold; }
 	public double getDamage() { return damage; }
 	
+	public void setHealth(double healthIn) {
+		health = health + healthIn;
+	}
+	
 	public void hurt(double amount) {
 		System.out.println(name + " takes " + amount + " damage!");
 		double damage = amount;

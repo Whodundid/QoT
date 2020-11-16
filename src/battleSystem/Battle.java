@@ -1,5 +1,6 @@
 package battleSystem;
 
+import entities.Entity;
 import entities.enemy.Enemy;
 import entities.enemy.types.Whodundid;
 import entities.player.Player;
@@ -10,12 +11,12 @@ public class Battle {
 	
 	private static int failAmount = 0;
 	
-	public Battle(Player player1, Enemy enemy1) {
+	public Battle(Player player1, Entity enemy1) {
 		System.out.println("You encountered a " + enemy1.getName() + "! They are level " + enemy1.getLevel() + " with " + enemy1.getHealth() + " HP and " + enemy1.getMana() + "!");
 		battle(player1, enemy1);
 	}
 	
-	public static void battle(Player player1, Enemy enemy1) {
+	public static void battle(Player player1, Entity enemy1) {
 		Songs.playSong((enemy1 instanceof Whodundid) ? Songs.darkCave : Songs.battleTheme);
 		
 		while (!player1.isDead && !enemy1.isDead) {
@@ -34,8 +35,9 @@ public class Battle {
 					enemy1.hurt(player1.flameDamage);
 					player1.useHeal();
 					break;
-				case 3:
-				default: System.out.println("You chose to do nothing...");
+				case 3:System.out.println("You chose to do nothing...");
+				case 4: player1.utilizeInventory(null);
+				default: System.out.println(":D");
 				}
 			}
 			
@@ -46,7 +48,7 @@ public class Battle {
 		if (player1.isDead) {
 			System.out.println("You got rekt son.");
 		}
-		else if (enemy1.isDead) {
+		if (enemy1.isDead) {
 			System.out.println("Victory!");
 		}
 		
@@ -54,12 +56,13 @@ public class Battle {
 		
 	}
 	
-	private static int printActions(Player p, Enemy e) {
+	private static int printActions(Player p, Entity e) {
 		System.out.println("You have " + p.health + " HP and " + p.mana + " MP " + e.name + " has " + e.health + " HP.");
 		System.out.println("Type 0 to attack the enemy.");
 		System.out.println("Type 1 to use fire on the enemy");
 		System.out.println("Type 2 to cast 'heal'");
 		System.out.println("Type 3 to do absolutely nothing.");
+		System.out.println("Type 4 to open your inventory.");
 		
 		int val = -1;
 		while (true) {

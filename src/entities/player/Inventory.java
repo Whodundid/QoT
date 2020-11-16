@@ -20,6 +20,12 @@ public class Inventory {
 		}
 	}
 	
+	// WORK ON THIS
+	//public void useItem(Player player, Item item) {
+	//	player.setHealth(30);
+	//	player.inventory.removeItem(potion.getName());
+	//}
+	
 	//... means array
 	public void storeItems(Item... in) {
 		for (Item i : in) {
@@ -49,6 +55,7 @@ public class Inventory {
 		
 		return theItem;
 	}
+	
 	
 	public ArrayList<Item> getItems() {
 		return content;

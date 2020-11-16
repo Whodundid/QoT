@@ -1,5 +1,7 @@
 package items;
 
+import entities.Entity;
+
 public class Potion extends Item {
 	
 	// Heal is the amount of health player will get when using the healing potion
@@ -34,5 +36,8 @@ public class Potion extends Item {
 
 	// Methods
 	
+	public void heal(Entity entity, double healthIn) {
+		entity.setHealth(healthIn);
+	}
 	
 }
