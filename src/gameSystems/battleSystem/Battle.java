@@ -1,4 +1,4 @@
-package battleSystem;
+package gameSystems.battleSystem;
 
 import entities.Entity;
 import entities.enemy.Enemy;

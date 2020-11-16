@@ -43,11 +43,13 @@ public final class GLSettings {
 	
 	public static void enableTexture() {
 		blendFunc();
+		glEnable(GL_TEXTURE_2D);
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 	}
 	
 	public static void disableTexture() {
+		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 	}

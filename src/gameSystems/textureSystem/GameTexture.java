@@ -1,4 +1,4 @@
-package openGL_Util;
+package gameSystems.textureSystem;
 
 import org.lwjgl.opengl.GL11;
 

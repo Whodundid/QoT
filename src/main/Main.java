@@ -3,11 +3,11 @@ package main;
 import java.util.Scanner;
 import shop.Shopkeeper;
 import sound.Songs;
-import battleSystem.Battle;
 import entities.enemy.Enemy;
 import entities.enemy.types.Goblin;
 import entities.enemy.types.Whodundid;
 import entities.player.Player;
+import gameSystems.battleSystem.Battle;
 import items.types.LesserHealing;
 
 public class Main implements Runnable {
@@ -15,8 +15,8 @@ public class Main implements Runnable {
 	public static Main m = null;
 	
 	public static void main(String[] args) {
-		m = new Main();
-		Game.getInstance().runGame();
+		//m = new Main();
+		Game.getGame().runGame();
 	}
 	
 	@Override
@@ -70,7 +70,5 @@ public class Main implements Runnable {
 		
 		Battle theRealOne = new Battle(mainCharacter, shopKeeper);
 	}
-	
-	public static Game getWindow() { return Game.getInstance(); }
 	
 }

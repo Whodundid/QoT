@@ -1,6 +1,6 @@
 package input;
 
-import main.Main;
+import main.Game;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 public class WindowResizeListener extends GLFWWindowSizeCallback {
@@ -22,7 +22,7 @@ public class WindowResizeListener extends GLFWWindowSizeCallback {
 		width = widthIn;
 		height = heightIn;
 		
-		Main.getWindow().onWindowResize();
+		Game.getGame().onWindowResize();
 	}
 
 	public static int getWidth() { return width; }

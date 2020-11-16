@@ -65,6 +65,13 @@ public final class Shaders {
 		init();
 	}
 	
+	/** Deletes each shader program. */
+	public static void destroy() {
+		if (init) {
+			shaders.filterNull().forEach(s -> s.destroy());
+		}
+	}
+	
 	/** Returns true if each shader has been successfully built. */
 	public static boolean isInit() { return init; }
 	

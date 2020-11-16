@@ -1,5 +1,6 @@
 package input;
 
+import gameSystems.gameRenderer.GameRenderer;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -39,6 +40,8 @@ public class Keyboard extends GLFWKeyCallback {
 		if (key >= 0) {
 			c = getKeyChar(key);
 			
+			if (key == 32) { c = ' '; }
+			
 			//set the key state
 			keys[key] = action == GLFW.GLFW_PRESS;
 		}
@@ -56,19 +59,17 @@ public class Keyboard extends GLFWKeyCallback {
 	//------------------
 	
 	private void distribute(int action, char typedChar, int keyCode) {
-		/*
-		if (Game.getGame() != null) {
-			AbstractScreen s = Game.getGame().currentScreen;
-			if (s != null) {
+		if (Game.getGLInit()) {
+			GameRenderer r = Game.getGameRenderer();
+			if (r != null) {
 				switch (action) {
-				case 0: s.keyPressed(typedChar, keyCode); break;
-				case 1: s.keyReleased(typedChar, keyCode); break;
-				case 2: s.keyHeld(typedChar, keyCode); break;
+				case 0: r.keyPressed(typedChar, keyCode); break;
+				case 1: r.keyReleased(typedChar, keyCode); break;
+				case 2: r.keyHeld(typedChar, keyCode); break;
 				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
 				}
 			}
 		}
-		*/
 	}
 
 	//-------------------------

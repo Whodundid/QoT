@@ -2,7 +2,7 @@ package openGL_Util.shader;
 
 import openGL_Util.shader.util.FragmentShader;
 import openGL_Util.shader.util.VertexShader;
-import org.lwjgl.opengl.GL46;
+import org.lwjgl.opengl.GL20;
 
 public abstract class ShaderProgram {
 	
@@ -37,21 +37,21 @@ public abstract class ShaderProgram {
 		if (!fragment.isCompiled()) { throw new RuntimeException(name + ": Fragment Shader not compiled!"); }
 		
 		//create program
-		shaderProgram = GL46.glCreateProgram();
-		GL46.glAttachShader(shaderProgram, vertex.getVertexShader());
-		GL46.glAttachShader(shaderProgram, fragment.getFragmentShader());
-		GL46.glLinkProgram(shaderProgram);
+		shaderProgram = GL20.glCreateProgram();
+		GL20.glAttachShader(shaderProgram, vertex.getVertexShader());
+		GL20.glAttachShader(shaderProgram, fragment.getFragmentShader());
+		GL20.glLinkProgram(shaderProgram);
 		
 		//check link success
 		int[] success = new int[1];
-		GL46.glGetProgramiv(shaderProgram, GL46.GL_LINK_STATUS, success);
+		GL20.glGetProgramiv(shaderProgram, GL20.GL_LINK_STATUS, success);
 		
 		isLinked = success[0] == 1;
 		
 		//print link error
 		if (!isLinked) {
 			System.out.println(name + ": link error!");
-			System.out.println(GL46.glGetProgramInfoLog(shaderProgram));
+			System.out.println(GL20.glGetProgramInfoLog(shaderProgram));
 		}
 	}
 	
@@ -62,7 +62,14 @@ public abstract class ShaderProgram {
 	/** Use this shader program. */
 	public void bind() {
 		if (isLinked) {
-			GL46.glUseProgram(shaderProgram);
+			GL20.glUseProgram(shaderProgram);
+		}
+	}
+	
+	/** Stop using this shader program. */
+	public void unbind() {
+		if (isLinked) {
+			GL20.glUseProgram(0);
 		}
 	}
 	
@@ -77,7 +84,10 @@ public abstract class ShaderProgram {
 	/** Deletes this shader program from memory. Cannot be undone! */
 	public void destroy() {
 		if (isLinked) {
-			GL46.glDeleteProgram(shaderProgram);
+			if (vertex != null && !vertex.isDestroyed()) { vertex.destroy(); }
+			if (fragment != null && !fragment.isDestroyed()) { fragment.destroy(); }
+			
+			GL20.glDeleteProgram(shaderProgram);
 			isLinked = false;
 			isDestroyed = true;
 		}

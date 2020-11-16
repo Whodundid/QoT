@@ -1,5 +1,6 @@
 package input;
 
+import gameSystems.gameRenderer.GameRenderer;
 import main.Game;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -31,8 +32,8 @@ public class Mouse extends GLFWMouseButtonCallback {
 		cursorCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
-				mX = (int) xpos;
-				mY = (int) ypos;
+				mX = (int) (xpos / Game.getGameScale());
+				mY = (int) (ypos / Game.getGameScale());
 			}
 		};
 		
@@ -61,19 +62,17 @@ public class Mouse extends GLFWMouseButtonCallback {
 	//---------------
 	
 	private void distribute(int action, int mXIn, int mYIn, int button, int change) {
-		/*
-		if (Game.getGame() != null) {
-			AbstractScreen s = Game.getGame().currentScreen;
-			if (s != null) {
+		if (Game.getGLInit()) {
+			GameRenderer r = Game.getGameRenderer();
+			if (r != null) {
 				switch (action) {
-				case 0: s.mouseReleased(mXIn, mYIn, button); break;
-				case 1: s.mousePressed(mXIn, mYIn, button); break;
-				case 2: s.mouseScrolled(change); break;
+				case 0: r.mouseReleased(mXIn, mYIn, button); break;
+				case 1: r.mousePressed(mXIn, mYIn, button); break;
+				case 2: r.mouseScrolled(change); break;
 				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
 				}
 			}
 		}
-		*/
 	}
 	
 	//----------------------

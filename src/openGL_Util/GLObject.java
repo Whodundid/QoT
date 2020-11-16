@@ -1,84 +1,102 @@
 package openGL_Util;
 
+import gameSystems.fontRenderer.EStringBuilder;
+import gameSystems.textureSystem.GameTexture;
 import main.Game;
 import org.lwjgl.opengl.GL11;
 import util.renderUtil.EColors;
+import util.renderUtil.WindowSize;
 
 /** The base underlying object that all window objects are drawn from. */
 public abstract class GLObject {
 	
-	//------------------
-	// Protected Fields
-	//------------------
+	protected WindowSize res = Game.getWindowSize();
+	protected float glZLevel;
+	
+	//--------------------------------------
+	// Public Static String Drawing Methods
+	//--------------------------------------
+	
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawString(Object o, double x, double y) { return drawString(toStr(o), x, y, EColors.white.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawString(Object o, double x, double y, EColors colorIn) { return drawString(toStr(o), x, y, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawCenteredString(Object o, double x, double y, EColors colorIn) { return drawCenteredString(toStr(o), x, y, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringWithShadow(Object o, double x, double y, EColors colorIn) { return drawStringWithShadow(toStr(o), x, y, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawCenteredStringWithShadow(Object o, double x, double y, EColors colorIn) { return drawCenteredStringWithShadow(toStr(o), x, y, colorIn.intVal); }
 	
 	
-	// Drawing position
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawString(Object o, double x, double y, int color) { return EStringBuilder.drawString(toStr(o), x, y, color, false, false); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawCenteredString(Object o, double x, double y, int color) { return EStringBuilder.drawString(toStr(o), x, y, color, true, false); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringWithShadow(Object o, double x, double y, int color) { return EStringBuilder.drawString(toStr(o), x, y, color, false, true); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawCenteredStringWithShadow(Object o, double x, double y, int color) { return EStringBuilder.drawString(toStr(o), x, y, color, true, true); }
 	
-		/** The z layer for which this object is drawn at. By default it is 0. */
-		protected double zLayer = 0;
-		
 	
-	// Object Position Coordinates
+	/** Draws a String at the specified position. */
+	public static double drawString(String text, double x, double y) { return drawString(text, x, y, EColors.white.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawString(String text, double x, double y, EColors colorIn) { return drawString(text, x, y, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredString(String text, double x, double y, EColors colorIn) { return drawCenteredString(text, x, y, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawStringWithShadow(String text, double x, double y, EColors colorIn) { return drawStringWithShadow(text, x, y, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredStringWithShadow(String text, double x, double y, EColors colorIn) { return drawCenteredStringWithShadow(text, x, y, colorIn.intVal); }
 	
-		/** The left most position of this object. */
-		protected double startX;
-		/** The right most position of this object. */
-		protected double endX;
-		/** The top most position of this object. */
-		protected double startY;
-		/** The bottom most position of this object. */
-		protected double endY;
-		
 	
-	// Object Dimensions
+	/** Draws a String at the specified position. */
+	public static double drawString(String text, double x, double y, int color) { return EStringBuilder.drawString(text, x, y, color, false, false); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredString(String text, double x, double y, int color) { return EStringBuilder.drawString(text, x, y, color, true, false); }
+	/** Draws a String at the specified position. */
+	public static double drawStringWithShadow(String text, double x, double y, int color) { return EStringBuilder.drawString(text, x, y, color, false, true); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredStringWithShadow(String text, double x, double y, int color) { return EStringBuilder.drawString(text, x, y, color, true, true); }
 	
-		/** A measurement of the right most point minus the left most point. */
-		protected double width;
-		/** A measurement of the top most point minus the bottom most point. */
-		protected double height;
-		
-		
-	//------------------------
-	// Protected Constructors
-	//------------------------
 	
-	protected GLObject(int sX, int sY) {
-		startX = sX;
-		startY = sY;
-	}
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringC(Object o, double x, double y, EColors colorIn) { return drawStringC(toStr(o), x, y, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringS(Object o, double x, double y, EColors colorIn) { return drawStringS(toStr(o), x, y, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringCS(Object o, double x, double y, EColors colorIn) { return drawStringCS(toStr(o), x, y, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringC(Object o, double x, double y, int color) { return drawCenteredString(toStr(o), x, y, color); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringS(Object o, double x, double y, int color) { return drawStringWithShadow(toStr(o), x, y, color); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringCS(Object o, double x, double y, int color) { return drawCenteredStringWithShadow(toStr(o), x, y, color); }
 	
-	protected GLObject(int sX, int sY, int eX, int eY) {
-		startX = sX;
-		startY = sY;
-		endX = eX;
-		endY = eY;
-		width = endX - startX;
-		height = endY - startY;
-	}
 	
-	//----------------
-	// Public Methods
-	//----------------
+	/** Draws a String at the specified position. */
+	public static double drawStringC(String text, double x, double y, EColors colorIn) { return drawStringC(text, x, y, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawStringS(String text, double x, double y, EColors colorIn) { return drawStringS(text, x, y, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawStringCS(String text, double x, double y, EColors colorIn) { return drawStringCS(text, x, y, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawStringC(String text, double x, double y, int color) { return drawCenteredString(text, x, y, color); }
+	/** Draws a String at the specified position. */
+	public static double drawStringS(String text, double x, double y, int color) { return drawStringWithShadow(text, x, y, color); }
+	/** Draws a String at the specified position. */
+	public static double drawStringCS(String text, double x, double y, int color) { return drawCenteredStringWithShadow(text, x, y, color); }
 	
-	public GLObject drawRect() { return drawRect(0, 0xffffffff); }
-	public GLObject drawRect(EColors color) { return drawRect(0, color.intVal); }
-	public GLObject drawRect(int offset) { return drawRect(offset, 0xffffffff); }
-	public GLObject drawRect(int offset, EColors color) { return drawRect(offset, color.intVal); }
-	public GLObject drawRect(int offset, int color) { drawRect(startX + offset, startY + offset, endX - offset, endY - offset, color); return this; }
+	/** Wrapper for EStringBuilder's getStringWidth. */
+	public static int getStringWidth(String text) { return EStringBuilder.getStringWidth(text); }
 	
-	public GLObject drawHRect() { return drawHRect(0, 0xffffffff); }
-	public GLObject drawHRect(EColors color) { return drawHRect(0, 1, color.intVal); }
-	public GLObject drawHRect(EColors color, int thickness) { return drawHRect(0, thickness, color.intVal); }
-	public GLObject drawHRect(int offset) { return drawHRect(offset, 0xffffffff); }
-	public GLObject drawHRect(int offset, int thickness) { return drawHRect(offset, 0xffffffff); }
-	public GLObject drawHRect(int offset, EColors color) { return drawHRect(offset, color.intVal); }
-	public GLObject drawHRect(int offset, int thickness, EColors color) { drawHRect(offset, thickness, color.intVal); return this; }
-	public GLObject drawHRect(int offset, int thickness, int color) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, thickness, color); return this; }
+	/** Returns a 'toString' representation of the given object. Accounts for null objets as well. */
+	private static String toStr(Object in) { return (in != null) ? in.toString() : "null"; }
 	
-	//-------------------------------
-	// Public Static Drawing Methods
-	//-------------------------------
-	
+	//-------------------------------------
+	// Public Static Shape Drawing Methods
+	//-------------------------------------
 	
 	/** Draws a line from point a to b with a thickness of 2. */
 	public static void drawLine(double startX, double startY, double endX, double endY, EColors color) { drawLine(startX, startY, endX, endY, 2, color.intVal); }
@@ -176,7 +194,7 @@ public abstract class GLObject {
 			double theta = 2.0f * Math.PI * i / detail;
 			double x = radiusX * Math.cos(theta);
 			double y = radiusY * Math.sin(theta);
-			vertex(tdx(x + posX), tdy(y + posY), 0.0d);
+			vertex(tdx(x + posX), tdy(y + posY));
 		}
 		
 		//draw
@@ -204,14 +222,14 @@ public abstract class GLObject {
 		
 		//define points
 		double prevX = 0.0, prevY = 0.0;
-		vertex(posX, posY, 0.0d);
+		vertex(tdx(posX), tdy(posY));
 		
 		for (int i = 0; i < detail + 1; i++) {
 			double theta = 2.0f * Math.PI * i / detail;
 			double x = radiusX * Math.cos(theta);
 			double y = radiusY * Math.sin(theta);
-			vertex(tdx(x + posX), tdy(y + posY), 0.0d);
-			vertex(tdx(posX + prevX), tdy(posY + prevY), 0.0d);
+			vertex(tdx(x + posX), tdy(y + posY));
+			vertex(tdx(posX + prevX), tdy(posY + prevY));
 			prevX = x;
 			prevY = y;
 		}
@@ -277,26 +295,67 @@ public abstract class GLObject {
 		drawRect(left, bottom - borderWidth, right, bottom, color); //bottom
 	}
 	
-	/** DO NOT USE -- NOT FINISHED! */
+	/** Draws a texture with the given dimensions. */
 	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) {
 		
 		//Ensure the texture can actually be drawn
 		if (tex != null && tex.hasBeenRegistered()) {
 			
-			float xVal = (float) x / (float) tex.getWidth();
-			float yVal = (float) y / (float) tex.getHeight();
-			float wVal = (float) w / (float) tex.getWidth();
-			float hVal = (float) h / (float) tex.getHeight();
+			alphaOn();
+			blendOn();
+			setGLColor(0xffffffff);
+			GLSettings.enableTexture();
+			bindTexture(tex);
+			
+			begin(GLModes.QUADS);
+			
+			GL11.glTexCoord2f(0.0f, 0.0f);
+			vertex(tdx(x), tdy(y));
+			GL11.glTexCoord2f(1.0f, 0.0f);
+			vertex(tdx(x + w), tdy(y));
+			GL11.glTexCoord2f(1.0f, 1.0f);
+			vertex(tdx(x + w), tdy(y + h));
+			GL11.glTexCoord2f(0.0f, 1.0f);
+			vertex(tdx(x), tdy(y + h));
+			
+			draw();
+			
+			alphaOff();
+			blendOff();
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+		}
+	}
+	
+	public static void drawTexture(double x, double y, double w, double h, int tX, int tY, int tW, int tH, GameTexture imageIn) {
+		if (imageIn != null) {
+			
+			float xVal = (float) tX / (float) imageIn.getWidth();
+			float yVal = (float) tY / (float) imageIn.getHeight();
+			float wVal = (float) tW / (float) imageIn.getWidth();
+			float hVal = (float) tH / (float) imageIn.getHeight();
 			
 			alphaOn();
 			blendOn();
-			bindTexture(tex);
+			setGLColor(0xffffffff);
+			GLSettings.enableTexture();
+			bindTexture(imageIn);
 			
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+			begin(GLModes.QUADS);
 			
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+			GL11.glTexCoord2f(xVal, yVal + hVal);
+			vertex(tdx(x), tdy(y + h));
+			GL11.glTexCoord2f(xVal + wVal, yVal + hVal);
+			vertex(tdx(x + w), tdy(y + h));
+			GL11.glTexCoord2f(xVal + wVal, yVal);
+			vertex(tdx(x + w), tdy(y));
+			GL11.glTexCoord2f(xVal, yVal);
+			vertex(tdx(x), tdy(y));
+			
+			draw();
+			
+			alphaOff();
+			blendOff();
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			
 		}
 	}
@@ -310,10 +369,11 @@ public abstract class GLObject {
 	/** Performs a scissoring on the specified region. IMPORTANT: ALWAYS CALL 'endScissor' OR gl11.disable(gl_scissor) AFTER THIS TO PREVENT RENDERING ERRORS!*/
 	public static void scissor(double startX, double startY, double endX, double endY, boolean useGlY) {
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		int w = ((int) endX - (int) startX);
-		int h = ((int) endY - (int) startY);
-		int x = (int) startX;
-		int y = useGlY ? (int) startY : (Game.getInstance().getWindowSize().getHeight() - ((int) startY) - h);
+		double scale = Game.getGameScale();
+		int w = (int) ((endX - startX) * scale);
+		int h = (int) ((endY - startY) * scale);
+		int x = (int) (startX * scale);
+		int y = useGlY ? (int) (startY * scale) : (int) (Game.getWindowSize().getHeight() - (startY * scale) - h);
 		if (w >= 0 && h >= 0) { GL11.glScissor(x, y, w, h); }
 	}
 	
@@ -339,13 +399,18 @@ public abstract class GLObject {
 	/** 'to double for x' converts a given value into a corresponding double value between -1.0f and 1.0f based on window x size. */
 	public static float tdx(Number valIn) {
 		float midX = Game.getWindowSize().getWidth() / 2;
-		return (valIn.floatValue() - midX) / midX;
+		return (float) (((valIn.floatValue() * Game.getGameScale()) - midX) / midX);
 	}
 	
 	/** 'to double for y' converts a given value into a corresponding double value between -1.0f and 1.0f based on window y size. */
 	public static float tdy(Number valIn) {
 		float midY = Game.getWindowSize().getHeight() / 2;
-		return (midY - valIn.floatValue()) / midY;
+		return (float) ((midY - (valIn.floatValue() * Game.getGameScale())) / midY);
+	}
+	
+	/** Binds a 2d texture. */
+	public static void bindTexture(GameTexture in) {
+		Game.getTextureSystem().bind(in);
 	}
 	
 	//-----------------------------
@@ -390,9 +455,5 @@ public abstract class GLObject {
 	
 	/** Concludes the drawing. */
 	private static void draw() { GL11.glEnd(); }
-	
-	
-	/** Binds a 2d texture. */
-	private static void bindTexture(GameTexture in) { GL11.glBindTexture(GL11.GL_TEXTURE_2D, in.getTextureID()); }
 	
 }
