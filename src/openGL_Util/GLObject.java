@@ -62,6 +62,8 @@ public abstract class GLObject {
 	
 	
 	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringC(Object o, double x, double y) { return drawStringC(toStr(o), x, y, EColors.white); }
+	/** Draws the toString representation of an object at the specified position. */
 	public static double drawStringC(Object o, double x, double y, EColors colorIn) { return drawStringC(toStr(o), x, y, colorIn.intVal); }
 	/** Draws the toString representation of an object at the specified position. */
 	public static double drawStringS(Object o, double x, double y, EColors colorIn) { return drawStringS(toStr(o), x, y, colorIn.intVal); }
@@ -296,7 +298,9 @@ public abstract class GLObject {
 	}
 	
 	/** Draws a texture with the given dimensions. */
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) {
+	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) { drawTexture(x, y, w, h, tex, false); }
+	/** Draws a texture with the given dimensions. */
+	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip) {
 		
 		//Ensure the texture can actually be drawn
 		if (tex != null && tex.hasBeenRegistered()) {
@@ -309,14 +313,26 @@ public abstract class GLObject {
 			
 			begin(GLModes.QUADS);
 			
-			GL11.glTexCoord2f(0.0f, 0.0f);
-			vertex(tdx(x), tdy(y));
-			GL11.glTexCoord2f(1.0f, 0.0f);
-			vertex(tdx(x + w), tdy(y));
-			GL11.glTexCoord2f(1.0f, 1.0f);
-			vertex(tdx(x + w), tdy(y + h));
-			GL11.glTexCoord2f(0.0f, 1.0f);
-			vertex(tdx(x), tdy(y + h));
+			if (flip) {
+				GL11.glTexCoord2f(1.0f, 0.0f);
+				vertex(tdx(x), tdy(y));
+				GL11.glTexCoord2f(0.0f, 0.0f);
+				vertex(tdx(x + w), tdy(y));
+				GL11.glTexCoord2f(0.0f, 1.0f);
+				vertex(tdx(x + w), tdy(y + h));
+				GL11.glTexCoord2f(1.0f, 1.0f);
+				vertex(tdx(x), tdy(y + h));
+			}
+			else {
+				GL11.glTexCoord2f(0.0f, 0.0f);
+				vertex(tdx(x), tdy(y));
+				GL11.glTexCoord2f(1.0f, 0.0f);
+				vertex(tdx(x + w), tdy(y));
+				GL11.glTexCoord2f(1.0f, 1.0f);
+				vertex(tdx(x + w), tdy(y + h));
+				GL11.glTexCoord2f(0.0f, 1.0f);
+				vertex(tdx(x), tdy(y + h));
+			}
 			
 			draw();
 			

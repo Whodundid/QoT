@@ -307,13 +307,17 @@ public class WindowObjectS extends EGui {
 			try {
 				if (o != null) { //only add if the object isn't null
 					//don't let the object be added to itself, or if the object is already in the object - this only goes 1 layer deep however
-					if (o != parent && parent.getObjects().notContains(o) && parent.getAddingObjects().notContains(o)) {
+					if (o != parent && (parent.getRemovingObjects().contains(o) || (parent.getObjects().notContains(o) && parent.getAddingObjects().notContains(o)))) {
+						
 						if (o instanceof WindowHeader && parent.hasHeader()) { continue; } //prevent multiple headers being added
 						if (o instanceof WindowParent) { ((WindowParent) o).initWindow(); } //if it's a window, do it's init
+						
 						o.setParent(parent).initObjects(); //initialize all of the children's children
+						
 						//o.setZLevel(parent.getZLevel() + o.getZLevel() + 1); //increment the child's z layer based off of the parent
 						//if the parent has a boundary enforcer, apply it to the child as well
 						if (parent.isBoundaryEnforced()) { o.setBoundaryEnforcer(parent.getBoundaryEnforcer()); }
+						
 						o.completeInit(); //tell the child that it has been fully initialized and that it is ready to be added on the next draw cycle
 						parent.getAddingObjects().add(o); //give the processed child to the parent so that it will be added
 					}
@@ -528,7 +532,7 @@ public class WindowObjectS extends EGui {
 			if (o != null) {
 				if (o != objIn) {
 					if (objIn.getObjects().contains(o)) {
-						objIn.onClosed();
+						objIn.onScreenClosed();
 						objIn.getObjects().remove(o);
 						objIn.postEvent(new EventObjects(objIn, o, ObjectEventType.ObjectRemoved));
 					}

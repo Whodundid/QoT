@@ -47,7 +47,7 @@ public class WindowLabel extends WindowObject {
 			}
 		} else {
 			if (centered) {
-				drawString(displayString, startX - game.getFontRenderer().getStringWidth(displayString), startY, displayStringColor);
+				drawStringC(displayString, startX, startY, displayStringColor);
 				//if (shadow) { drawCenteredStringWithShadow(displayString, startX, startY, displayStringColor); }
 				//else { drawCenteredString(displayString, startX, startY, displayStringColor); }
 			} else {

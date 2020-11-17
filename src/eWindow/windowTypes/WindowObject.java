@@ -425,7 +425,7 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	@Override public boolean isCloseable() { return closeable; }
 	@Override public boolean isClosed() { return closed; }
 	@Override public WindowObject setCloseable(boolean val) { closeable = val; return this; }
-	@Override public void onClosed() {}
+	@Override public void onScreenClosed() {}
 	@Override public WindowObject setFocusedObjectOnClose(IWindowObject objIn) { focusObjectOnClose = objIn; return this; }
 	@Override public void setBeingRemoved() { beingRemoved = true; }
 	@Override public boolean isBeingRemoved() { return beingRemoved; }

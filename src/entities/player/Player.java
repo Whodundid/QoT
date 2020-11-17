@@ -3,12 +3,12 @@ package entities.player;
 import java.util.Scanner;
 import main.Game;
 import entities.Entity;
+import gameTextures.EntityTextures;
 import items.Item;
 import items.Potion;
 import items.Weapon;
 import items.types.LesserHealing;
 import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
 
 public class Player extends Entity {
 	
@@ -16,34 +16,36 @@ public class Player extends Entity {
 	
 	public double EXP;
 	public Inventory inventory;
-	public boolean isDead;
 	public double flameCost = 3;
 	public double healCost = 4.5;
 	public double flameDamage;
 	public double healAmount;
 	public double weaponDamage = 0;
 	
-	public Player(String name, int level, double maxHealth, double health, double maxMana, double mana, double gold, double damage, double EXPIn) {
-		super(name, level, maxHealth, health, maxMana, mana, gold, damage);
-		EXP = EXPIn;
+	public Player(String nameIn) { this(nameIn, 0, 0); }
+	public Player(String nameIn, int posX, int posY) {
+		super(nameIn, 0, 200, 200, 50, 50, 0, 10);
+		
+		EXP = 0;
 		inventory = new Inventory(this);
 		flameDamage = 10;
 		healAmount = 10;
 		
-		init(Game.getGameRenderer(), 0, 0);
+		init(Game.getGameRenderer(), posX, posY, 150, 150);
 	}
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		drawCircle(midX, midY - 20, 19, 30, EColors.black);
-		drawCircle(midX, midY - 19, 18, 30, EColors.white);
-		
-		drawRect(midX - 4, midY - 18, midX + 4, midY + 9, EColors.black);
-		drawRect(midX - 5, midY - 19, midX + 5, midY + 10, EColors.cyan);
-		
+		drawTexture(EntityTextures.player);
 		super.drawObject(mXIn, mYIn);
 	}
 	
+	@Override
+	public void kill() {
+		Game.getGameRenderer().removeObject(this);
+		
+		super.kill();
+	}
 	
 	// Leveling up
 	public void levelUp() {
@@ -71,13 +73,8 @@ public class Player extends Entity {
 	
 	// Setters
 	
-	public void setDamage(double damageIn) {
-		damage = damage + damageIn;
-	}
-	
-	public void setHealth (double healthIn) {
-		health = health + healthIn;
-	}
+	public void setDamage(double damageIn) { damage = damageIn; }
+	public void setHealth(double healthIn) { health = healthIn; }
 	
 	// Player Methods
 	

@@ -4,18 +4,20 @@ import eWindow.windowTypes.WindowObject;
 import gameScreens.DamageSplash;
 import main.Game;
 import util.mathUtil.NumUtil;
+import util.renderUtil.EColors;
 
 public abstract class Entity extends WindowObject {
 	
-	public String name;
-	public int level;
-	public double maxHealth;
-	public double health;
-	public double maxMana;
-	public double mana;
-	public double damage;
-	public double gold;
-	public boolean isDead;
+	protected String name;
+	protected int level;
+	protected double maxHealth;
+	protected double health;
+	protected double maxMana;
+	protected double mana;
+	protected double damage;
+	protected double gold;
+	protected boolean isDead;
+	protected boolean drawHitbox = false;
 	
 	public Entity(String nameIn, int levelIn, double maxHealthIn, double healthIn, double maxManaIn, double manaIn, double damageIn, double goldIn) {
 		name = nameIn;
@@ -27,6 +29,12 @@ public abstract class Entity extends WindowObject {
 		damage = damageIn;
 		gold = goldIn;
 		isDead = false;
+	}
+	
+	@Override
+	public void drawObject(int mXIn, int mYIn) {
+		if (drawHitbox) { drawHRect(EColors.yellow); }
+		super.drawObject(mXIn, mYIn);
 	}
 	
 	//---------
@@ -67,10 +75,13 @@ public abstract class Entity extends WindowObject {
 	public double getMana() { return mana; }
 	public double getGold() { return gold; }
 	public double getDamage() { return damage; }
+	public boolean isDead() { return isDead; }
 	
 	//---------
 	// Setters
 	//---------
+	
+	public Entity setDrawHitbox(boolean val) { drawHitbox = val; return this; }
 	
 	//public void setHealth(double healthIn) {
 	//	health = health + healthIn;

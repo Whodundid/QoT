@@ -373,7 +373,7 @@ public class GameRenderer extends WindowObject implements ITopParent {
 	@Override public boolean isClosed() { return closed; }
 	@Override public GameRenderer setCloseable(boolean val) { return this; }
 	@Override public void close() { System.out.println("FOOL! Dagoth Ur cannot be closed, I am a god!"); }
-	@Override public void onClosed() {}
+	@Override public void onScreenClosed() {}
 	@Override public GameRenderer setFocusedObjectOnClose(IWindowObject objIn) { return this; }
 	
 	//--------------------
@@ -658,8 +658,6 @@ public class GameRenderer extends WindowObject implements ITopParent {
 		int newH = newRes.getHeight();
 		
 		res = Game.getWindowSize();
-		
-		System.out.println(res + " " + newRes);
 		
 		for (WindowParent p : windows) {
 			

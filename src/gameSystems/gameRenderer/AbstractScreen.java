@@ -1,9 +1,10 @@
 package gameSystems.gameRenderer;
 
 import eWindow.windowTypes.WindowObject;
+import eWindow.windowTypes.interfaces.ITopParent;
 
 /** The base class for window screens. */
-public abstract class AbstractScreen extends WindowObject {
+public abstract class AbstractScreen extends WindowObject implements ITopParent {
 	
 	/** Initializer method that is called before a screen is built. */
 	public void initScreen() {}
@@ -12,10 +13,12 @@ public abstract class AbstractScreen extends WindowObject {
 	public void postInit() {}
 	
 	/** Called whenever this screen is about to be closed. */
-	public void onClosed() {}
+	public void onScreenClosed() {}
 	
 	/** Called whenever the game window is resized. */
-	public void onWindowResize() {}
+	public void onWindowResize() {
+		setDimensions(game.getWidth(), game.getHeight());
+	}
 	
 	//------------------------
 	// WindowObject Overrides

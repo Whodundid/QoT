@@ -11,19 +11,18 @@ import gameSystems.gameRenderer.GameRenderer;
 import gameSystems.gameRenderer.IRendererProxy;
 import gameSystems.gameRenderer.GameScreen;
 import gameSystems.textureSystem.TextureSystem;
+import gameTextures.EntityTextures;
 import gameTextures.Textures;
 import input.Keyboard;
 import input.Mouse;
 import input.WindowResizeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import openGL_Util.GLObject;
 import openGL_Util.shader.Shaders;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import util.renderUtil.CenterType;
-import util.renderUtil.EColors;
 import util.renderUtil.WindowSize;
 import util.storageUtil.EArrayList;
 import util.storageUtil.EDimension;
@@ -107,6 +106,7 @@ public class Game {
 		GLFW.glfwShowWindow(handle);
 		
 		Textures.registerTextures(textureSystem);
+		EntityTextures.registerTextures(textureSystem);
 		
 		//testing things...
 		
@@ -121,12 +121,12 @@ public class Game {
 	
 	public void runGame() {
 		if (!running) {
-			Thread t = new Thread(Main.m);
-			t.start();
+			//Thread t = new Thread(Main.m);
+			//t.start();
 			
 			running = true;
 			
-			currentScreen = new TestScreen();
+			displayScreen(new TestScreen(null));
 			
 			while (running && !GLFW.glfwWindowShouldClose(handle)) {
 				
@@ -170,14 +170,14 @@ public class Game {
 		updateFramerate();
 		
 		if (currentScreen != null) {
-			currentScreen.drawObject(Mouse.getMx(), mouse.getMy());
+			currentScreen.drawObject(Mouse.getMx(), Mouse.getMy());
 		}
 		
-		GLObject.drawRect(50, 50, 150, 150, EColors.red);
+		//GLObject.drawRect(50, 50, 150, 150, EColors.red);
 		
-		GLObject.drawFilledEllipse(300, 300, 50, 50, 30, EColors.seafoam);
+		//GLObject.drawFilledEllipse(300, 300, 50, 50, 30, EColors.seafoam);
 		
-		GLObject.drawTexture(400, 200, 128 * 2, 64 * 2, Textures.debug);
+		//GLObject.drawTexture(400, 200, 128 * 2, 64 * 2, Textures.debug);
 		
 		gameRenderer.onRenderTick();
 	}
@@ -214,6 +214,9 @@ public class Game {
 		width = w.getWidth();
 		height = w.getHeight();
 		GL11.glViewport(0, 0, width, height);
+		
+		if (currentScreen != null) { currentScreen.onWindowResize(); }
+		gameRenderer.onWindowResized();
 	}
 	
 	//--------------------------------
@@ -223,16 +226,18 @@ public class Game {
 	/** Attempts to display a new AbstractScreen in game. */
 	public static void displayScreen(AbstractScreen screenIn) {
 		if (screenIn != null) {
-			AbstractScreen old = Game.currentScreen;
+			AbstractScreen old = currentScreen;
 			
 			if (old != null) {
-				getGameRenderer().removeObject(Game.currentScreen);
-				old.onClosed();
+				gameRenderer.removeObject(currentScreen);
+				currentScreen.removeAllObjects();
+				old.onScreenClosed();
 			}
 			
-			Game.currentScreen = screenIn;
-			Game.currentScreen.initScreen();
-			Game.currentScreen.postInit();
+			currentScreen = screenIn;
+			gameRenderer.addObject(currentScreen);
+			currentScreen.initScreen();
+			currentScreen.postInit();
 		}
 	}
 	
@@ -419,6 +424,8 @@ public class Game {
 	
 	public static boolean isRunning() { return running; }
 	public static boolean getGLInit() { return GLFW.glfwInit(); }
+	
+	public static int getFPS() { return instance.curFrameRate; }
 	
 	/** Returns true if the game is currently running in a debug state. */
 	public static boolean isDebugMode() { return isDebug; }

@@ -91,6 +91,11 @@ public class Keyboard extends GLFWKeyCallback {
 		return r;
 	}
 	
+	public static boolean isWDown() { return isKeyDown(GLFW.GLFW_KEY_W); }
+	public static boolean isADown() { return isKeyDown(GLFW.GLFW_KEY_A); }
+	public static boolean isSDown() { return isKeyDown(GLFW.GLFW_KEY_S); }
+	public static boolean isDDown() { return isKeyDown(GLFW.GLFW_KEY_D); }
+	
 	//-----------------------
 	//Keyboard Static Getters
 	//-----------------------

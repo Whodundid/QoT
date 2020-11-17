@@ -40,7 +40,7 @@ public class Main implements Runnable {
 		pressingEnter = reader.nextLine();
 		System.out.println("What is your name?");
 		String name = reader.nextLine();
-		Player mainCharacter = new Player(name, 1, 200, 200, 50, 50, 0, 25, 0);
+		Player mainCharacter = new Player(name);
 		
 		Enemy goblin = new Goblin();
 		System.out.println(goblin.getName() + " has " + goblin.getHealth() + " HP.");

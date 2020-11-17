@@ -44,7 +44,7 @@ public class WindowButton extends ActionObject {
 	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height) { this(parentIn, posX, posY, width, height, "", false); }
 	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height, String displayStringIn) { this(parentIn, posX, posY, width, height, displayStringIn, false); }
 	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height, String displayStringIn, boolean ignoreDims) {
-		if (!ignoreDims) { setMaxDims(200, 20); }
+		//if (!ignoreDims) { setMaxDims(200, 20); }
 		init(parentIn, posX, posY, width, height);
 		displayLabel = new WindowLabel(this, (drawCentered ? midX : startX + 3) + textOffset, startY + (height - 7) / 2, displayStringIn) {
 			@Override

@@ -382,7 +382,7 @@ public class WindowScrollList extends WindowObject {
 							}
 						}
 						else { o.relinquishFocus(); }
-						o.onClosed();
+						o.onScreenClosed();
 						if (eventHandler != null) { eventHandler.processEvent(new EventObjects(this, o, ObjectEventType.ObjectRemoved)); }
 						it.remove();
 					}

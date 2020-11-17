@@ -36,9 +36,11 @@ public class Songs {
 	
 	/** Stops a specific song that is currently playing. */
 	public static void stopSong(Audio in) {
-		if (currentlyPlaying.contains(in)) {
-			in.stop();
-			currentlyPlaying.remove(in);
+		if (in != null) {
+			if (currentlyPlaying.contains(in)) {
+				in.stop();
+				currentlyPlaying.remove(in);
+			}
 		}
 	}
 	

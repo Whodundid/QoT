@@ -336,7 +336,7 @@ public interface IWindowObject {
 	/** Sets this object to close when the hud closes. */
 	public IWindowObject setClosesWithHud(boolean val);
 	/** Event fired when object is closed. */
-	public void onClosed();
+	public void onScreenClosed();
 	/** Upon closing, this object will attempt to transfer it's focus to the specified object if possible. */
 	public IWindowObject setFocusedObjectOnClose(IWindowObject objIn);
 	/** Internal method used to indicate that this object will be removed soon. */

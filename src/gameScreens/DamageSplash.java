@@ -9,8 +9,6 @@ public class DamageSplash extends WindowObject {
 	double posX, posY;
 	double damage;
 	long creationTime;
-	
-	// Amount of time that the splash text stays on screen
 	long timeOnScreen = 1500;
 	
 	public DamageSplash(double posXIn, double posYIn, double damageIn) {
@@ -18,8 +16,6 @@ public class DamageSplash extends WindowObject {
 		posY = posYIn;
 		damage = damageIn;
 		init(Game.getGameRenderer(), posX - 10, posY - 10, 20, 20);
-		
-		
 	}
 	
 	@Override
@@ -35,12 +31,14 @@ public class DamageSplash extends WindowObject {
 			getParent().removeObject(this);
 		}
 		
-		EColors color = (damage > 0) ? EColors.lred : EColors.blue;
+		EColors color = (damage > 0) ? EColors.red : EColors.blue;
+		EColors inner = (damage > 0) ? EColors.maroon : EColors.navy;
 		
-		drawFilledCircle(midX, midY, width / 2, 6, color);
-		drawString(damage, midX, posY);
+		drawFilledCircle(midX, midY, width * 2, 6, color);
+		drawFilledCircle(midX, midY, width * 2 - 2, 6, inner);
+		drawStringC(damage, midX, midY - 8);
 		
-		move(0, 1);
+		move(0, -1);
 		
 		super.drawObject(mXIn, mYIn);
 	}

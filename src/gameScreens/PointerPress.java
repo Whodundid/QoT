@@ -18,6 +18,8 @@ public class PointerPress extends WindowObject {
 		
 		init(Game.getGameRenderer(), mX - rad, mY - rad, rad * 2, rad * 2);
 		curTime = System.currentTimeMillis();
+		
+		setClickable(false);
 	}
 	
 	@Override
