@@ -1,6 +1,8 @@
 package gameScreens;
 
+import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
+import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
 import input.Keyboard;
 import input.Mouse;
@@ -12,6 +14,8 @@ import util.renderUtil.EColors;
 
 public class TestScreen extends GameScreen {
 	
+	WindowButton damagePlayer;
+	
 	float xf = 0;
 	float yf = 0;
 	
@@ -22,7 +26,13 @@ public class TestScreen extends GameScreen {
 	
 	@Override
 	public void initObjects() {
+		Player mainCharacter = new Player("The Guy", 1, 200, 200, 50, 50, 0, 25, 0);
 		
+		mainCharacter.setPosition(Game.getWidth() / 2, Game.getHeight() / 2);
+		
+		Game.getGameRenderer().addObject(mainCharacter);
+		
+		damagePlayer = new WindowButton(this, startX + 5, endX - 60, 100, 55);
 	}
 	
 	@Override

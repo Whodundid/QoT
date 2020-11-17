@@ -1,6 +1,8 @@
 package entities;
 
 import eWindow.windowTypes.WindowObject;
+import gameScreens.DamageSplash;
+import main.Game;
 import util.mathUtil.NumUtil;
 
 public abstract class Entity extends WindowObject {
@@ -35,6 +37,9 @@ public abstract class Entity extends WindowObject {
 		System.out.println(name + " takes " + amount + " damage!");
 		double damage = amount;
 		health = NumUtil.clamp(health - damage, 0, health);
+		
+		Game.getGameRenderer().addObject(new DamageSplash(midX, startY, damage));
+		
 		if (health <= 0) { kill(); }
 	}
 	
