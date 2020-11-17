@@ -32,7 +32,7 @@ public class BattleScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		Songs.playSong(currentSong = Songs.darkCave);
+		Songs.playSong(currentSong = Songs.darkCave).loop();
 		
 		oldA = entA.getDimensions();
 		oldB = entB.getDimensions();

@@ -36,7 +36,7 @@ public class TestScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		Songs.playSong(Songs.theme);
+		Songs.playSong(Songs.theme).loop();
 		buildMap();
 	}
 	

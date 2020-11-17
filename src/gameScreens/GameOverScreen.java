@@ -12,7 +12,7 @@ public class GameOverScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		Songs.playSong(Songs.lithinburg);
+		Songs.playSong(Songs.lithinburg).loop();
 	}
 	
 	@Override

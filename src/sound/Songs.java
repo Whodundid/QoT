@@ -27,11 +27,12 @@ public class Songs {
 		return new EArrayList(currentlyPlaying);
 	}
 	
-	public static void playSong(Audio in) {
+	public static Audio playSong(Audio in) {
 		if (in != null) {
 			in.start();
 			currentlyPlaying.add(in);
 		}
+		return in;
 	}
 	
 	/** Stops a specific song that is currently playing. */
