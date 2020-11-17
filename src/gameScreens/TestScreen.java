@@ -4,6 +4,7 @@ import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
 import entities.enemy.Enemy;
 import entities.enemy.types.Goblin;
+import entities.enemy.types.Whodundid;
 import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
 import gameSystems.textureSystem.GameTexture;
@@ -146,11 +147,18 @@ public class TestScreen extends GameScreen {
 			int posX = NumUtil.getRoll(150, Game.getWidth() - 150);
 			int posY = NumUtil.getRoll(150, Game.getHeight() - 150);
 			
-			Goblin g = new Goblin(posX, posY);
-			monsters.add(g);
+			int type = NumUtil.getRoll(0, 1);
+			Enemy e = null;
+			
+			switch (type) {
+			case 0: e = new Goblin(posX, posY); break;
+			case 1: e = new Whodundid(posX, posY); break;
+			}
+			
+			monsters.add(e);
 			//g.setDrawHitbox(true);
 			
-			addObject(g);
+			addObject(e);
 		}
 		
 		removeObject(mainCharacter);
