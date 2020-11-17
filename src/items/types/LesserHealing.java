@@ -1,8 +1,6 @@
 package items.types;
 
 import entities.Entity;
-import entities.player.Player;
-import items.Item;
 import items.Potion;
 
 public class LesserHealing extends Potion {
@@ -14,7 +12,7 @@ public class LesserHealing extends Potion {
 	@Override
 	public void heal(Entity entity, double healthIn) {
 		System.out.println("Healed 30 HP! :D");
-		entity.setHealth(30);
+		entity.heal(30);
 	}
 	
 }

@@ -4,6 +4,7 @@ import eWindow.windowTypes.OverlayWindow;
 import eWindow.windowTypes.WindowParent;
 import eWindow.windowTypes.interfaces.IWindowObject;
 import eWindow.windowTypes.interfaces.IWindowParent;
+import gameScreens.TestScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.AbstractScreen;
 import gameSystems.gameRenderer.GameRenderer;
@@ -29,7 +30,7 @@ import util.storageUtil.EDimension;
 
 public class Game {
 	
-	public static final Logger QoTLogger = Logger.getLogger("Envision");
+	public static final Logger QoTLogger = Logger.getLogger("QoT");
 	public static long handle = -1;
 	private static Game instance = null;
 	
@@ -40,7 +41,7 @@ public class Game {
 	private static TextureSystem textureSystem;
 	private static GameRenderer gameRenderer;
 	
-	private static double gameScale = 2;
+	private static double gameScale = 1;
 	private static int width;
 	private static int height;
 	
@@ -120,10 +121,12 @@ public class Game {
 	
 	public void runGame() {
 		if (!running) {
-			//Thread t = new Thread(Main.m);
-			//t.start();
+			Thread t = new Thread(Main.m);
+			t.start();
 			
 			running = true;
+			
+			currentScreen = new TestScreen();
 			
 			while (running && !GLFW.glfwWindowShouldClose(handle)) {
 				
@@ -131,8 +134,8 @@ public class Game {
 					runningTime = System.currentTimeMillis() - startTime;
 					runTick();
 					
-					//if (GLFW.glfwWindowShouldClose(Game.getWindowHandle())) { running = false; }
-					//if (Keyboard.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) { running = false; }
+					if (GLFW.glfwWindowShouldClose(Game.getWindowHandle())) { running = false; }
+					if (Keyboard.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) { running = false; }
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -165,6 +168,10 @@ public class Game {
 	private void renderTick() {
 		//update framerate counter
 		updateFramerate();
+		
+		if (currentScreen != null) {
+			currentScreen.drawObject(Mouse.getMx(), mouse.getMy());
+		}
 		
 		GLObject.drawRect(50, 50, 150, 150, EColors.red);
 		

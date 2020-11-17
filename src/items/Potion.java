@@ -37,7 +37,7 @@ public class Potion extends Item {
 	// Methods
 	
 	public void heal(Entity entity, double healthIn) {
-		entity.setHealth(healthIn);
+		entity.heal(healthIn);
 	}
 	
 }

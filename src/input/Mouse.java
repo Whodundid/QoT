@@ -63,6 +63,15 @@ public class Mouse extends GLFWMouseButtonCallback {
 	
 	private void distribute(int action, int mXIn, int mYIn, int button, int change) {
 		if (Game.getGLInit()) {
+			if (Game.currentScreen != null) {
+				switch (action) {
+				case 0: Game.currentScreen.mouseReleased(mXIn, mYIn, button); break;
+				case 1: Game.currentScreen.mousePressed(mXIn, mYIn, button); break;
+				case 2: Game.currentScreen.mouseScrolled(change); break;
+				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
+				}
+			}
+			
 			GameRenderer r = Game.getGameRenderer();
 			if (r != null) {
 				switch (action) {

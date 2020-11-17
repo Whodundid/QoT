@@ -1,14 +1,14 @@
 package entities.player;
 
 import java.util.Scanner;
-
+import main.Game;
 import entities.Entity;
-import entities.enemy.Enemy;
 import items.Item;
 import items.Potion;
 import items.Weapon;
 import items.types.LesserHealing;
 import util.mathUtil.NumUtil;
+import util.renderUtil.EColors;
 
 public class Player extends Entity {
 	
@@ -29,6 +29,19 @@ public class Player extends Entity {
 		inventory = new Inventory(this);
 		flameDamage = 10;
 		healAmount = 10;
+		
+		init(Game.getGameRenderer(), 0, 0);
+	}
+	
+	@Override
+	public void drawObject(int mXIn, int mYIn) {
+		drawCircle(midX, midY - 20, 19, 30, EColors.black);
+		drawCircle(midX, midY - 19, 18, 30, EColors.white);
+		
+		drawRect(midX - 4, midY - 18, midX + 4, midY + 9, EColors.black);
+		drawRect(midX - 5, midY - 19, midX + 5, midY + 10, EColors.cyan);
+		
+		super.drawObject(mXIn, mYIn);
 	}
 	
 	
@@ -129,10 +142,6 @@ public class Player extends Entity {
 		else {
 			System.out.println("The item you specified is not usable.");
 		}
-		
 	}
-	
-	
-	
 	
 }

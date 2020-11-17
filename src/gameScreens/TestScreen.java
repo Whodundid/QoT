@@ -12,10 +12,6 @@ import util.renderUtil.EColors;
 
 public class TestScreen extends GameScreen {
 	
-	float val1 = 1;
-	float val2 = 1;
-	float val3 = 1;
-	
 	float xf = 0;
 	float yf = 0;
 	
@@ -49,6 +45,8 @@ public class TestScreen extends GameScreen {
 			Game.stopGame();
 		}
 		
+		float val1, val2, val3;
+		
 		if (Mouse.isButtonDown(0)) {
 			val1 = 0.25f;
 			val2 = 0.77f;
@@ -74,6 +72,14 @@ public class TestScreen extends GameScreen {
 		GL11.glEnd();
 		
 		super.drawScreen(mXIn, mYIn);
+	}
+	
+	@Override
+	public void mousePressed(int mXIn, int mYIn, int button) {
+		if (button == 0) {
+			PointerPress p = new PointerPress(mXIn, mYIn);
+			Game.getGameRenderer().addObject(p);
+		}
 	}
 	
 	@Override

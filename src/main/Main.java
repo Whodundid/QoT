@@ -3,6 +3,7 @@ package main;
 import java.util.Scanner;
 import shop.Shopkeeper;
 import sound.Songs;
+import util.miscUtil.TracingPrintStream;
 import entities.enemy.Enemy;
 import entities.enemy.types.Goblin;
 import entities.enemy.types.Whodundid;
@@ -15,7 +16,8 @@ public class Main implements Runnable {
 	public static Main m = null;
 	
 	public static void main(String[] args) {
-		//m = new Main();
+		TracingPrintStream.enableTrace();
+		m = new Main();
 		Game.getGame().runGame();
 	}
 	

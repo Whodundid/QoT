@@ -326,6 +326,7 @@ public abstract class GLObject {
 		}
 	}
 	
+	/** Draws a texture with a given texture coord offset. */
 	public static void drawTexture(double x, double y, double w, double h, int tX, int tY, int tW, int tH, GameTexture imageIn) {
 		if (imageIn != null) {
 			
@@ -356,7 +357,6 @@ public abstract class GLObject {
 			alphaOff();
 			blendOff();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			
 		}
 	}
 	

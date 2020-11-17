@@ -456,8 +456,10 @@ public class WindowObjectS extends EGui {
 	
 	public static void mouseReleased(IWindowObject objIn, int mX, int mY, int button) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.Released));
-		if (objIn.getTopParent().getDefaultFocusObject() != null) { objIn.getTopParent().getDefaultFocusObject().requestFocus(); }
-		if (objIn.getTopParent().getModifyType() == ObjectModifyType.Resize) { objIn.getTopParent().clearModifyingObject(); }
+		if (objIn.getTopParent() != null) {
+			if (objIn.getTopParent().getDefaultFocusObject() != null) { objIn.getTopParent().getDefaultFocusObject().requestFocus(); }
+			if (objIn.getTopParent().getModifyType() == ObjectModifyType.Resize) { objIn.getTopParent().clearModifyingObject(); }
+		}
 	}
 	
 	public static void mouseDragged(IWindowObject objIn, int mX, int mY, int button, long timeSinceLastClick) {}

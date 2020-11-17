@@ -8,7 +8,7 @@ public class Shopkeeper extends Entity {
 	private Shop shop = new Shop();
 	
 	public Shopkeeper(String name, double gold) {
-		super(name, 0, 58858588, 22233334, 123212321, 11331133, gold, 55);
+		super(name, 0, 58858588, 22233334, 123212321, 11331133, 55, gold);
 	}
 	
 	public void displayShop() {

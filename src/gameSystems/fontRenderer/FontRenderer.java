@@ -87,7 +87,7 @@ public class FontRenderer {
 	}
 	
 	private void drawChar(double posX, double posY, int tX, int tY, int color) {
-		GLObject.drawTexture(posX, posY, 8, 16, tX, tY, 16, 32, currentFont.getFontTexture());
+		GLObject.drawTexture(posX, posY, 16, 32, tX, tY, 16, 32, currentFont.getFontTexture());
 	}
 
 	public int getCharWidth(char c) {

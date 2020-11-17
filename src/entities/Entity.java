@@ -1,8 +1,9 @@
 package entities;
 
+import eWindow.windowTypes.WindowObject;
 import util.mathUtil.NumUtil;
 
-public abstract class Entity {
+public abstract class Entity extends WindowObject {
 	
 	public String name;
 	public int level;
@@ -26,17 +27,9 @@ public abstract class Entity {
 		isDead = false;
 	}
 	
-	// Getters
-	public String getName() { return name; }
-	public int getLevel() { return level; }
-	public double getHealth() { return health; }
-	public double getMana() { return mana; }
-	public double getGold() { return gold; }
-	public double getDamage() { return damage; }
-	
-	public void setHealth(double healthIn) {
-		health = health + healthIn;
-	}
+	//---------
+	// Methods
+	//---------
 	
 	public void hurt(double amount) {
 		System.out.println(name + " takes " + amount + " damage!");
@@ -59,6 +52,30 @@ public abstract class Entity {
 		isDead = true;
 	}
 	
+	//---------
+	// Getters
+	//---------
+	
+	public String getName() { return name; }
+	public int getLevel() { return level; }
+	public double getHealth() { return health; }
+	public double getMana() { return mana; }
+	public double getGold() { return gold; }
+	public double getDamage() { return damage; }
+	
+	//---------
+	// Setters
+	//---------
+	
+	//public void setHealth(double healthIn) {
+	//	health = health + healthIn;
+	//}
+	
+	//-------------------
+	// Protected Methods
+	//-------------------
+	
+	/** Returns true if this entity had enough mana to use the given spell. */
 	protected boolean manaCheck(double spellCost) {
 		if (mana >= spellCost) {
 			drainMana(spellCost);

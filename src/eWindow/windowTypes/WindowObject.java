@@ -280,7 +280,12 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	@Override public IWindowParent getWindowParent() { return WindowObjectS.getWindowParent(this); }
 	
 	//focus
-	@Override public boolean hasFocus() { if (getTopParent().getFocusedObject() != null) { return getTopParent().getFocusedObject().equals(this); } return false; }
+	@Override public boolean hasFocus() {
+		if (getTopParent().getFocusedObject() != null && getTopParent() != null) {
+			return getTopParent().getFocusedObject().equals(this);
+		}
+		return false;
+	}
 	@Override
 	public boolean relinquishFocus() {
 		if (getTopParent().doesFocusLockExist()) {
