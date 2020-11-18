@@ -23,7 +23,8 @@ public class Goblin extends Enemy {
 	
 	// This gets the loot and returns it
 	public void getLoot() {
-		treasure = (int) (Math.random() * 30);
-		loot = (double) (treasure);
+		treasure = (int) Math.random() * 30;
+		loot = (double) treasure;
 	}
+	
 }

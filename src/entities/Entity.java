@@ -1,8 +1,9 @@
 package entities;
 
 import eWindow.windowTypes.WindowObject;
-import gameScreens.DamageSplash;
 import main.Game;
+import particles.DamageSplash;
+import util.mathUtil.Direction;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
 
@@ -40,6 +41,20 @@ public abstract class Entity extends WindowObject {
 	//---------
 	// Methods
 	//---------
+	
+	public void move(Direction dir) {
+		switch (dir) {
+		case N: move(0, -1); break;
+		case NE: move(1, -1); break;
+		case E: move(1, 0); break;
+		case SE: move(1, 1); break;
+		case S: move(0, 1); break;
+		case SW: move(-1, 1); break;
+		case W: move(-1, 0); break;
+		case NW: move(-1, -1); break;
+		default: break;
+		}
+	}
 	
 	public void hurt(double amount) {
 		System.out.println(name + " takes " + amount + " damage!");

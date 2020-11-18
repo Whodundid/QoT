@@ -128,6 +128,10 @@ public class NumUtil {
 		return ThreadLocalRandom.current().nextDouble(min, max + 1);
 	}
 	
+	public static Direction randomDir() {
+		return Direction.get(getRoll(0, 7));
+	}
+	
 	/** Returns a random char that can be made from any type-able ascii character. */
 	public static char randomChar() { return randomChar(RandStringTypes.ANY); }
 	/** Returns a random char from a specified set of RandStringTypes. */

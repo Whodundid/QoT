@@ -22,6 +22,8 @@ import openGL_Util.shader.Shaders;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import terminal.TerminalHandler;
+import terminal.window.ETerminal;
 import util.renderUtil.CenterType;
 import util.renderUtil.WindowSize;
 import util.storageUtil.EArrayList;
@@ -39,6 +41,7 @@ public class Game {
 	private static FontRenderer fontRenderer;
 	private static TextureSystem textureSystem;
 	private static GameRenderer gameRenderer;
+	private static TerminalHandler terminalHandler;
 	
 	private static double gameScale = 1;
 	private static int width;
@@ -84,7 +87,7 @@ public class Game {
 		GLFW.glfwMakeContextCurrent(handle);
 		
 		GL.createCapabilities();
-		GLFW.glfwSwapInterval(1);
+		GLFW.glfwSwapInterval(0);
 		
 		//initialize shaders
 		Shaders.init();
@@ -96,6 +99,7 @@ public class Game {
 		textureSystem = TextureSystem.getInstance();
 		fontRenderer = FontRenderer.getInstance();
 		gameRenderer = GameRenderer.getInstance();
+		terminalHandler = TerminalHandler.getInstance();
 		
 		GLFW.glfwSetKeyCallback(handle, keyboard);
 		GLFW.glfwSetMouseButtonCallback(handle, mouse);
@@ -107,6 +111,8 @@ public class Game {
 		
 		Textures.registerTextures(textureSystem);
 		EntityTextures.registerTextures(textureSystem);
+		
+		terminalHandler.initCommands();
 		
 		//testing things...
 		
@@ -153,6 +159,11 @@ public class Game {
 		if (updateCounter == Long.MAX_VALUE) { updateCounter = 0; }
 		else { updateCounter++; }
 		
+		//debug terminal
+		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_V) && !isEGuiOpen(ETerminal.class)) {
+			displayWindow(new ETerminal());
+		}
+		
 		//update window title
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();
@@ -187,7 +198,7 @@ public class Game {
 			running = false;
 			
 			textureSystem.destroyAllTextures();
-			GL.setCapabilities(null);
+			//GL.setCapabilities(null);
 			
 			GLFW.glfwDestroyWindow(handle);
 			GLFW.glfwTerminate();
@@ -447,6 +458,8 @@ public class Game {
 	public static TextureSystem getTextureSystem() { return textureSystem; }
 	/** Returns this game's central object rendering system. */
 	public static GameRenderer getGameRenderer() { return gameRenderer; }
+	/** Returns this game's central terminal command handler. */
+	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
 	
 	//----------------
 	// Static Setters
@@ -454,5 +467,7 @@ public class Game {
 	
 	/** Sets whether the game should run in a debug state. */
 	public static void setDebugMode(boolean val) { isDebug = val; }
+
+	
 	
 }

@@ -1,5 +1,6 @@
-package gameScreens;
+package gameWindows;
 
+import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.WindowParent;
 import eWindow.windowTypes.interfaces.IActionObject;
 import entities.player.Player;
@@ -7,6 +8,7 @@ import entities.player.Player;
 public class InventoryWindow extends WindowParent {
 	
 	Player thePlayer;
+	WindowButton use, drop, info;
 	
 	public InventoryWindow(Player in) {
 		super();

@@ -99,6 +99,23 @@ public class EUtil {
 	//String Helpers
 	//--------------
 	
+	/** Returns a string made from the given char repeated num times. */
+	public static String repeatStr(String in, int num) {
+		return new String(new char[num]).replace("\0", in);
+	}
+	
+	public static int countSpaces(String in) { return countChar(in, ' '); }
+	public static int countChar(String in, char test) {
+		if (in != null) {
+			int num = 0;
+			for (int i = 0; i < in.length(); i++) {
+				if (in.charAt(i) == test) { num++; }
+			}
+			return num;
+		}
+		return -1;
+	}
+	
 	public static String combineAll(String[] in) { return combineAll(in, ""); }
 	public static String combineAll(String[] in, String spacer) {
 		String r = "";

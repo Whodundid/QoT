@@ -1,4 +1,4 @@
-package gameScreens;
+package particles;
 
 import eWindow.windowTypes.WindowObject;
 import main.Game;

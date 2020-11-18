@@ -22,8 +22,8 @@ import util.storageUtil.StorageBox;
 
 public class WindowHeader extends WindowObject {
 	
-	public static int defaultHeight = 19;
-	public static int buttonWidth = 16;
+	public static int defaultHeight = 29;
+	public static int buttonWidth = 26;
 	public WindowButton fileUpButton, closeButton, maximizeButton, pinButton, minimizeButton;
 	public boolean fullClose = false;
 	public boolean drawDefault = true;
@@ -43,7 +43,7 @@ public class WindowHeader extends WindowObject {
 	protected EArrayList<HeaderTab> tabs = new EArrayList();
 	private StorageBox<Integer, Integer> clickPos = new StorageBox(-1, -1);
 	protected IWindowParent window;
-	private int buttonPos = 18;
+	private int buttonPos = buttonWidth + 2;
 	private boolean pressed = false;
 	
 	//-------------------------
@@ -159,7 +159,7 @@ public class WindowHeader extends WindowObject {
 					tx = startX + (width / 2 - tw / 2) + titleOffset + 1;
 				}
 				
-				drawString(tempTitle, tx, startY + height / 2 - 3, titleColor);
+				drawString(tempTitle, tx, startY + height / 2 - 8, titleColor);
 			}
 			
 			super.drawObject(mX, mY);
@@ -405,7 +405,7 @@ public class WindowHeader extends WindowObject {
 	//-----------------------------
 	
 	protected void addCloseButton() {
-		closeButton = new WindowButton(this, endX - buttonPos, startY + 2, 16, 16);
+		closeButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
 		//closeButton.setTextures(EMCResources.guiCloseButton, EMCResources.guiCloseButtonSel);
 		closeButton.setHoverText("Close");
 		closeButton.setObjectName("close button");
@@ -414,7 +414,7 @@ public class WindowHeader extends WindowObject {
 	}
 	
 	protected void addMaximizeButton() {
-		maximizeButton = new WindowButton(this, endX - buttonPos, startY + 2, 16, 16);
+		maximizeButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
 		
 		if (window != null && window.isMaximizable()) {
 			//maximizeButton.setButtonTexture(window.getMaximizedPosition() == ScreenLocation.center ? EMCResources.guiMinButton : EMCResources.guiMaxButton);
@@ -429,7 +429,7 @@ public class WindowHeader extends WindowObject {
 	}
 	
 	protected void addMinimizeButton() {
-		minimizeButton = new WindowButton(this, endX - buttonPos, startY + 2, 16, 16);
+		minimizeButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
 		//minimizeButton.setTextures(EMCResources.minimize, EMCResources.minimizeSel);
 		minimizeButton.setHoverText("Minimize");
 		minimizeButton.setObjectName("minimize button");
@@ -441,7 +441,7 @@ public class WindowHeader extends WindowObject {
 	}
 	
 	protected void addPinButton() {
-		pinButton = new WindowButton(this, endX - buttonPos, startY + 2, 16, 16) {
+		pinButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth) {
 			@Override
 			public void drawObject(int mXIn, int mYIn) {
 				if (window != null && window.isPinnable()) {
@@ -461,7 +461,7 @@ public class WindowHeader extends WindowObject {
 	}
 	
 	protected void addBackButton() {
-		fileUpButton = new WindowButton(this, startX + 2, startY + 2, 16, 16);
+		fileUpButton = new WindowButton(this, startX + 2, startY + 2, buttonWidth, buttonWidth);
 		//fileUpButton.setTextures(EMCResources.backButton, EMCResources.backButtonSel).setVisible(false);
 		fileUpButton.setHoverText("Go Back");
 		fileUpButton.setObjectName("back button");

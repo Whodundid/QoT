@@ -5,9 +5,11 @@ import eWindow.windowTypes.interfaces.IActionObject;
 import entities.Entity;
 import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
+import gameWindows.InventoryWindow;
 import main.Game;
 import sound.Audio;
 import sound.Songs;
+import util.renderUtil.EColors;
 import util.storageUtil.EDimension;
 
 public class BattleScreen extends GameScreen {
@@ -48,14 +50,15 @@ public class BattleScreen extends GameScreen {
 		
 		addObject(entA, entB);
 		
-		entA.setPosition(startX + 150, midY - 150 - entA.height / 2);
-		entB.setPosition(endX - 150 - entB.width, midY - 150 - entB.height / 2);
+		entA.setPosition(midX - 150 - entA.width, midY - 150 - entA.height / 2);
+		entB.setPosition(midX + 150, midY - 150 - entB.height / 2);
 		
 		addObject(attack, flame, heal, doNothing, openInventory);
 	}
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
+		drawRect(EColors.vdgray);
 		if (!isInventoryOpen()) { inventoryWindow = null; }
 		
 		drawStringC(lastMessage, midX, 20);
@@ -91,6 +94,7 @@ public class BattleScreen extends GameScreen {
 		
 		if (object == heal) {
 			if (entA instanceof Player) {
+				entB.hurt(((Player) entA).flameDamage);
 				((Player) entA).useHeal();
 			}
 			endTurn();

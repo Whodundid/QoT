@@ -3,7 +3,6 @@ package gameScreens;
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
 import entities.Entity;
-import entities.enemy.Enemy;
 import entities.enemy.types.Goblin;
 import entities.enemy.types.Whodundid;
 import entities.player.Player;
@@ -12,12 +11,13 @@ import gameSystems.textureSystem.GameTexture;
 import gameTextures.Textures;
 import input.Keyboard;
 import main.Game;
-import shop.WhodundidsBrother;
-
 import org.lwjgl.glfw.GLFW;
+import shop.WhodundidsBrother;
 import sound.Songs;
+import util.mathUtil.Direction;
 import util.mathUtil.NumUtil;
 import util.storageUtil.EArrayList;
+import util.storageUtil.EDimension;
 
 public class TestScreen extends GameScreen {
 	
@@ -39,7 +39,7 @@ public class TestScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		Songs.playSong(Songs.theme).loop();
+		//Songs.playSong(Songs.theme).loop();
 		buildMap();
 	}
 	
@@ -61,14 +61,14 @@ public class TestScreen extends GameScreen {
 		
 		addObject(damagePlayer, rebuildMap);
 		
-		randomMonsters(1);
+		randomMonsters(2);
 	}
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		super.drawScreen(mXIn, mYIn);
 		
-		if (System.currentTimeMillis() - time >= 5000) {
+		if (System.currentTimeMillis() - time >= 2000) {
 			time = System.currentTimeMillis();
 			if (stage < 4) {
 				growTiles();
@@ -80,18 +80,24 @@ public class TestScreen extends GameScreen {
 			stage++;
 		}
 		
+		//draw tiles
 		for (int i = 0; i < mapTiles.length; i++) {
 			for (int j = 0; j < mapTiles[0].length; j++) {
 				int offset = (i % 2 == 1) ? 64 : 0;
 				
 				if (i % 2 == 0 || j < mapTiles[0].length - 1) {
-					//draw tiles
-					drawTexture(-64 + (j * 128) + offset, 32 + (i * 32), 128, 64, mapTiles[i][j]);
+					drawTexture(-64 + (j * 128) + offset, -32 + (i * 32), 128, 64, mapTiles[i][j]);
 				}
 			}
 		}
 		
-		drawString("FPS: " + Game.getFPS(), 50, 10);
+		drawString("HP: " + mainCharacter.getHealth() + "   MP: " + mainCharacter.getMana(), 10, 10);
+		
+		for (Entity e : monsters) {
+			Direction d = NumUtil.randomDir();
+			
+			e.move(d);
+		}
 		
 		if (Keyboard.isWDown()) { mainCharacter.move(0, -1); }
 		if (Keyboard.isADown()) { mainCharacter.move(-1, 0); }
@@ -129,8 +135,6 @@ public class TestScreen extends GameScreen {
 		//check if the player is touching any of the other monster's hitboxes
 		for (Entity e : monsters) {
 			if (mainCharacter.getDimensions().contains(e.getDimensions())) {
-				
-				System.out.println("TOUCHING: " + e);
 				Game.displayScreen(new BattleScreen(this, mainCharacter, e));
 			}
 		}
@@ -147,16 +151,23 @@ public class TestScreen extends GameScreen {
 		
 		//make new ones
 		for (int i = 0; i < number; i++) {
-			int posX = NumUtil.getRoll(150, Game.getWidth() - 150);
-			int posY = NumUtil.getRoll(150, Game.getHeight() - 150);
+			int posX, posY;
+			EDimension d;
 			
-			int type = NumUtil.getRoll(0, 2);
+			do {
+				posX = NumUtil.getRoll(150, Game.getWidth() - 150);
+				posY = NumUtil.getRoll(150, Game.getHeight() - 150);
+				d = new EDimension(posX, posY, posX + 150, posY + 150);
+			}
+			while (mainCharacter.getDimensions().contains(d));
+			
+			int type = NumUtil.getRoll(0, 1);
 			Entity e = null;
 			
 			switch (type) {
 			case 0: e = new Goblin(posX, posY); break;
 			case 1: e = new Whodundid(posX, posY); break;
-			case 2: e = new WhodundidsBrother(posX, posY); break;
+			//case 2: e = new WhodundidsBrother(posX, posY); break;
 			}
 			
 			monsters.add(e);
@@ -170,7 +181,7 @@ public class TestScreen extends GameScreen {
 	}
 	
 	private void buildMap() {
-		mapTiles = new GameTexture[Game.getWidth() / 64][Game.getHeight() / 32];
+		mapTiles = new GameTexture[Game.getWidth() / 32][Game.getHeight() / 64 + 2];
 		
 		for (int i = 0; i < mapTiles.length; i++) {
 			for (int j = 0; j < mapTiles[0].length; j++) {
@@ -179,15 +190,14 @@ public class TestScreen extends GameScreen {
 				
 				t = Textures.farmland_1;
 				
-				
-				if (rand >= 20) {
+				if (rand >= 30) {
 					switch (NumUtil.getRoll(0, 2)) {
 					case 0: t = Textures.dirt_1; break;
 					case 1: t = Textures.dirt_2; break;
 					case 2: t = Textures.dirt_3; break;
 					}
 				}
-				else if (rand >= 10) {
+				else if (rand >= 25) {
 					switch (NumUtil.getRoll(0, 2)) {
 					case 0: t = Textures.dirt_grass_1; break;
 					case 1: t = Textures.dirt_grass_2; break;

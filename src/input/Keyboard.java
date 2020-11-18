@@ -46,6 +46,8 @@ public class Keyboard extends GLFWKeyCallback {
 			keys[key] = action == GLFW.GLFW_PRESS;
 		}
 		
+		//System.out.println("action: " + action + " c: " + c + " key: " + key);
+		
 		//distribute the event
 		distribute(action, c, key);
 		
@@ -63,9 +65,9 @@ public class Keyboard extends GLFWKeyCallback {
 			GameRenderer r = Game.getGameRenderer();
 			if (r != null) {
 				switch (action) {
-				case 0: r.keyPressed(typedChar, keyCode); break;
-				case 1: r.keyReleased(typedChar, keyCode); break;
-				case 2: r.keyHeld(typedChar, keyCode); break;
+				case 0: r.keyReleased(typedChar, keyCode); break;
+				case 1: 
+				case 2: r.keyPressed(typedChar, keyCode); break;
 				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
 				}
 			}

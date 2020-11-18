@@ -118,7 +118,8 @@ public class WindowTextField extends ActionObject {
 		if (clickStartPos != -1) {
 			int i = (int) (mX - startX + 2);
 			if (enableBackgroundDrawing) { i -= 4; }
-			int cursorPos = Game.getFontRenderer().trimToWidth(text, i).length();
+			//int cursorPos = Game.getFontRenderer().trimToWidth(text, i).length();
+			int cursorPos = text.length();
 			setSelectionPos(cursorPos);
 		}
 		
@@ -132,7 +133,8 @@ public class WindowTextField extends ActionObject {
 			int i = (int) (mX - startX + 2);
 			if (enableBackgroundDrawing) { i -= 4; }
 			
-			int cursorPos = Game.getFontRenderer().trimToWidth(text, i).length();
+			//int cursorPos = Game.getFontRenderer().trimToWidth(text, i).length();
+			int cursorPos = text.length();
 			setCursorPosition(cursorPos);
 			
 			if (clickStartPos == -1) { clickStartPos = cursorPos; }
@@ -377,9 +379,11 @@ public class WindowTextField extends ActionObject {
 		if (Game.getFontRenderer() != null) {
 			if (lineScrollOffset > i) { lineScrollOffset = i; }
 			int j = (int) getWidth();
-			String s = Game.getFontRenderer().trimToWidth(text.substring(lineScrollOffset), j);
+			//String s = Game.getFontRenderer().trimToWidth(text.substring(lineScrollOffset), j);
+			String s = text.substring(lineScrollOffset);
 			int k = s.length() + lineScrollOffset;
-			if (posIn == lineScrollOffset) { lineScrollOffset -= Game.getFontRenderer().trimToWidth(text, j, true).length(); }
+			//if (posIn == lineScrollOffset) { lineScrollOffset -= Game.getFontRenderer().trimToWidth(text, j, true).length(); }
+			if (posIn == lineScrollOffset) { lineScrollOffset -= text.length(); }
 			if (posIn > k) { lineScrollOffset += posIn - k; } 
 			else if (posIn <= lineScrollOffset) { lineScrollOffset -= lineScrollOffset - posIn; }
 			lineScrollOffset = NumUtil.clamp(lineScrollOffset, 0, i);
