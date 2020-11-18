@@ -34,9 +34,9 @@ public class Battle {
 					enemy1.hurt(player1.flameDamage);
 					player1.useHeal();
 					break;
-				case 3:System.out.println("You chose to do nothing...");
-				case 4: player1.utilizeInventory(null);
-				default: System.out.println(":D");
+				case 3: System.out.println("You chose to do nothing..."); break;
+				case 4: player1.utilizeInventory(null); break;
+				default: System.out.println();
 				}
 			}
 			

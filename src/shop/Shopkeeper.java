@@ -1,14 +1,15 @@
 package shop;
 
 import entities.Entity;
+import entities.enemy.Enemy;
 import items.*;
 
 public class Shopkeeper extends Entity {
 	
 	private Shop shop = new Shop();
 	
-	public Shopkeeper(String name, double gold) {
-		super(name, 0, 58858588, 22233334, 123212321, 11331133, 55, gold);
+	public Shopkeeper(String name, double maxHealth, double health, double maxMana, double mana, double damage, double gold) {
+		super(name, 0, maxHealth, health, maxMana, mana, damage, gold);
 	}
 	
 	public void displayShop() {

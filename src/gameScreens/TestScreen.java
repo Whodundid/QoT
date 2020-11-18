@@ -2,6 +2,7 @@ package gameScreens;
 
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
+import entities.Entity;
 import entities.enemy.Enemy;
 import entities.enemy.types.Goblin;
 import entities.enemy.types.Whodundid;
@@ -11,6 +12,8 @@ import gameSystems.textureSystem.GameTexture;
 import gameTextures.Textures;
 import input.Keyboard;
 import main.Game;
+import shop.WhodundidsBrother;
+
 import org.lwjgl.glfw.GLFW;
 import sound.Songs;
 import util.mathUtil.NumUtil;
@@ -22,7 +25,7 @@ public class TestScreen extends GameScreen {
 	WindowButton damagePlayer, rebuildMap;
 	GameTexture[][] mapTiles;
 	
-	EArrayList<Enemy> monsters = new EArrayList();
+	EArrayList<Entity> monsters = new EArrayList();
 	
 	float xf = 0;
 	float yf = 0;
@@ -124,7 +127,7 @@ public class TestScreen extends GameScreen {
 	private void checkIfBattle() {
 		
 		//check if the player is touching any of the other monster's hitboxes
-		for (Enemy e : monsters) {
+		for (Entity e : monsters) {
 			if (mainCharacter.getDimensions().contains(e.getDimensions())) {
 				
 				System.out.println("TOUCHING: " + e);
@@ -137,7 +140,7 @@ public class TestScreen extends GameScreen {
 	private void randomMonsters(int number) {
 		
 		//remove old
-		for (Enemy e : monsters) {
+		for (Entity e : monsters) {
 			removeObject(e);
 		}
 		monsters.clear();
@@ -147,12 +150,13 @@ public class TestScreen extends GameScreen {
 			int posX = NumUtil.getRoll(150, Game.getWidth() - 150);
 			int posY = NumUtil.getRoll(150, Game.getHeight() - 150);
 			
-			int type = NumUtil.getRoll(0, 1);
-			Enemy e = null;
+			int type = NumUtil.getRoll(0, 2);
+			Entity e = null;
 			
 			switch (type) {
 			case 0: e = new Goblin(posX, posY); break;
 			case 1: e = new Whodundid(posX, posY); break;
+			case 2: e = new WhodundidsBrother(posX, posY); break;
 			}
 			
 			monsters.add(e);

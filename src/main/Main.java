@@ -2,6 +2,7 @@ package main;
 
 import java.util.Scanner;
 import shop.Shopkeeper;
+import shop.WhodundidsBrother;
 import sound.Songs;
 import util.miscUtil.TracingPrintStream;
 import entities.enemy.Enemy;
@@ -66,12 +67,12 @@ public class Main implements Runnable {
 		Battle battle1 = new Battle(mainCharacter, goblin);
 		Battle theOne = new Battle(mainCharacter, new Whodundid());
 		
-		Shopkeeper shopKeeper = new Shopkeeper("Whodundid's Brother", 350);
-		shopKeeper.getShop().addItem(new LesserHealing());
-		System.out.println("------------");
-		shopKeeper.displayShop();
+		//Shopkeeper shopKeeper = new WhodundidsBrother();
+		//shopKeeper.getShop().addItem(new LesserHealing());
+		//System.out.println("------------");
+		//shopKeeper.displayShop();
 		
-		Battle theRealOne = new Battle(mainCharacter, shopKeeper);
+		//Battle theRealOne = new Battle(mainCharacter, shopKeeper);
 	}
 	
 }
