@@ -61,7 +61,7 @@ public class TestScreen extends GameScreen {
 		
 		addObject(damagePlayer, rebuildMap);
 		
-		randomMonsters(2);
+		randomMonsters(3);
 	}
 	
 	@Override
@@ -92,6 +92,7 @@ public class TestScreen extends GameScreen {
 		}
 		
 		drawString("HP: " + mainCharacter.getHealth() + "   MP: " + mainCharacter.getMana(), 10, 10);
+		drawString("Enemies Killed: " + mainCharacter.getBackgroundStats().getEnemiesKilled(), 10, 100);
 		
 		for (Entity e : monsters) {
 			Direction d = NumUtil.randomDir();

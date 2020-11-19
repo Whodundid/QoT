@@ -1,6 +1,9 @@
 package entities;
 
 import eWindow.windowTypes.WindowObject;
+import entities.player.Player;
+import gameScreens.BattleScreen;
+import gameSystems.questSystem.RouteTracker;
 import main.Game;
 import particles.DamageSplash;
 import util.mathUtil.Direction;
@@ -80,6 +83,12 @@ public abstract class Entity extends WindowObject {
 		isDead = true;
 	}
 	
+	public void kill(Player player) {
+		health = 0;
+		isDead = true;
+		player.getBackgroundStats().setEnemiesKilled(1);
+	}
+	
 	//---------
 	// Getters
 	//---------
@@ -115,5 +124,8 @@ public abstract class Entity extends WindowObject {
 		System.out.println("YOU HAVE NO MANA, BITCH");
 		return false;
 	}
+
+	public abstract RouteTracker getBackgroundStats();
+
 	
 }

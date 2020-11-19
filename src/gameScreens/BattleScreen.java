@@ -71,6 +71,7 @@ public class BattleScreen extends GameScreen {
 				Game.displayScreen(new GameOverScreen());
 			}
 			else {
+				entA.getBackgroundStats().setEnemiesKilled(1);
 				endBattle();
 			}
 		}

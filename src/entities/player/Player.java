@@ -3,6 +3,8 @@ package entities.player;
 import java.util.Scanner;
 import main.Game;
 import entities.Entity;
+import gameSystems.questSystem.PathFinder;
+import gameSystems.questSystem.RouteTracker;
 import gameTextures.EntityTextures;
 import items.Item;
 import items.Potion;
@@ -21,6 +23,8 @@ public class Player extends Entity {
 	public double flameDamage;
 	public double healAmount;
 	public double weaponDamage = 0;
+	private RouteTracker routes = new RouteTracker();
+	private PathFinder findPath = new PathFinder(null);
 	
 	public Player(String nameIn) { this(nameIn, 0, 0); }
 	public Player(String nameIn, int posX, int posY) {
@@ -46,6 +50,7 @@ public class Player extends Entity {
 		
 		super.kill();
 	}
+	
 	
 	// Leveling up
 	public void levelUp() {
@@ -116,6 +121,11 @@ public class Player extends Entity {
 	
 	public Inventory getInventory() {
 		return inventory;
+	}
+	
+	@Override
+	public RouteTracker getBackgroundStats() {
+		return routes;
 	}
 	
 	public void utilizeInventory(String nameIn) {
