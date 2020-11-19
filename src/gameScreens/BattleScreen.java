@@ -122,6 +122,7 @@ public class BattleScreen extends GameScreen {
 	}
 	
 	private void drawStats(Entity in) {
+		drawStringC(in.getName(), in.midX, in.startY - 69);
 		drawStringC("HP: " + in.getHealth() + "  MP: " + in.getMana(), in.midX, in.startY - 30);
 	}
 	

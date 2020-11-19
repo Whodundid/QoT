@@ -46,7 +46,7 @@ public class TestScreen extends GameScreen {
 	@Override
 	public void initObjects() {
 		if (mainCharacter == null) {
-			mainCharacter = new Player("The Guy", Game.getWidth() / 2, Game.getHeight() / 2);
+			mainCharacter = new Player("The Player", Game.getWidth() / 2, Game.getHeight() / 2);
 		}
 		
 		//mainCharacter.setDrawHitbox(true);
