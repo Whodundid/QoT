@@ -2,6 +2,7 @@ package shop;
 
 import entities.Entity;
 import entities.enemy.Enemy;
+import gameSystems.questSystem.RouteTracker;
 import items.*;
 
 public class Shopkeeper extends Entity {
@@ -23,5 +24,7 @@ public class Shopkeeper extends Entity {
 	public Shop getShop() {
 		return shop;
 	}
+
+	@Override public RouteTracker getBackgroundStats() { return null; }
 	
 }

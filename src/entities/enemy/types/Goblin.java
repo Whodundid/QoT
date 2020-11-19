@@ -1,6 +1,7 @@
 package entities.enemy.types;
 
 import entities.enemy.Enemy;
+import gameSystems.questSystem.RouteTracker;
 import gameTextures.EntityTextures;
 import main.Game;
 
@@ -26,5 +27,7 @@ public class Goblin extends Enemy {
 		treasure = (int) Math.random() * 30;
 		loot = (double) treasure;
 	}
+	
+	@Override public RouteTracker getBackgroundStats() { return null; }
 	
 }

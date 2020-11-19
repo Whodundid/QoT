@@ -1,6 +1,7 @@
 package entities.enemy.types;
 
 import entities.enemy.Enemy;
+import gameSystems.questSystem.RouteTracker;
 import gameTextures.EntityTextures;
 import main.Game;
 
@@ -18,5 +19,7 @@ public class Whodundid extends Enemy {
 		drawTexture(EntityTextures.whodundid);
 		super.drawObject(mXIn, mYIn);
 	}
+	
+	@Override public RouteTracker getBackgroundStats() { return null; }
 	
 }
