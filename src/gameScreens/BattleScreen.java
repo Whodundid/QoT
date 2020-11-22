@@ -3,6 +3,7 @@ package gameScreens;
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
 import entities.Entity;
+import entities.enemy.types.Whodundid;
 import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
 import gameWindows.InventoryWindow;
@@ -36,7 +37,7 @@ public class BattleScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		Songs.playSong(currentSong = Songs.darkCave).loop();
+		Songs.playSong((entB instanceof Whodundid) ? Songs.darkCave : Songs.battleTheme);
 		
 		oldA = entA.getDimensions();
 		oldB = entB.getDimensions();
@@ -157,6 +158,7 @@ public class BattleScreen extends GameScreen {
 			if (inventoryWindow != null) { inventoryWindow.close(); }
 			
 			Game.displayScreen(prev);
+			Songs.stopAllMusic();
 		}
 	}
 	

@@ -4,6 +4,8 @@ import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
 import entities.Entity;
 import entities.enemy.types.Goblin;
+import entities.enemy.types.Thyrah;
+import entities.enemy.types.TollBoar;
 import entities.enemy.types.Whodundid;
 import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
@@ -161,12 +163,14 @@ public class TestScreen extends GameScreen {
 			}
 			while (mainCharacter.getDimensions().contains(d));
 			
-			int type = NumUtil.getRoll(0, 1);
+			int type = NumUtil.getRoll(0, 3);
 			Entity e = null;
 			
 			switch (type) {
 			case 0: e = new Goblin(posX, posY); break;
 			case 1: e = new Whodundid(posX, posY); break;
+			case 2: e = new TollBoar(posX, posY); break;
+			case 3: e = new Thyrah(posX, posY); break;
 			//case 2: e = new WhodundidsBrother(posX, posY); break;
 			}
 			

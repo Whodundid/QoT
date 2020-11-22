@@ -29,7 +29,7 @@ public class Audio {
 			clip.setFramePosition(0);
 			clip.start();
 			
-			setVolume(0.0125f);
+			setVolume(0.125f);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
