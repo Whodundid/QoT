@@ -97,7 +97,7 @@ public class TestScreen extends GameScreen {
 		
 		for (Entity e : monsters) {
 			Direction d = NumUtil.randomDir();
-			//e.move(d);
+			e.move(d);
 		}
 		
 		if (Keyboard.isWDown()) { mainCharacter.move(0, -1); }
@@ -119,6 +119,7 @@ public class TestScreen extends GameScreen {
 				mainCharacter.hurt(5);
 			}
 		}
+		
 		if (object == rebuildMap) {
 			buildMap();
 		}
@@ -180,7 +181,7 @@ public class TestScreen extends GameScreen {
 	}
 	
 	private void buildMap() {
-		mapTiles = new GameTexture[Game.getHeight() / 32 + 2][Game.getWidth() / 128 + 1];
+		mapTiles = new GameTexture[Game.getHeight() / 32 + 2][Game.getWidth() / 128 + 2];
 		
 		for (int i = 0; i < mapTiles.length; i++) {
 			for (int j = 0; j < mapTiles[0].length; j++) {
