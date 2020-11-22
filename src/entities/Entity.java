@@ -3,6 +3,7 @@ package entities;
 import eWindow.windowTypes.WindowObject;
 import entities.player.Player;
 import gameSystems.questSystem.RouteTracker;
+import particles.DamageSplash;
 import util.mathUtil.Direction;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
@@ -58,6 +59,7 @@ public abstract class Entity extends WindowObject {
 	
 	public void hurt(double amount) {
 		health = NumUtil.clamp(health - amount, 0, health);
+		addObject(new DamageSplash(midX, startY, amount));
 		if (health <= 0) { kill(); }
 	}
 	

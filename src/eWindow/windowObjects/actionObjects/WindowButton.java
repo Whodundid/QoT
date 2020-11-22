@@ -2,6 +2,7 @@ package eWindow.windowObjects.actionObjects;
 
 import eWindow.windowTypes.ActionObject;
 import eWindow.windowTypes.interfaces.IWindowObject;
+import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.textureSystem.GameTexture;
 import input.Mouse;
 import java.util.function.Consumer;
@@ -112,8 +113,8 @@ public class WindowButton extends ActionObject {
 		//------------------------------------
 		
 		if (drawString) {
-			if (drawCentered) { drawStringC(displayString, midX, midY, stringColor); }
-			else { drawString(displayString, midX, midY, stringColor); }
+			if (drawCentered) { drawStringC(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2, stringColor); }
+			else { drawString(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2, stringColor); }
 		}
 		
 		super.drawObject(mX, mY);

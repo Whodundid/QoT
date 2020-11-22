@@ -41,7 +41,6 @@ public class TestScreen extends GameScreen {
 	public void initScreen() {
 		Songs.playSong(Songs.theme).loop();
 		buildMap();
-		randomMonsters(3);
 	}
 	
 	@Override
@@ -57,16 +56,14 @@ public class TestScreen extends GameScreen {
 		
 		addObject(mainCharacter);
 		
-		damagePlayer = new WindowButton(this, 5, Game.getHeight() - 60, 100, 55, "Damage");
+		damagePlayer = new WindowButton(this, 5, Game.getHeight() - 60, 150, 55, "Damage");
 		rebuildMap = new WindowButton(this, damagePlayer.endX + 20, Game.getHeight() - 60, 100, 55, "Map");
 		
 		IActionObject.setActionReceiver(this, damagePlayer, rebuildMap);
 		
 		addObject(damagePlayer, rebuildMap);
 		
-		if (monsters.isNotEmpty()) {
-			for (Entity e : monsters) { addObject(e); }
-		}
+		randomMonsters(3);
 	}
 	
 	@Override
@@ -90,7 +87,7 @@ public class TestScreen extends GameScreen {
 				int offset = (i % 2 == 1) ? 64 : 0;
 				
 				if (i % 2 == 0 || j < mapTiles[0].length - 1) {
-					drawTexture(-64 + (j * 128) + offset + 64, -32 + (i * 32) + 32, 128, 64, mapTiles[i][j]);
+					drawTexture(-64 + (j * 128) + offset, -32 + (i * 32), 128, 64, mapTiles[i][j]);
 				}
 			}
 		}
@@ -183,7 +180,7 @@ public class TestScreen extends GameScreen {
 	}
 	
 	private void buildMap() {
-		mapTiles = new GameTexture[Game.getHeight() / 32][Game.getWidth() / 128];
+		mapTiles = new GameTexture[Game.getHeight() / 32 + 2][Game.getWidth() / 128 + 1];
 		
 		for (int i = 0; i < mapTiles.length; i++) {
 			for (int j = 0; j < mapTiles[0].length; j++) {

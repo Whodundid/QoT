@@ -54,7 +54,7 @@ public class FontRenderer {
 	
 	public GameFont getCurrentFont() { return currentFont; }
 	
-	public int getStringWidth(String in) { return (int) (in.length() * (16 / Game.getGameScale()) + 1); }
+	public int getStringWidth(String in) { return (int) (in.length() * (16 / Game.getGameScale())); }
 	
 	//--------------------
 	//FontRenderer Setters

@@ -91,17 +91,17 @@ public class BattleScreen extends GameScreen {
 		
 		//flame attack
 		if (object == flame) {
-			if (entA instanceof Player) {
-				((Player) entA).useFlame(entB);
+			if (entA instanceof Player p) {
+				p.useFlame(entB);
 			}
 			endTurn();
 		}
 		
 		//heal spell
 		if (object == heal) {
-			if (entA instanceof Player) {
-				entB.hurt(((Player) entA).flameDamage);
-				((Player) entA).useHeal();
+			if (entA instanceof Player p) {
+				entB.hurt(p.flameDamage);
+				p.useHeal();
 			}
 			endTurn();
 		}
