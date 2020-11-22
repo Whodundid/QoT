@@ -298,7 +298,7 @@ public class StaticTopParent extends EGui {
 	}
 	
 	/** Removes all windows from the topParent that are not pinned. */
-	public static ITopParent removeUnpinnedWindows(ITopParent objIn) {
+	public static ITopParent removeUnpinnedObjects(ITopParent objIn) {
 		
 		//check in both the current objects and the objects that will be added
 		EArrayList<IWindowParent> windows = new EArrayList();
@@ -332,7 +332,7 @@ public class StaticTopParent extends EGui {
 	public static ITopParent removeAllObjects(ITopParent objIn) {
 		
 		//check in both the current objects and the objects that will be added
-		EArrayList<IWindowObject> objects = EArrayList.combineLists(objIn.getObjects(), objIn.getAddingObjects());
+		EArrayList<IWindowObject> objects = objIn.getCombinedObjects();
 		
 		for (IWindowObject p : objects) {
 			EArrayList<IWindowObject> childObjects = p.getAllChildren();
@@ -346,7 +346,7 @@ public class StaticTopParent extends EGui {
 	}
 	
 	/** Returns true if there are any pinned windows within the specified topParent. */
-	public static boolean hasPinnedWindows(ITopParent objIn) {
+	public static boolean hasPinnedObjects(ITopParent objIn) {
 		//check in both the current objects and the objects that will be added
 		for (IWindowObject o : EArrayList.combineLists(objIn.getObjects(), objIn.getAddingObjects())) {
 			if (o instanceof IWindowParent) { //only windows can be pinned
@@ -443,12 +443,12 @@ public class StaticTopParent extends EGui {
 	
 	//mouse checks
 	/** Returns true if the mouse is over any object edge. */
-	public static boolean isMouseOnObjEdge(ITopParent objIn, int mX, int mY) {
-		return getEdgeAreaMouseIsOn(objIn, mX, mY) != ScreenLocation.out;
+	public static boolean isMouseOnObjEdge(ITopParent objIn) {
+		return getEdgeAreaMouseIsOn(objIn) != ScreenLocation.out;
 	}
 	
 	/** Returns the ScreenLocation type of any object the mouse is currently over. */
-	public static ScreenLocation getEdgeAreaMouseIsOn(ITopParent objIn, int mX, int mY) {
+	public static ScreenLocation getEdgeAreaMouseIsOn(ITopParent objIn) {
 		//check in both the objects on screen and the objects being added
 		for (IWindowObject o : EArrayList.combineLists(objIn.getObjects(), objIn.getAddingObjects())) {
 			ScreenLocation loc = o.getEdgeAreaMouseIsOn();
@@ -458,11 +458,11 @@ public class StaticTopParent extends EGui {
 	}
 	
 	/** Returns true if the cursor is currently inside an EGuiHeader object. */
-	public static boolean isMouseInsideHeader(ITopParent objIn, int mX, int mY) {
+	public static boolean isMouseInsideHeader(ITopParent objIn) {
 		return EUtil.forEachTest(objIn.getAllChildrenUnderMouse(), o -> (o instanceof WindowHeader), true, false);
 	}
 	
-	public static WindowHeader getHeaderUnderMouse(ITopParent objIn, int mX, int mY) {
+	public static WindowHeader getHeaderUnderMouse(ITopParent objIn) {
 		return (WindowHeader) EUtil.getFirst(objIn.getAllChildrenUnderMouse(), o -> (o instanceof WindowHeader));
 	}
 	
@@ -499,9 +499,12 @@ public class StaticTopParent extends EGui {
 	}
 	
 	/** Returns a list of all objects that currently under the cursor. */
-	public static EArrayList<IWindowObject> getAllObjectsUnderMouse(ITopParent objIn, int mX, int mY) {
+	public static EArrayList<IWindowObject> getAllObjectsUnderMouse(ITopParent objIn) {
 		EArrayList<IWindowObject> underMouse = new EArrayList();
 		EArrayList<IWindowObject> children = objIn.getAllChildren();
+		
+		int mX = Mouse.getMx();
+		int mY = Mouse.getMy();
 		
 		//don't check if an object is being resized
 		if (objIn.getModifyType() != ObjectModifyType.Resize) {

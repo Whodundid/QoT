@@ -29,6 +29,10 @@ public class WindowScrollBar extends ActionObject {
 	protected IWindowParent window;
 	private StorageBox<Integer, Integer> mousePos = new StorageBox(0, 0);
 	
+	//--------------
+	// Constructors
+	//--------------
+	
 	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn) {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, ScreenLocation.right, 3); 
 	}
@@ -74,6 +78,8 @@ public class WindowScrollBar extends ActionObject {
 		window = getWindowParent();
 	}
 	
+	//-------------------------------------------------------------------------
+	
 	private void setThumb() {
 		if (vertical) {
 			thumbStartX = endX - scrollBarThickness;
@@ -88,6 +94,8 @@ public class WindowScrollBar extends ActionObject {
 			thumbEndY = startY + scrollBarThickness;
 		}
 	}
+	
+	//-------------------------------------------------------------------------
 	
 	public void onResizeUpdate(double val, double xIn, double yIn, ScreenLocation areaIn) {
 		double hResizeVal = 0;
@@ -109,6 +117,8 @@ public class WindowScrollBar extends ActionObject {
 
 			IWindowParent p = window;
 			EDimension d = p.getDimensions();
+			
+			// unsure why this was commented out ~
 			
 			//if (p.getMinHeight() <= d.height || p.getMaxHeight() >= d.height) { vResizeVal = 0; }
 			//if (p.getMinWidth() <= d.width || p.getMaxWidth() >= d.width) { hResizeVal = 0; }

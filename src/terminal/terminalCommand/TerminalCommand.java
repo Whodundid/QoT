@@ -47,7 +47,7 @@ public abstract class TerminalCommand {
 	//TerminalCommand Setters
 	//-----------------------
 	
-	public TerminalCommand setModifiers(String... in) { modifiers = new EArrayList().addA(in); return this; }
+	public TerminalCommand setModifiers(String... in) { modifiers = new EArrayList().add(in); return this; }
 	public TerminalCommand setCategory(String in) { category = in; return this; }
 	
 	//---------------------------------

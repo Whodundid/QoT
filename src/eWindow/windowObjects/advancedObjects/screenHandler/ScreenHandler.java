@@ -21,7 +21,7 @@ public class ScreenHandler extends ActionObject {
 	public ScreenHandler(IWindowObject parentIn) { this(parentIn, (WindowScreen[]) null); }
 	public ScreenHandler(IWindowObject parentIn, WindowScreen... screensIn) {
 		super(parentIn);
-		if (screensIn != null) { screens.addA(screensIn); }
+		if (screensIn != null) { screens.add(screensIn); }
 		atBeginning = true;
 		actionReceiver = parentIn;
 	}
@@ -98,7 +98,7 @@ public class ScreenHandler extends ActionObject {
 	public void showCurrent() { EUtil.nullDo(screens.get(currentScreen), s -> { s.showScreen(); s.onLoaded(); }); }
 	public void hideCurrent() { EUtil.nullDo(screens.get(currentScreen), s -> { s.hideScreen(); s.onUnloaded(); }); }
 	
-	public void addScreen(WindowScreen... screensIn) { screens.addA(screensIn); }
+	public void addScreen(WindowScreen... screensIn) { screens.add(screensIn); }
 	
 	//---------------------
 	//ScreenHandler Getters

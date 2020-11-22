@@ -14,7 +14,9 @@ import util.storageUtil.EDimension;
 
 public class BattleScreen extends GameScreen {
 	
+	/** The previous screen that was shown before this one. */
 	GameScreen prev;
+	/** The song that is currently playing. */
 	Audio currentSong;
 	Entity entA, entB;
 	
@@ -50,8 +52,8 @@ public class BattleScreen extends GameScreen {
 		
 		addObject(entA, entB);
 		
-		entA.setPosition(midX - 150 - entA.width, midY - 150 - entA.height / 2);
-		entB.setPosition(midX + 150, midY - 150 - entB.height / 2);
+		entA.setPosition(midX - 250 - entA.width, midY - 150 - entA.height / 2);
+		entB.setPosition(midX + 250, midY - 150 - entB.height / 2);
 		
 		addObject(attack, flame, heal, doNothing, openInventory);
 	}
@@ -68,7 +70,7 @@ public class BattleScreen extends GameScreen {
 		
 		if (shouldBattleEnd()) {
 			if (entA.isDead()) {
-				Game.displayScreen(new GameOverScreen());
+				Game.displayScreen(new GameOverScreen((entA instanceof Player p) ? p : null));
 			}
 			else {
 				entA.getBackgroundStats().setEnemiesKilled(1);
@@ -81,11 +83,13 @@ public class BattleScreen extends GameScreen {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
+		//base attack
 		if (object == attack) {
 			entB.hurt(entA.getDamage());
 			endTurn();
 		}
 		
+		//flame attack
 		if (object == flame) {
 			if (entA instanceof Player) {
 				((Player) entA).useFlame(entB);
@@ -93,6 +97,7 @@ public class BattleScreen extends GameScreen {
 			endTurn();
 		}
 		
+		//heal spell
 		if (object == heal) {
 			if (entA instanceof Player) {
 				entB.hurt(((Player) entA).flameDamage);
@@ -101,48 +106,19 @@ public class BattleScreen extends GameScreen {
 			endTurn();
 		}
 		
+		//lol
 		if (object == doNothing) {
 			endTurn();
 		}
 		
+		//open inventory
 		if (object == openInventory) {
-			if (inventoryWindow == null) {
-				openInventory();
-			}
+			openInventory();
 		}
 	}
-	
-	private boolean shouldBattleEnd() {
-		return entA.isDead() || entB.isDead();
-	}
-	
-	private void endTurn() {
-		if (!entB.isDead()) {
-			entA.hurt(entB.getDamage());
-		}
-	}
-	
-	private void drawStats(Entity in) {
-		drawStringC(in.getName(), in.midX, in.startY - 69);
-		drawStringC("HP: " + in.getHealth() + "  MP: " + in.getMana(), in.midX, in.startY - 30);
-	}
-	
-	public void endBattle() {
-		if (prev instanceof TestScreen) {
-			Game.displayScreen(prev);
-		}
-	}
-	
-	public void openInventory() {
-		Game.displayWindow(inventoryWindow = new InventoryWindow((Player) entA));
-	}
-	
-	public boolean isInventoryOpen() {
-		return Game.isEGuiOpen(InventoryWindow.class);
-	}
-	
+
 	@Override
-	public void onScreenClosed() {
+	public void onClosed() {
 		Songs.stopSong(currentSong);
 		
 		entA.setDimensions(oldA);
@@ -153,6 +129,47 @@ public class BattleScreen extends GameScreen {
 	public void onWindowResize() {
 		super.onWindowResize();
 		reInitObjects();
+	}
+	
+	/** Allows the enemy to fight back if they are still alive. */
+	private void endTurn() {
+		if (!entB.isDead()) {
+			entA.hurt(entB.getDamage());
+		}
+	}
+	
+	/** Returns true if either entity in the fight has died. */
+	private boolean shouldBattleEnd() {
+		return entA.isDead() || entB.isDead();
+	}
+	
+	/** Displays info about the current entity in the fight above their head. */
+	private void drawStats(Entity in) {
+		drawStringC(in.getName(), in.midX, in.startY - 69);
+		drawStringC("HP: " + in.getHealth() + "  MP: " + in.getMana(), in.midX, in.startY - 30);
+	}
+	
+	/** Stops the battle and returns to the game world. */
+	public void endBattle() {
+		if (prev instanceof TestScreen) {
+			
+			//close the inventory if it is open
+			if (inventoryWindow != null) { inventoryWindow.close(); }
+			
+			Game.displayScreen(prev);
+		}
+	}
+	
+	/** Attempts to open the inventory screen. Note, Only one inventory window can be open at any time. */
+	public void openInventory() {
+		if (inventoryWindow == null) {
+			Game.displayWindow(inventoryWindow = new InventoryWindow((Player) entA));
+		}
+	}
+	
+	/** Returns true if there is an inventory window open. */
+	public boolean isInventoryOpen() {
+		return Game.isEGuiOpen(InventoryWindow.class);
 	}
 	
 }

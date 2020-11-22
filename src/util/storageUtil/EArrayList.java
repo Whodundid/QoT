@@ -338,45 +338,72 @@ public class EArrayList<E> extends AbstractList<E> {
 		return this;
 	}
 	
-	/** Same as size() but just adds a call to unify language across Strings, Arrays, and now lists. */
-	public int length() { return size; }
-	
+	/** Removes and returns the first element from this list. If the list is empty, null is returned instead. */
 	public E removeFirst() { return (size > 0) ? remove(0) : null; }
+	/** Removes and returns the last element from this list. If the list is empty, null is returned instead. */
 	public E removeLast() { return (size > 0) ? remove(size - 1) : null; }
 	
+	/** Removes the first element in this list that matches the given condition. */
+	public E removeFirst(Predicate<? super E> condition) {
+		for (E e : this) {
+			if (condition.test(e)) { remove(e); }
+		}
+		return null;
+	}
+	
+	/** Removes the last element in this list that matches the given condition. */
+	public E removeLast(Predicate<? super E> condition) {
+		for (int i = size - 1; i >= 0; i--) {
+			if (condition.test(get(i))) { return remove(i); }
+		}
+		return null;
+	}
+	
 	//filters
+	
+	/** Returns a new EArrayList consisting of elements from this list reduced by the provided filter. */
 	public EArrayList<E> filter(Predicate<? super E> filter) { return new EArrayList<E>(EUtil.filter(this, filter)); }
+	/** Returns a new EArrayList consisting of elements from this list with null values removed. */
 	public EArrayList<E> filterNull() { return new EArrayList<E>(EUtil.filterNull(this)); }
+	/** Returns a new EArrayList consisting of elements from this list reduced by the provided filter with null elements also filtered out. */
 	public EArrayList<E> filterNull(Predicate<? super E> filter) { return new EArrayList<E>(EUtil.filterNull(this, filter)); }
+	/** Adds the elements from an existing array that match the given condition. */
+	public EArrayList<E> filterAdd(E[] arr, Predicate<? super E> condition) { EUtil.filterForEach(arr, condition, this::add); return this; }
+	/** Adds the elements from an existing collection that match the given condition. */
+	public EArrayList<E> filterAdd(Collection<? extends E> c, Predicate<? super E> condition) { EUtil.filterForEach(c, condition, this::add); return this; }
+	/** Adds the elements from an existing array that match the given condition. */
+	public EArrayList<E> filterNullAdd(E[] arr, Predicate<? super E> condition) { EUtil.filterNullForEach(arr, condition, this::add); return this; }
+	/** Adds the elements from an existing collection that match the given condition. */
+	public EArrayList<E> filterNullAdd(Collection<? extends E> c, Predicate<? super E> condition) { EUtil.filterNullForEach(c, condition, this::add); return this; }
 	
 	//mappers
+	
+	/** Performs the provided mapping function across each element of this list and returns a new EArrayList consiting of the resulting conversions. */
 	public <T> EArrayList<T> map(Function<? super E, ? extends T> mapper) { return new EArrayList<T>(stream().map(mapper)); }
 	
 	//forEach methods
+	
+	/** Reduces this list using the given filter then performs the given action on the remaining elements. */
 	public void filterForEach(Predicate<? super E> filter, Consumer<? super E> action) { EUtil.filterForEach(this, filter, action); }
+	/** Removes null elements then performs the given action on the remaining elements. */
 	public void filterNullForEach(Consumer<? super E> action) { EUtil.filterNullForEach(this, action); }
+	/** Removes null elements and reduces this list using the given filter then performs the given action on the remaining elements. */
 	public void filterNullForEach(Predicate<? super E> filter, Consumer<? super E> action) { EUtil.filterNullForEach(this, filter, action); }
+	/** Performs the specified action on each element of this list then returns the given return value. */
 	public <R> R forEachR(Consumer<? super E> action, R returnVal) { forEach(action); return returnVal; }
-	public boolean ifForEach(boolean check, Consumer<? super E> action) { return EUtil.ifForEach(check, this, action); }
+	/** If the provided condition is true, then the provided action is performed on each element. */
+	public boolean ifForEach(boolean condition, Consumer<? super E> action) { return EUtil.ifForEach(condition, this, action); }
 	
 	//collectors
 	public <R, A> R filterInto(Predicate<? super E> filter, Collector<? super E, A, R> collector) { return EUtil.filterInto(this, filter, collector); }
-	
-	public EArrayList<E> noDuplicates() { return setAllowDuplicates(false); }
 
+	/** Returns a new EArrayList consiting of elements from both lists a and b. */
 	public static <E> EArrayList<E> combineLists(List<E> a, List<E> b) {
 		EArrayList<E> l = new EArrayList();
 		if (a != null) { l.addAll(a); }
 		if (b != null) { l.addAll(b); }
 		return l;
 	}
-
-	public E getFirst() { return (size > 0) ? get(0) : null; }
-	public E getLast() { return (size > 0) ? get(size - 1) : null; }
-	public boolean isNotEmpty() { return size > 0; }
-	public boolean notContains(Object o) { return !contains(o); }
-
-	protected E getElementData(int index) { return (E) elementData[index]; }
 
 	public E getFirstInstanceOf(Class<?> cIn) {
 		for (Object e : elementData) {
@@ -441,37 +468,125 @@ public class EArrayList<E> extends AbstractList<E> {
 		if (newCapacity - MAX_ARRAY_SIZE > 0) { newCapacity = hugeCapacity(minCapacity); }
 		elementData = Arrays.copyOf(elementData, newCapacity);
 	}
-
+	
 	// Add methods
-
+	
+	/** Adds the given object to this list then returns it. */
 	public E addR(E e) { add(e); return e; }
 	
-	public EArrayList<E> add(E... e) {
-		if (e == null) {
-			if (contains(null)) {
-				if (allowDuplicates) {
-					addE(null);
-					return this;
-				}
-				return this;
-			}
-			addE(null);
+	public EArrayList<E> add(E... e) { for (E val : e) { add(val); } return this; }
+	
+	//public EArrayList<E> addA(E[] e) { add(e); return this; }
+	
+	public boolean addIf(boolean condition, E e) { return (condition) ? add(e) : false; }
+	
+	public void addIfNotNull(E... e) {
+		for (E entry : e) {
+			if (entry != null) { add(entry); }
 		}
-		else {
-			for (int i = 0; i < e.length; i++) {
-				add(e[i]);
+	}
+	
+	/** Adds the element(s) if they are not already present in this list. */
+	public void addIfNotContains(E... e) { filterAdd(e, this::notContains); }
+	/** Adds the element(s) if they are not already present in this list and only if they are not null. */
+	public void addNullContains(E... e) { filterNullAdd(e, this::notContains); }
+	
+	public EArrayList<E> reduceTo(Stream<E> s) {
+		Objects.requireNonNull(s);
+		List<E> l = s.collect(Collectors.toList());
+		retainAll(l);
+		return this;
+	}
+	
+	public EArrayList<E> addAll(E... e) {
+		for (E entry : e) { add(entry); }
+		return this;
+	}
+	
+	/** Performs a for each loop on this list if the specified condition is true.
+	 *  Returns the value of the condition. */
+	public boolean IfForEach(boolean condition, Consumer<? super E> action) {
+		Objects.requireNonNull(action);
+		if (condition) { forEach(action); }
+		return condition;
+	}
+	
+	//--------------------
+	// EArrayList Getters
+	//--------------------
+	
+	public boolean allowsDuplicates() { return allowDuplicates; }
+
+	/** Returns the first element of this list. If this list is empty, null is returned instead. */
+	public E getFirst() { return (size > 0) ? get(0) : null; }
+	/** Returns the last element of this list. If this list is empty, null is returned instead. */
+	public E getLast() { return (size > 0) ? get(size - 1) : null; }
+	/** Returns true if there are elements in this list. */
+	public boolean isNotEmpty() { return size > 0; }
+	/** Returns true if this list does not contain the specified object. */
+	public boolean notContains(Object o) { return !contains(o); }
+	
+	/** Same as size() but just adds a call to unify language across Strings, Arrays, and now lists. */
+	public int length() { return size; }
+	
+	//--------------------
+	// EArrayList Setters
+	//--------------------
+
+	/**
+	 * Sets whether this list will allow duplicate entries or not. If no, the list
+	 * removes duplicates.
+	 */
+	public EArrayList<E> setAllowDuplicates(boolean val) {
+		if (!val) {
+			synchronized (this) {
+				List<E> nonDuplicates = this.stream().distinct().collect(Collectors.toList());
+				this.clear();
+				this.addAll(nonDuplicates);
 			}
 		}
 		return this;
 	}
 
-	public EArrayList<E> addA(E[] e) { add(e); return this; }
+	//----------------
+	// Static Methods
+	//----------------
 
+	private static <I, R> Function<I, R> castingIdentity() { return i -> (R) i; }
+	
+	private static int calculateCapacity(Object[] elementData, int minCapacity) {
+		if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) { return Math.max(DEFAULT_CAPACITY, minCapacity); }
+		return minCapacity;
+	}
+
+	private static int hugeCapacity(int minCapacity) {
+		if (minCapacity < 0) { throw new OutOfMemoryError(); }
+		return (minCapacity > MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE;
+	}
+
+	public static <T> Collector<T, ?, EArrayList<T>> toEArrayList() {
+		return new ECollector<>((Supplier<List<T>>) EArrayList::new, List::add, (left, right) -> { left.addAll(right); return left; }, CH_ID);
+	}
+	
+	public static <T> EArrayList<T> of(Class<T> type, T... vals) {
+		return new EArrayList<T>().addAll(vals);
+	}
+
+	//-------------------
+	// Protected Methods
+	//-------------------
+	
+	protected E getElementData(int index) { return (E) elementData[index]; }
+	
+	//-----------------
+	// Private Methods
+	//-----------------
+	
 	private void addE(E e) {
 		ensureCapacityInternal(size + 1);
 		elementData[size++] = e;
 	}
-
+	
 	private void addIE(int i, E e) {
 		rangeCheckForAdd(i);
 		ensureCapacityInternal(size + 1);
@@ -479,50 +594,7 @@ public class EArrayList<E> extends AbstractList<E> {
 		elementData[i] = e;
 		size++;
 	}
-
-	public boolean addIf(boolean condition, E e) {
-		if (condition) { add(e); }
-		return condition;
-	}
-
-	public void addIfNotNull(E... e) {
-		for (E entry : e) {
-			if (entry != null) { add(entry); }
-		}
-	}
-
-	public void addIfNotContains(E... e) {
-		for (E entry : e) {
-			if (!contains(entry)) { add(entry); }
-		}
-	}
-
-	public void addNullContains(E... e) {
-		for (E entry : e) {
-			if (entry != null && !contains(entry)) { add(entry); }
-		}
-	}
-
-	public EArrayList<E> reduceTo(Stream<E> s) {
-		Objects.requireNonNull(s);
-		List<E> l = s.collect(Collectors.toList());
-		retainAll(l);
-		return this;
-	}
-
-	public EArrayList<E> addAll(E... e) {
-		if (e != null) {
-			for (E entry : e) { add(entry); }
-		}
-		return this;
-	}
-
-	public void removeIfContains(E... e) {
-		for (E entry : e) {
-			if (contains(entry)) { remove(entry); }
-		}
-	}
-
+	
 	private boolean batchRemove(Collection<?> c, boolean complement) {
 		final Object[] elementData = this.elementData;
 		int r = 0, w = 0;
@@ -583,66 +655,7 @@ public class EArrayList<E> extends AbstractList<E> {
 			for (int i = 0; i < size; i++) { a[i] = s.readObject(); }
 		}
 	}
-
-	/**
-	 * Performs a for each loop on this list if the specified condition is true.
-	 * Returns the value of the condition.
-	 */
-	public boolean forEachIf(boolean condition, Consumer<? super E> action) {
-		Objects.requireNonNull(action);
-		if (condition) { forEach(action); }
-		return condition;
-	}
-
-	//------------------
-	//EArrayList Getters
-	//------------------
-
-	public boolean allowsDuplicates() { return allowDuplicates; }
-
-	//------------------
-	//EArrayList Setters
-	//------------------
-
-	/**
-	 * Sets whether this list will allow duplicate entries or not. If no, the list
-	 * removes duplicates.
-	 */
-	public EArrayList<E> setAllowDuplicates(boolean val) {
-		if (!val) {
-			synchronized (this) {
-				List<E> nonDuplicates = this.stream().distinct().collect(Collectors.toList());
-				this.clear();
-				this.addAll(nonDuplicates);
-			}
-		}
-		return this;
-	}
-
-	//--------------
-	//Static Methods
-	//--------------
-
-	private static <I, R> Function<I, R> castingIdentity() { return i -> (R) i; }
 	
-	private static int calculateCapacity(Object[] elementData, int minCapacity) {
-		if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) { return Math.max(DEFAULT_CAPACITY, minCapacity); }
-		return minCapacity;
-	}
-
-	private static int hugeCapacity(int minCapacity) {
-		if (minCapacity < 0) { throw new OutOfMemoryError(); }
-		return (minCapacity > MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE;
-	}
-
-	public static <T> Collector<T, ?, EArrayList<T>> toEArrayList() {
-		return new ECollector<>((Supplier<List<T>>) EArrayList::new, List::add, (left, right) -> { left.addAll(right); return left; }, CH_ID);
-	}
-	
-	public static <T> EArrayList<T> of(Class<T> type, T... vals) {
-		return new EArrayList<T>().addAll(vals);
-	}
-
 	//---------------
 	//Private Classes
 	//---------------

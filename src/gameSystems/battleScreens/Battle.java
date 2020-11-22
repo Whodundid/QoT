@@ -1,4 +1,4 @@
-package gameSystems.battleSystem;
+package gameSystems.battleScreens;
 
 import entities.Entity;
 import entities.enemy.types.Whodundid;
@@ -35,7 +35,7 @@ public class Battle {
 					player1.useHeal();
 					break;
 				case 3: System.out.println("You chose to do nothing..."); break;
-				case 4: player1.utilizeInventory(null); break;
+				//case 4: player1.utilizeInventory(null); break;
 				default: System.out.println();
 				}
 			}

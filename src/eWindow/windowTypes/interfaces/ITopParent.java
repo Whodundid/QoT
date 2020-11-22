@@ -1,5 +1,6 @@
 package eWindow.windowTypes.interfaces;
 
+import eWindow.StaticTopParent;
 import eWindow.windowUtil.windowEvents.eventUtil.FocusType;
 import eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import util.renderUtil.ScreenLocation;
@@ -53,19 +54,19 @@ public interface ITopParent extends IWindowObject {
 	//-------
 	
 	/** Returns the highest child object under the mouse. */
-	public IWindowObject getHighestZLevelObject();
+	public default IWindowObject getHighestZLevelObject() { return StaticTopParent.getHighestZLevelObject(this); }
 	/** Hides all child objects which are not pinned. */
-	public ITopParent hideUnpinnedObjects();
+	public default ITopParent hideUnpinnedObjects() { return StaticTopParent.hideUnpinnedObjects(this); }
 	/** Hides all child objects except for the specified exceptions. */
-	public ITopParent hideAllExcept(IWindowObject objIn);
+	public default ITopParent hideAllExcept(IWindowObject objIn) { return StaticTopParent.hideAllExcept(this, objIn); }
 	/** Reveals all child objects that are hidden. */
-	public ITopParent revealHiddenObjects();
+	public default ITopParent revealHiddenObjects() { return StaticTopParent.revealHiddenObjects(this); }
 	/** Removes all child objects that are not pinned. */
-	public ITopParent removeUnpinnedObjects();
+	public default ITopParent removeUnpinnedObjects() { return StaticTopParent.removeUnpinnedObjects(this); }
 	/** Removes all child objects on this top parent. */
-	public ITopParent removeAllObjects();
+	public default ITopParent removeAllObjects() { return StaticTopParent.removeAllObjects(this); }
 	/** Returns true if there are any child objects that are pinned. */
-	public boolean hasPinnedObjects();
+	public default boolean hasPinnedObjects() { return StaticTopParent.hasPinnedObjects(this); }
 	
 	//-----
 	//focus
@@ -82,11 +83,11 @@ public interface ITopParent extends IWindowObject {
 	/** Specifies an object that prevents all focus updates on anything that isn't on the current focus lock object or its children. */
 	public ITopParent setFocusLockObject(IWindowObject objIn);
 	/** Removes the current focus lock object from the HUD. */
-	public ITopParent clearFocusLockObject();
+	public default ITopParent clearFocusLockObject() { StaticTopParent.clearFocusLockObject(this); return this; }
 	/** Returns true if there is a focus lock object. */
 	public boolean doesFocusLockExist();
 	/** Forces the currently focused object to relinquish it's focus back to the renderer. */
-	public void clearFocusedObject();
+	public default void clearFocusedObject() { StaticTopParent.clearFocusedObject(this); }
 	/** Event handler that manages all focus updates for itself as well as all child objects for the top parent. */
 	public void updateFocus();
 	
@@ -120,17 +121,17 @@ public interface ITopParent extends IWindowObject {
 	//------------
 	
 	/** Returns true if the mouse is on the edge of an object. */
-	public boolean isMouseOnObjEdge(int mX, int mY);
+	public default boolean isMouseOnObjEdge() { return StaticTopParent.isMouseOnObjEdge(this); }
 	/** Returns the edge type that the mouse is currently hovering over, if any. */
-	public ScreenLocation getEdgeAreaMouseIsOn();
+	public default ScreenLocation getEdgeAreaMouseIsOn() { return StaticTopParent.getEdgeAreaMouseIsOn(this); }
 	/** Returns true if the mouse is inside of any object. */
-	public boolean isMouseInsideObject(int mX, int mY);
+	public default boolean isMouseInsideObject() { return getHighestZObjectUnderMouse() != null; }
 	/** Returns true if the mouse is inside of an EGuiHeader object. */
-	public boolean isMouseInsideHeader(int mX, int mY);
+	public default boolean isMouseInsideHeader() { return StaticTopParent.isMouseInsideHeader(this); }
 	/** Returns the objects with this highest z level under the mouse. */
-	public IWindowObject getHighestZObjectUnderMouse();
+	public default IWindowObject getHighestZObjectUnderMouse() { return StaticTopParent.getHighestZObjectUnderMouse(this); }
 	/** Returns a list of all objects underneath the mouse. */
-	public EArrayList<IWindowObject> getAllObjectsUnderMouse();
+	public default EArrayList<IWindowObject> getAllObjectsUnderMouse() { return StaticTopParent.getAllObjectsUnderMouse(this); }
 	
 	//-----
 	//close

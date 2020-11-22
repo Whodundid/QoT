@@ -1,20 +1,19 @@
 package eWindow.windowObjects.actionObjects;
 
-import eWindow.windowObjects.basicObjects.WindowLabel;
 import eWindow.windowTypes.ActionObject;
 import eWindow.windowTypes.interfaces.IWindowObject;
 import gameSystems.textureSystem.GameTexture;
 import input.Mouse;
 import java.util.function.Consumer;
+import openGL_Util.GLSettings;
+import org.lwjgl.glfw.GLFW;
 import util.EUtil;
 import util.renderUtil.EColors;
-import util.storageUtil.EDimension;
 
 //Author: Hunter Bragg
 
 public class WindowButton extends ActionObject {
 	
-	WindowLabel displayLabel = new WindowLabel(this, 0, 0, "");
 	public static int defaultColor = 14737632;
 	public int color = 14737632;
 	public int disabledColor = EColors.lgray.intVal;
@@ -38,22 +37,14 @@ public class WindowButton extends ActionObject {
 	protected boolean drawCentered = true;
 	protected GameTexture btnTexture = null;
 	protected GameTexture btnSelTexture = null;
+	protected String displayString;
 	
 	protected WindowButton(IWindowObject parentIn) { super(parentIn); custom = true; }
 	
-	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height) { this(parentIn, posX, posY, width, height, "", false); }
-	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height, String displayStringIn) { this(parentIn, posX, posY, width, height, displayStringIn, false); }
-	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height, String displayStringIn, boolean ignoreDims) {
-		//if (!ignoreDims) { setMaxDims(200, 20); }
+	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height) { this(parentIn, posX, posY, width, height, ""); }
+	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height, String displayStringIn) {
 		init(parentIn, posX, posY, width, height);
-		displayLabel = new WindowLabel(this, (drawCentered ? midX : startX + 3) + textOffset, startY + (height - 7) / 2, displayStringIn) {
-			@Override
-			public void drawObject(int mX, int mY) {
-				if (drawString) { super.drawObject(mX, mY); }
-			}
-		};
-		displayLabel.setDrawCentered(drawCentered).setClickable(false);
-		addObject(displayLabel);
+		displayString = displayStringIn;
 	}
 
 	@Override
@@ -61,7 +52,6 @@ public class WindowButton extends ActionObject {
 		boolean mouseHover = isClickable() && isMouseOver(mX, mY);
 		boolean mouseCheck = !Mouse.isButtonDown(0) && mouseHover;
 		int stringColor = isEnabled() ? (mouseCheck ? (color == 14737632 ? textHoverColor : color) : color) : (drawDisabledColor ? disabledColor : color + 0xbbbbbb);
-		displayLabel.setColor(stringColor);
 		
 		//draw background stuff
 		if (drawBackgroundHover && mouseHover) {
@@ -73,8 +63,9 @@ public class WindowButton extends ActionObject {
 		
 		drawRect(borderColor);
 		drawRect(mouseHover ? backgroundHoverColor : backgroundColor, 1);
+		
 		//reset the color buffer to prepare for texture drawing
-		//GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		GLSettings.fullBright();
 		
 		//only draw textures if specified
 		if (drawTextures) {
@@ -93,17 +84,17 @@ public class WindowButton extends ActionObject {
 			}
 			
 			//prime the renderer
-			//GlStateManager.enableBlend();
-			//GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-			//GlStateManager.blendFunc(770, 771);
+			GLSettings.enableBlend();
+			GLSettings.blendSeparate();
+			GLSettings.blendFunc();
 			
 			//draw the textures
 			if (usingBaseTextures) {
-				//if (stretchBaseTextures) { drawTexture(startX, startY, width, height); }
-				//else { drawBaseTexture(mouseHover); }
+				if (stretchBaseTextures) { drawTexture(startX, startY, width, height); }
+				else { drawBaseTexture(mouseHover); }
 			}
 			else if (btnTexture != null) {
-				//drawTexture(startX, startY, width, height);
+				drawTexture(startX, startY, width, height);
 				if (btnSelTexture == null && mouseHover) {
 					drawRect(startX + 1, startY + 1, endX - 1, endY - 1, 0x888B97D3);
 					//drawRect(startX, startY, startX + 1, endY, EColors.orange); //left
@@ -120,22 +111,12 @@ public class WindowButton extends ActionObject {
 		//------------------------------------
 		//------------------------------------
 		
-		super.drawObject(mX, mY);
-	}
-	
-	@Override
-	public WindowButton setDimensions(EDimension dimIn) {
-		if (dimIn != null) { return setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
-		return this;
-	}
-	
-	@Override
-	public WindowButton setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
-		super.setDimensions(startXIn, startYIn, widthIn, heightIn);
-		if (displayLabel != null) {
-			displayLabel.setDimensions((drawCentered ? midX : startX + 3) + textOffset, startY + (height - 7) / 2, displayLabel.width, displayLabel.height);
+		if (drawString) {
+			if (drawCentered) { drawStringC(displayString, midX, midY, stringColor); }
+			else { drawString(displayString, midX, midY, stringColor); }
 		}
-		return this;
+		
+		super.drawObject(mX, mY);
 	}
 	
 	@Override
@@ -148,7 +129,7 @@ public class WindowButton extends ActionObject {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (keyCode == 28) {
+		if (keyCode == GLFW.GLFW_KEY_ENTER) {
 			if (isEnabled() && checkDraw() && isClickable()) { performAction(); }
 		}
 		super.keyPressed(typedChar, keyCode);
@@ -183,18 +164,8 @@ public class WindowButton extends ActionObject {
 		return this;
 	}
 	
-	public WindowButton setDrawStringCentered(boolean val) {
-		drawCentered = val;
-		displayLabel.setDrawCentered(val);
-		//displayLabel.setDimensions((drawCentered ? midX : startX + 3) + textOffset, startY + (height - 7) / 2, displayLabel.width, displayLabel.height);
-		return this;
-	}
-	
-	public WindowButton setDisplayStringOffset(int offsetIn) {
-		textOffset = offsetIn;
-		displayLabel.setDimensions((drawCentered ? midX : startX + 3) + textOffset, startY + (height - 7) / 2, displayLabel.width, displayLabel.height);
-		return this;
-	}
+	public WindowButton setDrawStringCentered(boolean val) { drawCentered = val; return this; }
+	public WindowButton setDisplayStringOffset(int offsetIn) { textOffset = offsetIn; return this; }
 	
 	//----------------------
 	//Drawing Helper Methods
@@ -206,7 +177,6 @@ public class WindowButton extends ActionObject {
 	
 	//draw method
 	private void drawBaseTexture(boolean mouseHover) {
-		//bindTexture(EMCResources.mcWidgets);
 		double i = height > 20 ? 20 : height;
 		int offset = mouseHover ? 20 : 0;
 		if (!isEnabled()) { offset = 0; }
@@ -235,8 +205,7 @@ public class WindowButton extends ActionObject {
 	public int getBackgroundColor() { return backgroundColor; }
 	public int getStringColor() { return color; }
 	public int getStringHoverColor() { return textHoverColor; }
-	public String getString() { return displayLabel.getString(); }
-	public WindowLabel getDisplayLabel() { return displayLabel; }
+	public String getString() { return displayString; }
 	
 	//------------------
 	//EGuiButton Setters
@@ -245,7 +214,7 @@ public class WindowButton extends ActionObject {
 	public WindowButton setTextures(GameTexture base, GameTexture sel) { setButtonTexture(base); setButtonSelTexture(sel); return this; }
 	public WindowButton setButtonTexture(GameTexture loc) { btnTexture = loc; checkForBaseTextures(); return this; }
 	public WindowButton setButtonSelTexture(GameTexture loc) { btnSelTexture = loc; checkForBaseTextures(); return this; }
-	public WindowButton setString(String stringIn) { displayLabel.setString(stringIn); return this; }
+	public WindowButton setString(String stringIn) { displayString = stringIn; return this; }
 	public WindowButton setStringColor(int colorIn) { color = colorIn; return this; }
 	public WindowButton setStringColor(EColors colorIn) { if (colorIn != null) { color = colorIn.c(); } return this; }
 	public WindowButton setStringDisabledColor(int colorIn) { disabledColor = colorIn; return this; }
@@ -286,7 +255,7 @@ public class WindowButton extends ActionObject {
 	//--------------
 	
 	public static void playPressSound() {
-		//mc.getSoundHandler().playSound(PositionedSoundRecord.create(EMCResources.buttonSound, 1.0F));
+		
 	}
 	
 	public static void setTextures(GameTexture base, GameTexture sel, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setTextures(base, sel), button, additional); }

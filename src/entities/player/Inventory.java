@@ -1,11 +1,11 @@
 package entities.player;
 
 import items.Item;
-import java.util.ArrayList;
+import util.storageUtil.EArrayList;
 
 public class Inventory {
 	
-	ArrayList<Item> content = new ArrayList();
+	EArrayList<Item> content = new EArrayList();
 	Player thePlayer;
 	
 	public Inventory(Player playerIn) {
@@ -35,7 +35,7 @@ public class Inventory {
 	
 	public Item getItem(String nameIn) {
 		for (Item i : content) {
-			if (i.getName().contentEquals(nameIn)) {
+			if (i.getName().equals(nameIn)) {
 				return i;
 			}
 		}
@@ -56,17 +56,11 @@ public class Inventory {
 		return theItem;
 	}
 	
-	
-	public ArrayList<Item> getItems() {
-		return content;
-	}
-	
-	
-	
+	//-------------------
 	// Inventory Getters
+	//-------------------
 	
-	public Player getPlayer() {
-		return thePlayer;
-	}
+	public EArrayList<Item> getItems() { return content; }
+	public Player getPlayer() { return thePlayer; }
 	
 }

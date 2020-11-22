@@ -79,7 +79,7 @@ public interface IWindowObject {
 	//drawing checks
 	//--------------
 	
-	/** Returns true if this object is elligible be drawn on the next draw cycle. */
+	/** Returns true if this object will be drawn on the next draw cycle. */
 	public boolean checkDraw();
 	/** Returns true if this object is currently enabled. */
 	public boolean isEnabled();
@@ -206,7 +206,7 @@ public interface IWindowObject {
 	/** Returns true if the specified object type is a child of the parent or is being added to the parent. */
 	public <T> boolean containsObject(Class<T> objIn);
 	/** Returns a list combining the objects currently within within this object as well as the ones being added. */
-	public EArrayList<IWindowObject> getCombinedChildren();
+	public default EArrayList<IWindowObject> getCombinedObjects() { return EArrayList.combineLists(getObjects(), getAddingObjects()); }
 	
 	//-------
 	//parents
@@ -336,7 +336,7 @@ public interface IWindowObject {
 	/** Sets this object to close when the hud closes. */
 	public IWindowObject setClosesWithHud(boolean val);
 	/** Event fired when object is closed. */
-	public void onScreenClosed();
+	public void onClosed();
 	/** Upon closing, this object will attempt to transfer it's focus to the specified object if possible. */
 	public IWindowObject setFocusedObjectOnClose(IWindowObject objIn);
 	/** Internal method used to indicate that this object will be removed soon. */

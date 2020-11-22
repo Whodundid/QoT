@@ -13,7 +13,6 @@ public class Whodundid extends Enemy {
 		init(Game.getGameRenderer(), posX, posY, 150, 150);
 	}
 	
-	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawTexture(EntityTextures.whodundid);

@@ -90,7 +90,7 @@ public class WindowObjectS extends EGui {
 	
 	/** Returns this objects WindowHeader, if there is one. */
 	public static WindowHeader getHeader(IWindowObject obj) {
-		for (IWindowObject o : EArrayList.combineLists(obj.getObjects(), obj.getAddingObjects())) {
+		for (IWindowObject o : obj.getCombinedObjects()) {
 			if (o instanceof WindowHeader) { return (WindowHeader) o; }
 		}
 		return null;
@@ -344,12 +344,9 @@ public class WindowObjectS extends EGui {
 		EArrayList<IWindowObject> workList = new EArrayList();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
-		obj.getObjects().forEach(o -> { foundObjs.add(o); if (!o.getObjects().isEmpty()) { objsWithChildren.add(o); } });
-		//same as above but now check from objects that are going to be added on the next draw cycle
-		obj.getAddingObjects().forEach(o -> { foundObjs.add(o); if (!o.getAddingObjects().isEmpty()) { objsWithChildren.add(o); } });
+		obj.getObjects().forEach(o -> { foundObjs.add(o); if (!o.getCombinedObjects().isEmpty()) { objsWithChildren.add(o); } });
 		//load the workList with every child found on each object
-		objsWithChildren.forEach(c -> workList.addAll(c.getObjects()));
-		objsWithChildren.forEach(c -> workList.addAll(c.getAddingObjects()));
+		objsWithChildren.forEach(c -> workList.addAll(c.getCombinedObjects()));
 		
 		//only work as long as there are still child layers to process
 		while (workList.isNotEmpty()) {
@@ -358,26 +355,20 @@ public class WindowObjectS extends EGui {
 			
 			//for the current layer, find all objects that have children
 			objsWithChildren.clear();
-			EUtil.filterForEach(workList, o -> !o.getObjects().isEmpty(), objsWithChildren::add);
-			EUtil.filterForEach(workList, o -> !o.getAddingObjects().isEmpty(), objsWithChildren::add);
+			workList.filterForEach(o -> o.getCombinedObjects().isNotEmpty(), objsWithChildren::add);
 			
 			//put all children on the next layer into the work list
 			workList.clear();
-			objsWithChildren.forEach(c -> workList.addAll(c.getObjects()));
-			objsWithChildren.forEach(c -> workList.addAll(c.getAddingObjects()));
+			objsWithChildren.forEach(c -> workList.addAll(c.getCombinedObjects()));
 		}
-		
-		//System.out.println(System.nanoTime() - start);
 		
 		return foundObjs;
 	}
 	
 	/** Returns a list of all children currently under the cursor. */
 	public static EArrayList<IWindowObject> getAllChildrenUnderMouse(IWindowObject obj, int mX, int mY) {
-		EArrayList<IWindowObject> l = new EArrayList();
 		//only add objects if they are visible and if the cursor is over them.
-		EUtil.filterNullForEach(obj.getAllChildren(), o -> o.checkDraw() && o.isMouseInside(mX, mY), l::add);
-		return l;
+		return obj.getAllChildren().filterNull(o -> o.checkDraw() && o.isMouseInside(mX, mY));
 	}
 	
 	//parents
@@ -387,6 +378,10 @@ public class WindowObjectS extends EGui {
 		//recursively check through the object's parent lineage to see if that parent is a topParentdw
 		while (parentObj != null) {
 			if (parentObj instanceof ITopParent) { return (ITopParent) parentObj; }
+			
+			//break if the parent is itself
+			if (parentObj == parentObj.getParent()) { break; }
+			
 			parentObj = parentObj.getParent();
 		}
 		
@@ -395,17 +390,23 @@ public class WindowObjectS extends EGui {
 	
 	/** Returns the parent window for the specified object, if there is one. */
 	public static IWindowParent getWindowParent(IWindowObject obj) {
-		IWindowObject parentObject = obj.getParent();
+		IWindowObject parentObj = obj.getParent();
 		//recursively check through the object's parent lineage to see if that parent is a window
-		while (parentObject != null && !(parentObject instanceof ITopParent)) {
-			if (parentObject instanceof IWindowParent) { return (IWindowParent) parentObject; }
-			parentObject = parentObject.getParent();
+		while (parentObj != null && !(parentObj instanceof ITopParent)) {
+			if (parentObj instanceof IWindowParent) { return (IWindowParent) parentObj; }
+			
+			//break if the parent is itself
+			if (parentObj == parentObj.getParent()) { break; }
+			
+			parentObj = parentObj.getParent();
 		}
 		
 		return obj instanceof IWindowParent ? (IWindowParent) obj : null;
 	}
 	
 	//mouse checks
+	
+	/** Returns the ScreenLocation area the mouse is currently on for an object. */
 	public static ScreenLocation getEdgeAreaMouseIsOn(IWindowObject objIn, int mX, int mY) {
 		boolean left = false, right = false, top = false, bottom = false;
 		EDimension d = objIn.getDimensions();
@@ -434,17 +435,26 @@ public class WindowObjectS extends EGui {
 	public static boolean isMouseInside(IWindowObject obj, int mX, int mY) {
 		if (obj != null) {
 			EDimension d = obj.getDimensions();
+			
+			// check if there is a boundary enforcer limiting the overrall area
 			if (obj.isBoundaryEnforced()) {
 				EDimension b = obj.getBoundaryEnforcer();
-				return mX >= d.startX && mX >= b.startX && mX <= d.endX && mX <= b.endX && mY >= d.startY && mY >= b.startY && mY <= d.endY && mY <= b.endY;
+				return mX >= d.startX && mX >= b.startX &&
+					   mX <= d.endX && mX <= b.endX &&
+					   mY >= d.startY && mY >= b.startY &&
+					   mY <= d.endY && mY <= b.endY;
 			}
+			
+			// otherwise just check if the mouse is within the object's boundaries
 			return mX >= d.startX && mX <= d.endX && mY >= d.startY && mY <= d.endY;
 		}
 		return false;
 	}
 	
 	//basic inputs
-	public static void parseMousePosition(IWindowObject objIn, int mX, int mY) { objIn.getObjects().stream().filter(o -> o.isMouseInside(mX, mY)).forEach(o -> o.parseMousePosition(mX, mY)); }
+	public static void parseMousePosition(IWindowObject objIn, int mX, int mY) {
+		objIn.getObjects().filterForEach(o -> o.isMouseInside(mX, mY), o -> o.parseMousePosition(mX, mY));
+	}
 	
 	public static void mousePressed(IWindowObject objIn, int mX, int mY, int button) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.Pressed));
@@ -470,39 +480,11 @@ public class WindowObjectS extends EGui {
 	
 	public static void mouseScolled(IWindowObject objIn, int mX, int mY, int change) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.Scrolled));
-		EUtil.filterForEach(objIn.getObjects(), o -> o.isMouseInside(mX, mY) && o.checkDraw(), o -> o.mouseScrolled(change));
+		objIn.getObjects().filterForEach(o -> o.isMouseInside(mX, mY) && o.checkDraw(), o -> o.mouseScrolled(change));
 	}
 	
 	public static void keyPressed(IWindowObject objIn, char typedChar, int keyCode) {
 		objIn.postEvent(new EventKeyboard(objIn, typedChar, keyCode, KeyboardType.Pressed));
-		if (objIn.getTopParent() != null && keyCode == 15) {
-			EArrayList<IWindowObject> objs = objIn.getObjects();
-			EArrayList<IWindowObject> pObjs = objIn.getTopParent().getObjects();
-			//I have no idea if this code even works
-			if (objs != null) {
-				if (objs.isEmpty()) {
-					int thisObjPos = 0;
-					for (int i = 0; i < pObjs.size(); i++) {
-						if (pObjs.get(i).equals(objIn)) { thisObjPos = i; }
-					}
-					if (thisObjPos < pObjs.size() - 1) { pObjs.get(thisObjPos + 1).requestFocus(); }
-				}
-				else {
-					IWindowObject selectedChild = null;
-					for (IWindowObject o : objIn.getTopParent().getObjects()) {
-						if (objs.contains(o) && o instanceof IWindowObject) { selectedChild = (IWindowObject) o; }
-					}
-					if (selectedChild != null) {
-						int childPos = 0;
-						for (int i = 0; i < objs.size(); i++) {
-							if (selectedChild.equals(objs.get(i))) { childPos = i; }
-						}
-						if (childPos < objs.size() - 1) { objs.get(childPos + 1).requestFocus(); }
-					}
-				}
-			}
-			
-		}
 	}
 	
 	public static void keyReleased(IWindowObject objIn, char typedChar, int keyCode) {
@@ -532,7 +514,7 @@ public class WindowObjectS extends EGui {
 			if (o != null) {
 				if (o != objIn) {
 					if (objIn.getObjects().contains(o)) {
-						objIn.onScreenClosed();
+						objIn.onClosed();
 						objIn.getObjects().remove(o);
 						objIn.postEvent(new EventObjects(objIn, o, ObjectEventType.ObjectRemoved));
 					}

@@ -8,8 +8,6 @@ import gameScreens.TestScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.AbstractScreen;
 import gameSystems.gameRenderer.GameRenderer;
-import gameSystems.gameRenderer.IRendererProxy;
-import gameSystems.gameRenderer.GameScreen;
 import gameSystems.textureSystem.TextureSystem;
 import gameTextures.EntityTextures;
 import gameTextures.Textures;
@@ -54,6 +52,8 @@ public class Game {
 	private static boolean isDebug = false;
 	/** Indicates whether the game is actively running or not. */
 	private static boolean running = false;
+	/** If set to false, no songs will play. */
+	public static boolean playSongs = false;
 	
 	// Framerate stuff
 	public long startTime = 0l;
@@ -180,17 +180,11 @@ public class Game {
 		//update framerate counter
 		updateFramerate();
 		
+		gameRenderer.onRenderTick();
+		
 		if (currentScreen != null) {
 			currentScreen.drawObject(Mouse.getMx(), Mouse.getMy());
 		}
-		
-		//GLObject.drawRect(50, 50, 150, 150, EColors.red);
-		
-		//GLObject.drawFilledEllipse(300, 300, 50, 50, 30, EColors.seafoam);
-		
-		//GLObject.drawTexture(400, 200, 128 * 2, 64 * 2, Textures.debug);
-		
-		gameRenderer.onRenderTick();
 	}
 	
 	public static void stopGame() {
@@ -198,7 +192,6 @@ public class Game {
 			running = false;
 			
 			textureSystem.destroyAllTextures();
-			//GL.setCapabilities(null);
 			
 			GLFW.glfwDestroyWindow(handle);
 			GLFW.glfwTerminate();
@@ -234,21 +227,22 @@ public class Game {
 	// Public Static Engine Functions
 	//--------------------------------
 	
+	public static void displayScreen(AbstractScreen screenIn) { displayScreen(screenIn, true); }
 	/** Attempts to display a new AbstractScreen in game. */
-	public static void displayScreen(AbstractScreen screenIn) {
+	public static void displayScreen(AbstractScreen screenIn, boolean init) {
 		if (screenIn != null) {
 			AbstractScreen old = currentScreen;
 			
 			if (old != null) {
-				gameRenderer.removeObject(currentScreen);
-				currentScreen.removeAllObjects();
-				old.onScreenClosed();
+				old.removeAllObjects();
+				old.onClosed();
 			}
 			
 			currentScreen = screenIn;
-			gameRenderer.addObject(currentScreen);
-			currentScreen.initScreen();
-			currentScreen.postInit();
+			if (init) {
+				currentScreen.initScreen();
+				currentScreen.initObjects();
+			}
 		}
 	}
 	
@@ -314,9 +308,7 @@ public class Game {
 	/** Displays the specified window parent with variable arguments. */
 	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, CenterType loc) {
 		if (guiIn == null) { displayScreen(null); }
-		if (Game.currentScreen == null || !(Game.currentScreen instanceof IRendererProxy)) { displayScreen(new GameScreen()); }
-		if (guiIn != null) {
-			
+		else {
 			gameRenderer.addObject(guiIn);
 			if (oldObject instanceof AbstractScreen) { displayScreen(null); }
 			else if (oldObject instanceof IWindowParent && closeOld) { ((IWindowParent) oldObject).close(); }

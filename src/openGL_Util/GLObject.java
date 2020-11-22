@@ -2,6 +2,7 @@ package openGL_Util;
 
 import gameSystems.fontRenderer.EStringBuilder;
 import gameSystems.textureSystem.GameTexture;
+import gameSystems.textureSystem.TextureSystem;
 import main.Game;
 import org.lwjgl.opengl.GL11;
 import util.renderUtil.EColors;
@@ -297,6 +298,7 @@ public abstract class GLObject {
 		drawRect(left, bottom - borderWidth, right, bottom, color); //bottom
 	}
 	
+	public static void drawTexture(double x, double y, double w, double h) { drawTexture(x, y, w, h, TextureSystem.getInstance().getBoundTexture(), false); }
 	/** Draws a texture with the given dimensions. */
 	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) { drawTexture(x, y, w, h, tex, false); }
 	/** Draws a texture with the given dimensions. */

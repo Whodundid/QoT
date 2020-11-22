@@ -14,7 +14,7 @@ public abstract class SetLocationWindow extends OverlayWindow {
 	
 	protected SetLocationWindow hideAllOnRenderer(IWindowObject... exceptionsIn) {
 		previousStates.clear();
-		EArrayList exceptions = new EArrayList().addA(exceptionsIn);
+		EArrayList exceptions = new EArrayList().add(exceptionsIn);
 		
 		for (IWindowObject o : Game.getGameRenderer().getAllChildren()) {
 			if (o.isPersistent()) { continue; }
@@ -27,7 +27,7 @@ public abstract class SetLocationWindow extends OverlayWindow {
 	}
 	
 	protected SetLocationWindow unideAllOnRenderer(IWindowObject... exceptionsIn) {
-		EArrayList exceptions = new EArrayList().addA(exceptionsIn);
+		EArrayList exceptions = new EArrayList().add(exceptionsIn);
 		
 		for (StorageBox<IWindowObject, Boolean> b : previousStates) {
 			if (exceptions.notContains(b.getA())) { b.getA().setHidden(!b.getB()); }

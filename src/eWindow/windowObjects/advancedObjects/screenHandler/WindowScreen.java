@@ -47,7 +47,7 @@ public class WindowScreen {
 	//--------------------
 	
 	public WindowScreen setObjects(IWindowObject... objectsIn) {
-		objects.addA(objectsIn);
+		objects.add(objectsIn);
 		return this;
 	}
 	

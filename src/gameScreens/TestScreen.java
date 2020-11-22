@@ -12,7 +12,6 @@ import gameTextures.Textures;
 import input.Keyboard;
 import main.Game;
 import org.lwjgl.glfw.GLFW;
-import shop.WhodundidsBrother;
 import sound.Songs;
 import util.mathUtil.Direction;
 import util.mathUtil.NumUtil;
@@ -34,23 +33,27 @@ public class TestScreen extends GameScreen {
 	int stage = 0;
 	
 	public TestScreen(Player playerIn) {
+		super();
 		mainCharacter = playerIn;
 	}
 	
 	@Override
 	public void initScreen() {
-		//Songs.playSong(Songs.theme).loop();
+		Songs.playSong(Songs.theme).loop();
 		buildMap();
+		randomMonsters(3);
 	}
 	
 	@Override
 	public void initObjects() {
+		windowObjects.clear();
+		
 		if (mainCharacter == null) {
 			mainCharacter = new Player("The Player", Game.getWidth() / 2, Game.getHeight() / 2);
 		}
-		
-		//mainCharacter.setDrawHitbox(true);
-		mainCharacter.setPosition(Game.getWidth() / 2, Game.getHeight() / 2);
+		else {
+			mainCharacter.setPosition(Game.getWidth() / 2, Game.getHeight() / 2);
+		}
 		
 		addObject(mainCharacter);
 		
@@ -61,12 +64,13 @@ public class TestScreen extends GameScreen {
 		
 		addObject(damagePlayer, rebuildMap);
 		
-		randomMonsters(3);
+		if (monsters.isNotEmpty()) {
+			for (Entity e : monsters) { addObject(e); }
+		}
 	}
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
-		super.drawScreen(mXIn, mYIn);
 		
 		if (System.currentTimeMillis() - time >= 2000) {
 			time = System.currentTimeMillis();
@@ -86,7 +90,7 @@ public class TestScreen extends GameScreen {
 				int offset = (i % 2 == 1) ? 64 : 0;
 				
 				if (i % 2 == 0 || j < mapTiles[0].length - 1) {
-					drawTexture(-64 + (j * 128) + offset, -32 + (i * 32), 128, 64, mapTiles[i][j]);
+					drawTexture(-64 + (j * 128) + offset + 64, -32 + (i * 32) + 32, 128, 64, mapTiles[i][j]);
 				}
 			}
 		}
@@ -96,8 +100,7 @@ public class TestScreen extends GameScreen {
 		
 		for (Entity e : monsters) {
 			Direction d = NumUtil.randomDir();
-			
-			e.move(d);
+			//e.move(d);
 		}
 		
 		if (Keyboard.isWDown()) { mainCharacter.move(0, -1); }
@@ -110,8 +113,6 @@ public class TestScreen extends GameScreen {
 		}
 		
 		checkIfBattle();
-		
-		
 	}
 	
 	@Override
@@ -127,7 +128,7 @@ public class TestScreen extends GameScreen {
 	}
 	
 	@Override
-	public void onScreenClosed() {
+	public void onClosed() {
 		Songs.stopSong(Songs.theme);
 	}
 	
@@ -182,7 +183,7 @@ public class TestScreen extends GameScreen {
 	}
 	
 	private void buildMap() {
-		mapTiles = new GameTexture[Game.getWidth() / 32][Game.getHeight() / 64 + 2];
+		mapTiles = new GameTexture[Game.getHeight() / 32][Game.getWidth() / 128];
 		
 		for (int i = 0; i < mapTiles.length; i++) {
 			for (int j = 0; j < mapTiles[0].length; j++) {
@@ -241,6 +242,7 @@ public class TestScreen extends GameScreen {
 	
 	@Override
 	public void onWindowResize() {
+		reInitObjects();
 		buildMap();
 	}
 	

@@ -522,7 +522,7 @@ public class ETerminal extends WindowParent {
 		catch (Exception e) { e.printStackTrace(); }
 	}
 	
-	public ETerminal buildTabCompletions(String... dataIn) { return buildTabCompletions(new EArrayList().addA(dataIn)); }
+	public ETerminal buildTabCompletions(String... dataIn) { return buildTabCompletions(new EArrayList().add(dataIn)); }
 	public ETerminal buildTabCompletions(EArrayList<String> dataIn) {
 		clearTabCompletions();
 		

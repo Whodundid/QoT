@@ -1,16 +1,13 @@
 package main;
 
 import java.util.Scanner;
-import shop.Shopkeeper;
-import shop.WhodundidsBrother;
 import sound.Songs;
 import util.miscUtil.TracingPrintStream;
 import entities.enemy.Enemy;
 import entities.enemy.types.Goblin;
 import entities.enemy.types.Whodundid;
 import entities.player.Player;
-import gameSystems.battleSystem.Battle;
-import items.types.LesserHealing;
+import gameSystems.battleScreens.Battle;
 
 public class Main implements Runnable {
 	
@@ -54,7 +51,7 @@ public class Main implements Runnable {
 		mainCharacter.getInventory().storeItems(items.Items.lesserHealing);
 		
 		System.out.println("Your character has: ");
-		mainCharacter.displayInventory();
+		//mainCharacter.displayInventory();
 		//System.out.println(Swords.Items.woodSword.getWeight());
 		
 		//System.out.println(mainCharacter.getTrueDamage());

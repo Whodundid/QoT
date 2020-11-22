@@ -3,8 +3,10 @@ package input;
 import gameSystems.gameRenderer.GameRenderer;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import main.Game;
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
@@ -14,6 +16,7 @@ public class Keyboard extends GLFWKeyCallback {
 	private static char lastChar = '\u0000';
 	private static int lastKey = -1;
 	private static Keyboard instance;
+	private static boolean repeatEvents = true;
 	
 	//--------------------
 	//Keyboard Constructor
@@ -66,8 +69,8 @@ public class Keyboard extends GLFWKeyCallback {
 			if (r != null) {
 				switch (action) {
 				case 0: r.keyReleased(typedChar, keyCode); break;
-				case 1: 
-				case 2: r.keyPressed(typedChar, keyCode); break;
+				case 1: r.keyPressed(typedChar, keyCode); break;
+				case 2: if (repeatEvents) { r.keyPressed(typedChar, keyCode); } break;
 				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
 				}
 			}
@@ -115,13 +118,13 @@ public class Keyboard extends GLFWKeyCallback {
 	}
 	
 	public static void setClipboard(String in) {
-		//if (!StringUtils.isEmpty(in)) {
-		//try {
-		//		StringSelection stringselection = new StringSelection(in);
-          //      Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, null);
-		//	}
-			//catch (Exception e) {}
-		//}
+		if (!StringUtils.isEmpty(in)) {
+			try {
+				StringSelection stringselection = new StringSelection(in);
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, null);
+			}
+			catch (Exception e) {}
+		}
 	}
 	
 	public static String getClipboard() {
@@ -134,6 +137,9 @@ public class Keyboard extends GLFWKeyCallback {
 		catch (Exception e) {}
 		return "";
 	}
+	
+	public static void enableRepeatEvents() { repeatEvents = true; }
+	public static void disableRepeatEvents() { repeatEvents = false; }
 	
 	public static char getLastChar() { return lastChar; }
 	public static int getLastKey() { return lastKey; }

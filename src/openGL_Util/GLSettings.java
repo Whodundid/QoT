@@ -17,14 +17,18 @@ public final class GLSettings {
 	//GLSettings Static Methods
 	//-------------------------
 	
-	public static void enableBlend() { glEnable(GL_BLEND); }
-	public static void enableAlpha() { glEnable(GL_ALPHA); }
+	public static void enableBlend() { enable(GL_BLEND); }
+	public static void enableAlpha() { enable(GL_ALPHA); }
 	
-	public static void disableBlend() { glDisable(GL_BLEND); }
-	public static void disableAlpha() { glDisable(GL_ALPHA); }
+	public static void disableBlend() { disable(GL_BLEND); }
+	public static void disableAlpha() { disable(GL_ALPHA); }
 	
 	public static void pushMatrix() { glPushMatrix(); }
 	public static void popMatrix() { glPopMatrix(); }
+	
+	public static void clearDepth() { clear(GL_DEPTH_BUFFER_BIT); }
+	public static void enableScissor() { enable(GL_SCISSOR_BIT); }
+	public static void disableScissor() { disable(GL_SCISSOR_TEST); }
 	
 	public static void color(float val) { color(val, val, val); }
 	public static void colorA(float val) { color(val, val, val, val); }
@@ -37,21 +41,24 @@ public final class GLSettings {
 	public static void blendSeparate(int srcRGB, int destRGB, int srcA, int destA) { glBlendFuncSeparate(srcRGB, destRGB, srcA, destA); }
 	
 	public static void shade(int mode) { glShadeModel(mode); }
-
 	public static void fullBright() { colorA(1.0f); }
 	public static void setLight(float val) { colorA(val); }
 	
 	public static void enableTexture() {
 		blendFunc();
-		glEnable(GL_TEXTURE_2D);
-		glDisable(GL_CULL_FACE);
-		glDisable(GL_DEPTH_TEST);
+		enable(GL_TEXTURE_2D);
+		disable(GL_CULL_FACE);
+		disable(GL_DEPTH_TEST);
 	}
 	
 	public static void disableTexture() {
-		glDisable(GL_TEXTURE_2D);
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_DEPTH_TEST);
+		disable(GL_TEXTURE_2D);
+		enable(GL_CULL_FACE);
+		enable(GL_DEPTH_TEST);
 	}
+	
+	public static void clear(int mask) { glClear(mask); }
+	public static void enable(int target) { glEnable(target); }
+	public static void disable(int target) { glDisable(target); }
 	
 }

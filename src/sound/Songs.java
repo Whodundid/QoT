@@ -1,5 +1,6 @@
 package sound;
 
+import main.Game;
 import util.storageUtil.EArrayList;
 
 /** This contains every song in the game! */
@@ -28,9 +29,11 @@ public class Songs {
 	}
 	
 	public static Audio playSong(Audio in) {
-		if (in != null) {
-			in.start();
-			currentlyPlaying.add(in);
+		if (Game.playSongs) {
+			if (in != null) {
+				in.start();
+				currentlyPlaying.add(in);
+			}
 		}
 		return in;
 	}

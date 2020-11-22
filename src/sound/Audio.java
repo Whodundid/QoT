@@ -6,6 +6,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
+import main.Game;
 
 public class Audio {
 	
@@ -34,9 +35,11 @@ public class Audio {
 			e.printStackTrace();
 		}
 	}
-		
+	
 	public void loop() {
-		clip.loop(Clip.LOOP_CONTINUOUSLY);
+		if (Game.playSongs) {
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
 	}
 		
 	public void stop() {

@@ -2,10 +2,7 @@ package entities;
 
 import eWindow.windowTypes.WindowObject;
 import entities.player.Player;
-import gameScreens.BattleScreen;
 import gameSystems.questSystem.RouteTracker;
-import main.Game;
-import particles.DamageSplash;
 import util.mathUtil.Direction;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
@@ -60,23 +57,12 @@ public abstract class Entity extends WindowObject {
 	}
 	
 	public void hurt(double amount) {
-		System.out.println(name + " takes " + amount + " damage!");
-		double damage = amount;
-		health = NumUtil.clamp(health - damage, 0, health);
-		
-		Game.getGameRenderer().addObject(new DamageSplash(midX, startY, damage));
-		
+		health = NumUtil.clamp(health - amount, 0, health);
 		if (health <= 0) { kill(); }
 	}
 	
-	public void heal(double amount) {
-		System.out.println(name + " heals for " + amount + " damage?!");
-		health = NumUtil.clamp(health + amount, 0, maxHealth);
-	}
-	
-	public void drainMana(double amount) {
-		mana = NumUtil.clamp(mana - amount, 0, Double.MAX_VALUE);
-	}
+	public void heal(double amount) { health = NumUtil.clamp(health + amount, 0, maxHealth); }
+	public void drainMana(double amount) { mana = NumUtil.clamp(mana - amount, 0, Double.MAX_VALUE); }
 	
 	public void kill() {
 		health = 0;
@@ -107,10 +93,6 @@ public abstract class Entity extends WindowObject {
 	
 	public Entity setDrawHitbox(boolean val) { drawHitbox = val; return this; }
 	
-	//public void setHealth(double healthIn) {
-	//	health = health + healthIn;
-	//}
-	
 	//-------------------
 	// Protected Methods
 	//-------------------
@@ -121,11 +103,9 @@ public abstract class Entity extends WindowObject {
 			drainMana(spellCost);
 			return true;
 		}
-		System.out.println("YOU HAVE NO MANA, BITCH");
 		return false;
 	}
 
 	public abstract RouteTracker getBackgroundStats();
-
 	
 }

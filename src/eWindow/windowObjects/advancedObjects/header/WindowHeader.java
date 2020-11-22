@@ -14,7 +14,6 @@ import input.Mouse;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
 import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
 import util.storageUtil.EDimension;
 import util.storageUtil.StorageBox;
 
@@ -40,7 +39,6 @@ public class WindowHeader extends WindowObject {
 	protected boolean drawParentFocus = true;
 	protected boolean alwaysDrawFocused = false;
 	protected boolean moving = false;
-	protected EArrayList<HeaderTab> tabs = new EArrayList();
 	private StorageBox<Integer, Integer> clickPos = new StorageBox(-1, -1);
 	protected IWindowParent window;
 	private int buttonPos = buttonWidth + 2;
@@ -473,8 +471,6 @@ public class WindowHeader extends WindowObject {
 	//WindowHeader Getters
 	//--------------------
 	
-	public int getTabCount() { return tabs.size(); }
-	public EArrayList<HeaderTab> getTabs() { return tabs; }
 	public int getTitleColor() { return titleColor; }
 	public String getTitle() { return title; }
 	public boolean isParentFocusDrawn() { return drawParentFocus; }

@@ -1,6 +1,7 @@
 package util;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -278,18 +279,18 @@ public class EUtil {
 	public static <E> EArrayList<E> asList(E... vals) { return new EArrayList<E>(vals); }
 	
 	public static <E> E[] add(E obj, E[] array) {
-		EArrayList<E> list = new EArrayList(obj).addA(array);
+		EArrayList<E> list = new EArrayList(obj).add(array);
 		return list.toArray(array);
 	}
 	
 	public static <E> E[] addEnd(E obj, E[] array) {
-		EArrayList<E> list = new EArrayList().addA(array);
+		EArrayList<E> list = new EArrayList().add(array);
 		list.add(obj);
 		return list.toArray(array);
 	}
 	
 	public static <E> E[] addAt(E obj, int pos, E[] array) {
-		EArrayList<E> list = new EArrayList().addA(array);
+		EArrayList<E> list = new EArrayList().add(array);
 		if (pos >= 0 && pos < array.length + 1) {
 			list.add(pos, obj);
 		}
@@ -323,56 +324,72 @@ public class EUtil {
 	//array conversions
 	
 	/** Converts a typed-array to a Stream. */
-	public static <E> Stream<E> streamA(E... vals) { return ((EArrayList<E>) new EArrayList<E>().addA(vals)).stream(); }
-	/** Converts a typed-array to a Stream then performs the given filter. */
-	public static <E> Stream<E> filterA(Predicate<? super E> filter, E... vals) { return streamA(vals).filter(filter); }
+	public static <E> Stream<E> stream(E... vals) { return ((EArrayList<E>) new EArrayList<E>().add(vals)).stream(); }
 	/** Converts a typed-array to a Stream that filters out null objects. */
-	public static <E> Stream<E> filterNullA(E... vals) { return streamA(vals).filter(o -> o != null); }
+	public static <E> Stream<E> filterNull(E... vals) { return stream(vals).filter(o -> o != null); }
+	
+	/** Converts a typed-array to a Stream then performs the given filter. */
+	public static <E> Stream<E> filterA(Predicate<? super E> filter, E... vals) { return stream(vals).filter(filter); }
 	/** Converts a typed-array to a Stream that filters out null objects then performs the given filter. */
-	public static <E> Stream<E> filterNullA(Predicate<? super E> filter, E... vals) { return filterNullA(vals).filter(filter); }
+	public static <E> Stream<E> filterNullA(Predicate<? super E> filter, E... vals) { return filterNull(vals).filter(filter); }
 	/** Converts a typed-array to a Stream that maps each object to the specified type. */
-	public static <E, T> Stream<T> mapA(Function<? super E, ? extends T> mapper, E... vals) { return streamA(vals).map(mapper); }
+	public static <E, T> Stream<T> mapA(Function<? super E, ? extends T> mapper, E... vals) { return stream(vals).map(mapper); }
 	/** Performs a forEach loop across each element of a given array. */
 	public static <E> void forEachA(Consumer<? super E> action, E... vals) { forEach(vals, action); }
 	/** Converts a typed-array to a Stream then performs the given filter and finally performs a forEach loop on each remaining element. */
 	public static <E> void filterForEachA(Predicate<? super E> filter, Consumer<? super E> action, E... vals) { filterA(filter, vals).forEach(action); }
 	/** Converts a typed-array to a Stream that filters out null objects then performs a forEach loop on each remaining element. */
-	public static <E> void filterNullForEachA(Consumer<? super E> action, E... vals) { filterNullA(vals).forEach(action); }
+	public static <E> void filterNullForEachA(Consumer<? super E> action, E... vals) { filterNull(vals).forEach(action); }
 	/** Converts a typed-array to a Stream that filters out null objects then performs the given filter and finally performs a forEach loop on each remaining element. */
-	public static <E> void filterNullForEachA(Predicate<? super E> filter, Consumer<? super E> action, E... vals) { filterNullA(vals).filter(filter).forEach(action); }
+	public static <E> void filterNullForEachA(Predicate<? super E> filter, Consumer<? super E> action, E... vals) { filterNull(vals).filter(filter).forEach(action); }
 	
 	//list conversions
 	
-	/** Converts a typed-List to a Stream then performs the given filter. */
-	public static <E> Stream<E> filter(List<E> list, Predicate<? super E> filter) { return list.stream().filter(filter); }
-	/** Converts a typed-List to a Stream that filters out null objects. */
-	public static <E> Stream<E> filterNull(List<E> list) { return list.stream().filter(o -> o != null); }
-	/** Converts a typed-List to a Stream that filters out null objects then performs the given filter. */
-	public static <E> Stream<E> filterNull(List<E> list, Predicate<? super E> filter) { return filterNull(list).filter(filter); }
-	/** Converts a typed-List to a Stream that maps each object to the specified type. */
-	public static <E, T> Stream<T> map(List<E> list, Function<? super E, ? extends T> mapper) { return list.stream().map(mapper); }
+	/** Converts a typed-Collection to a Stream then performs the given filter. */
+	public static <E> Stream<E> filter(Collection<E> list, Predicate<? super E> filter) { return list.stream().filter(filter); }
+	/** Converts a typed-Collection to a Stream that filters out null objects. */
+	public static <E> Stream<E> filterNull(Collection<E> list) { return list.stream().filter(o -> o != null); }
+	/** Converts a typed-Collection to a Stream that filters out null objects then performs the given filter. */
+	public static <E> Stream<E> filterNull(Collection<E> list, Predicate<? super E> filter) { return filterNull(list).filter(filter); }
+	/** Converts a typed-Collection to a Stream that maps each object to the specified type. */
+	public static <E, T> Stream<T> map(Collection<E> list, Function<? super E, ? extends T> mapper) { return list.stream().map(mapper); }
 	/** Performs a forEach loop on each element. Directly mapped from 'Java.util.List' */
-	public static <E> void forEach(List<E> list, Consumer<? super E> action) { list.forEach(action); }
+	public static <E> void forEach(Collection<E> list, Consumer<? super E> action) { list.forEach(action); }
 	/** Performs a forEach loop on each element. Then returns the specified 'returnVal' argument. */
-	public static <E, R> R forEachR(List<E> list, Consumer<? super E> action, R returnVal) { forEach(list, action); return returnVal; }
-	/** Converts a typed-List to a Stream then performs the given filter then finally performs a forEach loop on each remaining element. */
-	public static <E> void filterForEach(List<E> list, Predicate<? super E> filter, Consumer<? super E> action) { filter(list, filter).forEach(action); }
-	/** Converts a typed-List to a Stream that filters out null objects then finally performs a forEach loop on each remaining element. */
-	public static <E> void filterNullForEach(List<E> list, Consumer<? super E> action) { filterNull(list).forEach(action); }
-	/** Converts a typed-List to a Stream that filters out null objects then performs the given filter then finally performs a forEach loop on each remaining element. */
-	public static <E> void filterNullForEach(List<E> list, Predicate<? super E> filter, Consumer<? super E> action) { filterNull(list).filter(filter).forEach(action); }
+	public static <E, R> R forEachR(Collection<E> list, Consumer<? super E> action, R returnVal) { forEach(list, action); return returnVal; }
+	/** Converts a typed-Collection to a Stream then performs the given filter then finally performs a forEach loop on each remaining element. */
+	public static <E> void filterForEach(Collection<E> list, Predicate<? super E> filter, Consumer<? super E> action) { filter(list, filter).forEach(action); }
+	/** Converts a typed-Collection to a Stream that filters out null objects then finally performs a forEach loop on each remaining element. */
+	public static <E> void filterNullForEach(Collection<E> list, Consumer<? super E> action) { filterNull(list).forEach(action); }
+	/** Converts a typed-Collection to a Stream that filters out null objects then performs the given filter then finally performs a forEach loop on each remaining element. */
+	public static <E> void filterNullForEach(Collection<E> list, Predicate<? super E> filter, Consumer<? super E> action) { filterNull(list).filter(filter).forEach(action); }
+	
+	/** Converts a typed-Array to a Stream then performs the given filter. */
+	public static <E> Stream<E> filter(E[] arr, Predicate<? super E> filter) { return stream(arr).filter(filter); }
+	/** Converts a typed-Array to a Stream that filters out null objects then performs the given filter. */
+	public static <E> Stream<E> filterNull(E[] arr, Predicate<? super E> filter) { return stream(arr).filter(filter.and(o -> o != null)); }
+	/** Converts a typed-Array to a Stream that maps each object to the specified type. */
+	public static <E, T> Stream<T> map(E[] arr, Function<? super E, ? extends T> mapper) { return stream(arr).map(mapper); }
+	/** Performs a forEach loop on each element. */
+	public static <E> void forEach(E[] arr, Consumer<? super E> action) { for (E e : arr) { action.accept(e); } }
+	/** Performs a forEach loop across each element of a given array if the given input is true and the list is not null. Returns provided value regardless of input. */
+	public static <E, R> R forEachR(E[] arr, Consumer<? super E> action, R returnVal) { forEach(arr, action); return returnVal; }
+	/** Converts a typed-Array to a Stream then performs the given filter then finally performs a forEach loop on each remaining element. */
+	public static <E> void filterForEach(E[] arr, Predicate<? super E> filter, Consumer<? super E> action) { filter(arr, filter).forEach(action); }
+	/** Converts a typed-Array to a Stream that filters out null objects then finally performs a forEach loop on each remaining element. */
+	public static <E> void filterNullForEach(E[] arr, Consumer<? super E> action) { filterNull(arr).forEach(action); }
+	/** Converts a typed-Array to a Stream that filters out null objects then performs the given filter then finally performs a forEach loop on each remaining element. */
+	public static <E> void filterNullForEach(E[] arr, Predicate<? super E> filter, Consumer<? super E> action) { filterNull(arr).filter(filter).forEach(action); }
 	
 	/** Converts an array of a specified type into a Stream and performs the given filter across each element then 
 	 *  finally collects the filtered data into the specified Collector. */
 	public static <E, R, A> R filterInto(E[] arrIn, Predicate<? super E> filter, Collector<? super E, A, R> collector) { return filterA(filter, arrIn).collect(collector); }
 	/** Converts a List of a specified type into a Stream and performs the given filter across each element then 
 	 *  finally collects the filtered data into the specified Collector. */
-	public static <E, R, A> R filterInto(List<E> listIn, Predicate<? super E> filter, Collector<? super E, A, R> collector) { return filter(listIn, filter).collect(collector); }
+	public static <E, R, A> R filterInto(Collection<E> listIn, Predicate<? super E> filter, Collector<? super E, A, R> collector) { return filter(listIn, filter).collect(collector); }
 	
 	//array forEach
 	
-	/** Performs a forEach loop across each element of a given array. */
-	public static <E> void forEach(E[] arr, Consumer<? super E> action) { for (E e : arr) { action.accept(e); } }
 	public static void forEach(boolean[] arr, Consumer<? super Boolean> action) { for (boolean e : arr) { action.accept(e); } }
 	public static void forEach(byte[] arr, Consumer<? super Byte> action) { for (byte e : arr) { action.accept(e); } }
 	public static void forEach(char[] arr, Consumer<? super Character> action) { for (char e : arr) { action.accept(e); } }
@@ -384,8 +401,6 @@ public class EUtil {
 	
 	//array forEach Returns
 	
-	/** Performs a forEach loop across each element of a given array if the given input is true and the list is not null. Returns provided value regardless of input. */
-	public static <E, R> R forEachR(E[] arr, Consumer<? super E> action, R returnVal) { forEach(arr, action); return returnVal; }
 	public static <R> R forEachR(boolean[] arr, Consumer<? super Boolean> action, R returnVal) { for (boolean e : arr) { action.accept(e); } return returnVal; }
 	public static <R> R forEachR(byte[] arr, Consumer<? super Byte> action, R returnVal) { for (byte e : arr) { action.accept(e); } return returnVal; }
 	public static <R> R forEachR(char[] arr, Consumer<? super Character> action, R returnVal) { for (char e : arr) { action.accept(e); } return returnVal; }
@@ -398,7 +413,7 @@ public class EUtil {
 	//if checks
 	
 	/** Performs a forEach loop across each element of a given list if the given input is true and the list is not null. Returns true if the given input is true. */
-	public static <E> boolean ifForEach(boolean check, List<E> list, Consumer<? super E> action) { if (check && notNull(list)) { list.forEach(action); return true; } return false; }
+	public static <E> boolean ifForEach(boolean check, Collection<E> list, Consumer<? super E> action) { if (check && notNull(list)) { list.forEach(action); return true; } return false; }
 	public static <E> boolean ifForEach(boolean check, E[] arr, Consumer<? super E> action) { if (check && notNull(arr)) { forEach(arr, action); return true; } return false; }
 	public static boolean ifForEach(boolean check, boolean[] arr, Consumer<? super Boolean> action) { if (check && notNull(arr)) { forEach(arr, action); return true; } return false; }
 	public static boolean ifForEach(boolean check, byte[] arr, Consumer<? super Byte> action) { if (check && notNull(arr)) { forEach(arr, action); return true; } return false; }
@@ -452,9 +467,9 @@ public class EUtil {
 	//contains
 	
 	public static <E> boolean contains(E[] arr, E value) { for (E e : arr) { if (isEqual(e, value)) { return true; } } return false; }
-	public static <E> boolean contains(List<E> arr, E value) { for (E e : arr) { if (isEqual(e, value)) { return true; } } return false; }
+	public static <E> boolean contains(Collection<E> arr, E value) { for (E e : arr) { if (isEqual(e, value)) { return true; } } return false; }
 	public static <E> E containsR(E[] arr, E value) { for (E e : arr) if (isEqual(e, value)) { return e; } return null; }
-	public static <E> E containsR(List<E> arr, E value) { for (E e : arr) if (isEqual(e, value)) { return e; } return null; }
+	public static <E> E containsR(Collection<E> arr, E value) { for (E e : arr) if (isEqual(e, value)) { return e; } return null; }
 	
 	//try statements
 	

@@ -30,7 +30,7 @@ public class ListCMD extends TerminalCommand {
 	@Override
 	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
 		String[] types = {"objects, guis, windows, commands"};
-		super.basicTabComplete(termIn, args, new EArrayList().addA(types));
+		super.basicTabComplete(termIn, args, new EArrayList().add(types));
 	}
 	
 	@Override

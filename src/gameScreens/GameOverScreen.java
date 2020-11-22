@@ -2,13 +2,21 @@ package gameScreens;
 
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
+import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
 import main.Game;
 import sound.Songs;
 
 public class GameOverScreen extends GameScreen {
 	
+	Player p;
 	WindowButton startOver, close;
+	
+	public GameOverScreen() { this(null); }
+	public GameOverScreen(Player in) {
+		super();
+		p = in;
+	}
 	
 	@Override
 	public void initScreen() {
@@ -26,10 +34,14 @@ public class GameOverScreen extends GameScreen {
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawStringC("You have died!", midX, midY - 300);
+		
+		if (p != null) {
+			drawStringC("You killed: " + p.getBackgroundStats().getEnemiesKilled(), midX, midY - 150);
+		}
 	}
 	
 	@Override
-	public void onScreenClosed() {
+	public void onClosed() {
 		Songs.stopSong(Songs.lithinburg);
 	}
 	
