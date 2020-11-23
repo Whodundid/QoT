@@ -38,6 +38,7 @@ public class Audio {
 	
 	public void loop() {
 		if (Game.playSongs) {
+			clip.setFramePosition(0);
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		}
 	}

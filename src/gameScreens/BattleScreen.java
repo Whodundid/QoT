@@ -3,7 +3,6 @@ package gameScreens;
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
 import entities.Entity;
-import entities.enemy.types.Whodundid;
 import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
 import gameWindows.InventoryWindow;
@@ -37,10 +36,12 @@ public class BattleScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		Songs.playSong((entB instanceof Whodundid) ? Songs.darkCave : Songs.battleTheme);
+		Songs.loop(currentSong = Songs.darkCave);
 		
 		oldA = entA.getDimensions();
 		oldB = entB.getDimensions();
+		
+		setObjectName("Battle Screen");
 	}
 	
 	@Override
@@ -62,6 +63,7 @@ public class BattleScreen extends GameScreen {
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.vdgray);
+		
 		if (!isInventoryOpen()) { inventoryWindow = null; }
 		
 		drawStringC(lastMessage, midX, 20);
@@ -119,7 +121,7 @@ public class BattleScreen extends GameScreen {
 	}
 
 	@Override
-	public void onClosed() {
+	public void onScreenClosed() {
 		Songs.stopSong(currentSong);
 		
 		entA.setDimensions(oldA);
@@ -152,13 +154,13 @@ public class BattleScreen extends GameScreen {
 	
 	/** Stops the battle and returns to the game world. */
 	public void endBattle() {
-		if (prev instanceof TestScreen) {
+		if (prev instanceof GamePlayScreen) {
 			
 			//close the inventory if it is open
 			if (inventoryWindow != null) { inventoryWindow.close(); }
 			
 			Game.displayScreen(prev);
-			Songs.stopAllMusic();
+			Songs.stopSong(currentSong);
 		}
 	}
 	

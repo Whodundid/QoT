@@ -37,14 +37,14 @@ public class FontRenderer {
 	//FontRenderer Methods
 	//--------------------
 	
-	public int drawString(Object in, Number xIn, Number yIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
-	public int drawString(String in, Number xIn, Number yIn) { return drawString(in, xIn, yIn, 0xffffffff); }
+	public double drawString(Object in, Number xIn, Number yIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
+	public double drawString(String in, Number xIn, Number yIn) { return drawString(in, xIn, yIn, 0xffffffff); }
 	
-	public int drawString(Object in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public int drawString(Object in, Number xIn, Number yIn, int colorIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn); }
+	public double drawString(Object in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
+	public double drawString(Object in, Number xIn, Number yIn, int colorIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn); }
 	
-	public int drawString(String in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public int drawString(String in, Number xIn, Number yIn, int colorIn) {
+	public double drawString(String in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
+	public double drawString(String in, Number xIn, Number yIn, int colorIn) {
 		return createString(in, xIn, yIn, colorIn);
 	}
 	
@@ -54,7 +54,7 @@ public class FontRenderer {
 	
 	public GameFont getCurrentFont() { return currentFont; }
 	
-	public int getStringWidth(String in) { return (int) (in.length() * (16 / Game.getGameScale())); }
+	public int getStringWidth(String in) { return (int) (in.length() * (16 / Game.getGameScale()) + 8); }
 	
 	//--------------------
 	//FontRenderer Setters
@@ -66,7 +66,7 @@ public class FontRenderer {
 	//FontRenderer Internal Methods
 	//-----------------------------
 	
-	private int createString(String in, Number xIn, Number yIn, int colorIn) {
+	private double createString(String in, Number xIn, Number yIn, int colorIn) {
 		if (in != null) {
 			double sX = xIn.doubleValue();
 			for (int i = 0; i < in.length(); i++) {
@@ -82,6 +82,7 @@ public class FontRenderer {
 				drawChar(sX, yIn.doubleValue(), xPos, yPos, colorIn);
 				sX += (16 / Game.getGameScale()) + 1;
 			}
+			return sX + getStringWidth(in);
 		}
 		return 0;
 	}

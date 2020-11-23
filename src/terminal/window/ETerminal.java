@@ -160,16 +160,12 @@ public class ETerminal extends WindowParent {
 		getHeader().setTitle("Terminal");
 		
 		drawRect(startX, startY, endX, endY, 0xff000000);
-		//history.setBackgroundColor(CoreApp.termBackground.get());
 		
 		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		//if (GuiScreen.isKeyComboCtrlC(keyCode)) {
-		//	System.out.println("ctrl c");
-		//}
 		if (inputField != null) { inputField.requestFocus(); }
 	}
 	

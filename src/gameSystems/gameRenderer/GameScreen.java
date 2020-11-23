@@ -24,4 +24,10 @@ public class GameScreen extends AbstractScreen {
 	@Override public ITopParent getTopParent() { return this; }
 	@Override public IWindowObject getParent() { return this; }
 	
+	@Override
+	public void onWindowResize() {
+		setDimensions(0, 0, Game.getWidth(), Game.getHeight());
+		reInitObjects();
+	}
+	
 }

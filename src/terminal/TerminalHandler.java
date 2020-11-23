@@ -239,6 +239,8 @@ public class TerminalHandler {
 		EArrayList<CommandType> types = new EArrayList();
 		unsorted.forEach(c -> types.addIfNotContains(c.getType()));
 		
+		System.out.println(commandsByCategory);
+		
 		//isolate the 'none' category
 		StorageBox<String, EArrayList<TerminalCommand>> noneCat = commandsByCategory.removeBoxesContainingA("none").get(0);
 		EArrayList<TerminalCommand> typeToProcess = new EArrayList(noneCat.getB());

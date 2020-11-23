@@ -28,6 +28,16 @@ public class Songs {
 		return new EArrayList(currentlyPlaying);
 	}
 	
+	public static Audio loop(Audio in) {
+		if (Game.playSongs) {
+			if (in != null) {
+				in.loop();
+				currentlyPlaying.add(in);
+			}
+		}
+		return in;
+	}
+	
 	public static Audio playSong(Audio in) {
 		if (Game.playSongs) {
 			if (in != null) {

@@ -5,7 +5,7 @@ import eWindow.windowTypes.interfaces.IActionObject;
 import entities.Entity;
 import entities.enemy.types.Goblin;
 import entities.enemy.types.Thyrah;
-import entities.enemy.types.TollBoar;
+import entities.enemy.types.TrollBoar;
 import entities.enemy.types.Whodundid;
 import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
@@ -20,7 +20,7 @@ import util.mathUtil.NumUtil;
 import util.storageUtil.EArrayList;
 import util.storageUtil.EDimension;
 
-public class TestScreen extends GameScreen {
+public class GamePlayScreen extends GameScreen {
 	
 	Player mainCharacter;
 	WindowButton damagePlayer, rebuildMap;
@@ -28,29 +28,25 @@ public class TestScreen extends GameScreen {
 	
 	EArrayList<Entity> monsters = new EArrayList();
 	
-	float xf = 0;
-	float yf = 0;
-	
 	long time = 0;
 	int stage = 0;
 	
-	public TestScreen(Player playerIn) {
-		super();
-		mainCharacter = playerIn;
-	}
-	
 	@Override
 	public void initScreen() {
-		Songs.playSong(Songs.theme).loop();
+		mainCharacter = Game.getPlayer();
+		
+		Songs.loop(Songs.battleTheme);
+		
 		buildMap();
+		setObjectName("Test Screen");
 	}
 	
 	@Override
 	public void initObjects() {
 		windowObjects.clear();
 		
-		if (mainCharacter == null) {
-			mainCharacter = new Player("The Player", Game.getWidth() / 2, Game.getHeight() / 2);
+		if (Game.getPlayer() == null) {
+			Game.setPlayer(mainCharacter = new Player("The Player", Game.getWidth() / 2, Game.getHeight() / 2));
 		}
 		else {
 			mainCharacter.setPosition(Game.getWidth() / 2, Game.getHeight() / 2);
@@ -70,6 +66,10 @@ public class TestScreen extends GameScreen {
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
+		
+		if (mainCharacter.isDead()) {
+			Game.displayScreen(new GameOverScreen());
+		}
 		
 		if (System.currentTimeMillis() - time >= 2000) {
 			time = System.currentTimeMillis();
@@ -95,6 +95,7 @@ public class TestScreen extends GameScreen {
 		}
 		
 		drawString("HP: " + mainCharacter.getHealth() + "   MP: " + mainCharacter.getMana(), 10, 10);
+		//drawString("FPS: " + Game.getFPS(), 10, 50);
 		drawString("Enemies Killed: " + mainCharacter.getBackgroundStats().getEnemiesKilled(), 10, 100);
 		
 		for (Entity e : monsters) {
@@ -128,8 +129,8 @@ public class TestScreen extends GameScreen {
 	}
 	
 	@Override
-	public void onClosed() {
-		Songs.stopSong(Songs.theme);
+	public void onScreenClosed() {
+		Songs.stopAllMusic();
 	}
 	
 	private void checkIfBattle() {
@@ -169,7 +170,7 @@ public class TestScreen extends GameScreen {
 			switch (type) {
 			case 0: e = new Goblin(posX, posY); break;
 			case 1: e = new Whodundid(posX, posY); break;
-			case 2: e = new TollBoar(posX, posY); break;
+			case 2: e = new TrollBoar(posX, posY); break;
 			case 3: e = new Thyrah(posX, posY); break;
 			//case 2: e = new WhodundidsBrother(posX, posY); break;
 			}

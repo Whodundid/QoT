@@ -7,6 +7,7 @@ import eWindow.windowUtil.windowEvents.eventUtil.MouseType;
 import eWindow.windowUtil.windowEvents.events.EventMouse;
 import input.Mouse;
 import java.util.Iterator;
+import openGL_Util.GLSettings;
 import util.EUtil;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
@@ -43,7 +44,6 @@ public class WindowTextArea extends WindowScrollList {
 		super(parentIn, x, y, widthIn, heightIn);
 		editable = editableIn;
 		textDocument = new EArrayList();
-		//Keyboard.enableRepeatEvents(true);
 		setBackgroundColor(0xff2d2d2d);
 		setResetDrawn(true);
 	}
@@ -64,8 +64,8 @@ public class WindowTextArea extends WindowScrollList {
 		int scale = 1;//res.getScaleFactor();
 		try {
 			if (checkDraw() && height > (isHScrollDrawn() ? 5 : 2) && width > (isVScrollDrawn() ? 5 : 2)) {
-				//GlStateManager.pushMatrix();
-				//GlStateManager.enableBlend();
+				GLSettings.pushMatrix();
+				GLSettings.enableBlend();
 				
 				double sX = startX + 1 + getLineNumberOffset() - 2;
 				
@@ -84,7 +84,7 @@ public class WindowTextArea extends WindowScrollList {
 					for (IWindowObject o : drawnListObjects) {
 						if (o.checkDraw()) {
 							if (!o.hasFirstDraw()) { o.onFirstDraw(); o.onFirstDraw(); }
-							//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+							GLSettings.fullBright();
 							EDimension d = o.getDimensions();
 							o.drawObject(mXIn, mYIn);
 						}
@@ -111,12 +111,12 @@ public class WindowTextArea extends WindowScrollList {
 				for (IWindowObject o : windowObjects) {
 					if (o.checkDraw() && listContents.notContains(o)) {
 						if (!o.hasFirstDraw()) { o.onFirstDraw(); o.onFirstDraw(); }
-	    				//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+						GLSettings.fullBright();
 	    	        	o.drawObject(mXIn, mYIn);
 	    			}
 				}
 				
-				//GlStateManager.popMatrix();
+				GLSettings.popMatrix();
 			}
 		}
 		catch (Exception e) { e.printStackTrace(); }

@@ -10,7 +10,7 @@ import sound.Songs;
 public class GameOverScreen extends GameScreen {
 	
 	Player p;
-	WindowButton startOver, close;
+	WindowButton menu, load, close;
 	
 	public GameOverScreen() { this(null); }
 	public GameOverScreen(Player in) {
@@ -20,15 +20,17 @@ public class GameOverScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		Songs.playSong(Songs.lithinburg).loop();
+		Songs.loop(Songs.lithinburg);
+		setObjectName("Game Over");
 	}
 	
 	@Override
 	public void initObjects() {
-		startOver = new WindowButton(this, midX - 100, midY - 30, 200, 50, "Start Over");
-		close = new WindowButton(this, midX - 100, midY + 25, 200, 50, "Close Game");
+		menu = new WindowButton(this, midX - 100, midY - 30, 200, 40, "Main Menu");
+		load = new WindowButton(this, midX - 100, midY + 15, 200, 40, "Load Game");
+		close = new WindowButton(this, midX - 100, midY + 60, 200, 40, "Close Game");
 		
-		addObject(startOver, close);
+		addObject(menu, load, close);
 	}
 	
 	@Override
@@ -41,14 +43,18 @@ public class GameOverScreen extends GameScreen {
 	}
 	
 	@Override
-	public void onClosed() {
+	public void onScreenClosed() {
 		Songs.stopSong(Songs.lithinburg);
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == startOver) {
-			Game.displayScreen(new TestScreen(null));
+		if (object == menu) {
+			Game.displayScreen(new MainMenuScreen());
+		}
+		
+		if (object == load) {
+			
 		}
 		
 		if (object == close) {

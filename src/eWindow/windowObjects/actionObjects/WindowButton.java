@@ -113,8 +113,12 @@ public class WindowButton extends ActionObject {
 		//------------------------------------
 		
 		if (drawString) {
-			if (drawCentered) { drawStringC(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2, stringColor); }
-			else { drawString(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2, stringColor); }
+			scissor(startX + 1, startY + 1, endX - 1, endY - 1);
+			
+			if (drawCentered) { drawStringC(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 - 3, stringColor); }
+			else { drawString(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 - 3, stringColor); }
+			
+			endScissor();
 		}
 		
 		super.drawObject(mX, mY);

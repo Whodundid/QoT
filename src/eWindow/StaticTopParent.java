@@ -250,24 +250,12 @@ public class StaticTopParent extends EGui {
 	
 	/** Returns the object with the highest z level, this could even be the topParent itself. */
 	public static IWindowObject getHighestZLevelObject(ITopParent objIn) {
-		EArrayList<IWindowObject> objs = objIn.getObjects();
-		
-		if (objs.isNotEmpty()) {
-			//IWindowObject highest = objs.get(0);
-			
-			//if (objIn.getZLevel() > highest.getZLevel()) { highest = objIn; }
-			//for (IWindowObject o : objIn.getObjects()) {
-			//	if (o.getZLevel() > highest.getZLevel()) { highest = o; }
-			//}
-			
-			return objIn.getObjects().getLast();
-		}
-		return objIn;
+		return (objIn.getObjects().isNotEmpty()) ? objIn.getObjects().getLast() : objIn;
 	}
 	
 	/** Hides all objects that are not pinned to the hud. */
 	public static ITopParent hideUnpinnedObjects(ITopParent objIn) {
-		for (IWindowObject o : EArrayList.combineLists(objIn.getObjects(), objIn.getAddingObjects())) {
+		for (IWindowObject o : objIn.getCombinedObjects()) {
 			if (o.closesWithHud()) { o.close(); }
 			else if (o instanceof IWindowParent) {
 				if (!((IWindowParent) o).isPinned()) {
@@ -281,7 +269,7 @@ public class StaticTopParent extends EGui {
 	
 	/** Hides all objects except for the specified ones. */
 	public static ITopParent hideAllExcept(ITopParent topIn, IWindowObject exception, IWindowObject... additional) {
-		for (IWindowObject o : EArrayList.combineLists(topIn.getObjects(), topIn.getAddingObjects())) {
+		for (IWindowObject o : topIn.getCombinedObjects()) {
 			for (IWindowObject e : EUtil.add(exception, additional)) {
 				if (o != e || o.isChild(e)) {
 					o.setHidden(true);
@@ -293,7 +281,7 @@ public class StaticTopParent extends EGui {
 	
 	/** Makes all objects that were hidden now visible. */
 	public static ITopParent revealHiddenObjects(ITopParent objIn) {
-		EUtil.filterForEach(objIn.getAllChildren(), o -> o.isHidden(), o -> o.setHidden(false));
+		objIn.getCombinedObjects().filter(o -> o.isHidden()).forEach(o -> o.setHidden(false));
 		return objIn;
 	}
 	

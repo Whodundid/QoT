@@ -4,7 +4,8 @@ import eWindow.windowTypes.OverlayWindow;
 import eWindow.windowTypes.WindowParent;
 import eWindow.windowTypes.interfaces.IWindowObject;
 import eWindow.windowTypes.interfaces.IWindowParent;
-import gameScreens.TestScreen;
+import entities.player.Player;
+import gameScreens.MainMenuScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.AbstractScreen;
 import gameSystems.gameRenderer.GameRenderer;
@@ -33,6 +34,8 @@ public class Game {
 	public static long handle = -1;
 	private static Game instance = null;
 	
+	private static Player thePlayer;
+	
 	private static Keyboard keyboard;
 	private static Mouse mouse;
 	private static WindowResizeListener resizeListener;
@@ -53,7 +56,7 @@ public class Game {
 	/** Indicates whether the game is actively running or not. */
 	private static boolean running = false;
 	/** If set to false, no songs will play. */
-	public static boolean playSongs = false;
+	public static boolean playSongs = true;
 	
 	// Framerate stuff
 	public long startTime = 0l;
@@ -132,7 +135,7 @@ public class Game {
 			
 			running = true;
 			
-			displayScreen(new TestScreen(null));
+			displayScreen(new MainMenuScreen());
 			
 			while (running && !GLFW.glfwWindowShouldClose(handle)) {
 				
@@ -180,11 +183,12 @@ public class Game {
 		//update framerate counter
 		updateFramerate();
 		
-		gameRenderer.onRenderTick();
-		
 		if (currentScreen != null) {
+			//System.out.println(currentScreen.getObjectName());
 			currentScreen.drawObject(Mouse.getMx(), Mouse.getMy());
 		}
+		
+		gameRenderer.onRenderTick();
 	}
 	
 	public static void stopGame() {
@@ -234,8 +238,9 @@ public class Game {
 			AbstractScreen old = currentScreen;
 			
 			if (old != null) {
-				old.removeAllObjects();
+				old.close();
 				old.onClosed();
+				old.onScreenClosed();
 			}
 			
 			currentScreen = screenIn;
@@ -453,13 +458,17 @@ public class Game {
 	/** Returns this game's central terminal command handler. */
 	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
 	
+	/** Returns this game's constant player object. */
+	public static Player getPlayer() { return thePlayer; }
+	
 	//----------------
 	// Static Setters
 	//----------------
 	
 	/** Sets whether the game should run in a debug state. */
 	public static void setDebugMode(boolean val) { isDebug = val; }
-
+	
+	public static void setPlayer(Player p) { thePlayer = p; }
 	
 	
 }
