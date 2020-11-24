@@ -13,10 +13,14 @@ import gameSystems.textureSystem.GameTexture;
 import gameTextures.Textures;
 import input.Keyboard;
 import main.Game;
+import screenParts.StatusBar;
+
 import org.lwjgl.glfw.GLFW;
+
 import sound.Songs;
 import util.mathUtil.Direction;
 import util.mathUtil.NumUtil;
+import util.renderUtil.EColors;
 import util.storageUtil.EArrayList;
 import util.storageUtil.EDimension;
 
@@ -25,6 +29,8 @@ public class GamePlayScreen extends GameScreen {
 	Player mainCharacter;
 	WindowButton damagePlayer, rebuildMap;
 	GameTexture[][] mapTiles;
+	StatusBar health, mana;
+	
 	
 	EArrayList<Entity> monsters = new EArrayList();
 	
@@ -38,12 +44,21 @@ public class GamePlayScreen extends GameScreen {
 		Songs.loop(Songs.battleTheme);
 		
 		buildMap();
-		setObjectName("Test Screen");
+		setObjectName("Game Screen");
 	}
 	
 	@Override
 	public void initObjects() {
 		windowObjects.clear();
+		
+		health = new StatusBar(this, 5, Game.getHeight() - 90, 200, 55, 0, mainCharacter.getMaxHealth(), EColors.green);
+		health.setCurrentValue(mainCharacter.getHealth());
+		addObject(health);
+		
+		mana = new StatusBar(this, health.endX + 5, Game.getHeight() - 90, 200, 55, 0, mainCharacter.getMaxMana(), EColors.blue);
+		mana.setCurrentValue(mainCharacter.getMana());
+		addObject(mana);
+		
 		
 		if (Game.getPlayer() == null) {
 			Game.setPlayer(mainCharacter = new Player("The Player", Game.getWidth() / 2, Game.getHeight() / 2));
@@ -54,14 +69,12 @@ public class GamePlayScreen extends GameScreen {
 		
 		addObject(mainCharacter);
 		
-		damagePlayer = new WindowButton(this, 5, Game.getHeight() - 60, 150, 55, "Damage");
-		rebuildMap = new WindowButton(this, damagePlayer.endX + 20, Game.getHeight() - 60, 100, 55, "Map");
+		//damagePlayer = new WindowButton(this, 5, Game.getHeight() - 150, 150, 55, "Damage");
+		//rebuildMap = new WindowButton(this, damagePlayer.endX + 20, Game.getHeight() - 150, 100, 55, "Map");
 		
-		IActionObject.setActionReceiver(this, damagePlayer, rebuildMap);
+		//addObject(damagePlayer, rebuildMap);
 		
-		addObject(damagePlayer, rebuildMap);
-		
-		randomMonsters(3);
+		randomMonsters(1);
 	}
 	
 	@Override

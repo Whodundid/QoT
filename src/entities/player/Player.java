@@ -69,6 +69,9 @@ public class Player extends Entity {
 		return (damage == 0) ? 0 : (damage + weaponDamage);
 	}
 	
+	public double getMaxHealth() { return maxHealth; }
+	public double getMaxMana() { return maxMana; }
+	
 	//---------
 	// Setters
 	//---------

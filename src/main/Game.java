@@ -56,7 +56,7 @@ public class Game {
 	/** Indicates whether the game is actively running or not. */
 	private static boolean running = false;
 	/** If set to false, no songs will play. */
-	public static boolean playSongs = true;
+	public static boolean playSongs = false;
 	
 	// Framerate stuff
 	public long startTime = 0l;
