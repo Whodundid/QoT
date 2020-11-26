@@ -74,7 +74,7 @@ public class GamePlayScreen extends GameScreen {
 		
 		//addObject(damagePlayer, rebuildMap);
 		
-		randomMonsters(1);
+		randomMonsters(5);
 	}
 	
 	@Override

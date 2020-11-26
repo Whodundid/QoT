@@ -47,7 +47,7 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == newGame) {
-			Game.setPlayer(new Player("The Guy"));
+			Game.setPlayer(new Player("Demmeonockhc"));
 			Game.displayScreen(new GamePlayScreen());
 		}
 		

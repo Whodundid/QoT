@@ -23,7 +23,7 @@ public class Player extends Entity {
 	
 	public Player(String nameIn) { this(nameIn, 0, 0); }
 	public Player(String nameIn, int posX, int posY) {
-		super(nameIn, 0, 200, 200, 50, 50, 0, 10);
+		super(nameIn, 0, 20000, 20000, 500, 500, 12, 35);
 		
 		EXP = 0;
 		flameDamage = 10;
