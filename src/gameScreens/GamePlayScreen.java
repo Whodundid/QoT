@@ -52,11 +52,6 @@ public class GamePlayScreen extends GameScreen {
 		case 2: addObject(new TrollBoar((int) midX, (int) midY)); break;
 		case 3: addObject(new Thyrah((int) midX, (int) midY)); break;
 		}
-		else {
-			mainCharacter.setPosition(Game.getWidth() / 2, Game.getHeight() / 2);
-		}
-		
-		addObject(mainCharacter);
 		
 		addObject(Game.getPlayer());
 		
