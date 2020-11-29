@@ -7,6 +7,7 @@ import entities.player.Player;
 import gameSystems.gameRenderer.GameScreen;
 import gameWindows.InventoryWindow;
 import main.Game;
+import screenParts.StatusBar;
 import sound.Audio;
 import sound.Songs;
 import util.renderUtil.EColors;
@@ -23,6 +24,7 @@ public class BattleScreen extends GameScreen {
 	EDimension oldA, oldB;
 	
 	WindowButton attack, flame, heal, doNothing, openInventory;
+	StatusBar health, mana;
 	
 	String lastMessage = "Prepare to fight!";
 	InventoryWindow inventoryWindow = null;
@@ -46,6 +48,14 @@ public class BattleScreen extends GameScreen {
 	
 	@Override
 	public void initObjects() {
+		health = new StatusBar(this, 5, 5, 200, 30, 0, Game.getPlayer().getMaxHealth(), EColors.red);
+		health.setCurrentValue(Game.getPlayer().getHealth());
+		addObject(health);
+		
+		mana = new StatusBar(this, health.endX + 5, 5, 200, 30, 0, Game.getPlayer().getMaxMana(), EColors.blue);
+		mana.setCurrentValue(Game.getPlayer().getMana());
+		addObject(mana);
+		
 		attack = new WindowButton(this, startX + 50, endY - 350, 200, 50, "Attack");
 		flame = new WindowButton(this, startX + 50, endY - 300, 200, 50, "Flame");
 		heal = new WindowButton(this, startX + 50, endY - 250, 200, 50, "Heal");
@@ -80,22 +90,23 @@ public class BattleScreen extends GameScreen {
 				endBattle();
 			}
 		}
-		
-		super.drawScreen(mXIn, mYIn);
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		//base attack
 		if (object == attack) {
-			entB.hurt(entA.getDamage());
+			double damage = entA.getDamage();
+			entB.hurt(damage);
 			endTurn();
 		}
 		
 		//flame attack
 		if (object == flame) {
 			if (entA instanceof Player p) {
+				double amount = p.flameCost;
 				p.useFlame(entB);
+				mana.decrementVal(amount);
 			}
 			endTurn();
 		}
@@ -103,8 +114,11 @@ public class BattleScreen extends GameScreen {
 		//heal spell
 		if (object == heal) {
 			if (entA instanceof Player p) {
+				double amount = p.flameCost;
 				entB.hurt(p.flameDamage);
 				p.useHeal();
+				mana.decrementVal(amount);
+				health.incrementVal(p.healAmount);
 			}
 			endTurn();
 		}
@@ -137,7 +151,9 @@ public class BattleScreen extends GameScreen {
 	/** Allows the enemy to fight back if they are still alive. */
 	private void endTurn() {
 		if (!entB.isDead()) {
-			entA.hurt(entB.getDamage());
+			double damage = entB.getDamage();
+			entA.hurt(damage);
+			health.decrementVal(damage);
 		}
 	}
 	

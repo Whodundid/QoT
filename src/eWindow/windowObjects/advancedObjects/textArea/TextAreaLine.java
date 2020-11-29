@@ -21,7 +21,7 @@ import util.storageUtil.TrippleBox;
 
 //Author: Hunter Bragg
 
-public class TextAreaLine<obj> extends WindowTextField {
+public class TextAreaLine<E> extends WindowTextField<E> {
 	
 	protected WindowTextArea parentTextArea;
 	protected WindowLabel numberLabel;
@@ -40,7 +40,6 @@ public class TextAreaLine<obj> extends WindowTextField {
 	protected long doubleClickTimer = 0l;
 	protected long doubleClickThreshold = 500l;
 	protected boolean clicked = false;
-	protected obj storedObj;
 	protected String linkText = "";
 	protected boolean webLink;
 	protected Object linkObject;
@@ -52,9 +51,9 @@ public class TextAreaLine<obj> extends WindowTextField {
 	public TextAreaLine(WindowTextArea textAreaIn) { this(textAreaIn, "", 0xffffff, null, -1); }
 	public TextAreaLine(WindowTextArea textAreaIn, String textIn) { this(textAreaIn, textIn, 0xffffff, null, -1); }
 	public TextAreaLine(WindowTextArea textAreaIn, String textIn, int colorIn) { this(textAreaIn, textIn, colorIn, null, -1); }
-	public TextAreaLine(WindowTextArea textAreaIn, String textIn, obj objectIn) { this(textAreaIn, textIn, 0xffffff, objectIn, -1); }
-	public TextAreaLine(WindowTextArea textAreaIn, String textIn, int colorIn, obj objectIn) { this(textAreaIn, textIn, colorIn, objectIn, -1); }
-	public TextAreaLine(WindowTextArea textAreaIn, String textIn, int colorIn, obj objectIn, int lineNumberIn) {
+	public TextAreaLine(WindowTextArea textAreaIn, String textIn, E objectIn) { this(textAreaIn, textIn, 0xffffff, objectIn, -1); }
+	public TextAreaLine(WindowTextArea textAreaIn, String textIn, int colorIn, E objectIn) { this(textAreaIn, textIn, colorIn, objectIn, -1); }
+	public TextAreaLine(WindowTextArea textAreaIn, String textIn, int colorIn, E objectIn, int lineNumberIn) {
 		init(textAreaIn, 0, 0, 0, 0);
 		setMaxStringLength(1500);
 		parent = textAreaIn;
@@ -62,7 +61,7 @@ public class TextAreaLine<obj> extends WindowTextField {
 		lineNumber = lineNumberIn;
 		setText(textIn);
 		textColor = colorIn;
-		setStoredObj(objectIn);
+		setStoredObject(objectIn);
 		setDrawShadowed(false);
 	}
 	
@@ -260,7 +259,7 @@ public class TextAreaLine<obj> extends WindowTextField {
 	public void mouseEntered(int mXIn, int mYIn) {
 		super.mouseEntered(mXIn, mYIn);
 		IWindowObject focused = getTopParent().getFocusedObject();
-		boolean oneOf = focused == this || parentTextArea.isChild(focused);
+		boolean oneOf = focused == this || parentTextArea.isChildOf(focused);
 		
 		if (parentTextArea.isEditable() && (oneOf || !Mouse.isButtonDown(0))) {
 			//CursorHelper.setCursor(EMCResources.cursorIBeam);
@@ -271,7 +270,7 @@ public class TextAreaLine<obj> extends WindowTextField {
 	public void mouseExited(int mXIn, int mYIn) {
 		super.mouseExited(mXIn, mYIn);
 		IWindowObject over = getTopParent().getHighestZObjectUnderMouse();
-		boolean inside = over != parentTextArea || !parentTextArea.isChild(over);
+		boolean inside = over != parentTextArea || !parentTextArea.isChildOf(over);
 		//if (parentTextArea.isEditable() && !inside) { CursorHelper.reset(); }
 	}
 	
@@ -344,7 +343,6 @@ public class TextAreaLine<obj> extends WindowTextField {
 	public IWindowObject getFocusRequester() { return focusRequester; }
 	public int getDrawnLineNumber() { return drawnLineNumber; }
 	public int getLineNumber() { return lineNumber; }
-	public obj getStoredObj() { return storedObj; }
 	public long getDoubleClickThreshold() { return doubleClickThreshold; }
 	public TrippleBox<String, Object, Boolean> getLink() { return new TrippleBox(linkText, linkObject, webLink); }
 	
@@ -368,7 +366,6 @@ public class TextAreaLine<obj> extends WindowTextField {
 		return this;
 	}
 	
-	public TextAreaLine setStoredObj(obj objectIn) { storedObj = objectIn; return this; }
 	public TextAreaLine setLineNumber(int numberIn) { lineNumber = numberIn; lineNumberWidth = getStringWidth(String.valueOf(lineNumber)); return this; }
 	public TextAreaLine setLineNumberColor(EColors colorIn) { lineNumberColor = colorIn.intVal; return this; }
 	public TextAreaLine setLineNumberColor(int colorIn) { lineNumberColor = colorIn; return this; }

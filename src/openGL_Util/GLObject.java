@@ -344,6 +344,7 @@ public abstract class GLObject {
 		}
 	}
 	
+	public static void drawTexture(double x, double y, double w, double h, int tX, int tY, int tW, int tH) { drawTexture(x, y, w, h, tX, tY, tW, tH, TextureSystem.getInstance().getBoundTexture()); }
 	/** Draws a texture with a given texture coord offset. */
 	public static void drawTexture(double x, double y, double w, double h, int tX, int tY, int tW, int tH, GameTexture imageIn) {
 		if (imageIn != null) {

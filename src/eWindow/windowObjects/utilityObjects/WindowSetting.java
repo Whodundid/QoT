@@ -8,7 +8,7 @@ import util.EUtil;
 import util.renderUtil.EColors;
 import util.storageUtil.EDimension;
 
-public class WindowSetting<E extends IActionObject> extends ActionObject {
+public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	
 	E object;
 	WindowLabel label;

@@ -36,39 +36,41 @@ public class TerminalTextField extends WindowTextField {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (keyCode == 15) { //tab
+		System.out.println(keyCode);
+		
+		if (keyCode == 258) { //tab
 			performAction("tab");
 		}
 		
-		if (keyCode == 14) { //backspace
+		if (keyCode == 259) { //backspace
 			term.resetTab();
 			//if (term.getTab1()) { term.setTab1(false); }
 			//term.setTextTabBeing("");
 		}
 		
-		if (keyCode == 53 || keyCode == 43) { // backslash and slash
+		if (keyCode == 92 || keyCode == 47) { // backslash and slash
 			term.resetTab();
 		}
 		
-		if (keyCode == 28) { //enter
+		if (keyCode == 257) { //enter
 			term.historyLine = 0;
 			term.preservedInput = "";
 			term.resetTab();
 		}
 		
-		if (keyCode == 57) { //space
+		if (keyCode == 32) { //space
 			term.resetTab();
 		}
 		
-		if (keyCode == 203) { //left
+		if (keyCode == 263) { //left
 			term.resetTab();
 		}
 		
-		if (keyCode == 205) { //right
+		if (keyCode == 262) { //right
 			term.resetTab();
 		}
 		
-		if (keyCode == 200) { //up
+		if (keyCode == 265) { //up
 			if (term.historyLine < handler.cmdHistory.size()) {
 				if (term.lastUsed == 0) {
 					term.historyLine += 1;
@@ -83,7 +85,7 @@ public class TerminalTextField extends WindowTextField {
 			
 			term.resetTab();
 		}
-		else if (keyCode == 208) { //down
+		else if (keyCode == 264) { //down
 			if (term.historyLine <= handler.cmdHistory.size() && term.historyLine > 1) {
 				if (term.historyLine == handler.cmdHistory.size() || term.lastUsed == 1) { term.historyLine -= 2; }
 				else { term.historyLine -= 1; }

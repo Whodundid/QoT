@@ -178,7 +178,7 @@ public interface IWindowObject {
 	//-------
 	
 	/** Checks if this object is a child of the specified object. */
-	public boolean isChild(IWindowObject objIn);
+	public boolean isChildOf(IWindowObject objIn);
 	/** Adds a child IWindowObject to this object. The object is added before the next draw cycle. 
 	 * @param obj TODO*/
 	public IWindowObject addObject(IWindowObject obj, IWindowObject... additional);

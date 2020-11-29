@@ -38,7 +38,7 @@ public class EGui extends GLObject {
 	public void drawRect(int color, int offset) { drawRect(startX + offset, startY + offset, endX - offset, endY - offset, color); }
 	
 	public void drawHRect(EColors color, int offset) { drawHRect(color.c(), offset); }
-	public void drawHRect(int color, int offset) { drawHRect(startX, + offset, startY + offset, endX - offset, endY - offset, color); }
+	public void drawHRect(int color, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, 1, color); }
 	
 	public void drawTexture(GameTexture texture) { drawTexture(startX, startY, width, height, texture); }
 	public void drawTexture(GameTexture texture, int offset) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture); }

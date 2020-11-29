@@ -6,7 +6,7 @@ import util.renderUtil.EColors;
 
 //Author: Hunter Bragg
 
-public class WindowRadioButton extends ActionObject {
+public class WindowRadioButton<E> extends ActionObject<E> {
 
 	boolean checked = false;
 	int color = EColors.green.intVal;

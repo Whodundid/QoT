@@ -93,7 +93,7 @@ public class WindowScrollList extends WindowObject {
 					//only draw the objects that are actually in the viewable area
 					for (IWindowObject o : drawnListObjects) {
 						if (o.checkDraw()) {
-							if (!o.hasFirstDraw()) { o.onFirstDraw(); o.onFirstDraw(); }
+							if (!o.hasFirstDraw()) { o.onFirstDraw(); }
 							GLSettings.fullBright();
 							EDimension d = o.getDimensions();
 							o.drawObject(mXIn, mYIn);
@@ -108,7 +108,7 @@ public class WindowScrollList extends WindowObject {
 				//draw non list contents as normal (non scissored)
 				for (IWindowObject o : windowObjects) {
 					if (o.checkDraw() && listContents.notContains(o)) {
-						if (!o.hasFirstDraw()) { o.onFirstDraw(); o.onFirstDraw(); }
+						if (!o.hasFirstDraw()) { o.onFirstDraw(); }
 						GLSettings.fullBright();
 	    	        	o.drawObject(mXIn, mYIn);
 	    			}

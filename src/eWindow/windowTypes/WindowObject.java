@@ -257,7 +257,7 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	@Override public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
 	
 	//objects
-	@Override public boolean isChild(IWindowObject objIn) { return WindowObjectS.isChildOfObject(this, objIn); }
+	@Override public boolean isChildOf(IWindowObject objIn) { return WindowObjectS.isChildOfObject(this, objIn); }
 	@Override public WindowObject addObject(IWindowObject obj, IWindowObject... additional) { WindowObjectS.addObject(this, obj, additional); return this; }
 	@Override public WindowObject removeObject(IWindowObject obj, IWindowObject... additional) { WindowObjectS.removeObject(this, obj, additional); return this; }
 	@Override public EObjectGroup getObjectGroup() { return objectGroup; }
@@ -413,7 +413,8 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 		if (closeable) {
 			postEvent(new EventObjects(this, this, ObjectEventType.Close));
 			if (recursive) { for (IWindowObject o : getAllChildren()) { o.close(false); } }
-			if (getTopParent().doesFocusLockExist() && getTopParent().getFocusLockObject().equals(this)) { getTopParent().clearFocusLockObject(); }
+			ITopParent p = getTopParent();
+			if (p.doesFocusLockExist() && p.getFocusLockObject().equals(this)) { p.clearFocusLockObject(); }
 			//if (getTopParent().getFocusedObject().equals(this)) { relinquishFocus(); }
 			if (focusObjectOnClose != null) { focusObjectOnClose.requestFocus(); }
 			parent.removeObject(this);

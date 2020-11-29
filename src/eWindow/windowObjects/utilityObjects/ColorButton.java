@@ -4,7 +4,7 @@ import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IWindowObject;
 import util.renderUtil.EColors;
 
-public class ColorButton extends WindowButton {
+public class ColorButton<E> extends WindowButton<E> {
 	
 	private int color = 0xffffffff;
 	private boolean drawBorder = true;

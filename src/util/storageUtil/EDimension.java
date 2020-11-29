@@ -65,6 +65,30 @@ public class EDimension {
 		midY = getMidY();
 	}
 	
+	public EDimension expand(double amount) {
+		EDimension d = new EDimension(this);
+		d.startX -= amount;
+		d.startY -= amount;
+		d.endX += amount;
+		d.endY += amount;
+		d.width += (amount * 2);
+		d.height += (amount * 2);
+		return d;
+	}
+	
+	public EDimension contract(double amount) {
+		EDimension d = new EDimension(this);
+		d.startX += amount;
+		d.startY += amount;
+		d.endX -= amount;
+		d.endY -= amount;
+		d.width -= (amount * 2);
+		d.height -= (amount * 2);
+		return d;
+	}
+	
+	public boolean contains(double xIn, double yIn) { return xIn >= startX && xIn <= endX && yIn >= startY && yIn <= endY;}
+	
 	public double getMidX() { return startX + (width / 2); }
 	public double getMidY() { return startY + (height / 2); }
 	
@@ -78,5 +102,8 @@ public class EDimension {
 	public boolean isEqualTo(EDimension dimIn) { return startX == dimIn.startX && startY == dimIn.startY && width == dimIn.width && height == dimIn.height; }
 	
 	@Override public String toString() { return "[startX/Y: " + startX + ", " + startY + "; endX/Y: " + endX + ", " + endY + "; width/Height: " + width + ", " + height + "]"; }
+	
+	public static EDimension of(double startXIn, double startYIn, double endXIn, double endYIn) { return new EDimension(startXIn, startYIn, endXIn, endYIn); }
+	public static EDimension of(EDimension in) { return new EDimension(in); }
 	
 }

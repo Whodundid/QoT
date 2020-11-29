@@ -3,6 +3,7 @@ package gameScreens;
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
 import entities.player.Player;
+import gameScreens.mapTest.MapMenuScreen;
 import gameSystems.gameRenderer.GameScreen;
 import main.Game;
 import sound.Songs;
@@ -12,16 +13,19 @@ import util.renderUtil.EColors;
 public class MainMenuScreen extends GameScreen {
 	
 	WindowButton newGame, loadGame, options, closeGame;
+	WindowButton mapTest;
 	
 	@Override
 	public void initScreen() {
-		Songs.loop(Songs.theme);
+		if (!(getPreviousScreen() instanceof OptionsScreen)) {
+			Songs.loop(Songs.theme);
+		}
 		setObjectName("Main Menu Screen");
 	}
 	
 	@Override
 	public void initObjects() {
-		double w = NumUtil.clamp(Game.getWidth() / 4, 200, 390);
+		double w = NumUtil.clamp(Game.getWidth() / 4, 200, 320);
 		double x = midX - w / 2;
 		double y = midY - 150;
 		double h = 40;
@@ -32,7 +36,10 @@ public class MainMenuScreen extends GameScreen {
 		options = new WindowButton(this, x, y + (gap + h) * 2, w, h, "Options");
 		closeGame = new WindowButton(this, x, y + (gap + h) * 3, w, h, "Quit Game");
 		
+		mapTest = new WindowButton(this, 10, 10, w, h, "Map Editor");
+		
 		addObject(newGame, loadGame, options, closeGame);
+		addObject(mapTest);
 	}
 	
 	@Override
@@ -49,6 +56,9 @@ public class MainMenuScreen extends GameScreen {
 		if (object == newGame) {
 			Game.setPlayer(new Player("Demmeonockhc"));
 			Game.displayScreen(new GamePlayScreen());
+			Game.setPlayer(new Player("The Guy"));
+			Game.displayScreen(new GamePlayScreen(), this);
+			Songs.stopSong(Songs.theme);
 		}
 		
 		if (object == loadGame) {
@@ -56,17 +66,18 @@ public class MainMenuScreen extends GameScreen {
 		}
 		
 		if (object == options) {
-			
+			Game.displayScreen(new OptionsScreen(), this);
 		}
 		
 		if (object == closeGame) {
 			Game.stopGame();
 		}
+		
+		if (object == mapTest) {
+			Game.displayScreen(new MapMenuScreen(), this);
+		}
 	}
-	
-	@Override
-	public void onScreenClosed() {
-		Songs.stopSong(Songs.theme);
-	}
+
+	@Override public void onScreenClosed() {}
 	
 }

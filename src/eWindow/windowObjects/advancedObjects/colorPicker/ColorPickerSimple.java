@@ -17,7 +17,7 @@ import util.storageUtil.EDimension;
 
 //Author: Hunter Bragg
 
-public class ColorPickerSimple extends ActionWindowParent {
+public class ColorPickerSimple<E> extends ActionWindowParent<E> {
 	
 	//color buttons
 	ColorPickerButton lred, red, maroon, brown, dorange, borange, orange, lorange, yellow;

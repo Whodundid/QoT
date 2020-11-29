@@ -29,7 +29,7 @@ public class Audio {
 			clip.setFramePosition(0);
 			clip.start();
 			
-			setVolume(0.125f);
+			setVolume(1f);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -40,6 +40,7 @@ public class Audio {
 		if (Game.playSongs) {
 			clip.setFramePosition(0);
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
+			setVolume(0.1f);
 		}
 	}
 		

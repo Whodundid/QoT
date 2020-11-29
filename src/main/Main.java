@@ -16,6 +16,7 @@ public class Main implements Runnable {
 	public static void main(String[] args) {
 		// This guy VV allows us to see where everything is coming from in console
 		TracingPrintStream.enableTrace();
+		TracingPrintStream.setTracePrimitives(true);
 		m = new Main();
 		Game.getGame().runGame();
 	}

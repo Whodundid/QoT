@@ -141,7 +141,7 @@ public class ETerminal extends WindowParent {
 	@Override
 	public void postReInit() {
 		for (TextAreaLine l : lines) {
-			TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObj(), l.getLineNumber());
+			TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObject(), l.getLineNumber());
 			TrippleBox<String, Object, Boolean> link = l.getLink();
 			n.setLinkText(link.o1, link.o2, link.o3);
 			history.addTextLine(n);
@@ -222,7 +222,7 @@ public class ETerminal extends WindowParent {
 				super.resize(xIn, yIn, areaIn);
 				
 				for (TextAreaLine l : lines) {
-					TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObj(), l.getLineNumber());
+					TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObject(), l.getLineNumber());
 					TrippleBox<String, Object, Boolean> link = l.getLink();
 					n.setLinkText(link.o1, link.o2, link.o3);
 					history.addTextLine(n);
@@ -351,7 +351,7 @@ public class ETerminal extends WindowParent {
 			reInitObjects();
 			
 			for (TextAreaLine l : lines) {
-				TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObj(), l.getLineNumber());
+				TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObject(), l.getLineNumber());
 				history.addTextLine(n);
 			}
 			
@@ -380,7 +380,7 @@ public class ETerminal extends WindowParent {
 		reInitObjects();
 		
 		for (TextAreaLine l : lines) {
-			TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObj(), l.getLineNumber());
+			TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObject(), l.getLineNumber());
 			history.addTextLine(n);
 		}
 		

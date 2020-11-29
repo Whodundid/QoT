@@ -83,9 +83,8 @@ public class WindowTextArea extends WindowScrollList {
 					//only draw the objects that are actually in the viewable area
 					for (IWindowObject o : drawnListObjects) {
 						if (o.checkDraw()) {
-							if (!o.hasFirstDraw()) { o.onFirstDraw(); o.onFirstDraw(); }
+							if (!o.hasFirstDraw()) { o.onFirstDraw(); }
 							GLSettings.fullBright();
-							EDimension d = o.getDimensions();
 							o.drawObject(mXIn, mYIn);
 						}
 					}
@@ -110,7 +109,7 @@ public class WindowTextArea extends WindowScrollList {
 				//draw non list contents as normal (non scissored)
 				for (IWindowObject o : windowObjects) {
 					if (o.checkDraw() && listContents.notContains(o)) {
-						if (!o.hasFirstDraw()) { o.onFirstDraw(); o.onFirstDraw(); }
+						if (!o.hasFirstDraw()) { o.onFirstDraw(); }
 						GLSettings.fullBright();
 	    	        	o.drawObject(mXIn, mYIn);
 	    			}
@@ -168,7 +167,7 @@ public class WindowTextArea extends WindowScrollList {
 	public void mouseEntered(int mX, int mY) {
 		super.mouseEntered(mX, mY);
 		IWindowObject focused = getTopParent().getFocusedObject();
-		boolean oneOf = focused == this || isChild(focused);
+		boolean oneOf = focused == this || isChildOf(focused);
 		
 		if (isEditable() && (oneOf || !Mouse.isButtonDown(0))) {
 			//CursorHelper.setCursor(EMCResources.cursorIBeam);
@@ -180,7 +179,7 @@ public class WindowTextArea extends WindowScrollList {
 		super.mouseExited(mX, mY);
 		if (getTopParent() != null) {
 			IWindowObject o = getTopParent().getHighestZObjectUnderMouse();
-			if (o != null && !o.isChild(this)) {
+			if (o != null && !o.isChildOf(this)) {
 				//CursorHelper.reset();
 			}
 		}
@@ -208,7 +207,7 @@ public class WindowTextArea extends WindowScrollList {
 	public TextAreaLine addTextLine(TextAreaLine lineIn, int offset, boolean moveDown) {
 		int moveArg = moveDown ? 1 : 0;
 		EDimension ld = getListDimensions();
-		lineIn.setDimensions(3, 1 + (textDocument.size() * 10) + offset, getStringWidth(lineIn.getText()), 10);
+		lineIn.setDimensions(3, 1 + (textDocument.size() * 22) + offset, getStringWidth(lineIn.getText()), 10);
 		textDocument.add(lineIn);
 		addObjectToList(lineIn);
 		fitItemsInList(3 + getLineNumberOffset(), 5);
@@ -268,7 +267,7 @@ public class WindowTextArea extends WindowScrollList {
 	public TextAreaLine createNewLineAfter(TextAreaLine theLine) {
 		if (theLine != null) {
 			String text = theLine.getText().substring(theLine.getCursorPosition());
-			TextAreaLine newLine = new TextAreaLine(this, text, theLine.textColor, theLine.getStoredObj(), theLine.getLineNumber() + 1);
+			TextAreaLine newLine = new TextAreaLine(this, text, theLine.textColor, theLine.getStoredObject(), theLine.getLineNumber() + 1);
 			
 			EArrayList<TextAreaLine> linesAfter = new EArrayList();
 			try {
@@ -430,20 +429,20 @@ public class WindowTextArea extends WindowScrollList {
 	
 	public TextAreaLine getLineWithObject(Object objectIn) {
 		for (TextAreaLine l : textDocument) {
-			if (l.getStoredObj() == null) {
+			if (l.getStoredObject() == null) {
 				if (objectIn == null) { return l; }
 			}
-			else if (l.getStoredObj().equals(objectIn)) { return l; }
+			else if (l.getStoredObject().equals(objectIn)) { return l; }
 		}
 		return null;
 	}
 	
 	public TextAreaLine getLineWithTextAndObject(String textIn, Object objectIn) {
 		for (TextAreaLine l : textDocument) {
-			if (l.getStoredObj() == null ) {
+			if (l.getStoredObject() == null ) {
 				if (l.getText().equals(textIn) && objectIn == null) { return l; }
 			}
-			else if (l.getText().equals(textIn) && l.getStoredObj().equals(objectIn)) { return l; }
+			else if (l.getText().equals(textIn) && l.getStoredObject().equals(objectIn)) { return l; }
 		}
 		return null;
 	}

@@ -38,7 +38,8 @@ public class WindowLabel extends WindowObject {
 				if (centered) {
 					//if (shadow) { drawCenteredStringWithShadow(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0), displayStringColor); }
 					//else { drawCenteredString(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0), displayStringColor); }
-				} else {
+				}
+				else {
 					//if (shadow) { drawStringWithShadow(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0), displayStringColor); }
 					//else { drawString(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0), displayStringColor); }
 					drawString(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0));
@@ -50,9 +51,11 @@ public class WindowLabel extends WindowObject {
 				drawStringC(displayString, startX, startY, displayStringColor);
 				//if (shadow) { drawCenteredStringWithShadow(displayString, startX, startY, displayStringColor); }
 				//else { drawCenteredString(displayString, startX, startY, displayStringColor); }
-			} else {
+			}
+			else {
 				//if (shadow) { drawStringWithShadow(displayString, startX, startY, displayStringColor); }
 				//else { drawString(displayString, startX, startY, displayStringColor); }
+				drawString(displayString, startX, startY, displayStringColor);
 				
 			}
 		}

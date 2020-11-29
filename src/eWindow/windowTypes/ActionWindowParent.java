@@ -7,11 +7,11 @@ import util.EUtil;
 
 //Author: Hunter Bragg
 
-public abstract class ActionWindowParent extends WindowParent implements IActionObject {
+public abstract class ActionWindowParent<E> extends WindowParent implements IActionObject<E> {
 
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
-	protected Object storredObject = null;
+	protected E storredObject = null;
 	protected Object selectedObject = null;
 	protected IWindowObject actionReceiver;
 	
@@ -47,8 +47,8 @@ public abstract class ActionWindowParent extends WindowParent implements IAction
 	@Override public IActionObject setActionReceiver(IWindowObject objIn) { actionReceiver = objIn; return this; }
 	@Override public IWindowObject getActionReceiver() { return actionReceiver; }
 	
-	@Override public IActionObject setStoredObject(Object objIn) { storredObject = objIn; return this; }
-	@Override public Object getStoredObject() { return storredObject; }
+	@Override public IActionObject setStoredObject(E objIn) { storredObject = objIn; return this; }
+	@Override public E getStoredObject() { return storredObject; }
 	@Override public IActionObject setSelectedObject(Object objIn) { selectedObject = objIn; return this; }
 	@Override public Object getSelectedObject() { return selectedObject; }
 	

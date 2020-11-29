@@ -7,11 +7,11 @@ import eWindow.windowTypes.interfaces.IWindowParent;
 import entities.player.Player;
 import gameScreens.MainMenuScreen;
 import gameSystems.fontRenderer.FontRenderer;
-import gameSystems.gameRenderer.AbstractScreen;
 import gameSystems.gameRenderer.GameRenderer;
+import gameSystems.gameRenderer.GameScreen;
 import gameSystems.textureSystem.TextureSystem;
 import gameTextures.EntityTextures;
-import gameTextures.Textures;
+import gameTextures.WorldTextures;
 import input.Keyboard;
 import input.Mouse;
 import input.WindowResizeListener;
@@ -49,7 +49,7 @@ public class Game {
 	private static int height;
 	
 	/** The screen currently being displayed. */
-	public static AbstractScreen currentScreen;
+	public static GameScreen currentScreen;
 	
 	/** Enables debug mode if true. */
 	private static boolean isDebug = false;
@@ -112,7 +112,7 @@ public class Game {
 		
 		GLFW.glfwShowWindow(handle);
 		
-		Textures.registerTextures(textureSystem);
+		WorldTextures.registerTextures(textureSystem);
 		EntityTextures.registerTextures(textureSystem);
 		
 		terminalHandler.initCommands();
@@ -231,11 +231,13 @@ public class Game {
 	// Public Static Engine Functions
 	//--------------------------------
 	
-	public static void displayScreen(AbstractScreen screenIn) { displayScreen(screenIn, true); }
-	/** Attempts to display a new AbstractScreen in game. */
-	public static void displayScreen(AbstractScreen screenIn, boolean init) {
+	public static GameScreen displayScreen(GameScreen screenIn) { return displayScreen(screenIn, null, true); }
+	public static GameScreen displayScreen(GameScreen screenIn, boolean init) { return displayScreen(screenIn, true); }
+	public static GameScreen displayScreen(GameScreen screenIn, GameScreen previous) { return displayScreen(screenIn, previous, true); }
+	/** Attempts to display a new GameScreen in game. */
+	public static GameScreen displayScreen(GameScreen screenIn, GameScreen previous, boolean init) {
 		if (screenIn != null) {
-			AbstractScreen old = currentScreen;
+			GameScreen old = currentScreen;
 			
 			if (old != null) {
 				old.close();
@@ -244,23 +246,27 @@ public class Game {
 			}
 			
 			currentScreen = screenIn;
+			if (previous != null) { currentScreen.getScreenHistory().push(previous); }
 			if (init) {
+				currentScreen.setWindowSize();
 				currentScreen.initScreen();
 				currentScreen.initObjects();
 			}
 		}
+		
+		return currentScreen;
 	}
 	
 	/** Returns true if the specified window parent is open. */
 	public static <T extends WindowParent> boolean isEGuiOpen(Class<T> windowIn) {
-		return windowIn != null ? getGameRenderer().getAllChildren().stream().anyMatch(o -> o.getClass() == windowIn) : false;
+		return windowIn != null ? gameRenderer.getCombinedObjects().stream().anyMatch(o -> o.getClass() == windowIn) : false;
 	}
 	
 	/** Returns a list of all actively drawn window parents. */
 	public static EArrayList<WindowParent> getAllActiveWindows() {
 		EArrayList<WindowParent> windows = new EArrayList();
 		try {
-			getGameRenderer().getAllChildren().stream().filter(o -> WindowParent.class.isInstance(o)).filter(o -> !o.isBeingRemoved()).forEach(w -> windows.add((WindowParent) w));
+			gameRenderer.getCombinedObjects().filterForEach(o -> WindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((WindowParent) w));
 		}
 		catch (Exception e) { e.printStackTrace(); }
 		return windows;
@@ -275,7 +281,7 @@ public class Game {
 	public static <T extends WindowParent> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
 		EArrayList<T> windows = new EArrayList();
 		try {
-			getGameRenderer().getAllChildren().stream().filter(o -> o.getClass() == windowIn).filter(o -> !o.isBeingRemoved()).forEach(w -> windows.add((T) w));
+			gameRenderer.getCombinedObjects().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));
 		}
 		catch (Exception e) { e.printStackTrace(); }
 		return windows;
@@ -315,7 +321,7 @@ public class Game {
 		if (guiIn == null) { displayScreen(null); }
 		else {
 			gameRenderer.addObject(guiIn);
-			if (oldObject instanceof AbstractScreen) { displayScreen(null); }
+			if (oldObject instanceof GameScreen) { displayScreen(null); }
 			else if (oldObject instanceof IWindowParent && closeOld) { ((IWindowParent) oldObject).close(); }
 			
 			if (transferHistory && oldObject != null) {

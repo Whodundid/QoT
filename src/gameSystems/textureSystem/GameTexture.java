@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GameTexture {
 	
+	private String name;
 	private int textureID = -1; //-1 indicates this texutre is currently unregistered
 	private String filePath;
 	private int width = -1, height = -1;
@@ -13,7 +14,9 @@ public class GameTexture {
 	// Constructors
 	//--------------
 	
-	public GameTexture(String filePathIn) {
+	public GameTexture(String filePathIn) { this("noname", filePathIn); }
+	public GameTexture(String nameIn, String filePathIn) {
+		name = nameIn;
 		filePath = filePathIn;
 	}
 	
@@ -37,6 +40,7 @@ public class GameTexture {
 	// GameTexture Getters
 	//---------------------
 	
+	public String getName() { return name; }
 	public int getTextureID() { return textureID; }
 	public String getFilePath() { return filePath; }
 	public int getWidth() { return width; }

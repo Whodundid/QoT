@@ -289,11 +289,16 @@ public class WindowObjectS extends EGui {
 	//objects
 	/** Returns true if the given object is a child of the specified parent. */
 	public static boolean isChildOfObject(IWindowObject child, IWindowObject parent) {
+		//prevent checking if there is nothing to check against
+		if (parent == null) { return false; }
+		
 		IWindowObject parentObj = child.getParent();
 		
 		//recursively check through the object's parent lineage to see if that parent is the possible parent
 		while (parentObj != null) {
 			if (parentObj == parent) { return true; }
+			//check for infinite loops
+			if (parentObj == parentObj.getParent()) { break; }
 			parentObj = parentObj.getParent();
 		}
 		
@@ -377,13 +382,22 @@ public class WindowObjectS extends EGui {
 		IWindowObject parentObj = obj.getParent();
 		//recursively check through the object's parent lineage to see if that parent is a topParentdw
 		while (parentObj != null) {
-			if (parentObj instanceof ITopParent) { return (ITopParent) parentObj; }
+			if (parentObj instanceof ITopParent) {
+				//System.out.println("returning cast of getTopParent");
+				return (ITopParent) parentObj;
+			}
 			
+			//System.out.println("HERE: " + obj + " : " + parentObj);
 			//break if the parent is itself
-			if (parentObj == parentObj.getParent()) { break; }
+			if (parentObj == parentObj.getParent()) {
+				//System.out.println("breaking getTopParent chain");
+				break;
+			}
 			
 			parentObj = parentObj.getParent();
 		}
+		
+		//System.out.println("out of getTopParent");
 		
 		return obj instanceof ITopParent ? (ITopParent) obj : null;
 	}
@@ -395,6 +409,7 @@ public class WindowObjectS extends EGui {
 		while (parentObj != null && !(parentObj instanceof ITopParent)) {
 			if (parentObj instanceof IWindowParent) { return (IWindowParent) parentObj; }
 			
+			//System.out.println("HERE2: " + obj + " : " + parentObj);
 			//break if the parent is itself
 			if (parentObj == parentObj.getParent()) { break; }
 			
@@ -411,11 +426,11 @@ public class WindowObjectS extends EGui {
 		boolean left = false, right = false, top = false, bottom = false;
 		EDimension d = objIn.getDimensions();
 		double rStartY = objIn.hasHeader() ? objIn.getHeader().startY : d.startY;
-		if (mX >= d.startX - 2 && mX <= d.endX + 2 && mY >= rStartY - 2 && mY <= d.endY + 1) {
-			if (mX >= d.startX - 2 && mX <= d.startX) { left = true; }
-			if (mX >= d.endX - 1 && mX <= d.endX + 2) { right = true; }
-			if (mY >= rStartY - 3 && mY <= rStartY) { top = true; }
-			if (mY >= d.endY - 1 && mY <= d.endY + 1) { bottom = true; }
+		if (mX >= d.startX - 5 && mX <= d.endX + 5 && mY >= rStartY - 5 && mY <= d.endY + 4) {
+			if (mX >= d.startX - 5 && mX <= d.startX) { left = true; }
+			if (mX >= d.endX - 4 && mX <= d.endX + 5) { right = true; }
+			if (mY >= rStartY - 6 && mY <= rStartY) { top = true; }
+			if (mY >= d.endY - 4 && mY <= d.endY + 4) { bottom = true; }
 			if (left) {
 				if (top) { return ScreenLocation.topLeft; }
 				else if (bottom) { return ScreenLocation.botLeft; }

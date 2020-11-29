@@ -103,7 +103,7 @@ public class WindowSelectionList extends ActionWindowParent {
 		drawDefaultBackground();
 		
 		if (select != null && list != null) {
-			select.setEnabled(list.getCurrentLine() != null && list.getCurrentLine().getStoredObj() != null);
+			select.setEnabled(list.getCurrentLine() != null && list.getCurrentLine().getStoredObject() != null);
 		}
 		
 		super.drawObject(mXIn, mYIn);
@@ -144,8 +144,8 @@ public class WindowSelectionList extends ActionWindowParent {
 	}
 	
 	protected void selectCurrentOptionAndClose() {
-		if (list.getCurrentLine() != null && list.getCurrentLine().getStoredObj() != null) {
-			selectedObject = list.getCurrentLine().getStoredObj();
+		if (list.getCurrentLine() != null && list.getCurrentLine().getStoredObject() != null) {
+			selectedObject = list.getCurrentLine().getStoredObject();
 			performAction(null, null);
 			close();
 		}
@@ -155,7 +155,7 @@ public class WindowSelectionList extends ActionWindowParent {
 		TextAreaLine l = new TextAreaLine(list, text, color, arg) {
 			@Override
 			public void onDoubleClick() {
-				if (list.getCurrentLine() != null && list.getCurrentLine().getStoredObj() != null) {
+				if (list.getCurrentLine() != null && list.getCurrentLine().getStoredObject() != null) {
 					selectCurrentOptionAndClose();
 				}
 			}

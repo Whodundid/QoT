@@ -1,5 +1,6 @@
 package util.mathUtil;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import util.EUtil;
@@ -13,6 +14,22 @@ public class NumUtil {
 	public static long clamp(long num, long min, long max) { return (num < min) ? min : (num > max ? max : num); }
 	public static float clamp(float num, float min, float max) { return (num < min) ? min : (num > max ? max : num); }
 	public static double clamp(double num, double min, double max) { return (num < min) ? min : (num > max ? max : num); }
+	
+	public static double round(double value, int places) {
+		if (places < 0) { return Double.NaN; }
+		value *= 100;
+		value = Math.round(value);
+		value = (double) ((int) value);
+		return value / 100;
+	}
+	
+	/** Double to String with fixed number of decimal places. */
+	public static String roundDSP(double value, int places) {
+		DecimalFormat f = new DecimalFormat("#." + EUtil.repeatStr("#", places));
+		return f.format(value);
+	}
+	
+	public static String roundD2(double value) { return roundDSP(value, 2); }
 	
 	/** Returns the higher of the given two numbers. */
 	public static Number max(Number a, Number b) { return (a.doubleValue() > b.doubleValue()) ? a : b; }

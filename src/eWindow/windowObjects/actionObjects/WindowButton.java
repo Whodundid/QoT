@@ -9,11 +9,12 @@ import java.util.function.Consumer;
 import openGL_Util.GLSettings;
 import org.lwjgl.glfw.GLFW;
 import util.EUtil;
+import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
 
 //Author: Hunter Bragg
 
-public class WindowButton extends ActionObject {
+public class WindowButton<E> extends ActionObject<E> {
 	
 	public static int defaultColor = 14737632;
 	public int color = 14737632;
@@ -23,15 +24,16 @@ public class WindowButton extends ActionObject {
 	public int backgroundHoverColor = 0xff828282;
 	public int borderColor = 0xff000000;
 	public int borderWidth = 1;
+	protected boolean forceDrawHover = false;
 	protected boolean drawBorder = false;
 	protected boolean custom = false;
 	protected boolean usingBaseTextures = true;
-	protected boolean stretchBaseTextures = false;
+	protected boolean stretchTextures = false;
 	protected boolean drawTextures = true;
 	protected int pressedButton = -1;
 	protected int textOffset = 0;
-	protected boolean drawBackground = false;
-	protected boolean drawBackgroundHover = false;
+	protected boolean drawBackground = true;
+	protected boolean drawBackgroundHover = true;
 	protected boolean trueFalseButton = false;
 	protected boolean drawString = true;
 	protected boolean drawDisabledColor = false;
@@ -40,7 +42,7 @@ public class WindowButton extends ActionObject {
 	protected GameTexture btnSelTexture = null;
 	protected String displayString;
 	
-	protected WindowButton(IWindowObject parentIn) { super(parentIn); custom = true; }
+	public WindowButton(IWindowObject parentIn) { super(parentIn); custom = true; }
 	
 	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height) { this(parentIn, posX, posY, width, height, ""); }
 	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height, String displayStringIn) {
@@ -55,15 +57,18 @@ public class WindowButton extends ActionObject {
 		int stringColor = isEnabled() ? (mouseCheck ? (color == 14737632 ? textHoverColor : color) : color) : (drawDisabledColor ? disabledColor : color + 0xbbbbbb);
 		
 		//draw background stuff
-		if (drawBackgroundHover && mouseHover) {
-			drawRect(startX, startY, endX, endY, backgroundHoverColor);
+		/*
+		if (drawBackgroundHover && (forceDrawHover || mouseHover)) {
+			//drawRect(startX, startY, endX, endY, backgroundHoverColor);
+			drawRect(startX, startY, endX, endY, borderColor);
 		}
 		else if (drawBackground) {
 			drawRect(startX, startY, endX, endY, backgroundColor);
 		}
+		*/
 		
 		drawRect(borderColor);
-		drawRect(mouseHover ? backgroundHoverColor : backgroundColor, 1);
+		drawRect((forceDrawHover || mouseHover) ? backgroundHoverColor : backgroundColor, 1);
 		
 		//reset the color buffer to prepare for texture drawing
 		GLSettings.fullBright();
@@ -91,11 +96,24 @@ public class WindowButton extends ActionObject {
 			
 			//draw the textures
 			if (usingBaseTextures) {
-				if (stretchBaseTextures) { drawTexture(startX, startY, width, height); }
+				if (stretchTextures) { drawTexture(startX, startY, width, height); }
 				else { drawBaseTexture(mouseHover); }
 			}
 			else if (btnTexture != null) {
-				drawTexture(startX, startY, width, height);
+				
+				if (stretchTextures) { drawTexture(startX, startY, width, height); }
+				else {
+					int tW = btnTexture.getWidth();
+					int tH = btnTexture.getHeight();
+					
+					double sX = NumUtil.clamp(midX - tW / 2, startX, endX);
+					double sY = NumUtil.clamp(midY - tH / 2, startY, endY);
+					double w = NumUtil.clamp(tW, 0, tW);
+					double h = NumUtil.clamp(tH, 0, tH);
+					
+					drawTexture(sX, sY, w, h);
+				}
+				
 				if (btnSelTexture == null && mouseHover) {
 					drawRect(startX + 1, startY + 1, endX - 1, endY - 1, 0x888B97D3);
 					//drawRect(startX, startY, startX + 1, endY, EColors.orange); //left
@@ -115,11 +133,13 @@ public class WindowButton extends ActionObject {
 		if (drawString) {
 			scissor(startX + 1, startY + 1, endX - 1, endY - 1);
 			
-			if (drawCentered) { drawStringC(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 - 3, stringColor); }
+			if (drawCentered) { drawStringC(displayString, midX + 3, midY - FontRenderer.FONT_HEIGHT / 2 - 3, stringColor); }
 			else { drawString(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 - 3, stringColor); }
 			
 			endScissor();
 		}
+		
+		forceDrawHover = false;
 		
 		super.drawObject(mX, mY);
 	}
@@ -199,6 +219,7 @@ public class WindowButton extends ActionObject {
 	}
 	
 	private void checkForBaseTextures() {
+		usingBaseTextures = false;
 		//usingBaseTextures = EMCResources.guiButtonBase.equals(btnTexture) && EMCResources.guiButtonSel.equals(btnSelTexture);
 	}
 	
@@ -216,6 +237,7 @@ public class WindowButton extends ActionObject {
 	//EGuiButton Setters
 	//------------------
 	
+	public WindowButton setForceDrawHover(boolean val) { forceDrawHover = val; return this; }
 	public WindowButton setTextures(GameTexture base, GameTexture sel) { setButtonTexture(base); setButtonSelTexture(sel); return this; }
 	public WindowButton setButtonTexture(GameTexture loc) { btnTexture = loc; checkForBaseTextures(); return this; }
 	public WindowButton setButtonSelTexture(GameTexture loc) { btnSelTexture = loc; checkForBaseTextures(); return this; }
@@ -234,7 +256,7 @@ public class WindowButton extends ActionObject {
 	public WindowButton setTrueFalseButton(boolean val, boolean initial) { trueFalseButton = val; updateTrueFalseDisplay(initial); return this; }
 	public WindowButton setDrawString(boolean val) { drawString = val; return this; }
 	public WindowButton setDrawDisabledColor(boolean val) { drawDisabledColor = val; return this; }
-	public WindowButton setDrawStretched(boolean val) { stretchBaseTextures = val; return this; }
+	public WindowButton setDrawStretched(boolean val) { stretchTextures = val; return this; }
 	public WindowButton setDrawBackgroundHover(boolean val) { drawBackgroundHover = val; return this; }
 	
 	public WindowButton setDrawTextures(boolean val) {

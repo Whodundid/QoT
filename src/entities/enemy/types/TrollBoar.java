@@ -15,7 +15,7 @@ public class TrollBoar extends Enemy {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		drawTexture(EntityTextures.tollboar);
+		drawTexture(EntityTextures.trollboar);
 		super.drawObject(mXIn, mYIn);
 	}
 	

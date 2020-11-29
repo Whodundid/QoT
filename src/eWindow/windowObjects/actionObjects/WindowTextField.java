@@ -12,7 +12,7 @@ import util.renderUtil.EColors;
 
 //Author: Hunter Bragg
 
-public class WindowTextField extends ActionObject {
+public class WindowTextField<E> extends ActionObject<E> {
 	
 	public String text = "", textWhenEmpty = "";
 	public int maxStringLength = 32;

@@ -10,7 +10,7 @@ import util.storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 
-public class WindowSlider extends ActionObject {
+public class WindowSlider<E> extends ActionObject<E> {
 
 	protected double sliderValue = 0;
 	public double lowVal = 0, highVal = 0;

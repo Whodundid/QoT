@@ -6,7 +6,7 @@ import util.EUtil;
 import util.mathUtil.NumUtil;
 import util.storageUtil.EArrayList;
 
-public class ScreenHandler extends ActionObject {
+public class ScreenHandler<E> extends ActionObject<E> {
 	
 	private IWindowObject parent;
 	private EArrayList<WindowScreen> screens = new EArrayList();

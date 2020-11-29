@@ -5,7 +5,7 @@ import util.renderUtil.EColors;
 
 //Author: Hunter Bragg
 
-public class WindowButton3Stage extends WindowButton {
+public class WindowButton3Stage<E> extends WindowButton<E> {
 
 	protected String stage0 = "und";
 	protected String stage1 = "und";

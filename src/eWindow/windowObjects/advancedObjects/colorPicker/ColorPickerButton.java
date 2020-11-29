@@ -6,7 +6,7 @@ import util.renderUtil.EColors;
 
 //Author: Hunter Bragg
 
-public class ColorPickerButton extends WindowButton {
+public class ColorPickerButton<E> extends WindowButton<E> {
 
 	public ColorPickerButton(IWindowObject parentIn, double posX, double posY, double width, double height) { this(parentIn, posX, posY, width, height, "White", EColors.white); }
 	public ColorPickerButton(IWindowObject parentIn, double posX, double posY, double width, double height, EColors colorIn) { this(parentIn, posX, posY, width, height, colorIn.name, colorIn.intVal); }

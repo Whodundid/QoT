@@ -11,7 +11,7 @@ import util.renderUtil.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public class ScreenLocationSelector extends ActionObject {
+public class ScreenLocationSelector<E> extends ActionObject<E> {
 	
 	protected IUseScreenLocation obj;
 	protected WindowButton bLeft, bRight, tLeft, tRight, center, custom, chatDraw;

@@ -239,36 +239,39 @@ public class TerminalHandler {
 		EArrayList<CommandType> types = new EArrayList();
 		unsorted.forEach(c -> types.addIfNotContains(c.getType()));
 		
-		System.out.println(commandsByCategory);
+		EArrayList<TerminalCommand> typeToProcess = new EArrayList();
 		
 		//isolate the 'none' category
-		StorageBox<String, EArrayList<TerminalCommand>> noneCat = commandsByCategory.removeBoxesContainingA("none").get(0);
-		EArrayList<TerminalCommand> typeToProcess = new EArrayList(noneCat.getB());
-		
-		//filter out commands that have a category but are not normal
-		for (StorageBox<String, EArrayList<TerminalCommand>> byCat : commandsByCategory) {
-			Iterator<TerminalCommand> it = byCat.getB().iterator();
-			while (it.hasNext()) {
-				TerminalCommand c = it.next();
-				if (c.getType() != CommandType.NORMAL) {
-					StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> box = sortedCommands.getBoxWithA(c.getType());
-					if (box != null) {
-						StorageBoxHolder<String, EArrayList<TerminalCommand>> cats = box.getB();
-						StorageBox<String, EArrayList<TerminalCommand>> catBox = cats.getBoxWithA(c.getCategory());
-						if (catBox != null) {
-							catBox.getB().add(c);
+		if (!commandsByCategory.removeBoxesContainingA("none").isEmpty()) {
+			StorageBox<String, EArrayList<TerminalCommand>> noneCat = commandsByCategory.removeBoxesContainingA("none").get(0);
+			typeToProcess.addAll(noneCat.getB());
+			
+			//filter out commands that have a category but are not normal
+			for (StorageBox<String, EArrayList<TerminalCommand>> byCat : commandsByCategory) {
+				Iterator<TerminalCommand> it = byCat.getB().iterator();
+				while (it.hasNext()) {
+					TerminalCommand c = it.next();
+					if (c.getType() != CommandType.NORMAL) {
+						StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> box = sortedCommands.getBoxWithA(c.getType());
+						if (box != null) {
+							StorageBoxHolder<String, EArrayList<TerminalCommand>> cats = box.getB();
+							StorageBox<String, EArrayList<TerminalCommand>> catBox = cats.getBoxWithA(c.getCategory());
+							if (catBox != null) {
+								catBox.getB().add(c);
+							}
+							else {
+								cats.add(new StorageBox(c.getCategory(), new EArrayList(c)));
+							}
 						}
 						else {
-							cats.add(new StorageBox(c.getCategory(), new EArrayList(c)));
+							sortedCommands.add(c.getType(), new StorageBoxHolder(c.getCategory(), new EArrayList(c)));
 						}
+						it.remove();
 					}
-					else {
-						sortedCommands.add(c.getType(), new StorageBoxHolder(c.getCategory(), new EArrayList(c)));
-					}
-					it.remove();
 				}
 			}
 		}
+		
 		
 		//add all other command categories except for 'none'
 		sortedCommands.add(CommandType.NORMAL, commandsByCategory);

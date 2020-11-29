@@ -3,7 +3,7 @@ package eWindow.windowTypes.interfaces;
 //Author: Hunter Bragg
 
 /** An interface outlining behavior for IWindowObjects which can perform actions. */
-public interface IActionObject extends IWindowObject {
+public interface IActionObject<E> extends IWindowObject {
 	
 	//-------
 	//actions
@@ -31,9 +31,9 @@ public interface IActionObject extends IWindowObject {
 	//-------
 	
 	/** Stores some object or argument to be preserved for future use. */
-	public IActionObject setStoredObject(Object objIn);
+	public IActionObject setStoredObject(E objIn);
 	/** Returns the object or arguemnt currently stored. */
-	public Object getStoredObject();
+	public E getStoredObject();
 	/** Specifies an object that was selected. */
 	public IActionObject setSelectedObject(Object objIn);
 	/** Returns the object that was selected. */

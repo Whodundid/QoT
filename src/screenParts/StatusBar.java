@@ -54,6 +54,17 @@ public class StatusBar extends WindowObject {
 		
 	}
 	
+	public void decrementVal(double amount) {
+		current -= amount;
+		current = NumUtil.clamp(current, min, max);
+	}
+	
+	public void incrementVal(double amount) {
+		current += amount;
+		current = NumUtil.clamp(current, min, max);
+	}
+	
 	public StatusBar setCurrentValue(double val) { current = NumUtil.clamp(val, min, max); return this; }
+	public double getCurrentVal() { return current; }
 	
 }

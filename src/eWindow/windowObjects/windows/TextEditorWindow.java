@@ -77,7 +77,7 @@ public class TextEditorWindow extends WindowParent {
 		document.getVScrollBar().setScrollBarPos(vPos);
 		document.getHScrollBar().setScrollBarPos(hPos);
 		if (line != null) {
-			document.setSelectedLine(document.getLineWithTextAndObject(line.getText(), line.getStoredObj()));
+			document.setSelectedLine(document.getLineWithTextAndObject(line.getText(), line.getStoredObject()));
 		}
 	}
 	

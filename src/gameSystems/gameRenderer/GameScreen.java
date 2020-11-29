@@ -1,16 +1,16 @@
 package gameSystems.gameRenderer;
 
+import eWindow.windowTypes.TopWindowParent;
 import eWindow.windowTypes.interfaces.ITopParent;
-import eWindow.windowTypes.interfaces.IWindowObject;
+import java.util.Stack;
 import main.Game;
 
-public class GameScreen extends AbstractScreen {
+public abstract class GameScreen extends TopWindowParent implements ITopParent {
 	
-	GameRenderer renderer;
+	protected Stack<GameScreen> screenHistory = new Stack();
 	
 	public GameScreen() {
-		renderer = Game.getGameRenderer();
-		init(renderer, 0, 0, Game.getWidth(), Game.getHeight());
+		init(Game.getGameRenderer(), 0, 0, Game.getWidth(), Game.getHeight());
 	}
 	
 	@Override
@@ -19,15 +19,40 @@ public class GameScreen extends AbstractScreen {
 		super.drawObject(mXIn, mYIn);
 	}
 	
-	protected void drawScreen(int mXIn, int mYIn) {}
+	/** Initializer method that is called before a screen is built. */
+	public abstract void initScreen();
 	
-	@Override public ITopParent getTopParent() { return this; }
-	@Override public IWindowObject getParent() { return this; }
+	public abstract void drawScreen(int mXIn, int mYIn);
 	
-	@Override
+	/** Called whenever this screen is about to be closed. */
+	public abstract void onScreenClosed();
+	
 	public void onWindowResize() {
 		setDimensions(0, 0, Game.getWidth(), Game.getHeight());
 		reInitObjects();
 	}
+	
+	public Stack<GameScreen> getScreenHistory() { return screenHistory; }
+	public GameScreen setScreenHistory(Stack<GameScreen> historyIn) {
+		screenHistory = historyIn;
+		return this;
+	}
+	
+	public void closeScreen() {
+		if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
+			GameScreen screen = screenHistory.pop();
+			screen.setScreenHistory(screen.getScreenHistory());
+			Game.displayScreen(screen);
+		}
+		else {
+			Game.displayScreen(null);
+		}
+	}
+	
+	public GameScreen getPreviousScreen() {
+		return (!screenHistory.isEmpty()) ? screenHistory.peek() : null;
+	}
+	
+	public GameScreen setWindowSize() { setDimensions(0, 0, Game.getWidth(), Game.getHeight()); return this; }
 	
 }

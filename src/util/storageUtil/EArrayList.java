@@ -372,9 +372,9 @@ public class EArrayList<E> extends AbstractList<E> {
 	/** Adds the elements from an existing collection that match the given condition. */
 	public EArrayList<E> filterAdd(Collection<? extends E> c, Predicate<? super E> condition) { EUtil.filterForEach(c, condition, this::add); return this; }
 	/** Adds the elements from an existing array that match the given condition. */
-	public EArrayList<E> filterNullAdd(E[] arr, Predicate<? super E> condition) { EUtil.filterNullForEach(arr, condition, this::add); return this; }
+	public EArrayList<E> filterNullAdd(E[] arr, Predicate<? super E> condition) { EUtil.fNullFore(arr, condition, this::add); return this; }
 	/** Adds the elements from an existing collection that match the given condition. */
-	public EArrayList<E> filterNullAdd(Collection<? extends E> c, Predicate<? super E> condition) { EUtil.filterNullForEach(c, condition, this::add); return this; }
+	public EArrayList<E> filterNullAdd(Collection<? extends E> c, Predicate<? super E> condition) { EUtil.fNullFore(c, condition, this::add); return this; }
 	
 	//mappers
 	
@@ -386,9 +386,9 @@ public class EArrayList<E> extends AbstractList<E> {
 	/** Reduces this list using the given filter then performs the given action on the remaining elements. */
 	public void filterForEach(Predicate<? super E> filter, Consumer<? super E> action) { EUtil.filterForEach(this, filter, action); }
 	/** Removes null elements then performs the given action on the remaining elements. */
-	public void filterNullForEach(Consumer<? super E> action) { EUtil.filterNullForEach(this, action); }
+	public void filterNullForEach(Consumer<? super E> action) { EUtil.fNullFore(this, action); }
 	/** Removes null elements and reduces this list using the given filter then performs the given action on the remaining elements. */
-	public void filterNullForEach(Predicate<? super E> filter, Consumer<? super E> action) { EUtil.filterNullForEach(this, filter, action); }
+	public void filterNullForEach(Predicate<? super E> filter, Consumer<? super E> action) { EUtil.fNullFore(this, filter, action); }
 	/** Performs the specified action on each element of this list then returns the given return value. */
 	public <R> R forEachR(Consumer<? super E> action, R returnVal) { forEach(action); return returnVal; }
 	/** If the provided condition is true, then the provided action is performed on each element. */

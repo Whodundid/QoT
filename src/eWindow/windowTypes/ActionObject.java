@@ -6,17 +6,17 @@ import eWindow.windowTypes.interfaces.IWindowParent;
 
 //Author: Hunter Bragg
 
-public abstract class ActionObject extends WindowObject implements IActionObject {
+public abstract class ActionObject<E> extends WindowObject implements IActionObject<E> {
 
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
 	protected Object selectedObject = null;
-	protected Object storedObject = null;
+	protected E storedObject = null;
 	protected IWindowObject actionReceiver;
 	
-	//-------------------------
-	//AcitonObject Constructors
-	//-------------------------
+	//---------------------------
+	// AcitonObject Constructors
+	//---------------------------
 	
 	/** Used for internal or highly specific purposes. */
 	protected ActionObject() {}
@@ -25,9 +25,9 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 		actionReceiver = parentIn;
 	}
 	
-	//----------------------
-	//WindowObject Overrides
-	//----------------------
+	//------------------------
+	// WindowObject Overrides
+	//------------------------
 	
 	@Override
 	public void init(IWindowObject objIn, double xIn, double yIn) {
@@ -55,9 +55,9 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 		if (runActionOnRelease) { performAction(); }
 	}
 	
-	//-----------------------
-	//IActionObject Overrides
-	//-----------------------
+	//-------------------------
+	// IActionObject Overrides
+	//-------------------------
 	
 	@Override
 	public void performAction(Object... args) {
@@ -76,8 +76,8 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 	@Override public IActionObject setActionReceiver(IWindowObject objIn) { actionReceiver = objIn; return this; }
 	@Override public IWindowObject getActionReceiver() { return actionReceiver; }
 		
-	@Override public IActionObject setStoredObject(Object objIn) { storedObject = objIn; return this; }
-	@Override public Object getStoredObject() { return storedObject; }
+	@Override public IActionObject setStoredObject(E objIn) { storedObject = objIn; return this; }
+	@Override public E getStoredObject() { return storedObject; }
 	@Override public IActionObject setSelectedObject(Object objIn) { selectedObject = objIn; return this; }
 	@Override public Object getSelectedObject() { return selectedObject; }
 	

@@ -40,7 +40,7 @@ public class StaticTopParent extends EGui {
 		if (objIn.getFocusLockObject() != null) { //first check if there is a focusLock
 			if (underMouse != null) { //if there is, then check if there is actually anything under the cursor
 				//allow focus to be passed to the object under the cursor if it is the focusLockObject, a child of the focusLockObject or an EGuiHeader
-				if (underMouse.equals(objIn.getFocusLockObject()) || underMouse.isChild(objIn.getFocusLockObject()) || underMouse instanceof WindowHeader) {
+				if (underMouse.equals(objIn.getFocusLockObject()) || underMouse.isChildOf(objIn.getFocusLockObject()) || underMouse instanceof WindowHeader) {
 					focusQueue.add(new EventFocus(objIn, underMouse, FocusType.MousePress, button, mX, mY));
 				}
 				else { //otherwise, annoy the user
@@ -138,7 +138,7 @@ public class StaticTopParent extends EGui {
 		else {
 			IWindowObject fo = objIn.getFocusedObject();
 			
-			if (fo != null && fo != objIn) { fo.keyPressed(Keyboard.getLastChar(), Keyboard.getLastKey()); }
+			if (fo != null && fo != objIn) { fo.keyPressed(typedChar, keyCode); }
 			if (fo == null || fo == objIn) {
 				
 			}
@@ -271,7 +271,7 @@ public class StaticTopParent extends EGui {
 	public static ITopParent hideAllExcept(ITopParent topIn, IWindowObject exception, IWindowObject... additional) {
 		for (IWindowObject o : topIn.getCombinedObjects()) {
 			for (IWindowObject e : EUtil.add(exception, additional)) {
-				if (o != e || o.isChild(e)) {
+				if (o != e || o.isChildOf(e)) {
 					o.setHidden(true);
 				}
 			}
@@ -391,7 +391,7 @@ public class StaticTopParent extends EGui {
 				if (children.contains(obj)) { //only allow object which are a part of the parent to request focus from the parent
 					
 					if (objIn.doesFocusLockExist()) { //check for a focus lock and, if it exists, only allow focus to transfer to headers or the focusLockObject
-						if (obj.equals(objIn.getFocusLockObject()) || obj.isChild(objIn.getFocusLockObject()) || obj instanceof WindowHeader) {
+						if (obj.equals(objIn.getFocusLockObject()) || obj.isChildOf(objIn.getFocusLockObject()) || obj instanceof WindowHeader) {
 							passFocus(objIn, objIn.getFocusedObject(), obj, event);
 						}
 						else if (objIn.getFocusedObject() != objIn.getFocusLockObject()) {

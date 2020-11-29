@@ -114,10 +114,10 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	@Override public TopWindowParent resize(double xIn, double yIn, ScreenLocation areaIn) { return this; }
 	
 	//objects
-	@Override public boolean isChild(IWindowObject objIn) { return false; }
+	@Override public boolean isChildOf(IWindowObject objIn) { return false; }
 	
 	//parents
-	@Override public IWindowObject getParent() { return this; }
+	@Override public IWindowObject getParent() { return null; }
 	@Override public TopWindowParent setParent(IWindowObject parentIn) { return this; }
 	@Override public ITopParent getTopParent() { return this; }
 	@Override public IWindowParent getWindowParent() { return null; }
@@ -159,7 +159,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	@Override public void mouseEntered(int mX, int mY) {}
 	@Override public void mouseExited(int mX, int mY) {}
 	@Override public boolean isMouseInside(int mX, int mY) { return false; }
-	@Override public boolean isMouseOver(int mX, int mY) { return false; }
+	@Override public boolean isMouseOver(int mX, int mY) { return !isMouseInsideObject(); }
 	@Override public TopWindowParent setBoundaryEnforcer(EDimension dimIn) { return this; }
 	@Override public EDimension getBoundaryEnforcer() { return getDimensions(); }
 	@Override public boolean isClickable() { return false; }
@@ -180,7 +180,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	@Override public boolean isCloseable() { return false; }
 	@Override public boolean isClosed() { return false; }
 	@Override public TopWindowParent setCloseable(boolean val) { return this; }
-	@Override public void close() {}
+	@Override public void close() { removeAllObjects(); }
 	@Override public void onClosed() {}
 	@Override public TopWindowParent setFocusedObjectOnClose(IWindowObject objIn) { return this; }
 	

@@ -11,7 +11,7 @@ import util.storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 
-public class WindowScrollBar extends ActionObject {
+public class WindowScrollBar<E> extends ActionObject<E> {
 	
 	public boolean vertical = false;
 	public double scrollBarThickness = 3;
