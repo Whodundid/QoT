@@ -49,6 +49,8 @@ public class MapMenuScreen extends GameScreen {
 		if (object == newMap) { Game.displayScreen(new NewMapCreatorScreen(nameField.getText()), this); }
 		if (object == loadMap) { Game.displayScreen(new MapEditorScreen(new File(nameField.getText())), this); }
 		
+		if (object == nameField) { actionPerformed(loadMap); }
+		
 		if (object == back) { closeScreen(); }
 	}
 	

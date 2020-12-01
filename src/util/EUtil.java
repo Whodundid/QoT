@@ -453,11 +453,11 @@ public class EUtil {
 	/** Returns false if either object was null. If either is null, no action is performed. */
 	public static <E, A> boolean nullDo(E obj1, A obj2, BiConsumer<? super E, ? super A> action) { if (notNull(obj1, obj2)) { action.accept(obj1, obj2); return true; } return false; }
 	/** Returns the provided value regardless of inputs. If object is null, no action is performed. */
-	public static <E, R> R nullDoR(E obj, Consumer<? super E> action) { if (notNull(obj)) { action.accept(obj); } return null; }
+	public static <E, R> E nullDoR(E obj, Consumer<? super E> action) { if (notNull(obj)) { action.accept(obj); } return obj; }
 	/** Returns the provided value regardless of inputs. If object is null, no action is performed. */
 	public static <E, R> R nullDoR(E obj, Consumer<? super E> action, R returnVal) { if (notNull(obj)) { action.accept(obj); } return returnVal; }
 	/** Returns the provided value regardless of inputs. If either object is null, no action is performed. */
-	public static <E, A, R> R nullDoR(E obj1, A obj2, BiConsumer<? super E, ? super A> action) { if (notNull(obj1, obj2)) { action.accept(obj1, obj2); } return null; }
+	public static <E, A, R> E nullDoR(E obj1, A obj2, BiConsumer<? super E, ? super A> action) { if (notNull(obj1, obj2)) { action.accept(obj1, obj2); } return obj1; }
 	/** Returns the provided value regardless of inputs. If either object is null, no action is performed. */
 	public static <E, A, R> R nullDoR(E obj1, A obj2, BiConsumer<? super E, ? super A> action, R returnVal) { if (notNull(obj1, obj2)) { action.accept(obj1, obj2); } return returnVal; }
 	/** A statement that returns the result of a given function if the given object is not null. */

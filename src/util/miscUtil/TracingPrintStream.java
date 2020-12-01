@@ -10,7 +10,7 @@ import java.io.PrintStream;
  */
 public class TracingPrintStream extends PrintStream {
 
-	private int BASE_DEPTH = 3;
+	private int BASE_DEPTH = 4;
 	private static PrintStream defaultOut = System.out;
 	private static boolean tracing = false;
 	private static boolean tracePrimitives = false;

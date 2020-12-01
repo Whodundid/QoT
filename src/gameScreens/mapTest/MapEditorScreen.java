@@ -9,8 +9,6 @@ import gameSystems.mapSystem.worldTiles.WorldTile;
 import input.Keyboard;
 import input.Mouse;
 import java.io.File;
-import java.util.Stack;
-import main.Game;
 import org.lwjgl.glfw.GLFW;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
@@ -150,15 +148,7 @@ public class MapEditorScreen extends GameScreen {
 		if (object == reload) { loadWorld(); }
 		if (object == save) { saveWorld(); }
 		
-		if (object == back) {
-			Stack<GameScreen> hist = getScreenHistory();
-			if (hist.peek() instanceof NewMapCreatorScreen) {
-				Game.displayScreen(new NewMapCreatorScreen(world)).setScreenHistory(hist);
-			}
-			else {
-				closeScreen();
-			}
-		}
+		if (object == back) { closeScreen(); }
 	}
 	
 	@Override public void onScreenClosed() {}
@@ -174,6 +164,7 @@ public class MapEditorScreen extends GameScreen {
 		else if (world != null) {
 			xPos = world.getWidth() / 2;
 			yPos = world.getHeight() / 2;
+			mapFile = world.getWorldFile();
 		}
 	}
 	
@@ -194,6 +185,9 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	private void drawMap(int x, int y, int w, int h) {
+		//if (xPos < distX) { xPos = distX; }
+		//if (yPos < distY) { yPos = distY; }
+		
 		WorldTile[][] tiles = world.getTilesAroundPoint(xPos, yPos, distX, distY);
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = 0; j < tiles[0].length; j++) {
@@ -202,6 +196,7 @@ public class MapEditorScreen extends GameScreen {
 					
 					int drawPosX = x;
 					int drawPosY = y;
+					
 					if (xPos < distX) { drawPosX += (distX - xPos) * w; }
 					if (yPos < distY) { drawPosY += (distY - yPos) * h; }
 					

@@ -9,20 +9,26 @@ import gameScreens.MainMenuScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.GameRenderer;
 import gameSystems.gameRenderer.GameScreen;
+import gameSystems.mapSystem.GameWorld;
 import gameSystems.textureSystem.TextureSystem;
 import gameTextures.EntityTextures;
 import gameTextures.WorldTextures;
 import input.Keyboard;
 import input.Mouse;
 import input.WindowResizeListener;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.settings.MainConfigFile;
+import main.settings.QotGameSettings;
 import openGL_Util.shader.Shaders;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import terminal.TerminalHandler;
 import terminal.window.ETerminal;
+import util.miscUtil.OSType;
+import util.miscUtil.SysUtil;
 import util.renderUtil.CenterType;
 import util.renderUtil.WindowSize;
 import util.storageUtil.EArrayList;
@@ -33,8 +39,8 @@ public class Game {
 	public static final Logger QoTLogger = Logger.getLogger("QoT");
 	public static long handle = -1;
 	private static Game instance = null;
-	
-	private static Player thePlayer;
+	private static MainConfigFile mainConfig;
+	public static final QotGameSettings settings = new QotGameSettings();
 	
 	private static Keyboard keyboard;
 	private static Mouse mouse;
@@ -48,6 +54,9 @@ public class Game {
 	private static int width;
 	private static int height;
 	
+	public static Player thePlayer;
+	public static GameWorld theWorld;
+	
 	/** The screen currently being displayed. */
 	public static GameScreen currentScreen;
 	
@@ -55,8 +64,6 @@ public class Game {
 	private static boolean isDebug = false;
 	/** Indicates whether the game is actively running or not. */
 	private static boolean running = false;
-	/** If set to false, no songs will play. */
-	public static boolean playSongs = true;
 	
 	// Framerate stuff
 	public long startTime = 0l;
@@ -67,8 +74,6 @@ public class Game {
 	
 	public static long updateCounter = 0;
 	
-	private int vbo;
-	
 	//-----------------------------------------------
 	
 	public static Game getGame() {
@@ -78,6 +83,14 @@ public class Game {
 	private Game() {
 		instance = this;
 		
+		// setup local game directory
+		if (!setupUserDir()) {
+			throw new RuntimeException("Failed to create game local directory!");
+		}
+		
+		mainConfig.tryLoad();
+		
+		// setup OpenGL
 		if (!GLFW.glfwInit()) {
 			System.err.println("GLFW Failed to initialize.");
 			System.exit(1);
@@ -128,11 +141,33 @@ public class Game {
 		//GL20.glEnableVertexAttribArray(0);
 	}
 	
+	private boolean setupUserDir() {
+		// determine user OS and get their home directory
+		OSType os = SysUtil.getOS();
+		String homeDir = System.getProperty("user.home");
+		
+		File dir = null;
+		
+		switch (os) {
+		case WINDOWS: dir = new File(homeDir + "\\AppData\\Roaming\\QoT");
+		case MAC:
+		case LINUX:
+		case SOLARIS: // no idea how to handle yet
+		default: break;
+		}
+		
+		// initialize game directories
+		settings.initDirectories(dir);
+		
+		// establish game main config
+		mainConfig = new MainConfigFile(new File(dir, "MainConfig"));
+		
+		// setup successful
+		return true;
+	}
+	
 	public void runGame() {
 		if (!running) {
-			//Thread t = new Thread(Main.m);
-			//t.start();
-			
 			running = true;
 			
 			displayScreen(new MainMenuScreen());
@@ -183,12 +218,12 @@ public class Game {
 		//update framerate counter
 		updateFramerate();
 		
+		gameRenderer.onRenderTick();
+		
 		if (currentScreen != null) {
 			//System.out.println(currentScreen.getObjectName());
 			currentScreen.drawObject(Mouse.getMx(), Mouse.getMy());
 		}
-		
-		gameRenderer.onRenderTick();
 	}
 	
 	public static void stopGame() {
@@ -238,6 +273,7 @@ public class Game {
 	public static GameScreen displayScreen(GameScreen screenIn, GameScreen previous, boolean init) {
 		if (screenIn != null) {
 			GameScreen old = currentScreen;
+			currentScreen = screenIn;
 			
 			if (old != null) {
 				old.close();
@@ -245,8 +281,11 @@ public class Game {
 				old.onScreenClosed();
 			}
 			
-			currentScreen = screenIn;
-			if (previous != null) { currentScreen.getScreenHistory().push(previous); }
+			if (previous != null) {
+				old.getScreenHistory().push(previous);
+				currentScreen.setScreenHistory(old.getScreenHistory());
+			}
+			
 			if (init) {
 				currentScreen.setWindowSize();
 				currentScreen.initScreen();
@@ -255,6 +294,17 @@ public class Game {
 		}
 		
 		return currentScreen;
+	}
+	
+	public static GameWorld loadWorld(GameWorld worldIn) {
+		if (theWorld != null) {
+			theWorld.setLoaded(false);
+		}
+		
+		theWorld = worldIn;
+		gameRenderer.setWorld(theWorld);
+		
+		return worldIn;
 	}
 	
 	/** Returns true if the specified window parent is open. */
@@ -467,6 +517,9 @@ public class Game {
 	/** Returns this game's constant player object. */
 	public static Player getPlayer() { return thePlayer; }
 	
+	public static MainConfigFile getMainConfig() { return mainConfig; }
+	public static boolean saveConfig() { return mainConfig.trySave(); }
+	
 	//----------------
 	// Static Setters
 	//----------------
@@ -474,7 +527,7 @@ public class Game {
 	/** Sets whether the game should run in a debug state. */
 	public static void setDebugMode(boolean val) { isDebug = val; }
 	
-	public static void setPlayer(Player p) { thePlayer = p; }
+	public static Player setPlayer(Player p) { thePlayer = p; return thePlayer; }
 	
 	
 }

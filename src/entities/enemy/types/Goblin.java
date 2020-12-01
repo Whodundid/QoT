@@ -3,7 +3,8 @@ package entities.enemy.types;
 import entities.enemy.Enemy;
 import gameSystems.questSystem.RouteTracker;
 import gameTextures.EntityTextures;
-import main.Game;
+import util.mathUtil.Direction;
+import util.mathUtil.NumUtil;
 
 public class Goblin extends Enemy {
 	
@@ -13,13 +14,13 @@ public class Goblin extends Enemy {
 	public Goblin() { this(0, 0); }
 	public Goblin(int posX, int posY) {
 		super("Goblin", 1, 20, 20, 0, 0, 2, 0);
-		init(Game.getGameRenderer(), posX, posY, 150, 150);
+		init(posX, posY, 64, 64);
+		sprite = EntityTextures.goblin;
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		drawTexture(EntityTextures.goblin);
-		super.drawObject(mXIn, mYIn);
+	public void drawEntity() {
+		drawTexture();
 	}
 	
 	// This gets the loot and returns it
@@ -29,5 +30,14 @@ public class Goblin extends Enemy {
 	}
 	
 	@Override public RouteTracker getBackgroundStats() { return null; }
+	
+	@Override
+	public void onLivingUpdate() {
+		boolean shouldMove = NumUtil.roll(10, 0, 10);
+		if (shouldMove) {
+			Direction dir = NumUtil.randomDir();
+			move(dir);
+		}
+	}
 	
 }

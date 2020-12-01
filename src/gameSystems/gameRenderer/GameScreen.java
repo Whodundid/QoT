@@ -38,11 +38,16 @@ public abstract class GameScreen extends TopWindowParent implements ITopParent {
 		return this;
 	}
 	
-	public void closeScreen() {
+	public void closeScreen() { closeScreen(false); }
+	public void closeScreen(boolean hist) {
 		if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
+			
+			//System.out.println("pre: " + screenHistory);
 			GameScreen screen = screenHistory.pop();
-			screen.setScreenHistory(screen.getScreenHistory());
-			Game.displayScreen(screen);
+			screen.setScreenHistory(screenHistory);
+			//System.out.println("post: " + screenHistory);
+			
+			Game.displayScreen(screen, (hist) ? this : null);
 		}
 		else {
 			Game.displayScreen(null);

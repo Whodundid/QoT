@@ -1,6 +1,5 @@
 package entities.player;
 
-import main.Game;
 import entities.Entity;
 import gameSystems.questSystem.PathFinder;
 import gameSystems.questSystem.RouteTracker;
@@ -23,7 +22,7 @@ public class Player extends Entity {
 	
 	public Player(String nameIn) { this(nameIn, 0, 0); }
 	public Player(String nameIn, int posX, int posY) {
-		super(nameIn, 0, 20000, 20000, 500, 500, 12, 35);
+		super(nameIn, 0, 200, 200, 50, 50, 12, 35);
 		
 		EXP = 0;
 		flameDamage = 10;
@@ -33,18 +32,19 @@ public class Player extends Entity {
 		routes = new RouteTracker(this);
 		findPath = new PathFinder(null);
 		
-		init(Game.getGameRenderer(), posX, posY, 150, 150);
+		init(posX, posY, 64, 64);
+		setCollisionBox(startX + 20, startY + 20, endX - 20, endY);
+		sprite = EntityTextures.player;
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		drawTexture(EntityTextures.player);
-		super.drawObject(mXIn, mYIn);
+	public void drawEntity() {
+		drawTexture();
 	}
 	
 	@Override
 	public void kill() {
-		Game.getGameRenderer().removeObject(this);
+		//Game.getGameRenderer().removeObject(this);
 		super.kill();
 	}
 	

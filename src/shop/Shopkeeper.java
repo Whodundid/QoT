@@ -4,7 +4,7 @@ import entities.Entity;
 import gameSystems.questSystem.RouteTracker;
 import items.*;
 
-public class Shopkeeper extends Entity {
+public abstract class Shopkeeper extends Entity {
 	
 	private Shop shop = new Shop();
 	

@@ -417,6 +417,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		int newH = newRes.getHeight();
 		
 		res = Game.getWindowSize();
+		setDimensions(0, 0, res.getWidth(), res.getHeight());
 		
 		for (WindowParent p : windows) {
 			

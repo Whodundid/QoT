@@ -2,9 +2,10 @@ package gameScreens;
 
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
-import entities.player.Player;
 import gameScreens.mapTest.MapMenuScreen;
+import gameScreens.mapTest.WorldTest;
 import gameSystems.gameRenderer.GameScreen;
+import java.io.File;
 import main.Game;
 import sound.Songs;
 import util.mathUtil.NumUtil;
@@ -54,10 +55,12 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == newGame) {
-			Game.setPlayer(new Player("Demmeonockhc"));
-			Game.displayScreen(new GamePlayScreen());
-			Game.setPlayer(new Player("The Guy"));
-			Game.displayScreen(new GamePlayScreen(), this);
+			//Game.setPlayer(new Player("Demmeonockhc"));
+			//GameWorld w = new GameWorld(new File("test.twld"));
+			//w.addEntity(Game.thePlayer);
+			//Game.loadWorld(w);
+			//Game.displayScreen(new GamePlayScreen(), this);
+			Game.displayScreen(new WorldTest(new File("test.twld")), this);
 			Songs.stopSong(Songs.theme);
 		}
 		

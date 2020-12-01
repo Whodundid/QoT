@@ -40,8 +40,8 @@ public class BattleScreen extends GameScreen {
 	public void initScreen() {
 		Songs.loop(currentSong = Songs.darkCave);
 		
-		oldA = entA.getDimensions();
-		oldB = entB.getDimensions();
+		//oldA = entA.getDimensions();
+		//oldB = entB.getDimensions();
 		
 		setObjectName("Battle Screen");
 	}
@@ -62,10 +62,10 @@ public class BattleScreen extends GameScreen {
 		doNothing = new WindowButton(this, startX + 50, endY - 200, 200, 50, "Do Nothing");
 		openInventory = new WindowButton(this, startX + 50, endY - 150, 200, 50, "Inventory");
 		
-		addObject(entA, entB);
+		//addObject(entA, entB);
 		
-		entA.setPosition(midX - 250 - entA.width, midY - 150 - entA.height / 2);
-		entB.setPosition(midX + 250, midY - 150 - entB.height / 2);
+		//entA.setPosition(midX - 250 - entA.width, midY - 150 - entA.height / 2);
+		//entB.setPosition(midX + 250, midY - 150 - entB.height / 2);
 		
 		addObject(attack, flame, heal, doNothing, openInventory);
 	}
@@ -138,8 +138,8 @@ public class BattleScreen extends GameScreen {
 	public void onScreenClosed() {
 		Songs.stopSong(currentSong);
 		
-		entA.setDimensions(oldA);
-		entB.setDimensions(oldB);
+		//entA.setDimensions(oldA);
+		//entB.setDimensions(oldB);
 	}
 	
 	@Override

@@ -1,10 +1,12 @@
 package gameSystems.mapSystem;
 
+import entities.Entity;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.textureSystem.GameTexture;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import main.Game;
 import util.mathUtil.NumUtil;
 import util.storageUtil.EArrayList;
 
@@ -17,9 +19,12 @@ public class GameWorld {
 	protected String name;
 	protected int width, height;
 	protected int tileWidth, tileHeight;
+	protected double zoom = 1;
 	protected WorldTile[][] worldData;
+	protected EArrayList<Entity> entityData;
 	
 	private boolean loaded = false;
+	private boolean fileLoaded = false;
 	
 	//--------------
 	// Constructors
@@ -33,27 +38,35 @@ public class GameWorld {
 		tileWidth = tileWidthIn;
 		tileHeight = tileHeightIn;
 		worldData = new WorldTile[width][height];
-		loaded = true;
+		entityData = new EArrayList();
+		fileLoaded = true;
 	}
 	
 	public GameWorld(File worldFile) {
 		if (!loadWorldFromFile(worldFile)) {
-			name = "!Failed";
+			name = worldFile.getName();
 			width = 0;
 			height = 0;
 			tileWidth = 0;
 			tileHeight = 0;
 			worldData = new WorldTile[0][0];
-			loaded = false;
+			entityData = new EArrayList();
+			fileLoaded = false;
 		}
 		else {
-			loaded = true;
+			fileLoaded = true;
 		}
 	}
 	
 	//---------
 	// Methods
 	//---------
+	
+	public Entity addEntity(Entity ent) {
+		entityData.add(ent);
+		ent.world = this;
+		return ent;
+	}
 	
 	public synchronized WorldTile[][] getTilesAroundPoint(int xIn, int yIn) { return getTilesAroundPoint(xIn, yIn, DEFAULT_RANGE); }
 	public synchronized WorldTile[][] getTilesAroundPoint(int xIn, int yIn, int range) { return getTilesAroundPoint(xIn, yIn, range, range); }
@@ -81,8 +94,18 @@ public class GameWorld {
 		return retArr;
 	}
 	
+	public synchronized boolean loadWorld() {
+		return loadWorldFromFile(new File(Game.settings.getEditorWorldsDir(), name));
+	}
+	
 	public synchronized boolean loadWorldFromFile(File worldFile) {
-		if (worldFile != null && worldFile.exists() && worldFile.getName().endsWith(".twld")) {
+		String worldName = worldFile.getName();
+		if (!worldName.endsWith(".twld")) { worldName += ".twld"; }
+		worldFile = new File(Game.settings.getEditorWorldsDir(), worldName);
+		
+		//System.out.println(worldFile + " " + worldFile.exists());
+		
+		if (worldFile != null && worldFile.exists()) {
 			try (Scanner reader = new Scanner(worldFile)) {
 				
 				String mapName = reader.nextLine();
@@ -134,6 +157,10 @@ public class GameWorld {
 				tileWidth = mapTileWidth;
 				tileHeight = mapTileHeight;
 				worldData = data;
+				entityData = new EArrayList();
+				
+				fileLoaded = true;
+				//System.out.println("fileLoaded: " + fileLoaded);
 				
 				return true;
 			}
@@ -148,12 +175,13 @@ public class GameWorld {
 	public synchronized boolean saveWorldToFile() { return saveWorldToFile(name); }
 	
 	public synchronized boolean saveWorldToFile(String fileName) {
-		fileName = (fileName.endsWith(".twld")) ? fileName : fileName + ".twld";
-		return saveWorldToFile(new File(fileName));
+
+		return saveWorldToFile(new File(Game.settings.getEditorWorldsDir(), fileName));
 	}
 	
 	public synchronized boolean saveWorldToFile(File fileIn) {
 		try {
+			fileIn = (fileIn.getName().endsWith(".twld")) ? fileIn : new File(fileIn.getPath() + ".twld");
 			
 			PrintWriter writer = new PrintWriter(fileIn, "UTF-8");
 			
@@ -196,6 +224,7 @@ public class GameWorld {
 	// Getters
 	//---------
 	
+	public boolean isFileLoaded() { return fileLoaded; }
 	public boolean isLoaded() { return loaded; }
 	public String getName() { return name; }
 	public int getWidth() { return width; }
@@ -205,10 +234,14 @@ public class GameWorld {
 	public int getPixelWidth() { return width * tileWidth; }
 	public int getPixelHeight() { return height * tileHeight; }
 	public WorldTile[][] getWorldData() { return worldData; }
+	public File getWorldFile() { return new File(Game.settings.getEditorWorldsDir(), name); }
+	public double getZoom() { return zoom; }
 	
 	public WorldTile getTileAt(int xIn, int yIn) {
 		return worldData[xIn][yIn];
 	}
+	
+	public EArrayList<Entity> getEntitiesInWorld() { return entityData; }
 	
 	//---------
 	// Setters
@@ -218,5 +251,8 @@ public class GameWorld {
 		worldData[xIn][yIn] = in;
 		return this;
 	}
+	
+	public GameWorld setLoaded(boolean val) { loaded = val; return this; }
+	public GameWorld setZoom(double val) { zoom = val; zoom = NumUtil.clamp(zoom, 0.15, 5); return this; }
 	
 }

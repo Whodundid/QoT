@@ -30,7 +30,7 @@ public class OptionsScreen extends GameScreen {
 		double x = midX - w / 2;
 		
 		back = new WindowButton(this, x, endY - 100, w, 40, "Back");
-		playMusic = new WindowCheckBox(this, midX, midY, 100, 100, Game.playSongs);
+		playMusic = new WindowCheckBox(this, midX, midY, 100, 100, Game.settings.playMusic.get());
 		
 		testButton = new WindowButton(this, 50, 50, 200, 50, "test1");
 		test2 = new WindowButton(this, testButton.endX + 5, 50, 200, 50, "test2");
@@ -51,18 +51,16 @@ public class OptionsScreen extends GameScreen {
 		}
 		
 		if (object == playMusic) {
-			game.playSongs = !game.playSongs;
-			if (!Game.playSongs) {
-				Songs.stopAllMusic();
-			}
-			else {
-				Songs.loop(Songs.zarus);
-			}
+			Game.settings.playMusic.toggle();
+			Game.saveConfig();
+			
+			if (!Game.settings.playMusic.get()) { Songs.stopAllMusic(); }
+			else { Songs.loop(Songs.zarus); }
 		}
 		
 		//load
 		if (object == testButton) {
-			SysUtil.getOS();
+			System.out.println(SysUtil.getOS());
 		}
 		
 		//save

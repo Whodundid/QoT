@@ -9,6 +9,7 @@ public class Water extends WorldTile {
 		super("Water");
 		
 		setTexture(WorldTextures.water);
+		
 		blocksMovement = true;
 	}
 	

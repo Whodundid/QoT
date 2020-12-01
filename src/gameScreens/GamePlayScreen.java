@@ -2,18 +2,10 @@ package gameScreens;
 
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
-import eWindow.windowTypes.interfaces.IWindowObject;
-import entities.Entity;
-import entities.enemy.types.Goblin;
-import entities.enemy.types.Thyrah;
-import entities.enemy.types.TrollBoar;
-import entities.enemy.types.Whodundid;
 import gameSystems.gameRenderer.GameScreen;
-import input.Keyboard;
 import main.Game;
 import screenParts.StatusBar;
 import sound.Songs;
-import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
 
 //rabbit fish
@@ -43,6 +35,7 @@ public class GamePlayScreen extends GameScreen {
 		mana.setCurrentValue(Game.getPlayer().getMana());
 		addObject(mana);
 		
+		/*
 		Game.getPlayer().setPosition(Game.getWidth() / 2 - 300, Game.getHeight() / 2);
 		
 		int random = NumUtil.getRoll(0, 3);
@@ -54,6 +47,7 @@ public class GamePlayScreen extends GameScreen {
 		}
 		
 		addObject(Game.getPlayer());
+		*/
 		
 		back = new WindowButton(this, 5, endY - 45, 150, 40, "Menu");
 		
@@ -62,12 +56,13 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
-		drawRect(EColors.dsteel);
+		//drawRect(EColors.dsteel);
 		
 		if (Game.getPlayer().isDead()) {
 			Game.displayScreen(new GameOverScreen());
 		}
 		
+		/*
 		for (IWindowObject o : getObjects()) {
 			if (o != Game.getPlayer() && o instanceof Entity e) {
 				if (Game.getPlayer().getDimensions().contains(o.getDimensions())) {
@@ -80,11 +75,13 @@ public class GamePlayScreen extends GameScreen {
 		if (Keyboard.isADown()) { Game.getPlayer().move(-1, 0); }
 		if (Keyboard.isSDown()) { Game.getPlayer().move(0, 1); }
 		if (Keyboard.isDDown()) { Game.getPlayer().move(1, 0); }
+		*/
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == back) {
+			Game.loadWorld(null);
 			closeScreen();
 		}
 	}

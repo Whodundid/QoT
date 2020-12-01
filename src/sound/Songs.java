@@ -29,7 +29,7 @@ public class Songs {
 	}
 	
 	public static Audio loop(Audio in) {
-		if (Game.playSongs) {
+		if (Game.settings.playMusic.get()) {
 			if (in != null) {
 				in.loop();
 				currentlyPlaying.add(in);
@@ -39,7 +39,7 @@ public class Songs {
 	}
 	
 	public static Audio playSong(Audio in) {
-		if (Game.playSongs) {
+		if (Game.settings.playMusic.get()) {
 			if (in != null) {
 				in.start();
 				currentlyPlaying.add(in);
