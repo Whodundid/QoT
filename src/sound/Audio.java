@@ -37,11 +37,9 @@ public class Audio {
 	}
 	
 	public void loop() {
-		if (Game.settings.playMusic.get()) {
-			clip.setFramePosition(0);
-			clip.loop(Clip.LOOP_CONTINUOUSLY);
-			setVolume(0.1f);
-		}
+		clip.setFramePosition(0);
+		clip.loop(Clip.LOOP_CONTINUOUSLY);
+		setVolume(Game.settings.musicVolume.get() * 0.0009f);
 	}
 		
 	public void stop() {

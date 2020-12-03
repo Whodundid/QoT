@@ -1,6 +1,5 @@
 package sound;
 
-import main.Game;
 import util.storageUtil.EArrayList;
 
 /** This contains every song in the game! */
@@ -22,6 +21,7 @@ public class Songs {
 	
 	public static void stopAllMusic() {
 		currentlyPlaying.forEach(s -> s.stop());
+		currentlyPlaying.clear();
 	}
 	
 	public static EArrayList<Audio> getAllCurrentlyPlaying() {
@@ -29,21 +29,17 @@ public class Songs {
 	}
 	
 	public static Audio loop(Audio in) {
-		if (Game.settings.playMusic.get()) {
-			if (in != null) {
-				in.loop();
-				currentlyPlaying.add(in);
-			}
+		if (in != null) {
+			in.loop();
+			currentlyPlaying.add(in);
 		}
 		return in;
 	}
 	
 	public static Audio playSong(Audio in) {
-		if (Game.settings.playMusic.get()) {
-			if (in != null) {
-				in.start();
-				currentlyPlaying.add(in);
-			}
+		if (in != null) {
+			in.start();
+			currentlyPlaying.add(in);
 		}
 		return in;
 	}
@@ -57,5 +53,16 @@ public class Songs {
 			}
 		}
 	}
+	
+	public static void playIfNotPlaying(Audio in) {
+		if (isSongNotPlaying(in)) { playSong(in); }
+	}
+	
+	public static void loopIfNotPlaying(Audio in) {
+		if (isSongNotPlaying(in)) { loop(in); }
+	}
+	
+	public static boolean isSongPlaying(Audio in) { return currentlyPlaying.contains(in); }
+	public static boolean isSongNotPlaying(Audio in) { return currentlyPlaying.notContains(in); }
 	
 }

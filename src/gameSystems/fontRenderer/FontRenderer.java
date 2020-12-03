@@ -52,9 +52,10 @@ public class FontRenderer {
 	//FontRenderer Getters
 	//--------------------
 	
-	public GameFont getCurrentFont() { return currentFont; }
+	public static GameFont getCurrentFont() { return getInstance().currentFont; }
 	
-	public int getStringWidth(String in) { return (int) (in.length() * (16 / Game.getGameScale()) + 8); }
+	public static int getStringWidth(String in) { return (int) (in.length() * (16 / Game.getGameScale()) + 8); }
+	public static int getCharWidth(char c) { return getStringWidth("" + c); }
 	
 	//--------------------
 	//FontRenderer Setters
@@ -89,10 +90,6 @@ public class FontRenderer {
 	
 	private void drawChar(double posX, double posY, int tX, int tY, int color) {
 		GLObject.drawTexture(posX, posY, 16, 32, tX, tY, 16, 32, currentFont.getFontTexture());
-	}
-
-	public int getCharWidth(char c) {
-		return getStringWidth("" + c);
 	}
 	
 	public String trimToWidth(String in, int width) { return trimToWidth(in, width, true); }

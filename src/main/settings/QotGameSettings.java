@@ -17,13 +17,11 @@ public class QotGameSettings {
 	//       settings
 	//-----------------------
 	
-	public static final ConfigSetting<Boolean> playMusic = new ConfigSetting(Boolean.class, "playMusic", "Enable music", true);
 	public static final ConfigSetting<Integer> musicVolume = new ConfigSetting(Integer.class, "musicVolume", "Music Volume", 100);
 	
 	//-----------------------
 	
 	static {
-		settings.add(playMusic);
 		settings.add(musicVolume);
 	}
 	
