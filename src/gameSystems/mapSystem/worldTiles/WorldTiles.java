@@ -38,6 +38,10 @@ public class WorldTiles {
 		return EUtil.getFirst(tiles, t -> t.getName().equals(tileName));
 	}
 	
+	public static WorldTile getTileFromID(int id) {
+		return EUtil.getFirst(tiles, t -> t.getID() == id);
+	}
+	
 	public static EArrayList<WorldTile> getTiles() { return new EArrayList(tiles); }
 	
 }

@@ -287,9 +287,19 @@ public class Game {
 			}
 			
 			if (init) {
-				currentScreen.setWindowSize();
-				currentScreen.initScreen();
-				currentScreen.initObjects();
+				try {
+					currentScreen.setWindowSize();
+					currentScreen.initScreen();
+					currentScreen.initObjects();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					currentScreen = old;
+					
+					old.setWindowSize();
+					currentScreen.initScreen();
+					currentScreen.initObjects();
+				}
 			}
 		}
 		

@@ -5,7 +5,7 @@ import gameSystems.mapSystem.worldTiles.WorldTile;
 public class CrackedDirt extends WorldTile {
 	
 	public CrackedDirt() {
-		super("CrackedDirt");
+		super(7, "CrackedDirt");
 	}
 	
 }

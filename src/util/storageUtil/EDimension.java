@@ -87,6 +87,14 @@ public class EDimension {
 		return d;
 	}
 	
+	public EDimension add(double x, double y) {
+		startX += x;
+		startY += y;
+		endX = startX + width;
+		endY = startY + height;
+		return this;
+	}
+	
 	public boolean contains(double xIn, double yIn) { return xIn >= startX && xIn <= endX && yIn >= startY && yIn <= endY;}
 	
 	public double getMidX() { return startX + (width / 2); }

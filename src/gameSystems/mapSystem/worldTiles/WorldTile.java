@@ -4,15 +4,18 @@ import gameSystems.textureSystem.GameTexture;
 
 public class WorldTile {
 	
+	protected int id;
 	protected String name;
 	protected GameTexture tex;
 	protected boolean blocksMovement = false;
+	protected boolean wildCardTexture = false;
 	protected TileMaterial material = TileMaterial.VOID;
 	
-	protected WorldTile() { this("unnamed tile", null); }
-	protected WorldTile(String nameIn) { this(nameIn, null); }
-	protected WorldTile(GameTexture texIn) { this("unnamed tile", texIn); }
-	protected WorldTile(String nameIn, GameTexture texIn) {
+	protected WorldTile(int id) { this(id, "unnamed tile", null); }
+	protected WorldTile(int id, String nameIn) { this(id, nameIn, null); }
+	protected WorldTile(int id, GameTexture texIn) { this(id, "unnamed tile", texIn); }
+	protected WorldTile(int id, String nameIn, GameTexture texIn) {
+		this.id = id;
 		name = nameIn;
 		tex = texIn;
 	}
@@ -23,10 +26,13 @@ public class WorldTile {
 	
 	public boolean hasTexture() { return tex != null; }
 	public boolean blocksMovement() { return blocksMovement; }
+	public boolean isWildCard() { return wildCardTexture; }
 	
+	public int getID() { return id; }
 	public String getName() { return name; }
-	public GameTexture getTexture() { return tex; }
 	public TileMaterial getMaterial() { return material; }
+	
+	public GameTexture getTexture() { return (tex != null && wildCardTexture) ? tex.getRandVariant() : tex; }
 	
 	public String getAdditionalValues() {
 		String r = "";
@@ -43,6 +49,7 @@ public class WorldTile {
 	
 	public WorldTile setTexture(GameTexture texIn) { tex = texIn; return this; }
 	public WorldTile setBlocksMovement(boolean val) { blocksMovement = val; return this; }
+	public WorldTile setWildCard(boolean val) { wildCardTexture = val; return this; }
 	
 	public WorldTile setAdditional(String in) {
 		if (in != null) {
@@ -63,8 +70,16 @@ public class WorldTile {
 	// Static Methods
 	//----------------
 	
-	public static WorldTile of(String nameIn) { return of(nameIn, null); }
-	public static WorldTile of(String nameIn, String additional) {
+	public static WorldTile getTileFromID(int id) {
+		return WorldTiles.getTileFromID(id);
+	}
+	
+	public static int getIDFromTile(WorldTile in) {
+		return (in != null) ? in.getID() : -1;
+	}
+	
+	public static WorldTile getTileFromName(String nameIn) { return getTileFromArgs(nameIn, null); }
+	public static WorldTile getTileFromArgs(String nameIn, String additional) {
 		if (nameIn != null) {
 			WorldTile t = WorldTiles.getTileFromName(nameIn);
 			

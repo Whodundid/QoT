@@ -1,7 +1,7 @@
 package eWindow.windowTypes;
 
 import eWindow.StaticTopParent;
-import eWindow.WindowObjectS;
+import eWindow.StaticWindowObject;
 import eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import eWindow.windowTypes.interfaces.ITopParent;
 import eWindow.windowTypes.interfaces.IWindowObject;
@@ -246,8 +246,8 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		oldMousePos.setValues(mX, mY);
 		
 		//update objects
-		if (!objsToBeRemoved.isEmpty()) { WindowObjectS.removeObjects(this, objsToBeRemoved); }
-		if (!objsToBeAdded.isEmpty()) { WindowObjectS.addObjects(this, objsToBeAdded); }
+		if (!objsToBeRemoved.isEmpty()) { StaticWindowObject.removeObjects(this, objsToBeRemoved); }
+		if (!objsToBeAdded.isEmpty()) { StaticWindowObject.addObjects(this, objsToBeAdded); }
 		if (escapeStopper != null && getAllChildren().notContains(escapeStopper)) { escapeStopper = null; }
 		
 		//update object states

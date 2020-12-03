@@ -6,7 +6,7 @@ import gameTextures.WorldTextures;
 public class Grass extends WorldTile {
 	
 	public Grass() {
-		super("Grass");
+		super(1, "Grass");
 		
 		setTexture(WorldTextures.grass);
 		

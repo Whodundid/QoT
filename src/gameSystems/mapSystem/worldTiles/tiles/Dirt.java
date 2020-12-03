@@ -6,7 +6,7 @@ import gameTextures.WorldTextures;
 public class Dirt extends WorldTile {
 	
 	public Dirt() {
-		super("Dirt");
+		super(2, "Dirt");
 		
 		setTexture(WorldTextures.dirt);
 		

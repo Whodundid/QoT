@@ -2,6 +2,7 @@ package entities;
 
 import entities.player.Player;
 import gameSystems.mapSystem.GameWorld;
+import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.questSystem.RouteTracker;
 import gameSystems.textureSystem.GameTexture;
 import openGL_Util.GLObject;
@@ -27,6 +28,7 @@ public abstract class Entity extends GLObject {
 	protected double damage;
 	protected double gold;
 	protected boolean isDead;
+	protected boolean passable;
 	
 	public Entity(String nameIn, int levelIn, double maxHealthIn, double healthIn, double maxManaIn, double manaIn, double damageIn, double goldIn) {
 		name = nameIn;
@@ -82,29 +84,64 @@ public abstract class Entity extends GLObject {
 	
 	public void move(double x, double y) {
 		if (world != null) {
-			startX += x;
-			endX += x;
-			startY += y;
-			endY += y;
+			boolean left = false, right = false, up = false, down = false;
 			
-			startX = NumUtil.clamp(startX,  0, world.getPixelWidth() - width / 2);
-			startY = NumUtil.clamp(startY, 0, world.getPixelHeight() - height / 2);
-			endX = NumUtil.clamp(endX, width, world.getPixelWidth());
-			endY = NumUtil.clamp(endY, height, world.getPixelHeight());
+			if (x < 0) { left = true; }
+			else if (x > 0) { right = true; }
+			else if (y < 0) { up = true; }
+			else if (y > 0) { down = true; }
 			
-			midX = startX + (width) / 2;
-			midY = startY + (height) / 2;
+			double movingToX = (startX / world.getTileWidth());
+			double movingToY = (startY / world.getTileHeight());
 			
-			double valX = (startX / (world.getTileWidth() * world.getZoom()));
-			double valY = (startY / (world.getTileHeight() * world.getZoom()));
+			if (left) {
+				movingToX = (int) ((startX + x) / world.getTileWidth());
+			}
+			else if (right) {
+				movingToX = (int) ((startX + x) / world.getTileWidth());
+			}
+			else if (up) {
+				movingToY = (int) ((startY + y) / world.getTileHeight());
+			}
+			else if (down) {
+				movingToY = (int) ((startY + height + y) / world.getTileHeight());
+			}
 			
-			worldX = (int) valX;
-			worldY = (int) valY;
+			//System.out.println(movingToX + " " + movingToY);
 			
-			//System.out.println(valX + " " + valY);
+			movingToX = NumUtil.clamp(movingToX, 0, world.getWidth() - 1);
+			movingToY = NumUtil.clamp(movingToY, 0, world.getHeight() - 1);
 			
-			worldX = NumUtil.clamp(worldX, 0, world.getWidth() - 1);
-			worldY = NumUtil.clamp(worldY, 0, world.getHeight() - 1);
+			WorldTile t = world.getTileAt((int) movingToX, (int) movingToY);
+			
+			//if (!t.blocksMovement()) {
+				startX += x;
+				endX += x;
+				startY += y;
+				endY += y;
+				//collisionBox.add(x, y);
+				
+				startX = NumUtil.clamp(startX, 0, world.getPixelWidth() - collisionBox.endX);
+				startY = NumUtil.clamp(startY, 0, world.getPixelHeight() - collisionBox.endY);
+				endX = NumUtil.clamp(endX, width, world.getPixelWidth());
+				endY = NumUtil.clamp(endY, height, world.getPixelHeight());
+				
+				midX = startX + (width / 2);
+				midY = startY + (height / 2);
+				
+				double valX = (startX / (world.getTileWidth() * world.getZoom()));
+				double valY = (startY / (world.getTileHeight() * world.getZoom()));
+				
+				//System.out.println(startX + " " + startY);
+				
+				worldX = (int) valX;
+				worldY = (int) valY;
+				
+				//System.out.println(worldX + " " + worldY);
+				
+				worldX = NumUtil.clamp(worldX, 0, world.getWidth() - 1);
+				worldY = NumUtil.clamp(worldY, 0, world.getHeight() - 1);
+			//}
 		}
 	}
 	
@@ -141,11 +178,13 @@ public abstract class Entity extends GLObject {
 	public boolean isDead() { return isDead; }
 	public GameTexture getTexture() { return sprite; }
 	public EDimension getCollision() { return collisionBox; }
+	public boolean isPassable() { return passable; }
 	
 	//---------
 	// Setters
 	//---------
 	
+	public Entity setPassable(boolean val) { passable = val; return this; }
 	public Entity setCollisionBox(double sX, double sY, double eX, double eY) { collisionBox = new EDimension(sX, sY, eX, eY); return this; }
 	public Entity setSprite(GameTexture in) { sprite = in; return this; }
 	public Entity setWorldPos(int x, int y) {
@@ -157,6 +196,8 @@ public abstract class Entity extends GLObject {
 			endX = startX + width;
 			startY = worldY * world.getTileHeight();
 			endY = startY + height;
+			
+			//collisionBox.setPosition(startX + 20, startY + 20);
 			
 			midX = startX + (width) / 2;
 			midY = startY + (height) / 2;

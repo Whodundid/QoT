@@ -1,6 +1,6 @@
 package eWindow.windowObjects.advancedObjects.scrollList;
 
-import eWindow.WindowObjectS;
+import eWindow.StaticWindowObject;
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowObjects.actionObjects.WindowScrollBar;
 import eWindow.windowTypes.WindowObject;
@@ -370,8 +370,8 @@ public class WindowScrollList extends WindowObject {
 		mX = mXIn; mY = mYIn;
 		if (!mouseEntered && isMouseOver(mX, mY)) { mouseEntered = true; mouseEntered(mX, mY); }
 		if (mouseEntered && !isMouseOver(mX, mY)) { mouseEntered = false; mouseExited(mX, mY); }
-		if (!objsToBeRemoved.isEmpty()) { WindowObjectS.removeObjects(this, objsToBeRemoved); }
-		if (!objsToBeAdded.isEmpty()) { WindowObjectS.addObjects(this, objsToBeAdded); }
+		if (!objsToBeRemoved.isEmpty()) { StaticWindowObject.removeObjects(this, objsToBeRemoved); }
+		if (!objsToBeAdded.isEmpty()) { StaticWindowObject.addObjects(this, objsToBeAdded); }
 		if (!listObjsToBeRemoved.isEmpty()) { removeListObjects(); }
 		if (!listObjsToBeAdded.isEmpty()) { addListObjects(); }
 	}

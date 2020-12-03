@@ -307,6 +307,13 @@ public class EArrayList<E> extends AbstractList<E> {
 	//EArrayList Methods
 	//------------------
 
+	public EArrayList<E> fillWith(E val) {
+		for (int i = 0; i < size; i++) {
+			set(i, val);
+		}
+		return this;
+	}
+	
 	public boolean containsProperty(Predicate<? super E> condition) {
 		for (int i = 0; i < size(); i++) {
 			if (condition.test(get(i))) { return true; }

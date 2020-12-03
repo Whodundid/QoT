@@ -6,9 +6,7 @@ import gameTextures.WorldTextures;
 public class Sand extends WorldTile {
 	
 	public Sand() {
-		super("Sand");
-		
-		setTexture(WorldTextures.sand);
+		super(3, "Sand", WorldTextures.sand);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package gameScreens.mapTest;
+package gameScreens.mapTest.mapEditor;
 
 import eWindow.windowObjects.actionObjects.WindowButton;
 import eWindow.windowTypes.interfaces.IActionObject;
@@ -6,6 +6,7 @@ import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.GameScreen;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
+import gameSystems.mapSystem.worldTiles.WorldTiles;
 import input.Keyboard;
 import input.Mouse;
 import java.io.File;
@@ -18,21 +19,26 @@ public class MapEditorScreen extends GameScreen {
 
 	File mapFile;
 	GameWorld world;
-	WindowButton up, left, down, right;
 	WindowButton reload, save, back;
 	WindowButton distUpX, distDownX;
 	WindowButton distUpY, distDownY;
-	TileList tileSelector;
+	EditorTileHotbar hotbar;
 	
 	boolean firstPress = false;
 	int xPos, yPos;
-	int distX = 15;
-	int distY = 10;
+	int distX = 20;
+	int distY = 15;
 	boolean mouseInMap = false;
 	double worldXPos, worldYPos;
 	int oldWorldX, oldWorldY;
-	double zoomVal = 1.25;
+	double zoomVal = 0.55;
 	boolean mouseOver = false;
+	
+	String timeOutText;
+	long timeStart;
+	long timeOut = 2000;
+	
+	long timeSinceKey = 0l;
 	
 	public MapEditorScreen(File mapFileIn) {
 		super();
@@ -51,34 +57,37 @@ public class MapEditorScreen extends GameScreen {
 	
 	@Override
 	public void initObjects() {
-		left = new WindowButton(this, midX - 60, endY - 45, 40, 40, "<");
-		down = new WindowButton(this, left.endX + 5, left.startY, 40, 40, "\\/");
-		up = new WindowButton(this, down.startX, down.startY - 45, 40, 40, "^");
-		right = new WindowButton(this, down.endX + 5, left.startY, 40, 40, ">");
+		hotbar = new EditorTileHotbar(this);
 		
-		distUpX = new WindowButton(this, right.endX + 100, left.startY, 40, 40, "+");
-		distDownX = new WindowButton(this, distUpX.endX + 5, left.startY, 40, 40, "-");
+		distDownY = new WindowButton(this, endX - 42, endY - 45, 40, 40, "-");
+		distUpY = new WindowButton(this, distDownY.startX - 42, endY - 45, 40, 40, "+");
 		
-		distUpY = new WindowButton(this, distDownX.endX + 10, left.startY, 40, 40, "+");
-		distDownY = new WindowButton(this, distUpY.endX + 5, left.startY, 40, 40, "-");
+		distDownX = new WindowButton(this, distUpY.startX - 47, endY - 45, 40, 40, "-");
+		distUpX = new WindowButton(this, distDownX.startX - 42, endY - 45, 40, 40, "+");
 		
 		reload = new WindowButton(this, 10, 10, 140, 40, "Reload");
 		save = new WindowButton(this, reload.endX + 5, 10, 140, 40, "Save");
-		back = new WindowButton(this, 10, endY - 45, 140, 40, "Back");
+		back = new WindowButton(this, 5, endY - 45, 140, 40, "Back");
 		
-		tileSelector = new TileList(this, 0, midY - 150);
+		int i = 0;
+		for (WorldTile t : WorldTiles.getTiles()) {
+			if (t.hasTexture()) {
+				hotbar.setItemAtPos(t, i);
+				i++;
+			}
+		}
 		
-		addObject(up, left, down, right);
 		addObject(distUpX, distDownX);
 		addObject(distUpY, distDownY);
 		addObject(reload, save, back);
-		addObject(tileSelector);
+		addObject(hotbar);
 	}
 
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
+		updateTimeOutText();
+		updateMovement();
 		mouseOver = isMouseOver(mXIn, mYIn);
-		checkArrowPress();
 		
 		if (world == null) { drawStringC("Failed to load!", midX, midY); }
 		else {
@@ -90,17 +99,29 @@ public class MapEditorScreen extends GameScreen {
 			
 			drawMap(x, y, w, h);
 			drawPosBox(x, y, w, h);
-			drawViewBox(x, y, w, h);
 			mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
 			if (mouseInMap && mouseOver) {
-				drawMouseCoords();
+				drawMouseCoords(x, y, w, h);
 				changeTiles();
 			}
+			drawViewBox(x, y, w, h);
 		}
 		
 		drawString("Pos: " + xPos + " " + yPos, reload.startX + 10, reload.endY + 20);
 		drawString("Dist: " + distX + " " + distY, reload.startX + 10, reload.endY + 100);
 		drawString("Zoom: " + NumUtil.roundD2(zoomVal), reload.startX + 10, reload.endY + 140);
+	}
+	
+	private void updateMovement() {
+		if (System.currentTimeMillis() - this.timeSinceKey >= 37) {
+			
+			if (Keyboard.isWDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_UP)) { yPos--; yPos = (yPos < 0) ? 0 : yPos; }
+			if (Keyboard.isADown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT)) { xPos--; xPos = (xPos < 0) ? 0 : xPos; }
+			if (Keyboard.isSDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_DOWN)) { yPos++; yPos = (yPos > (world.getHeight() - 1)) ? world.getHeight() - 1 : yPos; }
+			if (Keyboard.isDDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT)) { xPos++; xPos = (xPos > (world.getWidth() - 1)) ? world.getWidth() - 1 : xPos; }
+			
+			timeSinceKey = System.currentTimeMillis();
+		}
 	}
 	
 	@Override
@@ -110,35 +131,33 @@ public class MapEditorScreen extends GameScreen {
 			zoomVal = NumUtil.clamp(zoomVal, 0.15, 5);
 		}
 		else if (Keyboard.isShiftDown()) {
-			xPos += Math.signum(change);
+			xPos -= Math.signum(change) * 2;
 			xPos = (xPos < 0) ? 0 : (xPos > (world.getWidth() - 1)) ? world.getWidth() - 1 : xPos;
 		}
 		else if (Keyboard.isAltDown()) {
-			yPos -= Math.signum(change);
+			yPos -= Math.signum(change) * 2;
 			yPos = (yPos < 0) ? 0 : (yPos > (world.getHeight()) - 1) ? world.getHeight() - 1 : yPos;
+		}
+		else {
+			hotbar.scrollHotbar(change);
 		}
 	}
 	
 	@Override
 	public void mouseReleased(int mXIn, int mYIn, int button) {
-		if (!firstPress && button == 0) { firstPress = true; }
+		super.mouseReleased(mXIn, mYIn, button);
+		//if (!firstPress && button == 0) { firstPress = true; }
 	}
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (Keyboard.isWDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_UP)) { yPos--; yPos = (yPos < 0) ? 0 : yPos; }
-		if (Keyboard.isADown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT)) { xPos--; xPos = (xPos < 0) ? 0 : xPos; }
-		if (Keyboard.isSDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_DOWN)) { yPos++; yPos = (yPos > (world.getHeight() - 1)) ? world.getHeight() - 1 : yPos; }
-		if (Keyboard.isDDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT)) { xPos++; xPos = (xPos > (world.getWidth() - 1)) ? world.getWidth() - 1 : xPos; }
+		if (!hotbar.hasFocus()) { hotbar.keyPressed(typedChar, keyCode); }
+		hotbar.requestFocus();
+		super.keyPressed(typedChar, keyCode);
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == up) { yPos--; yPos = (yPos < 0) ? 0 : yPos; }
-		if (object == left) { xPos--; xPos = (xPos < 0) ? 0 : xPos; }
-		if (object == down) { yPos++; yPos = (yPos > (world.getHeight() - 1)) ? world.getHeight() - 1 : yPos; }
-		if (object == right) { xPos++; xPos = (xPos > (world.getWidth() - 1)) ? world.getWidth() - 1 : xPos; }
-		
 		if (object == distUpX) { distX++; }
 		if (object == distDownX) { distX--; distX = (distX < 0) ? 0 : distX; }
 		
@@ -162,26 +181,33 @@ public class MapEditorScreen extends GameScreen {
 			world = new GameWorld(mapFile);
 		}
 		else if (world != null) {
-			xPos = world.getWidth() / 2;
-			yPos = world.getHeight() / 2;
 			mapFile = world.getWorldFile();
 		}
+		
+		xPos = world.getWidth() / 2;
+		yPos = world.getHeight() / 2;
 	}
 	
 	private void saveWorld() {
-		if (mapFile != null) {
-			world.saveWorldToFile(mapFile);
-		}
-		else if (world != null) {
-			world.saveWorldToFile();
+		if (world != null) {
+			if (world.saveWorldToFile()) {
+				timeOutText = "Saved!";
+			}
+			else {
+				timeOutText = "Failed";
+			}
+			timeStart = System.currentTimeMillis();
 		}
 	}
 	
-	private void checkArrowPress() {
-		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_W) || Keyboard.isKeyDown(GLFW.GLFW_KEY_UP)) { up.setForceDrawHover(true); }
-		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_A) || Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT)) { left.setForceDrawHover(true); }
-		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_S) || Keyboard.isKeyDown(GLFW.GLFW_KEY_DOWN)) { down.setForceDrawHover(true); }
-		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_D) || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT)) { right.setForceDrawHover(true); }
+	private void updateTimeOutText() {
+		if (timeOutText != null) {
+			drawString(timeOutText, save.endX + 40, save.startY + 10);
+			
+			if (System.currentTimeMillis() - timeStart >= timeOut) {
+				timeOutText = null;
+			}
+		}
 	}
 	
 	private void drawMap(int x, int y, int w, int h) {
@@ -239,19 +265,24 @@ public class MapEditorScreen extends GameScreen {
 		return mouseOver && inMap && EDimension.of(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h)).contains(mXIn, mYIn);
 	}
 	
-	private void drawMouseCoords() {
+	private void drawMouseCoords(int x, int y, int w, int h) {
 		worldXPos = (int) worldXPos;
 		worldYPos = (int) worldYPos;
 		worldXPos = NumUtil.clamp(worldXPos, 0, world.getWidth() - 1);
 		worldYPos = NumUtil.clamp(worldYPos, 0, world.getHeight() - 1);
 		drawString("World: " + worldXPos + " " + worldYPos, reload.startX + 10, reload.endY + 180);
+		
+		double xPos = x + ((mX - x) / w) * w;
+		double yPos = y + ((mY - y) / h) * h;
+		
+		drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.vdgray);
 	}
 	
 	private void changeTiles() {
-		if (firstPress) {
-			if (Mouse.isButtonDown(0)) { world.setTileAt((int) worldXPos, (int) worldYPos, tileSelector.getCurrentTile()); }
+		//if (firstPress) {
+			if (Mouse.isButtonDown(0)) { world.setTileAt((int) worldXPos, (int) worldYPos, hotbar.getCurrent()); }
 			else if (Mouse.isButtonDown(1)) { world.setTileAt((int) worldXPos, (int) worldYPos, null); }
-		}
+		//}
 	}
 	
 }

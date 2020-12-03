@@ -3,7 +3,6 @@ package eWindow.windowObjects.actionObjects;
 import eWindow.windowTypes.ActionObject;
 import eWindow.windowTypes.interfaces.IWindowObject;
 import eWindow.windowUtil.windowEvents.events.EventFocus;
-import gameSystems.fontRenderer.FontRenderer;
 import java.text.DecimalFormat;
 import util.mathUtil.NumUtil;
 import util.storageUtil.StorageBox;
@@ -19,6 +18,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 	protected boolean isSliding = false;
 	protected boolean defaultDisplayString = true;
 	protected boolean drawDisplayString = true;
+	protected boolean useInts = false;
 	protected double interval = 0;
 	public String displayValue = "";
 	public int displayValueColor = 0x00ff00;
@@ -75,7 +75,10 @@ public class WindowSlider<E> extends ActionObject<E> {
 		
 		drawRect(thumbStartX, thumbStartY, thumbEndX, thumbEndY, (isMouseInThumb(mX, mY) || isSliding) ? 0xffffffff : 0xffbbbbbb); //thumb
 		
-		if (defaultDisplayString) { displayValue = new DecimalFormat("0.00").format(sliderValue); }
+		if (defaultDisplayString) {
+			if (useInts) { displayValue = "" + (int) sliderValue; }
+			else { displayValue = new DecimalFormat("0.00").format(sliderValue); }
+		}
 		
 		if (vertical && getStringWidth(displayValue) > width) {
 			//GlStateManager.pushMatrix();
@@ -85,10 +88,9 @@ public class WindowSlider<E> extends ActionObject<E> {
 			//GlStateManager.rotate(90f, 0f, 0f, 45f);
 			//GlStateManager.translate(-xPos, -yPos, 0);
 			
-			if (drawDisplayString) { drawCenteredString(displayValue, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 1, displayValueColor); }
-			//GlStateManager.popMatrix();
+			if (drawDisplayString) { drawStringC(displayValue, midX, midY - 8, displayValueColor); }
 		}
-		else if (drawDisplayString) { drawCenteredString(displayValue, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 1, displayValueColor); }
+		else if (drawDisplayString) { drawStringC(displayValue, midX, midY - 8, displayValueColor); }
 		
 		super.drawObject(mX, mY);
 	}
@@ -191,7 +193,10 @@ public class WindowSlider<E> extends ActionObject<E> {
 	public WindowSlider setSliderValue(double valIn) {
 		sliderValue = valIn;
 		pos = NumUtil.clamp((valIn - lowVal) / (highVal - lowVal), 0.0f, 1.0f);
-		if (defaultDisplayString) { displayValue = new DecimalFormat("0.00").format(sliderValue); }
+		if (defaultDisplayString) {
+			if (useInts) { displayValue = "" + (int) sliderValue; }
+			else { displayValue = new DecimalFormat("0.00").format(sliderValue); }
+		}
 		if (valIn >= lowVal && valIn <= highVal) { calculateSliderPos(false); }
 		else if (valIn > highVal) {
 			if (vertical) {
@@ -227,13 +232,19 @@ public class WindowSlider<E> extends ActionObject<E> {
 			if (vertical) {
 				pos = NumUtil.clamp((float)(mY - startY - thumbSize / 2) / (height - thumbSize - 1), 0f, 1f);
 				sliderValue = lowVal + (highVal - lowVal) * (1 + -pos);
+				if (useInts) { sliderValue = (int) sliderValue; }
 			}
 			else {
 				pos = NumUtil.clamp((float)(mX - startX - thumbSize / 2) / (width - thumbSize), 0f, 1f);
 				sliderValue = lowVal + (highVal - lowVal) * pos;
+				if (useInts) { sliderValue = (int) sliderValue; }
 			}
-			if (defaultDisplayString) { displayValue = new DecimalFormat("0.00").format(sliderValue); }
+			if (defaultDisplayString) {
+				if (useInts) { displayValue = "" + (int) sliderValue; }
+				else { displayValue = new DecimalFormat("0.00").format(sliderValue); }
+			}
 		}
+		
 		if (vertical) {
 			thumbStartX = startX + 1;
 			thumbStartY = startY + 1 + (int)(Math.ceil(pos * (height - thumbSize - 2)));
@@ -259,6 +270,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 	public WindowSlider setDrawDefault(boolean valIn) { defaultDisplayString = valIn; return this; }
 	public WindowSlider setDrawDisplayString(boolean valIn) { drawDisplayString = valIn; return this; }
 	public WindowSlider setContinuouslyRunAction(boolean val) { continuouslyRunAction = val; return this; }
+	public WindowSlider setUseIntegers(boolean val) { useInts = val; return this; }
 	
 	public double getSliderValue() { return sliderValue; }
 	public boolean drawVertical() { return vertical; }
@@ -270,5 +282,6 @@ public class WindowSlider<E> extends ActionObject<E> {
 	public boolean drawDisplayString() { return drawDisplayString; }
 	public boolean isMouseInThumb(double mX, double mY) { return mX >= thumbStartX && mX <= thumbEndX && mY >= thumbStartY && mY <= thumbEndY; }
 	public boolean getContinuouslyRunAction() { return continuouslyRunAction; }
+	public boolean usesIntegers() { return useInts; }
 	
 }

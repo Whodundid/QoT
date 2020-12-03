@@ -5,7 +5,7 @@ import gameSystems.mapSystem.worldTiles.WorldTile;
 public class RockyStone extends WorldTile {
 	
 	public RockyStone() {
-		super("RockyStone");
+		super(9, "RockyStone");
 	}
 	
 }

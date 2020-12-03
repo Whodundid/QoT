@@ -5,7 +5,7 @@ import gameSystems.mapSystem.worldTiles.WorldTile;
 public class Mud extends WorldTile {
 	
 	public Mud() {
-		super("Mud");
+		super(6, "Mud");
 	}
 	
 }

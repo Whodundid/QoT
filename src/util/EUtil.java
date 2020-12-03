@@ -77,6 +77,11 @@ public class EUtil {
 		return null;
 	}
 	
+	public static <E> E getFirst(List<E> list, Predicate<? super E> predicate, E defaultVal) {
+		E val = getFirst(list, predicate);
+		return (val != null) ? val : defaultVal;
+	}
+	
 	/** Returns the last member in a list that matches the given predicate. If no object matches, null is returned. */
 	public static <E> E getLast(List<E> list, Predicate<? super E> predicate) {
 		Objects.requireNonNull(predicate);
@@ -89,6 +94,11 @@ public class EUtil {
 		}
 		
 		return null;
+	}
+	
+	public static <E> E getLast(List<E> list, Predicate<? super E> predicate, E defaultVal) {
+		E val = getLast(list, predicate);
+		return (val != null) ? val : defaultVal;
 	}
 	
 	/** Returns true if the given objects are equal to each other, this method also accounts for null objects. */
@@ -471,6 +481,7 @@ public class EUtil {
 	
 	public static <E> void repeat(Runnable func, int times) { for (int i = 0; i < times; i++) { func.run(); } }
 	public static <E, R> R repeatR(Runnable func, int times, R returnVal) { repeat(func, times); return returnVal; }
+	public static <E> void repeat(E object, Consumer<? super E> action, int times) { for (int i = 0; i < times; i++) { action.accept(object); } }
 
 	//contains
 	

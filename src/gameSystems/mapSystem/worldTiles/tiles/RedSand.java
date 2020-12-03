@@ -5,7 +5,7 @@ import gameSystems.mapSystem.worldTiles.WorldTile;
 public class RedSand extends WorldTile {
 	
 	public RedSand() {
-		super("RedSand");
+		super(8, "RedSand");
 	}
 	
 }

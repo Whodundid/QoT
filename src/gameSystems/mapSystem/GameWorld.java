@@ -94,6 +94,62 @@ public class GameWorld {
 		return retArr;
 	}
 	
+	public void convertFile() {
+		File f = getWorldFile();
+		if (f != null && f.exists()) {
+			try (Scanner reader = new Scanner(f)) {
+				
+				EArrayList<Integer> ids = new EArrayList();
+				
+				String mapName = reader.nextLine();
+				int mapWidth = reader.nextInt();
+				int mapHeight = reader.nextInt();
+				int mapTileWidth = reader.nextInt();
+				int mapTileHeight = reader.nextInt();
+				reader.nextLine();
+				
+				for (int i = 0; i < mapWidth; i++) {
+					for (int j = 0; j < mapHeight; j++) {
+						if (reader.hasNextLine()) {
+							String tile = reader.nextLine();
+							//System.out.println("LINE: " + tile);
+							if (!tile.isBlank()) {
+								Scanner tileReader = new Scanner(tile);
+								
+								String tileName = null;
+								String texture = null;
+								EArrayList<String> additionalArgs = new EArrayList();
+								
+								if (tileReader.hasNext()) { tileName = tileReader.next(); }
+								ids.add(WorldTile.getTileFromName(tileName).getID());
+								
+								tileReader.close();
+							}
+						}
+					}
+				}
+				
+				PrintWriter writer = new PrintWriter(f, "UTF-8");
+				
+				writer.println(mapName);
+				writer.println(mapWidth + " " + mapHeight + " " + mapTileWidth + " " + mapTileHeight);
+				
+				int n = 0;
+				for (int i = 0; i < mapWidth; i++) {
+					for (int j = 0; j < mapHeight; j++) {
+						writer.println(ids.get(n++));
+					}
+				}
+				
+				writer.close();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("@ Failed to load map: " + getWorldFile() + "!");
+			}
+		}
+	}
+	
 	public synchronized boolean loadWorld() {
 		return loadWorldFromFile(new File(Game.settings.getEditorWorldsDir(), name));
 	}
@@ -125,22 +181,12 @@ public class GameWorld {
 							if (!tile.isBlank()) {
 								Scanner tileReader = new Scanner(tile);
 								
-								String tileName = null;
-								String texture = null;
-								EArrayList<String> additionalArgs = new EArrayList();
+								int tileID = -1;
 								
-								if (tileReader.hasNext()) { tileName = tileReader.next(); }
-								if (tileReader.hasNext()) { texture = tileReader.next(); }
-								if (tileReader.hasNext()) {
-									do { additionalArgs.add(tileReader.next()); }
-									while (tileReader.hasNext());
-								}
+								if (tileReader.hasNext()) { tileID = tileReader.nextInt(); }
 								
-								if (tileName != null) {
-									WorldTile t = WorldTile.of(tileName, texture);
-									//System.out.println(t + " : [" + i + ", " + j + "]");
-									data[i][j] = t;
-								}
+								WorldTile t = WorldTile.getTileFromID(tileID);
+								data[i][j] = t;
 								
 								tileReader.close();
 							}
@@ -197,7 +243,7 @@ public class GameWorld {
 						GameTexture tex = t.getTexture();
 						String texName = (tex != null) ? tex.getName() : "null";
 						
-						writer.println(t.getName() + " " + texName + " " + t.getAdditionalValues());
+						writer.println(t.getID());
 					}
 				}
 			}

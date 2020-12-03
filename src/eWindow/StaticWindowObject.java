@@ -26,7 +26,7 @@ import util.storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
-public class WindowObjectS extends EGui {
+public class StaticWindowObject extends EGui {
 	
 	private static volatile long windowPID = 0l;
 	

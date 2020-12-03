@@ -6,11 +6,9 @@ import gameTextures.WorldTextures;
 public class Water extends WorldTile {
 	
 	public Water() {
-		super("Water");
+		super(4, "Water", WorldTextures.water);
 		
-		setTexture(WorldTextures.water);
-		
-		blocksMovement = true;
+		setBlocksMovement(true);
 	}
 	
 }

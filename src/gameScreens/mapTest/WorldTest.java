@@ -38,6 +38,7 @@ public class WorldTest extends GameScreen {
 	boolean firstPress = false;
 	boolean drawPosBox = false;
 	boolean drawEntityHitboxes = false;
+	boolean drawEntityOutlines = false;
 	
 	public WorldTest(File mapFileIn) {
 		super();
@@ -57,7 +58,7 @@ public class WorldTest extends GameScreen {
 	@Override
 	public void initObjects() {
 		left = new WindowButton(this, midX - 60, endY - 45, 40, 40, "<");
-		down = new WindowButton(this, left.endX + 5, left.startY, 40, 40, "\\/");
+		down = new WindowButton(this, left.endX + 5, left.startY, 40, 40, "V");
 		up = new WindowButton(this, down.startX, down.startY - 45, 40, 40, "^");
 		right = new WindowButton(this, down.endX + 5, left.startY, 40, 40, ">");
 		
@@ -119,6 +120,7 @@ public class WorldTest extends GameScreen {
 		
 		if (typedChar == 'h') { drawEntityHitboxes = !drawEntityHitboxes; }
 		if (typedChar == 'p') { drawPosBox = !drawPosBox; }
+		if (typedChar == 'o') { drawEntityOutlines = !drawEntityOutlines; }
 	}
 	
 	@Override
@@ -151,6 +153,14 @@ public class WorldTest extends GameScreen {
 	
 	@Override public void onScreenClosed() {}
 	
+	@Override
+	public void onWindowResized() {
+		if (world != null) {
+			distX = (Game.getWidth() / world.getTileWidth()) / 2 + 1;
+			distY = (game.getHeight() / world.getTileHeight()) / 2 + 2;
+		}
+	}
+	
 	//------------------------
 	// Private Editor Methods
 	//------------------------
@@ -158,8 +168,9 @@ public class WorldTest extends GameScreen {
 	private void loadWorld() {
 		if (mapFile != null) {
 			world = new GameWorld(mapFile);
+			Game.setPlayer(new Player("Test Player"));
 			
-			for (int i = 0; i < NumUtil.getRoll(1, 1); i++) {
+			for (int i = 0; i < NumUtil.getRoll(5, 10); i++) {
 				Entity g = null;
 				
 				switch (NumUtil.getRoll(0, 3)) {
@@ -175,8 +186,8 @@ public class WorldTest extends GameScreen {
 			distX = (Game.getWidth() / world.getTileWidth()) / 2 + 1;
 			distY = (game.getHeight() / world.getTileHeight()) / 2 + 2;
 			
-			Entity e = world.addEntity(Game.setPlayer(new Player("Test Player")));
-			e.setWorldPos(world.getWidth() / 2, world.getHeight() / 2);
+			Entity e = world.addEntity(Game.getPlayer());
+			e.setWorldPos(world.getWidth() / 2, world.getHeight() / 2 - 5);
 		}
 		else if (world != null) {
 			mapFile = world.getWorldFile();
@@ -199,12 +210,7 @@ public class WorldTest extends GameScreen {
 	
 	private void drawMap(int x, int y, int w, int h) {
 		
-		double outX = 0;
-		double outY = 0;
-		
 		Player p = Game.thePlayer;
-		
-		//drawString(((int) (p.worldX * zoomVal)) + " " + ((int) (p.worldY * zoomVal)), reload.startX + 10, reload.endY + 400);
 		
 		WorldTile[][] tiles = world.getTilesAroundPoint(p.worldX, p.worldY, distX, distY);
 		for (int i = 0; i < tiles.length; i++) {
@@ -221,9 +227,6 @@ public class WorldTest extends GameScreen {
 					drawPosX -= offsetX;
 					drawPosY -= offsetY;
 					
-					outX = offsetX;
-					outY = offsetY;
-					
 					if (p.worldX < distX) { drawPosX += (distX - p.worldX) * w; }
 					if (p.worldY < distY) { drawPosY += (distY - p.worldY) * h; }
 					
@@ -234,15 +237,16 @@ public class WorldTest extends GameScreen {
 			}
 		}
 		
-		//drawString("OUT: " + outX + " " + outY + " : " + w + " " + h, reload.startX + 10, reload.endY + 250);
 	}
 	
 	private void drawPosBox(int x, int y, int w, int h) {
-		double drawX = x + (Game.thePlayer.worldX * w) + (distX - Game.thePlayer.worldX) * w;
-		double drawY = y + (Game.thePlayer.worldY * h) + (distY - Game.thePlayer.worldY) * h;
+		Player p = Game.thePlayer;
 		
-		double offsetX = (Game.thePlayer.startX % w);
-		double offsetY = (Game.thePlayer.startY % h);
+		double drawX = x + (p.worldX * w) + (distX - p.worldX) * w;
+		double drawY = y + (p.worldY * h) + (distY - p.worldY) * h;
+		
+		double offsetX = (p.startX % w);
+		double offsetY = (p.startY % h);
 		
 		drawX -= offsetX;
 		drawY -= offsetY;
@@ -266,7 +270,7 @@ public class WorldTest extends GameScreen {
 		EArrayList<Entity> entities = world.getEntitiesInWorld();
 		
 		for (Entity e : entities) {
-			//e.onLivingUpdate();
+			e.onLivingUpdate();
 			if (e.getTexture() != null) {
 				double drawX = 0;
 				double drawY = 0;
@@ -275,7 +279,7 @@ public class WorldTest extends GameScreen {
 					drawX = x + (e.worldX * w) + (distX - e.worldX) * w;
 					drawY = y + (e.worldY * h) + (distY - e.worldY) * h;
 					
-					drawTexture(drawX, drawY - e.height / 2, e.width, e.height, e.getTexture());
+					drawTexture(drawX, drawY, e.width, e.height, e.getTexture());
 				}
 				else {
 					drawX = x + (e.startX) + (distX - Game.thePlayer.worldX) * w;
@@ -286,18 +290,27 @@ public class WorldTest extends GameScreen {
 					drawX -= offsetX;
 					drawY -= offsetY;
 					
-					if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height / 2 > y && drawY - e.height / 2 < y + h + (distY * 2 * h)) {
-						drawTexture(drawX, drawY - e.height / 2, e.width, e.height, e.getTexture());
+					if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
+						drawTexture(drawX, drawY, e.width, e.height, e.getTexture());
 					}
 				}
 				
 				if (drawEntityHitboxes) {
 					double colSX = drawX + e.getCollision().startX;
-					double colSY = drawY - e.height / 2 + e.getCollision().startY;
+					double colSY = drawY + e.getCollision().startY;
 					double colEX = colSX + e.getCollision().width;
 					double colEY = colSY + e.getCollision().height;
 					
 					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
+				}
+				
+				if (drawEntityOutlines) {
+					double colSX = drawX;
+					double colSY = drawY;
+					double colEX = colSX + e.width;
+					double colEY = colSY + e.height;
+					
+					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.blue);
 				}
 			}
 		}
