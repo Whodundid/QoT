@@ -31,6 +31,11 @@ public class StorageBoxHolder<A, B> implements Iterable<StorageBox<A, B>> {
 		add(obj, val);
 	}
 	
+	public StorageBoxHolder(StorageBoxHolder<A, B> holderIn) {
+		this(true);
+		holderIn.forEach(s -> add(s.getA(), s.getB()));
+	}
+	
 	/** Creates a new StorageBox with the given A and B values and then adds it to the specified position of this holder. */
 	public void add(int pos, A obj, B value) {
 		if (allowDuplicates || !contains(obj)) { createdList.add(pos, new StorageBox<A, B>(obj, value)); }

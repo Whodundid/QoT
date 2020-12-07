@@ -87,7 +87,7 @@ public class EDimension {
 		return d;
 	}
 	
-	public EDimension add(double x, double y) {
+	public EDimension moveDim(double x, double y) {
 		startX += x;
 		startY += y;
 		endX = startX + width;

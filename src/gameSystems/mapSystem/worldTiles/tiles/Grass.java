@@ -1,14 +1,22 @@
 package gameSystems.mapSystem.worldTiles.tiles;
 
+import assets.textures.WorldTextures;
 import gameSystems.mapSystem.worldTiles.WorldTile;
-import gameTextures.WorldTextures;
 
 public class Grass extends WorldTile {
 	
-	public Grass() {
+	public Grass() { this(-1); }
+	public Grass(int id) {
 		super(1, "Grass");
 		
-		setTexture(WorldTextures.grass);
+		numVariants = 4;
+		
+		if (id < 0) {
+			setTexture(WorldTextures.grass.getRandVariant());
+		}
+		else {
+			setTexture(WorldTextures.grass.getChild(id));
+		}
 		
 		blocksMovement = false;
 	}

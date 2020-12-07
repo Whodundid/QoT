@@ -1,6 +1,5 @@
 package gameSystems.textureSystem;
 
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Iterator;
@@ -9,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.BufferUtils;
+import util.miscUtil.ReflectionHelper;
 import util.storageUtil.EArrayList;
 
 public class TextureSystem {
@@ -47,11 +47,15 @@ public class TextureSystem {
 			registeredTextures.add(textureIn);
 			
 			if (textureIn.getTextureID() > 0) {
-				System.out.println("Registered Texture: " + textureIn.getTextureID() + " : " + textureIn.getFilePath());
+				//System.out.println("Registered Texture: " + textureIn.getTextureID() + " : " + textureIn.getFilePath());
 			}
 			else {
 				System.out.println("Failed to register texture: " + textureIn.getFilePath());
 			}
+			
+			//now register child textures (if there are any)
+			textureIn.registerChildTextures(this);
+			
 		}
 	}
 
@@ -139,23 +143,10 @@ public class TextureSystem {
 				// Set the values onto the GameTexture object
 				//--------------------------------------------
 				
-				Class c = textureIn.getClass();
+				ReflectionHelper.setField(textureIn, "width", w);
+				ReflectionHelper.setField(textureIn, "height", h);
+				ReflectionHelper.setField(textureIn, "textureID", texID);
 				
-				Field widthField = c.getDeclaredField("width");
-				Field heightField = c.getDeclaredField("height");
-				Field idField = c.getDeclaredField("textureID");
-				
-				widthField.setAccessible(true);
-				heightField.setAccessible(true);
-				idField.setAccessible(true);
-				
-				widthField.set(textureIn, w);
-				heightField.set(textureIn, h);
-				idField.set(textureIn, texID);
-				
-				widthField.setAccessible(false);
-				heightField.setAccessible(false);
-				idField.setAccessible(false);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

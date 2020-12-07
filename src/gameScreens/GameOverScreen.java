@@ -1,11 +1,11 @@
 package gameScreens;
 
-import eWindow.windowObjects.actionObjects.WindowButton;
-import eWindow.windowTypes.interfaces.IActionObject;
-import entities.player.Player;
+import assets.entities.player.Player;
+import assets.sounds.Songs;
+import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
+import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameSystems.gameRenderer.GameScreen;
 import main.Game;
-import sound.Songs;
 
 public class GameOverScreen extends GameScreen {
 	

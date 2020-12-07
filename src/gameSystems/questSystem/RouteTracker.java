@@ -1,6 +1,6 @@
 package gameSystems.questSystem;
 
-import entities.player.Player;
+import assets.entities.player.Player;
 import util.storageUtil.EArrayList;
 
 public class RouteTracker {

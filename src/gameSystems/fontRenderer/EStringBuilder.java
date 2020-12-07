@@ -1,6 +1,5 @@
 package gameSystems.fontRenderer;
 
-import main.Game;
 import util.renderUtil.EColors;
 import util.storageUtil.EArrayList;
 
@@ -23,11 +22,11 @@ public class EStringBuilder {
 				if (c == 8750 && i + 2 < s.length()) { //the 'countour integral' character
 					
 					if (hasCode) {
-						lastX = (double) Game.getGame().getFontRenderer().drawString(curString, lastX, y, curColor);
+						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor);
 						curString = "";
 					}
 					else {
-						lastX = (double) Game.getGame().getFontRenderer().drawString(curString, lastX, y, curColor) - 1;
+						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor) - 1;
 						curString = "";
 					}
 					hasCode = true;
@@ -50,10 +49,10 @@ public class EStringBuilder {
 			}
 			
 			if (!hasCode) {
-				lastX = Game.getGame().getFontRenderer().drawString(s, lastX, y, colorIn);
+				lastX = FontRenderer.drawString(s, lastX, y, colorIn);
 			}
 			else {
-				lastX = Game.getGame().getFontRenderer().drawString(curString, lastX, y, curColor);
+				lastX = FontRenderer.drawString(curString, lastX, y, curColor);
 			}
 			
 			return lastX;
@@ -79,7 +78,7 @@ public class EStringBuilder {
 				else { str += c; }
 			}
 			
-			return Game.getFontRenderer().getStringWidth(str);
+			return FontRenderer.getStringWidth(str);
 		}
 		return -1;
 	}
@@ -88,15 +87,15 @@ public class EStringBuilder {
 	public static EArrayList<String> createWordWrapString(String stringIn, double widthMax) {
 		EArrayList<String> lines = new EArrayList();
 		try {
-			if (stringIn != null && !stringIn.isEmpty() && widthMax > 5 && EStringBuilder.getStringWidth(stringIn) > widthMax) {
+			if (stringIn != null && !stringIn.isEmpty() && widthMax > 5 && getStringWidth(stringIn) > widthMax) {
 				String restOfString = stringIn;
-				while (EStringBuilder.getStringWidth(restOfString) > widthMax) {
+				while (getStringWidth(restOfString) > widthMax) {
 					int i = 0;
 					int iPos = 0;
 					char end = Character.MIN_VALUE;
 					String buildString = "";
 					
-					while (!(EStringBuilder.getStringWidth(buildString) >= widthMax) && i < restOfString.length() - 1) {
+					while (!(getStringWidth(buildString) >= widthMax) && i < restOfString.length() - 1) {
 						buildString += restOfString.charAt(i);
 						i++;
 					}

@@ -18,11 +18,13 @@ public class QotGameSettings {
 	//-----------------------
 	
 	public static final ConfigSetting<Integer> musicVolume = new ConfigSetting(Integer.class, "musicVolume", "Music Volume", 100);
+	public static final ConfigSetting<String> lastMap = new ConfigSetting(String.class, "lastMap", "Last Editor Map", "");
 	
 	//-----------------------
 	
 	static {
 		settings.add(musicVolume);
+		settings.add(lastMap);
 	}
 	
 	public static EArrayList<ConfigSetting> getSettings() { return settings; }

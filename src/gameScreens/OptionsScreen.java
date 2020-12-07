@@ -1,11 +1,11 @@
 package gameScreens;
 
-import eWindow.windowObjects.actionObjects.WindowButton;
-import eWindow.windowObjects.actionObjects.WindowSlider;
-import eWindow.windowTypes.interfaces.IActionObject;
+import assets.sounds.Songs;
+import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
+import envisionEngine.eWindow.windowObjects.actionObjects.WindowSlider;
+import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameSystems.gameRenderer.GameScreen;
 import main.Game;
-import sound.Songs;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
 
@@ -53,7 +53,7 @@ public class OptionsScreen extends GameScreen {
 			
 			if (val == 0) { Songs.stopAllMusic(); }
 			else {
-				Songs.loopIfNotPlaying(Songs.theme);
+				Songs.loopIfNotPlaying(Songs.varthums);
 				Songs.getAllCurrentlyPlaying().forEach(s -> s.setVolume((float) (val * 0.0009f)));
 			}
 		}

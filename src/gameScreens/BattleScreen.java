@@ -1,15 +1,16 @@
 package gameScreens;
 
-import eWindow.windowObjects.actionObjects.WindowButton;
-import eWindow.windowTypes.interfaces.IActionObject;
-import entities.Entity;
-import entities.player.Player;
+import assets.entities.Entity;
+import assets.entities.player.Player;
+import assets.sounds.Audio;
+import assets.sounds.Songs;
+import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
+import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
+import gameScreens.gameplay.GamePlayScreen;
+import gameScreens.gameplay.StatusBar;
 import gameSystems.gameRenderer.GameScreen;
 import gameWindows.InventoryWindow;
 import main.Game;
-import screenParts.StatusBar;
-import sound.Audio;
-import sound.Songs;
 import util.renderUtil.EColors;
 import util.storageUtil.EDimension;
 

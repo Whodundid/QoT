@@ -1,34 +1,38 @@
 package main;
 
-import eWindow.windowTypes.OverlayWindow;
-import eWindow.windowTypes.WindowParent;
-import eWindow.windowTypes.interfaces.IWindowObject;
-import eWindow.windowTypes.interfaces.IWindowParent;
-import entities.player.Player;
+import assets.entities.player.Player;
+import assets.textures.CursorTextures;
+import assets.textures.EditorTextures;
+import assets.textures.EntityTextures;
+import assets.textures.WindowTextures;
+import assets.textures.WorldTextures;
+import envisionEngine.eWindow.windowTypes.OverlayWindow;
+import envisionEngine.eWindow.windowTypes.WindowParent;
+import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
+import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
+import envisionEngine.terminal.TerminalHandler;
+import envisionEngine.terminal.window.ETerminal;
 import gameScreens.MainMenuScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.GameRenderer;
 import gameSystems.gameRenderer.GameScreen;
+import gameSystems.input.Keyboard;
+import gameSystems.input.Mouse;
+import gameSystems.input.WindowResizeListener;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.textureSystem.TextureSystem;
-import gameTextures.EntityTextures;
-import gameTextures.WorldTextures;
-import input.Keyboard;
-import input.Mouse;
-import input.WindowResizeListener;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.settings.MainConfigFile;
 import main.settings.QotGameSettings;
-import openGL_Util.shader.Shaders;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import terminal.TerminalHandler;
-import terminal.window.ETerminal;
 import util.miscUtil.OSType;
 import util.miscUtil.SysUtil;
+import util.miscUtil.TracingPrintStream;
+import util.openGL_Util.shader.Shaders;
 import util.renderUtil.CenterType;
 import util.renderUtil.WindowSize;
 import util.storageUtil.EArrayList;
@@ -73,6 +77,15 @@ public class Game {
 	private int curFrameRate = 0;
 	
 	public static long updateCounter = 0;
+	
+	//-----------------------------------------------
+	
+	public static void main(String[] args) {
+		// This guy VV allows us to see where everything is coming from in console
+		TracingPrintStream.enableTrace();
+		TracingPrintStream.setTracePrimitives(true);
+		Game.getGame().runGame();
+	}
 	
 	//-----------------------------------------------
 	
@@ -127,6 +140,9 @@ public class Game {
 		
 		WorldTextures.registerTextures(textureSystem);
 		EntityTextures.registerTextures(textureSystem);
+		EditorTextures.registerTextures(textureSystem);
+		WindowTextures.registerTextures(textureSystem);
+		CursorTextures.registerTextures(textureSystem);
 		
 		terminalHandler.initCommands();
 		
@@ -179,7 +195,7 @@ public class Game {
 					runTick();
 					
 					if (GLFW.glfwWindowShouldClose(Game.getWindowHandle())) { running = false; }
-					if (Keyboard.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) { running = false; }
+					//if (Keyboard.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) { running = false; }
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -319,31 +335,35 @@ public class Game {
 	
 	/** Returns true if the specified window parent is open. */
 	public static <T extends WindowParent> boolean isEGuiOpen(Class<T> windowIn) {
-		return windowIn != null ? gameRenderer.getCombinedObjects().stream().anyMatch(o -> o.getClass() == windowIn) : false;
+		return (currentScreen != null && windowIn != null) ? currentScreen.getCombinedObjects().stream().anyMatch(o -> o.getClass() == windowIn) : false;
 	}
 	
 	/** Returns a list of all actively drawn window parents. */
 	public static EArrayList<WindowParent> getAllActiveWindows() {
 		EArrayList<WindowParent> windows = new EArrayList();
-		try {
-			gameRenderer.getCombinedObjects().filterForEach(o -> WindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((WindowParent) w));
+		if (currentScreen != null) {
+			try {
+				currentScreen.getCombinedObjects().filterForEach(o -> WindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((WindowParent) w));
+			}
+			catch (Exception e) { e.printStackTrace(); }
 		}
-		catch (Exception e) { e.printStackTrace(); }
 		return windows;
 	}
 	
 	/** Returns the first active instance of a specified type of window parent. If none are active, null is returned instead. */
 	public static <T extends WindowParent> WindowParent getWindowInstance(Class<T> windowIn) {
-		return (windowIn != null) ? (WindowParent) (getGameRenderer().getAllChildren().filter(o -> o.getClass() == windowIn).getFirst()) : null;
+		return (currentScreen != null && windowIn != null) ? (WindowParent) (getGameRenderer().getAllChildren().filter(o -> o.getClass() == windowIn).getFirst()) : null;
 	}
 	
 	/** Returns a list of all actively drawn window parents of a given type. */
 	public static <T extends WindowParent> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
 		EArrayList<T> windows = new EArrayList();
-		try {
-			gameRenderer.getCombinedObjects().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));
+		if (currentScreen != null) {
+			try {
+				currentScreen.getCombinedObjects().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));
+			}
+			catch (Exception e) { e.printStackTrace(); }
 		}
-		catch (Exception e) { e.printStackTrace(); }
 		return windows;
 	}
 	
@@ -379,8 +399,8 @@ public class Game {
 	/** Displays the specified window parent with variable arguments. */
 	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, CenterType loc) {
 		if (guiIn == null) { displayScreen(null); }
-		else {
-			gameRenderer.addObject(guiIn);
+		else if (currentScreen != null) {
+			currentScreen.addObject(guiIn);
 			if (oldObject instanceof GameScreen) { displayScreen(null); }
 			else if (oldObject instanceof IWindowParent && closeOld) { ((IWindowParent) oldObject).close(); }
 			

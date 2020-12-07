@@ -1,8 +1,8 @@
 package gameSystems.gameRenderer;
 
-import eWindow.windowObjects.windows.RightClickMenu;
-import eWindow.windowTypes.interfaces.IActionObject;
-import eWindow.windowTypes.interfaces.IWindowObject;
+import envisionEngine.eWindow.windowObjects.windows.RightClickMenu;
+import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
+import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import util.storageUtil.EArrayList;
 
 //Author: Hunter Bragg

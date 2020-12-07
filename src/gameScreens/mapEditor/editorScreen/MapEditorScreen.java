@@ -1,0 +1,309 @@
+package gameScreens.mapEditor.editorScreen;
+
+import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
+import gameScreens.mapEditor.editorScreen.botHeader.EditorScreenBotHeader;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorTileToolList;
+import gameScreens.mapEditor.editorScreen.topHeader.EditorScreenTopHeader;
+import gameSystems.fontRenderer.FontRenderer;
+import gameSystems.gameRenderer.GameScreen;
+import gameSystems.input.Keyboard;
+import gameSystems.input.Mouse;
+import gameSystems.mapSystem.GameWorld;
+import gameSystems.mapSystem.worldTiles.WorldTile;
+import gameSystems.mapSystem.worldTiles.WorldTiles;
+import java.io.File;
+import org.lwjgl.glfw.GLFW;
+import util.mathUtil.NumUtil;
+import util.renderUtil.EColors;
+import util.storageUtil.EDimension;
+
+public class MapEditorScreen extends GameScreen {
+
+	File mapFile;
+	GameWorld world;
+	
+	EditorTileHotbar hotbar;
+	EditorTileToolList tileTools;
+	EditorScreenTopHeader topHeader;
+	EditorScreenBotHeader botHeader;
+	
+	EditorTileTool curTool = EditorTileTool.PENCIL;
+	
+	boolean firstPress = false;
+	int xPos, yPos;
+	int distX = 20;
+	int distY = 15;
+	
+	int worldXPos, worldYPos;
+	boolean mouseInMap = false;
+	boolean mouseOver = false;
+	boolean drawingMousePos = false;
+	
+	long timeSinceKey = 0l;
+	
+	public MapEditorScreen(File mapFileIn) {
+		super();
+		mapFile = mapFileIn;
+	}
+	
+	public MapEditorScreen(GameWorld worldIn) {
+		super();
+		world = worldIn;
+	}
+	
+	@Override
+	public void initScreen() {
+		loadWorld();
+		firstPress = !Mouse.isButtonDown(0);
+	}
+	
+	@Override
+	public void initObjects() {
+		
+		topHeader = new EditorScreenTopHeader(this);
+		botHeader = new EditorScreenBotHeader(this);
+		tileTools = new EditorTileToolList(this);
+		hotbar = new EditorTileHotbar(this);
+		
+		int i = 0;
+		for (WorldTile t : WorldTiles.getTiles()) {
+			if (t.hasTexture()) {
+				hotbar.setItemAtPos(t, i);
+				i++;
+			}
+		}
+		
+		addObject(topHeader);
+		addObject(botHeader);
+		addObject(hotbar);
+		addObject(tileTools);
+	}
+
+	@Override
+	public void drawScreen(int mXIn, int mYIn) {
+		drawRect(EColors.vdgray);
+		if (hasFocus()) { updateMovement(); }
+		mouseOver = isMouseOver();
+		
+		if (world == null) { drawStringC("Failed to load!", midX, midY); }
+		else {
+			
+			int w = (int) (world.getTileWidth() * world.getZoom());
+			int h = (int) (world.getTileHeight() * world.getZoom());
+			int x = (int) (midX - (distX * w) - (w / 2));
+			int y = (int) (midY - (distY * h) - (h / 2));
+			
+			drawMap(x, y, w, h);
+			drawPosBox(x, y, w, h);
+			mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
+			if (drawingMousePos = mouseInMap) {
+				drawMouseCoords(x, y, w, h);
+				changeTiles();
+			}
+			drawViewBox(x, y, w, h);
+		}
+		
+		//drawString("Pos: " + xPos + " " + yPos, startX + 10, topHeader.endY + 20);
+		//drawString("Dist: " + distX + " " + distY, startX + 10, topHeader.endY + 100);
+		//drawString("Zoom: " + NumUtil.roundD2(zoomVal), startX + 10, topHeader.endY + 140);
+	}
+	
+	@Override
+	public void mouseScrolled(int change) {
+		if (Keyboard.isCtrlDown()) {
+			world.setZoom(world.getZoom() + NumUtil.round(Math.signum(change) * 0.05, 2));
+			world.setZoom(NumUtil.clamp(world.getZoom(), 0.15, 5));
+		}
+		else if (Keyboard.isShiftDown()) {
+			xPos -= Math.signum(change) * 2;
+			xPos = (xPos < 0) ? 0 : (xPos > (world.getWidth() - 1)) ? world.getWidth() - 1 : xPos;
+		}
+		else if (Keyboard.isAltDown()) {
+			yPos -= Math.signum(change) * 2;
+			yPos = (yPos < 0) ? 0 : (yPos > (world.getHeight()) - 1) ? world.getHeight() - 1 : yPos;
+		}
+		else {
+			hotbar.scrollHotbar(change);
+		}
+	}
+	
+	@Override
+	public void mouseReleased(int mXIn, int mYIn, int button) {
+		super.mouseReleased(mXIn, mYIn, button);
+		if (!firstPress && button == 0) { firstPress = true; }
+	}
+	
+	@Override
+	public void keyPressed(char typedChar, int keyCode) {
+		hotbar.keyPressed(typedChar, keyCode);
+		
+		if (keyCode == GLFW.GLFW_KEY_ESCAPE) { closeScreen(true); }
+		super.keyPressed(typedChar, keyCode);
+	}
+	
+	@Override
+	public void actionPerformed(IActionObject object, Object... args) {
+		
+	}
+	
+	@Override public void onScreenClosed() {}
+	
+	//------------------------
+	// Private Editor Methods
+	//------------------------
+	
+	private void updateMovement() {
+		if (System.currentTimeMillis() - timeSinceKey >= 37) {
+			
+			if (Keyboard.isWDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_UP)) { yPos--; yPos = (yPos < 0) ? 0 : yPos; }
+			if (Keyboard.isADown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT)) { xPos--; xPos = (xPos < 0) ? 0 : xPos; }
+			if (Keyboard.isSDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_DOWN)) { yPos++; yPos = (yPos > (world.getHeight() - 1)) ? world.getHeight() - 1 : yPos; }
+			if (Keyboard.isDDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT)) { xPos++; xPos = (xPos > (world.getWidth() - 1)) ? world.getWidth() - 1 : xPos; }
+			
+			timeSinceKey = System.currentTimeMillis();
+		}
+	}
+	
+	public void loadWorld() {
+		if (mapFile != null) {
+			world = new GameWorld(mapFile);
+		}
+		else if (world != null) {
+			mapFile = world.getWorldFile();
+		}
+		
+		xPos = world.getWidth() / 2;
+		yPos = world.getHeight() / 2;
+	}
+	
+	public void saveWorld() {
+		if (world != null) {
+			if (world.saveWorldToFile()) {
+				
+			}
+			else {
+				
+			}
+		}
+	}
+	
+	private void drawMap(int x, int y, int w, int h) {
+		WorldTile[][] tiles = world.getTilesAroundPoint(xPos, yPos, distX, distY);
+		for (int i = 0; i < tiles.length; i++) {
+			for (int j = 0; j < tiles[0].length; j++) {
+				WorldTile t = tiles[i][j];
+				if (t != null) {
+					
+					int drawPosX = x;
+					int drawPosY = y;
+					
+					if (xPos < distX) { drawPosX += (distX - xPos) * w; }
+					if (yPos < distY) { drawPosY += (distY - yPos) * h; }
+					
+					if (t.hasTexture()) {
+						drawTexture(drawPosX + (i * w), drawPosY + (j * h), w, h, t.getTexture());
+					}
+				}
+			}
+		}
+	}
+	
+	private void drawPosBox(int x, int y, int w, int h) {
+		int sX = x + (distX * w);
+		int sY = y + (distY * h);
+		int eX = sX + w;
+		int eY = sY + h;
+		drawHRect(sX, sY, eX, eY, 2, EColors.red);
+	}
+	
+	private void drawViewBox(int x, int y, int w, int h) {
+		int dsX = x;
+		int dsY = y;
+		int deX = x + w + (distX * 2 * w);
+		int deY = y + h + (distY * 2 * h);
+		drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
+	}
+	
+	private boolean checkMousePos(int x, int y, int w, int h, int mXIn, int mYIn) {
+		int tW = (int) (FontRenderer.getInstance().getStringWidth(world.getName()) / 2);
+		drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
+		drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
+		drawStringC(world.getName(), midX, 15);
+		
+		double xCheck = mXIn - x - ((distX - xPos) * w);
+		double yCheck = mYIn - y - ((distY - yPos) * h);
+		
+		if (xCheck >= 0 && yCheck >= 0) {
+			worldXPos = (int) (xCheck / w);
+			worldYPos = (int) (yCheck / h);
+			boolean inMap = worldXPos >= 0 && worldXPos < world.getWidth() && worldYPos >= 0 && worldYPos < world.getHeight();
+			
+			return mouseOver && inMap && EDimension.of(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h)).contains(mXIn, mYIn);
+		}
+		return false;
+	}
+	
+	private void drawMouseCoords(int x, int y, int w, int h) {
+		worldXPos = (int) worldXPos;
+		worldYPos = (int) worldYPos;
+		worldXPos = NumUtil.clamp(worldXPos, 0, world.getWidth() - 1);
+		worldYPos = NumUtil.clamp(worldYPos, 0, world.getHeight() - 1);
+		
+		double xPos = x + ((mX - x) / w) * w;
+		double yPos = y + ((mY - y) / h) * h;
+		
+		drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.vdgray);
+	}
+	
+	private void changeTiles() {
+		if (firstPress) {
+			if (curTool == EditorTileTool.PENCIL) {
+				if (Mouse.isButtonDown(0)) { world.setTileAt((int) worldXPos, (int) worldYPos, hotbar.getCurrent()); }
+				else if (Mouse.isButtonDown(1)) { world.setTileAt((int) worldXPos, (int) worldYPos, null); }
+			}
+		}
+	}
+	
+	//---------------------------------
+	//         Public Getters
+	//---------------------------------
+	
+	public int getXPos() { return xPos; }
+	public int getYPos() { return yPos; }
+	
+	public int getViewX() { return distX; }
+	public int getViewY() { return distY; }
+	
+	public int getWorldMX() { return worldXPos; }
+	public int getWorldMY() { return worldYPos; }
+	
+	public double getZoom() { return (world != null) ? world.getZoom() : 1; }
+	
+	public GameWorld getWorld() { return world; }
+	
+	public void setTileTool(EditorTileTool toolIn) {
+		curTool = toolIn;
+		topHeader.updateCurTool(curTool);
+	}
+	
+	public boolean shouldDrawMouse() { return drawingMousePos; }
+	
+	public EditorScreenTopHeader getTopHeader() { return topHeader; }
+	public EditorScreenBotHeader getBotHeader() { return botHeader; }
+	public EditorTileHotbar getHotbar() { return hotbar; }
+	public EditorTileToolList getTileToolList() { return tileTools; }
+	
+	//---------------------------------
+	//         Public Setters
+	//---------------------------------
+	
+	public MapEditorScreen setXPos(int pos) { return this; }
+	public MapEditorScreen setYPos(int pos) { return this; }
+	
+	public MapEditorScreen setViewX(int dist) { distX = NumUtil.clamp(dist, 0, dist); return this; }
+	public MapEditorScreen setViewY(int dist) { distY = NumUtil.clamp(dist, 0, dist); return this; }
+	
+	public EditorTileTool getCurTileTool() { return curTool; }
+	
+}

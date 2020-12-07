@@ -1,6 +1,6 @@
 package gameSystems.mapSystem;
 
-import entities.Entity;
+import assets.entities.Entity;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.textureSystem.GameTexture;
 import java.io.File;
@@ -94,7 +94,7 @@ public class GameWorld {
 		return retArr;
 	}
 	
-	public void convertFile() {
+	public void convertFileA() {
 		File f = getWorldFile();
 		if (f != null && f.exists()) {
 			try (Scanner reader = new Scanner(f)) {
@@ -175,20 +175,19 @@ public class GameWorld {
 				
 				for (int i = 0; i < mapWidth; i++) {
 					for (int j = 0; j < mapHeight; j++) {
-						if (reader.hasNextLine()) {
-							String tile = reader.nextLine();
-							//System.out.println("LINE: " + tile);
+						if (reader.hasNext()) {
+							String tile = reader.next();
+							
 							if (!tile.isBlank()) {
-								Scanner tileReader = new Scanner(tile);
-								
 								int tileID = -1;
+								int childID = 0;
+								String[] parts = tile.split(":");
+								tileID = Integer.parseInt(parts[0]);
+								if (parts.length > 1) { childID = Integer.parseInt(parts[1]); }
 								
-								if (tileReader.hasNext()) { tileID = tileReader.nextInt(); }
-								
-								WorldTile t = WorldTile.getTileFromID(tileID);
+								WorldTile t = WorldTile.getTileFromID(tileID, childID);
+								if (parts.length == 0) { t.setWildCard(true); }
 								data[i][j] = t;
-								
-								tileReader.close();
 							}
 						}
 						else {
@@ -219,13 +218,8 @@ public class GameWorld {
 	}
 	
 	public synchronized boolean saveWorldToFile() { return saveWorldToFile(name); }
-	
-	public synchronized boolean saveWorldToFile(String fileName) {
-
-		return saveWorldToFile(new File(Game.settings.getEditorWorldsDir(), fileName));
-	}
-	
-	public synchronized boolean saveWorldToFile(File fileIn) {
+	public synchronized boolean saveWorldToFile(String fileName) { return saveWorldToFile(new File(Game.settings.getEditorWorldsDir(), fileName)); }
+	protected synchronized boolean saveWorldToFile(File fileIn) {
 		try {
 			fileIn = (fileIn.getName().endsWith(".twld")) ? fileIn : new File(fileIn.getPath() + ".twld");
 			
@@ -241,11 +235,10 @@ public class GameWorld {
 					if (t == null) { writer.println("null"); }
 					else {
 						GameTexture tex = t.getTexture();
-						String texName = (tex != null) ? tex.getName() : "null";
-						
-						writer.println(t.getID());
+						writer.print(t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + " ");
 					}
 				}
+				writer.println();
 			}
 			
 			writer.close();

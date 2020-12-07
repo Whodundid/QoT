@@ -1,13 +1,13 @@
 package gameSystems.fontRenderer;
 
 import main.Game;
-import openGL_Util.GLObject;
+import util.openGL_Util.GLObject;
 import util.renderUtil.EColors;
 import util.storageUtil.StorageBox;
 
 public class FontRenderer {
 	
-	public static final double FONT_HEIGHT = 11;
+	public static final double FONT_HEIGHT = 24;
 	public static GameFont defaultFont = GameFont.createFont("bin/font/font_map.txt", "bin/font/font.png");
 	public static GameFont newFont = GameFont.createFont("bin/font/control_map.txt", "bin/font/font_test_fix.png");
 	
@@ -37,15 +37,15 @@ public class FontRenderer {
 	//FontRenderer Methods
 	//--------------------
 	
-	public double drawString(Object in, Number xIn, Number yIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
-	public double drawString(String in, Number xIn, Number yIn) { return drawString(in, xIn, yIn, 0xffffffff); }
+	public static double drawString(Object in, Number xIn, Number yIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
+	public static double drawString(String in, Number xIn, Number yIn) { return drawString(in, xIn, yIn, 0xffffffff); }
 	
-	public double drawString(Object in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public double drawString(Object in, Number xIn, Number yIn, int colorIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn); }
+	public static double drawString(Object in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
+	public static double drawString(Object in, Number xIn, Number yIn, int colorIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn); }
 	
-	public double drawString(String in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public double drawString(String in, Number xIn, Number yIn, int colorIn) {
-		return createString(in, xIn, yIn, colorIn);
+	public static double drawString(String in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
+	public static double drawString(String in, Number xIn, Number yIn, int colorIn) {
+		return instance.createString(in, xIn, yIn, colorIn);
 	}
 	
 	//--------------------
@@ -54,7 +54,7 @@ public class FontRenderer {
 	
 	public static GameFont getCurrentFont() { return getInstance().currentFont; }
 	
-	public static int getStringWidth(String in) { return (int) (in.length() * (16 / Game.getGameScale()) + 8); }
+	public static int getStringWidth(String in) { return (int) (in.length() * (16 / Game.getGameScale())); }
 	public static int getCharWidth(char c) { return getStringWidth("" + c); }
 	
 	//--------------------
@@ -81,9 +81,9 @@ public class FontRenderer {
 				//System.out.println(currentFont.getFontTexture().getWidth() + " : " + currentFont.getFontTexture().getHeight());
 				
 				drawChar(sX, yIn.doubleValue(), xPos, yPos, colorIn);
-				sX += (16 / Game.getGameScale()) + 1;
+				sX += (16 / Game.getGameScale());
 			}
-			return sX + getStringWidth(in);
+			return sX;
 		}
 		return 0;
 	}

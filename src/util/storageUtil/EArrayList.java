@@ -307,6 +307,27 @@ public class EArrayList<E> extends AbstractList<E> {
 	//EArrayList Methods
 	//------------------
 
+	public E getFirst(Predicate<? super E> condition) {
+		for (int i = 0; i < size(); i++) {
+			E e = get(i);
+			if (condition.test(e)) { return e; }
+		}
+		return null;
+	}
+	
+	public E getLast(Predicate<? super E> condition) {
+		for (int i = size() - 1; i >= 0; i--) {
+			E e = get(i);
+			if (condition.test(e)) { return e; }
+		}
+		return null;
+	}
+	
+	public EArrayList<E> addThen(E valIn) {
+		add(valIn);
+		return this;
+	}
+	
 	public EArrayList<E> fillWith(E val) {
 		for (int i = 0; i < size; i++) {
 			set(i, val);

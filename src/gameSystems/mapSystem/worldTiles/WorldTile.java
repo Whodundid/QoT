@@ -7,6 +7,7 @@ public class WorldTile {
 	protected int id;
 	protected String name;
 	protected GameTexture tex;
+	protected int numVariants = 1;
 	protected boolean blocksMovement = false;
 	protected boolean wildCardTexture = false;
 	protected TileMaterial material = TileMaterial.VOID;
@@ -31,6 +32,7 @@ public class WorldTile {
 	public int getID() { return id; }
 	public String getName() { return name; }
 	public TileMaterial getMaterial() { return material; }
+	public int getNumVariants() { return numVariants; }
 	
 	public GameTexture getTexture() { return (tex != null && wildCardTexture) ? tex.getRandVariant() : tex; }
 	
@@ -70,9 +72,8 @@ public class WorldTile {
 	// Static Methods
 	//----------------
 	
-	public static WorldTile getTileFromID(int id) {
-		return WorldTiles.getTileFromID(id);
-	}
+	public static WorldTile getTileFromID(int id) { return getTileFromID(id, 0); }
+	public static WorldTile getTileFromID(int id, int texNum) { return WorldTiles.getTileFromID(id, texNum); }
 	
 	public static int getIDFromTile(WorldTile in) {
 		return (in != null) ? in.getID() : -1;

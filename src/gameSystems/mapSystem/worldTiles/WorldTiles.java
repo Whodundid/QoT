@@ -2,6 +2,7 @@ package gameSystems.mapSystem.worldTiles;
 
 import gameSystems.mapSystem.worldTiles.tiles.*;
 import util.EUtil;
+import util.miscUtil.ReflectionHelper;
 import util.storageUtil.EArrayList;
 
 public class WorldTiles {
@@ -34,12 +35,42 @@ public class WorldTiles {
 		tiles.add(water);
 	}
 	
-	public static WorldTile getTileFromName(String tileName) {
-		return EUtil.getFirst(tiles, t -> t.getName().equals(tileName));
+	public static WorldTile getTileFromName(String tileName) { return getTileFromName(tileName, 0); }
+	public static WorldTile getTileFromName(String tileName, int texID) {
+		WorldTile tile = EUtil.getFirst(tiles, t -> t.getName().equals(tileName));
+		if (tile != null) {
+			try {
+				if (texID == 0) {
+					return tile.getClass().getConstructor().newInstance();
+				}
+				else if (ReflectionHelper.doesConstructorExist(tile, Integer.class)) {
+					return tile.getClass().getConstructor(Integer.class).newInstance(texID);
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 	
-	public static WorldTile getTileFromID(int id) {
-		return EUtil.getFirst(tiles, t -> t.getID() == id);
+	public static WorldTile getTileFromID(int id) { return getTileFromID(id, 0); }
+	public static WorldTile getTileFromID(int id, int texID) {
+		WorldTile tile = EUtil.getFirst(tiles, t -> t.getID() == id);
+		if (tile != null) {
+			try {
+				if (texID == 0) {
+					return tile.getClass().getConstructor().newInstance();
+				}
+				else if (ReflectionHelper.doesConstructorExist(tile, Integer.class)) {
+					return tile.getClass().getConstructor(Integer.class).newInstance(texID);
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 	
 	public static EArrayList<WorldTile> getTiles() { return new EArrayList(tiles); }

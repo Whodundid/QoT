@@ -1,9 +1,9 @@
 package gameWindows;
 
-import eWindow.windowObjects.actionObjects.WindowButton;
-import eWindow.windowTypes.WindowParent;
-import eWindow.windowTypes.interfaces.IActionObject;
-import entities.player.Player;
+import assets.entities.player.Player;
+import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
+import envisionEngine.eWindow.windowTypes.WindowParent;
+import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 
 public class InventoryWindow extends WindowParent {
 	

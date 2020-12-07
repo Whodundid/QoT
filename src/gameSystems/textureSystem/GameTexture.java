@@ -4,16 +4,21 @@ import org.lwjgl.opengl.GL11;
 import util.EUtil;
 import util.mathUtil.NumUtil;
 import util.storageUtil.EArrayList;
+import util.storageUtil.StorageBox;
+import util.storageUtil.StorageBoxHolder;
 
 public class GameTexture {
 	
 	private GameTexture parentTexture;
-	private GameTexture[] children = new GameTexture[0];
+	protected StorageBoxHolder<GameTexture, Integer> children = new StorageBoxHolder<GameTexture, Integer>();
 	private String name;
+	private int percent = -1;
 	private int textureID = -1; //-1 indicates this texutre is currently unregistered
+	private int childID = 0;
 	private String filePath;
 	private int width = -1, height = -1;
 	private boolean destroyed = false;
+	private int[] total = new int[100];
 	
 	//--------------
 	// Constructors
@@ -28,11 +33,19 @@ public class GameTexture {
 		filePath = filePathIn;
 	}
 	
+	//-------------------
+	// Protected Methods
+	//-------------------
+	
+	protected void registerChildTextures(TextureSystem systemIn) {}
+	
 	//----------------
 	// Public Methods
 	//----------------
 	
-	public GameTexture setChildren(final GameTexture... in) { children = in; return this; }
+	public GameTexture setChildID(int id) { childID = id; return this; }
+	public GameTexture addChild(final GameTexture in) { return addChild(in, -1); }
+	public GameTexture addChild(final GameTexture in, final int percentage) { children.add(in, percentage); return this; }
 	
 	public boolean destroy() {
 		if (textureID != -1) {
@@ -51,9 +64,10 @@ public class GameTexture {
 	//---------------------
 	
 	public GameTexture getParent() { return parentTexture; }
-	public GameTexture[] getChildren() { return children; }
+	public EArrayList<GameTexture> getChildren() { return children.getAVals(); }
 	public String getName() { return name; }
 	public int getTextureID() { return textureID; }
+	public int getChildID() { return childID; }
 	public String getFilePath() { return filePath; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
@@ -65,28 +79,40 @@ public class GameTexture {
 		EArrayList<GameTexture> withChildren = new EArrayList();
 		EArrayList<GameTexture> workList = new EArrayList();
 		
-		EUtil.forEach(children, c -> { found.add(c); if (c.getChildren().length > 0) { withChildren.add(c); } });
+		EUtil.forEach(children.getAVals(), c -> { found.add(c); if (c.children.size() > 0) { withChildren.add(c); } });
 		withChildren.forEach(c -> workList.addAll(c));
 		
 		while (workList.isNotEmpty()) {
 			found.addAll(workList);
 			
 			withChildren.clear();
-			workList.filterForEach(c -> c.children.length > 0, withChildren::add);
+			workList.filterForEach(c -> c.children.getAVals().length() > 0, withChildren::add);
 			
 			workList.clear();
-			withChildren.forEach(c -> workList.addAll(c.children));
+			withChildren.forEach(c -> workList.addAll(c.children.getAVals()));
 		}
 		
 		return found;
 	}
 	
 	private GameTexture getRandChild() {
-		return children[NumUtil.getRoll(0, children.length - 1)];
+		return children.getObject(NumUtil.getRoll(0, children.size() - 1));
+	}
+	
+	public void initVariantPercents() {
+		StorageBoxHolder<GameTexture, Integer> total = new StorageBoxHolder(children);
+		total.add(this, percent);
+		for (StorageBox<GameTexture, Integer> t : total) {
+			int amount = t.getB();
+		}
 	}
 	
 	public GameTexture getRandVariant() {
-		return (children.length > 0) ? ((NumUtil.roll(0, 0, 1)) ? this : getRandChild()) : this;
+		return (children.size() > 0) ? ((NumUtil.roll(0, 0, 1)) ? this : getRandChild()) : this;
+	}
+	
+	public GameTexture getChild(int id) {
+		return children.getObject(id);
 	}
 	
 }

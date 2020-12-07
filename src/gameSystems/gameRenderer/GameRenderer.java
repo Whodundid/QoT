@@ -1,10 +1,10 @@
 package gameSystems.gameRenderer;
 
-import eWindow.windowTypes.TopWindowParent;
-import entities.Entity;
+import assets.entities.Entity;
+import envisionEngine.eWindow.windowTypes.TopWindowParent;
+import gameSystems.input.Mouse;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
-import input.Mouse;
 import main.Game;
 
 //Author: Hunter Bragg

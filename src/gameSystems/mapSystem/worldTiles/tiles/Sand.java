@@ -1,7 +1,7 @@
 package gameSystems.mapSystem.worldTiles.tiles;
 
+import assets.textures.WorldTextures;
 import gameSystems.mapSystem.worldTiles.WorldTile;
-import gameTextures.WorldTextures;
 
 public class Sand extends WorldTile {
 	

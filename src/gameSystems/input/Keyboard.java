@@ -1,0 +1,187 @@
+package gameSystems.input;
+
+import gameSystems.gameRenderer.GameRenderer;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import main.Game;
+import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
+
+public class Keyboard extends GLFWKeyCallback {
+	
+	private boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
+	private static char lastChar = '\u0000';
+	private static int lastKey = -1;
+	private static Keyboard instance;
+	private static boolean repeatEvents = true;
+	
+	//--------------------
+	//Keyboard Constructor
+	//--------------------
+	
+	public static Keyboard getInstance() {
+		return instance = (instance != null) ? instance : new Keyboard();
+	}
+	
+	private Keyboard() {
+		super();
+	}
+	
+	//--------------------------
+	//GLFWKeyCallbackI Overrides
+	//--------------------------
+	
+	@Override
+	public void invoke(long window, int key, int scancode, int action, int mods) {
+		//get the actual character
+		char c = '\u0000';
+		
+		//prevent negative values!
+		if (key >= 0 && key < keys.length) {
+			c = getKeyChar(key);
+			
+			if (key == 32) { c = ' '; }
+			
+			//set the key state
+			keys[key] = action == GLFW.GLFW_PRESS;
+		}
+		
+		//System.out.println("action: " + action + " c: " + c + " key: " + key);
+		
+		//update the previous values
+		lastChar = c;
+		lastKey = key;
+		
+		//distribute the event
+		distribute(action, c, key);
+	}
+	
+	//------------------
+	//Keyboard Functions
+	//------------------
+	
+	private void distribute(int action, char typedChar, int keyCode) {
+		if (Game.getGLInit()) {
+			if (Game.currentScreen != null) {
+				switch (action) {
+				case 0: Game.currentScreen.keyReleased(typedChar, keyCode); break;
+				case 1: Game.currentScreen.keyPressed(typedChar, keyCode); break;
+				case 2: if (repeatEvents) { Game.currentScreen.keyPressed(typedChar, keyCode); } break;
+				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
+				}
+			}
+			
+			GameRenderer r = Game.getGameRenderer();
+			if (r != null) {
+				switch (action) {
+				case 0: r.keyReleased(typedChar, keyCode); break;
+				case 1: r.keyPressed(typedChar, keyCode); break;
+				case 2: if (repeatEvents) { r.keyPressed(typedChar, keyCode); } break;
+				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
+				}
+			}
+		}
+	}
+
+	//-------------------------
+	//Keyboard Static Functions
+	//-------------------------
+	
+	public static boolean isKeyDown(int key) {
+		return GLFW.glfwGetKey(Game.getWindowHandle(), key) == 1;
+	}
+	
+	public static String getKeyName(int key) {
+		return GLFW.glfwGetKeyName(key, GLFW.glfwGetKeyScancode(key));
+	}
+	
+	public static char getKeyChar(int key) {
+		char r = '\u0054';
+		String name = getKeyName(key);
+		if (name != null && name.length() > 0) { r = name.charAt(0); }
+		return r;
+	}
+	
+	public static boolean isWDown() { return isKeyDown(GLFW.GLFW_KEY_W); }
+	public static boolean isADown() { return isKeyDown(GLFW.GLFW_KEY_A); }
+	public static boolean isSDown() { return isKeyDown(GLFW.GLFW_KEY_S); }
+	public static boolean isDDown() { return isKeyDown(GLFW.GLFW_KEY_D); }
+	
+	//-----------------------
+	//Keyboard Static Getters
+	//-----------------------
+	
+	public static boolean isTypable(char in, int code) {
+		boolean typable = true;
+		
+		if (code >= 0) {
+			switch (code) {
+			case GLFW.GLFW_KEY_LEFT_CONTROL:
+			case GLFW.GLFW_KEY_RIGHT_CONTROL:
+			case GLFW.GLFW_KEY_LEFT_ALT:
+			case GLFW.GLFW_KEY_RIGHT_ALT:
+			case GLFW.GLFW_KEY_LEFT_SHIFT:
+			case GLFW.GLFW_KEY_RIGHT_SHIFT:
+				typable = false;
+			}
+		}
+		
+		if (typable == true) {
+			typable = in != 167 && in >= 32 && in != 127;
+		}
+		
+		//System.out.println(in + " " + code + " : " + typable);
+		
+		return typable;
+	}
+	
+	public static String removeUntypables(String in) {
+		String s = "";
+		for (char c : in.toCharArray()) {
+			if (isTypable(c, -1)) { s += c; }
+		}
+		return s;
+	}
+	
+	public static void setClipboard(String in) {
+		if (!StringUtils.isEmpty(in)) {
+			try {
+				StringSelection stringselection = new StringSelection(in);
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, null);
+			}
+			catch (Exception e) {}
+		}
+	}
+	
+	public static String getClipboard() {
+		try {
+			Transferable s = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+			if (s != null && s.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+				return (String) s.getTransferData(DataFlavor.stringFlavor);
+			}
+		}
+		catch (Exception e) {}
+		return "";
+	}
+	
+	public static void enableRepeatEvents() { repeatEvents = true; }
+	public static void disableRepeatEvents() { repeatEvents = false; }
+	
+	public static char getLastChar() { return lastChar; }
+	public static int getLastKey() { return lastKey; }
+
+	public static boolean isCtrlDown() { return Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL); }
+	public static boolean isAltDown() { return Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_ALT) || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT_ALT); }
+	public static boolean isShiftDown() { return Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT); }
+	
+	public static boolean isCtrlA(int keyCode) { return keyCode == GLFW.GLFW_KEY_A && isCtrlDown() && !isShiftDown() && !isAltDown(); }
+	public static boolean isCtrlX(int keyCode) { return keyCode == GLFW.GLFW_KEY_X && isCtrlDown() && !isShiftDown() && !isAltDown(); }
+	public static boolean isCtrlC(int keyCode) { return keyCode == GLFW.GLFW_KEY_C && isCtrlDown() && !isShiftDown() && !isAltDown(); }
+	public static boolean isCtrlV(int keyCode) { return keyCode == GLFW.GLFW_KEY_V && isCtrlDown() && !isShiftDown() && !isAltDown(); }
+	public static boolean isCtrlZ(int keyCode) { return keyCode == GLFW.GLFW_KEY_Z && isCtrlDown() && !isShiftDown() && !isAltDown(); }
+	public static boolean isCtrlY(int keyCode) { return keyCode == GLFW.GLFW_KEY_Y && isCtrlDown() && !isShiftDown() && !isAltDown(); }
+	
+}
