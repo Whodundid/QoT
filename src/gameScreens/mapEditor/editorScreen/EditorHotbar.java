@@ -2,6 +2,7 @@ package gameScreens.mapEditor.editorScreen;
 
 import envisionEngine.eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import envisionEngine.eWindow.windowTypes.WindowObject;
+import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import main.Game;
 import util.EUtil;
@@ -10,7 +11,7 @@ import util.renderUtil.EColors;
 import util.storageUtil.EArrayList;
 import util.storageUtil.StorageBox;
 
-public class EditorTileHotbar extends WindowObject {
+public class EditorHotbar extends WindowObject {
 	
 	MapEditorScreen editor;
 	
@@ -25,6 +26,8 @@ public class EditorTileHotbar extends WindowObject {
 	
 	WindowHeader header;
 	
+	long startTime = -1l;
+	
 	//---------------------------------
 	
 	boolean isMoving = false;
@@ -34,7 +37,7 @@ public class EditorTileHotbar extends WindowObject {
 	// Constructors
 	//--------------
 	
-	public EditorTileHotbar(MapEditorScreen editorIn) {
+	public EditorHotbar(MapEditorScreen editorIn) {
 		editor = editorIn;
 		//determine dims -- depends on number of slots -- is always at the bottom middle by default
 		double width = size * cellSize;
@@ -46,6 +49,8 @@ public class EditorTileHotbar extends WindowObject {
 		//set initial size
 		hotbar = new EArrayList(size);
 		EUtil.repeat(hotbar, h -> h.add((WorldTile) null), size);
+		
+		startTime = System.currentTimeMillis();
 	}
 	
 	//-----------
@@ -54,7 +59,13 @@ public class EditorTileHotbar extends WindowObject {
 	
 	@Override
 	public void initObjects() {
-		header = new WindowHeader(this, false, 10);
+		header = new WindowHeader(this, false, 10) {
+			@Override
+			public void mouseReleased(int mXIn, int mYIn, int button) {
+				super.mouseReleased(mXIn, mYIn, button);
+				transferFocus(editor);
+			}
+		};
 		header.setDrawTitle(false);
 		header.setDrawParentFocus(false);
 		
@@ -63,28 +74,27 @@ public class EditorTileHotbar extends WindowObject {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		//move the hotbar if moving
-		if (isMoving) { move(mXIn - oldPos.getA(), mYIn - oldPos.getB()); oldPos.setValues(mXIn, mYIn); }
+		if (hasFocus()) { transferFocus(editor); }
 		
+		header.setVisible(isMouseOver() || header.isMouseOver());
 		drawHotbar();
+		
+		updateText();
+		
 		super.drawObject(mXIn, mYIn);
 	}
 	
 	/** Used to reposition the hotbar itself. */
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
-		//prep values if moving
-		//oldPos.setValues(mXIn, mYIn);
-		//isMoving = true;
 		curItem = (int) ((mXIn - startX) / cellSize);
 		super.mousePressed(mXIn, mYIn, button);
 	}
 	
-	/** Used to stop hotbar move. */
 	@Override
 	public void mouseReleased(int mXIn, int mYIn, int button) {
-		//isMoving = false;
 		super.mouseReleased(mXIn, mYIn, button);
+		transferFocus(editor);
 	}
 	
 	/** Hook into scroll event if the mouse is directly hoving over this. */
@@ -105,6 +115,8 @@ public class EditorTileHotbar extends WindowObject {
 				else { num = NumUtil.clamp(num - 1, 0, num); }
 				
 				if (num < size) { curItem = num; }
+				
+				startTime = System.currentTimeMillis();
 			}
 			catch (Exception e) {}
 		}
@@ -116,10 +128,21 @@ public class EditorTileHotbar extends WindowObject {
 	// Methods
 	//---------
 	
+	private void updateText() {
+		if (startTime > 0) {
+			if (System.currentTimeMillis() - startTime >= 2000) {
+				startTime = -1;
+			}
+			
+			WorldTile t = getCurrent();
+			if (t != null) {
+				drawStringC(t.getName(), midX, startY - FontRenderer.FONT_HEIGHT - ((header.isVisible()) ? header.height : 0));
+			}
+		}
+	}
+	
 	/** Draws each cell along with its contents. */
 	private void drawHotbar() {
-		header.setVisible(isMouseOver() || header.isMouseOver());
-		
 		//black bacground
 		drawRect(EColors.black);
 		
@@ -163,6 +186,8 @@ public class EditorTileHotbar extends WindowObject {
 		if (curItem == 0 && amount > 0) { curItem = size - 1; }
 		else if (curItem == size - 1 && amount < 0) { curItem = 0; }
 		else { curItem -= amount; }
+		
+		startTime = System.currentTimeMillis();
 	}
 	
 	/** Clears the hotbar contents but does not modify the size. */
@@ -188,7 +213,7 @@ public class EditorTileHotbar extends WindowObject {
 	
 	/** Replaces the current hotbar with a new one, this also will redimension the hotbar if the size is different.
 	 *  If the incomming list is null or empty, the hotbar's contents are cleared but its size is not changed. */
-	public EditorTileHotbar setHotbar(EArrayList<WorldTile> in) {
+	public EditorHotbar setHotbar(EArrayList<WorldTile> in) {
 		if (in != null) {
 			if (in.isNotEmpty()) {
 				hotbar = new EArrayList(in);
@@ -209,7 +234,7 @@ public class EditorTileHotbar extends WindowObject {
 	}
 	
 	/** Sets the item at the hotbar position. Does not do bounds checking! */
-	public EditorTileHotbar setItemAtPos(WorldTile tile, int pos) {
+	public EditorHotbar setItemAtPos(WorldTile tile, int pos) {
 		hotbar.set(pos, tile);
 		return this;
 	}

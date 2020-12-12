@@ -4,7 +4,7 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
-import gameSystems.gameRenderer.GameRenderer;
+import gameSystems.gameRenderer.WorldRenderer;
 import util.storageUtil.EArrayList;
 
 //Author: Hunter Bragg
@@ -26,7 +26,7 @@ public class ClearObjects extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		GameRenderer ren = GameRenderer.getInstance();
+		WorldRenderer ren = WorldRenderer.getInstance();
 		EArrayList<IWindowObject> objs = EArrayList.combineLists(ren.getObjects(), ren.getAddingObjects());
 		if (objs.contains(termIn)) { objs.remove(termIn); }
 		if (objs.isNotEmpty()) {

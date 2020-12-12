@@ -1,5 +1,6 @@
 package envisionEngine.terminal.terminalCommand.commands.system;
 
+import debug.DebugFunctions;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
@@ -26,7 +27,19 @@ public class DebugControl extends TerminalCommand {
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.size() >= 1) {
-			termIn.error("This command does not take arguments!");
+			try {
+				int i = Integer.parseInt(args.get(0));
+				if (i >= 0 && i < DebugFunctions.getTotal()) {
+					DebugFunctions.runDebugFunction(i, termIn, args.subList(1, args.length()));
+				}
+				else {
+					termIn.error("Value out of range (0-" + DebugFunctions.getTotal() + ")");
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				error(termIn, e);
+			}
 		}
 		else if (args.size() == 1) {
 			Game.setDebugMode(!Game.isDebugMode());

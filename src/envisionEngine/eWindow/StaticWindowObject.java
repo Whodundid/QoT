@@ -472,7 +472,7 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	public static void mousePressed(IWindowObject objIn, int mX, int mY, int button) {
-		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.Pressed));
+		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.PRESSED));
 		IWindowParent p = objIn.getWindowParent();
 		if (p != null) { p.bringToFront(); }
 		if (!objIn.hasFocus() && objIn.isMouseOver()) { objIn.requestFocus(); }
@@ -484,7 +484,7 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	public static void mouseReleased(IWindowObject objIn, int mX, int mY, int button) {
-		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.Released));
+		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.RELEASED));
 		if (objIn.getTopParent() != null) {
 			if (objIn.getTopParent().getDefaultFocusObject() != null) { objIn.getTopParent().getDefaultFocusObject().requestFocus(); }
 			if (objIn.getTopParent().getModifyType() == ObjectModifyType.Resize) { objIn.getTopParent().clearModifyingObject(); }
@@ -494,7 +494,7 @@ public class StaticWindowObject extends EGui {
 	public static void mouseDragged(IWindowObject objIn, int mX, int mY, int button, long timeSinceLastClick) {}
 	
 	public static void mouseScolled(IWindowObject objIn, int mX, int mY, int change) {
-		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.Scrolled));
+		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.SCROLLED));
 		objIn.getObjects().filterForEach(o -> o.isMouseInside() && o.checkDraw(), o -> o.mouseScrolled(change));
 	}
 	

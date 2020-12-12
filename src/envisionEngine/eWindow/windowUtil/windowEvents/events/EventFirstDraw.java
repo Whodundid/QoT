@@ -9,7 +9,7 @@ import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.EventType;
 public class EventFirstDraw extends ObjectEvent {
 	
 	public EventFirstDraw(IWindowObject parentObjectIn) {
-		super(parentObjectIn, EventType.FirstDraw);
+		super(parentObjectIn, EventType.FIRSTDRAW);
 	}
 	
 }

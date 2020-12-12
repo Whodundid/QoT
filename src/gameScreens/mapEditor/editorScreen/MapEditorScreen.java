@@ -1,17 +1,19 @@
 package gameScreens.mapEditor.editorScreen;
 
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
+import envisionEngine.input.Keyboard;
+import envisionEngine.input.Mouse;
 import gameScreens.mapEditor.editorScreen.botHeader.EditorScreenBotHeader;
 import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
 import gameScreens.mapEditor.editorScreen.tileTools.EditorTileToolList;
 import gameScreens.mapEditor.editorScreen.topHeader.EditorScreenTopHeader;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.GameScreen;
-import gameSystems.input.Keyboard;
-import gameSystems.input.Mouse;
 import gameSystems.mapSystem.GameWorld;
+import gameSystems.mapSystem.Region;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.mapSystem.worldTiles.WorldTiles;
+import gameSystems.textureSystem.GameTexture;
 import java.io.File;
 import org.lwjgl.glfw.GLFW;
 import util.mathUtil.NumUtil;
@@ -23,12 +25,18 @@ public class MapEditorScreen extends GameScreen {
 	File mapFile;
 	GameWorld world;
 	
-	EditorTileHotbar hotbar;
+	EditorHotbar hotbar;
 	EditorTileToolList tileTools;
 	EditorScreenTopHeader topHeader;
 	EditorScreenBotHeader botHeader;
+	EditorMiniMap miniMap;
 	
 	EditorTileTool curTool = EditorTileTool.PENCIL;
+	
+	boolean drawPosBox = true;
+	boolean drawViewBox = true;
+	boolean drawEntities = true;
+	boolean drawRegions = true;
 	
 	boolean firstPress = false;
 	int xPos, yPos;
@@ -63,8 +71,9 @@ public class MapEditorScreen extends GameScreen {
 		
 		topHeader = new EditorScreenTopHeader(this);
 		botHeader = new EditorScreenBotHeader(this);
+		miniMap = new EditorMiniMap(this);
 		tileTools = new EditorTileToolList(this);
-		hotbar = new EditorTileHotbar(this);
+		hotbar = new EditorHotbar(this);
 		
 		int i = 0;
 		for (WorldTile t : WorldTiles.getTiles()) {
@@ -75,6 +84,7 @@ public class MapEditorScreen extends GameScreen {
 		}
 		
 		addObject(topHeader);
+		addObject(miniMap);
 		addObject(botHeader);
 		addObject(hotbar);
 		addObject(tileTools);
@@ -82,6 +92,8 @@ public class MapEditorScreen extends GameScreen {
 
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
+		//System.out.println(EColors.yellow.intVal);
+		
 		drawRect(EColors.vdgray);
 		if (hasFocus()) { updateMovement(); }
 		mouseOver = isMouseOver();
@@ -94,19 +106,25 @@ public class MapEditorScreen extends GameScreen {
 			int x = (int) (midX - (distX * w) - (w / 2));
 			int y = (int) (midY - (distY * h) - (h / 2));
 			
-			drawMap(x, y, w, h);
-			drawPosBox(x, y, w, h);
-			mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
-			if (drawingMousePos = mouseInMap) {
-				drawMouseCoords(x, y, w, h);
-				changeTiles();
+			int deX = x + w + (distX * 2 * w);
+			int deY = y + h + (distY * 2 * h);
+			
+			scissor(x, y, deX, deY + 1);
+			{
+				drawMap(x, y, w, h);
+				if (drawRegions) { drawRegions(x, y, w, h); }
+				if (drawPosBox) { drawPosBox(x, y, w, h); }
+				
+				mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
+				if (drawingMousePos = mouseInMap) {
+					drawMouseCoords(x, y, w, h);
+					changeTiles();
+				}
+				
+				if (drawViewBox) { drawViewBox(x, y, w, h); }
 			}
-			drawViewBox(x, y, w, h);
+			endScissor();
 		}
-		
-		//drawString("Pos: " + xPos + " " + yPos, startX + 10, topHeader.endY + 20);
-		//drawString("Dist: " + distX + " " + distY, startX + 10, topHeader.endY + 100);
-		//drawString("Zoom: " + NumUtil.roundD2(zoomVal), startX + 10, topHeader.endY + 140);
 	}
 	
 	@Override
@@ -138,7 +156,11 @@ public class MapEditorScreen extends GameScreen {
 	public void keyPressed(char typedChar, int keyCode) {
 		hotbar.keyPressed(typedChar, keyCode);
 		
-		if (keyCode == GLFW.GLFW_KEY_ESCAPE) { closeScreen(true); }
+		//if (keyCode == Keyboard.KEY_ESC) { closeScreen(); }
+		
+		if (Keyboard.isCtrlS(keyCode)) { saveWorld(); System.out.println("saved"); }
+		if (Keyboard.isCtrlR(keyCode)) { loadWorld(); System.out.println("reloaded"); }
+		
 		super.keyPressed(typedChar, keyCode);
 	}
 	
@@ -156,25 +178,38 @@ public class MapEditorScreen extends GameScreen {
 	private void updateMovement() {
 		if (System.currentTimeMillis() - timeSinceKey >= 37) {
 			
-			if (Keyboard.isWDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_UP)) { yPos--; yPos = (yPos < 0) ? 0 : yPos; }
-			if (Keyboard.isADown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT)) { xPos--; xPos = (xPos < 0) ? 0 : xPos; }
-			if (Keyboard.isSDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_DOWN)) { yPos++; yPos = (yPos > (world.getHeight() - 1)) ? world.getHeight() - 1 : yPos; }
-			if (Keyboard.isDDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT)) { xPos++; xPos = (xPos > (world.getWidth() - 1)) ? world.getWidth() - 1 : xPos; }
+			if (!Keyboard.isCtrlDown()) {
+				if (Keyboard.isWDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_UP)) { yPos--; yPos = (yPos < 0) ? 0 : yPos; }
+				if (Keyboard.isADown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT)) { xPos--; xPos = (xPos < 0) ? 0 : xPos; }
+				if (Keyboard.isSDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_DOWN)) { yPos++; yPos = (yPos > (world.getHeight() - 1)) ? world.getHeight() - 1 : yPos; }
+				if (Keyboard.isDDown() || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT)) { xPos++; xPos = (xPos > (world.getWidth() - 1)) ? world.getWidth() - 1 : xPos; }
+				
+				timeSinceKey = System.currentTimeMillis();
+			}
 			
-			timeSinceKey = System.currentTimeMillis();
 		}
 	}
 	
 	public void loadWorld() {
+		boolean center = world == null || !firstPress;
+		
 		if (mapFile != null) {
+			double oldZoom = 1;
+			if (world != null) { oldZoom = world.getZoom(); }
 			world = new GameWorld(mapFile);
+			world.setZoom(oldZoom);
 		}
 		else if (world != null) {
+			double oldZoom = world.getZoom();
+			world.getHighlightedRegions().clear();
 			mapFile = world.getWorldFile();
+			world.setZoom(oldZoom);
 		}
 		
-		xPos = world.getWidth() / 2;
-		yPos = world.getHeight() / 2;
+		if (center) {
+			xPos = world.getWidth() / 2;
+			yPos = world.getHeight() / 2;
+		}
 	}
 	
 	public void saveWorld() {
@@ -225,11 +260,29 @@ public class MapEditorScreen extends GameScreen {
 		drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
 	}
 	
+	private void drawRegions(int x, int y, int w, int h) {
+		world.getHighlightedRegions().forEach(r -> drawRegion(r, x, y, w, h));
+		world.getRegionData().forEach(r -> drawRegion(r, x, y, w, h));
+	}
+	
+	private void drawRegion(Region r, int x, int y, int w, int h) {
+		double z = world.getZoom();
+		int sX = (int) (r.startX * z);
+		int sY = (int) (r.startY * z);
+		int rw = (int) (r.width * z);
+		int rh = (int) (r.height * z);
+		int drawPosX = x + sX - ((xPos - distX) * w);
+		int drawPosY = y + sY - ((yPos - distY) * h);
+		int drawWidth = drawPosX + rw;
+		int drawHeight = drawPosY + rh;
+		int lineWidth = NumUtil.clamp((int) (3 * z), 1, 4);
+		drawHRect(drawPosX, drawPosY, drawWidth, drawHeight, lineWidth, r.getColor());
+	}
+	
 	private boolean checkMousePos(int x, int y, int w, int h, int mXIn, int mYIn) {
 		int tW = (int) (FontRenderer.getInstance().getStringWidth(world.getName()) / 2);
 		drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
 		drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
-		drawStringC(world.getName(), midX, 15);
 		
 		double xCheck = mXIn - x - ((distX - xPos) * w);
 		double yCheck = mYIn - y - ((distY - yPos) * h);
@@ -257,10 +310,20 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	private void changeTiles() {
-		if (firstPress) {
+		if (firstPress && getTopParent().getModifyingObject() == null) {
 			if (curTool == EditorTileTool.PENCIL) {
-				if (Mouse.isButtonDown(0)) { world.setTileAt((int) worldXPos, (int) worldYPos, hotbar.getCurrent()); }
-				else if (Mouse.isButtonDown(1)) { world.setTileAt((int) worldXPos, (int) worldYPos, null); }
+				if (Mouse.isButtonDown(0)) {
+					WorldTile t = hotbar.getCurrent();
+					if (t != null && t.isWildCard()) {
+						GameTexture tex = t.getTexture().getRandVariant();
+						System.out.println(tex.getChildID());
+						t.setTexture(tex);
+					}
+					world.setTileAt((int) worldXPos, (int) worldYPos, t);
+				}
+				else if (Mouse.isButtonDown(1)) {
+					world.setTileAt((int) worldXPos, (int) worldYPos, null);
+				}
 			}
 		}
 	}
@@ -287,12 +350,20 @@ public class MapEditorScreen extends GameScreen {
 		topHeader.updateCurTool(curTool);
 	}
 	
+	public WorldTile getTileHoveringOver() {
+		if (world != null) {
+			return world.getTileAt(worldXPos, worldYPos);
+		}
+		return null;
+	}
+	
 	public boolean shouldDrawMouse() { return drawingMousePos; }
 	
 	public EditorScreenTopHeader getTopHeader() { return topHeader; }
 	public EditorScreenBotHeader getBotHeader() { return botHeader; }
-	public EditorTileHotbar getHotbar() { return hotbar; }
+	public EditorHotbar getHotbar() { return hotbar; }
 	public EditorTileToolList getTileToolList() { return tileTools; }
+	public EditorMiniMap getMiniMap() { return miniMap; }
 	
 	//---------------------------------
 	//         Public Setters

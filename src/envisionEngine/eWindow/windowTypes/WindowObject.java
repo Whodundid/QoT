@@ -21,7 +21,7 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventObjects;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventRedraw;
-import gameSystems.input.Mouse;
+import envisionEngine.input.Mouse;
 import main.Game;
 import util.mathUtil.NumUtil;
 import util.openGL_Util.GLSettings;
@@ -360,8 +360,8 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	//mouse checks
 	@Override public boolean isMouseOnObjEdge(int mX, int mY) { return checkDraw() && getEdgeAreaMouseIsOn() != ScreenLocation.out; }
 	@Override public ScreenLocation getEdgeAreaMouseIsOn() { return StaticWindowObject.getEdgeAreaMouseIsOn(this, mX, mY); }
-	@Override public void mouseEntered(int mX, int mY) { postEvent(new EventMouse(this, mX, mY, -1, MouseType.Entered)); }
-	@Override public void mouseExited(int mX, int mY) { postEvent(new EventMouse(this, mX, mY, -1, MouseType.Exited)); }
+	@Override public void mouseEntered(int mX, int mY) { postEvent(new EventMouse(this, mX, mY, -1, MouseType.ENTERED)); }
+	@Override public void mouseExited(int mX, int mY) { postEvent(new EventMouse(this, mX, mY, -1, MouseType.EXITED)); }
 	@Override public boolean isMouseInside() { return StaticWindowObject.isMouseInside(this, Mouse.getMx(), Mouse.getMy()); }
 	@Override public boolean isMouseOver() { return isMouseInside() && this.equals(getTopParent().getHighestZObjectUnderMouse()); }
 	@Override public WindowObject setBoundaryEnforcer(EDimension dimIn) { boundaryDimension = new EDimension(dimIn); return this; }

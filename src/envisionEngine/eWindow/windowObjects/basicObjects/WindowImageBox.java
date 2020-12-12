@@ -82,7 +82,7 @@ public class WindowImageBox extends WindowObject {
 				}
 				
 				if (singleImage) {
-					//bindTexture(images.get(0));
+					bindTexture(images.get(0));
 				}
 				else {
 					if (System.currentTimeMillis() - timeSince >= updateInterval) {
@@ -90,7 +90,7 @@ public class WindowImageBox extends WindowObject {
 						if (curImage == images.size()) { curImage = 0; }
 						timeSince = System.currentTimeMillis();
 					}
-					//bindTexture(images.get(curImage));
+					bindTexture(images.get(curImage));
 				}
 				
 				GLSettings.color(2.0f, 2.0f, 2.0f, 2.0f);
@@ -99,7 +99,7 @@ public class WindowImageBox extends WindowObject {
 				zoomY = 10 * ((h / w) * zoom);
 				
 				scissor(startX + 1, startY + 1, endX - 0.5, endY - 0.5);
-				//drawTexture(posX - (zoomX / 2), posY - (zoomY / 2), w + zoomX, h + zoomY);
+				drawTexture(posX - (zoomX / 2), posY - (zoomY / 2), w + zoomX, h + zoomY);
 				endScissor();
 				
 				GLSettings.disableAlpha();

@@ -21,6 +21,7 @@ public class WorldTiles {
 	public static final WorldTile sand = new Sand();
 	public static final WorldTile stone = new Stone();
 	public static final WorldTile water = new Water();
+	public static final WorldTile wood = new Wood();
 	
 	static {
 		tiles.add(crackedDirt);
@@ -33,6 +34,7 @@ public class WorldTiles {
 		tiles.add(sand);
 		tiles.add(stone);
 		tiles.add(water);
+		tiles.add(wood);
 	}
 	
 	public static WorldTile getTileFromName(String tileName) { return getTileFromName(tileName, 0); }

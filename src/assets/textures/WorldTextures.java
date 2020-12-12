@@ -17,6 +17,7 @@ public class WorldTextures {
 	public static final GameTexture sand = new GameTexture("Sand", "bin/textures/world/sand.png");
 	public static final GameTexture water = new GameTexture("Water", "bin/textures/world/water.png");
 	public static final GameTexture stone = new GameTexture("Stone", "bin/textures/world/stone.png");
+	public static final GameTexture wood = new GameTexture("Wood", "bin/textures/world/wood.png");
 	
 	public static void registerTextures(TextureSystem systemIn) {
 		systemIn.registerTexture(grass);
@@ -24,6 +25,14 @@ public class WorldTextures {
 		systemIn.registerTexture(sand);
 		systemIn.registerTexture(water);
 		systemIn.registerTexture(stone);
+		systemIn.registerTexture(wood);
+		
+		textures.add(grass);
+		textures.add(dirt);
+		textures.add(sand);
+		textures.add(water);
+		textures.add(stone);
+		textures.add(wood);
 	}
 	
 	public static GameTexture getTextureFromName(String nameIn) {

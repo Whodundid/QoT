@@ -11,7 +11,7 @@ import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectEventType;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventModify;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventObjects;
-import gameSystems.input.Keyboard;
+import envisionEngine.input.Keyboard;
 import java.util.Iterator;
 import main.Game;
 import util.mathUtil.NumUtil;
@@ -86,7 +86,7 @@ public class WindowScrollList extends WindowObject {
 				GLSettings.enableBlend();
 				
 				//draw list contents scissored
-				scissor(startX + 1, startY + 1.0, endX - (isVScrollDrawn() ? verticalScroll.width + 2 : 1), endY - (isHScrollDrawn() ? horizontalScroll.height + 2 : 1));
+				scissor(startX + 1, startY + 1.0, endX - (isVScrollDrawn() ? verticalScroll.width + 2 : 1), endY - (isHScrollDrawn() ? horizontalScroll.height + 2 : 0));
 				drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor); //draw background
 				
 				if (drawListObjects) {

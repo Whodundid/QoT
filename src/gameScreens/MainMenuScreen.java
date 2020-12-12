@@ -5,7 +5,6 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.MapMenuScreen;
 import gameSystems.gameRenderer.GameScreen;
-import java.io.File;
 import main.Game;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
@@ -59,7 +58,7 @@ public class MainMenuScreen extends GameScreen {
 			//w.addEntity(Game.thePlayer);
 			//Game.loadWorld(w);
 			//Game.displayScreen(new GamePlayScreen(), this);
-			Game.displayScreen(new WorldRenderTest(new File("test.twld")), this);
+			Game.displayScreen(new WorldSelectScreen(), this);
 			Songs.stopSong(Songs.theme);
 		}
 		

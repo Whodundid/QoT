@@ -105,11 +105,22 @@ public abstract class Entity extends GLObject {
 			double cEY = endY - (height - collisionBox.endY);
 			
 			EDimension col = EDimension.of(cSX, cSY, cEX, cEY);
+			//System.out.println(col);
+			//col = col.expand(1);
 			
-			int movingToSX = (int) ((cSX - ((left) ? 1 : 0)) / w);
-			int movingToSY = (int) ((cSY - ((up) ? 1 : 0)) / h);
-			int movingToEX = (int) ((cEX + ((right) ? -1 : -1)) / w);
-			int movingToEY = (int) ((cEY + ((down) ? 0 : -1)) / h);
+			int lVal = (left) ? -1 : 0;
+			int uVal = (up) ? -1 : 0;
+			int rVal = (right) ? 0 : -1;
+			int dVal = (down) ? 0 : -1;
+			
+			int movingToSX = (int) ((col.startX + lVal) / w);
+			int movingToSY = (int) ((col.startY + uVal) / h);
+			int movingToEX = (int) ((col.endX + rVal) / w);
+			int movingToEY = (int) ((col.endY + dVal) / h);
+			
+			//col.endX += 1;
+			//col.endY += 1;
+			//col = col.contract(1);
 
 			movingToSX = NumUtil.clamp(movingToSX, 0, world.getWidth() - 1);
 			movingToSY = NumUtil.clamp(movingToSY, 0, world.getHeight() - 1);
@@ -121,10 +132,10 @@ public abstract class Entity extends GLObject {
 			WorldTile bl = world.getTileAt(movingToSX, movingToEY);
 			WorldTile br = world.getTileAt(movingToEX, movingToEY);
 			
-			boolean tlBlock = tl.blocksMovement();
-			boolean trBlock = tr.blocksMovement();
-			boolean blBlock = bl.blocksMovement();
-			boolean brBlock = br.blocksMovement();
+			boolean tlBlock = (tl == null) || tl.blocksMovement();
+			boolean trBlock = (tr == null) || tr.blocksMovement();
+			boolean blBlock = (bl == null) || bl.blocksMovement();
+			boolean brBlock = (br == null) || br.blocksMovement();
 			
 			double sX = movingToSX * w;
 			double sY = movingToSY * h;
@@ -160,16 +171,16 @@ public abstract class Entity extends GLObject {
 					int bVal = (int) ((col.startY + y) - trDim.endY);
 					//System.out.println("u A: " + aVal + " " + bVal);
 					
-					clearUp = (col.startY > tlDim.endY && col.startY > trDim.endY);
+					clearUp = (col.startY > tlDim.endY || col.startX >= tlDim.endX) && (col.startY > trDim.endY || col.endX <= trDim.startX);
 				}
 				else {
 					//System.out.println("u B: " + col.startY + " > " + tlDim.endY);
-					clearUp = (col.startY > tlDim.endY);
+					clearUp = (col.startY > tlDim.endY || col.startX >= tlDim.endX);
 				}
 			}
 			else if (trBlock) {
-				//System.out.println("u C: " + col.startY + " > " + trDim.endY);
-				clearUp = (col.startY > trDim.endY);
+				//System.out.println("u C: " + col.startY + " > " + trDim.endY + " || " + col.endX + " < " + trDim.startX);
+				clearUp = (col.startY > trDim.endY || col.endX <= trDim.startX);
 			}
 			
 			//clearLeft
@@ -208,16 +219,16 @@ public abstract class Entity extends GLObject {
 			if (trBlock) {
 				if (brBlock) {
 					//System.out.println("r A: " + col.endX + " < " + trDim.startX + " && " + col.endX + " < " + brDim.startX);
-					clearRight = (col.endX < trDim.startX && col.endX < brDim.startX);
+					clearRight = (col.endX < trDim.startX || col.startY >= trDim.endY) && (col.endX < brDim.startX || col.endY <= brDim.startY);
 				}
 				else {
-					//System.out.println("r B: " + col.endX + " < " + trDim.startX);
-					clearRight = (col.endX < trDim.startX);
+					//System.out.println("r B: " + col.endX + " < " + trDim.startX + " || " + col.startY + " >= " + trDim.endY);
+					clearRight = (col.endX < trDim.startX || col.startY >= trDim.endY);
 				}
 			}
 			else if (brBlock) {
-				//System.out.println("r C: " + col.endX + " < " + brDim.startX);
-				clearRight = (col.endX < brDim.startX);
+				//System.out.println("r C: " + col.endX + " < " + brDim.startX + " || " + col.endY + " <= " + brDim.startY);
+				clearRight = (col.endX < brDim.startX || col.endY <= brDim.startY);
 			}
 			
 			//System.out.println("   [" + clearUp + "]");
@@ -235,10 +246,10 @@ public abstract class Entity extends GLObject {
 				startY += y;
 				endY += y;
 				
-				startX = (int) NumUtil.clamp(startX, 0, world.getPixelWidth() - width);
-				startY = (int) NumUtil.clamp(startY, 0, world.getPixelHeight() - height);
-				endX = NumUtil.clamp(endX, width, world.getPixelWidth());
-				endY = NumUtil.clamp(endY, height, world.getPixelHeight());
+				startX = (int) NumUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
+				startY = (int) NumUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
+				endX = (int) NumUtil.clamp(endX, width - collisionBox.startX, world.getPixelWidth() + (width - collisionBox.endX));
+				endY = (int) NumUtil.clamp(endY, height - collisionBox.startY, world.getPixelHeight() + (height - collisionBox.endY));
 				
 				midX = startX + (width / 2);
 				midY = startY + (height / 2);
@@ -246,12 +257,8 @@ public abstract class Entity extends GLObject {
 				double valX = (startX / (world.getTileWidth() * world.getZoom()));
 				double valY = (startY / (world.getTileHeight() * world.getZoom()));
 				
-				//System.out.println(startX + " " + startY);
-				
 				worldX = (int) valX;
 				worldY = (int) valY;
-				
-				//System.out.println(worldX + " " + worldY);
 				
 				worldX = NumUtil.clamp(worldX, 0, world.getWidth() - 1);
 				worldY = NumUtil.clamp(worldY, 0, world.getHeight() - 1);

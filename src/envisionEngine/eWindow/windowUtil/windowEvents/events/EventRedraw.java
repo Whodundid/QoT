@@ -9,7 +9,7 @@ import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.EventType;
 public class EventRedraw extends ObjectEvent {
 	
 	public EventRedraw(IWindowObject parentObjectIn) {
-		super(parentObjectIn, EventType.Redraw);
+		super(parentObjectIn, EventType.REDRAW);
 	}
 	
 }

@@ -5,6 +5,7 @@ import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.editorScreen.MapEditorScreen;
 import gameSystems.fontRenderer.FontRenderer;
+import gameSystems.mapSystem.worldTiles.WorldTile;
 import main.Game;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
@@ -49,7 +50,9 @@ public class EditorScreenBotHeader extends WindowObject {
 		double mouseX = worldX + 14;
 		
 		if (editor.shouldDrawMouse()) {
-			mouseX = drawString("Mouse: [" + editor.getWorldMX() + "," + editor.getWorldMY() + "]", worldX + 14, endY - FontRenderer.FONT_HEIGHT);
+			WorldTile tile = editor.getTileHoveringOver();
+			String tileName = (tile != null) ? " " + tile.getName() : " Void";
+			mouseX = drawString("Mouse: [" + editor.getWorldMX() + "," + editor.getWorldMY() + "]" + tileName, worldX + 14, endY - FontRenderer.FONT_HEIGHT);
 			drawRect(mouseX + 6, startY, mouseX + 8, endY, EColors.black);
 		}
 		
@@ -65,6 +68,10 @@ public class EditorScreenBotHeader extends WindowObject {
 		drawString(zoomStr, incX.startX - xDist - 24 - zoomX, endY - FontRenderer.FONT_HEIGHT);
 		
 		drawRect(incX.startX - xDist - 16, startY, incX.startX - xDist - 14, endY, EColors.black);
+		
+		if (editor.getWorld() != null) {
+			drawStringC(editor.getWorld().getName(), midX, midY - FontRenderer.FONT_HEIGHT / 2 + 3);
+		}
 		
 		super.drawObject(mXIn, mYIn);
 	}

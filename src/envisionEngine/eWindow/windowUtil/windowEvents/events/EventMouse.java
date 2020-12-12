@@ -14,7 +14,7 @@ public class EventMouse extends ObjectEvent {
 	int button = -1;
 	
 	public EventMouse(IWindowObject parentObjectIn, int mXIn, int mYIn, int buttonIn, MouseType typeIn) {
-		super(parentObjectIn, EventType.Mouse);
+		super(parentObjectIn, EventType.MOUSE);
 		mX = mXIn;
 		mY = mYIn;
 		button = buttonIn;

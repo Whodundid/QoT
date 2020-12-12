@@ -5,7 +5,7 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.FocusType;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.MouseType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
-import gameSystems.input.Mouse;
+import envisionEngine.input.Mouse;
 import java.util.Iterator;
 import util.EUtil;
 import util.mathUtil.NumUtil;
@@ -123,7 +123,7 @@ public class WindowTextArea extends WindowScrollList {
 	
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
-		postEvent(new EventMouse(this, mX, mY, button, MouseType.Pressed));
+		postEvent(new EventMouse(this, mX, mY, button, MouseType.PRESSED));
 		listClick(mXIn, mYIn, button);
 	}
 	

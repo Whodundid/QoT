@@ -7,8 +7,8 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowUtil.windowEvents.ObjectEvent;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.MouseType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
-import gameSystems.gameRenderer.GameRenderer;
-import gameSystems.input.Mouse;
+import envisionEngine.input.Mouse;
+import gameSystems.gameRenderer.WorldRenderer;
 import gameSystems.textureSystem.GameTexture;
 import java.util.List;
 import util.storageUtil.StorageBox;
@@ -30,7 +30,7 @@ public class RightClickMenu extends ActionWindowParent {
 	public int separatorLineColor = 0xff000000;
 	public int borderColor = 0xff000000;
 	
-	public RightClickMenu() { this(GameRenderer.instance); }
+	public RightClickMenu() { this(WorldRenderer.instance); }
 	public RightClickMenu(IWindowObject obj) {
 		super(obj);
 		setDimensions(Mouse.getMx(), Mouse.getMy(), 125, 15);
@@ -220,7 +220,7 @@ public class RightClickMenu extends ActionWindowParent {
 	@Override
 	public void onEvent(ObjectEvent e) {
 		if (e instanceof EventMouse) {
-			if (((EventMouse) e).getMouseType() == MouseType.Pressed) {
+			if (((EventMouse) e).getMouseType() == MouseType.PRESSED) {
 				if (!isMouseInside()) {
 					if (!dontCloseOnPress) {
 						getTopParent().unregisterListener(this);

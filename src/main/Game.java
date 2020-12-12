@@ -10,15 +10,15 @@ import envisionEngine.eWindow.windowTypes.OverlayWindow;
 import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
+import envisionEngine.input.Keyboard;
+import envisionEngine.input.Mouse;
+import envisionEngine.input.WindowResizeListener;
 import envisionEngine.terminal.TerminalHandler;
 import envisionEngine.terminal.window.ETerminal;
 import gameScreens.MainMenuScreen;
 import gameSystems.fontRenderer.FontRenderer;
-import gameSystems.gameRenderer.GameRenderer;
+import gameSystems.gameRenderer.WorldRenderer;
 import gameSystems.gameRenderer.GameScreen;
-import gameSystems.input.Keyboard;
-import gameSystems.input.Mouse;
-import gameSystems.input.WindowResizeListener;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.textureSystem.TextureSystem;
 import java.io.File;
@@ -51,7 +51,7 @@ public class Game {
 	private static WindowResizeListener resizeListener;
 	private static FontRenderer fontRenderer;
 	private static TextureSystem textureSystem;
-	private static GameRenderer gameRenderer;
+	private static WorldRenderer gameRenderer;
 	private static TerminalHandler terminalHandler;
 	
 	private static double gameScale = 1;
@@ -127,7 +127,7 @@ public class Game {
 		resizeListener = WindowResizeListener.getInstance();
 		textureSystem = TextureSystem.getInstance();
 		fontRenderer = FontRenderer.getInstance();
-		gameRenderer = GameRenderer.getInstance();
+		gameRenderer = WorldRenderer.getInstance();
 		terminalHandler = TerminalHandler.getInstance();
 		
 		GLFW.glfwSetKeyCallback(handle, keyboard);
@@ -316,6 +316,16 @@ public class Game {
 					currentScreen.initScreen();
 					currentScreen.initObjects();
 				}
+			}
+		}
+		else {
+			GameScreen old = currentScreen;
+			currentScreen = screenIn;
+			
+			if (old != null) {
+				old.close();
+				old.onClosed();
+				old.onScreenClosed();
 			}
 		}
 		
@@ -540,7 +550,7 @@ public class Game {
 	/** Returns this game's central texture handling system. */
 	public static TextureSystem getTextureSystem() { return textureSystem; }
 	/** Returns this game's central object rendering system. */
-	public static GameRenderer getGameRenderer() { return gameRenderer; }
+	public static WorldRenderer getGameRenderer() { return gameRenderer; }
 	/** Returns this game's central terminal command handler. */
 	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
 	

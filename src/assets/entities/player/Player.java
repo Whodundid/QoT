@@ -39,7 +39,7 @@ public class Player extends Entity {
 		double cEX = endX - 20;
 		double cEY = endY;
 		
-		setCollisionBox(startX + 20, startY + 20, endX - 20, endY);
+		setCollisionBox(startX + 22, endY - 10, endX - 22, endY);
 		sprite = EntityTextures.player;
 	}
 	

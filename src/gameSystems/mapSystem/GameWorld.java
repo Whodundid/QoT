@@ -20,8 +20,11 @@ public class GameWorld {
 	protected int width, height;
 	protected int tileWidth, tileHeight;
 	protected double zoom = 1;
-	protected WorldTile[][] worldData;
-	protected EArrayList<Entity> entityData;
+	protected WorldTile[][] worldData = new WorldTile[0][0];
+	protected EArrayList<Entity> entityData = new EArrayList();
+	//protected EArrayList<EScript> globalScriptData;
+	protected EArrayList<Region> regionData = new EArrayList();
+	protected EArrayList<Region> highlightedRegions = new EArrayList();
 	
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
@@ -62,6 +65,22 @@ public class GameWorld {
 	// Methods
 	//---------
 	
+	public void highlightRegion(Region regionIn) {
+		highlightedRegions.add(regionIn);
+	}
+	
+	public void addRegion(Region regionIn) {
+		regionData.add(regionIn);
+	}
+	
+	public void entityEnteredRegion(Region region, Entity ent, int xIn, int yIn) {
+		
+	}
+	
+	public void entityExitedRegion(Region region, Entity ent, int xIn, int yIn) {
+		
+	}
+	
 	public Entity addEntity(Entity ent) {
 		entityData.add(ent);
 		ent.world = this;
@@ -77,8 +96,6 @@ public class GameWorld {
 		int bot = NumUtil.clamp(yIn + rangeY, top, height - 1);
 		int w = right - left;
 		int h = bot - top;
-		
-		//System.out.println(left + " " + top + " " + right + " " + bot + " : [" + w + ", " + h + "]");
 		
 		//catch negative dimensions
 		if (w < 0 || h < 0) { return new WorldTile[0][0]; }
@@ -150,19 +167,17 @@ public class GameWorld {
 		}
 	}
 	
-	public synchronized boolean loadWorld() {
-		return loadWorldFromFile(new File(Game.settings.getEditorWorldsDir(), name));
-	}
-	
+	public synchronized boolean loadWorld() { return loadWorldFromFile(new File(Game.settings.getEditorWorldsDir(), name)); }
 	public synchronized boolean loadWorldFromFile(File worldFile) {
 		String worldName = worldFile.getName();
 		if (!worldName.endsWith(".twld")) { worldName += ".twld"; }
 		worldFile = new File(Game.settings.getEditorWorldsDir(), worldName);
 		
-		//System.out.println(worldFile + " " + worldFile.exists());
-		
 		if (worldFile != null && worldFile.exists()) {
 			try (Scanner reader = new Scanner(worldFile)) {
+				
+				EArrayList<Entity> entities = new EArrayList();
+				EArrayList<Region> regions = new EArrayList();
 				
 				String mapName = reader.nextLine();
 				int mapWidth = reader.nextInt();
@@ -182,17 +197,30 @@ public class GameWorld {
 								int tileID = -1;
 								int childID = 0;
 								String[] parts = tile.split(":");
-								tileID = Integer.parseInt(parts[0]);
-								if (parts.length > 1) { childID = Integer.parseInt(parts[1]); }
-								
-								WorldTile t = WorldTile.getTileFromID(tileID, childID);
-								if (parts.length == 0) { t.setWildCard(true); }
-								data[i][j] = t;
+								if (!("n".equals(parts[0]) || "null".equals(parts[0]))) {
+									tileID = Integer.parseInt(parts[0]);
+									if (parts.length > 1) { childID = Integer.parseInt(parts[1]); }
+									
+									WorldTile t = WorldTile.getTileFromID(tileID, childID);
+									if (parts.length == 1) { t.setWildCard(true); }
+									data[i][j] = t;
+								}
+								else {
+									data[i][j] = null;
+								}
 							}
 						}
 						else {
 							data[i][j] = null;
 						}
+					}
+				}
+				
+				while (reader.hasNextLine()) {
+					String line = reader.nextLine();
+					if (line.startsWith("r")) {
+						Region r = Region.parseRegion(this, line);
+						if (r != null) { regions.add(r); }
 					}
 				}
 				
@@ -202,7 +230,8 @@ public class GameWorld {
 				tileWidth = mapTileWidth;
 				tileHeight = mapTileHeight;
 				worldData = data;
-				entityData = new EArrayList();
+				regionData = regions;
+				entityData = entities;
 				
 				fileLoaded = true;
 				//System.out.println("fileLoaded: " + fileLoaded);
@@ -225,20 +254,27 @@ public class GameWorld {
 			
 			PrintWriter writer = new PrintWriter(fileIn, "UTF-8");
 			
+			//write map name and dimensions
 			writer.println(name);
 			writer.println(width + " " + height + " " + tileWidth + " " + tileHeight);
 			
+			//write map data
 			for (int i = 0; i < width; i++) {
 				for (int j = 0; j < height; j++) {
 					WorldTile t = worldData[i][j];
 					
-					if (t == null) { writer.println("null"); }
+					if (t == null) { writer.print("n "); }
 					else {
 						GameTexture tex = t.getTexture();
 						writer.print(t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + " ");
 					}
 				}
 				writer.println();
+			}
+			
+			//write region data
+			for (Region r : regionData) {
+				writer.println("r " + r.getName() + " " + r.getColor() + " " + r.startX + " " + r.startY + " " + r.endX + " " + r.endY);
 			}
 			
 			writer.close();
@@ -263,6 +299,8 @@ public class GameWorld {
 	// Getters
 	//---------
 	
+	public EArrayList<Region> getHighlightedRegions() { return highlightedRegions; }
+	public EArrayList<Region> getRegionData() { return regionData; }
 	public boolean isFileLoaded() { return fileLoaded; }
 	public boolean isLoaded() { return loaded; }
 	public String getName() { return name; }

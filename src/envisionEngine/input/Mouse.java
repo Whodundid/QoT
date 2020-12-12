@@ -1,6 +1,6 @@
-package gameSystems.input;
+package envisionEngine.input;
 
-import gameSystems.gameRenderer.GameRenderer;
+import gameSystems.gameRenderer.WorldRenderer;
 import main.Game;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -72,7 +72,7 @@ public class Mouse extends GLFWMouseButtonCallback {
 				}
 			}
 			
-			GameRenderer r = Game.getGameRenderer();
+			WorldRenderer r = Game.getGameRenderer();
 			if (r != null) {
 				switch (action) {
 				case 0: r.mouseReleased(mXIn, mYIn, button); break;

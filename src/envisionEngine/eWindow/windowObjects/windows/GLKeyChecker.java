@@ -2,7 +2,7 @@ package envisionEngine.eWindow.windowObjects.windows;
 
 import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
-import gameSystems.input.Keyboard;
+import envisionEngine.input.Keyboard;
 import util.renderUtil.EColors;
 
 public class GLKeyChecker extends WindowParent {

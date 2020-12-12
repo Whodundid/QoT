@@ -3,9 +3,9 @@ package envisionEngine.terminal.window.termParts;
 import envisionEngine.eWindow.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.EventType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
+import envisionEngine.input.Keyboard;
 import envisionEngine.terminal.window.ETerminal;
 import envisionEngine.terminal.window.TerminalRCM;
-import gameSystems.input.Keyboard;
 import main.Game;
 import util.renderUtil.CenterType;
 import util.renderUtil.EColors;
@@ -51,7 +51,7 @@ public class TerminalTextLine extends TextAreaLine {
 	@Override
 	public void onFocusGained(EventFocus eventIn) {
 		super.onFocusGained(eventIn);
-		if (eventIn.getEventType() == EventType.Mouse) {
+		if (eventIn.getEventType() == EventType.MOUSE) {
 			if (eventIn.getActionCode() == 1) {
 				Game.displayWindow(new TerminalRCM(this), CenterType.cursorCorner);
 			}

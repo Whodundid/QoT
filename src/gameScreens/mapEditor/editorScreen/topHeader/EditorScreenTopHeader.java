@@ -4,6 +4,7 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowObjects.basicObjects.WindowLabel;
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
+import gameScreens.mapEditor.editorScreen.EditorSelectionList;
 import gameScreens.mapEditor.editorScreen.MapEditorScreen;
 import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
 import gameScreens.mapEditor.editorScreen.windows.EditorOptionsWindow;
@@ -13,7 +14,7 @@ import util.renderUtil.EColors;
 public class EditorScreenTopHeader extends WindowObject {
 	
 	MapEditorScreen editor;
-	WindowButton options, map, scripts;
+	WindowButton options, map, view, scripts, assets, regions;
 	WindowLabel tileToolLabel;
 	
 	BrushSettings brushSettings;
@@ -34,7 +35,10 @@ public class EditorScreenTopHeader extends WindowObject {
 	public void initObjects() {
 		options = new WindowButton(this, startX + 3, startY + 3, 140, 28, "Options");
 		map = new WindowButton(this, options.endX + 3, startY + 3, 140, 28, "Map");
-		scripts = new WindowButton(this, map.endX + 3, startY + 3, 140, 28, "Scripts");
+		view = new WindowButton(this, map.endX + 3, startY + 3, 140, 28, "View");
+		scripts = new WindowButton(this, view.endX + 3, startY + 3, 140, 28, "Scripts");
+		assets = new WindowButton(this, scripts.endX + 3, startY + 3, 140, 28, "Assets");
+		regions = new WindowButton(this, assets.endX + 3, startY + 3, 140, 28, "Regions");
 		
 		tileToolLabel = new WindowLabel(this, startX + 10, options.endY + 7, "" + curTool);
 		
@@ -42,7 +46,7 @@ public class EditorScreenTopHeader extends WindowObject {
 		lineSettings = new LineSettings(this, tileToolLabel.endX + 12, options.endY + 4, (endY - 1) - (options.endY + 4));
 		shapeSettings = new ShapeSettings(this, tileToolLabel.endX + 12, options.endY + 4, (endY - 1) - (options.endY + 4));
 		
-		addObject(options, map, scripts);
+		addObject(options, map, view, scripts, assets, regions);
 		addObject(tileToolLabel);
 		
 		addObject(brushSettings, lineSettings, shapeSettings);
@@ -67,6 +71,7 @@ public class EditorScreenTopHeader extends WindowObject {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == options) { Game.displayWindow(new EditorOptionsWindow(editor)); }
+		if (object == assets) { Game.displayWindow(new EditorSelectionList(editor)); }
 	}
 	
 	public void updateCurTool(EditorTileTool tool) {

@@ -13,8 +13,8 @@ import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventKeyboard;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
-import gameSystems.input.Keyboard;
-import gameSystems.input.Mouse;
+import envisionEngine.input.Keyboard;
+import envisionEngine.input.Mouse;
 import java.util.Deque;
 import main.Game;
 import util.EUtil;
@@ -34,7 +34,7 @@ public class StaticTopParent extends EGui {
 	
 	/** Notify the focused object that a mouse button was just pressed. */
 	public static void mousePressed(ITopParent objIn, int mX, int mY, int button, Deque<EventFocus> focusQueue) {
-		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.Pressed)); //post an event
+		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.PRESSED)); //post an event
 		IWindowObject underMouse = objIn.getHighestZObjectUnderMouse(); //get the highest object under the mouse
 		
 		if (objIn.getFocusLockObject() != null) { //first check if there is a focusLock
@@ -88,7 +88,7 @@ public class StaticTopParent extends EGui {
 	
 	/** Notify the focused object that a mouse button was just released. */
 	public static void mouseReleased(ITopParent objIn, int mX, int mY, int button) {
-		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.Released)); //post an event
+		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.RELEASED)); //post an event
 		
 		//clear the modifying object if it the modify type was MoveAlreadyClicked -- mainly used for headers to stop moving when the mouse is released
 		if (objIn.getModifyingObject() != null && objIn.getModifyType() == ObjectModifyType.MoveAlreadyClicked) {
@@ -109,7 +109,7 @@ public class StaticTopParent extends EGui {
 	
 	/** Notify any objects under the cursor that the mouse was just scrolled. */
 	public static void mouseScrolled(ITopParent objIn, int mX, int mY, int change) {
-		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.Scrolled));
+		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.SCROLLED));
 		
 		if (objIn.getHighestZObjectUnderMouse() != null) { //if there are actually any objects under the mouse
 			IWindowObject obj = objIn.getHighestZObjectUnderMouse();

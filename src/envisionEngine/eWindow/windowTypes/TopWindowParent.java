@@ -10,7 +10,7 @@ import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.FocusType;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventRedraw;
-import gameSystems.input.Mouse;
+import envisionEngine.input.Mouse;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import main.Game;

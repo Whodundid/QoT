@@ -16,14 +16,14 @@ public class EventFocus extends ObjectEvent {
 	int mX = -1, mY = -1;
 	
 	public EventFocus(IWindowObject parentObjectIn, IWindowObject eventObjectIn, FocusType typeIn) {
-		super(parentObjectIn, EventType.Focus);
+		super(parentObjectIn, EventType.FOCUS);
 		parentObject = parentObjectIn;
 		eventObject = eventObjectIn;
 		type = typeIn;
 	}
 	
 	public EventFocus(IWindowObject parentObjectIn, IWindowObject eventObjectIn, FocusType typeIn, int actionCodeIn, int mXIn, int mYIn) {
-		super(parentObjectIn, EventType.Focus);
+		super(parentObjectIn, EventType.FOCUS);
 		parentObject = parentObjectIn;
 		eventObject = eventObjectIn;
 		type = typeIn;

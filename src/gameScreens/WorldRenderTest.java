@@ -1,20 +1,15 @@
 package gameScreens;
 
 import assets.entities.Entity;
-import assets.entities.enemy.types.Goblin;
-import assets.entities.enemy.types.Thyrah;
-import assets.entities.enemy.types.TrollBoar;
-import assets.entities.enemy.types.Whodundid;
 import assets.entities.player.Player;
 import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
+import envisionEngine.input.Keyboard;
 import gameScreens.mapEditor.NewMapCreatorScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.GameScreen;
-import gameSystems.input.Keyboard;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
-import gameSystems.shopSystem.WhodundidsBrother;
 import java.io.File;
 import java.util.Stack;
 import main.Game;
@@ -40,9 +35,9 @@ public class WorldRenderTest extends GameScreen {
 	int oldWorldX, oldWorldY;
 	
 	boolean firstPress = false;
-	boolean drawPosBox = true;
+	boolean drawPosBox = false;
 	boolean drawEntityHitboxes = true;
-	boolean drawEntityOutlines = true;
+	boolean drawEntityOutlines = false;
 	
 	
 	boolean mouseInMap = false;
@@ -92,6 +87,7 @@ public class WorldRenderTest extends GameScreen {
 		checkArrowPress();
 		
 		if (world == null) { drawStringC("Failed to load!", midX, midY); }
+		else if (world.getWidth() < 0 || world.getHeight() < 0 || world.getTileWidth() <= 0 || world.getTileHeight() <= 0) { drawStringC("Bad world dimensions!", midX, midY); }
 		else {
 			
 			int w = (int) (world.getTileWidth() * world.getZoom());
@@ -114,6 +110,15 @@ public class WorldRenderTest extends GameScreen {
 			
 			
 			//endScissor();
+		}
+		
+		if (world != null) {
+			int tW = (int) (FontRenderer.getInstance().getStringWidth(world.getName()) / 2);
+			drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
+			drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
+			drawStringC(world.getName(), midX, 15);
+			
+			drawString("Dims: " + world.getWidth() + " " + world.getHeight(), reload.startX + 10, reload.endY + 60);
 		}
 		
 		Player p = Game.thePlayer;
@@ -208,7 +213,7 @@ public class WorldRenderTest extends GameScreen {
 			//distY = (game.getHeight() / world.getTileHeight()) / 2 + 2;
 			
 			Entity e = world.addEntity(Game.getPlayer());
-			e.setWorldPos(world.getWidth() / 2, world.getHeight() / 2 - 5);
+			e.setWorldPos(0, 0);
 		}
 		else if (world != null) {
 			mapFile = world.getWorldFile();
@@ -230,9 +235,7 @@ public class WorldRenderTest extends GameScreen {
 	}
 	
 	private void drawMap(int x, int y, int w, int h) {
-		
 		Player p = Game.thePlayer;
-		
 		double offsetX = (p.startX % w);
 		double offsetY = (p.startY % h);
 		
@@ -242,8 +245,8 @@ public class WorldRenderTest extends GameScreen {
 				WorldTile t = tiles[i][j];
 				if (t != null) {
 					
-					double drawPosX = (x - offsetX);
-					double drawPosY = (y - offsetY);
+					double drawPosX = x + ((p.startX < -world.getTileWidth()) ? Math.abs(p.startX) : -offsetX);
+					double drawPosY = y + ((p.startY < -world.getTileHeight()) ? Math.abs(p.startY) : -offsetY);
 					
 					if (p.worldX < distX) { drawPosX += (distX - p.worldX) * w; }
 					if (p.worldY < distY) { drawPosY += (distY - p.worldY) * h; }
@@ -254,7 +257,6 @@ public class WorldRenderTest extends GameScreen {
 				}
 			}
 		}
-		
 	}
 	
 	private void drawPosBox(int x, int y, int w, int h) {
@@ -335,13 +337,6 @@ public class WorldRenderTest extends GameScreen {
 	}
 	
 	private boolean checkMousePos(int x, int y, int w, int h, int mXIn, int mYIn) {
-		int tW = (int) (FontRenderer.getInstance().getStringWidth(world.getName()) / 2);
-		drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
-		drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
-		drawStringC(world.getName(), midX, 15);
-		
-		drawString("Dims: " + world.getWidth() + " " + world.getHeight(), reload.startX + 10, reload.endY + 60);
-		
 		double offsetX = (Game.thePlayer.startX % w);
 		double offsetY = (Game.thePlayer.startY % h);
 		

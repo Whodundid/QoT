@@ -34,7 +34,7 @@ public class WorldTile {
 	public TileMaterial getMaterial() { return material; }
 	public int getNumVariants() { return numVariants; }
 	
-	public GameTexture getTexture() { return (tex != null && wildCardTexture) ? tex.getRandVariant() : tex; }
+	public GameTexture getTexture() { return tex; }
 	
 	public String getAdditionalValues() {
 		String r = "";

@@ -1,4 +1,4 @@
-package gameSystems.input;
+package envisionEngine.input;
 
 import main.Game;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;

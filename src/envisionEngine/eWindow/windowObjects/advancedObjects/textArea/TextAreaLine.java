@@ -11,8 +11,8 @@ import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.MouseType;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
-import gameSystems.input.Keyboard;
-import gameSystems.input.Mouse;
+import envisionEngine.input.Keyboard;
+import envisionEngine.input.Mouse;
 import main.Game;
 import util.EUtil;
 import util.renderUtil.EColors;
@@ -214,7 +214,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	
 	@Override 
 	public void mousePressed(int mXIn, int mYIn, int button) {
-		postEvent(new EventMouse(this, mX, mY, button, MouseType.Pressed));
+		postEvent(new EventMouse(this, mX, mY, button, MouseType.PRESSED));
 		
 		int mX = mXIn;
 		int mY = mYIn;

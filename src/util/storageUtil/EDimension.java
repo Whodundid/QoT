@@ -95,6 +95,8 @@ public class EDimension {
 		return this;
 	}
 	
+	public EDimensionI toLong() { return new EDimensionI((long) startX, (long) startY, (long) endX, (long) endY); }
+	
 	public boolean contains(double xIn, double yIn) { return xIn >= startX && xIn <= endX && yIn >= startY && yIn <= endY;}
 	
 	public double getMidX() { return startX + (width / 2); }
@@ -113,5 +115,6 @@ public class EDimension {
 	
 	public static EDimension of(double startXIn, double startYIn, double endXIn, double endYIn) { return new EDimension(startXIn, startYIn, endXIn, endYIn); }
 	public static EDimension of(EDimension in) { return new EDimension(in); }
+	public static EDimension of(EDimensionI in) { return new EDimension(in.startX, in.startY, in.endX, in.endY); }
 	
 }

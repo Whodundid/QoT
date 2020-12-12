@@ -2,8 +2,8 @@ package envisionEngine.eWindow.windowObjects.actionObjects;
 
 import envisionEngine.eWindow.windowTypes.ActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
+import envisionEngine.input.Mouse;
 import gameSystems.fontRenderer.FontRenderer;
-import gameSystems.input.Mouse;
 import gameSystems.textureSystem.GameTexture;
 import java.util.function.Consumer;
 import org.lwjgl.glfw.GLFW;

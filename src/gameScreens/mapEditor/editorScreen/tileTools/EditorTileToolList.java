@@ -5,7 +5,6 @@ import envisionEngine.eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.editorScreen.MapEditorScreen;
-import main.Game;
 import util.renderUtil.EColors;
 import util.storageUtil.EArrayList;
 

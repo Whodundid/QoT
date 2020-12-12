@@ -14,7 +14,7 @@ public class EventKeyboard extends ObjectEvent {
 	int eventKey;
 	
 	public EventKeyboard(IWindowObject parentIn, char charIn, int keyIn, KeyboardType typeIn) {
-		super(parentIn, EventType.Keyboard);
+		super(parentIn, EventType.KEYBOARD);
 		eventChar = charIn;
 		eventKey = keyIn;
 		type = typeIn;

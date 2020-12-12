@@ -7,6 +7,7 @@ public class Stone extends WorldTile {
 	
 	public Stone() {
 		super(0, "Stone", WorldTextures.stone);
+		setBlocksMovement(true);
 	}
 	
 }

@@ -57,7 +57,7 @@ public class RendererRCM extends RightClickMenu {
 	}
 	
 	private void clearScreen() {
-		GameRenderer ren = GameRenderer.getInstance();
+		WorldRenderer ren = WorldRenderer.getInstance();
 		EArrayList<IWindowObject> objs = EArrayList.combineLists(ren.getObjects(), ren.getAddingObjects());
 		//TaskBar bar = ren.getTaskBar();
 		

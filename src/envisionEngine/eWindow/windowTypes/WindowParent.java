@@ -3,7 +3,7 @@ package envisionEngine.eWindow.windowTypes;
 import envisionEngine.eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
-import gameSystems.gameRenderer.GameRenderer;
+import gameSystems.gameRenderer.WorldRenderer;
 import gameSystems.textureSystem.GameTexture;
 import java.util.Stack;
 import main.Game;
@@ -47,8 +47,8 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	//-------------------------
 	
 	/** By default, set the parent to the EMC Renderer. */
-	public WindowParent() { this(GameRenderer.getInstance(), null); }
-	public WindowParent(Object oldGuiIn) { this(GameRenderer.getInstance(), oldGuiIn); }
+	public WindowParent() { this(WorldRenderer.getInstance(), null); }
+	public WindowParent(Object oldGuiIn) { this(WorldRenderer.getInstance(), oldGuiIn); }
 	public WindowParent(int xPos, int yPos) { windowInstance = this; initTime = System.currentTimeMillis(); }
 	public WindowParent(int xPos, int yPos, Object oldGuiIn) { initTime = System.currentTimeMillis(); windowInstance = this; pullHistoryFrom(oldGuiIn); }
 	public WindowParent(IWindowObject parentIn) { this(parentIn, null); }
@@ -337,7 +337,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 						newGui.setMaximized(getMaximizedPosition());
 						newGui.maximize();
 					}
-					GameRenderer.instance.setFocusedObject(p);
+					WorldRenderer.instance.setFocusedObject(p);
 				}
 				catch (Exception e) { e.printStackTrace(); }
 			}

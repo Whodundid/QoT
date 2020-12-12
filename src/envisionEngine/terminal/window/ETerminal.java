@@ -192,13 +192,13 @@ public class ETerminal extends WindowParent {
 	public void onGroupNotification(ObjectEvent e) {
 		if (e instanceof EventMouse) {
 			EventMouse m = (EventMouse) e;
-			if (m.getMouseType() == MouseType.Pressed) {
+			if (m.getMouseType() == MouseType.PRESSED) {
 				bringToFront();
 				if (e.getEventParent() instanceof WindowTextArea || e.getEventParent() instanceof TextAreaLine) {
 					if (inputField != null) { inputField.requestFocus(); }
 				}
 			}
-			if (m.getMouseType() == MouseType.Released) {
+			if (m.getMouseType() == MouseType.RELEASED) {
 				if (inputField != null) { inputField.requestFocus(); }
 			}
 		}
