@@ -1,6 +1,7 @@
 package gameScreens.gameplay;
 
 import assets.sounds.Songs;
+import envisionEngine.eWindow.windowObjects.basicObjects.WindowRect;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.GameOverScreen;
 import gameScreens.MainMenuScreen;
@@ -12,6 +13,8 @@ import util.renderUtil.EColors;
 
 public class GamePlayScreen extends GameScreen {
 	
+	WindowRect topHud;
+	WindowRect botHud; //don't know if actually want this one
 	StatusBar health, mana;
 	
 	@Override
@@ -25,6 +28,9 @@ public class GamePlayScreen extends GameScreen {
 	@Override
 	public void initObjects() {
 		windowObjects.clear();
+		
+		topHud = new WindowRect(this, 0, 0, Game.getWidth(), 39, EColors.dgray);
+		addObject(topHud);
 		
 		health = new StatusBar(this, 5, 5, 200, 30, 0, Game.getPlayer().getMaxHealth(), EColors.red);
 		health.setCurrentValue(Game.getPlayer().getHealth());

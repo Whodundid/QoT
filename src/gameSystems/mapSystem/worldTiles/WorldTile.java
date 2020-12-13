@@ -21,6 +21,8 @@ public class WorldTile {
 		tex = texIn;
 	}
 	
+	@Override public String toString() { return name + ":" + id; }
+	
 	//---------
 	// Getters
 	//---------

@@ -1,7 +1,9 @@
 package gameScreens.mapEditor.editorScreen;
 
+import assets.entities.Entity;
 import envisionEngine.eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import envisionEngine.eWindow.windowTypes.WindowObject;
+import gameScreens.mapEditor.editorScreen.util.EditorItem;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import main.Game;
@@ -16,7 +18,7 @@ public class EditorHotbar extends WindowObject {
 	MapEditorScreen editor;
 	
 	/** The actual contents of the hotbar. */
-	EArrayList<WorldTile> hotbar;
+	EArrayList<EditorItem> hotbar;
 	/** The number of hotbar slots. (Default is 10). */
 	int size = 10;
 	/** The size of each hotbar slot int pixels. (They are squares). */
@@ -48,7 +50,7 @@ public class EditorHotbar extends WindowObject {
 		
 		//set initial size
 		hotbar = new EArrayList(size);
-		EUtil.repeat(hotbar, h -> h.add((WorldTile) null), size);
+		EUtil.repeat(hotbar, h -> h.add((EditorItem) null), size);
 		
 		startTime = System.currentTimeMillis();
 	}
@@ -134,7 +136,7 @@ public class EditorHotbar extends WindowObject {
 				startTime = -1;
 			}
 			
-			WorldTile t = getCurrent();
+			EditorItem t = getCurrent();
 			if (t != null) {
 				drawStringC(t.getName(), midX, startY - FontRenderer.FONT_HEIGHT - ((header.isVisible()) ? header.height : 0));
 			}
@@ -152,7 +154,7 @@ public class EditorHotbar extends WindowObject {
 			double posX = startX + (i * cellSize);
 			drawHRect(posX, startY, posX + cellSize, endY, 3, EColors.dgray);
 			
-			WorldTile tile = hotbar.get(i);
+			EditorItem tile = hotbar.get(i);
 			
 			//only draw if it's not null and there's actually a texture
 			if (tile != null && tile.getTexture() != null) {
@@ -200,12 +202,19 @@ public class EditorHotbar extends WindowObject {
 	//---------
 	
 	/** Returns the current hotbar contents. */
-	public EArrayList<WorldTile> getHotbar() { return hotbar; }
+	public EArrayList<EditorItem> getHotbar() { return hotbar; }
 	
-	public WorldTile getCurrent() { return hotbar.get(curItem); }
+	public EditorItem getCurrent() { return hotbar.get(curItem); }
+	
+	public EditorHotbar setCurrent(WorldTile itemIn) { return setCurrent(EditorItem.of(itemIn)); }
+	public EditorHotbar setCurrent(Entity itemIn) { return setCurrent(EditorItem.of(itemIn)); }
+	public EditorHotbar setCurrent(EditorItem itemIn) {
+		setItemAtPos(itemIn, curItem);
+		return this;
+	}
 	
 	/** Returns the item at the given position. Does not do bounds checking! */
-	public WorldTile getItemAtPos(int pos) { return hotbar.get(pos); }
+	public EditorItem getItemAtPos(int pos) { return hotbar.get(pos); }
 	
 	//---------
 	// Setters
@@ -213,7 +222,7 @@ public class EditorHotbar extends WindowObject {
 	
 	/** Replaces the current hotbar with a new one, this also will redimension the hotbar if the size is different.
 	 *  If the incomming list is null or empty, the hotbar's contents are cleared but its size is not changed. */
-	public EditorHotbar setHotbar(EArrayList<WorldTile> in) {
+	public EditorHotbar setHotbar(EArrayList<EditorItem> in) {
 		if (in != null) {
 			if (in.isNotEmpty()) {
 				hotbar = new EArrayList(in);
@@ -234,8 +243,20 @@ public class EditorHotbar extends WindowObject {
 	}
 	
 	/** Sets the item at the hotbar position. Does not do bounds checking! */
+	public EditorHotbar setItemAtPos(EditorItem item, int pos) {
+		hotbar.set(pos, item);
+		return this;
+	}
+	
+	/** Sets the item at the hotbar position. Does not do bounds checking! */
 	public EditorHotbar setItemAtPos(WorldTile tile, int pos) {
-		hotbar.set(pos, tile);
+		hotbar.set(pos, (tile != null) ? EditorItem.of(tile) : null);
+		return this;
+	}
+	
+	/** Sets the item at the hotbar position. Does not do bounds checking! */
+	public EditorHotbar setItemAtPos(Entity tile, int pos) {
+		hotbar.set(pos, (tile != null) ? EditorItem.of(tile) : null);
 		return this;
 	}
 	

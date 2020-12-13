@@ -7,13 +7,13 @@ import gameScreens.mapEditor.editorScreen.botHeader.EditorScreenBotHeader;
 import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
 import gameScreens.mapEditor.editorScreen.tileTools.EditorTileToolList;
 import gameScreens.mapEditor.editorScreen.topHeader.EditorScreenTopHeader;
+import gameScreens.mapEditor.editorScreen.util.EditorItem;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.gameRenderer.GameScreen;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.Region;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.mapSystem.worldTiles.WorldTiles;
-import gameSystems.textureSystem.GameTexture;
 import java.io.File;
 import org.lwjgl.glfw.GLFW;
 import util.mathUtil.NumUtil;
@@ -30,6 +30,7 @@ public class MapEditorScreen extends GameScreen {
 	EditorScreenTopHeader topHeader;
 	EditorScreenBotHeader botHeader;
 	EditorMiniMap miniMap;
+	ToolHandler toolHandler;
 	
 	EditorTileTool curTool = EditorTileTool.PENCIL;
 	
@@ -74,6 +75,7 @@ public class MapEditorScreen extends GameScreen {
 		miniMap = new EditorMiniMap(this);
 		tileTools = new EditorTileToolList(this);
 		hotbar = new EditorHotbar(this);
+		toolHandler = new ToolHandler(this);
 		
 		int i = 0;
 		for (WorldTile t : WorldTiles.getTiles()) {
@@ -118,7 +120,9 @@ public class MapEditorScreen extends GameScreen {
 				mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
 				if (drawingMousePos = mouseInMap) {
 					drawMouseCoords(x, y, w, h);
-					changeTiles();
+					if (firstPress && getTopParent().getModifyingObject() == null) {
+						toolHandler.handleToolUpdate(getCurTileTool());
+					}
 				}
 				
 				if (drawViewBox) { drawViewBox(x, y, w, h); }
@@ -147,16 +151,28 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	@Override
+	public void mousePressed(int mXIn, int mYIn, int button) {
+		super.mousePressed(mXIn, mYIn, button);
+		if (drawingMousePos = mouseInMap && getTopParent().getModifyingObject() == null) {
+			toolHandler.handleToolPress(getCurTileTool(), button);
+		}
+	}
+	
+	@Override
 	public void mouseReleased(int mXIn, int mYIn, int button) {
 		super.mouseReleased(mXIn, mYIn, button);
-		if (!firstPress && button == 0) { firstPress = true; }
+		if (!firstPress && button == 0) {
+			firstPress = true;
+		}
+		
+		if (drawingMousePos = mouseInMap && getTopParent().getModifyingObject() == null) {
+			toolHandler.handleToolRelease(getCurTileTool(), button);
+		}
 	}
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		hotbar.keyPressed(typedChar, keyCode);
-		
-		//if (keyCode == Keyboard.KEY_ESC) { closeScreen(); }
 		
 		if (Keyboard.isCtrlS(keyCode)) { saveWorld(); System.out.println("saved"); }
 		if (Keyboard.isCtrlR(keyCode)) { loadWorld(); System.out.println("reloaded"); }
@@ -309,37 +325,18 @@ public class MapEditorScreen extends GameScreen {
 		drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.vdgray);
 	}
 	
-	private void changeTiles() {
-		if (firstPress && getTopParent().getModifyingObject() == null) {
-			if (curTool == EditorTileTool.PENCIL) {
-				if (Mouse.isButtonDown(0)) {
-					WorldTile t = hotbar.getCurrent();
-					if (t != null && t.isWildCard()) {
-						GameTexture tex = t.getTexture().getRandVariant();
-						System.out.println(tex.getChildID());
-						t.setTexture(tex);
-					}
-					world.setTileAt((int) worldXPos, (int) worldYPos, t);
-				}
-				else if (Mouse.isButtonDown(1)) {
-					world.setTileAt((int) worldXPos, (int) worldYPos, null);
-				}
-			}
-		}
-	}
-	
 	//---------------------------------
 	//         Public Getters
 	//---------------------------------
 	
 	public int getXPos() { return xPos; }
 	public int getYPos() { return yPos; }
-	
 	public int getViewX() { return distX; }
 	public int getViewY() { return distY; }
-	
 	public int getWorldMX() { return worldXPos; }
 	public int getWorldMY() { return worldYPos; }
+	
+	public EditorItem getCurItem() { return hotbar.getCurrent(); }
 	
 	public double getZoom() { return (world != null) ? world.getZoom() : 1; }
 	

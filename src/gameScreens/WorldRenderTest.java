@@ -108,7 +108,6 @@ public class WorldRenderTest extends GameScreen {
 				drawMouseCoords(x, y, w, h);
 			}
 			
-			
 			//endScissor();
 		}
 		

@@ -31,12 +31,23 @@ public class EditorItem {
 	public WorldTile getTile() { return tile; }
 	public Entity getEntity() { return entity; }
 	
-	public GameTexture getItemTexture() {
+	public String getName() {
+		return switch (type) {
+		case TILE -> (tile != null) ? tile.getName() : "null";
+		case ENTITY -> (entity != null) ? entity.getName() : "null";
+		default -> null;
+		};
+	}
+	
+	public GameTexture getTexture() {
 		return switch (type) {
 		case TILE -> (tile != null) ? tile.getTexture() : null;
 		case ENTITY -> (entity != null) ? entity.getTexture() : null;
 		default -> null;
 		};
 	}
+	
+	public static EditorItem of(WorldTile tileIn) { return new EditorItem(tileIn); }
+	public static EditorItem of(Entity entityIn) { return new EditorItem(entityIn); }
 	
 }
