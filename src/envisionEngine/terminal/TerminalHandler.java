@@ -5,6 +5,7 @@ import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.terminalCommand.commands.fileSystem.*;
 import envisionEngine.terminal.terminalCommand.commands.system.*;
 import envisionEngine.terminal.terminalCommand.commands.windows.*;
+import envisionEngine.terminal.terminalCommand.commands.game.*;
 import envisionEngine.terminal.window.ETerminal;
 import java.util.Collections;
 import java.util.Comparator;
@@ -83,6 +84,9 @@ public class TerminalHandler {
 		registerCommand(new ToFrontWindow(), termIn, runVisually);
 		registerCommand(new ShowWindow(), termIn, runVisually);
 		registerCommand(new MinimizeWindow(), termIn, runVisually);
+		
+		//game
+		registerCommand(new NoClip(), termIn, runVisually);
 	}
 	
 	public void registerCommand(TerminalCommand command, boolean runVisually) { registerCommand(command, null, runVisually); }

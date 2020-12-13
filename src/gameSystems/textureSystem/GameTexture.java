@@ -45,7 +45,13 @@ public class GameTexture {
 	
 	public GameTexture setChildID(int id) { childID = id; return this; }
 	public GameTexture addChild(final GameTexture in) { return addChild(in, -1); }
-	public GameTexture addChild(final GameTexture in, final int percentage) { children.add(in, percentage); return this; }
+	public GameTexture addChild(final GameTexture in, final int percentage) {
+		if (in != null) {
+			in.parentTexture = this;
+			children.add(in, percentage);
+		}
+		return this;
+	}
 	
 	public boolean destroy() {
 		if (textureID != -1) {
@@ -96,7 +102,8 @@ public class GameTexture {
 	}
 	
 	private GameTexture getRandChild() {
-		return children.getObject(NumUtil.getRoll(0, children.size() - 1));
+		int pos = NumUtil.getRoll(0, children.size() - 1);
+		return children.getObject(pos);
 	}
 	
 	public void initVariantPercents() {
@@ -108,7 +115,13 @@ public class GameTexture {
 	}
 	
 	public GameTexture getRandVariant() {
-		return (children.size() > 0) ? ((NumUtil.roll(0, 0, 1)) ? this : getRandChild()) : this;
+		if (children.isNotEmpty()) {
+			boolean val = (NumUtil.roll(0, 0, 1));
+			if (val) {
+				return getRandChild();
+			}
+		}
+		return this;
 	}
 	
 	public GameTexture getChild(int id) {

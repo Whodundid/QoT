@@ -95,4 +95,17 @@ public class WorldTile {
 		return null;
 	}
 	
+	public static WorldTile randVariant(WorldTile in) {
+		try {
+			WorldTile r = in.getClass().getConstructor().newInstance();
+			GameTexture tex = in.getTexture();
+			if (tex.hasParent()) {
+				r.setTexture(tex.getParent().getRandVariant());
+			}
+			return r;
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		return in;
+	}
+	
 }

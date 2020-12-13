@@ -69,7 +69,6 @@ public class MapEditorScreen extends GameScreen {
 	
 	@Override
 	public void initObjects() {
-		
 		topHeader = new EditorScreenTopHeader(this);
 		botHeader = new EditorScreenBotHeader(this);
 		miniMap = new EditorMiniMap(this);
@@ -345,6 +344,18 @@ public class MapEditorScreen extends GameScreen {
 	public void setTileTool(EditorTileTool toolIn) {
 		curTool = toolIn;
 		topHeader.updateCurTool(curTool);
+	}
+	
+	public WorldTile setTileAt(int x, int y, WorldTile in) {
+		world.setTileAt(x, y, in);
+		return in;
+	}
+	
+	public WorldTile setTileAtMouse(WorldTile in) {
+		if (mouseInMap) {
+			world.setTileAt(worldXPos, worldYPos, in);
+		}
+		return in;
 	}
 	
 	public WorldTile getTileHoveringOver() {

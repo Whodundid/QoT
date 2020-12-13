@@ -7,9 +7,15 @@ import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.editorScreen.MapEditorScreen;
 import gameSystems.gameRenderer.GameScreen;
 import gameSystems.mapSystem.GameWorld;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.io.File;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import main.Game;
 import util.renderUtil.EColors;
+import util.storageUtil.EDimension;
 
 public class MapMenuScreen extends GameScreen {
 	
@@ -69,7 +75,7 @@ public class MapMenuScreen extends GameScreen {
 			Game.displayScreen(new NewMapCreatorScreen(), this);
 		}
 		
-		if (object == loadMap) {
+		if (object == nameField) {
 			if (nameField.isNotEmpty()) {
 				String lastMap = nameField.getText();
 				lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
@@ -87,7 +93,29 @@ public class MapMenuScreen extends GameScreen {
 			}
 		}
 		
-		if (object == nameField) { actionPerformed(loadMap); }
+		if (object == loadMap) {
+			JFileChooser fc = new JFileChooser() {
+				@Override
+				protected JDialog createDialog(Component parent) throws HeadlessException {
+					JDialog dlg = super.createDialog(parent);
+					EDimension d = Game.getWindowDims();
+					Dimension fd = getSize();
+					dlg.setLocation((int) (d.startX + (d.width - fd.width) / 2), (int) (d.startY + (d.height - fd.height) / 2));
+					return dlg;
+				}
+			};
+			
+			fc.setCurrentDirectory(Game.settings.getEditorWorldsDir());
+			fc.setDialogTitle("Map Selection");
+			fc.setApproveButtonText("Open");
+			fc.showDialog(null, "Open");
+			File f = fc.getSelectedFile();
+			
+			if (f != null && f.exists() && f.getName().endsWith(".twld")) {
+				Game.settings.lastMap.set(f.getName());
+				Game.displayScreen(new MapEditorScreen(f), this);
+			}
+		}
 		
 		if (object == convert) {
 			if (nameField.isNotEmpty()) {

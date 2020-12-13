@@ -4,13 +4,15 @@ import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
 import gameScreens.mapEditor.editorScreen.util.EditorItem;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
-import gameSystems.textureSystem.GameTexture;
 import util.storageUtil.StorageBox;
 import util.storageUtil.StorageBoxHolder;
 
 public class ToolHandler {
 
 	MapEditorScreen editor;
+	
+	private StorageBox<Integer, Integer> oldPoint = new StorageBox(-1, -1);
+	private StorageBox<Integer, Integer> clickPoint = new StorageBox(-1, -1);
 	
 	private int button = -1;
 	private boolean pressed = false;
@@ -32,6 +34,7 @@ public class ToolHandler {
 		button = buttonIn;
 		held = false;
 		pressed = false;
+		oldPoint.setValues(-1, -1);
 		handleTool(toolIn);
 	}
 	
@@ -99,15 +102,7 @@ public class ToolHandler {
 					WorldTile tile = editor.getTileHoveringOver();
 					
 					if (!testTile(tile, item.getTile())) {
-						StorageBoxHolder<Integer, Integer> area = new StorageBoxHolder();
-						area.add(sX, sY);
-						
 						floodFill(w, sX, sY, tile, item.getTile());
-						
-						//set all of the found tiles to the current hotbar tile
-						for (StorageBox<Integer, Integer> t : area) {
-							
-						}
 					}
 					
 				} //posValid
@@ -116,16 +111,12 @@ public class ToolHandler {
 	}
 	
 	private void pencil() {
-		if (pressed && held) {
+		if (pressed && (held && !oldPoint.compare(editor.getWorldMX(), editor.getWorldMY()))) {
+			oldPoint.setValues(editor.getWorldMX(), editor.getWorldMY());
+			
 			EditorItem item = editor.getCurItem();
 			if (item != null) {
-				WorldTile t = item.getTile();
-				
-				GameTexture tex = t.getTexture().getRandVariant();
-				//System.out.println(tex.getChildID());
-				t.setTexture(tex);
-				
-				editor.getWorld().setTileAt((int) editor.getWorldMX(), (int) editor.getWorldMY(), t);
+				editor.setTileAtMouse(WorldTile.randVariant(item.getTile()));
 			}
 		}
 	}
@@ -158,7 +149,7 @@ public class ToolHandler {
 			WorldTile t = w.getTileAt(x, y);
 			
 			if (testTile(toReplace, t)) {
-				w.setTileAt(x, y, toSet);
+				w.setTileAt(x, y, WorldTile.randVariant(toSet));
 				
 				floodFill(w, x + 1, y, toReplace, toSet);
 				floodFill(w, x - 1, y, toReplace, toSet);

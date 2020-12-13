@@ -29,6 +29,7 @@ public abstract class Entity extends GLObject {
 	protected double gold;
 	protected boolean isDead;
 	protected boolean passable;
+	protected boolean allowNoClip = false;
 	
 	public Entity(String nameIn, int levelIn, double maxHealthIn, double healthIn, double maxManaIn, double manaIn, double damageIn, double goldIn) {
 		name = nameIn;
@@ -83,164 +84,166 @@ public abstract class Entity extends GLObject {
 	}
 	
 	public void move(double x, double y) {
-		if (world != null && this instanceof Player) {
+		if (world != null) {
 			x = Math.signum(x);
 			y = Math.signum(y);
-			
-			boolean left = false, right = false, up = false, down = false;
 			boolean stopMove = false;
-			double w = world.getTileWidth();
-			double h = world.getTileHeight();
 			
-			if (x < 0) { left = true; }
-			else if (x > 0) { right = true; }
-			if (y < 0) { up = true; }
-			else if (y > 0) { down = true; }
+			if (!allowNoClip) {
+				boolean left = false, right = false, up = false, down = false;
+				double w = world.getTileWidth();
+				double h = world.getTileHeight();
+				
+				if (x < 0) { left = true; }
+				else if (x > 0) { right = true; }
+				if (y < 0) { up = true; }
+				else if (y > 0) { down = true; }
 
-			//System.out.println(collisionBox.endX);
-			
-			double cSX = startX + collisionBox.startX;
-			double cSY = startY + collisionBox.startY;
-			double cEX = endX - (width - collisionBox.endX);
-			double cEY = endY - (height - collisionBox.endY);
-			
-			EDimension col = EDimension.of(cSX, cSY, cEX, cEY);
-			//System.out.println(col);
-			//col = col.expand(1);
-			
-			int lVal = (left) ? -1 : 0;
-			int uVal = (up) ? -1 : 0;
-			int rVal = (right) ? 0 : -1;
-			int dVal = (down) ? 0 : -1;
-			
-			int movingToSX = (int) ((col.startX + lVal) / w);
-			int movingToSY = (int) ((col.startY + uVal) / h);
-			int movingToEX = (int) ((col.endX + rVal) / w);
-			int movingToEY = (int) ((col.endY + dVal) / h);
-			
-			//col.endX += 1;
-			//col.endY += 1;
-			//col = col.contract(1);
+				//System.out.println(collisionBox.endX);
+				
+				double cSX = startX + collisionBox.startX;
+				double cSY = startY + collisionBox.startY;
+				double cEX = endX - (width - collisionBox.endX);
+				double cEY = endY - (height - collisionBox.endY);
+				
+				EDimension col = EDimension.of(cSX, cSY, cEX, cEY);
+				//System.out.println(col);
+				//col = col.expand(1);
+				
+				int lVal = (left) ? -1 : 0;
+				int uVal = (up) ? -1 : 0;
+				int rVal = (right) ? 0 : -1;
+				int dVal = (down) ? 0 : -1;
+				
+				int movingToSX = (int) ((col.startX + lVal) / w);
+				int movingToSY = (int) ((col.startY + uVal) / h);
+				int movingToEX = (int) ((col.endX + rVal) / w);
+				int movingToEY = (int) ((col.endY + dVal) / h);
+				
+				//col.endX += 1;
+				//col.endY += 1;
+				//col = col.contract(1);
 
-			movingToSX = NumUtil.clamp(movingToSX, 0, world.getWidth() - 1);
-			movingToSY = NumUtil.clamp(movingToSY, 0, world.getHeight() - 1);
-			movingToEX = NumUtil.clamp(movingToEX, 0, world.getWidth() - 1);
-			movingToEY = NumUtil.clamp(movingToEY, 0, world.getHeight() - 1);
-			
-			WorldTile tl = world.getTileAt(movingToSX, movingToSY);
-			WorldTile tr = world.getTileAt(movingToEX, movingToSY);
-			WorldTile bl = world.getTileAt(movingToSX, movingToEY);
-			WorldTile br = world.getTileAt(movingToEX, movingToEY);
-			
-			boolean tlBlock = (tl == null) || tl.blocksMovement();
-			boolean trBlock = (tr == null) || tr.blocksMovement();
-			boolean blBlock = (bl == null) || bl.blocksMovement();
-			boolean brBlock = (br == null) || br.blocksMovement();
-			
-			double sX = movingToSX * w;
-			double sY = movingToSY * h;
-			double eX = movingToEX * w;
-			double eY = movingToEY * h;
-			
-			EDimension tlDim = EDimension.of(sX, sY, sX + w, sY + h);
-			EDimension blDim = EDimension.of(sX, eY, sX + w, eY + h);
-			EDimension trDim = EDimension.of(eX, sY, eX + w, sY + h);
-			EDimension brDim = EDimension.of(eX, eY, eX + w, eY + h);
-			
-			//System.out.println("[" + movingToSX + ", " + movingToSY + "] [" + movingToEX + ", " + movingToSY + "]");
-			//System.out.println("[" + movingToSX + ", " + movingToEY + "] [" + movingToEX + ", " + movingToEY + "]");
-			
-			//System.out.println("tl: " + tlDim);
-			//System.out.println("tr: " + blDim);
-			//System.out.println("bl: " + blDim);
-			//System.out.println("br: " + brDim);
-			//System.out.println("cl: " + col);
-			
-			boolean clearUp = true;
-			boolean clearLeft = true;
-			boolean clearDown = true;
-			boolean clearRight = true;
-			
-			//System.out.println("[" + tlBlock + "] [" + trBlock + "]");
-			//System.out.println("[" + blBlock + "] [" + brBlock + "]");
-			
-			//clearUp
-			if (tlBlock) {
-				if (trBlock) {
-					int aVal = (int) ((col.startY + y) - tlDim.endY);
-					int bVal = (int) ((col.startY + y) - trDim.endY);
-					//System.out.println("u A: " + aVal + " " + bVal);
-					
-					clearUp = (col.startY > tlDim.endY || col.startX >= tlDim.endX) && (col.startY > trDim.endY || col.endX <= trDim.startX);
+				movingToSX = NumUtil.clamp(movingToSX, 0, world.getWidth() - 1);
+				movingToSY = NumUtil.clamp(movingToSY, 0, world.getHeight() - 1);
+				movingToEX = NumUtil.clamp(movingToEX, 0, world.getWidth() - 1);
+				movingToEY = NumUtil.clamp(movingToEY, 0, world.getHeight() - 1);
+				
+				WorldTile tl = world.getTileAt(movingToSX, movingToSY);
+				WorldTile tr = world.getTileAt(movingToEX, movingToSY);
+				WorldTile bl = world.getTileAt(movingToSX, movingToEY);
+				WorldTile br = world.getTileAt(movingToEX, movingToEY);
+				
+				boolean tlBlock = (tl == null) || tl.blocksMovement();
+				boolean trBlock = (tr == null) || tr.blocksMovement();
+				boolean blBlock = (bl == null) || bl.blocksMovement();
+				boolean brBlock = (br == null) || br.blocksMovement();
+				
+				double sX = movingToSX * w;
+				double sY = movingToSY * h;
+				double eX = movingToEX * w;
+				double eY = movingToEY * h;
+				
+				EDimension tlDim = EDimension.of(sX, sY, sX + w, sY + h);
+				EDimension blDim = EDimension.of(sX, eY, sX + w, eY + h);
+				EDimension trDim = EDimension.of(eX, sY, eX + w, sY + h);
+				EDimension brDim = EDimension.of(eX, eY, eX + w, eY + h);
+				
+				//System.out.println("[" + movingToSX + ", " + movingToSY + "] [" + movingToEX + ", " + movingToSY + "]");
+				//System.out.println("[" + movingToSX + ", " + movingToEY + "] [" + movingToEX + ", " + movingToEY + "]");
+				
+				//System.out.println("tl: " + tlDim);
+				//System.out.println("tr: " + blDim);
+				//System.out.println("bl: " + blDim);
+				//System.out.println("br: " + brDim);
+				//System.out.println("cl: " + col);
+				
+				boolean clearUp = true;
+				boolean clearLeft = true;
+				boolean clearDown = true;
+				boolean clearRight = true;
+				
+				//System.out.println("[" + tlBlock + "] [" + trBlock + "]");
+				//System.out.println("[" + blBlock + "] [" + brBlock + "]");
+				
+				//clearUp
+				if (tlBlock) {
+					if (trBlock) {
+						int aVal = (int) ((col.startY + y) - tlDim.endY);
+						int bVal = (int) ((col.startY + y) - trDim.endY);
+						//System.out.println("u A: " + aVal + " " + bVal);
+						
+						clearUp = (col.startY > tlDim.endY || col.startX >= tlDim.endX) && (col.startY > trDim.endY || col.endX <= trDim.startX);
+					}
+					else {
+						//System.out.println("u B: " + col.startY + " > " + tlDim.endY);
+						clearUp = (col.startY > tlDim.endY || col.startX >= tlDim.endX);
+					}
 				}
-				else {
-					//System.out.println("u B: " + col.startY + " > " + tlDim.endY);
-					clearUp = (col.startY > tlDim.endY || col.startX >= tlDim.endX);
+				else if (trBlock) {
+					//System.out.println("u C: " + col.startY + " > " + trDim.endY + " || " + col.endX + " < " + trDim.startX);
+					clearUp = (col.startY > trDim.endY || col.endX <= trDim.startX);
 				}
-			}
-			else if (trBlock) {
-				//System.out.println("u C: " + col.startY + " > " + trDim.endY + " || " + col.endX + " < " + trDim.startX);
-				clearUp = (col.startY > trDim.endY || col.endX <= trDim.startX);
-			}
-			
-			//clearLeft
-			if (tlBlock) {
+				
+				//clearLeft
+				if (tlBlock) {
+					if (blBlock) {
+						//System.out.println("l A: " + col.startX + " > " + tlDim.endX + " && " + col.startX + " > " + blDim.endX);
+						clearLeft = (col.startX > tlDim.endX && col.startX > blDim.endX);
+					}
+					else {
+						//System.out.println("l B: " + col.startX + " > " + tlDim.endX);
+						clearLeft = (col.startX > tlDim.endX);
+					}
+				}
+				else if (blBlock) {
+					//System.out.println("l C: " + col.startX + " > " + blDim.endX);
+					clearLeft = (col.startX > blDim.endX);
+				}
+				
+				//clearDown
 				if (blBlock) {
-					//System.out.println("l A: " + col.startX + " > " + tlDim.endX + " && " + col.startX + " > " + blDim.endX);
-					clearLeft = (col.startX > tlDim.endX && col.startX > blDim.endX);
+					if (brBlock) {
+						//System.out.println("d A: " + col.endY + " < " + blDim.startY + " && " + col.endY + " < " + brDim.startY);
+						clearDown = (col.endY < blDim.startY && col.endY < brDim.startY);
+					}
+					else {
+						//System.out.println("d B: " + col.endY + " < " + blDim.startY);
+						clearDown = (col.endY < blDim.startY);
+					}
 				}
-				else {
-					//System.out.println("l B: " + col.startX + " > " + tlDim.endX);
-					clearLeft = (col.startX > tlDim.endX);
+				else if (brBlock) {
+					//System.out.println("d C: " + col.endY + " < " + brDim.startY);
+					clearDown = (col.endY < brDim.startY);
 				}
-			}
-			else if (blBlock) {
-				//System.out.println("l C: " + col.startX + " > " + blDim.endX);
-				clearLeft = (col.startX > blDim.endX);
-			}
-			
-			//clearDown
-			if (blBlock) {
-				if (brBlock) {
-					//System.out.println("d A: " + col.endY + " < " + blDim.startY + " && " + col.endY + " < " + brDim.startY);
-					clearDown = (col.endY < blDim.startY && col.endY < brDim.startY);
+				
+				//clerRight
+				if (trBlock) {
+					if (brBlock) {
+						//System.out.println("r A: " + col.endX + " < " + trDim.startX + " && " + col.endX + " < " + brDim.startX);
+						clearRight = (col.endX < trDim.startX || col.startY >= trDim.endY) && (col.endX < brDim.startX || col.endY <= brDim.startY);
+					}
+					else {
+						//System.out.println("r B: " + col.endX + " < " + trDim.startX + " || " + col.startY + " >= " + trDim.endY);
+						clearRight = (col.endX < trDim.startX || col.startY >= trDim.endY);
+					}
 				}
-				else {
-					//System.out.println("d B: " + col.endY + " < " + blDim.startY);
-					clearDown = (col.endY < blDim.startY);
+				else if (brBlock) {
+					//System.out.println("r C: " + col.endX + " < " + brDim.startX + " || " + col.endY + " <= " + brDim.startY);
+					clearRight = (col.endX < brDim.startX || col.endY <= brDim.startY);
 				}
-			}
-			else if (brBlock) {
-				//System.out.println("d C: " + col.endY + " < " + brDim.startY);
-				clearDown = (col.endY < brDim.startY);
-			}
-			
-			//clerRight
-			if (trBlock) {
-				if (brBlock) {
-					//System.out.println("r A: " + col.endX + " < " + trDim.startX + " && " + col.endX + " < " + brDim.startX);
-					clearRight = (col.endX < trDim.startX || col.startY >= trDim.endY) && (col.endX < brDim.startX || col.endY <= brDim.startY);
-				}
-				else {
-					//System.out.println("r B: " + col.endX + " < " + trDim.startX + " || " + col.startY + " >= " + trDim.endY);
-					clearRight = (col.endX < trDim.startX || col.startY >= trDim.endY);
-				}
-			}
-			else if (brBlock) {
-				//System.out.println("r C: " + col.endX + " < " + brDim.startX + " || " + col.endY + " <= " + brDim.startY);
-				clearRight = (col.endX < brDim.startX || col.endY <= brDim.startY);
+				
+				//System.out.println("   [" + clearUp + "]");
+				//System.out.println("[" + clearLeft + "] [" + clearRight + "]");
+				//System.out.println("   [" + clearDown + "]");
+				
+				if (left && !(clearLeft)) { stopMove = true; }
+				if (right && !(clearRight)) { stopMove = true; }
+				if (up && !(clearUp)) { stopMove = true; }
+				if (down && !(clearDown)) { stopMove = true; }
 			}
 			
-			//System.out.println("   [" + clearUp + "]");
-			//System.out.println("[" + clearLeft + "] [" + clearRight + "]");
-			//System.out.println("   [" + clearDown + "]");
-			
-			if (left && !(clearLeft)) { stopMove = true; }
-			if (right && !(clearRight)) { stopMove = true; }
-			if (up && !(clearUp)) { stopMove = true; }
-			if (down && !(clearDown)) { stopMove = true; }
-			
-			if (!stopMove) {
+			if (allowNoClip || !stopMove) {
 				startX += x;
 				endX += x;
 				startY += y;
@@ -300,11 +303,13 @@ public abstract class Entity extends GLObject {
 	public GameTexture getTexture() { return sprite; }
 	public EDimension getCollision() { return collisionBox; }
 	public boolean isPassable() { return passable; }
+	public boolean isNoClipping() { return allowNoClip; }
 	
 	//---------
 	// Setters
 	//---------
 	
+	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }
 	public Entity setCollisionBox(double sX, double sY, double eX, double eY) { collisionBox = new EDimension(sX, sY, eX, eY); return this; }
 	public Entity setSprite(GameTexture in) { sprite = in; return this; }

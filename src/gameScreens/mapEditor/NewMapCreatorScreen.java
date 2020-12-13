@@ -96,7 +96,7 @@ public class NewMapCreatorScreen extends GameScreen {
 		
 		if (drawError) { drawStringC(error, midX, endY - 150); }
 	}
-
+	
 	@Override public void onScreenClosed() {}
 	
 	@Override
@@ -109,7 +109,7 @@ public class NewMapCreatorScreen extends GameScreen {
 			tileSelection.setVisible(!empty);
 		}
 		
-		if (object == create) {
+		if (object == create || object == nameField) {
 			if (check()) { createMap(); }
 			else { drawError = true; }
 		}

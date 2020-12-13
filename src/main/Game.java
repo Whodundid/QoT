@@ -22,10 +22,12 @@ import gameSystems.gameRenderer.GameScreen;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.textureSystem.TextureSystem;
 import java.io.File;
+import java.nio.IntBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.settings.MainConfigFile;
 import main.settings.QotGameSettings;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -544,6 +546,29 @@ public class Game {
 	public static int getWidth() { return width; }
 	/** Returns the game window's height in pixels. */
 	public static int getHeight() { return height; }
+	
+	public static int getX() {
+		IntBuffer x = BufferUtils.createIntBuffer(1);
+		IntBuffer y = BufferUtils.createIntBuffer(1);
+		GLFW.glfwGetWindowPos(handle, x, y);
+		return x.get();
+	}
+	
+	public static int getY() {
+		IntBuffer x = BufferUtils.createIntBuffer(1);
+		IntBuffer y = BufferUtils.createIntBuffer(1);
+		GLFW.glfwGetWindowPos(handle, x, y);
+		return y.get();
+	}
+	
+	public static EDimension getWindowDims() {
+		IntBuffer xBuff = BufferUtils.createIntBuffer(1);
+		IntBuffer yBuff = BufferUtils.createIntBuffer(1);
+		GLFW.glfwGetWindowPos(handle, xBuff, yBuff);
+		int x = xBuff.get();
+		int y = yBuff.get();
+		return new EDimension(x, y, x + width, y + height);
+	}
 	
 	/** Returns this game's central font rendering system. */
 	public static FontRenderer getFontRenderer() { return fontRenderer; }

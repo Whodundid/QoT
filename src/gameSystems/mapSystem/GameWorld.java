@@ -286,10 +286,11 @@ public class GameWorld {
 		return false;
 	}
 	
-	public GameWorld fillWith(WorldTile t) {
+	public GameWorld fillWith(WorldTile t) { return fillWith(t, true); }
+	public GameWorld fillWith(WorldTile t, boolean randomize) {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				worldData[i][j] = t;
+				worldData[i][j] = WorldTile.randVariant(t);
 			}
 		}
 		return this;
