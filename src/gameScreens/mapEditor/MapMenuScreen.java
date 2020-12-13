@@ -113,6 +113,7 @@ public class MapMenuScreen extends GameScreen {
 			
 			if (f != null && f.exists() && f.getName().endsWith(".twld")) {
 				Game.settings.lastMap.set(f.getName());
+				Game.saveConfig();
 				Game.displayScreen(new MapEditorScreen(f), this);
 			}
 		}
