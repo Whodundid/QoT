@@ -6,7 +6,6 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import envisionEngine.input.Keyboard;
 import envisionEngine.terminal.window.ETerminal;
 import envisionEngine.terminal.window.TerminalRCM;
-import main.Game;
 import util.renderUtil.CenterType;
 import util.renderUtil.EColors;
 
@@ -28,7 +27,7 @@ public class TerminalTextLine extends TextAreaLine {
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		if (button == 1) {
-			Game.displayWindow(new TerminalRCM(this), CenterType.cursorCorner);
+			getTopParent().displayWindow(new TerminalRCM(this), CenterType.cursorCorner);
 		}
 		else {
 			if (checkLinkClick(mXIn, mYIn, button)) { term.writeln("Opening Link..\n", EColors.seafoam); }
@@ -53,7 +52,7 @@ public class TerminalTextLine extends TextAreaLine {
 		super.onFocusGained(eventIn);
 		if (eventIn.getEventType() == EventType.MOUSE) {
 			if (eventIn.getActionCode() == 1) {
-				Game.displayWindow(new TerminalRCM(this), CenterType.cursorCorner);
+				getTopParent().displayWindow(new TerminalRCM(this), CenterType.cursorCorner);
 			}
 		}
 	}

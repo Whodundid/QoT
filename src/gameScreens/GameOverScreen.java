@@ -4,7 +4,7 @@ import assets.entities.player.Player;
 import assets.sounds.Songs;
 import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
-import gameSystems.gameRenderer.GameScreen;
+import gameSystems.screenSystem.GameScreen;
 import main.Game;
 
 public class GameOverScreen extends GameScreen {

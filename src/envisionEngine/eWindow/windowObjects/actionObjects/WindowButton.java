@@ -118,11 +118,11 @@ public class WindowButton<E> extends ActionObject<E> {
 				*/
 				
 				if (btnSelTexture == null && mouseHover) {
-					drawRect(startX + 1, startY + 1, endX - 1, endY - 1, 0x888B97D3);
-					//drawRect(startX, startY, startX + 1, endY, EColors.orange); //left
-					//drawRect(startX, startY, endX, startY + 1, EColors.orange); //top
-					//drawRect(endX - 2, startY + 1, endX - 1, endY - 1, EColors.orange); //right
-					//drawRect(startX + 1, endY - 2, endX - 2, endY - 1, EColors.orange); //bot
+					//drawRect(startX + 1, startY + 1, endX - 1, endY - 1, 0xaa8B97D3);
+					drawRect(startX, startY, startX + 1, endY, EColors.lgray); //left
+					drawRect(startX, startY, endX, startY + 1, EColors.lgray); //top
+					drawRect(endX - 1, startY + 1, endX, endY, EColors.lgray); //right
+					drawRect(startX + 1, endY - 1, endX - 1, endY, EColors.lgray); //bot
 				}
 			}
 			

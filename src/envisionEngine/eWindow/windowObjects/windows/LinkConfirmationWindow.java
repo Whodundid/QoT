@@ -4,7 +4,6 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowObjects.basicObjects.WindowLabel;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import gameSystems.gameRenderer.WorldRenderer;
 import main.Game;
 import util.renderUtil.EColors;
 import util.renderUtil.WindowSize;
@@ -16,7 +15,7 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 	String link;
 	WindowButton yes, copy, no;
 	
-	public LinkConfirmationWindow(String linkIn) { this(WorldRenderer.instance, linkIn); }
+	public LinkConfirmationWindow(String linkIn) { this(Game.getActiveTopParent(), linkIn); }
 	public LinkConfirmationWindow(IWindowObject parentIn, String linkIn) {
 		super();
 		setResizeable(false);

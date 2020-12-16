@@ -4,7 +4,6 @@ import envisionEngine.eWindow.windowObjects.windows.TextEditorWindow;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.window.ETerminal;
 import java.io.File;
-import main.Game;
 import util.EUtil;
 import util.renderUtil.CenterType;
 import util.storageUtil.EArrayList;
@@ -83,7 +82,7 @@ public class Edit extends FileCommand {
 			TextEditorWindow window = new TextEditorWindow(path);
 			window.setFocusedObjectOnClose(termIn);
 			
-			Game.displayWindow(window, CenterType.screen);
+			termIn.getTopParent().displayWindow(window, CenterType.screen);
 			
 			window.setFocusToLineIfEmpty();
 		}

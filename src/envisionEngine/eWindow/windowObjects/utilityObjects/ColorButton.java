@@ -47,8 +47,8 @@ public class ColorButton<E> extends WindowButton<E> {
 	//ColorButton Setters
 	//-------------------
 	
-	public ColorButton setColor(EColors colorIn) { if (colorIn != null) { color = colorIn.intVal; } return this; }
-	public ColorButton setColor(int colorIn) { color = colorIn; return this; }
-	public ColorButton setDrawBorder(boolean val) { drawBorder = val; return this; }
+	public ColorButton<E> setColor(EColors colorIn) { if (colorIn != null) { color = colorIn.intVal; } return this; }
+	public ColorButton<E> setColor(int colorIn) { color = colorIn; return this; }
+	public ColorButton<E> setDrawBorder(boolean val) { drawBorder = val; return this; }
 	
 }

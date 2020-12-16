@@ -23,7 +23,7 @@ import util.storageUtil.TrippleBox;
 
 public class TextAreaLine<E> extends WindowTextField<E> {
 	
-	protected WindowTextArea parentTextArea;
+	protected WindowTextArea<E> parentTextArea;
 	protected WindowLabel numberLabel;
 	protected IWindowObject focusRequester;
 	public int lineNumberColor = 0xff555555;
@@ -48,12 +48,12 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	//TextAreaLine Constructors
 	//-------------------------
 	
-	public TextAreaLine(WindowTextArea textAreaIn) { this(textAreaIn, "", 0xffffff, null, -1); }
-	public TextAreaLine(WindowTextArea textAreaIn, String textIn) { this(textAreaIn, textIn, 0xffffff, null, -1); }
-	public TextAreaLine(WindowTextArea textAreaIn, String textIn, int colorIn) { this(textAreaIn, textIn, colorIn, null, -1); }
-	public TextAreaLine(WindowTextArea textAreaIn, String textIn, E objectIn) { this(textAreaIn, textIn, 0xffffff, objectIn, -1); }
-	public TextAreaLine(WindowTextArea textAreaIn, String textIn, int colorIn, E objectIn) { this(textAreaIn, textIn, colorIn, objectIn, -1); }
-	public TextAreaLine(WindowTextArea textAreaIn, String textIn, int colorIn, E objectIn, int lineNumberIn) {
+	public TextAreaLine(WindowTextArea<E> textAreaIn) { this(textAreaIn, "", 0xffffff, null, -1); }
+	public TextAreaLine(WindowTextArea<E> textAreaIn, String textIn) { this(textAreaIn, textIn, 0xffffff, null, -1); }
+	public TextAreaLine(WindowTextArea<E> textAreaIn, String textIn, int colorIn) { this(textAreaIn, textIn, colorIn, null, -1); }
+	public TextAreaLine(WindowTextArea<E> textAreaIn, String textIn, E objectIn) { this(textAreaIn, textIn, 0xffffff, objectIn, -1); }
+	public TextAreaLine(WindowTextArea<E> textAreaIn, String textIn, int colorIn, E objectIn) { this(textAreaIn, textIn, colorIn, objectIn, -1); }
+	public TextAreaLine(WindowTextArea<E> textAreaIn, String textIn, int colorIn, E objectIn, int lineNumberIn) {
 		init(textAreaIn, 0, 0, 0, 0);
 		setMaxStringLength(1500);
 		parent = textAreaIn;
@@ -111,7 +111,6 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		System.out.println(keyCode);
 		
 		if (hasFocus()) {
 			parentTextArea.keyPressed(typedChar, keyCode);
@@ -231,9 +230,9 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 			if (b == 0) {
 				startTextTimer();
 				
-				if (isResizeable() && !getEdgeAreaMouseIsOn().equals(ScreenLocation.out)) {
+				if (isResizeable() && !getEdgeSideMouseIsOn().equals(ScreenLocation.out)) {
 					getTopParent().setModifyingObject(this, ObjectModifyType.Resize);
-					getTopParent().setResizingDir(getEdgeAreaMouseIsOn());
+					getTopParent().setResizingDir(getEdgeSideMouseIsOn());
 					getTopParent().setModifyMousePos(mX, mY);
 				}
 				if (parentTextArea.isEditable()) {
@@ -332,15 +331,15 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	//TextAreaLine Methods
 	//--------------------
 	
-	public TextAreaLine incrementLineNumber() { setLineNumber(lineNumber + 1); return this; }
-	public TextAreaLine decrementLineNumber() { setLineNumber(lineNumber - 1); return this; }
-	public TextAreaLine indent() { setText("    " + getText()); return this; }
+	public TextAreaLine<E> incrementLineNumber() { setLineNumber(lineNumber + 1); return this; }
+	public TextAreaLine<E> decrementLineNumber() { setLineNumber(lineNumber - 1); return this; }
+	public TextAreaLine<E> indent() { setText("    " + getText()); return this; }
 	
 	//--------------------
 	//TextAreaLine Getters
 	//--------------------
 	
-	public IWindowObject getFocusRequester() { return focusRequester; }
+	public IWindowObject<?> getFocusRequester() { return focusRequester; }
 	public int getDrawnLineNumber() { return drawnLineNumber; }
 	public int getLineNumber() { return lineNumber; }
 	public long getDoubleClickThreshold() { return doubleClickThreshold; }
@@ -350,28 +349,28 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	//TextAreaLine Setters
 	//--------------------
 	
-	public TextAreaLine setLinkText(String textIn) { return setLinkText(textIn, null, false); }
-	public TextAreaLine setLinkText(String textIn, Object linkObjectIn) { return setLinkText(textIn, linkObjectIn, false); }
-	public TextAreaLine setLinkText(String textIn, boolean isWebLink) { return setLinkText(textIn, null, isWebLink); }
-	public TextAreaLine setLinkText(String textIn, Object linkObjectIn, boolean isWebLink) {
+	public TextAreaLine<E> setLinkText(String textIn) { return setLinkText(textIn, null, false); }
+	public TextAreaLine<E> setLinkText(String textIn, Object linkObjectIn) { return setLinkText(textIn, linkObjectIn, false); }
+	public TextAreaLine<E> setLinkText(String textIn, boolean isWebLink) { return setLinkText(textIn, null, isWebLink); }
+	public TextAreaLine<E> setLinkText(String textIn, Object linkObjectIn, boolean isWebLink) {
 		linkText = textIn;
 		linkObject = linkObjectIn;
 		webLink = isWebLink;
 		return this;
 	}
 	
-	public TextAreaLine setHighlighted(boolean val) {
+	public TextAreaLine<E> setHighlighted(boolean val) {
 		cursorPosition = 0;
 		selectionEnd = val ? text.length() : 0;
 		return this;
 	}
 	
-	public TextAreaLine setLineNumber(int numberIn) { lineNumber = numberIn; lineNumberWidth = getStringWidth(String.valueOf(lineNumber)); return this; }
-	public TextAreaLine setLineNumberColor(EColors colorIn) { lineNumberColor = colorIn.intVal; return this; }
-	public TextAreaLine setLineNumberColor(int colorIn) { lineNumberColor = colorIn; return this; }
-	public TextAreaLine setDrawnLineNumber(int numberIn) { drawnLineNumber = numberIn; return this; }
-	public TextAreaLine setDoubleClickThreshold(long timeIn) { doubleClickThreshold = timeIn; return this; }
-	public TextAreaLine setFocusRequester(IWindowObject obj) { focusRequester = obj; return this; }
+	public TextAreaLine<E> setLineNumber(int numberIn) { lineNumber = numberIn; lineNumberWidth = getStringWidth(String.valueOf(lineNumber)); return this; }
+	public TextAreaLine<E> setLineNumberColor(EColors colorIn) { lineNumberColor = colorIn.intVal; return this; }
+	public TextAreaLine<E> setLineNumberColor(int colorIn) { lineNumberColor = colorIn; return this; }
+	public TextAreaLine<E> setDrawnLineNumber(int numberIn) { drawnLineNumber = numberIn; return this; }
+	public TextAreaLine<E> setDoubleClickThreshold(long timeIn) { doubleClickThreshold = timeIn; return this; }
+	public TextAreaLine<E> setFocusRequester(IWindowObject obj) { focusRequester = obj; return this; }
 	
 	//------------------------------
 	//TextAreaLine Protecetd Methods
@@ -422,12 +421,12 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 				try {
 					WindowButton.playPressSound();
 					if (webLink) {
-						Game.displayWindow(new LinkConfirmationWindow((String) linkObject));
+						getTopParent().displayWindow(new LinkConfirmationWindow((String) linkObject));
 						return true;
 					}
 					else if (linkObject != null) {
 						//if (linkObject instanceof File) { EUtil.openFile((File) linkObject); return true; }
-						if (linkObject instanceof IWindowParent) { Game.displayWindow((IWindowParent) linkObject); return true; }
+						if (linkObject instanceof IWindowParent) { getTopParent().displayWindow((IWindowParent) linkObject); return true; }
 						//if (linkObject instanceof Keyboard) { GuiOpener.openGui(linkObject.getClass()); return true; }
 					}
 				}

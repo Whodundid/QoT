@@ -5,7 +5,6 @@ import envisionEngine.eWindow.windowTypes.ActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IUseScreenLocation;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import main.Game;
 import util.renderUtil.EColors;
 import util.renderUtil.ScreenLocation;
 
@@ -70,10 +69,10 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 		if (object == tLeft) { obj.setLocation(ScreenLocation.topLeft); }
 		if (object == tRight) { obj.setLocation(ScreenLocation.topRight); }
 		if (object == center) { obj.setLocation(ScreenLocation.center); }
-		if (object == custom) { Game.displayWindow(obj.getScreenLocationGui()); }
+		if (object == custom) { getTopParent().displayWindow(obj.getScreenLocationGui()); }
 		performAction();
 	}
 	
-	public ScreenLocationSelector setDisplayName(String nameIn) { drawName = nameIn; return this; }
+	public ScreenLocationSelector<E> setDisplayName(String nameIn) { drawName = nameIn; return this; }
 	
 }

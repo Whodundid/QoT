@@ -127,21 +127,11 @@ public class StaticTopParent extends EGui {
 	/** Notify the focused object that the keyboard just had a key pressed. */
 	public static void keyPressed(ITopParent<?> objIn, char typedChar, int keyCode) {
 		objIn.postEvent(new EventKeyboard(objIn, typedChar, keyCode, KeyboardType.Pressed)); //post a new event
-		
-		if ((keyCode == 1 && objIn.getEscapeStopper() == null)) { //check if the pressed key was escape in which case all unpinned objects will be removed and the proxy gui is closed
+		IWindowObject<?> fo = objIn.getFocusedObject();
 			
-		}
-		
-		if (keyCode == 61) { //f3 key for debug info
+		if (fo != null && fo != objIn) { fo.keyPressed(typedChar, keyCode); }
+		if (fo == null || fo == objIn) {
 			
-		}
-		else {
-			IWindowObject<?> fo = objIn.getFocusedObject();
-			
-			if (fo != null && fo != objIn) { fo.keyPressed(typedChar, keyCode); }
-			if (fo == null || fo == objIn) {
-				
-			}
 		}
 	}
 	
@@ -432,7 +422,7 @@ public class StaticTopParent extends EGui {
 	public static ScreenLocation getEdgeAreaMouseIsOn(ITopParent<?> objIn) {
 		//check in both the objects on screen and the objects being added
 		for (IWindowObject<?> o : EArrayList.combineLists(objIn.getObjects(), objIn.getAddingObjects())) {
-			ScreenLocation loc = o.getEdgeAreaMouseIsOn();
+			ScreenLocation loc = o.getEdgeSideMouseIsOn();
 			if (loc != ScreenLocation.out) { return loc; }
 		}
 		return ScreenLocation.out; //otherwise, return out becuse it wasn't under an object edge
@@ -497,13 +487,13 @@ public class StaticTopParent extends EGui {
 						IWindowParent<?> wp = (IWindowParent<?>) o;
 						
 						//then check if the mouse is in or around the object if it's resizeable
-						if (o.isMouseInside() || ((o.isResizeable() && o.isMouseOnObjEdge(mX, mY)) && !(wp.isMinimized() || wp.getMaximizedPosition() == ScreenLocation.center))) {
+						if (o.isMouseInside() || ((o.isResizeable() && o.isMouseOnEdge(mX, mY)) && !(wp.isMinimized() || wp.getMaximizedPosition() == ScreenLocation.center))) {
 							underMouse.add(o);
 						}
 					}
 					else {
 						//then check if the mouse is in or around the object if it's resizeable
-						if (o.isMouseInside() || (o.isResizeable() && o.isMouseOnObjEdge(mX, mY))) {
+						if (o.isMouseInside() || (o.isResizeable() && o.isMouseOnEdge(mX, mY))) {
 							IWindowParent<?> wp = o.getWindowParent();
 							if (wp != null) {
 								if (!wp.isMinimized()) { underMouse.add(o); }

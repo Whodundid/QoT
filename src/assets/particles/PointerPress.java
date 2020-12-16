@@ -16,7 +16,7 @@ public class PointerPress extends WindowObject {
 		pressY = mY;
 		rad = startRadius;
 		
-		init(Game.getGameRenderer(), mX - rad, mY - rad, rad * 2, rad * 2);
+		init(Game.getActiveTopParent(), mX - rad, mY - rad, rad * 2, rad * 2);
 		curTime = System.currentTimeMillis();
 		
 		setClickable(false);

@@ -1,6 +1,5 @@
 package envisionEngine.input;
 
-import gameSystems.gameRenderer.WorldRenderer;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -16,7 +15,7 @@ public class Keyboard extends GLFWKeyCallback {
 	private static char lastChar = '\u0000';
 	private static int lastKey = -1;
 	private static Keyboard instance;
-	private static boolean repeatEvents = true;
+	public static boolean repeatEvents = true;
 	
 	//-----------------------
 	// Static Key References
@@ -156,26 +155,7 @@ public class Keyboard extends GLFWKeyCallback {
 	//------------------
 	
 	private void distribute(int action, char typedChar, int keyCode) {
-		if (Game.getGLInit()) {
-			if (Game.currentScreen != null) {
-				switch (action) {
-				case 0: Game.currentScreen.keyReleased(typedChar, keyCode); break;
-				case 1: Game.currentScreen.keyPressed(typedChar, keyCode); break;
-				case 2: if (repeatEvents) { Game.currentScreen.keyPressed(typedChar, keyCode); } break;
-				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
-				}
-			}
-			
-			WorldRenderer r = Game.getGameRenderer();
-			if (r != null) {
-				switch (action) {
-				case 0: r.keyReleased(typedChar, keyCode); break;
-				case 1: r.keyPressed(typedChar, keyCode); break;
-				case 2: if (repeatEvents) { r.keyPressed(typedChar, keyCode); } break;
-				default: throw new IllegalArgumentException("Invalid keyboard action type! " + action);
-				}
-			}
-		}
+		Game.keyboardEvent(action, typedChar, keyCode);
 	}
 
 	//-------------------------

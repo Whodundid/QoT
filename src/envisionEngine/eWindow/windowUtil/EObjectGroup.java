@@ -75,4 +75,5 @@ public class EObjectGroup {
 	
 	public EArrayList<IWindowObject> getObjects() { return objects; }
 	public IWindowObject getGroupParent() { return groupParent; }
+	
 }

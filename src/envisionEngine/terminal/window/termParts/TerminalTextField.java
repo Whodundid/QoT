@@ -4,7 +4,6 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowTextField;
 import envisionEngine.terminal.TerminalHandler;
 import envisionEngine.terminal.window.ETerminal;
 import envisionEngine.terminal.window.TerminalRCM;
-import main.Game;
 import util.renderUtil.CenterType;
 
 //Author: Hunter Bragg
@@ -31,7 +30,7 @@ public class TerminalTextField extends WindowTextField {
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
-		if (button == 1) { Game.displayWindow(new TerminalRCM(this), CenterType.cursorCorner); }
+		if (button == 1) { getTopParent().displayWindow(new TerminalRCM(this), CenterType.cursorCorner); }
 	}
 	
 	@Override

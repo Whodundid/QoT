@@ -5,7 +5,7 @@ import envisionEngine.eWindow.windowObjects.basicObjects.WindowRect;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.GameOverScreen;
 import gameScreens.MainMenuScreen;
-import gameSystems.gameRenderer.GameScreen;
+import gameSystems.screenSystem.GameScreen;
 import main.Game;
 import util.renderUtil.EColors;
 

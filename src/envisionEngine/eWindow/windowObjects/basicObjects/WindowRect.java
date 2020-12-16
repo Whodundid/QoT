@@ -5,7 +5,7 @@ import util.renderUtil.EColors;
 
 //Author: Hunter Bragg
 
-public class WindowRect extends WindowShape {
+public class WindowRect<E> extends WindowShape<E> {
 	
 	public WindowRect(IWindowObject parentIn, double startX, double startY, double endX, double endY) { this(parentIn, startX, startY, endX, endY, true, EColors.black); }
 	public WindowRect(IWindowObject parentIn, double startX, double startY, double endX, double endY, EColors colorIn) { this(parentIn, startX, startY, endX, endY, true, colorIn.intVal); }
@@ -28,7 +28,7 @@ public class WindowRect extends WindowShape {
 	}
 	
 	@Override
-	public WindowRect setDimensions(double newWidth, double newHeight) {
+	public WindowRect<E> setDimensions(double newWidth, double newHeight) {
 		width = Math.abs(newWidth);
 		height = Math.abs(newHeight);
 		if (newWidth < 0) { startX += newWidth; }
@@ -50,7 +50,7 @@ public class WindowRect extends WindowShape {
 	//EGuiRect Setters
 	//----------------
 	
-	public WindowRect setColor(EColors colorIn) { return setColor(colorIn.c()); }
-	public WindowRect setColor(int colorIn) { color = colorIn; return this; }
+	public WindowRect<E> setColor(EColors colorIn) { return setColor(colorIn.c()); }
+	public WindowRect<E> setColor(int colorIn) { color = colorIn; return this; }
 	
 }

@@ -4,7 +4,6 @@ import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
-import main.Game;
 import util.EUtil;
 import util.renderUtil.EColors;
 import util.storageUtil.EArrayList;
@@ -35,7 +34,7 @@ public class PinWindow extends TerminalCommand {
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
-				EArrayList<WindowParent> windows = Game.getAllActiveWindows();
+				EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 				
 				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getObjectID() == pid);
 				if (theWindow != null) {
@@ -51,7 +50,7 @@ public class PinWindow extends TerminalCommand {
 				try {
 					String name = EUtil.combineAll(args, " ").trim();
 					
-					EArrayList<WindowParent> windows = Game.getAllActiveWindows();
+					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					WindowParent theWindow = null;
 					
 					for (WindowParent p : windows) {

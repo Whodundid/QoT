@@ -10,7 +10,7 @@ import util.storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
-public class WindowLabel extends WindowObject {
+public class WindowLabel<E> extends WindowObject<E> {
 	
 	public String displayString = "";
 	public int displayStringColor = 0xffffff;
@@ -62,7 +62,7 @@ public class WindowLabel extends WindowObject {
 		super.drawObject(mX, mY);
 	}
 	
-	public WindowLabel setString(String stringIn) {
+	public WindowLabel<E> setString(String stringIn) {
 		displayString = stringIn;
 		if (wordWrap) {
 			wordWrappedLines = EStringBuilder.createWordWrapString(displayString, widthMax);
@@ -84,7 +84,7 @@ public class WindowLabel extends WindowObject {
 		return this;
 	}
 	
-	public WindowLabel enableWordWrap(boolean val, double widthMaxIn) {
+	public WindowLabel<E> enableWordWrap(boolean val, double widthMaxIn) {
 		boolean oldVal = wordWrap;
 		widthMax = widthMaxIn;
 		wordWrap = val;
@@ -98,12 +98,12 @@ public class WindowLabel extends WindowObject {
 	
 	public boolean isEmpty() { return (displayString != null) ? displayString.isEmpty() : true; }
 	
-	public WindowLabel clear() { if (displayString != null) { displayString = ""; } return this; }
-	public WindowLabel setLineGapHeight(int heightIn) { gapSize = heightIn; return this; }
-	public WindowLabel setColor(int colorIn) { displayStringColor = colorIn; return this; }
-	public WindowLabel setColor(EColors colorIn) { if (colorIn != null) { displayStringColor = colorIn.c(); } return this; }
-	public WindowLabel enableShadow(boolean val) { shadow = val; return this; }
-	public WindowLabel setDrawCentered(boolean val) { centered = val; return this; }
+	public WindowLabel<E> clear() { if (displayString != null) { displayString = ""; } return this; }
+	public WindowLabel<E> setLineGapHeight(int heightIn) { gapSize = heightIn; return this; }
+	public WindowLabel<E> setColor(int colorIn) { displayStringColor = colorIn; return this; }
+	public WindowLabel<E> setColor(EColors colorIn) { if (colorIn != null) { displayStringColor = colorIn.c(); } return this; }
+	public WindowLabel<E> enableShadow(boolean val) { shadow = val; return this; }
+	public WindowLabel<E> setDrawCentered(boolean val) { centered = val; return this; }
 	
 	public static void setColor(EColors colorIn, WindowLabel label, WindowLabel... additional) { setColor(colorIn.intVal, label, additional); }
 	public static void setColor(int colorIn, WindowLabel label, WindowLabel... additional) {

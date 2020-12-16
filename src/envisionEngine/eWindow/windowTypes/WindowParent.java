@@ -3,7 +3,6 @@ package envisionEngine.eWindow.windowTypes;
 import envisionEngine.eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
-import gameSystems.gameRenderer.WorldRenderer;
 import gameSystems.textureSystem.GameTexture;
 import java.util.Stack;
 import main.Game;
@@ -21,7 +20,6 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	public static int defaultWidth = 220, defaultHeight = 255;
 	
 	public WindowParent<E> windowInstance;
-	
 	protected WindowHeader<?> header;
 	protected int windowZLevel = 0;
 	protected boolean moveWithParent = false;
@@ -47,8 +45,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	//-------------------------
 	
 	/** By default, set the parent to the EMC Renderer. */
-	public WindowParent() { this(WorldRenderer.getInstance(), null); }
-	public WindowParent(IWindowParent<?> oldGuiIn) { this(WorldRenderer.getInstance(), oldGuiIn); }
+	public WindowParent() { this(Game.getActiveTopParent(), null); }
+	public WindowParent(IWindowParent<?> oldGuiIn) { this(Game.getActiveTopParent(), oldGuiIn); }
 	public WindowParent(int xPos, int yPos) { windowInstance = this; initTime = System.currentTimeMillis(); }
 	public WindowParent(int xPos, int yPos, IWindowParent<?> oldGuiIn) { initTime = System.currentTimeMillis(); windowInstance = this; pullHistoryFrom(oldGuiIn); }
 	public WindowParent(IWindowObject<?> parentIn) { this(parentIn, null); }
@@ -331,7 +329,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 				try {
 					WindowParent<?> newGui = ((WindowParent<?>) Class.forName(oldGuiPass.getClass().getName()).getConstructor().newInstance());
 					newGui.setWindowHistory(((WindowParent<?>) oldGuiPass).getWindowHistory());
-					IWindowParent p = Game.displayWindow(newGui, this, true, true, false, CenterType.object);
+					IWindowParent p = getTopParent().displayWindow(newGui, this, true, true, false, CenterType.object);
 					p.setPinned(isPinned());
 					if (isMaximized() && newGui.isMaximizable()) {
 						newGui.setPreMax(getPreMax());
@@ -342,7 +340,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 					//THIS IS NOT RIGHT
 					// V V V V V V V V
 					
-					WorldRenderer.instance.setFocusedObject(p);
+					getTopParent().setFocusedObject(p);
 				}
 				catch (Exception e) { e.printStackTrace(); }
 			}

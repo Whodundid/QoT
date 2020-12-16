@@ -255,37 +255,6 @@ public class StaticWindowObject extends EGui {
 		}
 	}
 	
-	/** Centers the object and all of its children in the middle of the screen with the specified dimensions. */
-	public static void centerObjectWithSize(IWindowObject<?> obj, double widthIn, double heightIn) {
-		WindowSize res = Game.getWindowSize(); //get the screen size
-		double sWidth = res.getWidth();
-		double sHeight = res.getHeight();
-		double startX, startY, width, height;
-		
-		if (sWidth >= widthIn) { //check if the screen width is larger than the desired object width
-			//if it is, set the xPos so that it will be in the middle of the screen
-			startX = (sWidth - widthIn) / 2;
-			width = widthIn;
-		}
-		else { //otherwise, restrict the object's width to the screen's width
-			startX = 0;
-			width = sWidth;
-		}
-		
-		if (sHeight >= heightIn) { //check if the screen height is larger than the desired object height
-			//if it is, set the yPos so that it will be in the middle of the screen
-			startY = (sHeight - heightIn) / 2;
-			height = heightIn;
-		}
-		else { //otherwise, restrict the object's width to the screen's height
-			startY = 0;
-			height = sHeight;
-		}
-		
-		obj.setDimensions(startX, startY, width, height); //apply the dimensions to the object
-		//obj.setClickableArea(startX, startY, startX + width, startY + height); //aplly the dimension to the clickableArea
-	}
-	
 	//objects
 	/** Returns true if the given object is a child of the specified parent. */
 	public static boolean isChildOfObject(IWindowObject<?> child, IWindowObject<?> parent) {
@@ -448,7 +417,7 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	public static boolean isMouseInside(IWindowObject<?> obj, int mX, int mY) {
-		if (obj != null) {
+		if (obj != null && (!Game.getTopRenderer().hasFocus() || obj.isChildOf(Game.getTopRenderer()))) {
 			EDimension d = obj.getDimensions();
 			
 			// check if there is a boundary enforcer limiting the overrall area
@@ -476,8 +445,8 @@ public class StaticWindowObject extends EGui {
 		IWindowParent<?> p = objIn.getWindowParent();
 		if (p != null) { p.bringToFront(); }
 		if (!objIn.hasFocus() && objIn.isMouseOver()) { objIn.requestFocus(); }
-		if (button == 0 && objIn.isResizeable() && !objIn.getEdgeAreaMouseIsOn().equals(ScreenLocation.out)) {
-			objIn.getTopParent().setResizingDir(objIn.getEdgeAreaMouseIsOn());
+		if (button == 0 && objIn.isResizeable() && !objIn.getEdgeSideMouseIsOn().equals(ScreenLocation.out)) {
+			objIn.getTopParent().setResizingDir(objIn.getEdgeSideMouseIsOn());
 			objIn.getTopParent().setModifyMousePos(mX, mY);
 			objIn.getTopParent().setModifyingObject(objIn, ObjectModifyType.Resize);
 		}

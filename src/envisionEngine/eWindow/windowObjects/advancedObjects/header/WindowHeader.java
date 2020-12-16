@@ -11,7 +11,6 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
 import envisionEngine.eWindow.windowUtil.EObjectGroup;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import envisionEngine.input.Mouse;
-import gameSystems.gameRenderer.WorldRenderer;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
 import util.renderUtil.ScreenLocation;
@@ -179,7 +178,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		if (getObjectGroup() != null && getObjectGroup().getGroupParent() != null) {
 			IWindowObject groupParent = getObjectGroup().getGroupParent();
 			if (groupParent.isResizeable()) {
-				if (groupParent.getEdgeAreaMouseIsOn() != ScreenLocation.out) {
+				if (groupParent.getEdgeSideMouseIsOn() != ScreenLocation.out) {
 					getTopParent().setFocusedObject(getWindowParent());
 					groupParent.mousePressed(mX, mY, button);
 				}
@@ -199,25 +198,25 @@ public class WindowHeader<E> extends WindowObject<E> {
 		WindowParent<?> p = (WindowParent<?>) window;
 		
 		if (mXIn <= 5 && mYIn <= 8) { //top left
-			WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.topLeft, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.topLeft, false);
 		}
 		else if (mXIn <= 5 && mYIn >= (res.getHeight() - 8)) { //bot left
-			WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.botLeft, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.botLeft, false);
 		}
 		else if (mXIn >= (res.getWidth() - 5) && mYIn <= 8) { //top right
-			WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.topRight, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.topRight, false);
 		}
 		else if (mXIn >= (res.getWidth() - 5) && mYIn >= (res.getHeight() - 8)) { //bot right
-			WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.botRight, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.botRight, false);
 		}
 		else if (mXIn <= 5) { //left
-			WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.left, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.left, false);
 		}
 		else if (mXIn >= (res.getWidth() - 5)) { //right
-			WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.right, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.right, false);
 		}
 		else if (mYIn <= 8) { //top
-			WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.center, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.center, false);
 		}
 		
 		super.mouseReleased(mXIn, mYIn, button);
@@ -298,7 +297,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	private void headerGrabMaximize() {
 		clickPos.setValues(-1, -1);
 		pressed = false;
-		WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.out, true);
+		getTopParent().setMaximizingWindow(window, ScreenLocation.out, true);
 	}
 	
 	public WindowHeader<E> updateButtonVisibility() {
@@ -382,13 +381,13 @@ public class WindowHeader<E> extends WindowObject<E> {
 				if (p.getMaximizedPosition() == ScreenLocation.center) {
 					p.setMaximized(ScreenLocation.out);
 					p.miniaturize();
-					WorldRenderer.instance.setFocusedObject(p);
+					getTopParent().setFocusedObject(p);
 				}
 				else {
 					if (p.getMaximizedPosition() == ScreenLocation.out) { p.setPreMax(p.getDimensions()); }
 					p.setMaximized(ScreenLocation.center);
 					p.maximize();
-					WorldRenderer.instance.setFocusedObject(p);
+					getTopParent().setFocusedObject(p);
 				}
 				
 				//maximizeButton.setButtonTexture(p.getMaximizedPosition() == ScreenLocation.center ? EMCResources.guiMinButton : EMCResources.guiMaxButton);

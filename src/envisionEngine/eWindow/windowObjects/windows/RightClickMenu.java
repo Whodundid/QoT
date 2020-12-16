@@ -8,9 +8,9 @@ import envisionEngine.eWindow.windowUtil.windowEvents.ObjectEvent;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.MouseType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
 import envisionEngine.input.Mouse;
-import gameSystems.gameRenderer.WorldRenderer;
 import gameSystems.textureSystem.GameTexture;
 import java.util.List;
+import main.Game;
 import util.storageUtil.StorageBox;
 import util.storageUtil.StorageBoxHolder;
 
@@ -30,7 +30,7 @@ public class RightClickMenu extends ActionWindowParent {
 	public int separatorLineColor = 0xff000000;
 	public int borderColor = 0xff000000;
 	
-	public RightClickMenu() { this(WorldRenderer.instance); }
+	public RightClickMenu() { this(Game.getActiveTopParent()); }
 	public RightClickMenu(IWindowObject obj) {
 		super(obj);
 		setDimensions(Mouse.getMx(), Mouse.getMy(), 125, 15);

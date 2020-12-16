@@ -1,4 +1,4 @@
-package gameSystems.gameRenderer;
+package gameSystems.worldRenderer;
 
 import envisionEngine.eWindow.windowObjects.windows.RightClickMenu;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
@@ -11,8 +11,6 @@ public class RendererRCM extends RightClickMenu {
 	
 	@Override
 	public void initWindow() {
-		//if (RegisteredApps.isAppRegEn(AppType.ENHANCEDCHAT)) { addOption("New Chat Window"); }
-		//if (EnhancedMC.getEMCApp().enableTerminal.get()) { addOption("New Terminal", EMCResources.terminalButton); }
 		addOption("New Window");
 		addOption("Open EMC Settings");
 		addOption("Close All Objects");
@@ -43,8 +41,7 @@ public class RendererRCM extends RightClickMenu {
 	}
 	
 	private void clearScreen() {
-		WorldRenderer ren = WorldRenderer.getInstance();
-		EArrayList<IWindowObject> objs = EArrayList.combineLists(ren.getObjects(), ren.getAddingObjects());
+		EArrayList<IWindowObject> objs = getTopParent().getCombinedObjects();
 		//TaskBar bar = ren.getTaskBar();
 		
 		for (IWindowObject o : objs) {

@@ -240,6 +240,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	protected void updateBeforeNextDraw(int mXIn, int mYIn) {
 		postEvent(new EventRedraw(this));
 		res = Game.getWindowSize();
+		setDimensions(res.getWidth(), res.getHeight());
 		
 		mX = mXIn;
 		mY = mYIn;
@@ -406,14 +407,9 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	}
 	
 	public void onWindowResized() {
-		//notify apps
-		//MinecraftForge.EVENT_BUS.post(new GameWindowResizedEvent(newWidth, newHeight));
-		
 		WindowSize newRes = Game.getWindowSize();
 		
 		//handle windows
-		EArrayList<WindowParent> windows = Game.getAllActiveWindows();
-		
 		int oldW = res.getWidth();
 		int oldH = res.getHeight();
 		int newW = newRes.getWidth();
@@ -422,7 +418,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		res = Game.getWindowSize();
 		setDimensions(0, 0, res.getWidth(), res.getHeight());
 		
-		for (WindowParent p : windows) {
+		for (WindowParent p : getAllActiveWindows()) {
 			
 			EDimension oldDims = p.getDimensions();
 			

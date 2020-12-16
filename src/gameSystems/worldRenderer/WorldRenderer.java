@@ -1,11 +1,9 @@
-package gameSystems.gameRenderer;
+package gameSystems.worldRenderer;
 
 import assets.entities.Entity;
 import assets.entities.player.Player;
-import envisionEngine.eWindow.windowTypes.TopWindowParent;
+import envisionEngine.eWindow.windowUtil.EGui;
 import envisionEngine.input.Keyboard;
-import envisionEngine.input.Mouse;
-import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import main.Game;
@@ -15,7 +13,7 @@ import util.storageUtil.EArrayList;
 //Author: Hunter Bragg
 
 /** Handles rendering GameWorlds. */
-public class WorldRenderer<E> extends TopWindowParent<E> {
+public class WorldRenderer extends EGui {
 	
 	public static WorldRenderer instance;
 	private GameWorld world;
@@ -33,25 +31,18 @@ public class WorldRenderer<E> extends TopWindowParent<E> {
 	boolean drawEntityHitboxes = true;
 	boolean drawEntityOutlines = false;
 	
-	boolean mouseInMap = false;
-	boolean mouseOver = false;
-	
 	public static WorldRenderer getInstance() {
 		return instance == null ? instance = new WorldRenderer() : instance;
 	}
 	
-	private WorldRenderer() {
-		res = Game.getWindowSize();
-		initObjects();
-	}
+	private WorldRenderer() {}
 	
 	public void onRenderTick() {
 		if (world != null && world.isFileLoaded()) { renderWorld(); }
-		drawObject(Mouse.getMx(), Mouse.getMy());
+		//drawObject(Mouse.getMx(), Mouse.getMy());
 	}
 	
 	private void renderWorld() {
-		mouseOver = isMouseOver();
 		checkArrowPress();
 		
 		if (world == null) { drawStringC("Failed to load!", midX, midY); }
@@ -80,6 +71,7 @@ public class WorldRenderer<E> extends TopWindowParent<E> {
 			//endScissor();
 		}
 		
+		/*
 		if (world != null) {
 			int tW = (int) (FontRenderer.getInstance().getStringWidth(world.getName()) / 2);
 			drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
@@ -88,8 +80,7 @@ public class WorldRenderer<E> extends TopWindowParent<E> {
 			
 			drawString("Dims: " + world.getWidth() + " " + world.getHeight(), startX + 10, endY + 60);
 		}
-		
-		Player p = Game.thePlayer;
+		*/
 		
 		//drawString("Dist: " + distX + " " + distY, reload.startX + 10, reload.endY + 20);
 		//drawString("Zoom: " + NumUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
@@ -206,8 +197,6 @@ public class WorldRenderer<E> extends TopWindowParent<E> {
 			}
 		}
 	}
-
-	@Override public void close() { System.out.println("FOOL! Dagoth Ur cannot be closed, I am a god!"); }
 	
 	public WorldRenderer setWorld(GameWorld worldIn) {
 		world = worldIn;
@@ -215,7 +204,6 @@ public class WorldRenderer<E> extends TopWindowParent<E> {
 		return this;
 	}
 	
-	@Override
 	public void onWindowResized() {
 		res = Game.getWindowSize();
 		setDimensions(0, 0, res.getWidth(), res.getHeight());

@@ -8,7 +8,7 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.gameplay.GamePlayScreen;
 import gameScreens.gameplay.StatusBar;
-import gameSystems.gameRenderer.GameScreen;
+import gameSystems.screenSystem.GameScreen;
 import gameWindows.InventoryWindow;
 import main.Game;
 import util.renderUtil.EColors;
@@ -184,13 +184,13 @@ public class BattleScreen extends GameScreen {
 	/** Attempts to open the inventory screen. Note, Only one inventory window can be open at any time. */
 	public void openInventory() {
 		if (inventoryWindow == null) {
-			Game.displayWindow(inventoryWindow = new InventoryWindow((Player) entA));
+			displayWindow(inventoryWindow = new InventoryWindow((Player) entA));
 		}
 	}
 	
 	/** Returns true if there is an inventory window open. */
 	public boolean isInventoryOpen() {
-		return Game.isEGuiOpen(InventoryWindow.class);
+		return isWindowOpen(InventoryWindow.class);
 	}
 	
 }

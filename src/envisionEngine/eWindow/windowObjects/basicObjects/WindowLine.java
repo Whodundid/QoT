@@ -4,7 +4,7 @@ import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import util.renderUtil.EColors;
 
-public class WindowLine extends WindowObject {
+public class WindowLine<E> extends WindowObject<E> {
 	
 	double x1, y1, x2, y2;
 	int color;

@@ -33,7 +33,7 @@ public class OpenWindow extends TerminalCommand {
 		if (args.isNotEmpty()) {
 			switch (args.get(0).toLowerCase()) {
 			case "main": Game.displayScreen(new MainMenuScreen()); break;
-			case "keys": Game.displayWindow(new GLKeyChecker()); break;
+			case "keys": termIn.getTopParent().displayWindow(new GLKeyChecker()); break;
 			default: termIn.error("Unrecognized screen name!");
 			}
 		}

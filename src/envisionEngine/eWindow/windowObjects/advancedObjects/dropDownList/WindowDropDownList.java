@@ -11,10 +11,10 @@ import util.storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
-public class WindowDropDownList extends WindowObject {
+public class WindowDropDownList<E> extends WindowObject<E> {
 	
-	EArrayList<DropDownListEntry> listContents = new EArrayList();
-	DropDownListEntry selectedEntry;
+	EArrayList<DropDownListEntry<E>> listContents = new EArrayList();
+	DropDownListEntry<E> selectedEntry;
 	double entryHeight = 17;
 	boolean listOpen = false;
 	boolean fixedWidth = false;
@@ -132,18 +132,18 @@ public class WindowDropDownList extends WindowObject {
 		}
 	}
 	
-	public WindowDropDownList addEntry(String title) { return addEntry(title, EColors.lgray, null); }
-	public WindowDropDownList addEntry(String title, EColors colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn.intVal, objIn)); }
-	public WindowDropDownList addEntry(String title, int colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn, objIn)); }
-	public WindowDropDownList addEntry(DropDownListEntry entryIn) {
+	public WindowDropDownList<E> addEntry(String title) { return addEntry(title, EColors.lgray, null); }
+	public WindowDropDownList<E> addEntry(String title, EColors colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn.intVal, objIn)); }
+	public WindowDropDownList<E> addEntry(String title, int colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn, objIn)); }
+	public WindowDropDownList<E> addEntry(DropDownListEntry<E> entryIn) {
 		listContents.add(entryIn.setEntryID(listContents.size()).setParentList(this).setGlobalActionPresent(globalAction));
 		if (listContents.size() == 1) { selectedEntry = entryIn; }
 		adjustWidth();
 		return this;
 	}
 	
-	public synchronized WindowDropDownList removeEntry(DropDownListEntry entryIn) {
-		Iterator<DropDownListEntry> it = listContents.iterator();
+	public synchronized WindowDropDownList<E> removeEntry(DropDownListEntry<E> entryIn) {
+		Iterator<DropDownListEntry<E>> it = listContents.iterator();
 		while (it.hasNext()) {
 			if (it.next().equals(entryIn)) { it.remove(); break; }
 		}
@@ -153,8 +153,8 @@ public class WindowDropDownList extends WindowObject {
 		return this;
 	}
 	
-	public synchronized WindowDropDownList removeEntry(int entryIdIn) {
-		Iterator<DropDownListEntry> it = listContents.iterator();
+	public synchronized WindowDropDownList<E> removeEntry(int entryIdIn) {
+		Iterator<DropDownListEntry<E>> it = listContents.iterator();
 		int i = 0;
 		while (it.hasNext()) {
 			if (i == entryIdIn) { it.remove(); break; }
@@ -186,7 +186,7 @@ public class WindowDropDownList extends WindowObject {
 		}
 	}
 	
-	public DropDownListEntry getHoveringEntry(int mXIn, int mYIn) {
+	public DropDownListEntry<E> getHoveringEntry(int mXIn, int mYIn) {
 		if (isMouseInside()) {
 			
 			double offset = drawTop ? entryHeight : 0;
@@ -203,29 +203,29 @@ public class WindowDropDownList extends WindowObject {
 		return null;
 	}
 	
-	public EArrayList<DropDownListEntry> getEntries() { return listContents; }
-	public DropDownListEntry getSelectedEntry() { return selectedEntry; }
-	public DropDownListEntry getEntryFromObject(Object objIn) {
-		for (DropDownListEntry e : listContents) { if (e.getEntryObject().equals(objIn)) { return e; } }
+	public EArrayList<DropDownListEntry<E>> getEntries() { return listContents; }
+	public DropDownListEntry<E> getSelectedEntry() { return selectedEntry; }
+	public DropDownListEntry<E> getEntryFromObject(E objIn) {
+		for (DropDownListEntry<E> e : listContents) { if (e.getEntryObject().equals(objIn)) { return e; } }
 		return null;
 	}
 	
-	public WindowDropDownList setDrawHighlight(boolean val) { drawHighlight = val; return this; }
-	public WindowDropDownList setAlwaysOpen(boolean val) { alwaysOpen = val; if (val) { openList(); } return this; }
-	public WindowDropDownList setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; return this; }
-	public WindowDropDownList setBackColor(EColors colorIn) { backColor = colorIn.intVal; return this; }
-	public WindowDropDownList setSelectedColor(EColors colorIn) { selectedColor = colorIn.intVal; return this; }
-	public WindowDropDownList setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowDropDownList setBackColor(int colorIn) { backColor = colorIn; return this; }
-	public WindowDropDownList setSelectedColor(int colorIn) { selectedColor = colorIn; return this; }
-	public WindowDropDownList setDrawTop(boolean val) { drawTop = val; return this; }
-	public WindowDropDownList setFixedWidth(boolean val) { fixedWidth = val; return this; }
-	public WindowDropDownList setFixedWidth(int newWidth) { fixedWidth = true; setWidth(newWidth); return this; }
-	public WindowDropDownList setWidth(int widthIn) {  setDimensions(startX, startY, widthIn, height); return this; }
-	public WindowDropDownList setSelectedEntry(int entry) { selectedEntry = listContents.get(entry); return this; }
-	public WindowDropDownList setSelectedEntry(DropDownListEntry entry) { return setSelectedEntry(entry, false); }
+	public WindowDropDownList<E> setDrawHighlight(boolean val) { drawHighlight = val; return this; }
+	public WindowDropDownList<E> setAlwaysOpen(boolean val) { alwaysOpen = val; if (val) { openList(); } return this; }
+	public WindowDropDownList<E> setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; return this; }
+	public WindowDropDownList<E> setBackColor(EColors colorIn) { backColor = colorIn.intVal; return this; }
+	public WindowDropDownList<E> setSelectedColor(EColors colorIn) { selectedColor = colorIn.intVal; return this; }
+	public WindowDropDownList<E> setBorderColor(int colorIn) { borderColor = colorIn; return this; }
+	public WindowDropDownList<E> setBackColor(int colorIn) { backColor = colorIn; return this; }
+	public WindowDropDownList<E> setSelectedColor(int colorIn) { selectedColor = colorIn; return this; }
+	public WindowDropDownList<E> setDrawTop(boolean val) { drawTop = val; return this; }
+	public WindowDropDownList<E> setFixedWidth(boolean val) { fixedWidth = val; return this; }
+	public WindowDropDownList<E> setFixedWidth(int newWidth) { fixedWidth = true; setWidth(newWidth); return this; }
+	public WindowDropDownList<E> setWidth(int widthIn) {  setDimensions(startX, startY, widthIn, height); return this; }
+	public WindowDropDownList<E> setSelectedEntry(int entry) { selectedEntry = listContents.get(entry); return this; }
+	public WindowDropDownList<E> setSelectedEntry(DropDownListEntry<E> entry) { return setSelectedEntry(entry, false); }
 	
-	public WindowDropDownList setSelectedEntry(DropDownListEntry entry, boolean addIfNotContains) {
+	public WindowDropDownList<E> setSelectedEntry(DropDownListEntry<E> entry, boolean addIfNotContains) {
 		if (entry != null) {
 			if (listContents.contains(entry)) { selectedEntry = entry; }
 			else if (addIfNotContains) {

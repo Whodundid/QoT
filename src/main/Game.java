@@ -6,9 +6,7 @@ import assets.textures.EditorTextures;
 import assets.textures.EntityTextures;
 import assets.textures.WindowTextures;
 import assets.textures.WorldTextures;
-import envisionEngine.eWindow.windowTypes.OverlayWindow;
-import envisionEngine.eWindow.windowTypes.WindowParent;
-import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
+import envisionEngine.eWindow.windowTypes.TopWindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
 import envisionEngine.input.Keyboard;
 import envisionEngine.input.Mouse;
@@ -17,10 +15,12 @@ import envisionEngine.terminal.TerminalHandler;
 import envisionEngine.terminal.window.ETerminal;
 import gameScreens.MainMenuScreen;
 import gameSystems.fontRenderer.FontRenderer;
-import gameSystems.gameRenderer.WorldRenderer;
-import gameSystems.gameRenderer.GameScreen;
 import gameSystems.mapSystem.GameWorld;
+import gameSystems.screenSystem.GameScreen;
+import gameSystems.screenSystem.GameTopRenderer;
+import gameSystems.screenSystem.ScreenLevel;
 import gameSystems.textureSystem.TextureSystem;
+import gameSystems.worldRenderer.WorldRenderer;
 import java.io.File;
 import java.nio.IntBuffer;
 import java.util.logging.Level;
@@ -34,10 +34,10 @@ import org.lwjgl.opengl.GL11;
 import util.miscUtil.OSType;
 import util.miscUtil.SysUtil;
 import util.miscUtil.TracingPrintStream;
+import util.openGL_Util.GLSettings;
 import util.openGL_Util.shader.Shaders;
 import util.renderUtil.CenterType;
 import util.renderUtil.WindowSize;
-import util.storageUtil.EArrayList;
 import util.storageUtil.EDimension;
 
 public class Game {
@@ -53,7 +53,8 @@ public class Game {
 	private static WindowResizeListener resizeListener;
 	private static FontRenderer fontRenderer;
 	private static TextureSystem textureSystem;
-	private static WorldRenderer<?> gameRenderer;
+	private static WorldRenderer worldRenderer;
+	private static GameTopRenderer<?> topRenderer;
 	private static TerminalHandler terminalHandler;
 	
 	private static double gameScale = 1;
@@ -129,7 +130,8 @@ public class Game {
 		resizeListener = WindowResizeListener.getInstance();
 		textureSystem = TextureSystem.getInstance();
 		fontRenderer = FontRenderer.getInstance();
-		gameRenderer = WorldRenderer.getInstance();
+		worldRenderer = WorldRenderer.getInstance();
+		topRenderer = GameTopRenderer.getInstance();
 		terminalHandler = TerminalHandler.getInstance();
 		
 		GLFW.glfwSetKeyCallback(handle, keyboard);
@@ -216,8 +218,14 @@ public class Game {
 		else { updateCounter++; }
 		
 		//debug terminal
-		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_V) && !isEGuiOpen(ETerminal.class)) {
-			displayWindow(new ETerminal());
+		if (Keyboard.isAltDown() && Keyboard.isKeyDown(Keyboard.KEY_TILDE)) {
+			if (currentScreen != null) {
+				if (!topRenderer.isWindowOpen(ETerminal.class)) {
+					topRenderer.displayWindow(new ETerminal());
+					topRenderer.setFocused(true);
+				}
+				else if (!topRenderer.hasFocus()) { topRenderer.setFocused(true); }
+			}
 		}
 		
 		//update window title
@@ -229,6 +237,8 @@ public class Game {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		renderTick();
 		GLFW.glfwSwapBuffers(handle);
+		GLSettings.disableAlpha();
+		GLSettings.disableBlend();
 	}
 	
 	/** Called from the main game loop to perform all rendering operations. */
@@ -236,12 +246,14 @@ public class Game {
 		//update framerate counter
 		updateFramerate();
 		
-		gameRenderer.onRenderTick();
+		worldRenderer.onRenderTick();
 		
 		if (currentScreen != null) {
 			//System.out.println(currentScreen.getObjectName());
 			currentScreen.drawObject(Mouse.getMx(), Mouse.getMy());
 		}
+		
+		topRenderer.onRenderTick();
 	}
 	
 	public static void stopGame() {
@@ -277,7 +289,28 @@ public class Game {
 		GL11.glViewport(0, 0, width, height);
 		
 		if (currentScreen != null) { currentScreen.onWindowResize(); }
-		gameRenderer.onWindowResized();
+		worldRenderer.onWindowResized();
+		topRenderer.onWindowResized();
+	}
+	
+	//-----------------------
+	// Engine Input Handlers
+	//-----------------------
+	
+	public static void keyboardEvent(int action, char typedChar, int keyCode) {
+		if (getGLInit()) {
+			if (topRenderer.hasFocus()) { topRenderer.handleKeyboardInput(action, typedChar, keyCode); }
+			if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleKeyboardInput(action, typedChar, keyCode); }
+			worldRenderer.handleKeyboardInput(action, typedChar, keyCode);
+		}
+	}
+	
+	public static void mouseEvent(int action, int mXIn, int mYIn, int button, int change) {
+		if (getGLInit()) {
+			if (topRenderer.hasFocus()) { topRenderer.handleMouseInput(action, mXIn, mYIn, button, change); }
+			if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleMouseInput(action, mXIn, mYIn, button, change); }
+			worldRenderer.handleMouseInput(action, mXIn, mYIn, button, change);
+		}
 	}
 	
 	//--------------------------------
@@ -340,180 +373,34 @@ public class Game {
 		}
 		
 		theWorld = worldIn;
-		gameRenderer.setWorld(theWorld);
+		worldRenderer.setWorld(theWorld);
 		
 		return worldIn;
 	}
 	
-	/** Returns true if the specified window parent is open. */
-	public static <T extends WindowParent> boolean isEGuiOpen(Class<T> windowIn) {
-		return (currentScreen != null && windowIn != null) ? currentScreen.getCombinedObjects().stream().anyMatch(o -> o.getClass() == windowIn) : false;
-	}
+	//------------------------
+	// Central Window Handles
+	//------------------------
 	
-	/** Returns a list of all actively drawn window parents. */
-	public static EArrayList<WindowParent> getAllActiveWindows() {
-		EArrayList<WindowParent> windows = new EArrayList();
-		if (currentScreen != null) {
-			try {
-				currentScreen.getCombinedObjects().filterForEach(o -> WindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((WindowParent) w));
-			}
-			catch (Exception e) { e.printStackTrace(); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn) { return displayWindow(level, windowIn, null, true, false, false, CenterType.screen); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, CenterType loc) { return displayWindow(level, windowIn, null, true, false, false, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus) { return displayWindow(level, windowIn, null, transferFocus, false, false, CenterType.screen); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus, CenterType loc) { return displayWindow(level, windowIn, null, transferFocus, false, false, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject) { return displayWindow(level, windowIn, oldObject, true, true, true, CenterType.object); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, CenterType loc) { return displayWindow(level, windowIn, oldObject, true, true, true, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(level, windowIn, oldObject, transferFocus, true, true, CenterType.object); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, CenterType loc) { return displayWindow(level, windowIn, oldObject, transferFocus, true, true, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(level, windowIn, oldObject, transferFocus, closeOld, true, CenterType.object); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(level, windowIn, oldObject, transferFocus, closeOld, transferHistory, CenterType.object); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, CenterType loc) {
+		switch (level) {
+		case TOP: topRenderer.displayWindow(windowIn); break;
+		case SCREEN: if (currentScreen != null) { currentScreen.displayWindow(windowIn); } break;
 		}
-		return windows;
+		return windowIn;
 	}
 	
-	/** Returns the first active instance of a specified type of window parent. If none are active, null is returned instead. */
-	public static <T extends WindowParent> WindowParent getWindowInstance(Class<T> windowIn) {
-		return (currentScreen != null && windowIn != null) ? (WindowParent) (getGameRenderer().getAllChildren().filter(o -> o.getClass() == windowIn).getFirst()) : null;
-	}
-	
-	/** Returns a list of all actively drawn window parents of a given type. */
-	public static <T extends WindowParent> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
-		EArrayList<T> windows = new EArrayList();
-		if (currentScreen != null) {
-			try {
-				currentScreen.getCombinedObjects().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));
-			}
-			catch (Exception e) { e.printStackTrace(); }
-		}
-		return windows;
-	}
-	
-	/** Reloads all actively drawn windows. */
-	public static void reloadAllWindows() { getAllActiveWindows().forEach(w -> w.sendArgs("Reload")); }
-	/** Reloads all actively drawn windows and sends a set of arguments to each. */
-	public static void reloadAllWindows(Object... args) { getAllActiveWindows().forEach(w -> w.sendArgs("Reload", args)); }
-	/** Reloads all actively drawn windows of a specific type. */
-	public static <T extends WindowParent> void reloadAllWindowInstances(Class<T> windowIn) { getAllWindowInstances(windowIn).forEach(w -> w.sendArgs("Reload")); }
-	/** Reloads all actively drawn windows of a specific type and sends a set of arguments to each. */
-	public static <T extends WindowParent> void reloadAllWindowInstances(Class<T> windowIn, Object... args) { getAllWindowInstances(windowIn).forEach(w -> w.sendArgs("Reload", args)); }
-	
-	/** Displays the specified window parent. */
-	public static IWindowParent displayWindow(IWindowParent guiIn) { return displayWindow(guiIn, null, true, false, false, CenterType.screen); }
-	/** Displays the specified window parent around a specific location on the screen. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, CenterType loc) { return displayWindow(guiIn, null, true, false, false, loc); }
-	/** Displays the specified window parent and specifies whether focus should be transfered to it. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, boolean transferFocus) { return displayWindow(guiIn, null, transferFocus, false, false, CenterType.screen); }
-	/** Displays the specified window parent where focus transfer properties can be set along with where it is drawn. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, boolean transferFocus, CenterType loc) { return displayWindow(guiIn, null, transferFocus, false, false, loc); }
-	/** Displays the specified window parent and passes a previous window for history traversal means. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject) { return displayWindow(guiIn, oldObject, true, true, true, CenterType.object); }
-	/** Displays the specified window parent, passes a previous window, and sets where this window will be relatively positioned. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject, CenterType loc) { return displayWindow(guiIn, oldObject, true, true, true, loc); }
-	/** Displays the specified window parent with variable arguments. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(guiIn, oldObject, transferFocus, true, true, CenterType.object); }
-	/** Displays the specified window parent with variable arguments. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject, boolean transferFocus, CenterType loc) { return displayWindow(guiIn, oldObject, transferFocus, true, true, loc); }
-	/** Displays the specified window parent with variable arguments. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(guiIn, oldObject, transferFocus, closeOld, true, CenterType.object); }
-	/** Displays the specified window parent with variable arguments. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(guiIn, oldObject, transferFocus, closeOld, transferHistory, CenterType.object); }
-	/** Displays the specified window parent with variable arguments. */
-	public static IWindowParent displayWindow(IWindowParent guiIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, CenterType loc) {
-		if (guiIn == null) { displayScreen(null); }
-		else if (currentScreen != null) {
-			currentScreen.addObject(guiIn);
-			if (oldObject instanceof GameScreen) { displayScreen(null); }
-			else if (oldObject instanceof IWindowParent && closeOld) { ((IWindowParent) oldObject).close(); }
-			
-			if (transferHistory && oldObject != null) {
-				IWindowParent old = (IWindowParent) oldObject;
-				old.getWindowHistory().add(old);
-				guiIn.setWindowHistory(old.getWindowHistory());
-				guiIn.setPinned(old.isPinned());
-			}
-			
-			setPos(guiIn, oldObject instanceof IWindowObject ? (IWindowObject) oldObject : null, loc);
-			guiIn.bringToFront();
-			if (transferFocus) { guiIn.requestFocus(); }
-		}
-		return guiIn;
-	}
-	
-	/** Helper method used in conjunction wth displayWindow that actually positions the newley created window on the screen. */
-	private static void setPos(IWindowParent windowIn, IWindowObject objectIn, CenterType typeIn) {
-		WindowSize res = Game.getWindowSize();
-		EDimension gDim = windowIn.getDimensions();
-		double headerHeight = windowIn.hasHeader() ? windowIn.getHeader().height : 0;
-		
-		int sX = 0;
-		int sY = 0;
-		
-		switch (typeIn) {
-		case screen:
-			sX = (int) ((res.getWidth() / 2) - (gDim.width / 2));
-			sY = (int) ((res.getHeight() / 2) - (gDim.height / 2));
-			break;
-		case botLeftScreen:
-			sX = 1;
-			sY = (int) (res.getHeight() - 2 - gDim.height);
-			break;
-		case topLeftScreen:
-			sX = 1;
-			sY = 2;
-			break;
-		case botRightScreen:
-			sX = (int) (res.getWidth() - 1 - gDim.width);
-			sY = (int) (res.getHeight() - 2 - gDim.height);
-			break;
-		case topRightScreen:
-			sX = (int) (res.getWidth() - 1 - gDim.width);
-			sY = 2;
-			break;
-		case cursor:
-			sX = (int) (Mouse.getMx() - (gDim.width / 2));
-			sY = (int) (Mouse.getMy() - (gDim.height - headerHeight) / 2 + (gDim.height / 7));
-			break;
-		case cursorCorner:
-			sX = Mouse.getMx();
-			sY = Mouse.getMy();
-			break;
-		case object:
-			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
-				sX = (int) (objDim.midX - (gDim.width / 2));
-				sY = (int) (objDim.midY - (gDim.height / 2));
-			}
-			break;
-		case objectCorner:
-			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
-				sX = (int) objDim.startX;
-				sY = (int) objDim.startY;
-			}
-			break;
-		case objectIndent:
-			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
-				sX = (int) (objDim.startX + 25);
-				sY = (int) (objDim.startY + 25);
-			}
-			break;
-		case existingObjectIndent:
-			EArrayList<WindowParent> windows = new EArrayList();
-			gameRenderer.getAllChildren().stream().filter(o -> windowIn.getClass().isInstance(o)).filter(o -> !o.isBeingRemoved()).forEach(w -> windows.add((WindowParent) w));
-			
-			if (windows.isNotEmpty()) {
-				if (windows.get(0) != null) {
-					EDimension objDim = windows.get(0).getDimensions();
-					sX = (int) (objDim.startX + 25);
-					sY = (int) (objDim.startY + 25);
-				}
-			}
-			
-			break;
-		default: break;
-		}
-		
-		if (!(windowIn instanceof OverlayWindow)) {
-			sX = sX < 0 ? 4 : sX;
-			sY = (int) ((sY - headerHeight) < 2 ? 4 + headerHeight : sY);
-			sX = (int) (sX + gDim.width > res.getWidth() ? -4 + sX - (sX + gDim.width - res.getWidth()) : sX);
-			sY = (int) (sY + gDim.height > res.getHeight() ? -4 + sY - (sY + gDim.height - res.getHeight()) : sY);
-		}
-		
-		windowIn.setPosition(sX, sY);
-	}
+	public static TopWindowParent<?> getActiveTopParent() { return (currentScreen != null) ? currentScreen : topRenderer; }
 	
 	//--------------
 	// Game Loggers
@@ -575,7 +462,11 @@ public class Game {
 	/** Returns this game's central texture handling system. */
 	public static TextureSystem getTextureSystem() { return textureSystem; }
 	/** Returns this game's central object rendering system. */
-	public static WorldRenderer<?> getGameRenderer() { return gameRenderer; }
+	public static WorldRenderer getWorldRenderer() { return worldRenderer; }
+	/** Returns this game's central top level rendering system. */
+	public static GameTopRenderer<?> getTopRenderer() { return topRenderer; }
+	/** Returns the actively rendererd screen. */
+	public static GameScreen<?> getCurrentScreen() { return currentScreen; }
 	/** Returns this game's central terminal command handler. */
 	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
 	

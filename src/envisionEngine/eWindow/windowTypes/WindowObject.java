@@ -23,7 +23,6 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventObjects;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventRedraw;
 import envisionEngine.input.Mouse;
 import main.Game;
-import util.mathUtil.NumUtil;
 import util.openGL_Util.GLSettings;
 import util.renderUtil.EColors;
 import util.renderUtil.ScreenLocation;
@@ -147,7 +146,6 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	//main draw
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		
 		updateBeforeNextDraw(mXIn, mYIn);
 		try {
 			if (checkDraw()) {
@@ -219,8 +217,8 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	@Override public double getMinHeight() { return minHeight; }
 	@Override public double getMaxWidth() { return maxWidth; }
 	@Override public double getMaxHeight() { return maxHeight; }
-	@Override public WindowObject<E> setMinDims(double widthIn, double heightIn) { setMinWidth(widthIn).setMinHeight(heightIn); return this; }
-	@Override public WindowObject<E> setMaxDims(double widthIn, double heightIn) { setMaxWidth(widthIn).setMaxHeight(heightIn); return this; }
+	@Override public WindowObject<E> setMinDims(double widthIn, double heightIn) { super.setMinDims(widthIn, heightIn); return this; }
+	@Override public WindowObject<E> setMaxDims(double widthIn, double heightIn) { super.setMaxDims(widthIn, heightIn); return this; }
 	@Override public WindowObject<E> setMinWidth(double widthIn) { minWidth = widthIn; return this; }
 	@Override public WindowObject<E> setMinHeight(double heightIn) { minHeight = heightIn; return this; }
 	@Override public WindowObject<E> setMaxWidth(double widthIn) { maxWidth = widthIn; return this; }
@@ -241,22 +239,11 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	@Override public WindowObject<E> setMoveable(boolean val) { moveable = val; return this; }
 	@Override public WindowObject<E> setDimensions(EDimension dimIn) { return setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
 	@Override public WindowObject<E> setDimensions(double widthIn, double heightIn) { return setDimensions(startX, startY, widthIn, heightIn); }
-	@Override
-	public WindowObject<E> setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
-		startX = startXIn;
-		startY = startYIn;
-		width = NumUtil.clamp(widthIn, minWidth, maxWidth);
-		height = NumUtil.clamp(heightIn, minHeight, maxHeight);
-		endX = startX + width;
-		endY = startY + height;
-		midX = startX + width / 2.0;
-		midY = startY + height / 2.0;
-		return this;
-	}
-	@Override public WindowObject<E> setInitialPosition(double startXIn, double startYIn) { startXPos = startXIn; startYPos = startYIn; return this; }
-	@Override public StorageBox<Double, Double> getInitialPosition() { return new StorageBox<Double, Double>(startXPos, startYPos); }
-	@Override public WindowObject<E> centerObjectWithSize(double widthIn, double heightIn) { StaticWindowObject.centerObjectWithSize(this, widthIn, heightIn); return this; }
-	@Override public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
+	@Override public WindowObject<E> setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) { super.setDimensions(startXIn, startYIn, widthIn, heightIn); return this; }
+	@Override public WindowObject<E> setInitialPosition(double startXIn, double startYIn) { super.setInitialPosition(startXIn, startYIn); return this; }
+	@Override public StorageBox<Double, Double> getInitialPosition() { return super.getInitialPosition(); }
+	@Override public WindowObject<E> centerObjectWithSize(double widthIn, double heightIn) { centerGuiWithSize(widthIn, heightIn); return this; }
+	@Override public EDimension getDimensions() { return super.getDimensions(); }
 	
 	//objects
 	@Override public boolean isChildOf(IWindowObject<?> objIn) { return StaticWindowObject.isChildOfObject(this, objIn); }
@@ -359,8 +346,8 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	@Override public WindowObject<E> setDefaultFocusObject(IWindowObject<?> objIn) { defaultFocusObject = objIn; return this; }
 	
 	//mouse checks
-	@Override public boolean isMouseOnObjEdge(int mX, int mY) { return checkDraw() && getEdgeAreaMouseIsOn() != ScreenLocation.out; }
-	@Override public ScreenLocation getEdgeAreaMouseIsOn() { return StaticWindowObject.getEdgeAreaMouseIsOn(this, mX, mY); }
+	@Override public boolean isMouseOnEdge(int mX, int mY) { return checkDraw() && getEdgeSideMouseIsOn() != ScreenLocation.out; }
+	@Override public ScreenLocation getEdgeSideMouseIsOn() { return StaticWindowObject.getEdgeAreaMouseIsOn(this, mX, mY); }
 	@Override public void mouseEntered(int mX, int mY) { postEvent(new EventMouse(this, mX, mY, -1, MouseType.ENTERED)); }
 	@Override public void mouseExited(int mX, int mY) { postEvent(new EventMouse(this, mX, mY, -1, MouseType.EXITED)); }
 	@Override public boolean isMouseInside() { return StaticWindowObject.isMouseInside(this, Mouse.getMx(), Mouse.getMy()); }
@@ -375,7 +362,6 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	@Override public void parseMousePosition(int mX, int mY) { StaticWindowObject.parseMousePosition(this, mX, mY); }
 	@Override public void mousePressed(int mX, int mY, int button) { StaticWindowObject.mousePressed(this, mX, mY, button); }
 	@Override public void mouseReleased(int mX, int mY, int button) { StaticWindowObject.mouseReleased(this, mX, mY, button); }
-	@Override public void mouseDragged(int mX, int mY, int button, long timeSinceLastClick) {}
 	@Override public void mouseScrolled(int change) { StaticWindowObject.mouseScolled(this, mX, mY, change); }
 	@Override public void onDoubleClick() {}
 	@Override public void keyPressed(char typedChar, int keyCode) { StaticWindowObject.keyPressed(this, typedChar, keyCode); }

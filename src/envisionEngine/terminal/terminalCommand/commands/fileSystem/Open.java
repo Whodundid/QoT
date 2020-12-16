@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
-import main.Game;
 import util.EUtil;
 import util.renderUtil.CenterType;
 import util.renderUtil.EColors;
@@ -112,7 +111,7 @@ public class Open extends FileCommand {
 							BufferedImage img = ImageIO.read(dir);
 							if (img != null) {
 								termIn.writeln("Opening...", EColors.green);
-								Game.displayWindow(new TextureDisplayer(dir), CenterType.screen);
+								termIn.getTopParent().displayWindow(new TextureDisplayer(dir), CenterType.screen);
 							}
 						}
 						catch (IIOException e) {
@@ -135,7 +134,7 @@ public class Open extends FileCommand {
 							TextEditorWindow window = new TextEditorWindow(dir);
 							window.setFocusedObjectOnClose(termIn);
 							
-							Game.displayWindow(window, CenterType.screen);
+							termIn.getTopParent().displayWindow(window, CenterType.screen);
 							
 							window.setFocusToLineIfEmpty();
 						}

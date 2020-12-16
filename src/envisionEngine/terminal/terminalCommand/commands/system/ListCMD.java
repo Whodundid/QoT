@@ -83,11 +83,11 @@ public class ListCMD extends TerminalCommand {
 		}
 	}
 	
-	private void listObjects(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		termIn.writeln("Listing all current objects in renderer\n", EColors.lgreen);
+	private void listObjects(ETerminal<?> termIn, EArrayList<String> args, boolean runVisually) {
+		termIn.writeln("Listing all current objects in this top renderer\n", EColors.lgreen);
 		if (runVisually) {
 			int grandTotal = 0; //this isn't completely right tree wise, but whatever
-			for (IWindowObject<?> obj : Game.getGameRenderer().getObjects()) {
+			for (IWindowObject<?> obj : termIn.getTopParent().getObjects()) {
 				termIn.writeln(obj.toString(), EColors.green);
 				
 				//int depth = 3;
@@ -137,10 +137,10 @@ public class ListCMD extends TerminalCommand {
 			termIn.writeln("Grand total: " + grandTotal, EColors.orange);
 		}
 		else {
-			for (IWindowObject obj : Game.getGameRenderer().getObjects()) {
+			for (IWindowObject obj : termIn.getTopParent().getObjects()) {
 				termIn.writeln(obj.toString(), EColors.green);
 			}
-			termIn.writeln("Total objects: " + Game.getGameRenderer().getObjects().size(), 0xffff00);
+			termIn.writeln("Total objects: " + termIn.getTopParent().getObjects().size(), 0xffff00);
 		}
 	}
 	
@@ -149,7 +149,7 @@ public class ListCMD extends TerminalCommand {
 	}
 	
 	private void listWindows(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		EArrayList<WindowParent> windows = Game.getAllActiveWindows();
+		EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 		
 		String plural = windows.size() > 1 ? "s" : "";
 		

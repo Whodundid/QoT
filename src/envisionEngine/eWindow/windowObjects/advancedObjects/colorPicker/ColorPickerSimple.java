@@ -10,7 +10,6 @@ import envisionEngine.eWindow.windowObjects.windows.WindowDialogueBox.DialogueBo
 import envisionEngine.eWindow.windowTypes.ActionWindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import main.Game;
 import util.renderUtil.CenterType;
 import util.renderUtil.EColors;
 import util.storageUtil.EDimension;
@@ -211,7 +210,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 			error.setTitleColor(EColors.lred.c());
 			error.setMessage("Cannot parse the value: " + inputField.getText());
 			error.setMessageColor(EColors.lgray.c());
-			Game.displayWindow(error, CenterType.screen);
+			getTopParent().displayWindow(error, CenterType.screen);
 			inputField.clear();
 			inputField.setTextWhenEmpty(inputField.textWhenEmpty);
 		}

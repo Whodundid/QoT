@@ -4,7 +4,7 @@ import assets.sounds.Songs;
 import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.MapMenuScreen;
-import gameSystems.gameRenderer.GameScreen;
+import gameSystems.screenSystem.GameScreen;
 import main.Game;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;

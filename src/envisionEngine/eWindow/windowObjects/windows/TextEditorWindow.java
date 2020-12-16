@@ -9,7 +9,6 @@ import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import main.Game;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
 import util.storageUtil.EArrayList;
@@ -160,7 +159,7 @@ public class TextEditorWindow extends WindowParent {
 		box.setMessage(path.getName() + ": " + (pass ? "Saved!" : "Failed to save!"));
 		box.setMessageColor(pass ? EColors.green.intVal : EColors.lred.intVal);
 		
-		Game.displayWindow(box);
+		getTopParent().displayWindow(box);
 	}
 
 }

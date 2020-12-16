@@ -1,7 +1,6 @@
 package envisionEngine.eWindow.windowTypes;
 
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import main.Game;
 import util.storageUtil.EArrayList;
 import util.storageUtil.StorageBox;
 import util.storageUtil.StorageBoxHolder;
@@ -16,7 +15,7 @@ public abstract class SetLocationWindow<E> extends OverlayWindow<E> {
 		previousStates.clear();
 		EArrayList exceptions = new EArrayList().add(exceptionsIn);
 		
-		for (IWindowObject<?> o : Game.getGameRenderer().getAllChildren()) {
+		for (IWindowObject<?> o : getTopParent().getAllChildren()) {
 			if (o.isPersistent()) { continue; }
 			previousStates.add(o, !o.isHidden());
 		}

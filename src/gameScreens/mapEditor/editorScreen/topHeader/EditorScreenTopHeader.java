@@ -71,9 +71,9 @@ public class EditorScreenTopHeader extends WindowObject {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == options) { Game.displayWindow(new EditorOptionsWindow(editor)); }
-		if (object == assets) { Game.displayWindow(new EditorSelectionList(editor)); }
-		if (object == regions) { Game.displayWindow(new RegionEditorMenu(editor)); }
+		if (object == options) { getTopParent().displayWindow(new EditorOptionsWindow(editor)); }
+		if (object == assets) { getTopParent().displayWindow(new EditorSelectionList(editor)); }
+		if (object == regions) { getTopParent().displayWindow(new RegionEditorMenu(editor)); }
 	}
 	
 	public void updateCurTool(EditorTool tool) {

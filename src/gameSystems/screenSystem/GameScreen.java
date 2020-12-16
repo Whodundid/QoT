@@ -1,4 +1,4 @@
-package gameSystems.gameRenderer;
+package gameSystems.screenSystem;
 
 import envisionEngine.eWindow.windowTypes.TopWindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.ITopParent;
@@ -11,7 +11,7 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	protected Stack<GameScreen<?>> screenHistory = new Stack();
 	
 	public GameScreen() {
-		init(Game.getGameRenderer(), 0, 0, Game.getWidth(), Game.getHeight());
+		setDimensions(0, 0, Game.getWidth(), Game.getHeight());
 	}
 	
 	@Override
@@ -31,7 +31,7 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		super.keyPressed(typedChar, keyCode);
-		if (keyCode == Keyboard.KEY_ESC) { closeScreen(false); }
+		if (keyCode == Keyboard.KEY_ESC && !screenHistory.isEmpty()) { closeScreen(false); }
 	}
 	
 	public void onWindowResize() {

@@ -127,8 +127,8 @@ public abstract class GLObject {
 		draw();
 		
 		//post draw
-		blendOff();
-		alphaOff();
+		//blendOff();
+		//alphaOff();
 	}
 	
 	
@@ -204,8 +204,8 @@ public abstract class GLObject {
 		draw();
 		
 		//post draw
-		blendOff();
-		alphaOff();
+		//blendOff();
+		//alphaOff();
 	}
 	
 	
@@ -241,8 +241,8 @@ public abstract class GLObject {
 		draw();
 		
 		//post draw
-		blendOff();
-		alphaOff();
+		//blendOff();
+		//alphaOff();
 	}
 	
 	
@@ -283,8 +283,8 @@ public abstract class GLObject {
 		draw();
 		
 		//post draw
-		blendOff();
-		alphaOff();
+		//blendOff();
+		//alphaOff();
 	}
 	
 	
@@ -338,8 +338,8 @@ public abstract class GLObject {
 			
 			draw();
 			
-			alphaOff();
-			blendOff();
+			//alphaOff();
+			//blendOff();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 	}
@@ -373,8 +373,8 @@ public abstract class GLObject {
 			
 			draw();
 			
-			alphaOff();
-			blendOff();
+			//alphaOff();
+			//blendOff();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 	}

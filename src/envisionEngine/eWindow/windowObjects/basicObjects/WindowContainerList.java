@@ -16,8 +16,8 @@ import util.storageUtil.StorageBoxHolder;
 
 public class WindowContainerList<E> extends WindowContainer<E> {
 	
-	WindowContainer container;
-	WindowScrollList list;
+	WindowContainer<?> container;
+	WindowScrollList<?> list;
 	String title = "noname";
 	protected EArrayList<IWindowObject<?>> containerContents = new EArrayList();
 	protected EArrayList<IWindowObject<?>> containerObjsToBeRemoved = new EArrayList();
@@ -72,7 +72,7 @@ public class WindowContainerList<E> extends WindowContainer<E> {
 	}
 	
 	@Override
-	public WindowContainerList setPosition(double newX, double newY) {
+	public WindowContainerList<E> setPosition(double newX, double newY) {
 		EDimension d = getDimensions();
 		StorageBox<Integer, Integer> loc = new StorageBox(d.startX, d.startY);
 		StorageBoxHolder<IWindowObject<?>, StorageBox<Integer, Integer>> previousLocations = new StorageBoxHolder();
@@ -97,7 +97,7 @@ public class WindowContainerList<E> extends WindowContainer<E> {
 		return new EDimension(0, 0, w, h);
 	}
 	
-	public WindowContainerList addObjectToContainer(IWindowObject<?>... objsIn) {
+	public WindowContainerList<E> addObjectToContainer(IWindowObject<?>... objsIn) {
 		for (IWindowObject<?> o : objsIn) {
 			try {
 				if (o != null && o != this) {
@@ -131,14 +131,14 @@ public class WindowContainerList<E> extends WindowContainer<E> {
 		return this;
 	}
 	
-	public WindowContainerList removeObjectFromList(IWindowObject<?>... objsIn) {
+	public WindowContainerList<E> removeObjectFromList(IWindowObject<?>... objsIn) {
 		containerObjsToBeRemoved.addAll(objsIn);
 		objsToBeRemoved.addAll(objsIn);
 		return this;
 	}
 	
 	@Override
-	public WindowContainerList removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) {
+	public WindowContainerList<E> removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) {
 		objsToBeRemoved.addAll(additional);
 		containerObjsToBeRemoved.addAll(additional);
 		return this;
@@ -147,6 +147,6 @@ public class WindowContainerList<E> extends WindowContainer<E> {
 	public boolean drawsTitle() { return drawTitle; }
 	public boolean drawsTitleCentered() { return centerTitle; }
 	
-	public WindowContainerList setDrawTitleCentered(boolean val) { centerTitle = val; return this; }
+	public WindowContainerList<E> setDrawTitleCentered(boolean val) { centerTitle = val; return this; }
 	
 }

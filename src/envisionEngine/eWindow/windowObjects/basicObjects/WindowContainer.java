@@ -58,17 +58,17 @@ public class WindowContainer<E> extends WindowObject<E> {
 	public double getTitleAreaWidth() { return titleAreaWidth; }
 	public double getTitleAreaHeight() { return titleAreaHeight; }
 	
-	public WindowContainer setTitle(String stringIn) { title = stringIn; titleWidth = getStringWidth(stringIn); return this; }
-	public WindowContainer setTitleColor(int colorIn) { titleColor = colorIn; return this; }
-	public WindowContainer setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowContainer setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
-	public WindowContainer setTitleBorderColor(int colorIn) { titleBorderColor = colorIn; return this; }
-	public WindowContainer setTitleBackgroundColor(int colorIn) { titleBackgroundColor = colorIn; return this; }
-	public WindowContainer setDrawTitle(boolean val) { drawTitle = val; return this; }
-	public WindowContainer setDrawBackground(boolean val) { drawBackground = val; return this; }
-	public WindowContainer setDrawBorder(boolean val) { drawBorder = val; return this; }
-	public WindowContainer setTitleWidth(int widthIn) { if (widthIn > 0) { useCustomWidth = true; titleAreaWidth = widthIn; } return this; }
-	public WindowContainer setTitleFullWidth(boolean val) { drawTitleFullWidth = val; return this; }
-	public WindowContainer setTitleCentered(boolean val) { center = val; return this; }
+	public WindowContainer<E> setTitle(String stringIn) { title = stringIn; titleWidth = getStringWidth(stringIn); return this; }
+	public WindowContainer<E> setTitleColor(int colorIn) { titleColor = colorIn; return this; }
+	public WindowContainer<E> setBorderColor(int colorIn) { borderColor = colorIn; return this; }
+	public WindowContainer<E> setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
+	public WindowContainer<E> setTitleBorderColor(int colorIn) { titleBorderColor = colorIn; return this; }
+	public WindowContainer<E> setTitleBackgroundColor(int colorIn) { titleBackgroundColor = colorIn; return this; }
+	public WindowContainer<E> setDrawTitle(boolean val) { drawTitle = val; return this; }
+	public WindowContainer<E> setDrawBackground(boolean val) { drawBackground = val; return this; }
+	public WindowContainer<E> setDrawBorder(boolean val) { drawBorder = val; return this; }
+	public WindowContainer<E> setTitleWidth(int widthIn) { if (widthIn > 0) { useCustomWidth = true; titleAreaWidth = widthIn; } return this; }
+	public WindowContainer<E> setTitleFullWidth(boolean val) { drawTitleFullWidth = val; return this; }
+	public WindowContainer<E> setTitleCentered(boolean val) { center = val; return this; }
 	
 }

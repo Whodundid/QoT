@@ -351,14 +351,14 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		return this;
 	}
 	
-	public WindowScrollList removeObjectFromList(IWindowObject<?>... objsIn) {
+	public WindowScrollList<E> removeObjectFromList(IWindowObject<?>... objsIn) {
 		listObjsToBeRemoved.addAll(objsIn);
 		objsToBeRemoved.addAll(objsIn);
 		return this;
 	}
 	
 	@Override
-	public WindowScrollList removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) {
+	public WindowScrollList<E> removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) {
 		objsToBeRemoved.add(obj);
 		objsToBeRemoved.addAll(additional);
 		listObjsToBeRemoved.add(obj);
@@ -437,29 +437,29 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		reInitObjects();
 	}
 	
-	public WindowScrollList clearIgnoreList() { ignoreList = new EArrayList(); return this; }
-	public WindowScrollList setIgnoreList(IWindowObject<?>... objects) {
+	public WindowScrollList<E> clearIgnoreList() { ignoreList = new EArrayList(); return this; }
+	public WindowScrollList<E> setIgnoreList(IWindowObject<?>... objects) {
 		ignoreList = new EArrayList<IWindowObject<?>>().add(objects);
 		return this;
 	}
 	
-	public WindowScrollList addToIgnoreList(IWindowObject<?>... objects) {
+	public WindowScrollList<E> addToIgnoreList(IWindowObject<?>... objects) {
 		if (ignoreList == null) { ignoreList = new EArrayList<IWindowObject<?>>(); }
 		ignoreList.add(objects);
 		return this;
 	}
 	
-	public WindowScrollList setDrawListObjects(boolean val) { drawListObjects = val; return this; }
-	public WindowScrollList setAllowScrolling(boolean val) { allowScrolling = val; return this; }
-	public WindowScrollList setBackgroundColor(EColors colorIn) { return setBackgroundColor(colorIn.intVal); }
-	public WindowScrollList setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
-	public WindowScrollList setBorderColor(EColors colorIn) { return setBorderColor(colorIn.intVal); }
-	public WindowScrollList setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowScrollList setVScrollDrawn(boolean valIn) { vScrollVis = valIn; if (verticalScroll != null) { verticalScroll.setVisible(valIn); } updateVisuals(); return this; }
-	public WindowScrollList setHScrollDrawn(boolean valIn) { hScrollVis = valIn; if (horizontalScroll != null) { horizontalScroll.setVisible(valIn); } updateVisuals(); return this; }
-	public WindowScrollList setResetDrawn(boolean valIn) { resetVis = valIn; if (reset != null) { reset.setVisible(valIn); } updateVisuals(); return this; }
-	public WindowScrollList renderVScrollBarThumb(boolean val) { if (verticalScroll != null) { verticalScroll.setRenderThumb(val); } else { vScrollVis = val; } return this; }
-	public WindowScrollList renderHScrollBarThumb(boolean val) { if (horizontalScroll != null) { horizontalScroll.setRenderThumb(val); } else { hScrollVis = val; } return this; }
+	public WindowScrollList<E> setDrawListObjects(boolean val) { drawListObjects = val; return this; }
+	public WindowScrollList<E> setAllowScrolling(boolean val) { allowScrolling = val; return this; }
+	public WindowScrollList<E> setBackgroundColor(EColors colorIn) { return setBackgroundColor(colorIn.intVal); }
+	public WindowScrollList<E> setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
+	public WindowScrollList<E> setBorderColor(EColors colorIn) { return setBorderColor(colorIn.intVal); }
+	public WindowScrollList<E> setBorderColor(int colorIn) { borderColor = colorIn; return this; }
+	public WindowScrollList<E> setVScrollDrawn(boolean valIn) { vScrollVis = valIn; if (verticalScroll != null) { verticalScroll.setVisible(valIn); } updateVisuals(); return this; }
+	public WindowScrollList<E> setHScrollDrawn(boolean valIn) { hScrollVis = valIn; if (horizontalScroll != null) { horizontalScroll.setVisible(valIn); } updateVisuals(); return this; }
+	public WindowScrollList<E> setResetDrawn(boolean valIn) { resetVis = valIn; if (reset != null) { reset.setVisible(valIn); } updateVisuals(); return this; }
+	public WindowScrollList<E> renderVScrollBarThumb(boolean val) { if (verticalScroll != null) { verticalScroll.setRenderThumb(val); } else { vScrollVis = val; } return this; }
+	public WindowScrollList<E> renderHScrollBarThumb(boolean val) { if (horizontalScroll != null) { horizontalScroll.setRenderThumb(val); } else { hScrollVis = val; } return this; }
 	
 	public double getListHeight() { return scrollableHeight - (isHScrollDrawn() ? horizontalScroll.getDimensions().height : 0); }
 	public double getListWidth() { return scrollableWidth - (isVScrollDrawn() ? verticalScroll.getDimensions().width : 0); }
@@ -467,8 +467,8 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	public boolean isVScrollDrawn() { return vScrollVis && (verticalScroll != null ? verticalScroll.getHighVal() > verticalScroll.getVisibleAmount() : false); }
 	public boolean isHScrollDrawn() { return hScrollVis && (horizontalScroll != null ? horizontalScroll.getHighVal() > horizontalScroll.getVisibleAmount() : false); }
 	public boolean isResetDrawn() { return resetVis && (isVScrollDrawn() || isHScrollDrawn()); }
-	public WindowScrollBar getVScrollBar() { return verticalScroll; }
-	public WindowScrollBar getHScrollBar() { return horizontalScroll; }
+	public WindowScrollBar<?> getVScrollBar() { return verticalScroll; }
+	public WindowScrollBar<?> getHScrollBar() { return horizontalScroll; }
 	public EArrayList<IWindowObject<?>> getDrawnObjects() { return drawnListObjects; }
 	public EArrayList<IWindowObject<?>> getListObjects() { return listContents; }
 	public EArrayList<IWindowObject<?>> getAddingListObjects() { return listObjsToBeAdded; }

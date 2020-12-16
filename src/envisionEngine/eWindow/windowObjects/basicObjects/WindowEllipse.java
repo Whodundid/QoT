@@ -4,7 +4,7 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import util.renderUtil.EColors;
 import util.storageUtil.StorageBox;
 
-public class WindowEllipse extends WindowShape {
+public class WindowEllipse<E> extends WindowShape<E> {
 	
 	double cX, cY;
 	
@@ -40,7 +40,7 @@ public class WindowEllipse extends WindowShape {
 	//EGuiEllipse Setters
 	//-------------------
 	
-	public WindowEllipse setCenter(StorageBox<Integer, Integer> in) { return setCenter(in.getA(), in.getB()); }
-	public WindowEllipse setCenter(int x, int y) { cX = x; cY = y; return this; }
+	public WindowEllipse<E> setCenter(StorageBox<Integer, Integer> in) { return setCenter(in.getA(), in.getB()); }
+	public WindowEllipse<E> setCenter(int x, int y) { cX = x; cY = y; return this; }
 
 }

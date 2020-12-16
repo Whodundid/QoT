@@ -1,14 +1,21 @@
 package envisionEngine.eWindow.windowTypes.interfaces;
 
 import envisionEngine.eWindow.StaticTopParent;
+import envisionEngine.eWindow.windowTypes.OverlayWindow;
+import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.FocusType;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import envisionEngine.input.Mouse;
+import main.Game;
+import util.renderUtil.CenterType;
 import util.renderUtil.ScreenLocation;
+import util.renderUtil.WindowSize;
 import util.storageUtil.EArrayList;
+import util.storageUtil.EDimension;
 
 //Author: Hunter Bragg
 
-/** An interface outlining behavior for Top Level WindowObjects. Top level objects handle drawing, object focus, object manipulation, and inputs. */
+/** An interface outlining behavior for Top Level WindowObjects. Top level objects handle drawing, object focus, object manipulation, window handling and input distribution. */
 public interface ITopParent<E> extends IWindowObject<E> {
 	
 	//-------
@@ -123,7 +130,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	/** Returns true if the mouse is on the edge of an object. */
 	public default boolean isMouseOnObjEdge() { return StaticTopParent.isMouseOnObjEdge(this); }
 	/** Returns the edge type that the mouse is currently hovering over, if any. */
-	public default ScreenLocation getEdgeAreaMouseIsOn() { return StaticTopParent.getEdgeAreaMouseIsOn(this); }
+	public default ScreenLocation getEdgeSideMouseIsOn() { return StaticTopParent.getEdgeAreaMouseIsOn(this); }
 	/** Returns true if the mouse is inside of any object. */
 	public default boolean isMouseInsideObject() { return getHighestZObjectUnderMouse() != null; }
 	/** Returns true if the mouse is inside of an EGuiHeader object. */
@@ -141,5 +148,172 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	public ITopParent<E> setEscapeStopper(IWindowObject<?> obj);
 	/** Returns the current object that will prevent the escape key from closing the hud. */
 	public IWindowObject<?> getEscapeStopper();
+	
+	//---------
+	// Windows
+	//---------
+	
+	/** Returns true if the specified window parent is open. */
+	public default <T extends WindowParent> boolean isWindowOpen(Class<T> windowIn) {
+		return (windowIn != null) ? getCombinedObjects().stream().anyMatch(o -> o.getClass() == windowIn) : false;
+	}
+	
+	/** Returns a list of all actively drawn window parents. */
+	public default EArrayList<WindowParent> getAllActiveWindows() {
+		EArrayList<WindowParent> windows = new EArrayList();
+		try {
+			getCombinedObjects().filterForEach(o -> WindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((WindowParent) w));
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		return windows;
+	}
+	
+	/** Returns the first active instance of a specified type of window parent. If none are active, null is returned instead. */
+	public default <T extends WindowParent> WindowParent getWindowInstance(Class<T> windowIn) {
+		return (windowIn != null) ? (WindowParent) (getAllChildren().filter(o -> o.getClass() == windowIn).getFirst()) : null;
+	}
+	
+	/** Returns a list of all actively drawn window parents of a given type. */
+	public default <T extends WindowParent> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
+		EArrayList<T> windows = new EArrayList();
+		try {
+			getCombinedObjects().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		return windows;
+	}
+	
+	/** Reloads all actively drawn windows. */
+	public default void reloadAllWindows() { getAllActiveWindows().forEach(w -> w.sendArgs("Reload")); }
+	/** Reloads all actively drawn windows and sends a set of arguments to each. */
+	public default void reloadAllWindows(Object... args) { getAllActiveWindows().forEach(w -> w.sendArgs("Reload", args)); }
+	/** Reloads all actively drawn windows of a specific type. */
+	public default <T extends WindowParent> void reloadAllWindowInstances(Class<T> windowIn) { getAllWindowInstances(windowIn).forEach(w -> w.sendArgs("Reload")); }
+	/** Reloads all actively drawn windows of a specific type and sends a set of arguments to each. */
+	public default <T extends WindowParent> void reloadAllWindowInstances(Class<T> windowIn, Object... args) { getAllWindowInstances(windowIn).forEach(w -> w.sendArgs("Reload", args)); }
+	
+	/** Displays the specified window parent. */
+	public default IWindowParent displayWindow(IWindowParent windowIn) { return displayWindow(windowIn, null, true, false, false, CenterType.screen); }
+	/** Displays the specified window parent around a specific location on the screen. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, CenterType loc) { return displayWindow(windowIn, null, true, false, false, loc); }
+	/** Displays the specified window parent and specifies whether focus should be transfered to it. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus) { return displayWindow(windowIn, null, transferFocus, false, false, CenterType.screen); }
+	/** Displays the specified window parent where focus transfer properties can be set along with where it is drawn. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus, CenterType loc) { return displayWindow(windowIn, null, transferFocus, false, false, loc); }
+	/** Displays the specified window parent and passes a previous window for history traversal means. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject) { return displayWindow(windowIn, oldObject, true, true, true, CenterType.object); }
+	/** Displays the specified window parent, passes a previous window, and sets where this window will be relatively positioned. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, CenterType loc) { return displayWindow(windowIn, oldObject, true, true, true, loc); }
+	/** Displays the specified window parent with variable arguments. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(windowIn, oldObject, transferFocus, true, true, CenterType.object); }
+	/** Displays the specified window parent with variable arguments. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, CenterType loc) { return displayWindow(windowIn, oldObject, transferFocus, true, true, loc); }
+	/** Displays the specified window parent with variable arguments. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, true, CenterType.object); }
+	/** Displays the specified window parent with variable arguments. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, CenterType.object); }
+	/** Displays the specified window parent with variable arguments. */
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, CenterType loc) {
+		if (windowIn != null) {
+			addObject(windowIn);
+			
+			if (transferHistory && oldObject != null) {
+				IWindowParent old = (IWindowParent) oldObject;
+				old.getWindowHistory().add(old);
+				windowIn.setWindowHistory(old.getWindowHistory());
+				windowIn.setPinned(old.isPinned());
+			}
+			
+			setPos(windowIn, oldObject instanceof IWindowObject ? (IWindowObject) oldObject : null, loc);
+			windowIn.bringToFront();
+			if (transferFocus) { windowIn.requestFocus(); }
+		}
+		return windowIn;
+	}
+	
+	/** Helper method used in conjunction wth displayWindow that actually positions the newley created window on the screen. */
+	private void setPos(IWindowParent windowIn, IWindowObject objectIn, CenterType typeIn) {
+		WindowSize res = Game.getWindowSize();
+		EDimension gDim = windowIn.getDimensions();
+		double headerHeight = windowIn.hasHeader() ? windowIn.getHeader().height : 0;
+		
+		int sX = 0;
+		int sY = 0;
+		
+		switch (typeIn) {
+		case screen:
+			sX = (int) ((res.getWidth() / 2) - (gDim.width / 2));
+			sY = (int) ((res.getHeight() / 2) - (gDim.height / 2));
+			break;
+		case botLeftScreen:
+			sX = 1;
+			sY = (int) (res.getHeight() - 2 - gDim.height);
+			break;
+		case topLeftScreen:
+			sX = 1;
+			sY = 2;
+			break;
+		case botRightScreen:
+			sX = (int) (res.getWidth() - 1 - gDim.width);
+			sY = (int) (res.getHeight() - 2 - gDim.height);
+			break;
+		case topRightScreen:
+			sX = (int) (res.getWidth() - 1 - gDim.width);
+			sY = 2;
+			break;
+		case cursor:
+			sX = (int) (Mouse.getMx() - (gDim.width / 2));
+			sY = (int) (Mouse.getMy() - (gDim.height - headerHeight) / 2 + (gDim.height / 7));
+			break;
+		case cursorCorner:
+			sX = Mouse.getMx();
+			sY = Mouse.getMy();
+			break;
+		case object:
+			if (objectIn != null) {
+				EDimension objDim = objectIn.getDimensions();
+				sX = (int) (objDim.midX - (gDim.width / 2));
+				sY = (int) (objDim.midY - (gDim.height / 2));
+			}
+			break;
+		case objectCorner:
+			if (objectIn != null) {
+				EDimension objDim = objectIn.getDimensions();
+				sX = (int) objDim.startX;
+				sY = (int) objDim.startY;
+			}
+			break;
+		case objectIndent:
+			if (objectIn != null) {
+				EDimension objDim = objectIn.getDimensions();
+				sX = (int) (objDim.startX + 25);
+				sY = (int) (objDim.startY + 25);
+			}
+			break;
+		case existingObjectIndent:
+			EArrayList<WindowParent> windows = new EArrayList();
+			getAllChildren().stream().filter(o -> windowIn.getClass().isInstance(o)).filter(o -> !o.isBeingRemoved()).forEach(w -> windows.add((WindowParent) w));
+			
+			if (windows.isNotEmpty()) {
+				if (windows.get(0) != null) {
+					EDimension objDim = windows.get(0).getDimensions();
+					sX = (int) (objDim.startX + 25);
+					sY = (int) (objDim.startY + 25);
+				}
+			}
+			
+			break;
+		default: break;
+		}
+		
+		if (!(windowIn instanceof OverlayWindow)) {
+			sX = sX < 0 ? 4 : sX;
+			sY = (int) ((sY - headerHeight) < 2 ? 4 + headerHeight : sY);
+			sX = (int) (sX + gDim.width > res.getWidth() ? -4 + sX - (sX + gDim.width - res.getWidth()) : sX);
+			sY = (int) (sY + gDim.height > res.getHeight() ? -4 + sY - (sY + gDim.height - res.getHeight()) : sY);
+		}
+		
+		windowIn.setPosition(sX, sY);
+	}
 
 }

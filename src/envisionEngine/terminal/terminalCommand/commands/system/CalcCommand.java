@@ -4,7 +4,6 @@ import envisionEngine.eWindow.windowObjects.windows.CalculatorWindow;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
-import main.Game;
 import util.renderUtil.EColors;
 import util.storageUtil.EArrayList;
 
@@ -26,7 +25,7 @@ public class CalcCommand extends TerminalCommand {
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		termIn.writeln("Opening Calculator", EColors.lgreen);
-		Game.displayWindow(new CalculatorWindow());
+		termIn.getTopParent().displayWindow(new CalculatorWindow());
 	}
 	
 }

@@ -15,7 +15,7 @@ public class DamageSplash extends WindowObject {
 		posX = posXIn;
 		posY = posYIn;
 		damage = damageIn;
-		init(Game.getGameRenderer(), posX - 10, posY - 10, 20, 20);
+		init(Game.getActiveTopParent(), posX - 10, posY - 10, 20, 20);
 	}
 	
 	@Override

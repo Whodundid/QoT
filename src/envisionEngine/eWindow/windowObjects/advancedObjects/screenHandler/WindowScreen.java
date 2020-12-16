@@ -5,9 +5,9 @@ import util.EUtil;
 import util.mathUtil.NumUtil;
 import util.storageUtil.EArrayList;
 
-public class WindowScreen {
+public class WindowScreen<E> {
 	
-	private EArrayList<IWindowObject> objects = new EArrayList();
+	private EArrayList<IWindowObject<?>> objects = new EArrayList();
 	private int curStage = 0;
 	private int numStages = 1;
 	
@@ -38,7 +38,7 @@ public class WindowScreen {
 	//WindowScreen Getters
 	//--------------------
 	
-	public EArrayList<IWindowObject> getObjects() { return objects; }
+	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
 	public int getNumStages() { return numStages; }
 	public int getCurrentStage() { return curStage; }
 	
@@ -46,7 +46,7 @@ public class WindowScreen {
 	//WindowScreen Setters
 	//--------------------
 	
-	public WindowScreen setObjects(IWindowObject... objectsIn) {
+	public WindowScreen setObjects(IWindowObject<?>... objectsIn) {
 		objects.add(objectsIn);
 		return this;
 	}

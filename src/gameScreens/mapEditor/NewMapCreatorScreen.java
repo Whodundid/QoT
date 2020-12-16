@@ -6,10 +6,10 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowTextField;
 import envisionEngine.eWindow.windowObjects.basicObjects.WindowLabel;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.editorScreen.MapEditorScreen;
-import gameSystems.gameRenderer.GameScreen;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.mapSystem.worldTiles.WorldTiles;
+import gameSystems.screenSystem.GameScreen;
 import main.Game;
 import util.renderUtil.EColors;
 

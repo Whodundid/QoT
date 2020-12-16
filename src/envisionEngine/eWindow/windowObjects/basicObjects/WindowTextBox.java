@@ -10,7 +10,7 @@ import util.storageUtil.EArrayList;
 import util.storageUtil.StorageBox;
 import util.storageUtil.StorageBoxHolder;
 
-public class WindowTextBox extends WindowObject {
+public class WindowTextBox<E> extends WindowObject<E> {
 	
 	StorageBoxHolder<String, Integer> lines = new StorageBoxHolder();
 	private boolean centered = false;
@@ -75,8 +75,8 @@ public class WindowTextBox extends WindowObject {
 	//WindowTextBox Methods
 	//---------------------
 	
-	public WindowTextBox addLine(String lineIn) { return addLine(lineIn, 0xffffff); }
-	public WindowTextBox addLine(String lineIn, int color) {
+	public WindowTextBox<E> addLine(String lineIn) { return addLine(lineIn, 0xffffff); }
+	public WindowTextBox<E> addLine(String lineIn, int color) {
 		EUtil.nullDo(parseLine(lineIn, color), l -> lines.addAll(l));
 		redimension();
 		return this;
@@ -93,11 +93,11 @@ public class WindowTextBox extends WindowObject {
 	//WindowTextBox Setters
 	//---------------------
 	
-	public WindowTextBox setMaxWidth(double widthIn) { maxWidth = widthIn; redimension(); return this; }
-	public WindowTextBox setMaxHeight(double heightIn) { maxHeight = heightIn; redimension(); return this; }
-	public WindowTextBox setBorderSize(int sizeIn) { border = sizeIn; redimension(); return this; }
-	public WindowTextBox setLineGap(int gapIn) { lineGap = gapIn; redimension(); return this; }
-	public WindowTextBox setDrawBackground(boolean val) { drawBackground = val; return this; }
+	public WindowTextBox<E> setMaxWidth(double widthIn) { maxWidth = widthIn; redimension(); return this; }
+	public WindowTextBox<E> setMaxHeight(double heightIn) { maxHeight = heightIn; redimension(); return this; }
+	public WindowTextBox<E> setBorderSize(int sizeIn) { border = sizeIn; redimension(); return this; }
+	public WindowTextBox<E> setLineGap(int gapIn) { lineGap = gapIn; redimension(); return this; }
+	public WindowTextBox<E> setDrawBackground(boolean val) { drawBackground = val; return this; }
 	
 	//------------------------------
 	//WindowTextBox Internal Methods

@@ -19,7 +19,7 @@ import util.storageUtil.EDimension;
 public class WindowTextArea<E> extends WindowScrollList<E> {
 	
 	EArrayList<TextAreaLine<E>> textDocument;
-	TextAreaLine currentLine, longestLine;
+	TextAreaLine<E> currentLine, longestLine;
 	protected boolean editable = true;
 	protected boolean drawLineNumbers = false;
 	protected boolean drawLineHighlight = true;
@@ -463,7 +463,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	public int getLineNumberOffset() { return hasLineNumbers() ? (6 + String.valueOf(textDocument.size()).length() * getStringWidth("0")) : 2; }
 	public boolean getDrawLineHighlight() { return drawLineHighlight; }
 	public boolean isEditable() { return editable; }
-	public TextAreaLine getCurrentLine() { return currentLine; }
+	public TextAreaLine<E> getCurrentLine() { return currentLine; }
 	public EArrayList<TextAreaLine<E>> getTextDocument() { return textDocument; }
 	
 	//----------------------

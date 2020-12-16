@@ -15,7 +15,6 @@ import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.termParts.TerminalTextField;
 import envisionEngine.terminal.window.termParts.TerminalTextLine;
 import java.io.File;
-import main.Game;
 import util.EUtil;
 import util.mathUtil.NumUtil;
 import util.renderUtil.CenterType;
@@ -26,7 +25,7 @@ import util.storageUtil.TrippleBox;
 
 //Author: Hunter Bragg
 
-public class ETerminal extends WindowParent {
+public class ETerminal<E> extends WindowParent<E> {
 	
 	TerminalTextField inputField;
 	WindowTextArea history;
@@ -172,7 +171,7 @@ public class ETerminal extends WindowParent {
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
-		if (button == 1) { Game.displayWindow(new TerminalRCM(this), CenterType.cursorCorner); }
+		if (button == 1) { getTopParent().displayWindow(new TerminalRCM(this), CenterType.cursorCorner); }
 		else { inputField.requestFocus(); }
 	}
 	

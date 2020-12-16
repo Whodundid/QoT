@@ -5,7 +5,6 @@ import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.terminal.TerminalHandler;
 import envisionEngine.terminal.window.termParts.TerminalTextField;
 import envisionEngine.terminal.window.termParts.TerminalTextLine;
-import main.Game;
 
 public class TerminalRCM extends RightClickMenu {
 
@@ -110,7 +109,7 @@ public class TerminalRCM extends RightClickMenu {
 	}
 	
 	private void openOptions() {
-		Game.displayWindow(new TerminalOptionsWindow());
+		getTopParent().displayWindow(new TerminalOptionsWindow());
 	}
 	
 	@Override public boolean isDebugWindow() { return true; }

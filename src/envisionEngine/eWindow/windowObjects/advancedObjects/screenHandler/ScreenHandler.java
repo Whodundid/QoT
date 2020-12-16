@@ -6,10 +6,10 @@ import util.EUtil;
 import util.mathUtil.NumUtil;
 import util.storageUtil.EArrayList;
 
-public class ScreenHandler extends ActionObject {
+public class ScreenHandler<E> extends ActionObject<E> {
 	
-	private IWindowObject parent;
-	private EArrayList<WindowScreen> screens = new EArrayList();
+	private IWindowObject<?> parent;
+	private EArrayList<WindowScreen<E>> screens = new EArrayList();
 	private int currentScreen = 0;
 	private boolean atBeginning = false;
 	private boolean atEnd = false;
@@ -18,8 +18,8 @@ public class ScreenHandler extends ActionObject {
 	//ScreenHandler Constructors
 	//--------------------------
 	
-	public ScreenHandler(IWindowObject parentIn) { this(parentIn, (WindowScreen[]) null); }
-	public ScreenHandler(IWindowObject parentIn, WindowScreen... screensIn) {
+	public ScreenHandler(IWindowObject<?> parentIn) { this(parentIn, (WindowScreen[]) null); }
+	public ScreenHandler(IWindowObject<?> parentIn, WindowScreen... screensIn) {
 		super(parentIn);
 		if (screensIn != null) { screens.add(screensIn); }
 		atBeginning = true;
@@ -98,17 +98,17 @@ public class ScreenHandler extends ActionObject {
 	public void showCurrent() { EUtil.nullDo(screens.get(currentScreen), s -> { s.showScreen(); s.onLoaded(); }); }
 	public void hideCurrent() { EUtil.nullDo(screens.get(currentScreen), s -> { s.hideScreen(); s.onUnloaded(); }); }
 	
-	public void addScreen(WindowScreen... screensIn) { screens.add(screensIn); }
+	public void addScreen(WindowScreen<E>... screensIn) { screens.add(screensIn); }
 	
 	//---------------------
 	//ScreenHandler Getters
 	//---------------------
 	
-	public WindowScreen getCurrentScreen() { return screens.get(currentScreen); }
+	public WindowScreen<E> getCurrentScreen() { return screens.get(currentScreen); }
 	public int getCurrentScreenNum() { return currentScreen; }
 	public int getCurrentStage() { return (screens.isNotEmpty()) ? screens.get(currentScreen).getCurrentStage() : -1; }
-	public EArrayList<WindowScreen> getScreens() { return screens; }
-	public IWindowObject getParent() { return parent; }
+	public EArrayList<WindowScreen<E>> getScreens() { return screens; }
+	public IWindowObject<?> getParent() { return parent; }
 	
 	public boolean atBeginning() { return atBeginning; }
 	public boolean atEnd() { return atEnd; }
@@ -117,20 +117,20 @@ public class ScreenHandler extends ActionObject {
 	//ScreenHandler Setters
 	//---------------------
 	
-	public ScreenHandler setCurrentScreen(int screenNum, int stageNum) {
+	public ScreenHandler<E> setCurrentScreen(int screenNum, int stageNum) {
 		setCurrentScreen(screenNum);
 		setCurrentStage(stageNum);
 		return this;
 	}
 	
-	public ScreenHandler setCurrentScreen(int num) {
+	public ScreenHandler<E> setCurrentScreen(int num) {
 		currentScreen = NumUtil.clamp(num, 0, screens.size() - 1);
 		checkScreen();
 		return this;
 	}
 	
-	public ScreenHandler setCurrentStage(int num) {
-		WindowScreen screen = screens.get(currentScreen);
+	public ScreenHandler<E> setCurrentStage(int num) {
+		WindowScreen<E> screen = screens.get(currentScreen);
 		if (screen != null) {
 			num = NumUtil.clamp(num, 0, screen.getNumStages());
 			screen.setCurrentStage(num);
@@ -143,7 +143,7 @@ public class ScreenHandler extends ActionObject {
 	//------------------------------
 	
 	private void checkScreen() {
-		WindowScreen s = screens.get(currentScreen);
+		WindowScreen<E> s = screens.get(currentScreen);
 		
 		atBeginning = false;
 		atEnd = false;
