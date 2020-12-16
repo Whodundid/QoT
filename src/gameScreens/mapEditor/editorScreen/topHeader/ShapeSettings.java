@@ -2,7 +2,7 @@ package gameScreens.mapEditor.editorScreen.topHeader;
 
 import envisionEngine.eWindow.windowObjects.advancedObjects.dropDownList.WindowDropDownList;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
-import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
 import gameScreens.mapEditor.editorScreen.util.ShapeType;
 
 public class ShapeSettings extends HeaderToolSettings {
@@ -13,7 +13,7 @@ public class ShapeSettings extends HeaderToolSettings {
 	boolean filled = true;
 	
 	public ShapeSettings(EditorScreenTopHeader headerIn, double xIn, double yIn, double heightIn) {
-		super(headerIn, EditorTileTool.SHAPE);
+		super(headerIn, EditorTool.SHAPE);
 		init(headerIn, xIn, yIn, 400, heightIn);
 	}
 	

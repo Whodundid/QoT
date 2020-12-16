@@ -4,8 +4,8 @@ import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.input.Keyboard;
 import envisionEngine.input.Mouse;
 import gameScreens.mapEditor.editorScreen.botHeader.EditorScreenBotHeader;
-import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
-import gameScreens.mapEditor.editorScreen.tileTools.EditorTileToolList;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorToolList;
 import gameScreens.mapEditor.editorScreen.topHeader.EditorScreenTopHeader;
 import gameScreens.mapEditor.editorScreen.util.EditorItem;
 import gameSystems.fontRenderer.FontRenderer;
@@ -26,13 +26,13 @@ public class MapEditorScreen extends GameScreen {
 	GameWorld world;
 	
 	EditorHotbar hotbar;
-	EditorTileToolList tileTools;
+	EditorToolList tileTools;
 	EditorScreenTopHeader topHeader;
 	EditorScreenBotHeader botHeader;
 	EditorMiniMap miniMap;
 	ToolHandler toolHandler;
 	
-	EditorTileTool curTool = EditorTileTool.PENCIL;
+	EditorTool curTool = EditorTool.PENCIL;
 	
 	boolean drawPosBox = true;
 	boolean drawViewBox = true;
@@ -72,7 +72,7 @@ public class MapEditorScreen extends GameScreen {
 		topHeader = new EditorScreenTopHeader(this);
 		botHeader = new EditorScreenBotHeader(this);
 		miniMap = new EditorMiniMap(this);
-		tileTools = new EditorTileToolList(this);
+		tileTools = new EditorToolList(this);
 		hotbar = new EditorHotbar(this);
 		toolHandler = new ToolHandler(this);
 		
@@ -341,7 +341,7 @@ public class MapEditorScreen extends GameScreen {
 	
 	public GameWorld getWorld() { return world; }
 	
-	public void setTileTool(EditorTileTool toolIn) {
+	public void setCurrentTool(EditorTool toolIn) {
 		curTool = toolIn;
 		topHeader.updateCurTool(curTool);
 	}
@@ -370,7 +370,7 @@ public class MapEditorScreen extends GameScreen {
 	public EditorScreenTopHeader getTopHeader() { return topHeader; }
 	public EditorScreenBotHeader getBotHeader() { return botHeader; }
 	public EditorHotbar getHotbar() { return hotbar; }
-	public EditorTileToolList getTileToolList() { return tileTools; }
+	public EditorToolList getTileToolList() { return tileTools; }
 	public EditorMiniMap getMiniMap() { return miniMap; }
 	
 	//---------------------------------
@@ -383,6 +383,6 @@ public class MapEditorScreen extends GameScreen {
 	public MapEditorScreen setViewX(int dist) { distX = NumUtil.clamp(dist, 0, dist); return this; }
 	public MapEditorScreen setViewY(int dist) { distY = NumUtil.clamp(dist, 0, dist); return this; }
 	
-	public EditorTileTool getCurTileTool() { return curTool; }
+	public EditorTool getCurTileTool() { return curTool; }
 	
 }

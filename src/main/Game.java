@@ -53,7 +53,7 @@ public class Game {
 	private static WindowResizeListener resizeListener;
 	private static FontRenderer fontRenderer;
 	private static TextureSystem textureSystem;
-	private static WorldRenderer gameRenderer;
+	private static WorldRenderer<?> gameRenderer;
 	private static TerminalHandler terminalHandler;
 	
 	private static double gameScale = 1;
@@ -64,7 +64,7 @@ public class Game {
 	public static GameWorld theWorld;
 	
 	/** The screen currently being displayed. */
-	public static GameScreen currentScreen;
+	public static GameScreen<?> currentScreen;
 	
 	/** Enables debug mode if true. */
 	private static boolean isDebug = false;
@@ -575,7 +575,7 @@ public class Game {
 	/** Returns this game's central texture handling system. */
 	public static TextureSystem getTextureSystem() { return textureSystem; }
 	/** Returns this game's central object rendering system. */
-	public static WorldRenderer getGameRenderer() { return gameRenderer; }
+	public static WorldRenderer<?> getGameRenderer() { return gameRenderer; }
 	/** Returns this game's central terminal command handler. */
 	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
 	

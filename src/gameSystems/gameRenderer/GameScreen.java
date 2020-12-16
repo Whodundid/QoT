@@ -6,9 +6,9 @@ import envisionEngine.input.Keyboard;
 import java.util.Stack;
 import main.Game;
 
-public abstract class GameScreen extends TopWindowParent implements ITopParent {
+public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopParent<E> {
 	
-	protected Stack<GameScreen> screenHistory = new Stack();
+	protected Stack<GameScreen<?>> screenHistory = new Stack();
 	
 	public GameScreen() {
 		init(Game.getGameRenderer(), 0, 0, Game.getWidth(), Game.getHeight());
@@ -39,8 +39,8 @@ public abstract class GameScreen extends TopWindowParent implements ITopParent {
 		reInitObjects();
 	}
 	
-	public Stack<GameScreen> getScreenHistory() { return screenHistory; }
-	public GameScreen setScreenHistory(Stack<GameScreen> historyIn) {
+	public Stack<GameScreen<?>> getScreenHistory() { return screenHistory; }
+	public GameScreen<E> setScreenHistory(Stack<GameScreen<?>> historyIn) {
 		screenHistory = historyIn;
 		return this;
 	}
@@ -53,7 +53,7 @@ public abstract class GameScreen extends TopWindowParent implements ITopParent {
 		if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
 			
 			//System.out.println("pre: " + screenHistory);
-			GameScreen screen = screenHistory.pop();
+			GameScreen<?> screen = screenHistory.pop();
 			screen.setScreenHistory(screenHistory);
 			//System.out.println("post: " + screenHistory);
 			
@@ -64,10 +64,10 @@ public abstract class GameScreen extends TopWindowParent implements ITopParent {
 		}
 	}
 	
-	public GameScreen getPreviousScreen() {
+	public GameScreen<?> getPreviousScreen() {
 		return (!screenHistory.isEmpty()) ? screenHistory.peek() : null;
 	}
 	
-	public GameScreen setWindowSize() { setDimensions(0, 0, Game.getWidth(), Game.getHeight()); return this; }
+	public GameScreen<E> setWindowSize() { setDimensions(0, 0, Game.getWidth(), Game.getHeight()); return this; }
 	
 }

@@ -17,7 +17,7 @@ import util.storageUtil.EDimension;
 
 //Author: Hunter Bragg
 
-public class ColorPickerSimple<E> extends ActionWindowParent<E> {
+public class ColorPickerSimple extends ActionWindowParent {
 	
 	//color buttons
 	ColorPickerButton lred, red, maroon, brown, dorange, borange, orange, lorange, yellow;
@@ -238,13 +238,5 @@ public class ColorPickerSimple<E> extends ActionWindowParent<E> {
 		}
 		catch (Exception e) { e.printStackTrace(); }
 	}
-	
-	@Override
-	public IActionObject setSelectedObject(Object objIn) {
-		if (objIn instanceof Integer) { currentColor = (int) objIn; }
-		return this;
-	}
-	
-	@Override public Object getSelectedObject() { return currentColor; }
 	
 }

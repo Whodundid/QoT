@@ -7,16 +7,16 @@ import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import util.renderUtil.EColors;
 
-public class CalculatorWindow extends WindowParent {
+public class CalculatorWindow<E> extends WindowParent<E> {
 
-	WindowTextField outputField;
-	WindowButton sin, cos, tan, backspace, clear;
-	WindowButton sqrt, square, pow, pi, divide;
-	WindowButton log, seven, eight, nine, multiply;
-	WindowButton ln, four, five, six, subtract;
-	WindowButton e2x, one, two, three, plus;
-	WindowButton second, zero, decimal, negate, enter;
-	WindowTextArea history;
+	WindowTextField<?> outputField;
+	WindowButton<?> sin, cos, tan, backspace, clear;
+	WindowButton<?> sqrt, square, pow, pi, divide;
+	WindowButton<?> log, seven, eight, nine, multiply;
+	WindowButton<?> ln, four, five, six, subtract;
+	WindowButton<?> e2x, one, two, three, plus;
+	WindowButton<?> second, zero, decimal, negate, enter;
+	WindowTextArea<?> history;
 	
 	String val = null;
 	String lastVal = null;

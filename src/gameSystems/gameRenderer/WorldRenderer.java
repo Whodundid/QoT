@@ -15,7 +15,7 @@ import util.storageUtil.EArrayList;
 //Author: Hunter Bragg
 
 /** Handles rendering GameWorlds. */
-public class WorldRenderer extends TopWindowParent {
+public class WorldRenderer<E> extends TopWindowParent<E> {
 	
 	public static WorldRenderer instance;
 	private GameWorld world;

@@ -3,7 +3,7 @@ package gameScreens.mapEditor.editorScreen.tileTools;
 import assets.textures.EditorTextures;
 import gameSystems.textureSystem.GameTexture;
 
-public enum EditorTileTool {
+public enum EditorTool {
 	
 	RECTSELECT("Rectangle Select", EditorTextures.rectangle),
 	MOVE("Move Selection", EditorTextures.move),
@@ -15,12 +15,13 @@ public enum EditorTileTool {
 	ERASER("Eraser", EditorTextures.eraser),
 	LINE("Line", EditorTextures.line),
 	SHAPE("Shape", EditorTextures.shape),
+	REGION("", null),
 	NONE("", null);
 	
 	public String hoverText;
 	public GameTexture texture;
 	
-	EditorTileTool(String in, GameTexture tex) {
+	EditorTool(String in, GameTexture tex) {
 		hoverText = in;
 		texture = tex;
 	}

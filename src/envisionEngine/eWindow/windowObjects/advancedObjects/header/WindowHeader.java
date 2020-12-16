@@ -20,11 +20,11 @@ import util.storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 
-public class WindowHeader extends WindowObject {
+public class WindowHeader<E> extends WindowObject<E> {
 	
 	public static int defaultHeight = 35;
 	public static int buttonWidth = 32;
-	public WindowButton fileUpButton, closeButton, maximizeButton, pinButton, minimizeButton;
+	public WindowButton<?> fileUpButton, closeButton, maximizeButton, pinButton, minimizeButton;
 	public boolean fullClose = false;
 	public boolean drawDefault = true;
 	public boolean drawTitle = true;
@@ -41,7 +41,7 @@ public class WindowHeader extends WindowObject {
 	protected boolean alwaysDrawFocused = false;
 	protected boolean moving = false;
 	private StorageBox<Integer, Integer> clickPos = new StorageBox(-1, -1);
-	protected IWindowParent window;
+	protected IWindowParent<?> window;
 	private int buttonPos = buttonWidth + 2;
 	private boolean pressed = false;
 	
@@ -50,14 +50,14 @@ public class WindowHeader extends WindowObject {
 	//-------------------------
 	
 	protected WindowHeader() {}
-	public WindowHeader(IWindowObject parentIn) { this(parentIn, true, defaultHeight, ""); }
-	public WindowHeader(IWindowObject parentIn, boolean drawDefaultIn, int headerHeight) { this(parentIn, drawDefaultIn, headerHeight, ""); }
-	public WindowHeader(IWindowObject parentIn, boolean drawDefaultIn, int headerHeight, String titleIn) {
+	public WindowHeader(IWindowObject<?> parentIn) { this(parentIn, true, defaultHeight, ""); }
+	public WindowHeader(IWindowObject<?> parentIn, boolean drawDefaultIn, int headerHeight) { this(parentIn, drawDefaultIn, headerHeight, ""); }
+	public WindowHeader(IWindowObject<?> parentIn, boolean drawDefaultIn, int headerHeight, String titleIn) {
 		if (parentIn != null) {
 			EDimension dim = parentIn.getDimensions();
 			init(parentIn, dim.startX, dim.startY - headerHeight, dim.width, headerHeight);
 			
-			if (parentIn instanceof IWindowParent) { window = (IWindowParent) parentIn; }
+			if (parentIn instanceof IWindowParent<?>) { window = (IWindowParent<?>) parentIn; }
 			else { window = parentIn.getWindowParent(); }
 		}
 		drawDefault = drawDefaultIn;
@@ -87,7 +87,7 @@ public class WindowHeader extends WindowObject {
 	
 	@Override
 	public void drawObject(int mX, int mY) {
-		ITopParent top = getTopParent();
+		ITopParent<?> top = getTopParent();
 		
 		//preventative logic to stop windows from moving while the left mouse button is not held down
 		if (moving && !Mouse.isButtonDown(0)) { moving = false; mouseReleased(mX, mY, 0); }
@@ -108,11 +108,11 @@ public class WindowHeader extends WindowObject {
 			
 			boolean anyFocus = alwaysDrawFocused;
 			if (drawParentFocus) {
-				IWindowObject p = drawDefault ? getWindowParent() : getParent();
+				IWindowObject<?> p = drawDefault ? getWindowParent() : getParent();
 				if (p != null) {
 					if (p.hasFocus()) { anyFocus = true; }
 					else {
-						for (IWindowObject o : p.getAllChildren()) {
+						for (IWindowObject<?> o : p.getAllChildren()) {
 							if (o.hasFocus()) { anyFocus = true; break; }
 						}
 					}
@@ -135,7 +135,7 @@ public class WindowHeader extends WindowObject {
 			if (drawTitle) {
 				double tx = startX + 4 + titleOffset;
 				String tempTitle = title;
-				IWindowParent p = getWindowParent();
+				IWindowParent<?> p = getWindowParent();
 				
 				if (p != null && p.isPinned()) {
 					tempTitle += "" + EColors.mc_lightpurple + "   Pinned";
@@ -196,7 +196,7 @@ public class WindowHeader extends WindowObject {
 		clickPos.setValues(-1, -1);
 		pressed = false;
 		
-		WindowParent p = (WindowParent) window;
+		WindowParent<?> p = (WindowParent<?>) window;
 		
 		if (mXIn <= 5 && mYIn <= 8) { //top left
 			WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.topLeft, false);
@@ -238,7 +238,7 @@ public class WindowHeader extends WindowObject {
 				if (fileUpButton != null) { fileUpButton.setVisible(val && getWindowParent().getWindowHistory() != null && !getWindowParent().getWindowHistory().isEmpty()); }
 			}
 		}
-		for (IWindowObject o : getObjects()) { o.setVisible(val); }
+		for (IWindowObject<?> o : getObjects()) { o.setVisible(val); }
 		return this;
 	}
 	
@@ -272,9 +272,9 @@ public class WindowHeader extends WindowObject {
 	}
 	
 	protected void headerClick(int button) {
-		ITopParent topParent = getTopParent();
+		ITopParent<?> topParent = getTopParent();
 		if (button == 0) {
-			IWindowObject parent = getParent();
+			IWindowObject<?> parent = getParent();
 			if (parent instanceof WindowParent p) {
 				p.bringToFront();
 				
@@ -301,9 +301,9 @@ public class WindowHeader extends WindowObject {
 		WorldRenderer.instance.setMaximizingWindow(window, ScreenLocation.out, true);
 	}
 	
-	public WindowHeader updateButtonVisibility() {
-		if (getParent() instanceof WindowParent) {
-			WindowParent window = (WindowParent) getParent();
+	public WindowHeader<E> updateButtonVisibility() {
+		if (getParent() instanceof WindowParent<?>) {
+			WindowParent<?> window = (WindowParent<?>) getParent();
 			if (window != null) {
 				int buttonPos = buttonWidth * 2 + 3;
 				
@@ -356,7 +356,7 @@ public class WindowHeader extends WindowObject {
 	}
 	
 	@Override
-	public void actionPerformed(IActionObject object, Object... args) {
+	public void actionPerformed(IActionObject<?> object, Object... args) {
 		if (object == closeButton) { handleClose(); }
 		if (object == maximizeButton) { handleMaximize(); }
 		if (object == minimizeButton) { handleMinimize(); }
@@ -369,14 +369,14 @@ public class WindowHeader extends WindowObject {
 	}
 	
 	protected void handlePin() {
-		IWindowParent p = getWindowParent();
+		IWindowParent<?> p = getWindowParent();
 		if (p != null) {
 			if (pinButton.getPressedButton() == 0) { p.setPinned(!p.isPinned()); }
 		}
 	}
 	
 	protected void handleMaximize() {
-		IWindowParent p = getWindowParent();
+		IWindowParent<?> p = getWindowParent();
 		if (p != null) {
 			if (p.isMaximizable()) {
 				if (p.getMaximizedPosition() == ScreenLocation.center) {
@@ -495,7 +495,7 @@ public class WindowHeader extends WindowObject {
 	//WindowHeader Setters
 	//--------------------
 	
-	public WindowHeader setDrawButtons(boolean val) {
+	public WindowHeader<E> setDrawButtons(boolean val) {
 		if (minimizeButton != null) { minimizeButton.setVisible(val); }
 		if (maximizeButton != null) { maximizeButton.setVisible(val); }
 		if (fileUpButton != null) { fileUpButton.setVisible(val); }
@@ -504,18 +504,18 @@ public class WindowHeader extends WindowObject {
 		return this;
 	}
 	
-	public WindowHeader setAlwaysDrawFocused(boolean val) { alwaysDrawFocused = val; return this; }
-	public WindowHeader setMoveable(boolean val) { headerMoveable = val; return this; }
-	public WindowHeader setTitleColor(int colorIn) { titleColor = colorIn; return this; }
-	public WindowHeader setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowHeader setBackgroundColor(int colorIn) { mainColor = colorIn; return this; }
-	public WindowHeader setTitle(String stringIn) { title = stringIn; return this; }
-	public WindowHeader setTitleOffset(int offsetIn) { titleOffset = offsetIn; return this; }
-	public WindowHeader setDrawTitleCentered(boolean val) { titleCentered = val; return this; }
-	public WindowHeader setDrawTitle(boolean val) { drawTitle = val; return this; }
-	public WindowHeader setDrawBackground(boolean val) { drawBackground = val; return this; }
-	public WindowHeader setDrawHeader(boolean val) { drawHeader = val; return this; }
-	public WindowHeader setDrawParentFocus(boolean val) { drawParentFocus = val; return this; }
-	public WindowHeader setHeaderMoving(boolean val) { moving = val; pressed = true; return this; }
+	public WindowHeader<E> setAlwaysDrawFocused(boolean val) { alwaysDrawFocused = val; return this; }
+	public WindowHeader<E> setMoveable(boolean val) { headerMoveable = val; return this; }
+	public WindowHeader<E> setTitleColor(int colorIn) { titleColor = colorIn; return this; }
+	public WindowHeader<E> setBorderColor(int colorIn) { borderColor = colorIn; return this; }
+	public WindowHeader<E> setBackgroundColor(int colorIn) { mainColor = colorIn; return this; }
+	public WindowHeader<E> setTitle(String stringIn) { title = stringIn; return this; }
+	public WindowHeader<E> setTitleOffset(int offsetIn) { titleOffset = offsetIn; return this; }
+	public WindowHeader<E> setDrawTitleCentered(boolean val) { titleCentered = val; return this; }
+	public WindowHeader<E> setDrawTitle(boolean val) { drawTitle = val; return this; }
+	public WindowHeader<E> setDrawBackground(boolean val) { drawBackground = val; return this; }
+	public WindowHeader<E> setDrawHeader(boolean val) { drawHeader = val; return this; }
+	public WindowHeader<E> setDrawParentFocus(boolean val) { drawParentFocus = val; return this; }
+	public WindowHeader<E> setHeaderMoving(boolean val) { moving = val; pressed = true; return this; }
 	
 }

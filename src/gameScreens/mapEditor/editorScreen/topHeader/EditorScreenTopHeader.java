@@ -6,7 +6,8 @@ import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.editorScreen.EditorSelectionList;
 import gameScreens.mapEditor.editorScreen.MapEditorScreen;
-import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
+import gameScreens.mapEditor.editorScreen.RegionEditorMenu;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
 import gameScreens.mapEditor.editorScreen.windows.EditorOptionsWindow;
 import main.Game;
 import util.renderUtil.EColors;
@@ -21,11 +22,11 @@ public class EditorScreenTopHeader extends WindowObject {
 	LineSettings lineSettings;
 	ShapeSettings shapeSettings;
 	
-	EditorTileTool curTool = EditorTileTool.NONE;
+	EditorTool curTool = EditorTool.NONE;
 	HeaderToolSettings curSettings = null;
 	
 	public EditorScreenTopHeader(MapEditorScreen editorIn) { this(editorIn, editorIn.getCurTileTool()); }
-	public EditorScreenTopHeader(MapEditorScreen editorIn, EditorTileTool toolIn) {
+	public EditorScreenTopHeader(MapEditorScreen editorIn, EditorTool toolIn) {
 		editor = editorIn;
 		init(editor, 0, 0, Game.getWidth(), 60);
 		curTool = toolIn;
@@ -72,9 +73,10 @@ public class EditorScreenTopHeader extends WindowObject {
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == options) { Game.displayWindow(new EditorOptionsWindow(editor)); }
 		if (object == assets) { Game.displayWindow(new EditorSelectionList(editor)); }
+		if (object == regions) { Game.displayWindow(new RegionEditorMenu(editor)); }
 	}
 	
-	public void updateCurTool(EditorTileTool tool) {
+	public void updateCurTool(EditorTool tool) {
 		//hide the current tool's settings
 		hideCur();
 		
@@ -94,7 +96,7 @@ public class EditorScreenTopHeader extends WindowObject {
 		if (curSettings != null) { curSettings.setVisible(false); }
 	}
 	
-	public HeaderToolSettings getSettingsForTool(EditorTileTool toolIn) {
+	public HeaderToolSettings getSettingsForTool(EditorTool toolIn) {
 		switch (toolIn) {
 		case BRUSH: return brushSettings;
 		case LINE: return lineSettings;

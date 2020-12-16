@@ -26,26 +26,12 @@ public class RendererRCM extends RightClickMenu {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == this) {
-			switch ((String) getSelectedObject()) {
-			case "New Chat Window": openChatWindow(); break;
+			switch ((String) getStoredObject()) {
 			case "New Terminal": openTerminal(); break;
 			case "New Window": openGui(); break;
-			case "Open EMC Settings": openSettings(); break;
 			case "Close All Objects": clearScreen(); break;
 			}
 		}
-	}
-	
-	private void openSettings() {
-		//Game.displayWindow(new SettingsWindowMain(), CenterType.cursor);
-	}
-	
-	private void openChatWindow() {
-		/*
-		if (RegisteredApps.isAppRegEn(AppType.ENHANCEDCHAT)) {
-			RegisteredApps.getApp(AppType.ENHANCEDCHAT).sendArgs("EnhancedChat: add window cursor");
-		}
-		*/
 	}
 	
 	private void openTerminal() {

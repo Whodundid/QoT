@@ -60,7 +60,7 @@ public class TerminalRCM extends RightClickMenu {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == this) {
-			switch ((String) getSelectedObject()) {
+			switch ((String) getStoredObject()) {
 			case "Copy": copy(); break;
 			case "Paste": paste(); break;
 			case "Search text..": search(); break;

@@ -14,17 +14,17 @@ import util.storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
-public class WindowContainerList extends WindowContainer {
+public class WindowContainerList<E> extends WindowContainer<E> {
 	
 	WindowContainer container;
 	WindowScrollList list;
 	String title = "noname";
-	protected EArrayList<IWindowObject> containerContents = new EArrayList();
-	protected EArrayList<IWindowObject> containerObjsToBeRemoved = new EArrayList();
-	protected EArrayList<IWindowObject> containerObjsToBeAdded = new EArrayList();
+	protected EArrayList<IWindowObject<?>> containerContents = new EArrayList();
+	protected EArrayList<IWindowObject<?>> containerObjsToBeRemoved = new EArrayList();
+	protected EArrayList<IWindowObject<?>> containerObjsToBeAdded = new EArrayList();
 	protected boolean centerTitle = false;
 
-	public WindowContainerList(IWindowObject parentIn, int posX, int posY, int widthIn, int heightIn, String titleIn) {
+	public WindowContainerList(IWindowObject<?> parentIn, int posX, int posY, int widthIn, int heightIn, String titleIn) {
 		super(parentIn, posX, posY, widthIn, heightIn);
 		title = titleIn;
 	}
@@ -49,14 +49,14 @@ public class WindowContainerList extends WindowContainer {
 	public void move(double newX, double newY) {
 		if (eventHandler != null) { eventHandler.processEvent(new EventModify(this, this, ObjectModifyType.Move)); }
 		if (!moveable) {
-			EArrayList<IWindowObject> objs = new EArrayList(windowObjects);
+			EArrayList<IWindowObject<?>> objs = new EArrayList(windowObjects);
 			objs.addAll(objsToBeAdded);
-			Iterator<IWindowObject> it = objs.iterator();
+			Iterator<IWindowObject<?>> it = objs.iterator();
 			while (it.hasNext()) {
-				IWindowObject o = it.next();
+				IWindowObject<?> o = it.next();
 				if (!o.isMoveable()) {
-					if (o instanceof WindowParent) {
-						if (((WindowParent) o).movesWithParent()) { o.move(newX, newY); }
+					if (o instanceof WindowParent<?>) {
+						if (((WindowParent<?>) o).movesWithParent()) { o.move(newX, newY); }
 					}
 					else {
 						if (containerContents.contains(o)) { o.setInitialPosition(o.getInitialPosition().getA() + newX, o.getInitialPosition().getB() + newY); }
@@ -75,8 +75,8 @@ public class WindowContainerList extends WindowContainer {
 	public WindowContainerList setPosition(double newX, double newY) {
 		EDimension d = getDimensions();
 		StorageBox<Integer, Integer> loc = new StorageBox(d.startX, d.startY);
-		StorageBoxHolder<IWindowObject, StorageBox<Integer, Integer>> previousLocations = new StorageBoxHolder();
-		EArrayList<IWindowObject> objs = EArrayList.combineLists(getObjects(), getAddingObjects());
+		StorageBoxHolder<IWindowObject<?>, StorageBox<Integer, Integer>> previousLocations = new StorageBoxHolder();
+		EArrayList<IWindowObject<?>> objs = EArrayList.combineLists(getObjects(), getAddingObjects());
 		for (IWindowObject o : objs) {
 			previousLocations.add(o, new StorageBox(o.getDimensions().startX - loc.getA(), o.getDimensions().startY - loc.getB()));
 		}
@@ -97,8 +97,8 @@ public class WindowContainerList extends WindowContainer {
 		return new EDimension(0, 0, w, h);
 	}
 	
-	public WindowContainerList addObjectToContainer(IWindowObject... objsIn) {
-		for (IWindowObject o : objsIn) {
+	public WindowContainerList addObjectToContainer(IWindowObject<?>... objsIn) {
+		for (IWindowObject<?> o : objsIn) {
 			try {
 				if (o != null && o != this) {
 					//if (o instanceof EnhancedGui) { continue; }
@@ -116,8 +116,8 @@ public class WindowContainerList extends WindowContainer {
 					
 					//limit the boundary of each object to the list's boundary
 					o.setBoundaryEnforcer(bounds);
-					for (IWindowObject q : o.getObjects()) { q.setBoundaryEnforcer(bounds); }
-					for (IWindowObject q : o.getAddingObjects()) { q.setBoundaryEnforcer(bounds); }
+					for (IWindowObject<?> q : o.getObjects()) { q.setBoundaryEnforcer(bounds); }
+					for (IWindowObject<?> q : o.getAddingObjects()) { q.setBoundaryEnforcer(bounds); }
 					
 					//replace the original intial position coordinates with the relative ones
 					o.setInitialPosition(o.getDimensions().startX, o.getDimensions().startY);
@@ -131,14 +131,14 @@ public class WindowContainerList extends WindowContainer {
 		return this;
 	}
 	
-	public WindowContainerList removeObjectFromList(IWindowObject... objsIn) {
+	public WindowContainerList removeObjectFromList(IWindowObject<?>... objsIn) {
 		containerObjsToBeRemoved.addAll(objsIn);
 		objsToBeRemoved.addAll(objsIn);
 		return this;
 	}
 	
 	@Override
-	public WindowContainerList removeObject(IWindowObject obj, IWindowObject... additional) {
+	public WindowContainerList removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) {
 		objsToBeRemoved.addAll(additional);
 		containerObjsToBeRemoved.addAll(additional);
 		return this;

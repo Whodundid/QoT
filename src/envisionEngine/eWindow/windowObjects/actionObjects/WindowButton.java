@@ -41,10 +41,10 @@ public class WindowButton<E> extends ActionObject<E> {
 	protected GameTexture btnSelTexture = null;
 	protected String displayString;
 	
-	public WindowButton(IWindowObject parentIn) { super(parentIn); custom = true; }
+	public WindowButton(IWindowObject<?> parentIn) { super(parentIn); custom = true; }
 	
-	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height) { this(parentIn, posX, posY, width, height, ""); }
-	public WindowButton(IWindowObject parentIn, double posX, double posY, double width, double height, String displayStringIn) {
+	public WindowButton(IWindowObject<?> parentIn, double posX, double posY, double width, double height) { this(parentIn, posX, posY, width, height, ""); }
+	public WindowButton(IWindowObject<?> parentIn, double posX, double posY, double width, double height, String displayStringIn) {
 		init(parentIn, posX, posY, width, height);
 		displayString = displayStringIn;
 	}
@@ -178,7 +178,7 @@ public class WindowButton<E> extends ActionObject<E> {
 		}
 	}
 	
-	public WindowButton updateTrueFalseDisplay() {
+	public WindowButton<E> updateTrueFalseDisplay() {
 		if (trueFalseButton) {
 			String cur = getString();
 			boolean val = cur.equals("False");
@@ -187,13 +187,13 @@ public class WindowButton<E> extends ActionObject<E> {
 		return this;
 	}
 	
-	public WindowButton updateTrueFalseDisplay(boolean val) {
+	public WindowButton<E> updateTrueFalseDisplay(boolean val) {
 		if (trueFalseButton) { setString(val ? "True" : "False").setStringColor(val ? 0x55ff55 : 0xff5555); }
 		return this;
 	}
 	
-	public WindowButton setDrawStringCentered(boolean val) { drawCentered = val; return this; }
-	public WindowButton setDisplayStringOffset(int offsetIn) { textOffset = offsetIn; return this; }
+	public WindowButton<E> setDrawStringCentered(boolean val) { drawCentered = val; return this; }
+	public WindowButton<E> setDisplayStringOffset(int offsetIn) { textOffset = offsetIn; return this; }
 	
 	//----------------------
 	//Drawing Helper Methods
@@ -240,29 +240,29 @@ public class WindowButton<E> extends ActionObject<E> {
 	//EGuiButton Setters
 	//------------------
 	
-	public WindowButton setForceDrawHover(boolean val) { forceDrawHover = val; return this; }
-	public WindowButton setTextures(GameTexture base, GameTexture sel) { setButtonTexture(base); setButtonSelTexture(sel); return this; }
-	public WindowButton setButtonTexture(GameTexture loc) { btnTexture = loc; checkForBaseTextures(); return this; }
-	public WindowButton setButtonSelTexture(GameTexture loc) { btnSelTexture = loc; checkForBaseTextures(); return this; }
-	public WindowButton setString(String stringIn) { displayString = stringIn; return this; }
-	public WindowButton setStringColor(int colorIn) { color = colorIn; return this; }
-	public WindowButton setStringColor(EColors colorIn) { if (colorIn != null) { color = colorIn.c(); } return this; }
-	public WindowButton setStringDisabledColor(int colorIn) { disabledColor = colorIn; return this; }
-	public WindowButton setStringDisabledColor(EColors colorIn) { if (colorIn != null) { disabledColor = colorIn.c(); } return this; }
-	public WindowButton setStringHoverColor(int colorIn) { textHoverColor = colorIn; return this; }
-	public WindowButton setStringHoverColor(EColors colorIn) { if (colorIn != null) { textHoverColor = colorIn.c(); } return this; }
-	public WindowButton setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
-	public WindowButton setBackgroundColor(EColors colorIn) { if (colorIn != null) { backgroundColor = colorIn.c(); } return this; }
-	public WindowButton setBackgroundHoverColor(int colorIn) { backgroundHoverColor = colorIn; return this; }
-	public WindowButton setBackgroundHoverColor(EColors colorIn) { if (colorIn != null) { backgroundHoverColor = colorIn.c(); } return this; }
-	public WindowButton setTrueFalseButton(boolean val) { return setTrueFalseButton(val, false); }
-	public WindowButton setTrueFalseButton(boolean val, boolean initial) { trueFalseButton = val; updateTrueFalseDisplay(initial); return this; }
-	public WindowButton setDrawString(boolean val) { drawString = val; return this; }
-	public WindowButton setDrawDisabledColor(boolean val) { drawDisabledColor = val; return this; }
-	public WindowButton setDrawStretched(boolean val) { stretchTextures = val; return this; }
-	public WindowButton setDrawBackgroundHover(boolean val) { drawBackgroundHover = val; return this; }
+	public WindowButton<E> setForceDrawHover(boolean val) { forceDrawHover = val; return this; }
+	public WindowButton<E> setTextures(GameTexture base, GameTexture sel) { setButtonTexture(base); setButtonSelTexture(sel); return this; }
+	public WindowButton<E> setButtonTexture(GameTexture loc) { btnTexture = loc; checkForBaseTextures(); return this; }
+	public WindowButton<E> setButtonSelTexture(GameTexture loc) { btnSelTexture = loc; checkForBaseTextures(); return this; }
+	public WindowButton<E> setString(String stringIn) { displayString = stringIn; return this; }
+	public WindowButton<E> setStringColor(int colorIn) { color = colorIn; return this; }
+	public WindowButton<E> setStringColor(EColors colorIn) { if (colorIn != null) { color = colorIn.c(); } return this; }
+	public WindowButton<E> setStringDisabledColor(int colorIn) { disabledColor = colorIn; return this; }
+	public WindowButton<E> setStringDisabledColor(EColors colorIn) { if (colorIn != null) { disabledColor = colorIn.c(); } return this; }
+	public WindowButton<E> setStringHoverColor(int colorIn) { textHoverColor = colorIn; return this; }
+	public WindowButton<E> setStringHoverColor(EColors colorIn) { if (colorIn != null) { textHoverColor = colorIn.c(); } return this; }
+	public WindowButton<E> setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
+	public WindowButton<E> setBackgroundColor(EColors colorIn) { if (colorIn != null) { backgroundColor = colorIn.c(); } return this; }
+	public WindowButton<E> setBackgroundHoverColor(int colorIn) { backgroundHoverColor = colorIn; return this; }
+	public WindowButton<E> setBackgroundHoverColor(EColors colorIn) { if (colorIn != null) { backgroundHoverColor = colorIn.c(); } return this; }
+	public WindowButton<E> setTrueFalseButton(boolean val) { return setTrueFalseButton(val, false); }
+	public WindowButton<E> setTrueFalseButton(boolean val, boolean initial) { trueFalseButton = val; updateTrueFalseDisplay(initial); return this; }
+	public WindowButton<E> setDrawString(boolean val) { drawString = val; return this; }
+	public WindowButton<E> setDrawDisabledColor(boolean val) { drawDisabledColor = val; return this; }
+	public WindowButton<E> setDrawStretched(boolean val) { stretchTextures = val; return this; }
+	public WindowButton<E> setDrawBackgroundHover(boolean val) { drawBackgroundHover = val; return this; }
 	
-	public WindowButton setDrawTextures(boolean val) {
+	public WindowButton<E> setDrawTextures(boolean val) {
 		drawTextures = val;
 		if (!custom) {
 			if (drawBackground && !drawTextures) { setMaxDims(Integer.MAX_VALUE, Integer.MAX_VALUE); }
@@ -271,7 +271,7 @@ public class WindowButton<E> extends ActionObject<E> {
 		return this;
 	}
 	
-	public WindowButton setDrawBackground(boolean val) {
+	public WindowButton<E> setDrawBackground(boolean val) {
 		drawBackground = val;
 		if (!custom) {
 			if (drawBackground && !drawTextures) { setMaxDims(Integer.MAX_VALUE, Integer.MAX_VALUE); }
@@ -288,28 +288,28 @@ public class WindowButton<E> extends ActionObject<E> {
 		
 	}
 	
-	public static void setTextures(GameTexture base, GameTexture sel, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setTextures(base, sel), button, additional); }
-	public static void setButtonTexture(GameTexture base, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setButtonTexture(base), button, additional); }
-	public static void setButtonSelTexture(GameTexture sel, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setButtonSelTexture(sel), button, additional); }
-	public static void setString(String textIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setString(textIn), button, additional); }
-	public static void setStringColor(EColors colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setStringColor(colorIn), button, additional); }
-	public static void setStringColor(int colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setStringColor(colorIn), button, additional); }
-	public static void setStringHoverColor(EColors colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setStringHoverColor(colorIn), button, additional); }
-	public static void setStringHoverColor(int colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setStringHoverColor(colorIn), button, additional); }
-	public static void setStringDisabledColor(EColors colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setStringDisabledColor(colorIn), button, additional); }
-	public static void setStringDisabledColor(int colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setStringDisabledColor(colorIn), button, additional); }
-	public static void setBackgroundColor(EColors colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setBackgroundColor(colorIn), button, additional); }
-	public static void setBackgroundColor(int colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setBackgroundColor(colorIn), button, additional); }
-	public static void setBackgroundHoverColor(EColors colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setBackgroundHoverColor(colorIn), button, additional); }
-	public static void setBackgroundHoverColor(int colorIn, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setBackgroundHoverColor(colorIn), button, additional); }
-	public static void setDrawString(boolean val, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setDrawString(val), button, additional); }
-	public static void setDrawDisabledColor(boolean val, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setDrawDisabledColor(val), button, additional); }
-	public static void setDrawStretched(boolean val, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setDrawStretched(val), button, additional); }
-	public static void setDrawTextures(boolean val, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setDrawTextures(val), button, additional); }
-	public static void setDrawBackground(boolean val, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setDrawBackground(val), button, additional); }
-	public static void setDrawBackgroundHover(boolean val, WindowButton button, WindowButton... additional) { setButtonVal(b -> b.setDrawBackgroundHover(val), button, additional); }
+	public static void setTextures(GameTexture base, GameTexture sel, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setTextures(base, sel), button, additional); }
+	public static void setButtonTexture(GameTexture base, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setButtonTexture(base), button, additional); }
+	public static void setButtonSelTexture(GameTexture sel, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setButtonSelTexture(sel), button, additional); }
+	public static void setString(String textIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setString(textIn), button, additional); }
+	public static void setStringColor(EColors colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setStringColor(colorIn), button, additional); }
+	public static void setStringColor(int colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setStringColor(colorIn), button, additional); }
+	public static void setStringHoverColor(EColors colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setStringHoverColor(colorIn), button, additional); }
+	public static void setStringHoverColor(int colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setStringHoverColor(colorIn), button, additional); }
+	public static void setStringDisabledColor(EColors colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setStringDisabledColor(colorIn), button, additional); }
+	public static void setStringDisabledColor(int colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setStringDisabledColor(colorIn), button, additional); }
+	public static void setBackgroundColor(EColors colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setBackgroundColor(colorIn), button, additional); }
+	public static void setBackgroundColor(int colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setBackgroundColor(colorIn), button, additional); }
+	public static void setBackgroundHoverColor(EColors colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setBackgroundHoverColor(colorIn), button, additional); }
+	public static void setBackgroundHoverColor(int colorIn, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setBackgroundHoverColor(colorIn), button, additional); }
+	public static void setDrawString(boolean val, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setDrawString(val), button, additional); }
+	public static void setDrawDisabledColor(boolean val, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setDrawDisabledColor(val), button, additional); }
+	public static void setDrawStretched(boolean val, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setDrawStretched(val), button, additional); }
+	public static void setDrawTextures(boolean val, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setDrawTextures(val), button, additional); }
+	public static void setDrawBackground(boolean val, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setDrawBackground(val), button, additional); }
+	public static void setDrawBackgroundHover(boolean val, WindowButton<?> button, WindowButton<?>... additional) { setButtonVal(b -> b.setDrawBackgroundHover(val), button, additional); }
 	
-	private static void setButtonVal(Consumer<? super WindowButton> action, WindowButton button, WindowButton... additional) {
+	private static void setButtonVal(Consumer<? super WindowButton<?>> action, WindowButton<?> button, WindowButton<?>... additional) {
 		EUtil.filterNullForEachA(action, EUtil.add(button, additional));
 	}
 	

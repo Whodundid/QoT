@@ -1,19 +1,19 @@
 package gameScreens.mapEditor.editorScreen.topHeader;
 
 import envisionEngine.eWindow.windowTypes.WindowObject;
-import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
 
 public abstract class HeaderToolSettings extends WindowObject {
 	
 	EditorScreenTopHeader header;
-	EditorTileTool tool;
+	EditorTool tool;
 	
-	protected HeaderToolSettings(EditorScreenTopHeader headerIn, EditorTileTool toolIn) {
+	protected HeaderToolSettings(EditorScreenTopHeader headerIn, EditorTool toolIn) {
 		header = headerIn;
 		tool = toolIn;
 	}
 	
 	public EditorScreenTopHeader getEditorHeader() { return header; }
-	public EditorTileTool getToolType() { return tool; }
+	public EditorTool getToolType() { return tool; }
 	
 }

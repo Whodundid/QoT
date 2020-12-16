@@ -87,14 +87,14 @@ public class ListCMD extends TerminalCommand {
 		termIn.writeln("Listing all current objects in renderer\n", EColors.lgreen);
 		if (runVisually) {
 			int grandTotal = 0; //this isn't completely right tree wise, but whatever
-			for (IWindowObject obj : Game.getGameRenderer().getObjects()) {
+			for (IWindowObject<?> obj : Game.getGameRenderer().getObjects()) {
 				termIn.writeln(obj.toString(), EColors.green);
 				
 				//int depth = 3;
 				
-				EArrayList<IWindowObject> foundObjs = new EArrayList();
-				EArrayList<IWindowObject> objsWithChildren = new EArrayList();
-				EArrayList<IWindowObject> workList = new EArrayList();
+				EArrayList<IWindowObject<?>> foundObjs = new EArrayList();
+				EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList();
+				EArrayList<IWindowObject<?>> workList = new EArrayList();
 				
 				//grab all immediate children and add them to foundObjs, then check if any have children of their own
 				obj.getObjects().forEach(o -> { foundObjs.add(o); if (!o.getObjects().isEmpty()) { objsWithChildren.add(o); } });

@@ -7,20 +7,18 @@ import util.EUtil;
 
 //Author: Hunter Bragg
 
-public abstract class ActionWindowParent<E> extends WindowParent implements IActionObject<E> {
+public abstract class ActionWindowParent<E> extends WindowParent<E> implements IActionObject<E> {
 
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
-	protected E storredObject = null;
-	protected Object selectedObject = null;
-	protected IWindowObject actionReceiver;
+	protected IWindowObject<?> actionReceiver;
 	
 	//-------------------------------
 	//ActionWindowParent Constructors
 	//-------------------------------
 	
 	/** Instantiates this ActionWindowParent with the givent parent. */
-	protected ActionWindowParent(IWindowObject parentIn) {
+	protected ActionWindowParent(IWindowObject<?> parentIn) {
 		actionReceiver = parentIn;
 		windowInstance = this;
 		objectInstance = this;
@@ -42,14 +40,9 @@ public abstract class ActionWindowParent<E> extends WindowParent implements IAct
 	@Override public void onPress() {}
 	@Override public boolean runsActionOnPress() { return runActionOnPress; }
 	@Override public boolean runsActionOnRelease() { return runActionOnRelease; }
-	@Override public IActionObject setRunActionOnPress(boolean value) { runActionOnPress = value; return this; }
-	@Override public IActionObject setRunActionOnRelease(boolean val) { runActionOnRelease = val; return this; }
-	@Override public IActionObject setActionReceiver(IWindowObject objIn) { actionReceiver = objIn; return this; }
-	@Override public IWindowObject getActionReceiver() { return actionReceiver; }
-	
-	@Override public IActionObject setStoredObject(E objIn) { storredObject = objIn; return this; }
-	@Override public E getStoredObject() { return storredObject; }
-	@Override public IActionObject setSelectedObject(Object objIn) { selectedObject = objIn; return this; }
-	@Override public Object getSelectedObject() { return selectedObject; }
+	@Override public IActionObject<E> setRunActionOnPress(boolean value) { runActionOnPress = value; return this; }
+	@Override public IActionObject<E> setRunActionOnRelease(boolean val) { runActionOnRelease = val; return this; }
+	@Override public IActionObject<E> setActionReceiver(IWindowObject objIn) { actionReceiver = objIn; return this; }
+	@Override public IWindowObject<?> getActionReceiver() { return actionReceiver; }
 	
 }

@@ -1,6 +1,6 @@
 package gameScreens.mapEditor.editorScreen;
 
-import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
 import gameScreens.mapEditor.editorScreen.util.EditorItem;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
@@ -22,7 +22,7 @@ public class ToolHandler {
 		editor = editorIn;
 	}
 	
-	public void handleToolPress(EditorTileTool toolIn, int buttonIn) {
+	public void handleToolPress(EditorTool toolIn, int buttonIn) {
 		button = buttonIn;
 		held = false;
 		pressed = true;
@@ -30,7 +30,7 @@ public class ToolHandler {
 		
 	}
 	
-	public void handleToolRelease(EditorTileTool toolIn, int buttonIn) {
+	public void handleToolRelease(EditorTool toolIn, int buttonIn) {
 		button = buttonIn;
 		held = false;
 		pressed = false;
@@ -38,12 +38,12 @@ public class ToolHandler {
 		handleTool(toolIn);
 	}
 	
-	public void handleToolUpdate(EditorTileTool toolIn) {
+	public void handleToolUpdate(EditorTool toolIn) {
 		held = true;
 		handleTool(toolIn);
 	}
 	
-	private void handleTool(EditorTileTool toolIn) {
+	private void handleTool(EditorTool toolIn) {
 		switch (toolIn) {
 		case BRUSH: brush(); break;
 		case ERASER: eraser(); break; //always press
@@ -126,6 +126,10 @@ public class ToolHandler {
 	}
 	
 	private void shape() {
+		
+	}
+	
+	private void region() {
 		
 	}
 	

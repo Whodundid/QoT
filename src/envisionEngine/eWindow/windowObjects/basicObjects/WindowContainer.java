@@ -5,7 +5,7 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg
 
-public class WindowContainer extends WindowObject {
+public class WindowContainer<E> extends WindowObject<E> {
 	
 	public String title = "";
 	//public int displayStringColor = 0x47ff96;
@@ -24,11 +24,11 @@ public class WindowContainer extends WindowObject {
 	protected double titleAreaWidth = 0;
 	protected double titleAreaHeight = 0;
 	
-	public WindowContainer(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn) {
+	public WindowContainer(IWindowObject<?> parentIn, double xIn, double yIn, double widthIn, double heightIn) {
 		this(parentIn, xIn, yIn, widthIn, heightIn, true);
 	}
 	
-	public WindowContainer(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn, boolean drawTitleIn) {
+	public WindowContainer(IWindowObject<?> parentIn, double xIn, double yIn, double widthIn, double heightIn, boolean drawTitleIn) {
 		init(parentIn, xIn, yIn, widthIn, heightIn);
 		drawTitle = drawTitleIn;
 	}

@@ -145,7 +145,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	
 	protected void selectCurrentOptionAndClose() {
 		if (list.getCurrentLine() != null && list.getCurrentLine().getStoredObject() != null) {
-			selectedObject = list.getCurrentLine().getStoredObject();
+			storedObject = list.getCurrentLine().getStoredObject();
 			performAction(null, null);
 			close();
 		}

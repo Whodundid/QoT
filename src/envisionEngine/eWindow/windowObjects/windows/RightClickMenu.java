@@ -73,7 +73,7 @@ public class RightClickMenu extends ActionWindowParent {
 				public void onPress() {
 					if (getPressedButton() == 0 && isEnabled()) {
 						playPressSound();
-						instance.setSelectedObject(getString());
+						instance.setStoredObject(getString());
 						instance.performAction();
 						getTopParent().unregisterListener(instance);
 						instance.close();
@@ -112,7 +112,7 @@ public class RightClickMenu extends ActionWindowParent {
 			public void onPress() {
 				if (getPressedButton() == 0 && isEnabled()) {
 					playPressSound();
-					instance.setSelectedObject(getString());
+					instance.setStoredObject(getString());
 					instance.performAction();
 					getTopParent().unregisterListener(instance);
 					instance.close();
@@ -208,7 +208,7 @@ public class RightClickMenu extends ActionWindowParent {
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		if (button == 1) { close(); }
-		performAction(getSelectedObject());
+		performAction(getStoredObject());
 		super.mousePressed(mXIn, mYIn, button);
 	}
 	

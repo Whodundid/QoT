@@ -11,5 +11,6 @@ public enum EventType {
 	REDRAW,
 	CLOSE,
 	MODIFY,
+	ACTION,
 	NONE;
 }

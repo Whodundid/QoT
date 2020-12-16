@@ -8,15 +8,15 @@ import util.storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
-public abstract class SetLocationWindow extends OverlayWindow {
+public abstract class SetLocationWindow<E> extends OverlayWindow<E> {
 	
-	protected StorageBoxHolder<IWindowObject, Boolean> previousStates = new StorageBoxHolder();
+	protected StorageBoxHolder<IWindowObject<?>, Boolean> previousStates = new StorageBoxHolder();
 	
-	protected SetLocationWindow hideAllOnRenderer(IWindowObject... exceptionsIn) {
+	protected SetLocationWindow hideAllOnRenderer(IWindowObject<?>... exceptionsIn) {
 		previousStates.clear();
 		EArrayList exceptions = new EArrayList().add(exceptionsIn);
 		
-		for (IWindowObject o : Game.getGameRenderer().getAllChildren()) {
+		for (IWindowObject<?> o : Game.getGameRenderer().getAllChildren()) {
 			if (o.isPersistent()) { continue; }
 			previousStates.add(o, !o.isHidden());
 		}
@@ -26,10 +26,10 @@ public abstract class SetLocationWindow extends OverlayWindow {
 		return this;
 	}
 	
-	protected SetLocationWindow unideAllOnRenderer(IWindowObject... exceptionsIn) {
+	protected SetLocationWindow unideAllOnRenderer(IWindowObject<?>... exceptionsIn) {
 		EArrayList exceptions = new EArrayList().add(exceptionsIn);
 		
-		for (StorageBox<IWindowObject, Boolean> b : previousStates) {
+		for (StorageBox<IWindowObject<?>, Boolean> b : previousStates) {
 			if (exceptions.notContains(b.getA())) { b.getA().setHidden(!b.getB()); }
 		}
 		

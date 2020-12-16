@@ -7,7 +7,7 @@ import util.storageUtil.EDimension;
 
 //Author: Hunter Bragg
 
-public interface IWindowParent extends IWindowObject {
+public interface IWindowParent<E> extends IWindowObject<E> {
 
 	//--------------
 	//Drawing Checks
@@ -38,23 +38,23 @@ public interface IWindowParent extends IWindowObject {
 	public boolean isMinimizable();
 	
 	/** Sets this object to remain drawn on the renderer even when an IRendererProxy gui is displayed. */
-	public IWindowParent setPinned(boolean val);
+	public IWindowParent<E> setPinned(boolean val);
 	/** Sets ths window to be maximized. */
-	public IWindowParent setMaximized(ScreenLocation position);
+	public IWindowParent<E> setMaximized(ScreenLocation position);
 	/** Sets this window to be minimized. */
-	public IWindowParent setMinimized(boolean val);
+	public IWindowParent<E> setMinimized(boolean val);
 	
 	/** Returns the way this window is currently maximized. If the window is not maximized, this will return ScreenLocation.out. */
 	public ScreenLocation getMaximizedPosition();
 	
 	/** Makes this window pinnable. */
-	public IWindowParent setPinnable(boolean val);
+	public IWindowParent<E> setPinnable(boolean val);
 	/** Makes this window maximizable. */
-	public IWindowParent setMaximizable(boolean val);
+	public IWindowParent<E> setMaximizable(boolean val);
 	/** Makes this window minimizeable. */
-	public IWindowParent setMinimizable(boolean val);
+	public IWindowParent<E> setMinimizable(boolean val);
 	/** Sets this object to draw even when minimized. Used for TaskBar previews. */
-	public IWindowParent setDrawWhenMinimized(boolean val);
+	public IWindowParent<E> setDrawWhenMinimized(boolean val);
 	
 	//------
 	//zLevel
@@ -63,11 +63,11 @@ public interface IWindowParent extends IWindowObject {
 	/** Returns this object's Z level added on top of all of it's combined parent's Z levels.*/
 	public int getZLevel();
 	/** Sets this object's Z Level, this value is added to the combination of all of its parent's Z levels. */
-	public IWindowParent setZLevel(int zLevelIn);
+	public IWindowParent<E> setZLevel(int zLevelIn);
 	/** Signals the top parent to bring this object and it's children to the very front of the draw order on the next draw cycle. */
-	public IWindowParent bringToFront();
+	public IWindowParent<E> bringToFront();
 	/** Signals the top parent to bring this object and it's children to the very back of the draw order on the next draw cycle. */
-	public IWindowParent sendToBack();
+	public IWindowParent<E> sendToBack();
 	
 	//------------------
 	//Maximize Functions
@@ -81,7 +81,7 @@ public interface IWindowParent extends IWindowObject {
 	/** Returns the original dimensions for this object before it was maximized. */
 	public EDimension getPreMax();
 	/** Specifies the dimensions this object had before it was maximized. */
-	public IWindowParent setPreMax(EDimension dimIn);
+	public IWindowParent<E> setPreMax(EDimension dimIn);
 	
 	//-----------------------
 	//Special Argument Checks
@@ -99,9 +99,9 @@ public interface IWindowParent extends IWindowObject {
 	//--------------
 	
 	/** Returns the chain of windows that will be opened when pressing the 'back' or 'file up' button. */
-	public Stack<Object> getWindowHistory();
+	public Stack<IWindowParent<?>> getWindowHistory();
 	/** Sets the chain of windows that will be opened when pressing the 'back' or 'file up' button. */
-	public IWindowParent setWindowHistory(Stack<Object> historyIn);
+	public IWindowParent<E> setWindowHistory(Stack<IWindowParent<?>> historyIn);
 	
 	//--------------
 	//Window Aliases

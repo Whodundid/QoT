@@ -14,7 +14,7 @@ import util.renderUtil.ScreenLocation;
 public class ScreenLocationSelector<E> extends ActionObject<E> {
 	
 	protected IUseScreenLocation obj;
-	protected WindowButton bLeft, bRight, tLeft, tRight, center, custom, chatDraw;
+	protected WindowButton<ScreenLocation> bLeft, bRight, tLeft, tRight, center, custom, chatDraw;
 	protected int heightRatio = 0, widthRatio = 0;
 	public String drawName = "";
 	
@@ -28,12 +28,12 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 	
 	@Override
 	public void initObjects() {
-		bLeft = (WindowButton) new WindowButton(this, startX + 4, startY + heightRatio - 19, 23, 15, "BL").setSelectedObject(ScreenLocation.botLeft);
-		bRight = (WindowButton) new WindowButton(this, endX - 27, startY + heightRatio - 19, 23, 15, "BR").setSelectedObject(ScreenLocation.botRight);
-		tLeft = (WindowButton) new WindowButton(this, startX + 4, startY + 4, 23, 15, "TL").setSelectedObject(ScreenLocation.topLeft);
-		tRight = (WindowButton) new WindowButton(this, endX - 27, startY + 4, 23, 15, "TR").setSelectedObject(ScreenLocation.topRight);
-		center = (WindowButton) new WindowButton(this, startX + width / 2 - 11, startY + (heightRatio / 2) - 7, 23, 15, "C").setSelectedObject(ScreenLocation.center);
-		custom = (WindowButton) new WindowButton(this, startX + width / 2 - (95 / 2), endY, 95, 16, "Custom location").setSelectedObject(ScreenLocation.custom);
+		bLeft = (WindowButton<ScreenLocation>) new WindowButton(this, startX + 4, startY + heightRatio - 19, 23, 15, "BL").setStoredObject(ScreenLocation.botLeft);
+		bRight = (WindowButton<ScreenLocation>) new WindowButton(this, endX - 27, startY + heightRatio - 19, 23, 15, "BR").setStoredObject(ScreenLocation.botRight);
+		tLeft = (WindowButton<ScreenLocation>) new WindowButton(this, startX + 4, startY + 4, 23, 15, "TL").setStoredObject(ScreenLocation.topLeft);
+		tRight = (WindowButton<ScreenLocation>) new WindowButton(this, endX - 27, startY + 4, 23, 15, "TR").setStoredObject(ScreenLocation.topRight);
+		center = (WindowButton<ScreenLocation>) new WindowButton(this, startX + width / 2 - 11, startY + (heightRatio / 2) - 7, 23, 15, "C").setStoredObject(ScreenLocation.center);
+		custom = (WindowButton<ScreenLocation>) new WindowButton(this, startX + width / 2 - (95 / 2), endY, 95, 16, "Custom location").setStoredObject(ScreenLocation.custom);
 		
 		addObject(bLeft, bRight, tLeft, tRight, center, custom);
 	}

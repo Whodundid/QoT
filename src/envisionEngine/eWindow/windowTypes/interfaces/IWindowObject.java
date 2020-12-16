@@ -16,7 +16,7 @@ import util.storageUtil.StorageBox;
 //Author: Hunter Bragg
 
 /** An interface outlining behavior for WindowObjects. */
-public interface IWindowObject {
+public interface IWindowObject<E> {
 	
 	//----
 	//init
@@ -56,9 +56,9 @@ public interface IWindowObject {
 	/** Hook that indicates when the object is drawing its hovering layer. */
 	public boolean isDrawingHover();
 	/** Sets generic mouse hovering background with specified text. */
-	public IWindowObject setHoverText(String textIn);
+	public IWindowObject<E> setHoverText(String textIn);
 	/** Sets hover text color. */
-	public IWindowObject setHoverTextColor(int colorIn);
+	public IWindowObject<E> setHoverTextColor(int colorIn);
 	/** Gets the hover text. */
 	public String getHoverText();
 	
@@ -69,11 +69,11 @@ public interface IWindowObject {
 	/** Returns this object's set ID number. */
 	public long getObjectID();
 	/** Designates this object with the specified ID number. Useful for ordering objects and referencing objects by shorthand calls. */
-	public IWindowObject setObjectID(long l);
+	public IWindowObject<E> setObjectID(long l);
 	/** Returns the name of this object. */
 	public String getObjectName();
 	/** Sets the name of this object. */
-	public IWindowObject setObjectName(String nameIn);
+	public IWindowObject<E> setObjectName(String nameIn);
 	
 	//--------------
 	//drawing checks
@@ -98,15 +98,15 @@ public interface IWindowObject {
 	/** Returns true if this object will always be drawn on top. */
 	public boolean isAlwaysOnTop();
 	/** Set this object's enabled state. */
-	public IWindowObject setEnabled(boolean val);
+	public IWindowObject<E> setEnabled(boolean val);
 	/** Set this object's visibility. A non-visible object can still run actions if it is still enabled. */
-	public IWindowObject setVisible(boolean val);
+	public IWindowObject<E> setVisible(boolean val);
 	/** Sets this object to be drawn regardless of it being visible or enabled. */
-	public IWindowObject setPersistent(boolean val);
+	public IWindowObject<E> setPersistent(boolean val);
 	/** Sets this object to always be drawn on top. */
-	public IWindowObject setAlwaysOnTop(boolean val);
+	public IWindowObject<E> setAlwaysOnTop(boolean val);
 	/** Sets this object as hidden when the hud is not drawn. */
-	public IWindowObject setHidden(boolean val);
+	public IWindowObject<E> setHidden(boolean val);
 	
 	//----
 	//size
@@ -127,21 +127,21 @@ public interface IWindowObject {
 	/** Returns the maximum height that this object can have. */
 	public double getMaxHeight();
 	/** Sets both the minimum width and height for this object. */
-	public IWindowObject setMinDims(double widthIn, double heightIn);
+	public IWindowObject<E> setMinDims(double widthIn, double heightIn);
 	/** Sets both the maximum width and height for this object. */
-	public IWindowObject setMaxDims(double widthIn, double heightIn);
+	public IWindowObject<E> setMaxDims(double widthIn, double heightIn);
 	/** Sets the minimum width for this object when resizing. */
-	public IWindowObject setMinWidth(double widthIn);
+	public IWindowObject<E> setMinWidth(double widthIn);
 	/** Sets the minimum height for this object when resizing. */
-	public IWindowObject setMinHeight(double heightIn);
+	public IWindowObject<E> setMinHeight(double heightIn);
 	/** Sets the maximum width for this object when resizing. */
-	public IWindowObject setMaxWidth(double widthIn);
+	public IWindowObject<E> setMaxWidth(double widthIn);
 	/** Sets the maximum height for this object when resizing. */
-	public IWindowObject setMaxHeight(double heightIn);
+	public IWindowObject<E> setMaxHeight(double heightIn);
 	/** Sets whether this object can be resized or not. */
-	public IWindowObject setResizeable(boolean val);
+	public IWindowObject<E> setResizeable(boolean val);
 	/** Resizes this object by an amount in both the x and y axies, specified by the given Direction. */
-	public IWindowObject resize(double xIn, double yIn, ScreenLocation areaIn);
+	public IWindowObject<E> resize(double xIn, double yIn, ScreenLocation areaIn);
 	
 	//--------
 	//position
@@ -152,24 +152,24 @@ public interface IWindowObject {
 	/** Returns true if this object's position cannot be modified. */
 	public boolean isMoveable();
 	/** Moves this object back to it's initial position that it had upon its creation. */
-	public IWindowObject resetPosition();
+	public IWindowObject<E> resetPosition();
 	/** Move this object and all of its children to the specified x and y coordinates. The specified position represents the top left corner of this object.
 	    All children will remain in their original positions relative to the parent object. */
-	public IWindowObject setPosition(double newX, double newY);
+	public IWindowObject<E> setPosition(double newX, double newY);
 	/** Sets this object's position as unmodifiable. */
-	public IWindowObject setMoveable(boolean val);
+	public IWindowObject<E> setMoveable(boolean val);
 	/** Specifies this objects position, width, and height using an EDimension object. */
-	public IWindowObject setDimensions(EDimension dimIn);
+	public IWindowObject<E> setDimensions(EDimension dimIn);
 	/** Specifies this object's width and height based on the current starting position. */
-	public IWindowObject setDimensions(double widthIn, double heightIn);
+	public IWindowObject<E> setDimensions(double widthIn, double heightIn);
 	/** Specifies this objects position, width, and height. (x, y, width, height) */
-	public IWindowObject setDimensions(double startXIn, double startYIn, double widthIn, double heightIn);
+	public IWindowObject<E> setDimensions(double startXIn, double startYIn, double widthIn, double heightIn);
 	/** Specifies the position this object will relocate to when its' position is reset. */
-	public IWindowObject setInitialPosition(double startXIn, double startYIn);
+	public IWindowObject<E> setInitialPosition(double startXIn, double startYIn);
 	/** Returns the position this object will relocate to when reset. */
 	public StorageBox<Double, Double> getInitialPosition();
 	/** Centers the object around the center of the screen with proper dimensions. */
-	public IWindowObject centerObjectWithSize(double widthIn, double heightIn);
+	public IWindowObject<E> centerObjectWithSize(double widthIn, double heightIn);
 	/** Returns the current dimensions of this object. */
 	public EDimension getDimensions();
 	
@@ -178,48 +178,46 @@ public interface IWindowObject {
 	//-------
 	
 	/** Checks if this object is a child of the specified object. */
-	public boolean isChildOf(IWindowObject objIn);
-	/** Adds a child IWindowObject to this object. The object is added before the next draw cycle. 
-	 * @param obj TODO*/
-	public IWindowObject addObject(IWindowObject obj, IWindowObject... additional);
-	/** Removes a child IWindowObject to this object. If this object does not contain the specified child, no action is performed. The object is removed before the next draw cycle. 
-	 * @param obj TODO*/
-	public IWindowObject removeObject(IWindowObject obj, IWindowObject... additional);
+	public boolean isChildOf(IWindowObject<?> objIn);
+	/** Adds a child IWindowObject to this object. The object is added before the next draw cycle. */
+	public IWindowObject<E> addObject(IWindowObject<?> obj, IWindowObject<?>... additional);
+	/** Removes a child IWindowObject to this object. If this object does not contain the specified child, no action is performed. The object is removed before the next draw cycle. */
+	public IWindowObject<E> removeObject(IWindowObject<?> obj, IWindowObject<?>... additional);
 	/** Returns this object's object group, if any. */
 	public EObjectGroup getObjectGroup();
 	/** Sets this object's object group. */
-	public IWindowObject setObjectGroup(EObjectGroup groupIn);
+	public IWindowObject<E> setObjectGroup(EObjectGroup groupIn);
 	/** Event fired when any object within the object group fires an event. */
 	public void onGroupNotification(ObjectEvent e);
 	/** Returns a list of all objects that are directly children of this object. */
-	public EArrayList<IWindowObject> getObjects();
+	public EArrayList<IWindowObject<?>> getObjects();
 	/** Returns a list of all objects that are going to be added on the next draw cycle */
-	public EArrayList<IWindowObject> getAddingObjects();
+	public EArrayList<IWindowObject<?>> getAddingObjects();
 	/** Returns a list of all objects that are going to be removed on the next draw cycle */
-	public EArrayList<IWindowObject> getRemovingObjects();
+	public EArrayList<IWindowObject<?>> getRemovingObjects();
 	/** Returns a list of all objects that descend from this parent. */
-	public EArrayList<IWindowObject> getAllChildren();
+	public EArrayList<IWindowObject<?>> getAllChildren();
 	/** Returns a list of all children from 'getAllChildren()' that are currently under the mouse. */
-	public EArrayList<IWindowObject> getAllChildrenUnderMouse();
+	public EArrayList<IWindowObject<?>> getAllChildrenUnderMouse();
 	/** Returns true if the specified object is a child of the parent or is being added to the parent. */
-	public boolean containsObject(IWindowObject object);
+	public boolean containsObject(IWindowObject<?> object);
 	/** Returns true if the specified object type is a child of the parent or is being added to the parent. */
-	public <T> boolean containsObject(Class<T> objIn);
+	public boolean containsObject(Class objIn);
 	/** Returns a list combining the objects currently within within this object as well as the ones being added. */
-	public default EArrayList<IWindowObject> getCombinedObjects() { return EArrayList.combineLists(getObjects(), getAddingObjects()); }
+	public default EArrayList<IWindowObject<?>> getCombinedObjects() { return EArrayList.combineLists(getObjects(), getAddingObjects()); }
 	
 	//-------
 	//parents
 	//-------
 	
 	/** Returns this object's direct parent object. */
-	public IWindowObject getParent();
+	public IWindowObject<?> getParent();
 	/** Sets this object's parent. */
-	public IWindowObject setParent(IWindowObject parentIn);
+	public IWindowObject<E> setParent(IWindowObject<?> parentIn);
 	/** Returns the top most parent object in the parent chain. */
-	public ITopParent getTopParent();
+	public ITopParent<?> getTopParent();
 	/** Returns the first instance of a WindowParent in the parent chain. */
-	public IWindowParent getWindowParent();
+	public IWindowParent<?> getWindowParent();
 	
 	//-----
 	//focus
@@ -235,17 +233,17 @@ public interface IWindowObject {
 	/** Focus event that is called when this object loses focus in any way. */
 	public void onFocusLost(EventFocus eventIn);
 	/** Signals the top parent to transfer focus from this object to the object specified on the next draw cycle. */
-	public void transferFocus(IWindowObject objIn);
+	public void transferFocus(IWindowObject<?> objIn);
 	/** Used to draw a visible border around an object whose focus is locked. A focus lock does not need to be in place in order for this to be called however. */
 	public void drawFocusLockBorder();
 	/** Signals the top parent to try transfering focus to this object on the next draw cycle. If another object has a focus lock, this object will not receive focus */ 
-	public IWindowObject requestFocus();
+	public IWindowObject<E> requestFocus();
 	/** Same as the previous request focus but the exact type of focus event can be specified. */
-	public IWindowObject requestFocus(FocusType typeIn);
+	public IWindowObject<E> requestFocus(FocusType typeIn);
 	/** Returns the object that will recieve foucs by default when the base object has foucs transfered to it. */
-	public IWindowObject getDefaultFocusObject();
+	public IWindowObject<?> getDefaultFocusObject();
 	/** Sets a default focus object for this object. When the main object recieves focus, the top parent will attempt to transfer focus to the specified default focus object. */
-	public IWindowObject setDefaultFocusObject(IWindowObject objectIn);
+	public IWindowObject<E> setDefaultFocusObject(IWindowObject<?> objectIn);
 	
 	//------------
 	//mouse checks
@@ -264,15 +262,15 @@ public interface IWindowObject {
 	/** Returns true if the mouse is currently inside this object and that this is the top most object inside of the parent. */
 	public boolean isMouseOver();
 	/** Specifies a region that this object will adhere to for mouse checks. */
-	public IWindowObject setBoundaryEnforcer(EDimension dimIn);
+	public IWindowObject<E> setBoundaryEnforcer(EDimension dimIn);
 	/** Returns an EDimension object containing the boundary this object is bounded by */
 	public EDimension getBoundaryEnforcer();
 	/** Returns true if this object can be clicked on. */
 	public boolean isClickable();
 	/** Specifies if this object can be clicked on. */
-	public IWindowObject setClickable(boolean valIn);
+	public IWindowObject<E> setClickable(boolean valIn);
 	/** Sets this object and every child to be clickable or not. */
-	public IWindowObject setEntiretyClickable(boolean val);
+	public IWindowObject<E> setEntiretyClickable(boolean val);
 	
 	//------------
 	//basic inputs
@@ -304,18 +302,20 @@ public interface IWindowObject {
 	/** Gets the EventHandler. */
 	public ObjectEventHandler getEventHandler();
 	/** Register an object that listens to this object's events. */
-	public IWindowObject registerListener(IWindowObject objIn);
+	public IWindowObject<E> registerListener(IWindowObject<?> objIn);
 	/** Unregister a listener Object. */
-	public IWindowObject unregisterListener(IWindowObject objIn);
+	public IWindowObject<E> unregisterListener(IWindowObject<?> objIn);
 	/** Broadcasts an ObjectEvent on this object. */
-	public IWindowObject postEvent(ObjectEvent e);
+	public IWindowObject<E> postEvent(ObjectEvent e);
 	/** Called on ObjectEvents. */
 	public void onEvent(ObjectEvent e);
 	
+	//------
 	//action
+	//------
 	
 	/** Event called whenever a child IActionObject's action is triggered. */
-	public void actionPerformed(IActionObject object, Object... args);
+	public void actionPerformed(IActionObject<?> object, Object... args);
 	
 	//------------
 	//close object
@@ -326,7 +326,7 @@ public interface IWindowObject {
 	/** Returns true is this object has been closed. */
 	public boolean isClosed();
 	/** Sets whether this object can be closed or not. */
-	public IWindowObject setCloseable(boolean val);
+	public IWindowObject<E> setCloseable(boolean val);
 	/** Removes this object and all of it's children from the immeadiate a parent. Removes any present focus locks on this object and returns focus back to the top parent. */
 	public void close();
 	/** Removes this object and all of it's children from the immeadiate a parent. Removes any present focus locks on this object and returns focus back to the top parent. */
@@ -334,41 +334,50 @@ public interface IWindowObject {
 	/** Returns true if this object will close when the hud closes. */
 	public boolean closesWithHud();
 	/** Sets this object to close when the hud closes. */
-	public IWindowObject setClosesWithHud(boolean val);
+	public IWindowObject<E> setClosesWithHud(boolean val);
 	/** Event fired when object is closed. */
 	public void onClosed();
 	/** Upon closing, this object will attempt to transfer it's focus to the specified object if possible. */
-	public IWindowObject setFocusedObjectOnClose(IWindowObject objIn);
+	public IWindowObject<E> setFocusedObjectOnClose(IWindowObject<?> objIn);
 	/** Internal method used to indicate that this object will be removed soon. */
 	public void setBeingRemoved();
 	/** Returns true if this object is currently scheduled to be removed on the next draw cycle. */
 	public boolean isBeingRemoved();
 	
+	//------------------
+	// Parameter Object
+	//------------------
+	
+	/** Stores some object or argument to be preserved for future use. */
+	public IWindowObject<E> setStoredObject(E objIn);
+	/** Returns the object or arguemnt currently stored. */
+	public E getStoredObject();
+	
 	//---------------
 	//Default setters
 	//---------------
 	
-	public default void setMoveable(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setMoveable(val), obj, objs); }
-	public default void setResizeable(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setResizeable(val), obj, objs); }
-	public default void setCloseable(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setCloseable(val), obj, objs); }
-	public default void setClickable(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setClickable(val), obj, objs); }
-	public default void setHidden(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setHidden(val), obj, objs); }
-	public default void setEnabled(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setEnabled(val), obj, objs); }
-	public default void setVisible(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setVisible(val), obj, objs); }
-	public default void setPersistent(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setPersistent(val), obj, objs); }
-	public default void setHoverText(String text, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setHoverText(text), obj, objs); }
+	public default void setMoveable(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setMoveable(val), obj, objs); }
+	public default void setResizeable(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setResizeable(val), obj, objs); }
+	public default void setCloseable(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setCloseable(val), obj, objs); }
+	public default void setClickable(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setClickable(val), obj, objs); }
+	public default void setHidden(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setHidden(val), obj, objs); }
+	public default void setEnabled(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setEnabled(val), obj, objs); }
+	public default void setVisible(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setVisible(val), obj, objs); }
+	public default void setPersistent(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setPersistent(val), obj, objs); }
+	public default void setHoverText(String text, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setHoverText(text), obj, objs); }
 	
-	public static void setMoveableS(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setMoveable(val), obj, objs); }
-	public static void setResizeableS(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setResizeable(val), obj, objs); }
-	public static void setCloseableS(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setCloseable(val), obj, objs); }
-	public static void setClickableS(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setClickable(val), obj, objs); }
-	public static void setHiddenS(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setHidden(val), obj, objs); }
-	public static void setEnabledS(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setEnabled(val), obj, objs); }
-	public static void setVisibleS(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setVisible(val), obj, objs); }
-	public static void setPersistentS(boolean val, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setPersistent(val), obj, objs); }
-	public static void setHoverTextS(String text, IWindowObject obj, IWindowObject... objs) { setVal(o -> o.setHoverText(text), obj, objs); }
+	public static void setMoveableS(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setMoveable(val), obj, objs); }
+	public static void setResizeableS(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setResizeable(val), obj, objs); }
+	public static void setCloseableS(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setCloseable(val), obj, objs); }
+	public static void setClickableS(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setClickable(val), obj, objs); }
+	public static void setHiddenS(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setHidden(val), obj, objs); }
+	public static void setEnabledS(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setEnabled(val), obj, objs); }
+	public static void setVisibleS(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setVisible(val), obj, objs); }
+	public static void setPersistentS(boolean val, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setPersistent(val), obj, objs); }
+	public static void setHoverTextS(String text, IWindowObject<?> obj, IWindowObject<?>... objs) { setVal(o -> o.setHoverText(text), obj, objs); }
 	
-	public static void setVal(Consumer<? super IWindowObject> action, IWindowObject obj, IWindowObject... objs) {
+	public static void setVal(Consumer<? super IWindowObject<?>> action, IWindowObject<?> obj, IWindowObject<?>... objs) {
 		EUtil.filterNullForEachA(action, EUtil.add(obj, objs));
 	}
 	

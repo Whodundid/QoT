@@ -25,17 +25,17 @@ import util.storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
-public class WindowScrollList extends WindowObject {
+public class WindowScrollList<E> extends WindowObject<E> {
 	
-	protected EArrayList<IWindowObject> listContents = new EArrayList();
-	protected EArrayList<IWindowObject> drawnListObjects = new EArrayList();
+	protected EArrayList<IWindowObject<?>> listContents = new EArrayList();
+	protected EArrayList<IWindowObject<?>> drawnListObjects = new EArrayList();
 	protected WindowScrollBar verticalScroll, horizontalScroll;
 	protected WindowButton reset;
 	protected double scrollableHeight = 0;
 	protected double scrollableWidth = 0;
-	protected EArrayList<IWindowObject> listObjsToBeRemoved = new EArrayList();
-	protected EArrayList<IWindowObject> listObjsToBeAdded = new EArrayList();
-	protected EArrayList<IWindowObject> ignoreList = new EArrayList();
+	protected EArrayList<IWindowObject<?>> listObjsToBeRemoved = new EArrayList();
+	protected EArrayList<IWindowObject<?>> listObjsToBeAdded = new EArrayList();
+	protected EArrayList<IWindowObject<?>> ignoreList = new EArrayList();
 	protected int backgroundColor = 0xff4D4D4D;
 	protected int borderColor = 0xff000000;
 	protected double heightToBeSet = 0, widthToBeSet = 0;
@@ -91,7 +91,7 @@ public class WindowScrollList extends WindowObject {
 				
 				if (drawListObjects) {
 					//only draw the objects that are actually in the viewable area
-					for (IWindowObject o : drawnListObjects) {
+					for (IWindowObject<?> o : drawnListObjects) {
 						if (o.checkDraw()) {
 							if (!o.hasFirstDraw()) { o.onFirstDraw(); }
 							GLSettings.fullBright();
@@ -106,7 +106,7 @@ public class WindowScrollList extends WindowObject {
 				if (isHScrollDrawn()) { drawRect(startX + 1, endY - horizontalScroll.height - 2, endX, endY, EColors.black); }
 				
 				//draw non list contents as normal (non scissored)
-				for (IWindowObject o : windowObjects) {
+				for (IWindowObject<?> o : windowObjects) {
 					if (o.checkDraw() && listContents.notContains(o)) {
 						if (!o.hasFirstDraw()) { o.onFirstDraw(); }
 						GLSettings.fullBright();
@@ -130,17 +130,19 @@ public class WindowScrollList extends WindowObject {
 	public void move(double newX, double newY) {
 		if (eventHandler != null) { eventHandler.processEvent(new EventModify(this, this, ObjectModifyType.Move)); }
 		if (moveable) {
-			EArrayList<IWindowObject> objs = new EArrayList(windowObjects);
+			EArrayList<IWindowObject<?>> objs = new EArrayList(windowObjects);
 			objs.addAll(objsToBeAdded);
-			Iterator<IWindowObject> it = objs.iterator();
+			Iterator<IWindowObject<?>> it = objs.iterator();
 			while (it.hasNext()) {
-				IWindowObject o = it.next();
+				IWindowObject<?> o = it.next();
 				if (o.isMoveable()) {
 					if (o instanceof WindowParent) {
 						if (((WindowParent) o).movesWithParent()) { o.move(newX, newY); }
 					}
 					else {
-						if (listContents.contains(o)) { o.setInitialPosition(o.getInitialPosition().getA() + newX, o.getInitialPosition().getB() + newY); }
+						if (listContents.contains(o)) {
+							o.setInitialPosition(o.getInitialPosition().getA() + newX, o.getInitialPosition().getB() + newY);
+						}
 						o.move(newX, newY);
 					}
 				}
@@ -157,17 +159,17 @@ public class WindowScrollList extends WindowObject {
 		if (isMoveable()) {
 			EDimension d = getDimensions();
 			StorageBox<Double, Double> loc = new StorageBox(d.startX, d.startY);
-			StorageBoxHolder<IWindowObject, StorageBox<Double, Double>> previousLocations = new StorageBoxHolder();
+			StorageBoxHolder<IWindowObject<?>, StorageBox<Double, Double>> previousLocations = new StorageBoxHolder();
 			
-			EArrayList<IWindowObject> objs = getCombinedObjects();
+			EArrayList<IWindowObject<?>> objs = getCombinedObjects();
 			
-			for (IWindowObject o : objs) {
+			for (IWindowObject<?> o : objs) {
 				previousLocations.add(o, new StorageBox(o.getDimensions().startX - loc.getA(), o.getDimensions().startY - loc.getB()));
 			}
 			
 			setDimensions(newX, newY, d.width, d.height);
 			
-			for (IWindowObject o : objs) {
+			for (IWindowObject<?> o : objs) {
 				if (o.isMoveable()) {
 					StorageBox<Double, Double> oldLoc = previousLocations.getBoxWithA(o).getB();
 					o.setInitialPosition(newX + oldLoc.getA(), newY + oldLoc.getB());
@@ -179,7 +181,7 @@ public class WindowScrollList extends WindowObject {
 						EDimension bounds = new EDimension(startX + 1, startY + 1, eX, eY);
 						
 						o.setBoundaryEnforcer(getDimensions());
-						for (IWindowObject q : o.getCombinedObjects()) { q.setBoundaryEnforcer(bounds); }
+						for (IWindowObject<?> q : o.getCombinedObjects()) { q.setBoundaryEnforcer(bounds); }
 					}
 					
 					o.setPosition(newX + oldLoc.getA(), newY + oldLoc.getB());
@@ -200,7 +202,7 @@ public class WindowScrollList extends WindowObject {
 			double vScrollPos = verticalScroll.getScrollPos() - verticalScroll.getVisibleAmount();
 			double hScrollPos = horizontalScroll.getScrollPos() - horizontalScroll.getVisibleAmount();
 			
-			for (IWindowObject o : EArrayList.combineLists(listContents, listObjsToBeAdded)) {
+			for (IWindowObject<?> o : EArrayList.combineLists(listContents, listObjsToBeAdded)) {
 				o.setPosition(o.getInitialPosition().getA() - hScrollPos, o.getInitialPosition().getB() - vScrollPos);
 			}
 			
@@ -242,9 +244,9 @@ public class WindowScrollList extends WindowObject {
 		double down = 0;
 		
 		//get both the current list objects and those being added
-		EArrayList<IWindowObject> objs = EArrayList.combineLists(listContents, listObjsToBeAdded);
-		EArrayList<IWindowObject> aObjs = new EArrayList();
-		EArrayList<IWindowObject> ignored = new EArrayList(ignoreList);
+		EArrayList<IWindowObject<?>> objs = EArrayList.combineLists(listContents, listObjsToBeAdded);
+		EArrayList<IWindowObject<?>> aObjs = new EArrayList();
+		EArrayList<IWindowObject<?>> ignored = new EArrayList(ignoreList);
 		
 		for (IWindowObject o : objs) {
 			if (listObjsToBeRemoved.notContains(o) && ignored.notContains(o)) { aObjs.add(o); }
@@ -314,7 +316,7 @@ public class WindowScrollList extends WindowObject {
 	
 	public WindowScrollList addObjectToList(IWindowObject... objsIn) { return addObjectToList(true, objsIn); }
 	public WindowScrollList addObjectToList(boolean useRelativeCoords, IWindowObject... objsIn) {
-		for (IWindowObject o : objsIn) {
+		for (IWindowObject<?> o : objsIn) {
 			try {
 				if (o != null && o != this) {
 					
@@ -349,14 +351,14 @@ public class WindowScrollList extends WindowObject {
 		return this;
 	}
 	
-	public WindowScrollList removeObjectFromList(IWindowObject... objsIn) {
+	public WindowScrollList removeObjectFromList(IWindowObject<?>... objsIn) {
 		listObjsToBeRemoved.addAll(objsIn);
 		objsToBeRemoved.addAll(objsIn);
 		return this;
 	}
 	
 	@Override
-	public WindowScrollList removeObject(IWindowObject obj, IWindowObject... additional) {
+	public WindowScrollList removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) {
 		objsToBeRemoved.add(obj);
 		objsToBeRemoved.addAll(additional);
 		listObjsToBeRemoved.add(obj);
@@ -377,7 +379,7 @@ public class WindowScrollList extends WindowObject {
 	}
 	
 	protected void removeListObjects() {
-		for (IWindowObject o : listObjsToBeRemoved) {
+		for (IWindowObject<?> o : listObjsToBeRemoved) {
 			if (o != null) {
 				Iterator it = listContents.iterator();
 				while (it.hasNext()) {
@@ -436,13 +438,13 @@ public class WindowScrollList extends WindowObject {
 	}
 	
 	public WindowScrollList clearIgnoreList() { ignoreList = new EArrayList(); return this; }
-	public WindowScrollList setIgnoreList(IWindowObject... objects) {
-		ignoreList = new EArrayList<IWindowObject>().add(objects);
+	public WindowScrollList setIgnoreList(IWindowObject<?>... objects) {
+		ignoreList = new EArrayList<IWindowObject<?>>().add(objects);
 		return this;
 	}
 	
-	public WindowScrollList addToIgnoreList(IWindowObject... objects) {
-		if (ignoreList == null) { ignoreList = new EArrayList<IWindowObject>(); }
+	public WindowScrollList addToIgnoreList(IWindowObject<?>... objects) {
+		if (ignoreList == null) { ignoreList = new EArrayList<IWindowObject<?>>(); }
 		ignoreList.add(objects);
 		return this;
 	}
@@ -467,8 +469,8 @@ public class WindowScrollList extends WindowObject {
 	public boolean isResetDrawn() { return resetVis && (isVScrollDrawn() || isHScrollDrawn()); }
 	public WindowScrollBar getVScrollBar() { return verticalScroll; }
 	public WindowScrollBar getHScrollBar() { return horizontalScroll; }
-	public EArrayList<IWindowObject> getDrawnObjects() { return drawnListObjects; }
-	public EArrayList<IWindowObject> getListObjects() { return listContents; }
-	public EArrayList<IWindowObject> getAddingListObjects() { return listObjsToBeAdded; }
+	public EArrayList<IWindowObject<?>> getDrawnObjects() { return drawnListObjects; }
+	public EArrayList<IWindowObject<?>> getListObjects() { return listContents; }
+	public EArrayList<IWindowObject<?>> getAddingListObjects() { return listObjsToBeAdded; }
 	
 }

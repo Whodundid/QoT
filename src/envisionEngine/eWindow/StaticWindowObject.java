@@ -34,7 +34,7 @@ public class StaticWindowObject extends EGui {
 	public static synchronized long getPID() { return windowPID++; }
 	
 	//main draw
-	public static void updateCursorImage(IWindowObject obj) {
+	public static void updateCursorImage(IWindowObject<?> obj) {
 		
 		/*
 		//make sure that the window isn't maximized
@@ -60,7 +60,7 @@ public class StaticWindowObject extends EGui {
 		*/
 	}
 	
-	public static void onMouseHover(IWindowObject obj, int mX, int mY, String hoverText, int textColor) {
+	public static void onMouseHover(IWindowObject<?> obj, int mX, int mY, String hoverText, int textColor) {
 		if (hoverText != null && !hoverText.isEmpty()) {
 			WindowSize res = Game.getWindowSize();
 			int strWidth = getStringWidth(hoverText);
@@ -86,18 +86,18 @@ public class StaticWindowObject extends EGui {
 	
 	//size
 	/** Returns true if the object has an EGuiHeader. */
-	public static boolean hasHeader(IWindowObject obj) { return getHeader(obj) != null; }
+	public static boolean hasHeader(IWindowObject<?> obj) { return getHeader(obj) != null; }
 	
 	/** Returns this objects WindowHeader, if there is one. */
-	public static WindowHeader getHeader(IWindowObject obj) {
-		for (IWindowObject o : obj.getCombinedObjects()) {
-			if (o instanceof WindowHeader) { return (WindowHeader) o; }
+	public static WindowHeader getHeader(IWindowObject<?> obj) {
+		for (IWindowObject<?> o : obj.getCombinedObjects()) {
+			if (o instanceof WindowHeader<?>) { return (WindowHeader<?>) o; }
 		}
 		return null;
 	}
 	
 	/** Generic object resizing algorithm. */
-	public static void resize(IWindowObject obj, double xIn, double yIn, ScreenLocation areaIn) {
+	public static void resize(IWindowObject<?> obj, double xIn, double yIn, ScreenLocation areaIn) {
 		obj.postEvent(new EventModify(obj, obj, ObjectModifyType.Resize)); //post an event
 		if (xIn != 0 || yIn != 0) { //make sure that there is actually a change in the cursor position
 			EDimension d = obj.getDimensions();
@@ -188,16 +188,16 @@ public class StaticWindowObject extends EGui {
 	
 	//position
 	/** Translates the specified object by a given x and y amount. */
-	public static void move(IWindowObject obj, double newX, double newY) {
+	public static void move(IWindowObject<?> obj, double newX, double newY) {
 		if (newX != 0 || newY != 0) {
 			obj.postEvent(new EventModify(obj, obj, ObjectModifyType.Move)); //post an event
 			
 			if (obj.isMoveable()) { //only allow the object to be moved if it's not locked in place
 				//get all of the children in the object that aren't locked in place
-				for (IWindowObject o : EArrayList.combineLists(obj.getObjects(), obj.getAddingObjects())) {
+				for (IWindowObject<?> o : EArrayList.combineLists(obj.getObjects(), obj.getAddingObjects())) {
 					if (o.isMoveable()) { //only move the child if it's not locked in place
-						if (o instanceof WindowParent) { //only move the window if it moves with the parent
-							if (((WindowParent) o).movesWithParent()) { o.move(newX, newY); }
+						if (o instanceof WindowParent<?>) { //only move the window if it moves with the parent
+							if (((WindowParent<?>) o).movesWithParent()) { o.move(newX, newY); }
 						}
 						else { o.move(newX, newY); }
 					}
@@ -214,7 +214,7 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	/** Moves the object to the specified x and y coordinates. */
-	public static void setPosition(IWindowObject obj, double newX, double newY) {
+	public static void setPosition(IWindowObject<?> obj, double newX, double newY) {
 		//only move this object and its children if it is moveable
 		if (obj.isMoveable()) {
 			EDimension d = obj.getDimensions();
@@ -225,10 +225,10 @@ public class StaticWindowObject extends EGui {
 			//StorageBox<Integer, Integer> relLoc = new StorageBox(d.startX - c.startX, d.startY - c.startY);
 			
 			//holder to store each object and their relative child locations
-			StorageBoxHolder<IWindowObject, StorageBox<Double, Double>> previousLocations = new StorageBoxHolder();
+			StorageBoxHolder<IWindowObject<?>, StorageBox<Double, Double>> previousLocations = new StorageBoxHolder();
 			
 			//grab all immediate objects
-			EArrayList<IWindowObject> objs = EArrayList.combineLists(obj.getObjects(), obj.getAddingObjects());
+			EArrayList<IWindowObject<?>> objs = EArrayList.combineLists(obj.getObjects(), obj.getAddingObjects());
 			
 			//get each of the object's children's relative positions and clickable areas relative to each child
 			for (IWindowObject o : objs) {
@@ -241,7 +241,7 @@ public class StaticWindowObject extends EGui {
 			//obj.setClickableArea(newX + relLoc.getObject(), newY + relLoc.getValue(), c.width, c.height);
 			
 			//apply the new location to each child
-			for (IWindowObject o : objs) {
+			for (IWindowObject<?> o : objs) {
 				//don't move the child if its position is locked
 				if (o.isMoveable()) {
 					StorageBox<Double, Double> oldLoc = previousLocations.getBoxWithA(o).getB();
@@ -256,7 +256,7 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	/** Centers the object and all of its children in the middle of the screen with the specified dimensions. */
-	public static void centerObjectWithSize(IWindowObject obj, double widthIn, double heightIn) {
+	public static void centerObjectWithSize(IWindowObject<?> obj, double widthIn, double heightIn) {
 		WindowSize res = Game.getWindowSize(); //get the screen size
 		double sWidth = res.getWidth();
 		double sHeight = res.getHeight();
@@ -288,11 +288,11 @@ public class StaticWindowObject extends EGui {
 	
 	//objects
 	/** Returns true if the given object is a child of the specified parent. */
-	public static boolean isChildOfObject(IWindowObject child, IWindowObject parent) {
+	public static boolean isChildOfObject(IWindowObject<?> child, IWindowObject<?> parent) {
 		//prevent checking if there is nothing to check against
 		if (parent == null) { return false; }
 		
-		IWindowObject parentObj = child.getParent();
+		IWindowObject<?> parentObj = child.getParent();
 		
 		//recursively check through the object's parent lineage to see if that parent is the possible parent
 		while (parentObj != null) {
@@ -307,8 +307,8 @@ public class StaticWindowObject extends EGui {
 	
 	/** Start the process of adding a child to this object. Children are fully added on the next draw cycle. 
 	 *  There is an issue where a child of a child can be added to the parent again. */
-	public static void addObject(IWindowObject parent, IWindowObject obj, IWindowObject... objsIn) {
-		for (IWindowObject o : EUtil.add(obj, objsIn)) {
+	public static void addObject(IWindowObject<?> parent, IWindowObject<?> obj, IWindowObject<?>... objsIn) {
+		for (IWindowObject<?> o : EUtil.add(obj, objsIn)) {
 			try {
 				if (o != null) { //only add if the object isn't null
 					//don't let the object be added to itself, or if the object is already in the object - this only goes 1 layer deep however
@@ -336,17 +336,17 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	/** Start the process of removing a child from this object. Children are fully removed on the next draw cycle. */
-	public static void removeObject(IWindowObject parent, IWindowObject obj, IWindowObject... objsIn) {
-		IWindowObject[] objs = EUtil.add(obj, objsIn);
+	public static void removeObject(IWindowObject<?> parent, IWindowObject<?> obj, IWindowObject<?>... objsIn) {
+		IWindowObject<?>[] objs = EUtil.add(obj, objsIn);
 		EUtil.filterNullForEachA(o -> o.setBeingRemoved(), objs);
 		parent.getRemovingObjects().addAll(objs);
 	}
 	
 	/** Returns a list containing every single child from every object in the specified object. */
-	public static EArrayList<IWindowObject> getAllChildren(IWindowObject obj) {
-		EArrayList<IWindowObject> foundObjs = new EArrayList();
-		EArrayList<IWindowObject> objsWithChildren = new EArrayList();
-		EArrayList<IWindowObject> workList = new EArrayList();
+	public static EArrayList<IWindowObject<?>> getAllChildren(IWindowObject<?> obj) {
+		EArrayList<IWindowObject<?>> foundObjs = new EArrayList();
+		EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList();
+		EArrayList<IWindowObject<?>> workList = new EArrayList();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
 		obj.getObjects().forEach(o -> { foundObjs.add(o); if (!o.getCombinedObjects().isEmpty()) { objsWithChildren.add(o); } });
@@ -371,20 +371,20 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	/** Returns a list of all children currently under the cursor. */
-	public static EArrayList<IWindowObject> getAllChildrenUnderMouse(IWindowObject obj, int mX, int mY) {
+	public static EArrayList<IWindowObject<?>> getAllChildrenUnderMouse(IWindowObject<?> obj, int mX, int mY) {
 		//only add objects if they are visible and if the cursor is over them.
 		return obj.getAllChildren().filterNull(o -> o.checkDraw() && o.isMouseInside());
 	}
 	
 	//parents
 	/* Returns the topParent for the specified object. */
-	public static ITopParent getTopParent(IWindowObject obj) {
-		IWindowObject parentObj = obj.getParent();
+	public static ITopParent<?> getTopParent(IWindowObject<?> obj) {
+		IWindowObject<?> parentObj = obj.getParent();
 		//recursively check through the object's parent lineage to see if that parent is a topParentdw
 		while (parentObj != null) {
-			if (parentObj instanceof ITopParent) {
+			if (parentObj instanceof ITopParent<?>) {
 				//System.out.println("returning cast of getTopParent");
-				return (ITopParent) parentObj;
+				return (ITopParent<?>) parentObj;
 			}
 			
 			//System.out.println("HERE: " + obj + " : " + parentObj);
@@ -399,15 +399,15 @@ public class StaticWindowObject extends EGui {
 		
 		//System.out.println("out of getTopParent");
 		
-		return obj instanceof ITopParent ? (ITopParent) obj : null;
+		return obj instanceof ITopParent<?> ? (ITopParent<?>) obj : null;
 	}
 	
 	/** Returns the parent window for the specified object, if there is one. */
-	public static IWindowParent getWindowParent(IWindowObject obj) {
-		IWindowObject parentObj = obj.getParent();
+	public static IWindowParent<?> getWindowParent(IWindowObject<?> obj) {
+		IWindowObject<?> parentObj = obj.getParent();
 		//recursively check through the object's parent lineage to see if that parent is a window
-		while (parentObj != null && !(parentObj instanceof ITopParent)) {
-			if (parentObj instanceof IWindowParent) { return (IWindowParent) parentObj; }
+		while (parentObj != null && !(parentObj instanceof ITopParent<?>)) {
+			if (parentObj instanceof IWindowParent<?>) { return (IWindowParent<?>) parentObj; }
 			
 			//System.out.println("HERE2: " + obj + " : " + parentObj);
 			//break if the parent is itself
@@ -416,13 +416,13 @@ public class StaticWindowObject extends EGui {
 			parentObj = parentObj.getParent();
 		}
 		
-		return obj instanceof IWindowParent ? (IWindowParent) obj : null;
+		return obj instanceof IWindowParent<?> ? (IWindowParent<?>) obj : null;
 	}
 	
 	//mouse checks
 	
 	/** Returns the ScreenLocation area the mouse is currently on for an object. */
-	public static ScreenLocation getEdgeAreaMouseIsOn(IWindowObject objIn, int mX, int mY) {
+	public static ScreenLocation getEdgeAreaMouseIsOn(IWindowObject<?> objIn, int mX, int mY) {
 		boolean left = false, right = false, top = false, bottom = false;
 		EDimension d = objIn.getDimensions();
 		double rStartY = objIn.hasHeader() ? objIn.getHeader().startY : d.startY;
@@ -447,7 +447,7 @@ public class StaticWindowObject extends EGui {
 		return ScreenLocation.out;
 	}
 	
-	public static boolean isMouseInside(IWindowObject obj, int mX, int mY) {
+	public static boolean isMouseInside(IWindowObject<?> obj, int mX, int mY) {
 		if (obj != null) {
 			EDimension d = obj.getDimensions();
 			
@@ -467,13 +467,13 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	//basic inputs
-	public static void parseMousePosition(IWindowObject objIn, int mX, int mY) {
+	public static void parseMousePosition(IWindowObject<?> objIn, int mX, int mY) {
 		objIn.getObjects().filterForEach(o -> o.isMouseInside(), o -> o.parseMousePosition(mX, mY));
 	}
 	
-	public static void mousePressed(IWindowObject objIn, int mX, int mY, int button) {
+	public static void mousePressed(IWindowObject<?> objIn, int mX, int mY, int button) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.PRESSED));
-		IWindowParent p = objIn.getWindowParent();
+		IWindowParent<?> p = objIn.getWindowParent();
 		if (p != null) { p.bringToFront(); }
 		if (!objIn.hasFocus() && objIn.isMouseOver()) { objIn.requestFocus(); }
 		if (button == 0 && objIn.isResizeable() && !objIn.getEdgeAreaMouseIsOn().equals(ScreenLocation.out)) {
@@ -483,7 +483,7 @@ public class StaticWindowObject extends EGui {
 		}
 	}
 	
-	public static void mouseReleased(IWindowObject objIn, int mX, int mY, int button) {
+	public static void mouseReleased(IWindowObject<?> objIn, int mX, int mY, int button) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.RELEASED));
 		if (objIn.getTopParent() != null) {
 			if (objIn.getTopParent().getDefaultFocusObject() != null) { objIn.getTopParent().getDefaultFocusObject().requestFocus(); }
@@ -491,28 +491,28 @@ public class StaticWindowObject extends EGui {
 		}
 	}
 	
-	public static void mouseDragged(IWindowObject objIn, int mX, int mY, int button, long timeSinceLastClick) {}
+	public static void mouseDragged(IWindowObject<?> objIn, int mX, int mY, int button, long timeSinceLastClick) {}
 	
-	public static void mouseScolled(IWindowObject objIn, int mX, int mY, int change) {
+	public static void mouseScolled(IWindowObject<?> objIn, int mX, int mY, int change) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.SCROLLED));
 		objIn.getObjects().filterForEach(o -> o.isMouseInside() && o.checkDraw(), o -> o.mouseScrolled(change));
 	}
 	
-	public static void keyPressed(IWindowObject objIn, char typedChar, int keyCode) {
+	public static void keyPressed(IWindowObject<?> objIn, char typedChar, int keyCode) {
 		objIn.postEvent(new EventKeyboard(objIn, typedChar, keyCode, KeyboardType.Pressed));
 	}
 	
-	public static void keyReleased(IWindowObject objIn, char typedChar, int keyCode) {
+	public static void keyReleased(IWindowObject<?> objIn, char typedChar, int keyCode) {
 		objIn.postEvent(new EventKeyboard(objIn, typedChar, keyCode, KeyboardType.Released));
 	}
 	
-	public static void setEntiretyClickable(IWindowObject objIn, boolean val) {
+	public static void setEntiretyClickable(IWindowObject<?> objIn, boolean val) {
 		objIn.getAllChildren().forEach(o -> o.setClickable(val));
 		objIn.setClickable(val);
 	}
 	
-	public static void addObjects(IWindowObject objIn, EArrayList<IWindowObject> toBeAdded) {
-		for (IWindowObject o : toBeAdded) {
+	public static void addObjects(IWindowObject<?> objIn, EArrayList<IWindowObject<?>> toBeAdded) {
+		for (IWindowObject<?> o : toBeAdded) {
 			if (o != null) {
 				if (o != objIn) {
 					objIn.getObjects().add(o);
@@ -524,8 +524,8 @@ public class StaticWindowObject extends EGui {
 		toBeAdded.clear();
 	}
 
-	public static void removeObjects(IWindowObject objIn, EArrayList<IWindowObject> toBeRemoved) {
-		for (IWindowObject o : toBeRemoved) {
+	public static void removeObjects(IWindowObject<?> objIn, EArrayList<IWindowObject<?>> toBeRemoved) {
+		for (IWindowObject<?> o : toBeRemoved) {
 			if (o != null) {
 				if (o != objIn) {
 					if (objIn.getObjects().contains(o)) {

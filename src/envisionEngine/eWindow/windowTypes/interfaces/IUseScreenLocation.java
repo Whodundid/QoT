@@ -11,6 +11,6 @@ public interface IUseScreenLocation {
 	public void setLocation(double xIn, double yIn);
 	public StorageBox<Double, Double> getLocation();
 	public ScreenLocation getScreenLocation();
-	public IWindowParent getScreenLocationGui();
+	public IWindowParent<?> getScreenLocationGui();
 	
 }

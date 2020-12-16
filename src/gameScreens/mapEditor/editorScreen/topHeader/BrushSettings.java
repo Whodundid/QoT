@@ -3,7 +3,7 @@ package gameScreens.mapEditor.editorScreen.topHeader;
 import envisionEngine.eWindow.windowObjects.advancedObjects.dropDownList.WindowDropDownList;
 import envisionEngine.eWindow.windowObjects.basicObjects.WindowLabel;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
-import gameScreens.mapEditor.editorScreen.tileTools.EditorTileTool;
+import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
 import util.renderUtil.EColors;
 
 public class BrushSettings extends HeaderToolSettings {
@@ -13,7 +13,7 @@ public class BrushSettings extends HeaderToolSettings {
 	int curWidth;
 	
 	public BrushSettings(EditorScreenTopHeader headerIn, double xIn, double yIn, double heightIn) {
-		super(headerIn, EditorTileTool.BRUSH);
+		super(headerIn, EditorTool.BRUSH);
 		init(headerIn, xIn, yIn, 0, heightIn);
 	}
 

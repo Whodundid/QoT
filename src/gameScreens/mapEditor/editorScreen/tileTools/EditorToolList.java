@@ -4,30 +4,31 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
+import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import gameScreens.mapEditor.editorScreen.MapEditorScreen;
 import util.renderUtil.EColors;
 import util.storageUtil.EArrayList;
 
-public class EditorTileToolList extends WindowObject {
+public class EditorToolList extends WindowObject {
 	
 	MapEditorScreen editor;
-	EArrayList<WindowButton<EditorTileTool>> tools = new EArrayList();
+	EArrayList<WindowButton<EditorTool>> tools = new EArrayList();
 	
-	WindowButton<EditorTileTool> rectangleSelect, move;
-	WindowButton<EditorTileTool> magicWand, paintBucket;
-	WindowButton<EditorTileTool> brush, pencil;
-	WindowButton<EditorTileTool> eyeDropper, eraser;
-	WindowButton<EditorTileTool> line, shape;
+	WindowButton<EditorTool> rectangleSelect, move;
+	WindowButton<EditorTool> magicWand, paintBucket;
+	WindowButton<EditorTool> brush, pencil;
+	WindowButton<EditorTool> eyeDropper, eraser;
+	WindowButton<EditorTool> line, shape;
 	
-	WindowButton<EditorTileTool> curTool;
-	EditorTileTool oldTool;
+	WindowButton<EditorTool> curTool;
+	EditorTool oldTool;
 	
 	int numTools = 10;
 	double toolSize = 40;
 	int toolWidth = 2;
 	int gapSize = 4;
 	
-	public EditorTileToolList(MapEditorScreen in) {
+	public EditorToolList(MapEditorScreen in) {
 		editor = in;
 		
 		//gap of 2 between each tool and a gap of 2 for each side
@@ -60,16 +61,16 @@ public class EditorTileToolList extends WindowObject {
 		line = new WindowButton(this, startX + gapSize, eyeDropper.endY + gapSize, toolSize, toolSize);
 		shape = new WindowButton(this, rectangleSelect.endX + gapSize, eyeDropper.endY + gapSize, toolSize, toolSize);
 		
-		applyValues(rectangleSelect, EditorTileTool.RECTSELECT);
-		applyValues(move, EditorTileTool.MOVE);
-		applyValues(magicWand, EditorTileTool.MAGICWAND);
-		applyValues(paintBucket, EditorTileTool.PAINTBUCKET);
-		applyValues(brush, EditorTileTool.BRUSH);
-		applyValues(pencil, EditorTileTool.PENCIL);
-		applyValues(eyeDropper, EditorTileTool.EYEDROPPER);
-		applyValues(eraser, EditorTileTool.ERASER);
-		applyValues(line, EditorTileTool.LINE);
-		applyValues(shape, EditorTileTool.SHAPE);
+		applyValues(rectangleSelect, EditorTool.RECTSELECT);
+		applyValues(move, EditorTool.MOVE);
+		applyValues(magicWand, EditorTool.MAGICWAND);
+		applyValues(paintBucket, EditorTool.PAINTBUCKET);
+		applyValues(brush, EditorTool.BRUSH);
+		applyValues(pencil, EditorTool.PENCIL);
+		applyValues(eyeDropper, EditorTool.EYEDROPPER);
+		applyValues(eraser, EditorTool.ERASER);
+		applyValues(line, EditorTool.LINE);
+		applyValues(shape, EditorTool.SHAPE);
 		
 		tools.add(rectangleSelect);
 		tools.add(move);
@@ -95,8 +96,15 @@ public class EditorTileToolList extends WindowObject {
 		drawRect(EColors.black);
 		drawRect(EColors.dgray, 1);
 		
-		EditorTileTool newTool = editor.getCurTileTool();
-		if (newTool != EditorTileTool.NONE && oldTool != newTool) {
+		IWindowObject obj = getTopParent().getFocusedObject();
+		if (obj != null) {
+			if (obj == this || obj.isChildOf(this)) {
+				obj.transferFocus(getTopParent());
+			}
+		}
+		
+		EditorTool newTool = editor.getCurTileTool();
+		if (newTool != EditorTool.NONE && oldTool != newTool) {
 			oldTool = newTool;
 			curTool = tools.getFirst(t -> t.getStoredObject() == newTool);
 		}
@@ -110,13 +118,13 @@ public class EditorTileToolList extends WindowObject {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object instanceof WindowButton && object.getStoredObject() instanceof EditorTileTool) {
-			EditorTileTool t = (EditorTileTool) object.getStoredObject();
-			editor.setTileTool(t);
+		if (object instanceof WindowButton && object.getStoredObject() instanceof EditorTool) {
+			EditorTool t = (EditorTool) object.getStoredObject();
+			editor.setCurrentTool(t);
 		}
 	}
 	
-	private void applyValues(WindowButton<EditorTileTool> in, EditorTileTool value) {
+	private void applyValues(WindowButton<EditorTool> in, EditorTool value) {
 		in.setStoredObject(value);
 		in.setButtonTexture(value.texture);
 		in.setHoverText(value.hoverText);

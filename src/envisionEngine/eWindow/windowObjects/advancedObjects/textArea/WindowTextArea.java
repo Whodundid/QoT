@@ -16,9 +16,9 @@ import util.storageUtil.EDimension;
 
 //Author: Hunter Bragg
 
-public class WindowTextArea extends WindowScrollList {
+public class WindowTextArea<E> extends WindowScrollList<E> {
 	
-	EArrayList<TextAreaLine> textDocument;
+	EArrayList<TextAreaLine<E>> textDocument;
 	TextAreaLine currentLine, longestLine;
 	protected boolean editable = true;
 	protected boolean drawLineNumbers = false;
@@ -32,15 +32,15 @@ public class WindowTextArea extends WindowScrollList {
 	//WindowTextArea Constructors
 	//---------------------------
 	
-	public WindowTextArea(IWindowObject parentIn, double x, double y, double widthIn, double heightIn) {
+	public WindowTextArea(IWindowObject<?> parentIn, double x, double y, double widthIn, double heightIn) {
 		this(parentIn, x, y, widthIn, heightIn, false);
 	}
 	
-	public WindowTextArea(IWindowObject parentIn, double x, double y, double widthIn, double heightIn, boolean editableIn) {
+	public WindowTextArea(IWindowObject<?> parentIn, double x, double y, double widthIn, double heightIn, boolean editableIn) {
 		this(parentIn, x, y, widthIn, heightIn, false, false);
 	}
 	
-	public WindowTextArea(IWindowObject parentIn, double x, double y, double widthIn, double heightIn, boolean editableIn, boolean addLine) {
+	public WindowTextArea(IWindowObject<?> parentIn, double x, double y, double widthIn, double heightIn, boolean editableIn, boolean addLine) {
 		super(parentIn, x, y, widthIn, heightIn);
 		editable = editableIn;
 		textDocument = new EArrayList();
@@ -96,7 +96,7 @@ public class WindowTextArea extends WindowScrollList {
 					double eY = endY - 1 - (isHScrollDrawn() ? getHScrollBar().height : 0);
 					drawRect(sX, startY + 1, sX + 1, eY, lineNumberSeparatorColor);
 					
-					for (TextAreaLine l : textDocument) {
+					for (TextAreaLine<E> l : textDocument) {
 						double nX = startX + getLineNumberOffset() - getStringWidth(String.valueOf(l.getLineNumber())) - 3;
 						drawString(l.getLineNumber(), nX, l.startY + 2, l.lineNumberColor);
 					}
@@ -132,13 +132,13 @@ public class WindowTextArea extends WindowScrollList {
 			EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
 			
 			if (isEditable() && textDocument.isEmpty()) {
-				TextAreaLine l = addTextLine();
+				TextAreaLine<E> l = addTextLine();
 				setSelectedLine(l);
 				l.requestFocus();
 			}
 			else if (textDocument.isNotEmpty()) {
 				if (button == 0) {
-					TextAreaLine l = getLineMouseIsOver();
+					TextAreaLine<E> l = getLineMouseIsOver();
 					if (l != currentLine) {
 						if (l != null) {
 							setSelectedLine(l, FocusType.MousePress);
@@ -190,21 +190,21 @@ public class WindowTextArea extends WindowScrollList {
 	//WindowTextArea Methods
 	//----------------------
 	
-	public TextAreaLine addTextLine() { return addTextLine("", 0xffffff, null, false); }
-	public TextAreaLine addTextLine(boolean moveDown) { return addTextLine("", 0xffffff, null, moveDown); }
-	public TextAreaLine addTextLine(String textIn) { return addTextLine(textIn, 0xffffff, null, false); }
-	public TextAreaLine addTextLine(String textIn, EColors colorIn) { return addTextLine(textIn, colorIn.intVal, null, false); }
-	public TextAreaLine addTextLine(String textIn, int colorIn) { return addTextLine(textIn, colorIn, null, false); }
-	public TextAreaLine addTextLine(String textIn, EColors colorIn, Object objectIn) { return addTextLine(textIn, colorIn.intVal, objectIn, false); }
-	public TextAreaLine addTextLine(String textIn, int colorIn, Object objectIn) { return addTextLine(textIn, colorIn, objectIn, false); }
-	public TextAreaLine addTextLine(String textIn, EColors colorIn, Object objectIn, boolean moveDown) { return addTextLine(textIn, colorIn.intVal, objectIn, moveDown); }
-	public TextAreaLine addTextLine(String textIn, int colorIn, Object objectIn, boolean moveDown) {
+	public TextAreaLine<E> addTextLine() { return addTextLine("", 0xffffff, null, false); }
+	public TextAreaLine<E> addTextLine(boolean moveDown) { return addTextLine("", 0xffffff, null, moveDown); }
+	public TextAreaLine<E> addTextLine(String textIn) { return addTextLine(textIn, 0xffffff, null, false); }
+	public TextAreaLine<E> addTextLine(String textIn, EColors colorIn) { return addTextLine(textIn, colorIn.intVal, null, false); }
+	public TextAreaLine<E> addTextLine(String textIn, int colorIn) { return addTextLine(textIn, colorIn, null, false); }
+	public TextAreaLine<E> addTextLine(String textIn, EColors colorIn, E objectIn) { return addTextLine(textIn, colorIn.intVal, objectIn, false); }
+	public TextAreaLine<E> addTextLine(String textIn, int colorIn, E objectIn) { return addTextLine(textIn, colorIn, objectIn, false); }
+	public TextAreaLine<E> addTextLine(String textIn, EColors colorIn, E objectIn, boolean moveDown) { return addTextLine(textIn, colorIn.intVal, objectIn, moveDown); }
+	public TextAreaLine<E> addTextLine(String textIn, int colorIn, E objectIn, boolean moveDown) {
 		return addTextLine(new TextAreaLine(this, textIn, colorIn, objectIn, textDocument.size()), 0, moveDown);
 	}
 	
-	public TextAreaLine addTextLine(TextAreaLine lineIn) { return addTextLine(lineIn, 0, false); }
-	public TextAreaLine addTextLine(TextAreaLine lineIn, int offset) { return addTextLine(lineIn, offset, false); }
-	public TextAreaLine addTextLine(TextAreaLine lineIn, int offset, boolean moveDown) {
+	public TextAreaLine<E> addTextLine(TextAreaLine<E> lineIn) { return addTextLine(lineIn, 0, false); }
+	public TextAreaLine<E> addTextLine(TextAreaLine<E> lineIn, int offset) { return addTextLine(lineIn, offset, false); }
+	public TextAreaLine<E> addTextLine(TextAreaLine<E> lineIn, int offset, boolean moveDown) {
 		int moveArg = moveDown ? 1 : 0;
 		EDimension ld = getListDimensions();
 		lineIn.setDimensions(3, 1 + (textDocument.size() * 22) + offset, getStringWidth(lineIn.getText()), 10);
@@ -216,17 +216,17 @@ public class WindowTextArea extends WindowScrollList {
 		return lineIn;
 	}
 	
-	public WindowTextArea deleteLine() { return deleteLine(getCurrentLine()); }
-	public WindowTextArea deleteLine(int lineNumber) { return deleteLine(getTextLine(lineNumber)); }
-	public WindowTextArea deleteLine(TextAreaLine lineIn) {
+	public WindowTextArea<E> deleteLine() { return deleteLine(getCurrentLine()); }
+	public WindowTextArea<E> deleteLine(int lineNumber) { return deleteLine(getTextLine(lineNumber)); }
+	public WindowTextArea<E> deleteLine(TextAreaLine<E> lineIn) {
 		textDocument.remove(lineIn);
 		removeObjectFromList(lineIn);
 		fitItemsInList(3, 7);
 		return this;
 	}
 	
-	public WindowTextArea setSelectedLine(TextAreaLine lineIn) { return setSelectedLine(lineIn, FocusType.Transfer); }
-	public WindowTextArea setSelectedLine(TextAreaLine lineIn, FocusType typeIn) {
+	public WindowTextArea<E> setSelectedLine(TextAreaLine<E> lineIn) { return setSelectedLine(lineIn, FocusType.Transfer); }
+	public WindowTextArea<E> setSelectedLine(TextAreaLine<E> lineIn, FocusType typeIn) {
 		if (lineIn == null) { currentLine = null; return this; }
 		if (textDocument.contains(lineIn)) {
 			currentLine = lineIn;
@@ -235,10 +235,10 @@ public class WindowTextArea extends WindowScrollList {
 		return this;
 	}
 	
-	public TextAreaLine selectPreviousLine(int numIn, int pos) { return selectPreviousLine(getTextLine(numIn), pos); }
-	public TextAreaLine selectPreviousLine(TextAreaLine lineIn, int pos) {
+	public TextAreaLine<E> selectPreviousLine(int numIn, int pos) { return selectPreviousLine(getTextLine(numIn), pos); }
+	public TextAreaLine<E> selectPreviousLine(TextAreaLine<E> lineIn, int pos) {
 		if (lineIn != null) {
-			TextAreaLine line = getTextLine(lineIn.getLineNumber() - 1);
+			TextAreaLine<E> line = getTextLine(lineIn.getLineNumber() - 1);
 			if (line != null) {
 				setSelectedLine(line, FocusType.Gained);
 				line.setCursorPosition(pos);
@@ -249,10 +249,10 @@ public class WindowTextArea extends WindowScrollList {
 		return null;
 	}
 	
-	public TextAreaLine selectNextLine(int numIn, int pos) { return selectNextLine(getTextLine(numIn), pos); }
-	public TextAreaLine selectNextLine(TextAreaLine lineIn, int pos) {
+	public TextAreaLine<E> selectNextLine(int numIn, int pos) { return selectNextLine(getTextLine(numIn), pos); }
+	public TextAreaLine<E> selectNextLine(TextAreaLine<E> lineIn, int pos) {
 		if (lineIn != null) {
-			TextAreaLine line = getTextLine(lineIn.getLineNumber() + 1);
+			TextAreaLine<E> line = getTextLine(lineIn.getLineNumber() + 1);
 			if (line != null) {
 				setSelectedLine(line, FocusType.Gained);
 				line.setCursorPosition(pos);
@@ -264,24 +264,24 @@ public class WindowTextArea extends WindowScrollList {
 	}
 	
 	/** Used when pressing enter. */
-	public TextAreaLine createNewLineAfter(TextAreaLine theLine) {
+	public TextAreaLine<E> createNewLineAfter(TextAreaLine<E> theLine) {
 		if (theLine != null) {
 			String text = theLine.getText().substring(theLine.getCursorPosition());
-			TextAreaLine newLine = new TextAreaLine(this, text, theLine.textColor, theLine.getStoredObject(), theLine.getLineNumber() + 1);
+			TextAreaLine<E> newLine = new TextAreaLine(this, text, theLine.textColor, theLine.getStoredObject(), theLine.getLineNumber() + 1);
 			
-			EArrayList<TextAreaLine> linesAfter = new EArrayList();
+			EArrayList<TextAreaLine<E>> linesAfter = new EArrayList();
 			try {
 				for (int i = theLine.getLineNumber() + 1; i < textDocument.size() + 1; i++) {
-					TextAreaLine l = getTextLine(i);
+					TextAreaLine<E> l = getTextLine(i);
 					linesAfter.add(l);
 				}
 			}
 			catch (Exception e) { e.printStackTrace(); }
 			
-			for (TextAreaLine l : linesAfter) { deleteLine(l); }
+			for (TextAreaLine<E> l : linesAfter) { deleteLine(l); }
 			theLine.setText(theLine.getText().substring(0, theLine.getCursorPosition()));
 			addTextLine(newLine);
-			for (TextAreaLine l : linesAfter) { addTextLine(l); }
+			for (TextAreaLine<E> l : linesAfter) { addTextLine(l); }
 			
 			setSelectedLine(newLine);
 			newLine.setCursorPosition(0);
@@ -291,13 +291,13 @@ public class WindowTextArea extends WindowScrollList {
 		return null;
 	}
 	
-	public TextAreaLine deleteLineAndAddPrevious(TextAreaLine theLine) {
+	public TextAreaLine<E> deleteLineAndAddPrevious(TextAreaLine<E> theLine) {
 		if (theLine != null) {
 			String text = theLine.getText();
-			TextAreaLine prev = getTextLine(theLine.getLineNumber() - 1);
+			TextAreaLine<E> prev = getTextLine(theLine.getLineNumber() - 1);
 			
 			if (prev != null) {
-				EArrayList<TextAreaLine> linesAfter = new EArrayList();
+				EArrayList<TextAreaLine<E>> linesAfter = new EArrayList();
 				try {
 					for (int i = theLine.getLineNumber() + 1; i < textDocument.size() + 1; i++) {
 						linesAfter.add(getTextLine(i));
@@ -308,8 +308,8 @@ public class WindowTextArea extends WindowScrollList {
 				deleteLine(theLine);
 				
 				prev.setText(prev.getText() + text);
-				for (TextAreaLine l : linesAfter) { deleteLine(l); }
-				for (TextAreaLine l : linesAfter) { addTextLine(l); }
+				for (TextAreaLine<E> l : linesAfter) { deleteLine(l); }
+				for (TextAreaLine<E> l : linesAfter) { addTextLine(l); }
 				
 				setSelectedLine(prev);
 				int pos = NumUtil.clamp(prev.getText().length() - text.length(), 0, prev.getText().length());
@@ -321,8 +321,8 @@ public class WindowTextArea extends WindowScrollList {
 		return null;
 	}
 	
-	public WindowTextArea setLineNumberDrawn(int lineNumber) { return setLineNumberDrawn(getTextLine(lineNumber)); }
-	public WindowTextArea setLineNumberDrawn(TextAreaLine lineIn) {
+	public WindowTextArea<E> setLineNumberDrawn(int lineNumber) { return setLineNumberDrawn(getTextLine(lineNumber)); }
+	public WindowTextArea<E> setLineNumberDrawn(TextAreaLine<E> lineIn) {
 		if (lineIn != null) {
 			double lineYPos = lineIn.endY + lineIn.height;
 			double difference = lineYPos - startY;
@@ -332,7 +332,7 @@ public class WindowTextArea extends WindowScrollList {
 		return this;
 	}
 	
-	public WindowTextArea clear() {
+	public WindowTextArea<E> clear() {
 		setListWidth(width - 2);
 		setListHeight(0);
 		Iterator it = windowObjects.iterator();
@@ -386,13 +386,13 @@ public class WindowTextArea extends WindowScrollList {
 	//WindowTextArea Getters
 	//----------------------
 	
-	public TextAreaLine getLineMouseIsOver() {
+	public TextAreaLine<E> getLineMouseIsOver() {
 		double mPosY = mY - startY - 1;
 		double scrollOffset = verticalScroll.getScrollPos() - verticalScroll.getVisibleAmount();
 		double posY = mPosY + scrollOffset;
 		
 		int num = (int) ((posY / lineHeight) + 1);
-		TextAreaLine l = getTextLine(num);
+		TextAreaLine<E> l = getTextLine(num);
 		
 		return l;
 	}
@@ -402,13 +402,13 @@ public class WindowTextArea extends WindowScrollList {
 		return longestLine != null ? getStringWidth(longestLine.getText()) : - 1;
 	}
 	
-	public TextAreaLine getTextLine(int numIn) {
+	public TextAreaLine<E> getTextLine(int numIn) {
 		if (numIn > 0 && numIn <= textDocument.size()) {
 			int first = 0;
 			int last = textDocument.size();
 			int mid = (first + last) / 2;
 			while (first <= last && mid < textDocument.size()) {
-				TextAreaLine l = textDocument.get(mid);
+				TextAreaLine<E> l = textDocument.get(mid);
 				if (l != null) {
 					if (l.getLineNumber() == numIn) { return l; }
 					else if (l.getLineNumber() < numIn) { first = mid + 1; }
@@ -420,15 +420,15 @@ public class WindowTextArea extends WindowScrollList {
 		return null;
 	}
 	
-	public TextAreaLine getLineWithText(String textIn) {
-		for (TextAreaLine l : textDocument) {
+	public TextAreaLine<E> getLineWithText(String textIn) {
+		for (TextAreaLine<E> l : textDocument) {
 			if (l.getText().equals(textIn)) { return l; }
 		}
 		return null;
 	}
 	
-	public TextAreaLine getLineWithObject(Object objectIn) {
-		for (TextAreaLine l : textDocument) {
+	public TextAreaLine<E> getLineWithObject(E objectIn) {
+		for (TextAreaLine<E> l : textDocument) {
 			if (l.getStoredObject() == null) {
 				if (objectIn == null) { return l; }
 			}
@@ -437,8 +437,8 @@ public class WindowTextArea extends WindowScrollList {
 		return null;
 	}
 	
-	public TextAreaLine getLineWithTextAndObject(String textIn, Object objectIn) {
-		for (TextAreaLine l : textDocument) {
+	public TextAreaLine<E> getLineWithTextAndObject(String textIn, E objectIn) {
+		for (TextAreaLine<E> l : textDocument) {
 			if (l.getStoredObject() == null ) {
 				if (l.getText().equals(textIn) && objectIn == null) { return l; }
 			}
@@ -447,10 +447,10 @@ public class WindowTextArea extends WindowScrollList {
 		return null;
 	}
 	
-	public TextAreaLine getLongestTextLine() {
-		TextAreaLine longest = null;
+	public TextAreaLine<E> getLongestTextLine() {
+		TextAreaLine<E> longest = null;
 		int longestLen = 0;
-		for (TextAreaLine l : textDocument) {
+		for (TextAreaLine<E> l : textDocument) {
 			int len = getStringWidth(l.getText());
 			if (len > longestLen) { longest = l; longestLen = len; }
 		}
@@ -464,24 +464,24 @@ public class WindowTextArea extends WindowScrollList {
 	public boolean getDrawLineHighlight() { return drawLineHighlight; }
 	public boolean isEditable() { return editable; }
 	public TextAreaLine getCurrentLine() { return currentLine; }
-	public EArrayList<TextAreaLine> getTextDocument() { return textDocument; }
+	public EArrayList<TextAreaLine<E>> getTextDocument() { return textDocument; }
 	
 	//----------------------
 	//WindowTextArea Setters
 	//----------------------
 	
-	public WindowTextArea setTextDocument(EArrayList<TextAreaLine> docIn) {
+	public WindowTextArea<E> setTextDocument(EArrayList<TextAreaLine<E>> docIn) {
 		clear();
-		for (TextAreaLine l : docIn) { addTextLine(l); }
+		for (TextAreaLine<E> l : docIn) { addTextLine(l); }
 		return this;
 	}
 	
-	public WindowTextArea setLineHeight(int in) { lineHeight = in; return this; }
-	public WindowTextArea setDrawLineNumbers(boolean valIn) { drawLineNumbers = valIn; return this; }
-	public WindowTextArea setDrawLineHighlight(boolean valIn) { drawLineHighlight = valIn; return this; }
-	public WindowTextArea setEditable(boolean valIn) { editable = valIn; return this; }
-	public WindowTextArea setDrawLineNumberSeparator(boolean valIn) { drawLineNumberSeparator = valIn; return this; }
-	public WindowTextArea setLineNumberSeparatorColor(EColors colorIn) { return setLineNumberSeparatorColor(colorIn.intVal); }
-	public WindowTextArea setLineNumberSeparatorColor(int colorIn) { lineNumberSeparatorColor = colorIn; return this; }
+	public WindowTextArea<E> setLineHeight(int in) { lineHeight = in; return this; }
+	public WindowTextArea<E> setDrawLineNumbers(boolean valIn) { drawLineNumbers = valIn; return this; }
+	public WindowTextArea<E> setDrawLineHighlight(boolean valIn) { drawLineHighlight = valIn; return this; }
+	public WindowTextArea<E> setEditable(boolean valIn) { editable = valIn; return this; }
+	public WindowTextArea<E> setDrawLineNumberSeparator(boolean valIn) { drawLineNumberSeparator = valIn; return this; }
+	public WindowTextArea<E> setLineNumberSeparatorColor(EColors colorIn) { return setLineNumberSeparatorColor(colorIn.intVal); }
+	public WindowTextArea<E> setLineNumberSeparatorColor(int colorIn) { lineNumberSeparatorColor = colorIn; return this; }
 	
 }

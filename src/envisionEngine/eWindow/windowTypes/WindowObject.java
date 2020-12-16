@@ -33,14 +33,14 @@ import util.storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 
-public abstract class WindowObject extends EGui implements IWindowObject {
+public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	
-	protected WindowObject objectInstance;
-	protected IWindowObject parent, focusObjectOnClose, defaultFocusObject;
+	protected WindowObject<E> objectInstance;
+	protected IWindowObject<?> parent, focusObjectOnClose, defaultFocusObject;
 	protected EDimension boundaryDimension;
-	protected EArrayList<IWindowObject> windowObjects = new EArrayList();
-	protected EArrayList<IWindowObject> objsToBeRemoved = new EArrayList();
-	protected EArrayList<IWindowObject> objsToBeAdded = new EArrayList();
+	protected EArrayList<IWindowObject<?>> windowObjects = new EArrayList();
+	protected EArrayList<IWindowObject<?>> objsToBeRemoved = new EArrayList();
+	protected EArrayList<IWindowObject<?>> objsToBeAdded = new EArrayList();
 	protected ObjectEventHandler eventHandler = new ObjectEventHandler(this);
 	protected ScreenLocation oldArea = ScreenLocation.out;
 	protected EObjectGroup objectGroup;
@@ -67,18 +67,19 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	private boolean hasBeenInitialized = false;
 	private boolean objectInit = false;
 	private boolean beingRemoved = false;
+	protected E storedObject = null;
 	
 	/** Initializes this WindowObject with the specified parent. */
-	public void init(IWindowObject objIn) {
+	public void init(IWindowObject<?> objIn) {
 		parent = objIn;
 		objectInstance = this;
 		res = Game.getWindowSize();
 	}
 	
-	public void init(IWindowObject objIn, int xIn, int yIn) { init(objIn, (double) xIn, (double) yIn); }
+	public void init(IWindowObject<?> objIn, int xIn, int yIn) { init(objIn, (double) xIn, (double) yIn); }
 	
 	/** Initializes this WindowObject with the specified parent and starting coordinates. */
-	public void init(IWindowObject objIn, double xIn, double yIn) {
+	public void init(IWindowObject<?> objIn, double xIn, double yIn) {
 		parent = objIn;
 		startX = xIn;
 		startY = yIn;
@@ -88,13 +89,13 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 		res = Game.getWindowSize();
 	}
 	
-	public void init(IWindowObject objIn, int xIn, int yIn, int widthIn, int heightIn) { init(objIn, (double) xIn, (double) yIn, (double) widthIn, (double) heightIn); }
+	public void init(IWindowObject<?> objIn, int xIn, int yIn, int widthIn, int heightIn) { init(objIn, (double) xIn, (double) yIn, (double) widthIn, (double) heightIn); }
 	/** Initializes this WindowObject with the specified parent and dimensions. */
-	public void init(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) { init(objIn, xIn, yIn, widthIn, heightIn, -1); }
+	public void init(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn) { init(objIn, xIn, yIn, widthIn, heightIn, -1); }
 	
-	public void init(IWindowObject objIn, int xIn, int yIn, int widthIn, int heightIn, int objectIdIn) { init(objIn, (double) xIn, (double) yIn, (double) widthIn, (double) heightIn, objectIdIn); }
+	public void init(IWindowObject<?> objIn, int xIn, int yIn, int widthIn, int heightIn, int objectIdIn) { init(objIn, (double) xIn, (double) yIn, (double) widthIn, (double) heightIn, objectIdIn); }
 	/** Initializes this WindowObject with the specified parent, dimensions, as well as object id. */
-	public void init(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn, int objectIdIn) {
+	public void init(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn, int objectIdIn) {
 		parent = objIn;
 		objectId = objectIdIn;
 		startXPos = xIn;
@@ -125,7 +126,7 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	public void reInitObjects() {
 		objectInit = false;
 		ITopParent p = getTopParent();
-		EArrayList<IWindowObject> children = getAllChildren();
+		EArrayList<IWindowObject<?>> children = getAllChildren();
 		if (!(p.getModifyType() == ObjectModifyType.Resize)) {
 			if (children.contains(p.getFocusedObject())) { p.clearFocusedObject(); }
 			if (children.contains(p.getFocusLockObject())) { p.clearFocusLockObject(); }
@@ -184,15 +185,15 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	@Override public void updateCursorImage() { StaticWindowObject.updateCursorImage(this); }
 	@Override public void onMouseHover(int mX, int mY) { StaticWindowObject.onMouseHover(this, mX, mY, hoverText, hoverTextColor); }
 	@Override public boolean isDrawingHover() { return getTopParent() != null && this.equals(getTopParent().getHoveringObject()); }
-	@Override public WindowObject setHoverText(String textIn) { hoverText = textIn; return this; }
-	@Override public WindowObject setHoverTextColor(int colorIn) { hoverTextColor = colorIn; hasCustomHoverColor = true; return this; }
+	@Override public WindowObject<E> setHoverText(String textIn) { hoverText = textIn; return this; }
+	@Override public WindowObject<E> setHoverTextColor(int colorIn) { hoverTextColor = colorIn; hasCustomHoverColor = true; return this; }
 	@Override public String getHoverText() { return hoverText; }
 	
 	//obj ids
 	@Override public long getObjectID() { return objectId; }
-	@Override public WindowObject setObjectID(long idIn) { objectId = idIn; return this; }
+	@Override public WindowObject<E> setObjectID(long idIn) { objectId = idIn; return this; }
 	@Override public String getObjectName() { return objectName; }
-	@Override public WindowObject setObjectName(String nameIn) { objectName = nameIn; return this; }
+	@Override public WindowObject<E> setObjectName(String nameIn) { objectName = nameIn; return this; }
 	
 	//drawing checks
 	@Override public boolean checkDraw() { return persistent || visible; }
@@ -204,44 +205,44 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	@Override public boolean isResizing() { ITopParent t = getTopParent(); return t.getModifyingObject() == this && t.getModifyType() == ObjectModifyType.Resize; }
 	@Override public boolean isMoving() { ITopParent t = getTopParent(); return t.getModifyingObject() == this && t.getModifyType() == ObjectModifyType.Move; }
 	@Override public boolean isAlwaysOnTop() { return alwaysOnTop; }
-	@Override public WindowObject setEnabled(boolean val) { enabled = val; return this; }
-	@Override public WindowObject setVisible(boolean val) { visible = val; return this; }
-	@Override public WindowObject setPersistent(boolean val) { persistent = val; return this; }
-	@Override public WindowObject setAlwaysOnTop(boolean val) { alwaysOnTop = val; return this; }
-	@Override public WindowObject setHidden(boolean val) { hidden = val; return this; }
+	@Override public WindowObject<E> setEnabled(boolean val) { enabled = val; return this; }
+	@Override public WindowObject<E> setVisible(boolean val) { visible = val; return this; }
+	@Override public WindowObject<E> setPersistent(boolean val) { persistent = val; return this; }
+	@Override public WindowObject<E> setAlwaysOnTop(boolean val) { alwaysOnTop = val; return this; }
+	@Override public WindowObject<E> setHidden(boolean val) { hidden = val; return this; }
 	
 	//size
 	@Override public boolean hasHeader() { return StaticWindowObject.hasHeader(this); }
 	@Override public boolean isResizeable() { return resizeable; }
-	@Override public WindowHeader getHeader() { return StaticWindowObject.getHeader(this); }
+	@Override public WindowHeader<?> getHeader() { return StaticWindowObject.getHeader(this); }
 	@Override public double getMinWidth() { return minWidth; }
 	@Override public double getMinHeight() { return minHeight; }
 	@Override public double getMaxWidth() { return maxWidth; }
 	@Override public double getMaxHeight() { return maxHeight; }
-	@Override public WindowObject setMinDims(double widthIn, double heightIn) { setMinWidth(widthIn).setMinHeight(heightIn); return this; }
-	@Override public WindowObject setMaxDims(double widthIn, double heightIn) { setMaxWidth(widthIn).setMaxHeight(heightIn); return this; }
-	@Override public WindowObject setMinWidth(double widthIn) { minWidth = widthIn; return this; }
-	@Override public WindowObject setMinHeight(double heightIn) { minHeight = heightIn; return this; }
-	@Override public WindowObject setMaxWidth(double widthIn) { maxWidth = widthIn; return this; }
-	@Override public WindowObject setMaxHeight(double heightIn) { maxHeight = heightIn; return this; }
-	@Override public WindowObject setResizeable(boolean val) { resizeable = val; return this; }
-	@Override public IWindowObject resize(double xIn, double yIn, ScreenLocation areaIn) { StaticWindowObject.resize(this, xIn, yIn, areaIn); return this; }
+	@Override public WindowObject<E> setMinDims(double widthIn, double heightIn) { setMinWidth(widthIn).setMinHeight(heightIn); return this; }
+	@Override public WindowObject<E> setMaxDims(double widthIn, double heightIn) { setMaxWidth(widthIn).setMaxHeight(heightIn); return this; }
+	@Override public WindowObject<E> setMinWidth(double widthIn) { minWidth = widthIn; return this; }
+	@Override public WindowObject<E> setMinHeight(double heightIn) { minHeight = heightIn; return this; }
+	@Override public WindowObject<E> setMaxWidth(double widthIn) { maxWidth = widthIn; return this; }
+	@Override public WindowObject<E> setMaxHeight(double heightIn) { maxHeight = heightIn; return this; }
+	@Override public WindowObject<E> setResizeable(boolean val) { resizeable = val; return this; }
+	@Override public WindowObject<E> resize(double xIn, double yIn, ScreenLocation areaIn) { StaticWindowObject.resize(this, xIn, yIn, areaIn); return this; }
 	
 	//position
 	@Override public void move(double newX, double newY) { StaticWindowObject.move(this, newX, newY); }
 	@Override public boolean isMoveable() { return moveable; }
 	@Override
-	public WindowObject resetPosition() {
+	public WindowObject<E> resetPosition() {
 		setDimensions(startXPos, startYPos, startWidth, startHeight);
 		windowObjects.forEach(o -> o.resetPosition());
 		return this;
 	}
-	@Override public WindowObject setPosition(double newX, double newY) { StaticWindowObject.setPosition(this, newX, newY); return this; }
-	@Override public WindowObject setMoveable(boolean val) { moveable = val; return this; }
-	@Override public WindowObject setDimensions(EDimension dimIn) { return setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
-	@Override public WindowObject setDimensions(double widthIn, double heightIn) { return setDimensions(startX, startY, widthIn, heightIn); }
+	@Override public WindowObject<E> setPosition(double newX, double newY) { StaticWindowObject.setPosition(this, newX, newY); return this; }
+	@Override public WindowObject<E> setMoveable(boolean val) { moveable = val; return this; }
+	@Override public WindowObject<E> setDimensions(EDimension dimIn) { return setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
+	@Override public WindowObject<E> setDimensions(double widthIn, double heightIn) { return setDimensions(startX, startY, widthIn, heightIn); }
 	@Override
-	public WindowObject setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
+	public WindowObject<E> setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
 		startX = startXIn;
 		startY = startYIn;
 		width = NumUtil.clamp(widthIn, minWidth, maxWidth);
@@ -252,35 +253,35 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 		midY = startY + height / 2.0;
 		return this;
 	}
-	@Override public WindowObject setInitialPosition(double startXIn, double startYIn) { startXPos = startXIn; startYPos = startYIn; return this; }
+	@Override public WindowObject<E> setInitialPosition(double startXIn, double startYIn) { startXPos = startXIn; startYPos = startYIn; return this; }
 	@Override public StorageBox<Double, Double> getInitialPosition() { return new StorageBox<Double, Double>(startXPos, startYPos); }
-	@Override public WindowObject centerObjectWithSize(double widthIn, double heightIn) { StaticWindowObject.centerObjectWithSize(this, widthIn, heightIn); return this; }
+	@Override public WindowObject<E> centerObjectWithSize(double widthIn, double heightIn) { StaticWindowObject.centerObjectWithSize(this, widthIn, heightIn); return this; }
 	@Override public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
 	
 	//objects
-	@Override public boolean isChildOf(IWindowObject objIn) { return StaticWindowObject.isChildOfObject(this, objIn); }
-	@Override public WindowObject addObject(IWindowObject obj, IWindowObject... additional) { StaticWindowObject.addObject(this, obj, additional); return this; }
-	@Override public WindowObject removeObject(IWindowObject obj, IWindowObject... additional) { StaticWindowObject.removeObject(this, obj, additional); return this; }
+	@Override public boolean isChildOf(IWindowObject<?> objIn) { return StaticWindowObject.isChildOfObject(this, objIn); }
+	@Override public WindowObject<E> addObject(IWindowObject<?> obj, IWindowObject<?>... additional) { StaticWindowObject.addObject(this, obj, additional); return this; }
+	@Override public WindowObject<E> removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) { StaticWindowObject.removeObject(this, obj, additional); return this; }
 	@Override public EObjectGroup getObjectGroup() { return objectGroup; }
-	@Override public WindowObject setObjectGroup(EObjectGroup groupIn) { objectGroup = groupIn; return this; }
+	@Override public WindowObject<E> setObjectGroup(EObjectGroup groupIn) { objectGroup = groupIn; return this; }
 	@Override public void onGroupNotification(ObjectEvent e) {}
-	@Override public EArrayList<IWindowObject> getObjects() { return windowObjects; }
-	@Override public EArrayList<IWindowObject> getAddingObjects() { return objsToBeAdded; }
-	@Override public EArrayList<IWindowObject> getRemovingObjects() { return objsToBeRemoved; }
-	@Override public EArrayList<IWindowObject> getAllChildren() { return StaticWindowObject.getAllChildren(this); }
-	@Override public EArrayList<IWindowObject> getAllChildrenUnderMouse() { return StaticWindowObject.getAllChildrenUnderMouse(this, mX, mY); }
-	@Override public boolean containsObject(IWindowObject object) { return getCombinedObjects().contains(object); }
-	@Override public <T> boolean containsObject(Class<T> objIn) { return objIn != null ? getAllChildren().stream().anyMatch(o -> objIn.isInstance(o)) : false; }
+	@Override public EArrayList<IWindowObject<?>> getObjects() { return windowObjects; }
+	@Override public EArrayList<IWindowObject<?>> getAddingObjects() { return objsToBeAdded; }
+	@Override public EArrayList<IWindowObject<?>> getRemovingObjects() { return objsToBeRemoved; }
+	@Override public EArrayList<IWindowObject<?>> getAllChildren() { return StaticWindowObject.getAllChildren(this); }
+	@Override public EArrayList<IWindowObject<?>> getAllChildrenUnderMouse() { return StaticWindowObject.getAllChildrenUnderMouse(this, mX, mY); }
+	@Override public boolean containsObject(IWindowObject<?> object) { return getCombinedObjects().contains(object); }
+	@Override public boolean containsObject(Class objIn) { return objIn != null ? getAllChildren().stream().anyMatch(o -> objIn.isInstance(o)) : false; }
 	
 	//parents
-	@Override public IWindowObject getParent() { return parent; }
-	@Override public WindowObject setParent(IWindowObject parentIn) { parent = parentIn; return this; }
-	@Override public ITopParent getTopParent() { return StaticWindowObject.getTopParent(this); }
-	@Override public IWindowParent getWindowParent() { return StaticWindowObject.getWindowParent(this); }
+	@Override public IWindowObject<?> getParent() { return parent; }
+	@Override public WindowObject<E> setParent(IWindowObject<?> parentIn) { parent = parentIn; return this; }
+	@Override public ITopParent<?> getTopParent() { return StaticWindowObject.getTopParent(this); }
+	@Override public IWindowParent<?> getWindowParent() { return StaticWindowObject.getWindowParent(this); }
 	
 	//focus
 	@Override public boolean hasFocus() {
-		ITopParent t = getTopParent();
+		ITopParent<?> t = getTopParent();
 		if (t.getFocusedObject() != null && t != null) {
 			return t.getFocusedObject().equals(this);
 		}
@@ -288,7 +289,7 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	}
 	@Override
 	public boolean relinquishFocus() {
-		ITopParent t = getTopParent();
+		ITopParent<?> t = getTopParent();
 		if (t.doesFocusLockExist()) {
 			if (t.getFocusLockObject().equals(this)) {
 				t.setObjectRequestingFocus(t, FocusType.Transfer);
@@ -306,13 +307,13 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 		if (eventIn.getFocusType().equals(FocusType.MousePress)) {
 			mousePressed(eventIn.getMX(), eventIn.getMY(), eventIn.getActionCode());
 			
-			ITopParent t = getTopParent();
+			ITopParent<?> t = getTopParent();
 			
 			if (t != null) {
 				
 				//check if elligible for a double click event
 				if (eventIn.getActionCode() == 0) {
-					IWindowObject lastClicked = t.getLastClickedObject();
+					IWindowObject<?> lastClicked = t.getLastClickedObject();
 					if (lastClicked == this) {
 						long clickTime = t.getLastClickTime();
 						
@@ -330,8 +331,8 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	}
 	@Override public void onFocusLost(EventFocus eventIn) { postEvent(new EventFocus(this, this, FocusType.Lost)); }
 	@Override
-	public void transferFocus(IWindowObject objIn) {
-		ITopParent t = getTopParent();
+	public void transferFocus(IWindowObject<?> objIn) {
+		ITopParent<?> t = getTopParent();
 		
 		if (t.doesFocusLockExist() && getTopParent().getFocusLockObject().equals(this)) {
 			if (objIn != null) {
@@ -352,10 +353,10 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 			else { addObject(new FocusLockBorder(this)); }
 		}
 	}
-	@Override public WindowObject requestFocus() { return requestFocus(FocusType.Transfer); }
-	@Override public WindowObject requestFocus(FocusType typeIn) { getTopParent().setObjectRequestingFocus(this, typeIn); return this; }
-	@Override public IWindowObject getDefaultFocusObject() { return defaultFocusObject; }
-	@Override public WindowObject setDefaultFocusObject(IWindowObject objIn) { defaultFocusObject = objIn; return this; }
+	@Override public WindowObject<E> requestFocus() { return requestFocus(FocusType.Transfer); }
+	@Override public WindowObject<E> requestFocus(FocusType typeIn) { getTopParent().setObjectRequestingFocus(this, typeIn); return this; }
+	@Override public IWindowObject<?> getDefaultFocusObject() { return defaultFocusObject; }
+	@Override public WindowObject<E> setDefaultFocusObject(IWindowObject<?> objIn) { defaultFocusObject = objIn; return this; }
 	
 	//mouse checks
 	@Override public boolean isMouseOnObjEdge(int mX, int mY) { return checkDraw() && getEdgeAreaMouseIsOn() != ScreenLocation.out; }
@@ -364,11 +365,11 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	@Override public void mouseExited(int mX, int mY) { postEvent(new EventMouse(this, mX, mY, -1, MouseType.EXITED)); }
 	@Override public boolean isMouseInside() { return StaticWindowObject.isMouseInside(this, Mouse.getMx(), Mouse.getMy()); }
 	@Override public boolean isMouseOver() { return isMouseInside() && this.equals(getTopParent().getHighestZObjectUnderMouse()); }
-	@Override public WindowObject setBoundaryEnforcer(EDimension dimIn) { boundaryDimension = new EDimension(dimIn); return this; }
+	@Override public WindowObject<E> setBoundaryEnforcer(EDimension dimIn) { boundaryDimension = new EDimension(dimIn); return this; }
 	@Override public EDimension getBoundaryEnforcer() { return boundaryDimension; }
 	@Override public boolean isClickable() { return clickable; }
-	@Override public WindowObject setClickable(boolean valIn) { clickable = valIn; return this; }
-	@Override public WindowObject setEntiretyClickable(boolean val) { StaticWindowObject.setEntiretyClickable(this, val); return this; }
+	@Override public WindowObject<E> setClickable(boolean valIn) { clickable = valIn; return this; }
+	@Override public WindowObject<E> setEntiretyClickable(boolean val) { StaticWindowObject.setEntiretyClickable(this, val); return this; }
 	
 	//basic inputs
 	@Override public void parseMousePosition(int mX, int mY) { StaticWindowObject.parseMousePosition(this, mX, mY); }
@@ -388,7 +389,7 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 				String msg = (String) args[0];
 				if (msg.equals("Reload")) {
 					boolean any = false;
-					for (IWindowObject o : getAllChildren()) {
+					for (IWindowObject<?> o : getAllChildren()) {
 						if (o.hasFocus()) { any = true; break; }
 					}
 					reInitObjects();
@@ -399,13 +400,13 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	}
 	
 	@Override public ObjectEventHandler getEventHandler() { return eventHandler; }
-	@Override public WindowObject registerListener(IWindowObject objIn) { if (eventHandler != null) { eventHandler.registerObject(objIn); } return this; }
-	@Override public WindowObject unregisterListener(IWindowObject objIn) { if (eventHandler != null) { eventHandler.unregisterObject(objIn); } return this; }
-	@Override public WindowObject postEvent(ObjectEvent e) { if (eventHandler != null) { eventHandler.processEvent(e); } return this; }
+	@Override public WindowObject<E> registerListener(IWindowObject<?> objIn) { if (eventHandler != null) { eventHandler.registerObject(objIn); } return this; }
+	@Override public WindowObject<E> unregisterListener(IWindowObject<?> objIn) { if (eventHandler != null) { eventHandler.unregisterObject(objIn); } return this; }
+	@Override public WindowObject<E> postEvent(ObjectEvent e) { if (eventHandler != null) { eventHandler.processEvent(e); } return this; }
 	@Override public void onEvent(ObjectEvent e) {}
 	
 	//action object
-	@Override public void actionPerformed(IActionObject object, Object... args) { postEvent(new EventAction(this, object, args)); }
+	@Override public void actionPerformed(IActionObject<?> object, Object... args) { postEvent(new EventAction(this, object, args)); }
 	
 	//close object
 	@Override public void close() { close(true); }
@@ -413,7 +414,7 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	public void close(boolean recursive) {
 		if (closeable) {
 			postEvent(new EventObjects(this, this, ObjectEventType.Close));
-			if (recursive) { for (IWindowObject o : getAllChildren()) { o.close(false); } }
+			if (recursive) { for (IWindowObject<?> o : getAllChildren()) { o.close(false); } }
 			ITopParent p = getTopParent();
 			if (p.doesFocusLockExist() && p.getFocusLockObject().equals(this)) { p.clearFocusLockObject(); }
 			//if (getTopParent().getFocusedObject().equals(this)) { relinquishFocus(); }
@@ -423,18 +424,21 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 		}
 	}
 	@Override public boolean closesWithHud() { return closesWithHud; }
-	@Override public WindowObject setClosesWithHud(boolean val) { closesWithHud = val; return this; }
+	@Override public WindowObject<E> setClosesWithHud(boolean val) { closesWithHud = val; return this; }
 	@Override public boolean isCloseable() { return closeable; }
 	@Override public boolean isClosed() { return closed; }
-	@Override public WindowObject setCloseable(boolean val) { closeable = val; return this; }
+	@Override public WindowObject<E> setCloseable(boolean val) { closeable = val; return this; }
 	@Override public void onClosed() {}
-	@Override public WindowObject setFocusedObjectOnClose(IWindowObject objIn) { focusObjectOnClose = objIn; return this; }
+	@Override public WindowObject<E> setFocusedObjectOnClose(IWindowObject<?> objIn) { focusObjectOnClose = objIn; return this; }
 	@Override public void setBeingRemoved() { beingRemoved = true; }
 	@Override public boolean isBeingRemoved() { return beingRemoved; }
 	
-	//-------------------------
-	//EnhancedGuiObject methods
-	//-------------------------
+	@Override public WindowObject<E> setStoredObject(E objIn) { storedObject = objIn; return this; }
+	@Override public E getStoredObject() { return storedObject; }
+	
+	//----------------------
+	// WindowObject methods
+	//----------------------
 	
 	/** Internal method used to prep the next draw phase before it is drawn. */
 	protected void updateBeforeNextDraw(int mXIn, int mYIn) {
