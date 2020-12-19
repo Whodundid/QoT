@@ -2,9 +2,8 @@ package assets.entities.enemy.types;
 
 import assets.entities.enemy.Enemy;
 import assets.textures.EntityTextures;
-import gameSystems.questSystem.RouteTracker;
-import util.mathUtil.Direction;
 import util.mathUtil.NumUtil;
+import util.miscUtil.Direction;
 
 public class Goblin extends Enemy {
 	
@@ -18,18 +17,11 @@ public class Goblin extends Enemy {
 		sprite = EntityTextures.goblin;
 	}
 	
-	@Override
-	public void drawEntity() {
-		drawTexture();
-	}
-	
 	// This gets the loot and returns it
 	public void getLoot() {
 		treasure = (int) Math.random() * 30;
 		loot = (double) treasure;
 	}
-	
-	@Override public RouteTracker getBackgroundStats() { return null; }
 	
 	@Override
 	public void onLivingUpdate() {

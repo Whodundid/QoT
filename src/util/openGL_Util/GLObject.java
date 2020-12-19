@@ -5,6 +5,7 @@ import gameSystems.textureSystem.GameTexture;
 import gameSystems.textureSystem.TextureSystem;
 import main.Game;
 import org.lwjgl.opengl.GL11;
+import util.miscUtil.Rotation;
 import util.renderUtil.EColors;
 import util.renderUtil.WindowSize;
 
@@ -109,7 +110,6 @@ public abstract class GLObject {
 	public static void drawLine(double startX, double startY, double endX, double endY, int thickness, EColors color) { drawLine(startX, startY, endX, endY, thickness, color.intVal); }
 	/** Draws a line from point a to b with a variable thickness. */
 	public static void drawLine(double startX, double startY, double endX, double endY, int thickness, int color) {
-		
 		//set mode
 		begin(GLModes.LINES);
 		
@@ -125,10 +125,6 @@ public abstract class GLObject {
 		
 		//draw
 		draw();
-		
-		//post draw
-		//blendOff();
-		//alphaOff();
 	}
 	
 	
@@ -136,7 +132,6 @@ public abstract class GLObject {
 	public static void drawHorizontalLine(double startX, double endX, double y, EColors color) { drawHorizontalLine(startX, endX, y, color.intVal); }
 	/** Draws a horizontal line with a thickness of 1. */
 	public static void drawHorizontalLine(double startX, double endX, double y, int color) {
-		
 		//correct dimensions (if necessary)
 		if (endX < startX) {
 			double i = startX;
@@ -153,7 +148,6 @@ public abstract class GLObject {
 	public static void drawVerticalLine(double x, double startY, double endY, EColors color) { drawVerticalLine(x, startY, endY, color.intVal); }
 	/** Draws a vertical line with a thickness of 1. */
 	public static void drawVerticalLine(double x, double startY, double endY, int color) {
-		
 		//correct dimensions (if necessary)
 		if (endY < startY) {
 			double i = startY;
@@ -182,7 +176,6 @@ public abstract class GLObject {
 	public static void drawEllipse(double posX, double posY, double radiusX, double radiusY, int detail, EColors color) { drawEllipse(posX, posY, radiusX, radiusY, detail, color.intVal); }
 	/** Draws a hollow ellipse expanding out from the center. */
 	public static void drawEllipse(double posX, double posY, double radiusX, double radiusY, int detail, int color) {
-		
 		//set mode
 		begin(GLModes.LINE_LOOP);
 		
@@ -202,10 +195,6 @@ public abstract class GLObject {
 		
 		//draw
 		draw();
-		
-		//post draw
-		//blendOff();
-		//alphaOff();
 	}
 	
 	
@@ -213,7 +202,6 @@ public abstract class GLObject {
 	public static void drawFilledEllipse(double posX, double posY, double radiusX, double radiusY, int detail, EColors color) { drawFilledEllipse(posX, posY, radiusX, radiusY, detail, color.intVal); }
 	/** Draws a solid ellipse expanding out from the center. */
 	public static void drawFilledEllipse(double posX, double posY, double radiusX, double radiusY, int detail, int color) {
-		
 		//set mode
 		begin(GLModes.TRIANGLE_FAN);
 		
@@ -239,10 +227,6 @@ public abstract class GLObject {
 		
 		//draw
 		draw();
-		
-		//post draw
-		//blendOff();
-		//alphaOff();
 	}
 	
 	
@@ -250,7 +234,6 @@ public abstract class GLObject {
 	public static void drawRect(double left, double top, double right, double bottom, EColors colorIn) { drawRect(left, top, right, bottom, colorIn.intVal); }
 	/** Draws a filled rectangle. */
 	public static void drawRect(double left, double top, double right, double bottom, int color) {
-		
 		//correct dimensions (if necessary)
 		if (left < right) {
 			double i = left;
@@ -281,10 +264,6 @@ public abstract class GLObject {
 		
 		//draw
 		draw();
-		
-		//post draw
-		//blendOff();
-		//alphaOff();
 	}
 	
 	
@@ -298,12 +277,11 @@ public abstract class GLObject {
 		drawRect(left, bottom - borderWidth, right, bottom, color); //bottom
 	}
 	
-	public static void drawTexture(double x, double y, double w, double h) { drawTexture(x, y, w, h, TextureSystem.getInstance().getBoundTexture(), false); }
 	/** Draws a texture with the given dimensions. */
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) { drawTexture(x, y, w, h, tex, false); }
-	/** Draws a texture with the given dimensions. */
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip) {
-		
+	public static void drawTexture(double x, double y, double w, double h) { drawTexture(x, y, w, h, TextureSystem.getInstance().getBoundTexture(), false, Rotation.N); }
+	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) { drawTexture(x, y, w, h, tex, false, Rotation.N); }
+	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip) { drawTexture(x, y, w, h, tex, false, Rotation.N); }
+	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip, Rotation rotation) {
 		//Ensure the texture can actually be drawn
 		if (tex != null && tex.hasBeenRegistered()) {
 			
@@ -314,32 +292,9 @@ public abstract class GLObject {
 			bindTexture(tex);
 			
 			begin(GLModes.QUADS);
-			
-			if (flip) {
-				GL11.glTexCoord2f(1.0f, 0.0f);
-				vertex(tdx(x), tdy(y));
-				GL11.glTexCoord2f(0.0f, 0.0f);
-				vertex(tdx(x + w), tdy(y));
-				GL11.glTexCoord2f(0.0f, 1.0f);
-				vertex(tdx(x + w), tdy(y + h));
-				GL11.glTexCoord2f(1.0f, 1.0f);
-				vertex(tdx(x), tdy(y + h));
-			}
-			else {
-				GL11.glTexCoord2f(0.0f, 0.0f);
-				vertex(tdx(x), tdy(y));
-				GL11.glTexCoord2f(1.0f, 0.0f);
-				vertex(tdx(x + w), tdy(y));
-				GL11.glTexCoord2f(1.0f, 1.0f);
-				vertex(tdx(x + w), tdy(y + h));
-				GL11.glTexCoord2f(0.0f, 1.0f);
-				vertex(tdx(x), tdy(y + h));
-			}
+			tv(flip, rotation, x, y, x + w, y + h);
 			
 			draw();
-			
-			//alphaOff();
-			//blendOff();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 	}
@@ -372,9 +327,6 @@ public abstract class GLObject {
 			vertex(tdx(x), tdy(y));
 			
 			draw();
-			
-			//alphaOff();
-			//blendOff();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 	}
@@ -466,6 +418,51 @@ public abstract class GLObject {
 	private static void vertex(Number a, Number b) { vertex(a.doubleValue(), b.doubleValue(), 0); }
 	/** Declares a new vertex from 3 points. */
 	private static void vertex(Number a, Number b, Number c) { GL11.glVertex3d(a.doubleValue(), b.doubleValue(), c.doubleValue()); }
+	
+	private static void tv(boolean f, Rotation r, double sx, double sy, double ex, double ey) {
+		switch (r) {
+		case N:
+			GL11.glTexCoord2d(f ? 1 : 0, 0);
+			vertex(tdx(sx), tdy(sy));
+			GL11.glTexCoord2d(f ? 0 : 1, 0);
+			vertex(tdx(ex), tdy(sy));
+			GL11.glTexCoord2d(f ? 0 : 1, 1);
+			vertex(tdx(ex), tdy(ey));
+			GL11.glTexCoord2d(f ? 1 : 0, 1);
+			vertex(tdx(sx), tdy(ey));
+			break;
+		case E:
+			GL11.glTexCoord2d(f ? 1 : 0, 1);
+			vertex(tdx(sx), tdy(sy));
+			GL11.glTexCoord2d(f ? 1 : 0, 0);
+			vertex(tdx(ex), tdy(sy));
+			GL11.glTexCoord2d(f ? 0 : 1, 0);
+			vertex(tdx(ex), tdy(ey));
+			GL11.glTexCoord2d(f ? 0 : 1, 1);
+			vertex(tdx(sx), tdy(ey));
+			break;
+		case W:
+			GL11.glTexCoord2d(f ? 0 : 1, 0);
+			vertex(tdx(sx), tdy(sy));
+			GL11.glTexCoord2d(f ? 0 : 1, 1);
+			vertex(tdx(ex), tdy(sy));
+			GL11.glTexCoord2d(f ? 1 : 0, 1);
+			vertex(tdx(ex), tdy(ey));
+			GL11.glTexCoord2d(f ? 1 : 0, 0);
+			vertex(tdx(sx), tdy(ey));
+			break;
+		case S:
+			GL11.glTexCoord2d(f ? 0 : 1, 1);
+			vertex(tdx(sx), tdy(sy));
+			GL11.glTexCoord2d(f ? 1 : 0, 1);
+			vertex(tdx(ex), tdy(sy));
+			GL11.glTexCoord2d(f ? 1 : 0, 0);
+			vertex(tdx(ex), tdy(ey));
+			GL11.glTexCoord2d(f ? 0 : 1, 0);
+			vertex(tdx(sx), tdy(ey));
+			break;
+		}
+	}
 	
 	
 	/** Sets the width of the a drawn line when drawing lines. */

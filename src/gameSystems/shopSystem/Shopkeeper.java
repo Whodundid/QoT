@@ -1,8 +1,7 @@
 package gameSystems.shopSystem;
 
 import assets.entities.Entity;
-import assets.items.*;
-import gameSystems.questSystem.RouteTracker;
+import assets.items.Item;
 
 public abstract class Shopkeeper extends Entity {
 	
@@ -20,7 +19,5 @@ public abstract class Shopkeeper extends Entity {
 	}
 	
 	public Shop getShop() { return shop; }
-
-	@Override public RouteTracker getBackgroundStats() { return null; }
 	
 }

@@ -5,6 +5,7 @@ import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.input.Keyboard;
 import envisionEngine.input.Mouse;
+import envisionEngine.terminal.window.ETerminal;
 import main.Game;
 import util.openGL_Util.GLSettings;
 import util.storageUtil.EDimension;
@@ -82,6 +83,40 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 		}
 		
 		GLSettings.popMatrix();
+	}
+	
+	@Override
+	public void handleMouseInput(int action, int mXIn, int mYIn, int button, int change) {
+		if (hasFocus) {
+			super.handleMouseInput(action, mXIn, mYIn, button, change);
+		}
+		else if (Game.currentScreen != null) {
+			Game.currentScreen.handleMouseInput(action, mXIn, mYIn, button, change);
+		}
+	}
+	
+	@Override
+	public void handleKeyboardInput(int action, char typedChar, int keyCode) {
+		//debug terminal
+		if (Keyboard.isAltDown() && keyCode == Keyboard.KEY_TILDE) {
+			if (Game.currentScreen != null) {
+				if (!isWindowOpen(ETerminal.class)) {
+					displayWindow(new ETerminal());
+					setFocused(true);
+				}
+				else if (!hasFocus()) { setFocused(true); }
+			}
+			else {
+				ETerminal term = (ETerminal) getWindowInstance(ETerminal.class);
+				if (term != null) { term.requestFocus(); }
+			}
+		}
+		else if (hasFocus) {
+			super.handleKeyboardInput(action, typedChar, keyCode);
+		}
+		else if (Game.currentScreen != null) {
+			Game.currentScreen.handleKeyboardInput(action, typedChar, keyCode);
+		}
 	}
 	
 	@Override

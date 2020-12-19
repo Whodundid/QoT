@@ -3,7 +3,7 @@ package gameSystems.questSystem;
 import assets.entities.player.Player;
 import util.storageUtil.EArrayList;
 
-public class RouteTracker {
+public class PlayerStats {
 	
 	private Player player;
 	private int enemiesKilled;
@@ -15,7 +15,7 @@ public class RouteTracker {
 	// Constructor
 	//-------------
 	
-	public RouteTracker(Player playerIn) {
+	public PlayerStats(Player playerIn) {
 		player = playerIn;
 		enemiesKilled = 0;
 		friendshipPoints = 0;
@@ -25,7 +25,7 @@ public class RouteTracker {
 	// Methods
 	//---------
 	
-	public RouteTracker reset() {
+	public PlayerStats reset() {
 		enemiesKilled = 0;
 		friendshipPoints = 0;
 		completedQuests.clear();
@@ -33,10 +33,10 @@ public class RouteTracker {
 		return this;
 	}
 	
-	public RouteTracker addKilled(int val) { enemiesKilled += val; return this; }
-	public RouteTracker addFriendship(int val) { friendshipPoints += val; return this; }
-	public RouteTracker completeQuest(Quest questIn) { completedQuests.addIfNotContains(questIn); return this; }
-	public RouteTracker startQuest(Quest questIn) { incompletedQuests.addIfNotContains(questIn); return this; }
+	public PlayerStats addKilled(int val) { enemiesKilled += val; return this; }
+	public PlayerStats addFriendship(int val) { friendshipPoints += val; return this; }
+	public PlayerStats completeQuest(Quest questIn) { completedQuests.addIfNotContains(questIn); return this; }
+	public PlayerStats startQuest(Quest questIn) { incompletedQuests.addIfNotContains(questIn); return this; }
 	
 	public boolean hasStartedQuest(Quest questIn) { return EArrayList.combineLists(completedQuests, incompletedQuests).contains(questIn); }
 	public boolean hasCompletedQuest(Quest questIn) { return completedQuests.contains(questIn); }

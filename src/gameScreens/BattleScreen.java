@@ -87,7 +87,7 @@ public class BattleScreen extends GameScreen {
 				Game.displayScreen(new GameOverScreen((entA instanceof Player p) ? p : null));
 			}
 			else {
-				entA.getBackgroundStats().addKilled(1);
+				//entA.getStats().addKilled(1);
 				endBattle();
 			}
 		}

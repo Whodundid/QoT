@@ -283,11 +283,6 @@ public class EUtil {
 		nullDo(arr, a -> asList(a).map(type).forEach(s -> System.out.println(s)));
 	}
 	
-	/** Boxes a generic varags of typed-objects into a typed-array. */
-	public static <E> E[] asArray(E... vals) { return asList(vals).toArray(vals); }
-	/** Converts a generic varags of typed-objects into a typed-EArrayList. */
-	public static <E> EArrayList<E> asList(E... vals) { return new EArrayList<E>(vals); }
-	
 	public static <E> E[] add(E obj, E[] array) {
 		EArrayList<E> list = new EArrayList(obj).add(array);
 		return list.toArray(array);
@@ -332,6 +327,19 @@ public class EUtil {
 	public static long length(Iterable itr) { return itr.spliterator().getExactSizeIfKnown(); }
 	
 	//array conversions
+	
+	/** Boxes a generic varags of typed-objects into a typed-array. */
+	public static <E> E[] asArray(E... vals) { return asList(vals).toArray(vals); }
+	/** Converts a generic varags of typed-objects into a typed-EArrayList. */
+	public static <E> EArrayList<E> asList(E... vals) { return new EArrayList<E>(vals); }
+	
+	public static <E> E[] toArray(Collection<? extends E> list) {
+		E[] arr = (E[]) new Object[list.size()];
+		for (int i = 0; i < list.size(); i++) { arr[i] = (E) list.toArray()[i]; }
+		return arr;
+	}
+	
+	public static <E> List<E> toList(E[] arr) { return new EArrayList<E>(arr); }
 	
 	/** Converts a typed-array to a Stream. */
 	public static <E> Stream<E> stream(E... vals) { return ((EArrayList<E>) new EArrayList<E>().add(vals)).stream(); }

@@ -2,7 +2,6 @@ package assets.entities.enemy.types;
 
 import assets.entities.enemy.Enemy;
 import assets.textures.EntityTextures;
-import gameSystems.questSystem.RouteTracker;
 import util.mathUtil.NumUtil;
 
 public class TrollBoar extends Enemy {
@@ -13,13 +12,6 @@ public class TrollBoar extends Enemy {
 		init(posX, posY, 64, 64);
 		sprite = EntityTextures.trollboar;
 	}
-	
-	@Override
-	public void drawEntity() {
-		drawTexture();
-	}
-	
-	@Override public RouteTracker getBackgroundStats() { return null; }
 	
 	@Override
 	public void onLivingUpdate() {

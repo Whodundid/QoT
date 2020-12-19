@@ -6,6 +6,7 @@ import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.textureSystem.GameTexture;
 import main.Game;
 import util.mathUtil.NumUtil;
+import util.miscUtil.Rotation;
 import util.openGL_Util.GLObject;
 import util.renderUtil.EColors;
 import util.renderUtil.ScreenLocation;
@@ -46,8 +47,14 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public void drawHRect(EColors color, int offset) { drawHRect(color.c(), offset); }
 	public void drawHRect(int color, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, 1, color); }
 	
-	public void drawTexture(GameTexture texture) { drawTexture(startX, startY, width, height, texture); }
-	public void drawTexture(GameTexture texture, int offset) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture); }
+	public void drawTexture(GameTexture texture) { drawTexture(startX, startY, width, height, texture, false, Rotation.N); }
+	public void drawTexture(GameTexture texture, Rotation rotation) { drawTexture(startX, startY, width, height, texture, false, rotation); }
+	public void drawTexture(GameTexture texture, boolean flip) { drawTexture(startX, startY, width, height, texture, flip, Rotation.N); }
+	public void drawTexture(GameTexture texture, Rotation rotation, boolean flip) { drawTexture(startX, startY, width, height, texture, flip, rotation); }
+	public void drawTexture(GameTexture texture, int offset) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, false, Rotation.N); }
+	public void drawTexture(GameTexture texture, int offset, Rotation rotation) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, false, rotation); }
+	public void drawTexture(GameTexture texture, int offset, boolean flip) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, flip); }
+	public void drawTexture(GameTexture texture, int offset, Rotation rotation, boolean flip) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, flip, rotation); }
 	
 	public void scissor() { scissor(startX, startY, endX, endY); }
 	public void scissor(double offset) { scissor(startX + offset, startY + offset, endX - offset, endY - offset); }

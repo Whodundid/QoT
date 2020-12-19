@@ -1,8 +1,9 @@
-package util.mathUtil;
+package util.miscUtil;
 
 //Author: Hunter Bragg
 
 public enum Direction {
+	
 	N("N"),
 	NE("NE"),
 	E("E"),

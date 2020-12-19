@@ -30,8 +30,8 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		super.keyPressed(typedChar, keyCode);
 		if (keyCode == Keyboard.KEY_ESC && !screenHistory.isEmpty()) { closeScreen(false); }
+		super.keyPressed(typedChar, keyCode);
 	}
 	
 	public void onWindowResize() {

@@ -3,10 +3,9 @@ package assets.entities;
 import assets.entities.player.Player;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
-import gameSystems.questSystem.RouteTracker;
 import gameSystems.textureSystem.GameTexture;
-import util.mathUtil.Direction;
 import util.mathUtil.NumUtil;
+import util.miscUtil.Direction;
 import util.openGL_Util.GLObject;
 import util.storageUtil.EDimension;
 
@@ -53,14 +52,6 @@ public abstract class Entity extends GLObject {
 		width = widthIn;
 		height = heightIn;
 		collisionBox = new EDimension(startX, startY, endX, endY);
-	}
-	
-	public abstract void drawEntity();
-	
-	protected void drawTexture() {
-		if (sprite != null) {
-			drawTexture(startX, startY, width, height, sprite);
-		}
 	}
 	
 	public void onLivingUpdate() {}
@@ -286,7 +277,7 @@ public abstract class Entity extends GLObject {
 	public void kill(Player player) {
 		health = 0;
 		isDead = true;
-		player.getBackgroundStats().setEnemiesKilled(1);
+		player.getStats().setEnemiesKilled(1);
 	}
 	
 	//---------
@@ -343,7 +334,5 @@ public abstract class Entity extends GLObject {
 		}
 		return false;
 	}
-
-	public abstract RouteTracker getBackgroundStats();
 	
 }

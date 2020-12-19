@@ -38,7 +38,7 @@ public class GameOverScreen extends GameScreen {
 		drawStringC("You have died!", midX, midY - 300);
 		
 		if (p != null) {
-			drawStringC("You killed: " + p.getBackgroundStats().getEnemiesKilled(), midX, midY - 150);
+			drawStringC("You killed: " + p.getStats().getEnemiesKilled(), midX, midY - 150);
 		}
 	}
 	

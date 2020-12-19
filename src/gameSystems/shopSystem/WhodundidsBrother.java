@@ -15,9 +15,4 @@ public class WhodundidsBrother extends Shopkeeper {
 		sprite = EntityTextures.whodundidsbrother;
 	}
 	
-	@Override
-	public void drawEntity() {
-		drawTexture();
-	}
-	
 }

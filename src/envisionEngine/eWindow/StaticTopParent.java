@@ -130,9 +130,6 @@ public class StaticTopParent extends EGui {
 		IWindowObject<?> fo = objIn.getFocusedObject();
 			
 		if (fo != null && fo != objIn) { fo.keyPressed(typedChar, keyCode); }
-		if (fo == null || fo == objIn) {
-			
-		}
 	}
 	
 	/** Notify the focused object that the keyboard just had a key released. */

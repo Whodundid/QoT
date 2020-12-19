@@ -5,7 +5,7 @@ import assets.items.Item;
 import assets.items.Weapon;
 import assets.textures.EntityTextures;
 import gameSystems.questSystem.PathFinder;
-import gameSystems.questSystem.RouteTracker;
+import gameSystems.questSystem.PlayerStats;
 import util.mathUtil.NumUtil;
 
 public class Player extends Entity {
@@ -17,7 +17,7 @@ public class Player extends Entity {
 	public double flameDamage;
 	public double healAmount;
 	public double weaponDamage = 0;
-	private RouteTracker routes;
+	private PlayerStats stats;
 	private PathFinder findPath;
 	
 	public Player(String nameIn) { this(nameIn, 0, 0); }
@@ -29,7 +29,7 @@ public class Player extends Entity {
 		healAmount = 10;
 		
 		inventory = new Inventory(this);
-		routes = new RouteTracker(this);
+		stats = new PlayerStats(this);
 		findPath = new PathFinder(null);
 		
 		init(posX, posY, 64, 64);
@@ -41,11 +41,6 @@ public class Player extends Entity {
 		
 		setCollisionBox(startX + 22, endY - 10, endX - 22, endY);
 		sprite = EntityTextures.player;
-	}
-	
-	@Override
-	public void drawEntity() {
-		drawTexture();
 	}
 	
 	@Override
@@ -124,6 +119,6 @@ public class Player extends Entity {
 	//----------------
 	
 	public Inventory getInventory() { return inventory; }
-	@Override public RouteTracker getBackgroundStats() { return routes; }
+	public PlayerStats getStats() { return stats; }
 	
 }

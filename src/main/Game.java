@@ -12,7 +12,6 @@ import envisionEngine.input.Keyboard;
 import envisionEngine.input.Mouse;
 import envisionEngine.input.WindowResizeListener;
 import envisionEngine.terminal.TerminalHandler;
-import envisionEngine.terminal.window.ETerminal;
 import gameScreens.MainMenuScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.mapSystem.GameWorld;
@@ -217,17 +216,6 @@ public class Game {
 		if (updateCounter == Long.MAX_VALUE) { updateCounter = 0; }
 		else { updateCounter++; }
 		
-		//debug terminal
-		if (Keyboard.isAltDown() && Keyboard.isKeyDown(Keyboard.KEY_TILDE)) {
-			if (currentScreen != null) {
-				if (!topRenderer.isWindowOpen(ETerminal.class)) {
-					topRenderer.displayWindow(new ETerminal());
-					topRenderer.setFocused(true);
-				}
-				else if (!topRenderer.hasFocus()) { topRenderer.setFocused(true); }
-			}
-		}
-		
 		//update window title
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();
@@ -299,16 +287,16 @@ public class Game {
 	
 	public static void keyboardEvent(int action, char typedChar, int keyCode) {
 		if (getGLInit()) {
-			if (topRenderer.hasFocus()) { topRenderer.handleKeyboardInput(action, typedChar, keyCode); }
-			if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleKeyboardInput(action, typedChar, keyCode); }
+			topRenderer.handleKeyboardInput(action, typedChar, keyCode);
+			//if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleKeyboardInput(action, typedChar, keyCode); }
 			worldRenderer.handleKeyboardInput(action, typedChar, keyCode);
 		}
 	}
 	
 	public static void mouseEvent(int action, int mXIn, int mYIn, int button, int change) {
 		if (getGLInit()) {
-			if (topRenderer.hasFocus()) { topRenderer.handleMouseInput(action, mXIn, mYIn, button, change); }
-			if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleMouseInput(action, mXIn, mYIn, button, change); }
+			topRenderer.handleMouseInput(action, mXIn, mYIn, button, change);
+			//if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleMouseInput(action, mXIn, mYIn, button, change); }
 			worldRenderer.handleMouseInput(action, mXIn, mYIn, button, change);
 		}
 	}
