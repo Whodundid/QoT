@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 public enum EDataType {
 	VOID,
 	OBJECT,
-	BOOL,
+	BOOLEAN,
 	CHAR,
 	BYTE,
 	SHORT,
@@ -19,7 +19,8 @@ public enum EDataType {
 	METHOD,
 	ARRAY,
 	ENUM,
-	NULL;
+	NULL,
+	THIS;
 	
 	/** Returns true if the given dataType is a number. */
 	public boolean isNumber() {
@@ -73,7 +74,7 @@ public enum EDataType {
 	
 	public static EDataType getDataType(Object in) {
 		if (in == null) { return NULL; }
-		if (in instanceof Boolean) { return BOOL; }
+		if (in instanceof Boolean) { return BOOLEAN; }
 		if (in instanceof Character) { return CHAR; }
 		if (in instanceof Byte) { return BYTE; }
 		if (in instanceof Short) { return SHORT; }
@@ -86,6 +87,28 @@ public enum EDataType {
 		if (in instanceof Array) { return ARRAY; }
 		if (in instanceof Enum) { return ENUM; }
 		return OBJECT;
+	}
+	
+	public static EDataType getDataType(String in) {
+		switch (in) {
+		case "boolean": return BOOLEAN;
+		case "char": return CHAR;
+		case "byte": return BYTE;
+		case "short": return SHORT;
+		case "int": return INT;
+		case "long": return LONG;
+		case "float": return FLOAT;
+		case "double": return DOUBLE;
+		case "enum": return ENUM;
+		case "list": return ARRAY;
+		case "string": return STRING;
+		case "function":
+		case "method": return METHOD;
+		case "void": return VOID;
+		case "this": return THIS;
+		case "null": return NULL;
+		default: return OBJECT;
+		}
 	}
 	
 	/** Returns the dataType of the given String.

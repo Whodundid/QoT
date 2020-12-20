@@ -25,6 +25,7 @@ public class GameWorld {
 	//protected EArrayList<EScript> globalScriptData;
 	protected EArrayList<Region> regionData = new EArrayList();
 	protected EArrayList<Region> highlightedRegions = new EArrayList();
+	protected PlayerSpawnPosition playerSpawn = new PlayerSpawnPosition(this);
 	
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
@@ -59,6 +60,18 @@ public class GameWorld {
 		else {
 			fileLoaded = true;
 		}
+	}
+	
+	public void setDefaultValues() {
+		name = "Unnamed";
+		width = 0;
+		height = 0;
+		tileWidth = 0;
+		tileHeight = 0;
+		zoom = 1;
+		worldData = new WorldTile[0][0];
+		entityData = new EArrayList();
+		fileLoaded = false;
 	}
 	
 	//---------

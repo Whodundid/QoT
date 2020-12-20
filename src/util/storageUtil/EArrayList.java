@@ -307,6 +307,46 @@ public class EArrayList<E> extends AbstractList<E> {
 	//EArrayList Methods
 	//------------------
 
+	public boolean atStart(int i) { return i == 0; }
+	public boolean atEnd(int i) { return i == size - 1; }
+	
+	public EArrayList<E> push(E value) { add(0, value); return this; }
+	public E pop() { return removeFirst(); }
+	
+	public EArrayList<E> replaceFrom(int from, E value) { return replaceFrom(from, size, value); }
+	public EArrayList<E> replaceFrom(int from, int to, E value) {
+		if (from >= 0) {
+			set(from, value);
+			for (int i = from + 1; i < to; i++) {
+				remove(from + 1);
+			}
+		}
+		return this;
+	}
+	
+	public EArrayList<E> removeFrom(int from) { return removeFrom(from, size); }
+	public EArrayList<E> removeFrom(int from, int to) {
+		if (from >= 0) {
+			for (int i = from; i < to; i++) {
+				remove(from);
+			}
+		}
+		return this;
+	}
+	
+	public EArrayList<E> addFrom(List<E> in, int from) { return addFrom(in, from, (in != null) ? in.size() : -1); }
+	public EArrayList<E> addFrom(List<E> in, int from, int to) {
+		if (in != null && from >= 0) {
+			for (int i = from; i < to; i++) {
+				add(in.get(i));
+			}
+		}
+		return this;
+	}
+	
+	public boolean hasOnlyOne() { return size == 1; }
+	public boolean hasOne() { return size >= 1; }
+	
 	public E getFirst(Predicate<? super E> condition) {
 		for (int i = 0; i < size(); i++) {
 			E e = get(i);
@@ -501,6 +541,8 @@ public class EArrayList<E> extends AbstractList<E> {
 	
 	/** Adds the given object to this list then returns it. */
 	public E addR(E e) { add(e); return e; }
+	/** Adds the given object to this list and then returns this list itself. */
+	public EArrayList<E> addRT(E e) { add(e); return this; }
 	
 	public EArrayList<E> add(E... e) { for (E val : e) { add(val); } return this; }
 	

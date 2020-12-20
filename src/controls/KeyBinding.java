@@ -2,6 +2,7 @@ package controls;
 
 import controls.util.KeyCategory;
 import controls.util.KeyCombo;
+import envisionEngine.input.Keyboard;
 
 public abstract class KeyBinding {
 	
@@ -47,6 +48,10 @@ public abstract class KeyBinding {
 	public void setKeyCategory(String categoryNameIn) { category = new KeyCategory(categoryNameIn); }
 	public void setKeyDescription(String descriptionIn) { description = descriptionIn; }
 	
+	public void setKeyCombo(KeyCombo comboIn) {
+		keys = comboIn;
+	}
+	
 	//general
 	public boolean isEnabled() { return isEnabled; }
 	public boolean isBuiltInKey() { return builtIn; }
@@ -60,6 +65,16 @@ public abstract class KeyBinding {
 		if (category != null) { returnStats += category.getCategoryName(); }
 		returnStats += String.valueOf(builtIn);
 		return returnStats;
+	}
+	
+	public boolean isPressed() {
+		if (keys.getKeys().isNotEmpty()) {
+			for (int k : keys.getKeys()) {
+				if (!Keyboard.isKeyDown(k)) { return false; }
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	public abstract void executeHotKeyAction();

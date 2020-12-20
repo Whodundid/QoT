@@ -84,7 +84,7 @@ public class ConfigSetting<Val> {
 		if (val != null) {
 			Class c = val.getClass();
 			try {
-				if (c.isAssignableFrom(Boolean.class)) { type = EDataType.BOOL; }
+				if (c.isAssignableFrom(Boolean.class)) { type = EDataType.BOOLEAN; }
 				else if (c.isAssignableFrom(Byte.class)) { type = EDataType.BYTE; }
 				else if (c.isAssignableFrom(Short.class)) { type = EDataType.SHORT; }
 				else if (c.isAssignableFrom(Integer.class)) { type = EDataType.INT; }
