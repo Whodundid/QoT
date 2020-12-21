@@ -2,6 +2,7 @@ package util.miscUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import util.EUtil;
 
 public class ReflectionHelper {
 	
@@ -71,6 +72,7 @@ public class ReflectionHelper {
 			Constructor c = findConstructor(obj.getClass(), parameters);
 			return c != null;
 		}
+		catch (NullPointerException e) {}
 		catch (NoSuchMethodException e) {}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -106,6 +108,8 @@ public class ReflectionHelper {
 	
 	
 	protected static Constructor findConstructor(Class c, Class... parameters) throws Exception {
+		if (c == null) { throw new NullPointerException("The original class is null!"); }
+		Class original = c;
 		Constructor f = null;
 		
 		while (c != null && f == null) {
@@ -117,7 +121,10 @@ public class ReflectionHelper {
 			c = c.getSuperclass();
 		}
 		
-		if (f == null) { throw new NoSuchMethodException(c.getSimpleName()); }
+		if (f == null) {
+			if (c != null) { throw new NoSuchMethodException(c.getSimpleName()); }
+			else { throw new NullPointerException("The class '" + original + "' does not have a constructor with the given parameters: [" + EUtil.toList(parameters) + "]!"); }
+		}
 		
 		return f;
 	}

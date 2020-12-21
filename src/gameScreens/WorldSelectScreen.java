@@ -6,14 +6,20 @@ import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.gameplay.GamePlayScreen;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.screenSystem.GameScreen;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.io.File;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import main.Game;
 import util.mathUtil.NumUtil;
 import util.renderUtil.EColors;
+import util.storageUtil.EDimension;
 
 public class WorldSelectScreen extends GameScreen {
 	
-	WindowButton defaultWorld, lastEditor;
+	WindowButton defaultWorld, lastEditor, loadWorld;
 	WindowButton back;
 	
 	String error;
@@ -27,11 +33,12 @@ public class WorldSelectScreen extends GameScreen {
 	public void initObjects() {
 		int w = NumUtil.clamp(Game.getWidth() / 4, 150, 350);
 		defaultWorld = new WindowButton(this, midX - w / 2, midY - 200, w, 45, "Default Map");
-		lastEditor = new WindowButton(this, midX - w / 2, defaultWorld.endY + 5, w, 45, Game.settings.lastMap.get());
+		loadWorld = new WindowButton(this, midX - w / 2, defaultWorld.endY + 5, w, 45, "Load World");
+		lastEditor = new WindowButton(this, midX - w / 2, loadWorld.endY + 5, w, 45, Game.settings.lastMap.get());
 		
 		back = new WindowButton(this, 5, endY - 45, 150, 40, "Back");
 		
-		addObject(defaultWorld);
+		addObject(defaultWorld, loadWorld);
 		if (!lastEditor.getString().isBlank() && !lastEditor.getString().isEmpty()) { addObject(lastEditor); }
 		addObject(back);
 	}
@@ -39,8 +46,8 @@ public class WorldSelectScreen extends GameScreen {
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.pdgray);
-		drawRect(midX - 252, midY - 252, midX + 252, midY - 48, EColors.black);
-		drawRect(midX - 250, midY - 250, midX + 250, midY - 50, EColors.steel);
+		drawRect(midX - 252, midY - 252, midX + 252, midY - 0, EColors.black);
+		drawRect(midX - 250, midY - 250, midX + 250, midY - 2, EColors.steel);
 		
 		drawStringC("Chose a World", midX, (midY - 250) / 2);
 		
@@ -54,11 +61,42 @@ public class WorldSelectScreen extends GameScreen {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == defaultWorld) {
-			Player p = Game.setPlayer(new Player("Test"));
-			GameWorld w = Game.loadWorld(new GameWorld(new File("test.twld")));
-			w.addEntity(p);
-			Game.displayScreen(new GamePlayScreen());
-			//Game.displayScreen(new WorldRenderTest(new File("test.twld")), this);
+			File f = new File(Game.settings.getEditorWorldsDir(), "test.twld");
+			if (f.exists()) {
+				Player p = Game.setPlayer(new Player("Test"));
+				GameWorld w = Game.loadWorld(new GameWorld(f));
+				w.addEntity(p);
+				Game.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+				//Game.displayScreen(new WorldRenderTest(new File("test.twld")), this);
+			}
+		}
+		
+		if (object == loadWorld) {
+			JFileChooser fc = new JFileChooser() {
+				@Override
+				protected JDialog createDialog(Component parent) throws HeadlessException {
+					JDialog dlg = super.createDialog(parent);
+					EDimension d = Game.getWindowDims();
+					Dimension fd = getSize();
+					dlg.setLocation((int) (d.startX + (d.width - fd.width) / 2), (int) (d.startY + (d.height - fd.height) / 2));
+					dlg.setModal(true);
+					//dlg.setAlwaysOnTop(true);
+					return dlg;
+				}
+			};
+			
+			fc.setCurrentDirectory(Game.settings.getEditorWorldsDir());
+			fc.setDialogTitle("Map Selection");
+			fc.setApproveButtonText("Open");
+			fc.showDialog(null, "Open");
+			File f = fc.getSelectedFile();
+			
+			if (f != null && f.exists() && f.getName().endsWith(".twld")) {
+				Player p = Game.setPlayer(new Player("Test"));
+				GameWorld w = Game.loadWorld(new GameWorld(f));
+				w.addEntity(p);
+				Game.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			}
 		}
 		
 		if (object == lastEditor) {
@@ -68,7 +106,7 @@ public class WorldSelectScreen extends GameScreen {
 				Player p = Game.setPlayer(new Player("Test"));
 				GameWorld w = Game.loadWorld(new GameWorld(new File(last)));
 				w.addEntity(p);
-				Game.displayScreen(new GamePlayScreen());
+				Game.displayScreen(new GamePlayScreen(), new MainMenuScreen());
 				//Game.displayScreen(new WorldRenderTest(new File(last)), this);
 			}
 		}

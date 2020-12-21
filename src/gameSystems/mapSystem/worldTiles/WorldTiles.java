@@ -61,11 +61,11 @@ public class WorldTiles {
 		WorldTile tile = EUtil.getFirst(tiles, t -> t.getID() == id);
 		if (tile != null) {
 			try {
-				if (texID == 0) {
-					return tile.getClass().getConstructor().newInstance();
-				}
-				else if (ReflectionHelper.doesConstructorExist(tile, Integer.class)) {
+				if (ReflectionHelper.doesConstructorExist(tile, Integer.class)) {
 					return tile.getClass().getConstructor(Integer.class).newInstance(texID);
+				}
+				else {
+					return tile.getClass().getConstructor().newInstance();
 				}
 			}
 			catch (Exception e) {
