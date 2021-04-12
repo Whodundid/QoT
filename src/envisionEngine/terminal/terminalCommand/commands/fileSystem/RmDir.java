@@ -2,10 +2,10 @@ package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.window.ETerminal;
+import eutil.EUtil;
 import java.io.File;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class RmDir extends FileCommand {
 	

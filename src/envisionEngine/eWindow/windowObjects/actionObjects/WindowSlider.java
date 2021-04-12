@@ -4,8 +4,8 @@ import envisionEngine.eWindow.windowTypes.ActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import java.text.DecimalFormat;
-import util.mathUtil.NumUtil;
-import util.storageUtil.StorageBox;
+import mathUtil.NumberUtil;
+import storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 
@@ -21,7 +21,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 	protected boolean useInts = false;
 	protected double interval = 0;
 	public String displayValue = "";
-	public int displayValueColor = 0x00ff00;
+	public int displayValueColor = 0xff00ff00;
 	public double thumbSize = 8;
 	private double thumbStartX = 0, thumbStartY = 0;
 	private double thumbEndX = 0, thumbEndY = 0;
@@ -192,7 +192,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 	
 	public WindowSlider setSliderValue(double valIn) {
 		sliderValue = valIn;
-		pos = NumUtil.clamp((valIn - lowVal) / (highVal - lowVal), 0.0f, 1.0f);
+		pos = NumberUtil.clamp((valIn - lowVal) / (highVal - lowVal), 0.0f, 1.0f);
 		if (defaultDisplayString) {
 			if (useInts) { displayValue = "" + (int) sliderValue; }
 			else { displayValue = new DecimalFormat("0.00").format(sliderValue); }
@@ -230,12 +230,12 @@ public class WindowSlider<E> extends ActionObject<E> {
 	private void calculateSliderPos(boolean calc) {
 		if (calc) {
 			if (vertical) {
-				pos = NumUtil.clamp((float)(mY - startY - thumbSize / 2) / (height - thumbSize - 1), 0f, 1f);
+				pos = NumberUtil.clamp((float)(mY - startY - thumbSize / 2) / (height - thumbSize - 1), 0f, 1f);
 				sliderValue = lowVal + (highVal - lowVal) * (1 + -pos);
 				if (useInts) { sliderValue = (int) sliderValue; }
 			}
 			else {
-				pos = NumUtil.clamp((float)(mX - startX - thumbSize / 2) / (width - thumbSize), 0f, 1f);
+				pos = NumberUtil.clamp((float)(mX - startX - thumbSize / 2) / (width - thumbSize), 0f, 1f);
 				sliderValue = lowVal + (highVal - lowVal) * pos;
 				if (useInts) { sliderValue = (int) sliderValue; }
 			}

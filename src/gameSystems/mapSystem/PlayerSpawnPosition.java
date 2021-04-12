@@ -1,6 +1,6 @@
 package gameSystems.mapSystem;
 
-import util.storageUtil.StorageBox;
+import storageUtil.StorageBox;
 
 /** A point in the world where the player will be positioned when being loaded.
  *  The coordinates for positioning are based off of the top left corner of the player's collision box. */

@@ -10,9 +10,9 @@ import envisionEngine.eWindow.windowObjects.windows.WindowDialogueBox.DialogueBo
 import envisionEngine.eWindow.windowTypes.ActionWindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.renderUtil.CenterType;
-import util.renderUtil.EColors;
-import util.storageUtil.EDimension;
+import renderUtil.CenterType;
+import renderUtil.EColors;
+import storageUtil.EDimension;
 
 //Author: Hunter Bragg
 

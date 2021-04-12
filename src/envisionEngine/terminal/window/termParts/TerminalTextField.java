@@ -4,7 +4,7 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowTextField;
 import envisionEngine.terminal.TerminalHandler;
 import envisionEngine.terminal.window.ETerminal;
 import envisionEngine.terminal.window.TerminalRCM;
-import util.renderUtil.CenterType;
+import renderUtil.CenterType;
 
 //Author: Hunter Bragg
 

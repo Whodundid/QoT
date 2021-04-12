@@ -3,13 +3,13 @@ package gameSystems.textureSystem;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Iterator;
+import miscUtil.ReflectionHelper;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.stb.STBImage;
-import org.lwjgl.BufferUtils;
-import util.miscUtil.ReflectionHelper;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public class TextureSystem {
 
@@ -133,8 +133,8 @@ public class TextureSystem {
 				
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
 				
-				GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-				GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 				
 				GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
 				STBImage.stbi_image_free(data);

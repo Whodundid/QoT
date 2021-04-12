@@ -2,8 +2,8 @@ package assets.entities.enemy.types;
 
 import assets.entities.enemy.Enemy;
 import assets.textures.EntityTextures;
-import util.mathUtil.NumUtil;
-import util.miscUtil.Direction;
+import miscUtil.Direction;
+import randomUtil.RandomUtil;
 
 public class Goblin extends Enemy {
 	
@@ -25,9 +25,9 @@ public class Goblin extends Enemy {
 	
 	@Override
 	public void onLivingUpdate() {
-		boolean shouldMove = NumUtil.roll(10, 0, 10);
+		boolean shouldMove = RandomUtil.roll(10, 0, 10);
 		if (shouldMove) {
-			Direction dir = NumUtil.randomDir();
+			Direction dir = RandomUtil.randomDir();
 			move(dir);
 		}
 	}

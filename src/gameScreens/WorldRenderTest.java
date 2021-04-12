@@ -13,11 +13,11 @@ import gameSystems.screenSystem.GameScreen;
 import java.io.File;
 import java.util.Stack;
 import main.Game;
+import mathUtil.NumberUtil;
 import org.lwjgl.glfw.GLFW;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
 
 public class WorldRenderTest extends GameScreen {
 
@@ -123,7 +123,7 @@ public class WorldRenderTest extends GameScreen {
 		Player p = Game.thePlayer;
 		
 		drawString("Dist: " + distX + " " + distY, reload.startX + 10, reload.endY + 20);
-		//drawString("Zoom: " + NumUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
+		//drawString("Zoom: " + NumberUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
 		drawString("WPos: " + p.worldX + " " + p.worldY, reload.startX + 10, reload.endY + 100);
 		drawString("PPos: " + p.startX + " " + p.startY, reload.startX + 10, reload.endY + 140);
 	}
@@ -193,10 +193,10 @@ public class WorldRenderTest extends GameScreen {
 			Game.setPlayer(new Player("Test Player"));
 			
 			/*
-			for (int i = 0; i < NumUtil.getRoll(5, 10); i++) {
+			for (int i = 0; i < NumberUtil.getRoll(5, 10); i++) {
 				Entity g = null;
 				
-				switch (NumUtil.getRoll(0, 4)) {
+				switch (NumberUtil.getRoll(0, 4)) {
 				case 0: g = world.addEntity(new Goblin()); break;
 				case 1: g = world.addEntity(new Thyrah()); break;
 				case 2: g = world.addEntity(new TrollBoar()); break;
@@ -204,7 +204,7 @@ public class WorldRenderTest extends GameScreen {
 				case 4: g = world.addEntity(new WhodundidsBrother()); break;
 				}
 				
-				g.setWorldPos(NumUtil.getRoll(0, world.getWidth() - 1), NumUtil.getRoll(0, world.getHeight() - 1));
+				g.setWorldPos(NumberUtil.getRoll(0, world.getWidth() - 1), NumberUtil.getRoll(0, world.getHeight() - 1));
 			}
 			*/
 			
@@ -349,14 +349,14 @@ public class WorldRenderTest extends GameScreen {
 	private void drawMouseCoords(int x, int y, int w, int h) {
 		worldXPos = (int) worldXPos;
 		worldYPos = (int) worldYPos;
-		worldXPos = NumUtil.clamp(worldXPos, 0, world.getWidth() - 1);
-		worldYPos = NumUtil.clamp(worldYPos, 0, world.getHeight() - 1);
+		worldXPos = NumberUtil.clamp(worldXPos, 0, world.getWidth() - 1);
+		worldYPos = NumberUtil.clamp(worldYPos, 0, world.getHeight() - 1);
 		
 		WorldTile t = world.getTileAt((int) worldXPos, (int) worldYPos);
 		String name = (t != null) ? " : " + t.getName() : "";
 		drawString("World: " + worldXPos + " " + worldYPos + name, reload.startX + 10, reload.endY + 180);
 		
-		double offsetX = (Game.thePlayer.startX % w);
+		double offsetX = (Game.thePlayer.startX % w);	
 		double offsetY = (Game.thePlayer.startY % h);
 		
 		double xPos = (x - offsetX) + ((mX - (int) (x - offsetX)) / w) * w;

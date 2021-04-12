@@ -5,7 +5,7 @@ import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
 import main.Game;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

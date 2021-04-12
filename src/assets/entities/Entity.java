@@ -4,10 +4,10 @@ import assets.entities.player.Player;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.textureSystem.GameTexture;
-import util.mathUtil.NumUtil;
-import util.miscUtil.Direction;
-import util.openGL_Util.GLObject;
-import util.storageUtil.EDimension;
+import mathUtil.NumberUtil;
+import miscUtil.Direction;
+import openGL_Util.GLObject;
+import storageUtil.EDimension;
 
 public abstract class Entity extends GLObject {
 	
@@ -97,7 +97,7 @@ public abstract class Entity extends GLObject {
 				double cEX = endX - (width - collisionBox.endX);
 				double cEY = endY - (height - collisionBox.endY);
 				
-				EDimension col = EDimension.of(cSX, cSY, cEX, cEY);
+				EDimension col = new EDimension(cSX, cSY, cEX, cEY);
 				//System.out.println(col);
 				//col = col.expand(1);
 				
@@ -115,10 +115,10 @@ public abstract class Entity extends GLObject {
 				//col.endY += 1;
 				//col = col.contract(1);
 
-				movingToSX = NumUtil.clamp(movingToSX, 0, world.getWidth() - 1);
-				movingToSY = NumUtil.clamp(movingToSY, 0, world.getHeight() - 1);
-				movingToEX = NumUtil.clamp(movingToEX, 0, world.getWidth() - 1);
-				movingToEY = NumUtil.clamp(movingToEY, 0, world.getHeight() - 1);
+				movingToSX = NumberUtil.clamp(movingToSX, 0, world.getWidth() - 1);
+				movingToSY = NumberUtil.clamp(movingToSY, 0, world.getHeight() - 1);
+				movingToEX = NumberUtil.clamp(movingToEX, 0, world.getWidth() - 1);
+				movingToEY = NumberUtil.clamp(movingToEY, 0, world.getHeight() - 1);
 				
 				WorldTile tl = world.getTileAt(movingToSX, movingToSY);
 				WorldTile tr = world.getTileAt(movingToEX, movingToSY);
@@ -135,10 +135,10 @@ public abstract class Entity extends GLObject {
 				double eX = movingToEX * w;
 				double eY = movingToEY * h;
 				
-				EDimension tlDim = EDimension.of(sX, sY, sX + w, sY + h);
-				EDimension blDim = EDimension.of(sX, eY, sX + w, eY + h);
-				EDimension trDim = EDimension.of(eX, sY, eX + w, sY + h);
-				EDimension brDim = EDimension.of(eX, eY, eX + w, eY + h);
+				EDimension tlDim = new EDimension(sX, sY, sX + w, sY + h);
+				EDimension blDim = new EDimension(sX, eY, sX + w, eY + h);
+				EDimension trDim = new EDimension(eX, sY, eX + w, sY + h);
+				EDimension brDim = new EDimension(eX, eY, eX + w, eY + h);
 				
 				//System.out.println("[" + movingToSX + ", " + movingToSY + "] [" + movingToEX + ", " + movingToSY + "]");
 				//System.out.println("[" + movingToSX + ", " + movingToEY + "] [" + movingToEX + ", " + movingToEY + "]");
@@ -240,10 +240,10 @@ public abstract class Entity extends GLObject {
 				startY += y;
 				endY += y;
 				
-				startX = (int) NumUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
-				startY = (int) NumUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
-				endX = (int) NumUtil.clamp(endX, width - collisionBox.startX, world.getPixelWidth() + (width - collisionBox.endX));
-				endY = (int) NumUtil.clamp(endY, height - collisionBox.startY, world.getPixelHeight() + (height - collisionBox.endY));
+				startX = (int) NumberUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
+				startY = (int) NumberUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
+				endX = (int) NumberUtil.clamp(endX, width - collisionBox.startX, world.getPixelWidth() + (width - collisionBox.endX));
+				endY = (int) NumberUtil.clamp(endY, height - collisionBox.startY, world.getPixelHeight() + (height - collisionBox.endY));
 				
 				midX = startX + (width / 2);
 				midY = startY + (height / 2);
@@ -254,20 +254,20 @@ public abstract class Entity extends GLObject {
 				worldX = (int) valX;
 				worldY = (int) valY;
 				
-				worldX = NumUtil.clamp(worldX, 0, world.getWidth() - 1);
-				worldY = NumUtil.clamp(worldY, 0, world.getHeight() - 1);
+				worldX = NumberUtil.clamp(worldX, 0, world.getWidth() - 1);
+				worldY = NumberUtil.clamp(worldY, 0, world.getHeight() - 1);
 			}
 		}
 	}
 	
 	public void hurt(double amount) {
-		health = NumUtil.clamp(health - amount, 0, health);
+		health = NumberUtil.clamp(health - amount, 0, health);
 		//addObject(new DamageSplash(midX, startY, amount));
 		if (health <= 0) { kill(); }
 	}
 	
-	public void heal(double amount) { health = NumUtil.clamp(health + amount, 0, maxHealth); }
-	public void drainMana(double amount) { mana = NumUtil.clamp(mana - amount, 0, Double.MAX_VALUE); }
+	public void heal(double amount) { health = NumberUtil.clamp(health + amount, 0, maxHealth); }
+	public void drainMana(double amount) { mana = NumberUtil.clamp(mana - amount, 0, Double.MAX_VALUE); }
 	
 	public void kill() {
 		health = 0;

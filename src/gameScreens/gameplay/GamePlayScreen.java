@@ -7,7 +7,7 @@ import gameScreens.GameOverScreen;
 import gameScreens.MainMenuScreen;
 import gameSystems.screenSystem.GameScreen;
 import main.Game;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 //rabbit fish
 
@@ -16,6 +16,11 @@ public class GamePlayScreen extends GameScreen {
 	WindowRect topHud;
 	WindowRect botHud; //don't know if actually want this one
 	StatusBar health, mana;
+	
+	public GamePlayScreen() {
+		super();
+		screenHistory.push(new MainMenuScreen());
+	}
 	
 	@Override
 	public void initScreen() {
@@ -30,15 +35,15 @@ public class GamePlayScreen extends GameScreen {
 		windowObjects.clear();
 		
 		topHud = new WindowRect(this, 0, 0, Game.getWidth(), 39, EColors.dgray);
-		addObject(topHud);
+		//addObject(topHud);
 		
 		health = new StatusBar(this, 5, 5, 200, 30, 0, Game.getPlayer().getMaxHealth(), EColors.red);
 		health.setCurrentValue(Game.getPlayer().getHealth());
-		addObject(health);
+		//addObject(health);
 		
 		mana = new StatusBar(this, health.endX + 5, 5, 200, 30, 0, Game.getPlayer().getMaxMana(), EColors.blue);
 		mana.setCurrentValue(Game.getPlayer().getMana());
-		addObject(mana);
+		//addObject(mana);
 	}
 	
 	@Override
@@ -60,9 +65,9 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void onScreenClosed() {
-		Game.displayScreen(new MainMenuScreen());
-		Game.loadWorld(null);
-		Songs.stopAllMusic();
+		//Game.displayScreen(new MainMenuScreen());
+		//Game.loadWorld(null);
+		//Songs.stopAllMusic();
 	}
 	
 }

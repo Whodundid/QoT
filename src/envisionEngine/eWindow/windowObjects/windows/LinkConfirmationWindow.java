@@ -5,8 +5,8 @@ import envisionEngine.eWindow.windowObjects.basicObjects.WindowLabel;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import main.Game;
-import util.renderUtil.EColors;
-import util.renderUtil.WindowSize;
+import renderUtil.EColors;
+import tempUtil.WindowSize;
 
 //Author: Hunter Bragg
 

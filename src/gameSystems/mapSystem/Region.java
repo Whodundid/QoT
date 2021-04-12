@@ -1,9 +1,9 @@
 package gameSystems.mapSystem;
 
 import assets.entities.Entity;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimensionI;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
+import storageUtil.EDimensionI;
 
 public class Region {
 	

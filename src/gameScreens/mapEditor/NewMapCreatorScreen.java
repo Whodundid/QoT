@@ -11,7 +11,7 @@ import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.mapSystem.worldTiles.WorldTiles;
 import gameSystems.screenSystem.GameScreen;
 import main.Game;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 public class NewMapCreatorScreen extends GameScreen {
 

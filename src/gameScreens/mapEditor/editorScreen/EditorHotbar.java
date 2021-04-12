@@ -3,15 +3,15 @@ package gameScreens.mapEditor.editorScreen;
 import assets.entities.Entity;
 import envisionEngine.eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import envisionEngine.eWindow.windowTypes.WindowObject;
+import eutil.EUtil;
 import gameScreens.mapEditor.editorScreen.util.EditorItem;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import main.Game;
-import util.EUtil;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
 
 public class EditorHotbar extends WindowObject {
 	
@@ -114,7 +114,7 @@ public class EditorHotbar extends WindowObject {
 				int num = Character.digit(typedChar, 10);
 				
 				if (num == 0) { num = size - 1; }
-				else { num = NumUtil.clamp(num - 1, 0, num); }
+				else { num = NumberUtil.clamp(num - 1, 0, num); }
 				
 				if (num < size) { curItem = num; }
 				

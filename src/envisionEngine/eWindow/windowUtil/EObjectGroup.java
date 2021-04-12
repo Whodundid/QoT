@@ -4,7 +4,7 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowUtil.windowEvents.ObjectEvent;
 import java.util.Iterator;
 import java.util.List;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

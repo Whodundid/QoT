@@ -8,12 +8,12 @@ import envisionEngine.eWindow.windowUtil.windowEvents.ObjectEvent;
 import envisionEngine.eWindow.windowUtil.windowEvents.ObjectEventHandler;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.FocusType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
+import eutil.EUtil;
 import java.util.function.Consumer;
-import util.EUtil;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 

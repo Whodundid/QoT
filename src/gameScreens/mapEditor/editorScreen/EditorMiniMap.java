@@ -4,7 +4,7 @@ import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameSystems.mapSystem.GameWorld;
 import main.Game;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 public class EditorMiniMap extends WindowObject {
 	
@@ -25,6 +25,8 @@ public class EditorMiniMap extends WindowObject {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
+		//System.out.println(this.getDimensions());
+		
 		drawRect(EColors.black);
 		drawRect(EColors.mgray, 1);
 		drawRect(EColors.lgray, 3);

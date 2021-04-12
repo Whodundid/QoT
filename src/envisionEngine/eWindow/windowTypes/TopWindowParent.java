@@ -14,12 +14,12 @@ import envisionEngine.input.Mouse;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import main.Game;
-import util.openGL_Util.GLSettings;
-import util.renderUtil.ScreenLocation;
-import util.renderUtil.WindowSize;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
+import openGL_Util.GLSettings;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
+import tempUtil.WindowSize;
 
 public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E> {
 	

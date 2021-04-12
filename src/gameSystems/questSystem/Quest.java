@@ -1,7 +1,7 @@
 package gameSystems.questSystem;
 
-import util.mathUtil.NumUtil;
-import util.storageUtil.EArrayList;
+import mathUtil.NumberUtil;
+import storageUtil.EArrayList;
 
 public class Quest {
 	
@@ -64,7 +64,7 @@ public class Quest {
 	
 	public boolean ignoresGoals() { return ignoreGoals; }
 	public EArrayList<QuestGoal> getGoals() { return goals; }
-	public QuestGoal getGoal(int num) { return (goals.isNotEmpty()) ? goals.get(NumUtil.clamp(num, 0, goals.size() - 1)) : null; }
+	public QuestGoal getGoal(int num) { return (goals.isNotEmpty()) ? goals.get(NumberUtil.clamp(num, 0, goals.size() - 1)) : null; }
 	
 	//---------
 	// Setters

@@ -2,9 +2,9 @@ package envisionEngine.eWindow.windowObjects.advancedObjects.screenHandler;
 
 import envisionEngine.eWindow.windowTypes.ActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.EUtil;
-import util.mathUtil.NumUtil;
-import util.storageUtil.EArrayList;
+import eutil.EUtil;
+import mathUtil.NumberUtil;
+import storageUtil.EArrayList;
 
 public class ScreenHandler<E> extends ActionObject<E> {
 	
@@ -124,7 +124,7 @@ public class ScreenHandler<E> extends ActionObject<E> {
 	}
 	
 	public ScreenHandler<E> setCurrentScreen(int num) {
-		currentScreen = NumUtil.clamp(num, 0, screens.size() - 1);
+		currentScreen = NumberUtil.clamp(num, 0, screens.size() - 1);
 		checkScreen();
 		return this;
 	}
@@ -132,7 +132,7 @@ public class ScreenHandler<E> extends ActionObject<E> {
 	public ScreenHandler<E> setCurrentStage(int num) {
 		WindowScreen<E> screen = screens.get(currentScreen);
 		if (screen != null) {
-			num = NumUtil.clamp(num, 0, screen.getNumStages());
+			num = NumberUtil.clamp(num, 0, screen.getNumStages());
 			screen.setCurrentStage(num);
 		}
 		return this;

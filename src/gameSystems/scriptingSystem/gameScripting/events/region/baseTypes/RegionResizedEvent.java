@@ -3,7 +3,7 @@ package gameSystems.scriptingSystem.gameScripting.events.region.baseTypes;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.Region;
 import gameSystems.scriptingSystem.gameScripting.events.region.RegionEvent;
-import util.storageUtil.EDimensionI;
+import storageUtil.EDimensionI;
 
 public class RegionResizedEvent extends RegionEvent {
 	

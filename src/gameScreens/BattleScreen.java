@@ -11,8 +11,8 @@ import gameScreens.gameplay.StatusBar;
 import gameSystems.screenSystem.GameScreen;
 import gameWindows.InventoryWindow;
 import main.Game;
-import util.renderUtil.EColors;
-import util.storageUtil.EDimension;
+import renderUtil.EColors;
+import storageUtil.EDimension;
 
 public class BattleScreen extends GameScreen {
 	

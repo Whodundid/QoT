@@ -2,7 +2,7 @@ package assets.entities.enemy.types;
 
 import assets.entities.enemy.Enemy;
 import assets.textures.EntityTextures;
-import util.mathUtil.NumUtil;
+import randomUtil.RandomUtil;
 
 public class Thyrah extends Enemy {
 	
@@ -15,7 +15,7 @@ public class Thyrah extends Enemy {
 
 	@Override
 	public void onLivingUpdate() {
-		move(NumUtil.randomDir());
+		move(RandomUtil.randomDir());
 	}
 	
 }

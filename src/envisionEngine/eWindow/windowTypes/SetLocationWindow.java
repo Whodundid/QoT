@@ -1,9 +1,9 @@
 package envisionEngine.eWindow.windowTypes;
 
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 

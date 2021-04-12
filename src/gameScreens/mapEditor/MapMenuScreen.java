@@ -15,8 +15,8 @@ import java.io.File;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import main.Game;
-import util.renderUtil.EColors;
-import util.storageUtil.EDimension;
+import renderUtil.EColors;
+import storageUtil.EDimension;
 
 public class MapMenuScreen extends GameScreen {
 	

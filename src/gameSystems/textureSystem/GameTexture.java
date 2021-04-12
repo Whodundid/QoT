@@ -1,11 +1,11 @@
 package gameSystems.textureSystem;
 
+import eutil.EUtil;
 import org.lwjgl.opengl.GL11;
-import util.EUtil;
-import util.mathUtil.NumUtil;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import randomUtil.RandomUtil;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 public class GameTexture {
 	
@@ -86,7 +86,7 @@ public class GameTexture {
 		EArrayList<GameTexture> workList = new EArrayList();
 		
 		EUtil.forEach(children.getAVals(), c -> { found.add(c); if (c.children.size() > 0) { withChildren.add(c); } });
-		withChildren.forEach(c -> workList.addAll(c));
+		withChildren.forEach(c -> workList.add(c));
 		
 		while (workList.isNotEmpty()) {
 			found.addAll(workList);
@@ -102,8 +102,8 @@ public class GameTexture {
 	}
 	
 	private GameTexture getRandChild() {
-		int pos = NumUtil.getRoll(0, children.size() - 1);
-		return children.getObject(pos);
+		int pos = RandomUtil.getRoll(0, children.size() - 1);
+		return children.getA(pos);
 	}
 	
 	public void initVariantPercents() {
@@ -116,7 +116,7 @@ public class GameTexture {
 	
 	public GameTexture getRandVariant() {
 		if (children.isNotEmpty()) {
-			boolean val = (NumUtil.roll(0, 0, 1));
+			boolean val = (RandomUtil.roll(0, 0, 1));
 			if (val) {
 				return getRandChild();
 			}
@@ -125,7 +125,7 @@ public class GameTexture {
 	}
 	
 	public GameTexture getChild(int id) {
-		return children.getObject(id);
+		return children.getA(id);
 	}
 	
 }

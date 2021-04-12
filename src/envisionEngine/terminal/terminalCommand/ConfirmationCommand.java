@@ -1,7 +1,7 @@
 package envisionEngine.terminal.terminalCommand;
 
 import envisionEngine.terminal.window.ETerminal;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public abstract class ConfirmationCommand extends TerminalCommand {
 

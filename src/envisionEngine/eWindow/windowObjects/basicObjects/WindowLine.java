@@ -2,7 +2,7 @@ package envisionEngine.eWindow.windowObjects.basicObjects;
 
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 public class WindowLine<E> extends WindowObject<E> {
 	

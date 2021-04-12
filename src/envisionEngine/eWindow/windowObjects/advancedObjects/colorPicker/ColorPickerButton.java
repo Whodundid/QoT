@@ -2,7 +2,7 @@ package envisionEngine.eWindow.windowObjects.advancedObjects.colorPicker;
 
 import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 //Author: Hunter Bragg
 

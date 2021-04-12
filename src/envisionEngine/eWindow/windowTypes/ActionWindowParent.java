@@ -2,8 +2,8 @@ package envisionEngine.eWindow.windowTypes;
 
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
+import eutil.EUtil;
 import main.Game;
-import util.EUtil;
 
 //Author: Hunter Bragg
 

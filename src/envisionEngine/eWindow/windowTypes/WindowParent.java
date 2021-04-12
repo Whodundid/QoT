@@ -3,15 +3,15 @@ package envisionEngine.eWindow.windowTypes;
 import envisionEngine.eWindow.windowObjects.advancedObjects.header.WindowHeader;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
+import eutil.EUtil;
 import gameSystems.textureSystem.GameTexture;
 import java.util.Stack;
 import main.Game;
-import util.EUtil;
-import util.renderUtil.CenterType;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
+import renderUtil.CenterType;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
 
 //Author: Hunter Bragg
 

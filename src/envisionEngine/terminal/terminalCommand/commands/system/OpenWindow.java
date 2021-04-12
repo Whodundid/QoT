@@ -6,7 +6,7 @@ import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
 import gameScreens.MainMenuScreen;
 import main.Game;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

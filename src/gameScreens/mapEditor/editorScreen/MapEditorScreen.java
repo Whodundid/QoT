@@ -1,5 +1,6 @@
 package gameScreens.mapEditor.editorScreen;
 
+import assets.sounds.Songs;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.input.Keyboard;
 import envisionEngine.input.Mouse;
@@ -15,10 +16,10 @@ import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.mapSystem.worldTiles.WorldTiles;
 import gameSystems.screenSystem.GameScreen;
 import java.io.File;
+import mathUtil.NumberUtil;
 import org.lwjgl.glfw.GLFW;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EDimension;
+import renderUtil.EColors;
+import storageUtil.EDimension;
 
 public class MapEditorScreen extends GameScreen {
 
@@ -63,6 +64,7 @@ public class MapEditorScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
+		Songs.stopAllMusic();
 		loadWorld();
 		firstPress = !Mouse.isButtonDown(0);
 	}
@@ -133,8 +135,8 @@ public class MapEditorScreen extends GameScreen {
 	@Override
 	public void mouseScrolled(int change) {
 		if (Keyboard.isCtrlDown()) {
-			world.setZoom(world.getZoom() + NumUtil.round(Math.signum(change) * 0.05, 2));
-			world.setZoom(NumUtil.clamp(world.getZoom(), 0.15, 5));
+			world.setZoom(world.getZoom() + NumberUtil.round(Math.signum(change) * 0.05, 2));
+			world.setZoom(NumberUtil.clamp(world.getZoom(), 0.15, 5));
 		}
 		else if (Keyboard.isShiftDown()) {
 			xPos -= Math.signum(change) * 2;
@@ -184,7 +186,7 @@ public class MapEditorScreen extends GameScreen {
 		
 	}
 	
-	@Override public void onScreenClosed() {}
+	@Override public void onScreenClosed() { Songs.stopAllMusic(); }
 	
 	//------------------------
 	// Private Editor Methods
@@ -290,7 +292,7 @@ public class MapEditorScreen extends GameScreen {
 		int drawPosY = y + sY - ((yPos - distY) * h);
 		int drawWidth = drawPosX + rw;
 		int drawHeight = drawPosY + rh;
-		int lineWidth = NumUtil.clamp((int) (3 * z), 1, 4);
+		int lineWidth = NumberUtil.clamp((int) (3 * z), 1, 4);
 		drawHRect(drawPosX, drawPosY, drawWidth, drawHeight, lineWidth, r.getColor());
 	}
 	
@@ -315,8 +317,8 @@ public class MapEditorScreen extends GameScreen {
 	private void drawMouseCoords(int x, int y, int w, int h) {
 		worldXPos = (int) worldXPos;
 		worldYPos = (int) worldYPos;
-		worldXPos = NumUtil.clamp(worldXPos, 0, world.getWidth() - 1);
-		worldYPos = NumUtil.clamp(worldYPos, 0, world.getHeight() - 1);
+		worldXPos = NumberUtil.clamp(worldXPos, 0, world.getWidth() - 1);
+		worldYPos = NumberUtil.clamp(worldYPos, 0, world.getHeight() - 1);
 		
 		double xPos = x + ((mX - x) / w) * w;
 		double yPos = y + ((mY - y) / h) * h;
@@ -380,8 +382,8 @@ public class MapEditorScreen extends GameScreen {
 	public MapEditorScreen setXPos(int pos) { return this; }
 	public MapEditorScreen setYPos(int pos) { return this; }
 	
-	public MapEditorScreen setViewX(int dist) { distX = NumUtil.clamp(dist, 0, dist); return this; }
-	public MapEditorScreen setViewY(int dist) { distY = NumUtil.clamp(dist, 0, dist); return this; }
+	public MapEditorScreen setViewX(int dist) { distX = NumberUtil.clamp(dist, 0, dist); return this; }
+	public MapEditorScreen setViewY(int dist) { distY = NumberUtil.clamp(dist, 0, dist); return this; }
 	
 	public EditorTool getCurTileTool() { return curTool; }
 	

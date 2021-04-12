@@ -6,10 +6,10 @@ import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.IListableCommand;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
+import eutil.EUtil;
 import main.Game;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -140,7 +140,7 @@ public class ListCMD extends TerminalCommand {
 			for (IWindowObject obj : termIn.getTopParent().getObjects()) {
 				termIn.writeln(obj.toString(), EColors.green);
 			}
-			termIn.writeln("Total objects: " + termIn.getTopParent().getObjects().size(), 0xffff00);
+			termIn.writeln("Total objects: " + termIn.getTopParent().getObjects().size(), 0xffffff00);
 		}
 	}
 	
@@ -156,7 +156,7 @@ public class ListCMD extends TerminalCommand {
 		termIn.writeln("Listing " + windows.size() + " active window" + plural + "..\n", EColors.lgreen);
 		
 		termIn.writeln("(Name | PID | Type)", EColors.lime);
-		termIn.writeln(EUtil.repeatStr("-", 16), EColors.lime);
+		termIn.writeln(EUtil.repeatString("-", 16), EColors.lime);
 		
 		for (WindowParent p : windows) {
 			String out = p.getObjectName() + " | " + p.getObjectID() + " | " + p.getClass().getSimpleName()

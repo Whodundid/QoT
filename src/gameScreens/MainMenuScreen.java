@@ -6,8 +6,8 @@ import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.MapMenuScreen;
 import gameSystems.screenSystem.GameScreen;
 import main.Game;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
 
 public class MainMenuScreen extends GameScreen {
 	
@@ -16,15 +16,14 @@ public class MainMenuScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		if (!(getPreviousScreen() instanceof OptionsScreen)) {
-			Songs.loop(Songs.theme);
-		}
+		if (!Songs.isSongPlaying(Songs.theme)) { Songs.stopAllMusic(); }
+		Songs.loopIfNotPlaying(Songs.theme);
 		setObjectName("Main Menu Screen");
 	}
 	
 	@Override
 	public void initObjects() {
-		double w = NumUtil.clamp(Game.getWidth() / 4, 200, 320);
+		double w = NumberUtil.clamp(Game.getWidth() / 4, 200, 320);
 		double x = midX - w / 2;
 		double y = midY - 150;
 		double h = 40;
@@ -41,44 +40,44 @@ public class MainMenuScreen extends GameScreen {
 		addObject(mapTest);
 	}
 	
+	@Override public void onScreenClosed() {}
+	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.skyblue);
-		//drawLine(midX - 1, 0, midX, Game.getHeight(), 1, EColors.black);
 		drawStringC("QUEST OF THYRAH", midX, newGame.startY / 2);
-		
 		drawRect(newGame.startX - 10, newGame.startY - 10, newGame.endX + 10, closeGame.endY + 10, EColors.dsteel);
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == newGame) {
-			//Game.setPlayer(new Player("Demmeonockhc"));
-			//GameWorld w = new GameWorld(new File("test.twld"));
-			//w.addEntity(Game.thePlayer);
-			//Game.loadWorld(w);
-			//Game.displayScreen(new GamePlayScreen(), this);
-			Game.displayScreen(new WorldSelectScreen(), this);
-			Songs.stopSong(Songs.theme);
-		}
-		
-		if (object == loadGame) {
-			
-		}
-		
-		if (object == options) {
-			Game.displayScreen(new OptionsScreen(), this);
-		}
-		
-		if (object == closeGame) {
-			Game.stopGame();
-		}
-		
-		if (object == mapTest) {
-			Game.displayScreen(new MapMenuScreen(), this);
-		}
+		if (object == newGame) { newGame(); }
+		if (object == loadGame) { load(); }
+		if (object == options) { options(); }
+		if (object == closeGame) { closeGame(); }
+		if (object == mapTest) { mapTest(); }
 	}
-
-	@Override public void onScreenClosed() {}
+	
+	//---------------------------------------------------
+	
+	private void newGame() {
+		Game.displayScreen(new WorldSelectScreen(), this);
+	}
+	
+	private void load() {
+		
+	}
+	
+	private void options() {
+		Game.displayScreen(new OptionsScreen(), this);
+	}
+	
+	private void closeGame() {
+		Game.stopGame();
+	}
+	
+	private void mapTest() {
+		Game.displayScreen(new MapMenuScreen(), this);
+	}
 	
 }

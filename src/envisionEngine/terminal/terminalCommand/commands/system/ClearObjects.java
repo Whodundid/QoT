@@ -4,7 +4,7 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -28,14 +28,14 @@ public class ClearObjects extends TerminalCommand {
 		EArrayList<IWindowObject> objs = termIn.getTopParent().getCombinedObjects();
 		if (objs.contains(termIn)) { objs.remove(termIn); }
 		if (objs.isNotEmpty()) {
-			termIn.writeln("Closing Renderer Objects..", 0x00ffff);
+			termIn.writeln("Closing Renderer Objects..", 0xff00ffff);
 			for (IWindowObject o : objs) {
 				if (o.isCloseable()) {
-					if (runVisually) { termIn.writeln("Closing: " + o, 0xffff00); }
+					if (runVisually) { termIn.writeln("Closing: " + o, 0xffffff00); }
 					o.close();
 				}
 			}
-			if (runVisually) { termIn.writeln(objs.size() + " closed.", 0xffaa00); }
+			if (runVisually) { termIn.writeln(objs.size() + " closed.", 0xffffaa00); }
 		}
 	}
 	

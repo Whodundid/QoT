@@ -4,15 +4,15 @@ import envisionEngine.eWindow.windowObjects.windows.TextEditorWindow;
 import envisionEngine.eWindow.windowObjects.windows.TextureDisplayer;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.window.ETerminal;
+import eutil.EUtil;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
-import util.EUtil;
-import util.renderUtil.CenterType;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.CenterType;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class Open extends FileCommand {
 	

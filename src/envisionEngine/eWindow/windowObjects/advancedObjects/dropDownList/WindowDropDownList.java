@@ -6,8 +6,8 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.FocusType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import java.util.Iterator;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

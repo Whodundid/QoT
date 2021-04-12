@@ -23,12 +23,12 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventObjects;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventRedraw;
 import envisionEngine.input.Mouse;
 import main.Game;
-import util.openGL_Util.GLSettings;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
+import openGL_Util.GLSettings;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 

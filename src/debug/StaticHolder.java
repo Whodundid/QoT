@@ -1,6 +1,6 @@
 package debug;
 
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public class StaticHolder {
 

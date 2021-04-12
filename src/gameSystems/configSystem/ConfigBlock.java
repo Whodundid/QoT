@@ -2,8 +2,8 @@ package gameSystems.configSystem;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBoxHolder;
+import storageUtil.EArrayList;
+import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 

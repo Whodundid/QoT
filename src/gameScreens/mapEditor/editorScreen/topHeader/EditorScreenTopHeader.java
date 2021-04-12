@@ -10,7 +10,7 @@ import gameScreens.mapEditor.editorScreen.RegionEditorMenu;
 import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
 import gameScreens.mapEditor.editorScreen.windows.EditorOptionsWindow;
 import main.Game;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 public class EditorScreenTopHeader extends WindowObject {
 	
@@ -41,7 +41,7 @@ public class EditorScreenTopHeader extends WindowObject {
 		assets = new WindowButton(this, scripts.endX + 3, startY + 3, 140, 28, "Assets");
 		regions = new WindowButton(this, assets.endX + 3, startY + 3, 140, 28, "Regions");
 		
-		tileToolLabel = new WindowLabel(this, startX + 10, options.endY + 7, "" + curTool);
+		tileToolLabel = new WindowLabel(this, startX + 10, options.endY + 7, "" + curTool, EColors.dsteel);
 		
 		brushSettings = new BrushSettings(this, tileToolLabel.endX + 12, options.endY + 4, (endY - 1) - (options.endY + 4));
 		lineSettings = new LineSettings(this, tileToolLabel.endX + 12, options.endY + 4, (endY - 1) - (options.endY + 4));

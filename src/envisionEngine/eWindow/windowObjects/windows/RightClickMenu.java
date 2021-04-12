@@ -11,8 +11,8 @@ import envisionEngine.input.Mouse;
 import gameSystems.textureSystem.GameTexture;
 import java.util.List;
 import main.Game;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -183,7 +183,7 @@ public class RightClickMenu extends ActionWindowParent {
 		title.setDimensions(midX, startY + titleHeight / 2 - 3, 0, 0);
 		
 		for (int i = 0; i < options.size(); i++) {
-			WindowButton b = options.getValue(i);
+			WindowButton b = options.getB(i);
 			b.setDimensions(sX + 2, sY + (useTitle ? titleHeight : 0) + 2 + (optionHeight * i + i), newWidth - 4, optionHeight);
 		}
 	}

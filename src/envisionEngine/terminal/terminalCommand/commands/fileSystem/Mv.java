@@ -6,8 +6,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class Mv extends FileCommand {
 	

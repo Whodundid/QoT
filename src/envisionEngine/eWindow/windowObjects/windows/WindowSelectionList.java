@@ -7,10 +7,10 @@ import envisionEngine.eWindow.windowTypes.ActionWindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import java.util.Iterator;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
-import util.storageUtil.TrippleBox;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.TrippleBox;
 
 //Author: Hunter Bragg
 
@@ -64,7 +64,7 @@ public class WindowSelectionList extends ActionWindowParent {
 		Iterator<TrippleBox<String, Integer, Object>> it = toAdd.iterator();
 		while (it.hasNext()) {
 			TrippleBox<String, Integer, Object> b = it.next();
-			add(b.o1, b.o2, b.o3);
+			add(b.a, b.b, b.c);
 			it.remove();
 		}
 		if (!list.getTextDocument().isEmpty()) { list.setSelectedLine(list.getTextLine(0)); }

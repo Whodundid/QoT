@@ -4,7 +4,7 @@ import controls.util.KeyCategory;
 import controls.util.KeyCombo;
 import envisionEngine.input.Keyboard;
 
-public abstract class KeyBinding {
+public class KeyBinding {
 	
 	protected String name = "";
 	protected String description = "";
@@ -77,6 +77,6 @@ public abstract class KeyBinding {
 		return false;
 	}
 	
-	public abstract void executeHotKeyAction();
+	public void executeHotKeyAction() {}
 	
 }

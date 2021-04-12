@@ -1,6 +1,6 @@
 package assets.sounds;
 
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 /** This contains every song in the game! */
 public class Songs {

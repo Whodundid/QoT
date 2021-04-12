@@ -4,9 +4,9 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import gameSystems.fontRenderer.EStringBuilder;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -39,7 +39,7 @@ public class WindowDialogueBox extends WindowParent {
 		if (type != null) {
 			switch (type) {
 			case yesNo:
-				double bw = NumUtil.clamp((width - 10) / 3, 0, 140);
+				double bw = NumberUtil.clamp((width - 10) / 3, 0, 140);
 				double g = width / 30;
 				
 				yes = new WindowButton(this, midX - g - bw, endY - 30, bw, 20, "Yes");

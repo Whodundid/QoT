@@ -3,10 +3,8 @@ package envisionEngine.terminal.terminalCommand.commands.system;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
-import java.util.Comparator;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class RuntimeCMD extends TerminalCommand {
 	
@@ -37,25 +35,25 @@ public class RuntimeCMD extends TerminalCommand {
 			String memJVMUsedString = String.format("%.2f gb", memJVMUsed);
 			String memJVMFreeString = String.format("%.2f gb", memJVMFree);
 			
-			String javaVer = "Java Version: " + EColors.mc_green + Runtime.class.getPackage().getImplementationVersion();
+			String javaVer = "Java Version: " + EColors.mc_green + Runtime.getRuntime().version();
 			String totMem = "Total Memory: " + EColors.mc_green + memJVMTotalString;
 			String usedMem = "Used Memory: " + EColors.mc_green + memJVMUsedString;
 			String freeMem = "Free Memory: " + EColors.mc_green + memJVMFreeString;
 			
-			String longest = EArrayList.of(String.class, javaVer, totMem, usedMem).stream().max(Comparator.comparingInt(String::length)).get();
-			int len = (longest != null) ? longest.length() : 0;
+			//String longest = EArrayList.of(String.class, javaVer, totMem, usedMem).stream()..max(Comparator.comparingInt(String::length)).get();
+			//int len = (longest != null) ? longest.length() : 0;
 			
-			String divider = EUtil.repeatStr("-", len - 3);
+			//String divider = EUtil.repeatString("-", len - 3);
 			
 			//java version
 			termIn.writeln(javaVer, EColors.cyan);
-			termIn.writeln(divider, EColors.lgray);
+			//termIn.writeln(divider, EColors.lgray);
 			
 			//memory
 			termIn.writeln(totMem, EColors.cyan);
 			termIn.writeln(usedMem, EColors.cyan);
 			termIn.writeln(freeMem, EColors.cyan);
-			termIn.writeln(divider, EColors.lgray);
+			//termIn.writeln(divider, EColors.lgray);
 		}
 		
 	}

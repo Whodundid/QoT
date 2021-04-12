@@ -1,7 +1,7 @@
 package envisionEngine.eWindow.windowObjects.basicObjects;
 
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 //Author: Hunter Bragg
 

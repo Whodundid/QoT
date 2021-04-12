@@ -2,13 +2,13 @@ package envisionEngine.eWindow.windowTypes.dynamicWindow;
 
 import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
+import eutil.EUtil;
 import java.io.File;
 import java.io.IOException;
 import main.Game;
-import util.EUtil;
-import util.renderUtil.CenterType;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
+import renderUtil.CenterType;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
 
 /** A special type of WindowParent that can be directly constructed from a serialized file. */
 public class DynamicWindow extends WindowParent {

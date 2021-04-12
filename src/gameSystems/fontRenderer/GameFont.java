@@ -3,8 +3,8 @@ package gameSystems.fontRenderer;
 import gameSystems.textureSystem.GameTexture;
 import java.io.File;
 import java.util.Scanner;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
 
 //can only be instantiated after the textureSystem
 public class GameFont {

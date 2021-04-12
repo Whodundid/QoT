@@ -1,6 +1,6 @@
 package gameSystems.scriptingSystem.gameScripting;
 
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public abstract class ScriptAction {
 	

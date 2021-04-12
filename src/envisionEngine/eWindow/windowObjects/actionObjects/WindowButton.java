@@ -3,22 +3,22 @@ package envisionEngine.eWindow.windowObjects.actionObjects;
 import envisionEngine.eWindow.windowTypes.ActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.input.Mouse;
+import eutil.EUtil;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.textureSystem.GameTexture;
 import java.util.function.Consumer;
+import openGL_Util.GLSettings;
 import org.lwjgl.glfw.GLFW;
-import util.EUtil;
-import util.openGL_Util.GLSettings;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 //Author: Hunter Bragg
 
 public class WindowButton<E> extends ActionObject<E> {
 	
-	public static int defaultColor = 14737632;
-	public int color = 14737632;
-	public int disabledColor = EColors.lgray.intVal;
-	public int textHoverColor = 0xffffa0;
+	public static int defaultColor = 0xffababab;
+	public int color = EColors.white.intVal;
+	public int disabledColor = EColors.mgray.intVal;
+	public int textHoverColor = 0xffffffa0;
 	public int backgroundColor = 0xff525252;
 	public int backgroundHoverColor = 0xff828282;
 	public int borderColor = 0xff000000;
@@ -35,7 +35,7 @@ public class WindowButton<E> extends ActionObject<E> {
 	protected boolean drawBackgroundHover = true;
 	protected boolean trueFalseButton = false;
 	protected boolean drawString = true;
-	protected boolean drawDisabledColor = false;
+	protected boolean drawDisabledColor = true;
 	protected boolean drawCentered = true;
 	protected GameTexture btnTexture = null;
 	protected GameTexture btnSelTexture = null;
@@ -53,7 +53,7 @@ public class WindowButton<E> extends ActionObject<E> {
 	public void drawObject(int mX, int mY) {
 		boolean mouseHover = isClickable() && isMouseOver();
 		boolean mouseCheck = !Mouse.isButtonDown(0) && mouseHover;
-		int stringColor = isEnabled() ? (mouseCheck ? (color == 14737632 ? textHoverColor : color) : color) : (drawDisabledColor ? disabledColor : color + 0xbbbbbb);
+		int stringColor = isEnabled() ? (mouseCheck ? textHoverColor : color) : (drawDisabledColor ? disabledColor : color + 0xbbbbbb);
 		
 		//draw background stuff
 		/*

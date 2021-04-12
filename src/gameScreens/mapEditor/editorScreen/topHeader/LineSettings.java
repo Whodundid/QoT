@@ -4,7 +4,7 @@ import envisionEngine.eWindow.windowObjects.advancedObjects.dropDownList.WindowD
 import envisionEngine.eWindow.windowObjects.basicObjects.WindowLabel;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 public class LineSettings extends HeaderToolSettings {
 	

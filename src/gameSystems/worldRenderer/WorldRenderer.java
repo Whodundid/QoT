@@ -7,8 +7,8 @@ import envisionEngine.input.Keyboard;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import main.Game;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

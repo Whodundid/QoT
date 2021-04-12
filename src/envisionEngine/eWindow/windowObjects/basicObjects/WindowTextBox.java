@@ -2,13 +2,13 @@ package envisionEngine.eWindow.windowObjects.basicObjects;
 
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
+import eutil.EUtil;
 import gameSystems.fontRenderer.EStringBuilder;
 import gameSystems.fontRenderer.FontRenderer;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 public class WindowTextBox<E> extends WindowObject<E> {
 	

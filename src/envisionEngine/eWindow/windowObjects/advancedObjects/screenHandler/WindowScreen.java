@@ -1,9 +1,9 @@
 package envisionEngine.eWindow.windowObjects.advancedObjects.screenHandler;
 
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.EUtil;
-import util.mathUtil.NumUtil;
-import util.storageUtil.EArrayList;
+import eutil.EUtil;
+import mathUtil.NumberUtil;
+import storageUtil.EArrayList;
 
 public class WindowScreen<E> {
 	
@@ -27,9 +27,9 @@ public class WindowScreen<E> {
 	public void onUnloaded() {}
 	public void onStageChanged() {}
 	
-	public void setCurrentStage(int num) { curStage = NumUtil.clamp(num, 0, numStages); }
-	public void nextStage() { curStage = NumUtil.clamp(curStage + 1, 0, numStages); }
-	public void prevStage() { curStage = NumUtil.clamp(curStage - 1, 0, numStages); }
+	public void setCurrentStage(int num) { curStage = NumberUtil.clamp(num, 0, numStages); }
+	public void nextStage() { curStage = NumberUtil.clamp(curStage + 1, 0, numStages); }
+	public void prevStage() { curStage = NumberUtil.clamp(curStage - 1, 0, numStages); }
 	
 	public void showScreen() { objects.forEach(o -> EUtil.nullDo(o, i -> i.setVisible(true))); }
 	public void hideScreen() { objects.forEach(o -> EUtil.nullDo(o, i -> i.setVisible(false))); }

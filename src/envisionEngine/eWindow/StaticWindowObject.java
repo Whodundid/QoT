@@ -14,15 +14,15 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventKeyboard;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventModify;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventObjects;
+import eutil.EUtil;
 import main.Game;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.renderUtil.WindowSize;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
+import tempUtil.WindowSize;
 
 //Author: Hunter Bragg
 
@@ -308,7 +308,7 @@ public class StaticWindowObject extends EGui {
 	public static void removeObject(IWindowObject<?> parent, IWindowObject<?> obj, IWindowObject<?>... objsIn) {
 		IWindowObject<?>[] objs = EUtil.add(obj, objsIn);
 		EUtil.filterNullForEachA(o -> o.setBeingRemoved(), objs);
-		parent.getRemovingObjects().addAll(objs);
+		parent.getRemovingObjects().add(objs);
 	}
 	
 	/** Returns a list containing every single child from every object in the specified object. */

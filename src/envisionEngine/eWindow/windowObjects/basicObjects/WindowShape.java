@@ -1,7 +1,7 @@
 package envisionEngine.eWindow.windowObjects.basicObjects;
 
 import envisionEngine.eWindow.windowTypes.WindowObject;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 public abstract class WindowShape<E> extends WindowObject<E> {
 	

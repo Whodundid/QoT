@@ -7,8 +7,8 @@ import gameScreens.mapEditor.editorScreen.MapEditorScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.mapSystem.worldTiles.WorldTile;
 import main.Game;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
 
 public class EditorScreenBotHeader extends WindowObject {
 	
@@ -62,7 +62,7 @@ public class EditorScreenBotHeader extends WindowObject {
 		drawString("X:" + editor.getViewX(), incX.startX - xDist - 8, incX.midY - FontRenderer.FONT_HEIGHT / 2 + 3);
 		drawString("Y:" + editor.getViewY(), incY.startX - yDist - 8, incY.midY - FontRenderer.FONT_HEIGHT / 2 + 3);
 		
-		String zoomStr = "Zoom: " + NumUtil.roundD2(editor.getZoom()) + "x";
+		String zoomStr = "Zoom: " + NumberUtil.roundD2(editor.getZoom()) + "x";
 		double zoomX = FontRenderer.getStringWidth(zoomStr);
 		
 		drawString(zoomStr, incX.startX - xDist - 24 - zoomX, endY - FontRenderer.FONT_HEIGHT);

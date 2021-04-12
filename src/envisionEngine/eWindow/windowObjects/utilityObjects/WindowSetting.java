@@ -4,9 +4,9 @@ import envisionEngine.eWindow.windowObjects.basicObjects.WindowLabel;
 import envisionEngine.eWindow.windowTypes.ActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EDimension;
+import eutil.EUtil;
+import renderUtil.EColors;
+import storageUtil.EDimension;
 
 public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	

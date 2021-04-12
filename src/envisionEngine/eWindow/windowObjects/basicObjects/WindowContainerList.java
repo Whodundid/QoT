@@ -7,10 +7,10 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventModify;
 import java.util.Iterator;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -132,15 +132,15 @@ public class WindowContainerList<E> extends WindowContainer<E> {
 	}
 	
 	public WindowContainerList<E> removeObjectFromList(IWindowObject<?>... objsIn) {
-		containerObjsToBeRemoved.addAll(objsIn);
-		objsToBeRemoved.addAll(objsIn);
+		containerObjsToBeRemoved.add(objsIn);
+		objsToBeRemoved.add(objsIn);
 		return this;
 	}
 	
 	@Override
 	public WindowContainerList<E> removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) {
-		objsToBeRemoved.addAll(additional);
-		containerObjsToBeRemoved.addAll(additional);
+		objsToBeRemoved.add(additional);
+		containerObjsToBeRemoved.add(additional);
 		return this;
 	}
 	

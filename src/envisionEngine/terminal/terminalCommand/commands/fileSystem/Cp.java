@@ -4,8 +4,8 @@ import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.window.ETerminal;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class Cp extends FileCommand {
 	

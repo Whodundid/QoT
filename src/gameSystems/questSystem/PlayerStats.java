@@ -1,7 +1,7 @@
 package gameSystems.questSystem;
 
 import assets.entities.player.Player;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public class PlayerStats {
 	

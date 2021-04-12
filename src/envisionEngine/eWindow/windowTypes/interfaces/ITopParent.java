@@ -7,11 +7,11 @@ import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.FocusType;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import envisionEngine.input.Mouse;
 import main.Game;
-import util.renderUtil.CenterType;
-import util.renderUtil.ScreenLocation;
-import util.renderUtil.WindowSize;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
+import renderUtil.CenterType;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
+import tempUtil.WindowSize;
 
 //Author: Hunter Bragg
 

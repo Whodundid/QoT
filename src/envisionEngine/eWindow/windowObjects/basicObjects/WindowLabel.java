@@ -2,18 +2,18 @@ package envisionEngine.eWindow.windowObjects.basicObjects;
 
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
+import eutil.EUtil;
 import gameSystems.fontRenderer.EStringBuilder;
 import gameSystems.fontRenderer.FontRenderer;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
 public class WindowLabel<E> extends WindowObject<E> {
 	
 	public String displayString = "";
-	public int displayStringColor = 0xffffff;
+	public int displayStringColor = 0xffffffff;
 	protected EArrayList<String> wordWrappedLines;
 	protected double widthMax = 0;
 	protected boolean wordWrap = false;
@@ -21,8 +21,8 @@ public class WindowLabel<E> extends WindowObject<E> {
 	protected boolean shadow = true;
 	protected double gapSize = 0;
 	
-	public WindowLabel(IWindowObject parentIn, double xPos, double yPos) { this(parentIn, xPos, yPos, "", 0xffffff); }
-	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn) { this(parentIn, xPos, yPos, stringIn, 0xffffff); }
+	public WindowLabel(IWindowObject parentIn, double xPos, double yPos) { this(parentIn, xPos, yPos, "", 0xffffffff); }
+	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn) { this(parentIn, xPos, yPos, stringIn, 0xffffffff); }
 	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn, EColors colorIn) { this(parentIn, xPos, yPos, stringIn, colorIn.c()); }
 	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn, int colorIn) {
 		init(parentIn, xPos, yPos, getStringWidth(stringIn), FontRenderer.FONT_HEIGHT);

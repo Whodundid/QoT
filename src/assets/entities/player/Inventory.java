@@ -1,7 +1,7 @@
 package assets.entities.player;
 
 import assets.items.Item;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public class Inventory {
 	

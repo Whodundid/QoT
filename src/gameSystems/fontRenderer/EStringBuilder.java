@@ -1,7 +1,7 @@
 package gameSystems.fontRenderer;
 
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 /** Used to concatenate EColors and EnumChatFormating objects within Strings. */
 public class EStringBuilder {
@@ -13,7 +13,7 @@ public class EStringBuilder {
 			double lastX = (centered) ? x - getStringWidth(s) / 2 : x;
 			int i = 0;
 			String curString = "";
-			int curColor = 0xffffff;
+			int curColor = colorIn;
 			boolean hasCode = false;
 			
 			while (i < s.length()) {

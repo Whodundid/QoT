@@ -15,14 +15,14 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventKeyboard;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
 import envisionEngine.input.Keyboard;
 import envisionEngine.input.Mouse;
+import eutil.EUtil;
 import java.util.Deque;
 import main.Game;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -448,8 +448,8 @@ public class StaticTopParent extends EGui {
 			//next iterate through each of the objects found under the mouse and add them to the corresponding parents
 			for (IWindowObject<?> o : underMouse) {
 				for (int i = 0; i < sortedByParent.size(); i++) {
-					IWindowObject<?> parent = sortedByParent.getObject(i);
-					if (o.equals(parent) || parent.getAllChildren().contains(o)) { sortedByParent.getValue(i).add(o); }
+					IWindowObject<?> parent = sortedByParent.getA(i);
+					if (o.equals(parent) || parent.getAllChildren().contains(o)) { sortedByParent.getB(i).add(o); }
 				}
 			}
 			

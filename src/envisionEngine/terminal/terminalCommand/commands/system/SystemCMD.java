@@ -4,9 +4,9 @@ import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
 import java.io.File;
-import util.miscUtil.ESystemInfo;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import miscUtil.ESystemInfo;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class SystemCMD extends TerminalCommand {
 	
@@ -58,9 +58,9 @@ public class SystemCMD extends TerminalCommand {
 			termIn.writeln("\nGPU:", EColors.orange);
 			
 			try {
-				termIn.writeln("  Model: " + EColors.mc_green + ESystemInfo.getGPU_Model(), EColors.cyan);
-				termIn.writeln("  Vendor: " + EColors.mc_green + ESystemInfo.getGPU_Vendor(), EColors.cyan);
-				termIn.writeln("  Version: " + EColors.mc_green + ESystemInfo.getGPU_Version(), EColors.cyan);
+				//termIn.writeln("  Model: " + EColors.mc_green + ESystemInfo.getGPU_Model(), EColors.cyan);
+				//termIn.writeln("  Vendor: " + EColors.mc_green + ESystemInfo.getGPU_Vendor(), EColors.cyan);
+				//termIn.writeln("  Version: " + EColors.mc_green + ESystemInfo.getGPU_Version(), EColors.cyan);
 			}
 			catch (Exception e) {
 				termIn.error("Error fetching GPU values..");

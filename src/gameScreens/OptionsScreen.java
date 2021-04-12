@@ -6,22 +6,19 @@ import envisionEngine.eWindow.windowObjects.actionObjects.WindowSlider;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameSystems.screenSystem.GameScreen;
 import main.Game;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
 
 public class OptionsScreen extends GameScreen {
 	
 	WindowButton back;
 	WindowSlider volumeSlider;
 	
-	@Override
-	public void initScreen() {
-		
-	}
+	@Override public void initScreen() {}
 	
 	@Override
 	public void initObjects() {
-		double w = NumUtil.clamp(Game.getWidth() / 4, 150, 390);
+		double w = NumberUtil.clamp(Game.getWidth() / 4, 150, 390);
 		double x = midX - w / 2;
 		
 		back = new WindowButton(this, x, endY - 100, w, 40, "Back");
@@ -32,6 +29,8 @@ public class OptionsScreen extends GameScreen {
 		addObject(back, volumeSlider);
 	}
 	
+	@Override public void onScreenClosed() {}
+	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.dsteel);
@@ -41,24 +40,27 @@ public class OptionsScreen extends GameScreen {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == back) {
-			closeScreen();
-		}
+		if (object == back) { back(); }
+		if (object == volumeSlider) { volumeSlider(); }
+	}
+	
+	//---------------------------------------------
+	
+	private void back() {
+		closeScreen();
+	}
+	
+	private void volumeSlider() {
+		double val = volumeSlider.getSliderValue();
 		
-		if (object == volumeSlider) {
-			double val = volumeSlider.getSliderValue();
-			
-			Game.settings.musicVolume.set((int) val);
-			Game.saveConfig();
-			
-			if (val == 0) { Songs.stopAllMusic(); }
-			else {
-				Songs.loopIfNotPlaying(Songs.varthums);
-				Songs.getAllCurrentlyPlaying().forEach(s -> s.setVolume((float) (val * 0.0009f)));
-			}
+		Game.settings.musicVolume.set((int) val);
+		Game.saveConfig();
+		
+		if (val == 0) { Songs.stopAllMusic(); }
+		else {
+			Songs.loopIfNotPlaying(Songs.theme);
+			Songs.getAllCurrentlyPlaying().forEach(s -> s.setVolume((float) (val * 0.0009f)));
 		}
 	}
-
-	@Override public void onScreenClosed() {}
 	
 }

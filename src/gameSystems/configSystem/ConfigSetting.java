@@ -1,9 +1,9 @@
 package gameSystems.configSystem;
 
+import eutil.EUtil;
 import java.util.Collection;
-import util.EUtil;
-import util.miscUtil.EDataType;
-import util.storageUtil.EArrayList;
+import miscUtil.EDataType;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

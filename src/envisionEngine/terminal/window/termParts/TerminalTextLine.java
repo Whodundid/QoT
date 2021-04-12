@@ -6,8 +6,8 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import envisionEngine.input.Keyboard;
 import envisionEngine.terminal.window.ETerminal;
 import envisionEngine.terminal.window.TerminalRCM;
-import util.renderUtil.CenterType;
-import util.renderUtil.EColors;
+import renderUtil.CenterType;
+import renderUtil.EColors;
 
 public class TerminalTextLine extends TextAreaLine {
 

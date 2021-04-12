@@ -6,13 +6,13 @@ import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.FocusType;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.MouseType;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
 import envisionEngine.input.Mouse;
+import eutil.EUtil;
 import java.util.Iterator;
-import util.EUtil;
-import util.mathUtil.NumUtil;
-import util.openGL_Util.GLSettings;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
+import mathUtil.NumberUtil;
+import openGL_Util.GLSettings;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
 
 //Author: Hunter Bragg
 
@@ -312,7 +312,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				for (TextAreaLine<E> l : linesAfter) { addTextLine(l); }
 				
 				setSelectedLine(prev);
-				int pos = NumUtil.clamp(prev.getText().length() - text.length(), 0, prev.getText().length());
+				int pos = NumberUtil.clamp(prev.getText().length() - text.length(), 0, prev.getText().length());
 				prev.setCursorPosition(pos);
 				
 				return prev;

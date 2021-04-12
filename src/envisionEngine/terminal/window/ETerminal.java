@@ -14,14 +14,14 @@ import envisionEngine.terminal.TerminalHandler;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.termParts.TerminalTextField;
 import envisionEngine.terminal.window.termParts.TerminalTextLine;
+import eutil.EUtil;
 import java.io.File;
-import util.EUtil;
-import util.mathUtil.NumUtil;
-import util.renderUtil.CenterType;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
-import util.storageUtil.TrippleBox;
+import mathUtil.NumberUtil;
+import renderUtil.CenterType;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.TrippleBox;
 
 //Author: Hunter Bragg
 
@@ -142,7 +142,7 @@ public class ETerminal<E> extends WindowParent<E> {
 		for (TextAreaLine l : lines) {
 			TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObject(), l.getLineNumber());
 			TrippleBox<String, Object, Boolean> link = l.getLink();
-			n.setLinkText(link.o1, link.o2, link.o3);
+			n.setLinkText(link.a, link.b, link.c);
 			history.addTextLine(n);
 		}
 		
@@ -223,7 +223,7 @@ public class ETerminal<E> extends WindowParent<E> {
 				for (TextAreaLine l : lines) {
 					TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getStoredObject(), l.getLineNumber());
 					TrippleBox<String, Object, Boolean> link = l.getLink();
-					n.setLinkText(link.o1, link.o2, link.o3);
+					n.setLinkText(link.a, link.b, link.c);
 					history.addTextLine(n);
 				}
 				
@@ -284,7 +284,7 @@ public class ETerminal<E> extends WindowParent<E> {
 							boolean isSetChat = (cmd.startsWith("setchat") || cmd.startsWith("chat"));
 							
 							if (!isClear && !isSetChat) {
-								writeln("> " + cmd, 0xffffff);
+								writeln("> " + cmd, 0xffffffff);
 							}
 							
 							TerminalHandler.getInstance().executeCommand(this, cmd, false, !isSetChat);
@@ -307,7 +307,7 @@ public class ETerminal<E> extends WindowParent<E> {
 							boolean isSetChat = (cmd.startsWith("setchat") || cmd.startsWith("chat"));
 							
 							if (!isClear && !isSetChat) {
-								writeln("> " + cmd, 0xffffff);
+								writeln("> " + cmd, 0xffffffff);
 							}
 							
 							TerminalHandler.getInstance().cmdHistory.add(cmd);
@@ -542,7 +542,7 @@ public class ETerminal<E> extends WindowParent<E> {
 			
 			//determine the maximum number of autocomplete options that can fit on one line
 			for (int i = 1; i < dataIn.size() + 1; i++) {
-				textWidth += longest + getStringWidth(EUtil.repeatStr(" ", spaceAmount));
+				textWidth += longest + getStringWidth(EUtil.repeatString(" ", spaceAmount));
 				if (textWidth < width) {
 					maxData = i;
 				}
@@ -550,7 +550,7 @@ public class ETerminal<E> extends WindowParent<E> {
 			}
 			
 			//System.out.println("maxData: " + maxData);
-			maxData = NumUtil.clamp(maxData, 1, Integer.MAX_VALUE);
+			maxData = NumberUtil.clamp(maxData, 1, Integer.MAX_VALUE);
 			
 			//position each autocomplete option on one line up to the max line width
 			int amount = dataIn.size();
@@ -567,7 +567,7 @@ public class ETerminal<E> extends WindowParent<E> {
 				if (cur == maxData || amount == 1) {
 					//if (amount == 0) { line += dataIn.get(i) + ", "; cur++; }
 					try {
-						String format = EUtil.repeatStr("%-" + (longest / 4) + "s" + EUtil.repeatStr(" ", spaceAmount), cur);
+						String format = EUtil.repeatString("%-" + (longest / 4) + "s" + EUtil.repeatString(" ", spaceAmount), cur);
 						String[] args = line.split(", ");
 						line = String.format(format, (Object[]) args);
 					}
@@ -631,21 +631,21 @@ public class ETerminal<E> extends WindowParent<E> {
 		isCommand = false;
 	}
 	
-	public ETerminal writeln() { return writeln("", 0xffffff); }
-	public ETerminal writeln(Object objIn) { return writeln(objIn != null ? objIn.toString() : "null", 0xffffff); }
+	public ETerminal writeln() { return writeln("", 0xffffffff); }
+	public ETerminal writeln(Object objIn) { return writeln(objIn != null ? objIn.toString() : "null", 0xffffffff); }
 	public ETerminal writeln(Object objIn, EColors colorIn) { return writeln(objIn != null ? objIn.toString() : "null", colorIn.intVal); }
 	public ETerminal writeln(Object objIn, int colorIn) { return writeln(objIn != null ? objIn.toString() : "null", colorIn); }
-	public ETerminal writeln(String msgIn) { return writeln(msgIn, 0xffffff); }
+	public ETerminal writeln(String msgIn) { return writeln(msgIn, 0xffffffff); }
 	public ETerminal writeln(String msgIn, EColors colorIn) { return writeln(msgIn, colorIn.intVal); }
 	public ETerminal writeln(String msgIn, int colorIn) {
 		parseText(msgIn, colorIn);
 		return this;
 	}
 	
-	public ETerminal info(String msgIn) { parseText(msgIn, 0xffff00); return this; }
+	public ETerminal info(String msgIn) { parseText(msgIn, 0xffffff00); return this; }
 	public ETerminal warn(String msgIn) { parseText("Warning: " + msgIn, EColors.orange.intVal); return this; }
-	public ETerminal error(String msgIn) { parseText(msgIn, 0xff5555); return this; }
-	public ETerminal javaError(String msgIn) { parseText(msgIn, 0xff0000); return this; }
+	public ETerminal error(String msgIn) { parseText(msgIn, 0xffff5555); return this; }
+	public ETerminal javaError(String msgIn) { parseText(msgIn, 0xffff0000); return this; }
 	
 	private void parseText(String msgIn, int colorIn) {
 		String[] lines = msgIn.split("[\\r\\n]+", -1);

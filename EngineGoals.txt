@@ -1,0 +1,109 @@
+QoT Engine Goals:
+
+	1. Map Editor:
+		1.1 Hotkeys:
+			1.1.1 Select All (Ctrl + A):
+				-Selects everything in the map.
+					-This includes tiles, entities and regions.
+
+			1.1.2 Deselect Selection (Ctrl + D):
+				-Deselects any currently selected tiles, entities and regions.
+
+			1.1.3 Save Map (Ctrl + S):
+				-Saves the current map to the file system.
+
+			1.1.4 Reload Map (Ctrl + R):
+				-Reloads the current map from the file system.
+				-A warning prompt will be shown if the map currently has unsaved changes that will be lost upon reloading.
+
+			1.1.5 Undo Action (Ctrl + Z):
+				-Will undo the last action in the edit history.
+
+			1.1.6 Redo Action (Ctrl + Y):
+				-Will redo the last action in the edit history.
+
+			1.1.7 Copy Selection (Ctrl + C): 
+				-Copies the currently selected tiles, entities or regions.
+				-If copying an entity or region, their scripts WILL NOT be copied.
+
+			1.1.8 Deep Copy Selection (Ctrl + Shift + C):
+				-Copies the currently selected tiles, entities or regions.
+				-If copying an entity or region, their scripts WILL be copied.
+
+			1.1.9 Paste Clipboard (Ctrl + V):
+				-Pastes the active clipboard contents of whatever was copied or cut previously.
+			
+			1.1.10 Cut Selection (Ctrl + X):
+				-Copies the currently selected tiles, entities or regions and then deletes them from the world.
+				-If cutting an entity or region, their scripts WILL be copied.
+
+
+			---------------------------------------------------------------------------------------------------------------------------------------	
+
+
+		1.2 Tools:
+			1.2.1 Rectangle Select:
+				-Allows the ability to select a region of tiles or entities in the world by dragging a selection box across an area.
+				-The selection can be toggled to either select tiles or entities, but not both.
+				-The selection will appear as a highlited border encompassing the region that has been chosen.
+				-If the 'delete' key is pressed while a selection is active, all tiles or entities that have been selected will be
+					either set to void or removed from the world.
+				-If the 'shift' key is pressed while a selection is active as a new selection is being made using Rectangle Select
+					the new selection's contents will be added to the original selection.
+				-If the 'alt' key is pressed while a selection is active as a new selection is being made using Rectangle Select
+					the new selection's contents will be subtracted from the original selection.
+
+			1.2.2 Move Selection:
+				-This tool will allow a selected region, either created from the 1.1.1.1 Rectangle Select or the 1.1.1.3 Magic Wand tools, to
+					move a given selection to another location by holding and dragging the mosue to the new area.
+
+			1.2.3 Magic Wand:
+				-Allows the user to make a selection of tiles in the world by pressing on any tile already in the world.
+					The wand will find all touching tiles of the same type and add them to the current selection.
+				-If the 'delete' key is pressed while a selection is active, all tiles that have been selected will be set to void.
+				-If the 'shift' key is pressed while a selection is active as a new selection is being made using Rectangle Select or Magic Wand
+					the new selection's contents will be added to the original selection.
+				-If the 'alt' key is pressed while a selection is active as a new selection is being made using Rectangle Select or Magic Wand
+					the new selection's contents will be subtracted from the original selection.
+
+			1.2.4 Paint Bucket:
+				-Replaces a region of similar, touching tiles with the current tile in the hotbar.
+				-Can toggle whether or not tiles with wildcard properties will randomize their texture upon being placed.
+				-If an active selection exists in the world, the Paint Bucket will only be able to affect tiles within the selected region.
+
+			1.2.5 Brush:
+				-Effectively a pencil tool with a resizeable width.
+				-Can toggle whether or not tiles with wildcard properties will randomize their texture upon being placed.
+				-If an active selection exists in the world, the Brush will only be able to affect tiles within the selected region.
+
+			1.2.6 Pencil:
+				-Changes the tile the mouse is hovering over in the world to the current tile in the hotbar.
+				-Can toggle whether or not tiles with wildcard properties will randomize their texture upon being placed.
+				-If an active selection exists in the world, the Pencil will only be able to affect tiles within the selected region.
+
+			1.2.7 Eyedropper:
+				-Sets the current hotbar slot to the clicked tile in the world.
+				-A setting to choose whether to ignore wildcard textures can be toggled.
+					-If toggled to ignore wildcard textures, a selected tile that has wildcard properties will always return the exact tile shown in the world.
+					-If toggled to not ignore wildcard textures, a selected tile that as wildcard properties will always return the wildcard's base texture.
+
+			1.2.8 Eraser:
+				-Changes the tile the mouse is hovering over in the world to void.
+				-The radius of the area to be affected can be increased to 10 or decreased to 1.
+
+			1.2.9 Line Tool:
+				-Allows straight/diagonal tile lines to be placed in the world made from the currently selected tile in the hotbar.
+				-The width of the lines can be increased to 10 or decreased to 1.
+				-Can toggle whether or not tiles with wildcard properties will randomize their texture upon being placed.
+
+			1.2.10 Shape Tool:
+				-Allows the drawing of shapes such as Retangles, Ellipses, and Triangles in the world made from the currently selected tile in the hotbar.
+				-Shapes can either be set to be drawn hollow or be drawn filled.
+				-Can toggle whether or not tiles with wildcard properties will randomize their texture upon being placed.
+
+
+			---------------------------------------------------------------------------------------------------------------------------------------	
+
+
+		1.2 Region Placement/Editing:
+			1.2.1 

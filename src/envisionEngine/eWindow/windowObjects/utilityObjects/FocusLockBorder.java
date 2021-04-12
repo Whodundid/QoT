@@ -2,7 +2,7 @@ package envisionEngine.eWindow.windowObjects.utilityObjects;
 
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.storageUtil.EDimension;
+import storageUtil.EDimension;
 
 //Author: Hunter Bragg
 

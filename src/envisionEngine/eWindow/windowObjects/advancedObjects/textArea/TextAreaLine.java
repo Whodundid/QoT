@@ -13,11 +13,11 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
 import envisionEngine.input.Keyboard;
 import envisionEngine.input.Mouse;
+import eutil.EUtil;
 import main.Game;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.TrippleBox;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.TrippleBox;
 
 //Author: Hunter Bragg
 
@@ -305,12 +305,12 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 			}
 			else if (mX >= startX) {
 				int i = (int) (mX - startX - parentTextArea.getLineNumberOffset() + 3);
-				int cursorPos = Game.getFontRenderer().trimToWidth(text, i).length();
+				//int cursorPos = Game.getFontRenderer().trimToWidth(text, i).length();
 				
-				setCursorPosition(cursorPos);
-				selectionEnd = cursorPosition;
+				//setCursorPosition(cursorPos);
+				//selectionEnd = cursorPosition;
 				
-				if (clickStartPos == -1) { clickStartPos = cursorPos; }
+				//if (clickStartPos == -1) { clickStartPos = cursorPos; }
 			}
 			else {
 				setCursorPosition(0);

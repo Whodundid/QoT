@@ -3,8 +3,8 @@ package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.window.ETerminal;
 import java.io.File;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class MkDir extends FileCommand {
 	

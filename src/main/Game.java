@@ -26,18 +26,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.settings.MainConfigFile;
 import main.settings.QotGameSettings;
+import miscUtil.ESystemInfo;
+import miscUtil.OSType;
+import miscUtil.TracingPrintStream;
+import openGL_Util.GLSettings;
+import openGL_Util.shader.Shaders;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import util.miscUtil.OSType;
-import util.miscUtil.SysUtil;
-import util.miscUtil.TracingPrintStream;
-import util.openGL_Util.GLSettings;
-import util.openGL_Util.shader.Shaders;
-import util.renderUtil.CenterType;
-import util.renderUtil.WindowSize;
-import util.storageUtil.EDimension;
+import org.lwjgl.system.MemoryStack;
+import renderUtil.CenterType;
+import storageUtil.EDimension;
+import tempUtil.WindowSize;
 
 public class Game {
 	
@@ -71,6 +74,13 @@ public class Game {
 	/** Indicates whether the game is actively running or not. */
 	private static boolean running = false;
 	
+	// Game tick stuff
+	public long lastTime = 0l;
+	private double lag = 0.0;
+	private long lastGameUpdate = 0l;
+	private int curNumTicks = 0;
+	private final double updateInterval = 16.8;
+	
 	// Framerate stuff
 	public long startTime = 0l;
 	public long runningTime = 0l;
@@ -86,7 +96,7 @@ public class Game {
 		// This guy VV allows us to see where everything is coming from in console
 		TracingPrintStream.enableTrace();
 		TracingPrintStream.setTracePrimitives(true);
-		Game.getGame().runGame();
+		getGame().runGameLoop();
 	}
 	
 	//-----------------------------------------------
@@ -105,6 +115,8 @@ public class Game {
 		
 		mainConfig.tryLoad();
 		
+		GLFWErrorCallback.createPrint(System.err).set();
+		
 		// setup OpenGL
 		if (!GLFW.glfwInit()) {
 			System.err.println("GLFW Failed to initialize.");
@@ -115,6 +127,18 @@ public class Game {
 		height = 720;
 		
 		handle = GLFW.glfwCreateWindow(width, height, "LWJGL Program", 0, 0);
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer w = stack.mallocInt(1);
+			IntBuffer h = stack.mallocInt(1);
+			
+			GLFW.glfwGetWindowSize(handle, w, h);
+			GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+			
+			int x = (vidmode.width() - w.get(0)) / 2;
+			int y = (vidmode.height() - h.get(0)) / 2;
+			GLFW.glfwSetWindowPos(handle, x, y);
+		}
+		
 		GLFW.glfwMakeContextCurrent(handle);
 		
 		GL.createCapabilities();
@@ -132,6 +156,7 @@ public class Game {
 		worldRenderer = WorldRenderer.getInstance();
 		topRenderer = GameTopRenderer.getInstance();
 		terminalHandler = TerminalHandler.getInstance();
+		//tickManager = new TickManager();
 		
 		GLFW.glfwSetKeyCallback(handle, keyboard);
 		GLFW.glfwSetMouseButtonCallback(handle, mouse);
@@ -148,21 +173,11 @@ public class Game {
 		CursorTextures.registerTextures(textureSystem);
 		
 		terminalHandler.initCommands();
-		
-		//testing things...
-		
-		//vbo = GL15.glGenBuffers();
-		
-		//IntBuffer buff = BufferUtils.createIntBuffer(1);
-		//buff.put(0);
-		
-		//GL20.glVertexAttribPointer(0, 3, GL20.GL_FLOAT, false, 3 * Float.BYTES, buff);
-		//GL20.glEnableVertexAttribArray(0);
 	}
 	
 	private boolean setupUserDir() {
 		// determine user OS and get their home directory
-		OSType os = SysUtil.getOS();
+		OSType os = ESystemInfo.getOS();
 		String homeDir = System.getProperty("user.home");
 		
 		File dir = null;
@@ -185,54 +200,63 @@ public class Game {
 		return true;
 	}
 	
-	public void runGame() {
+	public void runGameLoop() {
 		if (!running) {
 			running = true;
+			startTime = System.currentTimeMillis();
+			lastTime = startTime;
 			
 			displayScreen(new MainMenuScreen());
 			
 			while (running && !GLFW.glfwWindowShouldClose(handle)) {
-				
 				try {
+					long current = System.currentTimeMillis();
 					runningTime = System.currentTimeMillis() - startTime;
-					runTick();
+					double elapsed = current - lastTime;
+					lastTime = current;
+					lag += elapsed;
 					
-					if (GLFW.glfwWindowShouldClose(Game.getWindowHandle())) { running = false; }
-					//if (Keyboard.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) { running = false; }
+					//update inputs
+					GLFW.glfwPollEvents();
+					if (GLFW.glfwWindowShouldClose(handle)) { running = false; }
+					
+					//synchronize game inputs to 60 ticks per second
+					while (lag >= updateInterval) {
+						runGameTick();
+						lag -= updateInterval;
+					}
+					
+					//render screen
+					onRenderTick((long) (lag / updateInterval));
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 			
-			stopGame();
+			// Dying
+			
+			textureSystem.destroyAllTextures();
+			
+			GLFW.glfwDestroyWindow(handle);
+			GLFW.glfwTerminate();
 		}
 	}
 	
-	private void runTick() {
-		//update inputs
-		GLFW.glfwPollEvents();
-		
-		if (updateCounter == Long.MAX_VALUE) { updateCounter = 0; }
-		else { updateCounter++; }
+	private void runGameTick() {
+		curNumTicks++;
 		
 		//update window title
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();
 		String mouseCoords = "(" + mX + ", " + mY + ")";
 		GLFW.glfwSetWindowTitle(Game.getWindowHandle(), "QoT      FPS: " + curFrameRate + "              " + mouseCoords);
-		
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		renderTick();
-		GLFW.glfwSwapBuffers(handle);
-		GLSettings.disableAlpha();
-		GLSettings.disableBlend();
 	}
 	
 	/** Called from the main game loop to perform all rendering operations. */
-	private void renderTick() {
-		//update framerate counter
+	private void onRenderTick(long partialTicks) {
 		updateFramerate();
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
 		worldRenderer.onRenderTick();
 		
@@ -242,24 +266,22 @@ public class Game {
 		}
 		
 		topRenderer.onRenderTick();
+		
+		GLFW.glfwSwapBuffers(handle);
+		GLSettings.disableAlpha();
+		GLSettings.disableBlend();
 	}
 	
 	public static void stopGame() {
-		if (running) {
-			running = false;
-			
-			textureSystem.destroyAllTextures();
-			
-			GLFW.glfwDestroyWindow(handle);
-			GLFW.glfwTerminate();
-		}
+		if (running) { running = false; }
 	}
 	
-	/** Simple framerate calculator. */
 	private void updateFramerate() {
 		frames++;
 		if (System.currentTimeMillis() > frameTime + 1000) {
 			curFrameRate = frames;
+			//System.out.println("TICKS: " + curNumTicks);
+			curNumTicks = 0;
 			frameTime = System.currentTimeMillis();
 			frames = 0;
 		}
@@ -457,6 +479,9 @@ public class Game {
 	public static GameScreen<?> getCurrentScreen() { return currentScreen; }
 	/** Returns this game's central terminal command handler. */
 	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
+	
+	/** Returns the game's current tickrate. */
+	public static long getTickrate() { return getGame().curFrameRate; }
 	
 	/** Returns this game's constant player object. */
 	public static Player getPlayer() { return thePlayer; }

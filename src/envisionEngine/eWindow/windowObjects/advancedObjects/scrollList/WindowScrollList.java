@@ -14,14 +14,14 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventObjects;
 import envisionEngine.input.Keyboard;
 import java.util.Iterator;
 import main.Game;
-import util.mathUtil.NumUtil;
-import util.openGL_Util.GLSettings;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import mathUtil.NumberUtil;
+import openGL_Util.GLSettings;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -265,8 +265,8 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		}
 		
 		//prevent negative values
-		double w = NumUtil.clamp((right - startX) + overShootX, 0, Integer.MAX_VALUE);
-		double h = NumUtil.clamp((down - startY) + overShootY, 0, Integer.MAX_VALUE);
+		double w = NumberUtil.clamp((right - startX) + overShootX, 0, Integer.MAX_VALUE);
+		double h = NumberUtil.clamp((down - startY) + overShootY, 0, Integer.MAX_VALUE);
 		
 		setListSize(w, h);
 		
@@ -352,17 +352,17 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	public WindowScrollList<E> removeObjectFromList(IWindowObject<?>... objsIn) {
-		listObjsToBeRemoved.addAll(objsIn);
-		objsToBeRemoved.addAll(objsIn);
+		listObjsToBeRemoved.add(objsIn);
+		objsToBeRemoved.add(objsIn);
 		return this;
 	}
 	
 	@Override
 	public WindowScrollList<E> removeObject(IWindowObject<?> obj, IWindowObject<?>... additional) {
 		objsToBeRemoved.add(obj);
-		objsToBeRemoved.addAll(additional);
+		objsToBeRemoved.add(additional);
 		listObjsToBeRemoved.add(obj);
-		listObjsToBeRemoved.addAll(additional);
+		listObjsToBeRemoved.add(additional);
 		return this;
 	}
 	

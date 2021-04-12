@@ -4,11 +4,11 @@ import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.textureSystem.GameTexture;
-import util.mathUtil.NumUtil;
-import util.openGL_Util.GLSettings;
-import util.renderUtil.EColors;
-import util.resourceUtil.ResourceUtil;
-import util.storageUtil.EArrayList;
+import mathUtil.NumberUtil;
+import openGL_Util.GLSettings;
+import renderUtil.EColors;
+import resourceUtil.ResourceUtil;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -69,11 +69,11 @@ public class WindowImageBox<E> extends WindowObject<E> {
 					//image ratio equations
 					
 					if (w <= h) {
-						h = NumUtil.clamp((w / imgW) * imgH, 0, (height - 4));
+						h = NumberUtil.clamp((w / imgW) * imgH, 0, (height - 4));
 						w = (h / imgH) * imgW;
 					}
 					else {
-						w = NumUtil.clamp((h / imgH) * imgW, 0, (width - 4));
+						w = NumberUtil.clamp((h / imgH) * imgW, 0, (width - 4));
 						h = (w / imgW) * imgH;
 					}
 					
@@ -117,7 +117,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	public void mouseScrolled(int change) {
 		super.mouseScrolled(change);
 		zoom += (change * 5);
-		zoom = NumUtil.clamp(zoom, 0, Double.MAX_VALUE);
+		zoom = NumberUtil.clamp(zoom, 0, Double.MAX_VALUE);
 	}
 	
 	@Override
@@ -156,7 +156,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	public WindowImageBox<E> setNullText(String textIn) { nullText = textIn; return this; }
 	public WindowImageBox<E> setNullTextColor(EColors colorIn) { return setNullTextColor(colorIn.intVal); }
 	public WindowImageBox<E> setNullTextColor(int colorIn) { nullTextColor = colorIn; return this; }
-	public WindowImageBox<E> setUpdateInterval(long time) { updateInterval = (long) NumUtil.clamp(time, 0, Long.MAX_VALUE); return this; }
+	public WindowImageBox<E> setUpdateInterval(long time) { updateInterval = (long) NumberUtil.clamp(time, 0, Long.MAX_VALUE); return this; }
 	public WindowImageBox<E> setDrawImage(boolean val) { drawImage = val; return this; }
 	public WindowImageBox<E> setDrawBorder(boolean val) { drawBorder = val; return this; }
 	public WindowImageBox<E> setDrawBackground(boolean val) { drawBackground = val; return this; }

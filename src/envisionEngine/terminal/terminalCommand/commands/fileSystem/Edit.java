@@ -3,10 +3,10 @@ package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 import envisionEngine.eWindow.windowObjects.windows.TextEditorWindow;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.window.ETerminal;
+import eutil.EUtil;
 import java.io.File;
-import util.EUtil;
-import util.renderUtil.CenterType;
-import util.storageUtil.EArrayList;
+import renderUtil.CenterType;
+import storageUtil.EArrayList;
 
 public class Edit extends FileCommand {
 	

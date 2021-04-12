@@ -6,8 +6,8 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventFocus;
 import envisionEngine.input.Keyboard;
 import gameSystems.fontRenderer.FontRenderer;
 import main.Game;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
 
 //Author: Hunter Bragg
 
@@ -15,11 +15,11 @@ public class WindowTextField<E> extends ActionObject<E> {
 	
 	public String text = "", textWhenEmpty = "";
 	public int maxStringLength = 32;
-	public int textWhenEmptyColor = 0xb2b2b2;
-	public int disabledColor = 7368816;
-	public int textColor = 14737632;
+	public int textWhenEmptyColor = 0xffb2b2b2;
+	public int disabledColor = EColors.dgray.intVal;
+	public int textColor = EColors.lgray.intVal;
 	public int backgroundColor = 0xff000000;
-	public int borderColor = -6250336;
+	public int borderColor = EColors.lgray.intVal;
 	protected boolean editable = true;
 	protected boolean enableBackgroundDrawing = true;
 	protected boolean alwaysDrawCursor = false;
@@ -301,7 +301,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 	public WindowTextField setCursorPosition(int posIn) {
 		cursorPosition = posIn;
 		int i = text.length();
-		cursorPosition = NumUtil.clamp(cursorPosition, 0, i);
+		cursorPosition = NumberUtil.clamp(cursorPosition, 0, i);
 		setSelectionPos(cursorPosition);
 		return this;
 	}
@@ -329,7 +329,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 			if (posIn == lineScrollOffset) { lineScrollOffset -= text.length(); }
 			if (posIn > k) { lineScrollOffset += posIn - k; } 
 			else if (posIn <= lineScrollOffset) { lineScrollOffset -= lineScrollOffset - posIn; }
-			lineScrollOffset = NumUtil.clamp(lineScrollOffset, 0, i);
+			lineScrollOffset = NumberUtil.clamp(lineScrollOffset, 0, i);
 		}
 		return this;
 	}

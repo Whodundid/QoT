@@ -1,8 +1,8 @@
 package envisionEngine.terminal.terminalCommand;
 
 import envisionEngine.terminal.window.ETerminal;
-import util.mathUtil.NumUtil;
-import util.storageUtil.EArrayList;
+import mathUtil.NumberUtil;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -61,7 +61,7 @@ public abstract class TerminalCommand {
 	}
 	
 	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, EArrayList<String> completionsIn) {
-		int limit = numArgs == -1 ? args.size() : NumUtil.clamp(args.size(), 0, numArgs);
+		int limit = numArgs == -1 ? args.size() : NumberUtil.clamp(args.size(), 0, numArgs);
 		
 		if (args.isEmpty()) {
 			termIn.buildTabCompletions(completionsIn);

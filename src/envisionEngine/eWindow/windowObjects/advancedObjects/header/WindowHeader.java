@@ -11,11 +11,11 @@ import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
 import envisionEngine.eWindow.windowUtil.EObjectGroup;
 import envisionEngine.eWindow.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import envisionEngine.input.Mouse;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 
@@ -31,7 +31,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	public String title = "";
 	public int borderColor = 0xff000000;
 	public int mainColor = 0xff2d2d2d;
-	public int titleColor = 0xb2b2b2;
+	public int titleColor = 0xffb2b2b2;
 	public int titleOffset = 0;
 	protected boolean headerMoveable = true;
 	protected boolean drawBackground = true;
@@ -97,7 +97,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		
 		//check for header grabs with maximizable windows
 		if (pressed && window != null && window.isMaximized()) {
-			double dist = NumUtil.distance(mX, mY, clickPos.getA(), clickPos.getB());
+			double dist = NumberUtil.distance(mX, mY, clickPos.getA(), clickPos.getB());
 			if (dist >= 5) {
 				headerGrabMaximize();
 			}

@@ -105,7 +105,7 @@ public class TerminalRCM extends RightClickMenu {
 	
 	private void clearHistory() {
 		TerminalHandler.cmdHistory.clear();
-		term.writeln("Terminal history cleared..", 0x55ff55);
+		term.writeln("Terminal history cleared..", 0xff55ff55);
 	}
 	
 	private void openOptions() {

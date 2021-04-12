@@ -7,9 +7,9 @@ import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
 import gameSystems.mapSystem.Region;
-import util.renderUtil.EColors;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
+import renderUtil.EColors;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
 
 public class RegionEditorMenu extends WindowParent {
 	

@@ -1,6 +1,6 @@
 package controls;
 
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public class GameControls {
 	

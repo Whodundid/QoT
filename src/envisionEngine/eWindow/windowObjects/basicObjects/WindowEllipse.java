@@ -1,8 +1,8 @@
 package envisionEngine.eWindow.windowObjects.basicObjects;
 
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.renderUtil.EColors;
-import util.storageUtil.StorageBox;
+import renderUtil.EColors;
+import storageUtil.StorageBox;
 
 public class WindowEllipse<E> extends WindowShape<E> {
 	

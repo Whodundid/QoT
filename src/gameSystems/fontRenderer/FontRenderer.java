@@ -1,15 +1,17 @@
 package gameSystems.fontRenderer;
 
 import main.Game;
-import util.openGL_Util.GLObject;
-import util.renderUtil.EColors;
-import util.storageUtil.StorageBox;
+import openGL_Util.GLObject;
+import org.lwjgl.opengl.GL11;
+import renderUtil.EColors;
+import storageUtil.StorageBox;
 
 public class FontRenderer {
 	
 	public static final double FONT_HEIGHT = 24;
 	public static GameFont defaultFont = GameFont.createFont("bin/font/font_map.txt", "bin/font/font.png");
 	public static GameFont newFont = GameFont.createFont("bin/font/control_map.txt", "bin/font/font_test_fix.png");
+	public static GameFont font8 = GameFont.createFont("bin/font/control_map.txt", "bin/font/font_8x8.png");
 	
 	private GameFont currentFont;
 	
@@ -30,6 +32,7 @@ public class FontRenderer {
 	private FontRenderer() {
 		Game.getTextureSystem().registerTexture(defaultFont.getFontTexture());
 		Game.getTextureSystem().registerTexture(newFont.getFontTexture());
+		Game.getTextureSystem().registerTexture(font8.getFontTexture());
 		currentFont = newFont;
 	}
 	
@@ -89,7 +92,10 @@ public class FontRenderer {
 	}
 	
 	private void drawChar(double posX, double posY, int tX, int tY, int color) {
-		GLObject.drawTexture(posX, posY, 16, 32, tX, tY, 16, 32, currentFont.getFontTexture());
+		GL11.glPushMatrix();
+		GL11.glScaled(1, 1, 1);
+		GLObject.drawTexture(posX, posY, 16, 32, tX, tY, 16, 31.75, currentFont.getFontTexture(), color);
+		GL11.glPopMatrix();
 	}
 	
 	public String trimToWidth(String in, int width) { return trimToWidth(in, width, true); }

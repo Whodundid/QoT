@@ -5,10 +5,10 @@ import envisionEngine.terminal.terminalCommand.IListableCommand;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
 import main.Game;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -47,9 +47,9 @@ public class Help extends TerminalCommand implements IListableCommand {
 			if (Game.getTerminalHandler().getCommandNames().contains(commandName)) {
 				TerminalCommand command = Game.getTerminalHandler().getCommand(commandName);
 				if (command.showInHelp()) {
-					termIn.writeln(command.getHelpInfo(runVisually), 0xffff00);
+					termIn.writeln(command.getHelpInfo(runVisually), 0xffffff00);
 					if (command.getUsage() != null && !command.getUsage().isEmpty()) {
-						termIn.writeln(command.getUsage(), 0xffff00);
+						termIn.writeln(command.getUsage(), 0xffffff00);
 					}
 				}
 				else { termIn.error("Unrecognized command name"); }
@@ -80,7 +80,7 @@ public class Help extends TerminalCommand implements IListableCommand {
 				
 				for (TerminalCommand command : catCommands.getB()) {
 					if (command.getAliases() == null) {
-						termIn.writeln((norm ? "    " : "  ") + command.getName(), 0xb2b2b2);
+						termIn.writeln((norm ? "    " : "  ") + command.getName(), 0xffb2b2b2);
 					}
 					else {
 						String a = EColors.mc_green + "";
@@ -89,7 +89,7 @@ public class Help extends TerminalCommand implements IListableCommand {
 							if (i == command.getAliases().size() - 1) { a += commandAlias; }
 							else { a += (commandAlias + ", "); }
 						}
-						termIn.writeln((norm ? "    " : "  ") + command.getName() + ": " + a, 0xb2b2b2);
+						termIn.writeln((norm ? "    " : "  ") + command.getName() + ": " + a, 0xffb2b2b2);
 					}
 				}
 				

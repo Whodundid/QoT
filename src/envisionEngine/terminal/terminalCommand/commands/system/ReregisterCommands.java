@@ -4,7 +4,7 @@ import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
 import main.Game;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -25,7 +25,7 @@ public class ReregisterCommands extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal conIn, EArrayList<String> args, boolean runVisually) {
-		conIn.writeln("Reregistering all commands..", 0xffaa00);
+		conIn.writeln("Reregistering all commands..", 0xffffaa00);
 		Game.getTerminalHandler().reregisterAllCommands(conIn, runVisually);
 	}
 	

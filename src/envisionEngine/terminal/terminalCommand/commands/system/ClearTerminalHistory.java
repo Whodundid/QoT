@@ -4,7 +4,7 @@ import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
 import main.Game;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -26,7 +26,7 @@ public class ClearTerminalHistory extends TerminalCommand {
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		Game.getTerminalHandler().clearHistory();
-		termIn.writeln("Terminal history cleared..", 0x55ff55);
+		termIn.writeln("Terminal history cleared..", 0xff55ff55);
 	}
 	
 }

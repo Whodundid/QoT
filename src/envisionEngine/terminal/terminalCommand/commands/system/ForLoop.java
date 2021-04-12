@@ -3,10 +3,10 @@ package envisionEngine.terminal.terminalCommand.commands.system;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
+import eutil.EUtil;
 import main.Game;
-import util.EUtil;
-import util.mathUtil.NumUtil;
-import util.storageUtil.EArrayList;
+import mathUtil.NumberUtil;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -118,9 +118,9 @@ public class ForLoop extends TerminalCommand {
 			Class second = String.class;
 			Class third = String.class;
 			
-			if (NumUtil.isInteger(firstArg, 10)) { first = Integer.class; }
-			if (NumUtil.isInteger(secondArg, 10)) { second = Integer.class; }
-			if (NumUtil.isInteger(thirdArg, 10)) { third = Integer.class; }
+			if (NumberUtil.isInteger(firstArg, 10)) { first = Integer.class; }
+			if (NumberUtil.isInteger(secondArg, 10)) { second = Integer.class; }
+			if (NumberUtil.isInteger(thirdArg, 10)) { third = Integer.class; }
 			
 			if (!first.equals(second) || !first.equals(third)) { return Exception.class; } //error and return if the parsed range types are not the same
 			else if (first == Integer.class) { return Integer.class; } //try for integer range

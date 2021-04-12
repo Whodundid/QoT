@@ -13,9 +13,9 @@ import java.io.File;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import main.Game;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EDimension;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
+import storageUtil.EDimension;
 
 public class WorldSelectScreen extends GameScreen {
 	
@@ -31,7 +31,7 @@ public class WorldSelectScreen extends GameScreen {
 	
 	@Override
 	public void initObjects() {
-		int w = NumUtil.clamp(Game.getWidth() / 4, 150, 350);
+		int w = NumberUtil.clamp(Game.getWidth() / 4, 150, 350);
 		defaultWorld = new WindowButton(this, midX - w / 2, midY - 200, w, 45, "Default Map");
 		loadWorld = new WindowButton(this, midX - w / 2, defaultWorld.endY + 5, w, 45, "Load World");
 		lastEditor = new WindowButton(this, midX - w / 2, loadWorld.endY + 5, w, 45, Game.settings.lastMap.get());

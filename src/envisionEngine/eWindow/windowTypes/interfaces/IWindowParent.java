@@ -1,9 +1,9 @@
 package envisionEngine.eWindow.windowTypes.interfaces;
 
 import java.util.Stack;
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.EArrayList;
-import util.storageUtil.EDimension;
+import renderUtil.ScreenLocation;
+import storageUtil.EArrayList;
+import storageUtil.EDimension;
 
 //Author: Hunter Bragg
 

@@ -6,9 +6,9 @@ import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import java.io.File;
 import java.nio.file.Path;
-import util.mathUtil.NumUtil;
-import util.resourceUtil.DynamicTextureHandler;
-import util.storageUtil.EArrayList;
+import mathUtil.NumberUtil;
+import resourceUtil.DynamicTextureHandler;
+import storageUtil.EArrayList;
 
 public class TextureDisplayer extends WindowParent {
 	
@@ -57,7 +57,7 @@ public class TextureDisplayer extends WindowParent {
 	public void initObjects() {
 		defaultHeader(this);
 		
-		double w = NumUtil.clamp((width - 10 - (width / 6)) / 2, 50, 100);
+		double w = NumberUtil.clamp((width - 10 - (width / 6)) / 2, 50, 100);
 		
 		imageBox = new WindowImageBox(this, startX + 5, startY + 5, width - 10, navigationDrawn ? height - 30 : height - 10);
 		previous = new WindowButton(this, midX - (width / 40) - w, imageBox.endY + 4, w, 16, "Previous");

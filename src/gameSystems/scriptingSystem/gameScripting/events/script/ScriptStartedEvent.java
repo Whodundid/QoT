@@ -1,10 +1,15 @@
 package gameSystems.scriptingSystem.gameScripting.events.script;
 
 import gameSystems.mapSystem.GameWorld;
-import gameSystems.scriptingSystem.EScript;
 import gameSystems.scriptingSystem.gameScripting.ScriptEvent;
 
 public class ScriptStartedEvent extends ScriptEvent {
+
+	protected ScriptStartedEvent(GameWorld theWorld) {
+		super(theWorld);
+	}
+	
+	/*
 	
 	private EScript script;
 	
@@ -14,5 +19,7 @@ public class ScriptStartedEvent extends ScriptEvent {
 	}
 	
 	public EScript getScript() { return script; }
+	
+	*/
 	
 }

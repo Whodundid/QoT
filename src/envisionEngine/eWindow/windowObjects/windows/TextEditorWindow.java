@@ -9,9 +9,9 @@ import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class TextEditorWindow extends WindowParent {
 	
@@ -49,7 +49,7 @@ public class TextEditorWindow extends WindowParent {
 		document.setResetDrawn(false);
 		if (!failed) { document.setDrawLineNumbers(true); }
 		
-		double w = NumUtil.clamp((width - 10 - 24) / 2, 45, 100);
+		double w = NumberUtil.clamp((width - 10 - 24) / 2, 45, 100);
 		double h = document.endY + (endY - document.endY) / 2 - 10;
 		
 		cancel = new WindowButton(this, midX - 15 - w, h, w, 20, "Cancel");

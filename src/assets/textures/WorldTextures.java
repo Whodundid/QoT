@@ -1,10 +1,10 @@
 package assets.textures;
 
 import assets.textures.world.Tex_Grass;
+import eutil.EUtil;
 import gameSystems.textureSystem.GameTexture;
 import gameSystems.textureSystem.TextureSystem;
-import util.EUtil;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public class WorldTextures {
 	

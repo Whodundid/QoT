@@ -1,7 +1,7 @@
 package envisionEngine.eWindow.windowUtil.windowEvents;
 
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

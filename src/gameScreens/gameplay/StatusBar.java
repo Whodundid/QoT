@@ -2,8 +2,8 @@ package gameScreens.gameplay;
 
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
-import util.mathUtil.NumUtil;
-import util.renderUtil.EColors;
+import mathUtil.NumberUtil;
+import renderUtil.EColors;
 
 public class StatusBar extends WindowObject {
 	
@@ -56,15 +56,15 @@ public class StatusBar extends WindowObject {
 	
 	public void decrementVal(double amount) {
 		current -= amount;
-		current = NumUtil.clamp(current, min, max);
+		current = NumberUtil.clamp(current, min, max);
 	}
 	
 	public void incrementVal(double amount) {
 		current += amount;
-		current = NumUtil.clamp(current, min, max);
+		current = NumberUtil.clamp(current, min, max);
 	}
 	
-	public StatusBar setCurrentValue(double val) { current = NumUtil.clamp(val, min, max); return this; }
+	public StatusBar setCurrentValue(double val) { current = NumberUtil.clamp(val, min, max); return this; }
 	public double getCurrentVal() { return current; }
 	
 }

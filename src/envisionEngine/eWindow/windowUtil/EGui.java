@@ -5,14 +5,14 @@ import envisionEngine.eWindow.windowUtil.input.MouseInputAcceptor;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.textureSystem.GameTexture;
 import main.Game;
-import util.mathUtil.NumUtil;
-import util.miscUtil.Rotation;
-import util.openGL_Util.GLObject;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
-import util.renderUtil.WindowSize;
-import util.storageUtil.EDimension;
-import util.storageUtil.StorageBox;
+import mathUtil.NumberUtil;
+import miscUtil.Rotation;
+import openGL_Util.GLObject;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
+import storageUtil.EDimension;
+import storageUtil.StorageBox;
+import tempUtil.WindowSize;
 
 //Author: Hunter Bragg
 
@@ -78,8 +78,8 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public EGui setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
 		startX = startXIn;
 		startY = startYIn;
-		width = NumUtil.clamp(widthIn, minWidth, maxWidth);
-		height = NumUtil.clamp(heightIn, minHeight, maxHeight);
+		width = NumberUtil.clamp(widthIn, minWidth, maxWidth);
+		height = NumberUtil.clamp(heightIn, minHeight, maxHeight);
 		endX = startX + width;
 		endY = startY + height;
 		midX = startX + width / 2.0;

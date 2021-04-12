@@ -3,7 +3,7 @@ package gameSystems.worldRenderer;
 import envisionEngine.eWindow.windowObjects.windows.RightClickMenu;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

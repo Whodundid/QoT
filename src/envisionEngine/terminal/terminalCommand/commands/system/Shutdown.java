@@ -4,7 +4,7 @@ import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.ConfirmationCommand;
 import envisionEngine.terminal.window.ETerminal;
 import main.Game;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public class Shutdown extends ConfirmationCommand {
 	

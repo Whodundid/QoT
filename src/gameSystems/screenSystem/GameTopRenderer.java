@@ -7,8 +7,8 @@ import envisionEngine.input.Keyboard;
 import envisionEngine.input.Mouse;
 import envisionEngine.terminal.window.ETerminal;
 import main.Game;
-import util.openGL_Util.GLSettings;
-import util.storageUtil.EDimension;
+import openGL_Util.GLSettings;
+import storageUtil.EDimension;
 
 /** The renderer that is overlaid onto every other one. (Need a better name). */
 public class GameTopRenderer<E> extends TopWindowParent<E> {
@@ -27,6 +27,7 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 	
 	public void onRenderTick() {
 		updateBeforeNextDraw(Mouse.getMx(), Mouse.getMy());
+		if (getObjects().isEmpty()) { hasFocus = false; }
 		
 		//prime renderer
 		GLSettings.pushMatrix();
@@ -104,7 +105,11 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 					displayWindow(new ETerminal());
 					setFocused(true);
 				}
-				else if (!hasFocus()) { setFocused(true); }
+				else if (!hasFocus()) {
+					setFocused(true);
+					ETerminal term = (ETerminal) getWindowInstance(ETerminal.class);
+					if (term != null) { term.requestFocus(); }
+				}
 			}
 			else {
 				ETerminal term = (ETerminal) getWindowInstance(ETerminal.class);

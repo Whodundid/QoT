@@ -1,7 +1,7 @@
 package envisionEngine.eWindow.windowTypes.interfaces;
 
-import util.renderUtil.ScreenLocation;
-import util.storageUtil.StorageBox;
+import renderUtil.ScreenLocation;
+import storageUtil.StorageBox;
 
 //Author: Hunter Bragg
 

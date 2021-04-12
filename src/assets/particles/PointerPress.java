@@ -2,7 +2,7 @@ package assets.particles;
 
 import envisionEngine.eWindow.windowTypes.WindowObject;
 import main.Game;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 public class PointerPress extends WindowObject {
 	

@@ -4,9 +4,9 @@ import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
-import util.EUtil;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import eutil.EUtil;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class MinimizeWindow extends TerminalCommand {
 	

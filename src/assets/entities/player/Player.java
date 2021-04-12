@@ -6,7 +6,7 @@ import assets.items.Weapon;
 import assets.textures.EntityTextures;
 import gameSystems.questSystem.PathFinder;
 import gameSystems.questSystem.PlayerStats;
-import util.mathUtil.NumUtil;
+import randomUtil.RandomUtil;
 
 public class Player extends Entity {
 	
@@ -65,7 +65,7 @@ public class Player extends Entity {
 	public double getTrueDamage() { return damage; }
 	
 	public double getDamage() {
-		double damage = NumUtil.getRoll(0, 3);
+		double damage = RandomUtil.getRoll(0, 3);
 		return (damage == 0) ? 0 : (damage + weaponDamage);
 	}
 	

@@ -11,8 +11,8 @@ import envisionEngine.eWindow.windowUtil.windowEvents.events.EventMouse;
 import gameScreens.mapEditor.editorScreen.util.EditorItem;
 import gameScreens.mapEditor.editorScreen.util.EditorItemCategory;
 import main.Game;
-import util.renderUtil.EColors;
-import util.storageUtil.EArrayList;
+import renderUtil.EColors;
+import storageUtil.EArrayList;
 
 public class EditorSelectionList extends WindowParent {
 	

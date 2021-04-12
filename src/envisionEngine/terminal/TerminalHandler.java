@@ -2,18 +2,52 @@ package envisionEngine.terminal;
 
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
-import envisionEngine.terminal.terminalCommand.commands.fileSystem.*;
-import envisionEngine.terminal.terminalCommand.commands.system.*;
-import envisionEngine.terminal.terminalCommand.commands.windows.*;
-import envisionEngine.terminal.terminalCommand.commands.game.*;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Cat;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Cd;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Cp;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Edit;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Head;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Ls;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Lsblk;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.MkDir;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Mv;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Open;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Pwd;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Rm;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.RmDir;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.Tail;
+import envisionEngine.terminal.terminalCommand.commands.game.LoadWorld;
+import envisionEngine.terminal.terminalCommand.commands.game.NoClip;
+import envisionEngine.terminal.terminalCommand.commands.game.UnloadWorld;
+import envisionEngine.terminal.terminalCommand.commands.system.CalcCommand;
+import envisionEngine.terminal.terminalCommand.commands.system.ClearObjects;
+import envisionEngine.terminal.terminalCommand.commands.system.ClearTerminal;
+import envisionEngine.terminal.terminalCommand.commands.system.ClearTerminalHistory;
+import envisionEngine.terminal.terminalCommand.commands.system.DebugControl;
+import envisionEngine.terminal.terminalCommand.commands.system.ForLoop;
+import envisionEngine.terminal.terminalCommand.commands.system.Help;
+import envisionEngine.terminal.terminalCommand.commands.system.ID_CMD;
+import envisionEngine.terminal.terminalCommand.commands.system.ListCMD;
+import envisionEngine.terminal.terminalCommand.commands.system.OpenWindow;
+import envisionEngine.terminal.terminalCommand.commands.system.ReregisterCommands;
+import envisionEngine.terminal.terminalCommand.commands.system.RuntimeCMD;
+import envisionEngine.terminal.terminalCommand.commands.system.Shutdown;
+import envisionEngine.terminal.terminalCommand.commands.system.SystemCMD;
+import envisionEngine.terminal.terminalCommand.commands.system.Version;
+import envisionEngine.terminal.terminalCommand.commands.system.WhoAmI;
+import envisionEngine.terminal.terminalCommand.commands.windows.Close;
+import envisionEngine.terminal.terminalCommand.commands.windows.MinimizeWindow;
+import envisionEngine.terminal.terminalCommand.commands.windows.PinWindow;
+import envisionEngine.terminal.terminalCommand.commands.windows.ShowWindow;
+import envisionEngine.terminal.terminalCommand.commands.windows.ToFrontWindow;
 import envisionEngine.terminal.window.ETerminal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import util.storageUtil.EArrayList;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import storageUtil.EArrayList;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -87,17 +121,19 @@ public class TerminalHandler {
 		
 		//game
 		registerCommand(new NoClip(), termIn, runVisually);
+		registerCommand(new LoadWorld(), termIn, runVisually);
+		registerCommand(new UnloadWorld(), termIn, runVisually);
 	}
 	
 	public void registerCommand(TerminalCommand command, boolean runVisually) { registerCommand(command, null, runVisually); }
 	public void registerCommand(TerminalCommand command, ETerminal termIn, boolean runVisually) {
 		commandList.add(command);
 		commands.put(command.getName(), command);
-		if (termIn != null & runVisually) { termIn.writeln("Registering command call: " + command.getName(), 0xffff00); }
+		if (termIn != null & runVisually) { termIn.writeln("Registering command call: " + command.getName(), 0xffffff00); }
 		if (command.getAliases() != null) {
 			for (int i = 0; i < command.getAliases().size(); i++) {
 				commands.put(command.getAliases().get(i), command);
-				if (termIn != null & runVisually) { termIn.writeln("Registering command alias: " + command.getAliases().get(i), 0x55ff55); }
+				if (termIn != null & runVisually) { termIn.writeln("Registering command alias: " + command.getAliases().get(i), 0xff55ff55); }
 			}
 		}
 	}
@@ -154,7 +190,7 @@ public class TerminalHandler {
 				return;
 			}
 		}
-		termIn.writeln("Unrecognized command." + (!termIn.isChatTerminal() ? "\n" : ""), 0xff5555);
+		termIn.writeln("Unrecognized command." + (!termIn.isChatTerminal() ? "\n" : ""), 0xffff5555);
 	}
 	
 	public synchronized void reregisterAllCommands(boolean runVisually) { reregisterAllCommands(null, runVisually); }
@@ -162,14 +198,14 @@ public class TerminalHandler {
 		Iterator<TerminalCommand> a = commandList.iterator();
 		while (a.hasNext()) {
 			String commandName = a.next().getName();
-			if (termIn != null && runVisually) { termIn.writeln("Unregistering command: " + commandName, 0xb2b2b2); }
+			if (termIn != null && runVisually) { termIn.writeln("Unregistering command: " + commandName, 0xffb2b2b2); }
 			a.remove();
 		}
 		
 		Iterator<StorageBox<String, TerminalCommand>> b = commands.iterator();
 		while (b.hasNext()) {
 			String commandName = b.next().getA();
-			if (termIn != null && runVisually) { termIn.writeln("Unregistering command alias: " + commandName, 0xb2b2b2); }
+			if (termIn != null && runVisually) { termIn.writeln("Unregistering command alias: " + commandName, 0xffb2b2b2); }
 			b.remove();
 		}
 		

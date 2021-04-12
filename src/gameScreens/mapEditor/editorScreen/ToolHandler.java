@@ -4,8 +4,8 @@ import gameScreens.mapEditor.editorScreen.tileTools.EditorTool;
 import gameScreens.mapEditor.editorScreen.util.EditorItem;
 import gameSystems.mapSystem.GameWorld;
 import gameSystems.mapSystem.worldTiles.WorldTile;
-import util.storageUtil.StorageBox;
-import util.storageUtil.StorageBoxHolder;
+import storageUtil.StorageBox;
+import storageUtil.StorageBoxHolder;
 
 public class ToolHandler {
 

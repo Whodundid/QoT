@@ -5,8 +5,8 @@ import envisionEngine.eWindow.windowTypes.ActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import envisionEngine.eWindow.windowTypes.interfaces.IUseScreenLocation;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
 
 //Author: Hunter Bragg
 

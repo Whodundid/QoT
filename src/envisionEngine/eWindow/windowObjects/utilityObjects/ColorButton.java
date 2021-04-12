@@ -2,7 +2,7 @@ package envisionEngine.eWindow.windowObjects.utilityObjects;
 
 import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
 import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import util.renderUtil.EColors;
+import renderUtil.EColors;
 
 public class ColorButton<E> extends WindowButton<E> {
 	

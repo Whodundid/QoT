@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import main.Game;
-import util.mathUtil.NumUtil;
-import util.storageUtil.EArrayList;
+import mathUtil.NumberUtil;
+import storageUtil.EArrayList;
 
 public class GameWorld {
 	
@@ -103,10 +103,10 @@ public class GameWorld {
 	public synchronized WorldTile[][] getTilesAroundPoint(int xIn, int yIn) { return getTilesAroundPoint(xIn, yIn, DEFAULT_RANGE); }
 	public synchronized WorldTile[][] getTilesAroundPoint(int xIn, int yIn, int range) { return getTilesAroundPoint(xIn, yIn, range, range); }
 	public synchronized WorldTile[][] getTilesAroundPoint(int xIn, int yIn, int rangeX, int rangeY) {
-		int left = NumUtil.clamp(xIn - rangeX, 0, width - 1);
-		int top = NumUtil.clamp(yIn - rangeY, 0, height - 1);
-		int right = NumUtil.clamp(xIn + rangeX, left, width - 1);
-		int bot = NumUtil.clamp(yIn + rangeY, top, height - 1);
+		int left = NumberUtil.clamp(xIn - rangeX, 0, width - 1);
+		int top = NumberUtil.clamp(yIn - rangeY, 0, height - 1);
+		int right = NumberUtil.clamp(xIn + rangeX, left, width - 1);
+		int bot = NumberUtil.clamp(yIn + rangeY, top, height - 1);
 		int w = right - left;
 		int h = bot - top;
 		
@@ -344,6 +344,6 @@ public class GameWorld {
 	}
 	
 	public GameWorld setLoaded(boolean val) { loaded = val; return this; }
-	public GameWorld setZoom(double val) { zoom = val; zoom = NumUtil.clamp(zoom, 0.15, 5); return this; }
+	public GameWorld setZoom(double val) { zoom = val; zoom = NumberUtil.clamp(zoom, 0.15, 5); return this; }
 	
 }

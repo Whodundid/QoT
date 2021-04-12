@@ -3,9 +3,9 @@ package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 import envisionEngine.terminal.terminalCommand.CommandType;
 import envisionEngine.terminal.terminalCommand.TerminalCommand;
 import envisionEngine.terminal.window.ETerminal;
+import eutil.EUtil;
 import java.io.File;
-import util.EUtil;
-import util.storageUtil.EArrayList;
+import storageUtil.EArrayList;
 
 public abstract class FileCommand extends TerminalCommand {
 

@@ -6,8 +6,8 @@ import envisionEngine.eWindow.windowObjects.advancedObjects.scrollList.WindowScr
 import envisionEngine.eWindow.windowObjects.basicObjects.WindowLabel;
 import envisionEngine.eWindow.windowTypes.WindowParent;
 import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
-import util.renderUtil.EColors;
-import util.renderUtil.ScreenLocation;
+import renderUtil.EColors;
+import renderUtil.ScreenLocation;
 
 public class TerminalOptionsWindow extends WindowParent {
 
