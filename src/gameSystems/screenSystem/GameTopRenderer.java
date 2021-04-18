@@ -1,14 +1,14 @@
 package gameSystems.screenSystem;
 
-import envisionEngine.eWindow.windowTypes.TopWindowParent;
-import envisionEngine.eWindow.windowTypes.WindowParent;
-import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
-import envisionEngine.input.Keyboard;
-import envisionEngine.input.Mouse;
-import envisionEngine.terminal.window.ETerminal;
+import input.Keyboard;
+import input.Mouse;
 import main.Game;
 import openGL_Util.GLSettings;
 import storageUtil.EDimension;
+import terminal.window.ETerminal;
+import windowLib.windowTypes.TopWindowParent;
+import windowLib.windowTypes.WindowParent;
+import windowLib.windowTypes.interfaces.IWindowObject;
 
 /** The renderer that is overlaid onto every other one. (Need a better name). */
 public class GameTopRenderer<E> extends TopWindowParent<E> {
@@ -135,6 +135,7 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 	
 	public void clear() { removeAllObjects(); }
 	
+	@Override
 	public boolean hasFocus() { return hasFocus; }
 	
 	public void setFocused(boolean val) {

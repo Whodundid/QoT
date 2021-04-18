@@ -1,7 +1,7 @@
 package gameSystems.mapSystem;
 
 import assets.entities.Entity;
-import gameSystems.mapSystem.worldTiles.WorldTile;
+import assets.worldTiles.WorldTile;
 import gameSystems.textureSystem.GameTexture;
 import java.io.File;
 import java.io.PrintWriter;
@@ -344,6 +344,6 @@ public class GameWorld {
 	}
 	
 	public GameWorld setLoaded(boolean val) { loaded = val; return this; }
-	public GameWorld setZoom(double val) { zoom = val; zoom = NumberUtil.clamp(zoom, 0.15, 5); return this; }
+	public GameWorld setZoom(double val) { zoom = val; zoom = NumberUtil.clamp(zoom, 0.25, 5); return this; }
 	
 }

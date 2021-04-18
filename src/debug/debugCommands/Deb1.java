@@ -1,9 +1,9 @@
 package debug.debugCommands;
 
-import envisionEngine.terminal.window.ETerminal;
 import gameScreens.MainMenuScreen;
 import gameScreens.TestScreen;
 import main.Game;
+import terminal.window.ETerminal;
 
 @SuppressWarnings("unused")
 public class Deb1 extends DebugCommand {

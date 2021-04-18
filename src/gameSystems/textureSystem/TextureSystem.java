@@ -35,7 +35,7 @@ public class TextureSystem {
 	//---------------------
 
 	/** Attempts to register a texture into OpenGL. Upon passing, the texture will have it's associated file properties loaded. */
-	public void registerTexture(GameTexture textureIn) {
+	public GameTexture registerTexture(GameTexture textureIn) {
 		if (textureIn != null) {
 			
 			// only register textures that aren't already registered!
@@ -48,15 +48,15 @@ public class TextureSystem {
 			
 			if (textureIn.getTextureID() > 0) {
 				//System.out.println("Registered Texture: " + textureIn.getTextureID() + " : " + textureIn.getFilePath());
+				//now register child textures (if there are any)
+				textureIn.registerChildTextures(this);
 			}
 			else {
 				System.out.println("Failed to register texture: " + textureIn.getFilePath());
 			}
-			
-			//now register child textures (if there are any)
-			textureIn.registerChildTextures(this);
-			
 		}
+		
+		return textureIn;
 	}
 
 	/** Attempts to delete a registered texture from OpenGL. */

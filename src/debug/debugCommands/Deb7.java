@@ -1,6 +1,6 @@
 package debug.debugCommands;
 
-import envisionEngine.terminal.window.ETerminal;
+import terminal.window.ETerminal;
 
 @SuppressWarnings("unused")
 public class Deb7 extends DebugCommand {

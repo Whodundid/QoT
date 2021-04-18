@@ -1,8 +1,8 @@
 package assets.particles;
 
-import envisionEngine.eWindow.windowTypes.WindowObject;
 import main.Game;
 import renderUtil.EColors;
+import windowLib.windowTypes.WindowObject;
 
 public class DamageSplash extends WindowObject {
 	

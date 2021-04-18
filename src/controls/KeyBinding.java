@@ -2,7 +2,7 @@ package controls;
 
 import controls.util.KeyCategory;
 import controls.util.KeyCombo;
-import envisionEngine.input.Keyboard;
+import input.Keyboard;
 
 public class KeyBinding {
 	

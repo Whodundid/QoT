@@ -1,9 +1,9 @@
 package gameSystems.worldRenderer;
 
-import envisionEngine.eWindow.windowObjects.windows.RightClickMenu;
-import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
-import envisionEngine.eWindow.windowTypes.interfaces.IWindowObject;
 import storageUtil.EArrayList;
+import windowLib.windowObjects.windows.RightClickMenu;
+import windowLib.windowTypes.interfaces.IActionObject;
+import windowLib.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg
 
@@ -24,7 +24,7 @@ public class RendererRCM extends RightClickMenu {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == this) {
-			switch ((String) getStoredObject()) {
+			switch ((String) getGenericObject()) {
 			case "New Terminal": openTerminal(); break;
 			case "New Window": openGui(); break;
 			case "Close All Objects": clearScreen(); break;

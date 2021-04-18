@@ -1,9 +1,9 @@
 package gameScreens.gameplay;
 
-import envisionEngine.eWindow.windowTypes.WindowObject;
-import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import mathUtil.NumberUtil;
 import renderUtil.EColors;
+import windowLib.windowTypes.WindowObject;
+import windowLib.windowTypes.interfaces.IActionObject;
 
 public class StatusBar extends WindowObject {
 	
@@ -43,8 +43,6 @@ public class StatusBar extends WindowObject {
 		double pw = w * percent;
 		double ex = x + pw;
 		drawRect(x, y, ex, endY - 5, color);
-		
-		
 		
 		super.drawObject(mXIn, mYIn);
 	}

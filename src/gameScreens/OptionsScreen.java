@@ -1,13 +1,13 @@
 package gameScreens;
 
 import assets.sounds.Songs;
-import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
-import envisionEngine.eWindow.windowObjects.actionObjects.WindowSlider;
-import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameSystems.screenSystem.GameScreen;
 import main.Game;
 import mathUtil.NumberUtil;
 import renderUtil.EColors;
+import windowLib.windowObjects.actionObjects.WindowButton;
+import windowLib.windowObjects.actionObjects.WindowSlider;
+import windowLib.windowTypes.interfaces.IActionObject;
 
 public class OptionsScreen extends GameScreen {
 	

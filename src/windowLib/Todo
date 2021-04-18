@@ -1,0 +1,6 @@
+todo:
+
+1. Investigate the possibility of making calls to StaticTopParent::getHighestZObjectUnderMouse
+   only be called when an input has changed -- ie: a mouse press, the mouse moved, etc.
+   
+2. Fix cursor handler.

@@ -1,9 +1,9 @@
 package gameScreens;
 
-import envisionEngine.eWindow.windowObjects.actionObjects.WindowButton;
-import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
 import gameSystems.screenSystem.GameScreen;
 import renderUtil.EColors;
+import windowLib.windowObjects.actionObjects.WindowButton;
+import windowLib.windowTypes.interfaces.IActionObject;
 
 public class TestScreen extends GameScreen {
 	

@@ -1,12 +1,12 @@
 package debug.debugCommands;
 
-import envisionEngine.terminal.window.ETerminal;
+import assets.worldTiles.WorldTile;
 import gameSystems.mapSystem.GameWorld;
-import gameSystems.mapSystem.worldTiles.WorldTile;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import main.Game;
 import tempUtil.FloodFill;
+import terminal.window.ETerminal;
 
 @SuppressWarnings("unused")
 public class Deb0 extends DebugCommand {

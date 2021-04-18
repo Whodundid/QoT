@@ -1,18 +1,21 @@
 package gameScreens.gameplay;
 
 import assets.sounds.Songs;
-import envisionEngine.eWindow.windowObjects.basicObjects.WindowRect;
-import envisionEngine.eWindow.windowTypes.interfaces.IActionObject;
-import gameScreens.GameOverScreen;
 import gameScreens.MainMenuScreen;
+import gameSystems.mapSystem.GameWorld;
 import gameSystems.screenSystem.GameScreen;
+import input.Keyboard;
 import main.Game;
+import mathUtil.NumberUtil;
 import renderUtil.EColors;
+import windowLib.windowObjects.basicObjects.WindowRect;
+import windowLib.windowTypes.interfaces.IActionObject;
 
 //rabbit fish
 
 public class GamePlayScreen extends GameScreen {
 	
+	GameWorld world;
 	WindowRect topHud;
 	WindowRect botHud; //don't know if actually want this one
 	StatusBar health, mana;
@@ -20,6 +23,7 @@ public class GamePlayScreen extends GameScreen {
 	public GamePlayScreen() {
 		super();
 		screenHistory.push(new MainMenuScreen());
+		world = Game.getWorld();
 	}
 	
 	@Override
@@ -48,14 +52,20 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
-		if (Game.getPlayer().isDead()) {
-			Game.displayScreen(new GameOverScreen());
-		}
+		
 	}
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		super.keyPressed(typedChar, keyCode);
+	}
+	
+	@Override
+	public void mouseScrolled(int change) {
+		if (Keyboard.isCtrlDown()) {
+			world.setZoom(world.getZoom() + NumberUtil.round(Math.signum(change) * 0.25, 2));
+			world.setZoom(NumberUtil.clamp(world.getZoom(), 0.25, 5));
+		}
 	}
 	
 	@Override

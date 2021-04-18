@@ -1,10 +1,10 @@
 package gameSystems.screenSystem;
 
-import envisionEngine.eWindow.windowTypes.TopWindowParent;
-import envisionEngine.eWindow.windowTypes.interfaces.ITopParent;
-import envisionEngine.input.Keyboard;
+import input.Keyboard;
 import java.util.Stack;
 import main.Game;
+import windowLib.windowTypes.TopWindowParent;
+import windowLib.windowTypes.interfaces.ITopParent;
 
 public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopParent<E> {
 	

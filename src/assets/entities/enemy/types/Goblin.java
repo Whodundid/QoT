@@ -15,6 +15,8 @@ public class Goblin extends Enemy {
 		super("Goblin", 1, 20, 20, 0, 0, 2, 0);
 		init(posX, posY, 64, 64);
 		sprite = EntityTextures.goblin;
+		
+		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 	}
 	
 	// This gets the loot and returns it

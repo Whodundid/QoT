@@ -1,8 +1,8 @@
 package assets.entities;
 
 import assets.entities.player.Player;
+import assets.worldTiles.WorldTile;
 import gameSystems.mapSystem.GameWorld;
-import gameSystems.mapSystem.worldTiles.WorldTile;
 import gameSystems.textureSystem.GameTexture;
 import mathUtil.NumberUtil;
 import miscUtil.Direction;

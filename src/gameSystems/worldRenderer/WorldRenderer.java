@@ -1,14 +1,21 @@
 package gameSystems.worldRenderer;
 
 import assets.entities.Entity;
+import assets.entities.enemy.types.Goblin;
+import assets.entities.enemy.types.Thyrah;
+import assets.entities.enemy.types.TrollBoar;
+import assets.entities.enemy.types.Whodundid;
 import assets.entities.player.Player;
-import envisionEngine.eWindow.windowUtil.EGui;
-import envisionEngine.input.Keyboard;
+import assets.worldTiles.WorldTile;
+import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.mapSystem.GameWorld;
-import gameSystems.mapSystem.worldTiles.WorldTile;
+import input.Keyboard;
+import java.util.Comparator;
 import main.Game;
+import randomUtil.RandomUtil;
 import renderUtil.EColors;
 import storageUtil.EArrayList;
+import windowLib.windowUtil.EGui;
 
 //Author: Hunter Bragg
 
@@ -39,7 +46,6 @@ public class WorldRenderer extends EGui {
 	
 	public void onRenderTick() {
 		if (world != null && world.isFileLoaded()) { renderWorld(); }
-		//drawObject(Mouse.getMx(), Mouse.getMy());
 	}
 	
 	private void renderWorld() {
@@ -55,11 +61,11 @@ public class WorldRenderer extends EGui {
 			x = (int) (midX - (distX * w) - (w / 2));
 			y = (int) (midY - (distY * h) - (h / 2));
 			
-			//scissor(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h));
+			scissor(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h));
 			renderMap();
 			renderEntities();
 			if (drawPosBox) { drawPosBox(); }
-			drawViewBox();
+			//drawViewBox();
 			
 			/*
 			mouseInMap = checkMousePos(x, y, w, h, mX, mY);
@@ -68,10 +74,9 @@ public class WorldRenderer extends EGui {
 			}
 			*/
 			
-			//endScissor();
+			endScissor();
 		}
 		
-		/*
 		if (world != null) {
 			int tW = (int) (FontRenderer.getInstance().getStringWidth(world.getName()) / 2);
 			drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
@@ -80,7 +85,6 @@ public class WorldRenderer extends EGui {
 			
 			drawString("Dims: " + world.getWidth() + " " + world.getHeight(), startX + 10, endY + 60);
 		}
-		*/
 		
 		//drawString("Dist: " + distX + " " + distY, reload.startX + 10, reload.endY + 20);
 		//drawString("Zoom: " + NumUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
@@ -145,11 +149,12 @@ public class WorldRenderer extends EGui {
 		int dsY = y;
 		int deX = x + w + (distX * 2 * w);
 		int deY = y + h + (distY * 2 * h);
-		drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
+		//drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
 	}
 	
 	private void renderEntities() {
 		EArrayList<Entity> entities = world.getEntitiesInWorld();
+		entities.sort(Comparator.comparingInt(e -> e.startY));
 		
 		for (Entity e : entities) {
 			e.onLivingUpdate();
@@ -183,7 +188,7 @@ public class WorldRenderer extends EGui {
 					double colEX = colSX + e.getCollision().width;
 					double colEY = colSY + e.getCollision().height;
 					
-					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
+					//drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
 				}
 				
 				if (drawEntityOutlines) {
@@ -200,6 +205,29 @@ public class WorldRenderer extends EGui {
 	
 	public WorldRenderer setWorld(GameWorld worldIn) {
 		world = worldIn;
+		
+		if (world != null) {
+			distX = world.getWidth();
+			distY = world.getHeight();
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			Entity e = null;
+			switch (RandomUtil.getRoll(0, 3)) {
+			case 0: e = new Goblin(); break;
+			case 1: e = new Thyrah(); break;
+			case 2: e = new TrollBoar(); break;
+			case 3: e = new Whodundid(); break;
+			}
+			
+			if (e != null) {
+				world.addEntity(e);
+				int x = RandomUtil.getRoll(0, world.getWidth());
+				int y = RandomUtil.getRoll(0, world.getHeight());
+				e.setWorldPos(x, y);
+			}
+		}
+		
 		onWindowResized();
 		return this;
 	}

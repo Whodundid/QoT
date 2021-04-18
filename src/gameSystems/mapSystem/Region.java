@@ -74,6 +74,10 @@ public class Region {
 	public boolean onlyRenderInEditor() { return onlyRenderInEditor; }
 	public Region setOnlyRenderInEditor(boolean val) { onlyRenderInEditor = val; return this; }
 	
+	public Region setName(String nameIn) { name = nameIn; return this; }
+	public Region setColor(EColors colorIn) { return setColor(colorIn.intVal); }
+	public Region setColor(int colorIn) { regionColor = colorIn; return this; }
+	
 	public static Region parseRegion(GameWorld world, String line) {
 		try {
 			String[] parts = line.split(" ");

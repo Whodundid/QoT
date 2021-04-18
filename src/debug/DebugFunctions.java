@@ -11,9 +11,9 @@ import debug.debugCommands.Deb7;
 import debug.debugCommands.Deb8;
 import debug.debugCommands.Deb9;
 import debug.debugCommands.DebugCommand;
-import envisionEngine.terminal.window.ETerminal;
 import eutil.EUtil;
 import storageUtil.EArrayList;
+import terminal.window.ETerminal;
 
 //Author: Hunter Bragg
 

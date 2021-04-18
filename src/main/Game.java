@@ -6,12 +6,6 @@ import assets.textures.EditorTextures;
 import assets.textures.EntityTextures;
 import assets.textures.WindowTextures;
 import assets.textures.WorldTextures;
-import envisionEngine.eWindow.windowTypes.TopWindowParent;
-import envisionEngine.eWindow.windowTypes.interfaces.IWindowParent;
-import envisionEngine.input.Keyboard;
-import envisionEngine.input.Mouse;
-import envisionEngine.input.WindowResizeListener;
-import envisionEngine.terminal.TerminalHandler;
 import gameScreens.MainMenuScreen;
 import gameSystems.fontRenderer.FontRenderer;
 import gameSystems.mapSystem.GameWorld;
@@ -20,6 +14,9 @@ import gameSystems.screenSystem.GameTopRenderer;
 import gameSystems.screenSystem.ScreenLevel;
 import gameSystems.textureSystem.TextureSystem;
 import gameSystems.worldRenderer.WorldRenderer;
+import input.Keyboard;
+import input.Mouse;
+import input.WindowResizeListener;
 import java.io.File;
 import java.nio.IntBuffer;
 import java.util.logging.Level;
@@ -41,6 +38,9 @@ import org.lwjgl.system.MemoryStack;
 import renderUtil.CenterType;
 import storageUtil.EDimension;
 import tempUtil.WindowSize;
+import terminal.TerminalHandler;
+import windowLib.windowTypes.TopWindowParent;
+import windowLib.windowTypes.interfaces.IWindowParent;
 
 public class Game {
 	
@@ -311,7 +311,7 @@ public class Game {
 		if (getGLInit()) {
 			topRenderer.handleKeyboardInput(action, typedChar, keyCode);
 			//if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleKeyboardInput(action, typedChar, keyCode); }
-			worldRenderer.handleKeyboardInput(action, typedChar, keyCode);
+			//worldRenderer.handleKeyboardInput(action, typedChar, keyCode);
 		}
 	}
 	
@@ -319,7 +319,7 @@ public class Game {
 		if (getGLInit()) {
 			topRenderer.handleMouseInput(action, mXIn, mYIn, button, change);
 			//if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleMouseInput(action, mXIn, mYIn, button, change); }
-			worldRenderer.handleMouseInput(action, mXIn, mYIn, button, change);
+			//worldRenderer.handleMouseInput(action, mXIn, mYIn, button, change);
 		}
 	}
 	
@@ -485,6 +485,8 @@ public class Game {
 	
 	/** Returns this game's constant player object. */
 	public static Player getPlayer() { return thePlayer; }
+	/** Returns this game's active world. */
+	public static GameWorld getWorld() { return theWorld; }
 	
 	public static MainConfigFile getMainConfig() { return mainConfig; }
 	public static boolean saveConfig() { return mainConfig.trySave(); }

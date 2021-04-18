@@ -1,7 +1,7 @@
 package debug.debugCommands;
 
-import envisionEngine.terminal.window.ETerminal;
 import storageUtil.EArrayList;
+import terminal.window.ETerminal;
 
 public abstract class DebugCommand {
 	

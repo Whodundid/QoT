@@ -1,8 +1,8 @@
 package controls;
 
-import envisionEngine.eWindow.windowUtil.input.KeyboardInputAcceptor;
-import envisionEngine.eWindow.windowUtil.input.MouseInputAcceptor;
 import storageUtil.EArrayList;
+import windowLib.windowUtil.input.KeyboardInputAcceptor;
+import windowLib.windowUtil.input.MouseInputAcceptor;
 
 public class PlayerControlProfile implements MouseInputAcceptor, KeyboardInputAcceptor {
 	
