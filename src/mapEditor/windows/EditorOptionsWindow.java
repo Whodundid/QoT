@@ -1,6 +1,6 @@
 package mapEditor.windows;
 
-import main.Game;
+import main.QoT;
 import mapEditor.MapEditorScreen;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.WindowParent;
@@ -19,7 +19,7 @@ public class EditorOptionsWindow extends WindowParent {
 	
 	@Override
 	public void initWindow() {
-		setDimensions(Game.getWidth() / 2, Game.getHeight() / 2);
+		setDimensions(QoT.getWidth() / 2, QoT.getHeight() / 2);
 		setMinDims(300, 300);
 		setMaximizable(true);
 		setResizeable(true);

@@ -4,7 +4,7 @@ import eutil.EUtil;
 import input.Mouse;
 import java.util.Iterator;
 import mathUtil.NumberUtil;
-import openGL_Util.GLSettings;
+import renderEngine.GLSettings;
 import renderUtil.EColors;
 import storageUtil.EArrayList;
 import storageUtil.EDimension;

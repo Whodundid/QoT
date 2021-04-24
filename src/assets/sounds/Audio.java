@@ -6,7 +6,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
-import main.Game;
+import main.QoT;
 
 public class Audio {
 	
@@ -39,7 +39,7 @@ public class Audio {
 	public void loop() {
 		clip.setFramePosition(0);
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
-		setVolume(Game.settings.musicVolume.get() * 0.0009f);
+		setVolume(QoT.settings.musicVolume.get() * 0.0009f);
 	}
 		
 	public void stop() {

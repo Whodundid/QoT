@@ -2,9 +2,9 @@ package windowLib.windowObjects.advancedObjects.scrollList;
 
 import input.Keyboard;
 import java.util.Iterator;
-import main.Game;
+import main.QoT;
 import mathUtil.NumberUtil;
-import openGL_Util.GLSettings;
+import renderEngine.GLSettings;
 import renderUtil.EColors;
 import renderUtil.ScreenLocation;
 import storageUtil.EArrayList;
@@ -368,7 +368,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	
 	@Override
 	protected void updateBeforeNextDraw(int mXIn, int mYIn) {
-		res = Game.getWindowSize();
+		res = QoT.getWindowSize();
 		mX = mXIn; mY = mYIn;
 		if (!mouseEntered && isMouseOver()) { mouseEntered = true; mouseEntered(mX, mY); }
 		if (mouseEntered && !isMouseOver()) { mouseEntered = false; mouseExited(mX, mY); }

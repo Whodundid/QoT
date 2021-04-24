@@ -1,7 +1,7 @@
 package mapEditor.editorParts.sidePanel;
 
 import eutil.EUtil;
-import main.Game;
+import main.QoT;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorParts.minimap.EditorMiniMap;
 import mapEditor.editorParts.sidePanel.toolPanels.assetTool.AssetSidePanel;
@@ -40,16 +40,16 @@ public class EditorSidePanel extends WindowObject {
 		editor = in;
 		
 		int w = 251;
-		int sx = Game.getWidth() - w;
+		int sx = QoT.getWidth() - w;
 		int y = (int) editor.getTopHeader().endY;
-		setDimensions(sx, y, w, Game.getHeight() - y);
+		setDimensions(sx, y, w, QoT.getHeight() - y);
 		
 		miniMap = new EditorMiniMap(this);
 		miniMap.setDimensions(startX + 5, startY + 5, width - 10, width - 10);
 		int py = (int) miniMap.endY + 5;
 		
 		//apply panelDims
-		panelDims = new EDimension(sx + 5, py, Game.getWidth() - 5, Game.getHeight() - 5);
+		panelDims = new EDimension(sx + 5, py, QoT.getWidth() - 5, QoT.getHeight() - 5);
 		
 		terrainTool = new TerrainSidePanel(this, in);
 		assetTool = new AssetSidePanel(this, in);

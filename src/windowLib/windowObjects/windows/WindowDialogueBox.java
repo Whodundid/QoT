@@ -1,7 +1,7 @@
 package windowLib.windowObjects.windows;
 
-import gameSystems.fontRenderer.EStringBuilder;
 import mathUtil.NumberUtil;
+import renderEngine.fontRenderer.EStringBuilder;
 import renderUtil.EColors;
 import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;

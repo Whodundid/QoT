@@ -1,11 +1,11 @@
 package windowLib.windowObjects.basicObjects;
 
-import gameSystems.fontRenderer.FontRenderer;
-import gameSystems.textureSystem.GameTexture;
 import mathUtil.NumberUtil;
-import openGL_Util.GLSettings;
+import renderEngine.GLSettings;
+import renderEngine.fontRenderer.FontRenderer;
+import renderEngine.resources.ResourceUtil;
+import renderEngine.textureSystem.GameTexture;
 import renderUtil.EColors;
-import resourceUtil.ResourceUtil;
 import storageUtil.EArrayList;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IWindowObject;

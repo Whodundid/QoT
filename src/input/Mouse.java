@@ -1,6 +1,6 @@
 package input;
 
-import main.Game;
+import main.QoT;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -31,8 +31,8 @@ public class Mouse extends GLFWMouseButtonCallback {
 		cursorCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
-				mX = (int) (xpos / Game.getGameScale());
-				mY = (int) (ypos / Game.getGameScale());
+				mX = (int) (xpos / QoT.getGameScale());
+				mY = (int) (ypos / QoT.getGameScale());
 			}
 		};
 		
@@ -61,7 +61,7 @@ public class Mouse extends GLFWMouseButtonCallback {
 	//---------------
 	
 	private void distribute(int action, int mXIn, int mYIn, int button, int change) {
-		Game.mouseEvent(action, mXIn, mYIn, button, change);
+		QoT.mouseEvent(action, mXIn, mYIn, button, change);
 	}
 	
 	//----------------------
@@ -69,7 +69,7 @@ public class Mouse extends GLFWMouseButtonCallback {
 	//----------------------
 	
 	public static boolean isButtonDown(int button) {
-		return GLFW.glfwGetMouseButton(Game.getWindowHandle(), button) == 1;
+		return GLFW.glfwGetMouseButton(QoT.getWindowHandle(), button) == 1;
 	}
 	
 	//--------------------

@@ -1,7 +1,7 @@
 package windowLib.windowTypes;
 
 import eutil.EUtil;
-import main.Game;
+import main.QoT;
 import windowLib.windowTypes.interfaces.IActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
@@ -22,7 +22,7 @@ public abstract class ActionWindowParent<E> extends WindowParent<E> implements I
 		actionReceiver = parentIn;
 		windowInstance = this;
 		objectInstance = this;
-		res = Game.getWindowSize();
+		res = QoT.getWindowSize();
 	}
 	
 	//-----------------------

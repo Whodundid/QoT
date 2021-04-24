@@ -1,16 +1,16 @@
 package mapEditor;
 
+import assets.screens.GameScreen;
 import assets.worldTiles.WorldTile;
 import assets.worldTiles.WorldTiles;
-import gameSystems.mapSystem.GameWorld;
-import gameSystems.screenSystem.GameScreen;
-import main.Game;
+import main.QoT;
 import renderUtil.EColors;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.actionObjects.WindowCheckBox;
 import windowLib.windowObjects.actionObjects.WindowTextField;
 import windowLib.windowObjects.basicObjects.WindowLabel;
 import windowLib.windowTypes.interfaces.IActionObject;
+import world.GameWorld;
 
 public class NewMapCreatorScreen extends GameScreen {
 
@@ -137,7 +137,7 @@ public class NewMapCreatorScreen extends GameScreen {
 	private void createMap() {
 		world = new GameWorld(name, width, height);
 		if (!empty) { world.fillWith(fillTile); }
-		Game.displayScreen(new MapEditorScreen(world), this);
+		QoT.displayScreen(new MapEditorScreen(world), this);
 	}
 	
 }

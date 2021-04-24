@@ -1,7 +1,6 @@
 package mapEditor.editorParts.topHeader;
 
-import gameSystems.mapSystem.GameWorld;
-import main.Game;
+import main.QoT;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorParts.sidePanel.SidePanel;
 import mapEditor.editorParts.sidePanel.SidePanelType;
@@ -10,6 +9,7 @@ import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IActionObject;
+import world.GameWorld;
 
 public class EditorScreenTopHeader extends WindowObject {
 	
@@ -19,7 +19,7 @@ public class EditorScreenTopHeader extends WindowObject {
 	
 	public EditorScreenTopHeader(MapEditorScreen editorIn) {
 		editor = editorIn;
-		init(editor, 0, 0, Game.getWidth(), 34);
+		init(editor, 0, 0, QoT.getWidth(), 34);
 	}
 	
 	@Override

@@ -1,9 +1,9 @@
 package windowLib.windowObjects.actionObjects;
 
-import gameSystems.fontRenderer.FontRenderer;
 import input.Keyboard;
-import main.Game;
+import main.QoT;
 import mathUtil.NumberUtil;
+import renderEngine.fontRenderer.FontRenderer;
 import renderUtil.EColors;
 import windowLib.windowTypes.ActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
@@ -166,7 +166,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 	@Override
 	public void onFocusGained(EventFocus eventIn) {
 		startTextTimer();
-		if (!alwaysDrawCursor) { Game.updateCounter = 0; }
+		if (!alwaysDrawCursor) { QoT.updateCounter = 0; }
 		if (text.equals(textWhenEmpty)) { text = ""; setTextColor(textColor); setCursorPosition(0); }
 		super.onFocusGained(eventIn);
 	}
@@ -319,7 +319,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 		if (posIn < 0) { posIn = 0; }
 		selectionEnd = posIn;
 		
-		if (Game.getFontRenderer() != null) {
+		if (QoT.getFontRenderer() != null) {
 			if (lineScrollOffset > i) { lineScrollOffset = i; }
 			int j = (int) getWidth();
 			//String s = Game.getFontRenderer().trimToWidth(text.substring(lineScrollOffset), j);

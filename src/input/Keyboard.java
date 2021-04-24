@@ -4,7 +4,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import main.Game;
+import main.QoT;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -155,7 +155,7 @@ public class Keyboard extends GLFWKeyCallback {
 	//------------------
 	
 	private void distribute(int action, char typedChar, int keyCode) {
-		Game.keyboardEvent(action, typedChar, keyCode);
+		QoT.keyboardEvent(action, typedChar, keyCode);
 	}
 
 	//-------------------------
@@ -163,7 +163,7 @@ public class Keyboard extends GLFWKeyCallback {
 	//-------------------------
 	
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(Game.getWindowHandle(), key) == 1;
+		return GLFW.glfwGetKey(QoT.getWindowHandle(), key) == 1;
 	}
 	
 	public static String getKeyName(int key) {

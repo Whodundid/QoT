@@ -4,8 +4,8 @@ import assets.entities.Entity;
 import assets.items.Item;
 import assets.items.Weapon;
 import assets.textures.EntityTextures;
-import gameSystems.questSystem.PathFinder;
-import gameSystems.questSystem.PlayerStats;
+import quests.PathFinder;
+import quests.PlayerStats;
 import randomUtil.RandomUtil;
 
 public class Player extends Entity {

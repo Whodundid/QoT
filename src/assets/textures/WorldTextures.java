@@ -2,8 +2,8 @@ package assets.textures;
 
 import assets.textures.world.Tex_Grass;
 import eutil.EUtil;
-import gameSystems.textureSystem.GameTexture;
-import gameSystems.textureSystem.TextureSystem;
+import renderEngine.textureSystem.GameTexture;
+import renderEngine.textureSystem.TextureSystem;
 import storageUtil.EArrayList;
 
 public class WorldTextures {

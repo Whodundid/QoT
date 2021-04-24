@@ -1,6 +1,6 @@
 package assets.particles;
 
-import main.Game;
+import main.QoT;
 import renderUtil.EColors;
 import windowLib.windowTypes.WindowObject;
 
@@ -16,7 +16,7 @@ public class PointerPress extends WindowObject {
 		pressY = mY;
 		rad = startRadius;
 		
-		init(Game.getActiveTopParent(), mX - rad, mY - rad, rad * 2, rad * 2);
+		init(QoT.getActiveTopParent(), mX - rad, mY - rad, rad * 2, rad * 2);
 		curTime = System.currentTimeMillis();
 		
 		setClickable(false);

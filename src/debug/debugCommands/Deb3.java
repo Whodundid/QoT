@@ -1,6 +1,6 @@
 package debug.debugCommands;
 
-import terminal.window.ETerminal;
+import debug.terminal.window.ETerminal;
 
 @SuppressWarnings("unused")
 public class Deb3 extends DebugCommand {

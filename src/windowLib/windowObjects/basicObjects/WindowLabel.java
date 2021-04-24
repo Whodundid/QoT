@@ -1,8 +1,8 @@
 package windowLib.windowObjects.basicObjects;
 
 import eutil.EUtil;
-import gameSystems.fontRenderer.EStringBuilder;
-import gameSystems.fontRenderer.FontRenderer;
+import renderEngine.fontRenderer.EStringBuilder;
+import renderEngine.fontRenderer.FontRenderer;
 import renderUtil.EColors;
 import storageUtil.EArrayList;
 import windowLib.windowTypes.WindowObject;

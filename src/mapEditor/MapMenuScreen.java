@@ -1,21 +1,21 @@
 package mapEditor;
 
+import assets.screens.GameScreen;
 import assets.textures.EditorTextures;
-import gameSystems.mapSystem.GameWorld;
-import gameSystems.screenSystem.GameScreen;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.io.File;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import main.Game;
+import main.QoT;
 import renderUtil.EColors;
 import storageUtil.EDimension;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.actionObjects.WindowTextField;
 import windowLib.windowObjects.basicObjects.WindowLabel;
 import windowLib.windowTypes.interfaces.IActionObject;
+import world.GameWorld;
 
 public class MapMenuScreen extends GameScreen {
 	
@@ -45,7 +45,7 @@ public class MapMenuScreen extends GameScreen {
 		loadCur = new WindowButton(this, nameField.endX + 10, nameLabel.endY + 19, nameField.height + 1, nameField.height + 1);
 		loadCur.setButtonTexture(EditorTextures.play);
 		
-		nameField.setText(Game.settings.lastMap.get());
+		nameField.setText(QoT.settings.lastMap.get());
 		
 		addObject(convert);
 		addObject(newMap, mapDir);
@@ -74,9 +74,9 @@ public class MapMenuScreen extends GameScreen {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == newMap) {
-			Game.settings.lastMap.set(nameField.getText());
-			Game.saveConfig();
-			Game.displayScreen(new NewMapCreatorScreen(), this);
+			QoT.settings.lastMap.set(nameField.getText());
+			QoT.saveConfig();
+			QoT.displayScreen(new NewMapCreatorScreen(), this);
 		}
 		
 		if (object == loadCur || object == nameField) {
@@ -84,12 +84,12 @@ public class MapMenuScreen extends GameScreen {
 				String lastMap = nameField.getText();
 				lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
 				
-				Game.settings.lastMap.set(lastMap);
-				Game.saveConfig();
+				QoT.settings.lastMap.set(lastMap);
+				QoT.saveConfig();
 				
-				File f = new File(Game.settings.getEditorWorldsDir(), lastMap);
+				File f = new File(QoT.settings.getEditorWorldsDir(), lastMap);
 				if (f.exists()) {
-					Game.displayScreen(new MapEditorScreen(f), this);
+					QoT.displayScreen(new MapEditorScreen(f), this);
 				}
 				else {
 					error = "'" + lastMap + "' does not exist!";
@@ -102,7 +102,7 @@ public class MapMenuScreen extends GameScreen {
 				@Override
 				protected JDialog createDialog(Component parent) throws HeadlessException {
 					JDialog dlg = super.createDialog(parent);
-					EDimension d = Game.getWindowDims();
+					EDimension d = QoT.getWindowDims();
 					Dimension fd = getSize();
 					dlg.setLocation((int) (d.startX + (d.width - fd.width) / 2), (int) (d.startY + (d.height - fd.height) / 2));
 					dlg.setModal(true);
@@ -111,16 +111,16 @@ public class MapMenuScreen extends GameScreen {
 				}
 			};
 			
-			fc.setCurrentDirectory(Game.settings.getEditorWorldsDir());
+			fc.setCurrentDirectory(QoT.settings.getEditorWorldsDir());
 			fc.setDialogTitle("Map Selection");
 			fc.setApproveButtonText("Open");
 			fc.showDialog(null, "Open");
 			File f = fc.getSelectedFile();
 			
 			if (f != null && f.exists() && f.getName().endsWith(".twld")) {
-				Game.settings.lastMap.set(f.getName());
-				Game.saveConfig();
-				Game.displayScreen(new MapEditorScreen(f), this);
+				QoT.settings.lastMap.set(f.getName());
+				QoT.saveConfig();
+				QoT.displayScreen(new MapEditorScreen(f), this);
 			}
 		}
 		
@@ -129,10 +129,10 @@ public class MapMenuScreen extends GameScreen {
 				String lastMap = nameField.getText();
 				lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
 				
-				Game.settings.lastMap.set(lastMap);
-				Game.saveConfig();
+				QoT.settings.lastMap.set(lastMap);
+				QoT.saveConfig();
 				
-				File f = new File(Game.settings.getEditorWorldsDir(), lastMap);
+				File f = new File(QoT.settings.getEditorWorldsDir(), lastMap);
 				if (f.exists()) {
 					GameWorld w = new GameWorld(f);
 					w.convertFileA();

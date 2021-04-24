@@ -1,8 +1,8 @@
 package windowLib.windowObjects.windows;
 
-import main.Game;
+import main.QoT;
+import main.WindowSize;
 import renderUtil.EColors;
-import tempUtil.WindowSize;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.basicObjects.WindowLabel;
 import windowLib.windowTypes.interfaces.IActionObject;
@@ -15,7 +15,7 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 	String link;
 	WindowButton yes, copy, no;
 	
-	public LinkConfirmationWindow(String linkIn) { this(Game.getActiveTopParent(), linkIn); }
+	public LinkConfirmationWindow(String linkIn) { this(QoT.getActiveTopParent(), linkIn); }
 	public LinkConfirmationWindow(IWindowObject parentIn, String linkIn) {
 		super(parentIn);
 		setResizeable(false);
@@ -24,7 +24,7 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 	
 	@Override
 	public void initObjects() {
-		WindowSize res = Game.getWindowSize();
+		WindowSize res = QoT.getWindowSize();
 		
 		String prompt = "Confirm";
 		String warning = "Warning";

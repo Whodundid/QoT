@@ -1,14 +1,14 @@
 package windowLib;
 
 import eutil.EUtil;
-import main.Game;
+import main.QoT;
+import main.WindowSize;
 import renderUtil.EColors;
 import renderUtil.ScreenLocation;
 import storageUtil.EArrayList;
 import storageUtil.EDimension;
 import storageUtil.StorageBox;
 import storageUtil.StorageBoxHolder;
-import tempUtil.WindowSize;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import windowLib.windowTypes.WindowParent;
 import windowLib.windowTypes.interfaces.ITopParent;
@@ -62,7 +62,7 @@ public class StaticWindowObject extends EGui {
 	
 	public static void onMouseHover(IWindowObject<?> obj, int mX, int mY, String hoverText, int textColor) {
 		if (hoverText != null && !hoverText.isEmpty()) {
-			WindowSize res = Game.getWindowSize();
+			WindowSize res = QoT.getWindowSize();
 			int strWidth = getStringWidth(hoverText);
 			int sX = mX + 8;
 			int sY = mY - 7;
@@ -413,7 +413,7 @@ public class StaticWindowObject extends EGui {
 	}
 	
 	public static boolean isMouseInside(IWindowObject<?> obj, int mX, int mY) {
-		if (obj != null && (!Game.getTopRenderer().hasFocus() || obj.isChildOf(Game.getTopRenderer()))) {
+		if (obj != null && (!QoT.getTopRenderer().hasFocus() || obj.isChildOf(QoT.getTopRenderer()))) {
 			EDimension d = obj.getDimensions();
 			
 			// check if there is a boundary enforcer limiting the overrall area

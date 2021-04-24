@@ -1,9 +1,9 @@
 package windowLib.windowObjects.windows;
 
-import gameSystems.textureSystem.GameTexture;
 import input.Mouse;
 import java.util.List;
-import main.Game;
+import main.QoT;
+import renderEngine.textureSystem.GameTexture;
 import storageUtil.StorageBox;
 import storageUtil.StorageBoxHolder;
 import windowLib.windowObjects.actionObjects.WindowButton;
@@ -30,7 +30,7 @@ public class RightClickMenu extends ActionWindowParent {
 	public int separatorLineColor = 0xff000000;
 	public int borderColor = 0xff000000;
 	
-	public RightClickMenu() { this(Game.getActiveTopParent()); }
+	public RightClickMenu() { this(QoT.getActiveTopParent()); }
 	public RightClickMenu(IWindowObject obj) {
 		super(obj);
 		setDimensions(Mouse.getMx(), Mouse.getMy(), 125, 15);

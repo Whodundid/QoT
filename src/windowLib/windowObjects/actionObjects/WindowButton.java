@@ -1,12 +1,12 @@
 package windowLib.windowObjects.actionObjects;
 
 import eutil.EUtil;
-import gameSystems.fontRenderer.FontRenderer;
-import gameSystems.textureSystem.GameTexture;
 import input.Mouse;
 import java.util.function.Consumer;
-import openGL_Util.GLSettings;
 import org.lwjgl.glfw.GLFW;
+import renderEngine.GLSettings;
+import renderEngine.fontRenderer.FontRenderer;
+import renderEngine.textureSystem.GameTexture;
 import renderUtil.EColors;
 import windowLib.windowTypes.ActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;

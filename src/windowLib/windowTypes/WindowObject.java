@@ -1,8 +1,8 @@
 package windowLib.windowTypes;
 
 import input.Mouse;
-import main.Game;
-import openGL_Util.GLSettings;
+import main.QoT;
+import renderEngine.GLSettings;
 import renderUtil.EColors;
 import renderUtil.ScreenLocation;
 import storageUtil.EArrayList;
@@ -72,7 +72,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	public void init(IWindowObject<?> objIn) {
 		parent = objIn;
 		objectInstance = this;
-		res = Game.getWindowSize();
+		res = QoT.getWindowSize();
 	}
 	
 	public void init(IWindowObject<?> objIn, int xIn, int yIn) { init(objIn, (double) xIn, (double) yIn); }
@@ -85,7 +85,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 		startXPos = startX;
 		startYPos = startY;
 		objectInstance = this;
-		res = Game.getWindowSize();
+		res = QoT.getWindowSize();
 	}
 	
 	public void init(IWindowObject<?> objIn, int xIn, int yIn, int widthIn, int heightIn) { init(objIn, (double) xIn, (double) yIn, (double) widthIn, (double) heightIn); }
@@ -103,7 +103,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 		startHeight = heightIn;
 		setDimensions(xIn, yIn, widthIn, heightIn);
 		objectInstance = this;
-		res = Game.getWindowSize();
+		res = QoT.getWindowSize();
 	}
 	
 	//----------------
@@ -429,7 +429,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	/** Internal method used to prep the next draw phase before it is drawn. */
 	protected void updateBeforeNextDraw(int mXIn, int mYIn) {
 		postEvent(new EventRedraw(this));
-		res = Game.getWindowSize();
+		res = QoT.getWindowSize();
 		mX = mXIn; mY = mYIn;
 		if (!mouseEntered && isMouseOver()) { mouseEntered = true; mouseEntered(mX, mY); }
 		if (mouseEntered && !isMouseOver()) { mouseEntered = false; mouseExited(mX, mY); }

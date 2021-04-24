@@ -3,7 +3,7 @@ package windowLib.windowObjects.windows;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import main.Game;
+import main.QoT;
 import mathUtil.NumberUtil;
 import renderUtil.EColors;
 import storageUtil.EArrayList;
@@ -26,7 +26,7 @@ public class TextEditorWindow extends WindowParent {
 	private TextAreaLine line;
 	
 	public TextEditorWindow(File pathIn) {
-		super(Game.getActiveTopParent());
+		super(QoT.getActiveTopParent());
 		path = pathIn;
 		//windowIcon = EMCResources.textEditorIcon;
 	}

@@ -1,9 +1,9 @@
 package windowLib.windowTypes;
 
 import eutil.EUtil;
-import gameSystems.textureSystem.GameTexture;
 import java.util.Stack;
-import main.Game;
+import main.QoT;
+import renderEngine.textureSystem.GameTexture;
 import renderUtil.CenterType;
 import renderUtil.EColors;
 import renderUtil.ScreenLocation;
@@ -45,8 +45,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	//---------------------------
 	
 	/** By default, set the parent to the EMC Renderer. */
-	public WindowParent() { this(Game.getActiveTopParent(), null); }
-	public WindowParent(IWindowParent<?> oldGuiIn) { this(Game.getActiveTopParent(), oldGuiIn); }
+	public WindowParent() { this(QoT.getActiveTopParent(), null); }
+	public WindowParent(IWindowParent<?> oldGuiIn) { this(QoT.getActiveTopParent(), oldGuiIn); }
 	public WindowParent(int xPos, int yPos) { windowInstance = this; initTime = System.currentTimeMillis(); }
 	public WindowParent(int xPos, int yPos, IWindowParent<?> oldGuiIn) { initTime = System.currentTimeMillis(); windowInstance = this; pullHistoryFrom(oldGuiIn); }
 	public WindowParent(IWindowObject<?> parentIn) { this(parentIn, null); }

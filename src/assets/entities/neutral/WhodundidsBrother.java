@@ -1,7 +1,7 @@
 package assets.entities.neutral;
 
+import assets.shops.Shopkeeper;
 import assets.textures.EntityTextures;
-import gameSystems.shopSystem.Shopkeeper;
 
 public class WhodundidsBrother extends Shopkeeper {
 	

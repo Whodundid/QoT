@@ -3,7 +3,7 @@ package windowLib.windowObjects.advancedObjects.textArea;
 import eutil.EUtil;
 import input.Keyboard;
 import input.Mouse;
-import main.Game;
+import main.QoT;
 import renderUtil.EColors;
 import renderUtil.ScreenLocation;
 import storageUtil.TrippleBox;
@@ -237,7 +237,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 				}
 				if (parentTextArea.isEditable()) {
 					int i = (int) (mX - startX - parentTextArea.getLineNumberOffset() + 3);
-					int cursorPos = Game.getFontRenderer().trimToWidth(text, i).length();
+					int cursorPos = QoT.getFontRenderer().trimToWidth(text, i).length();
 					
 					setCursorPosition(cursorPos);
 					selectionEnd = cursorPosition;
@@ -380,7 +380,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		if (clicked && System.currentTimeMillis() - doubleClickTimer >= doubleClickThreshold) { clicked = false; doubleClickTimer = 0l; }
 		if (parentTextArea != null && parentTextArea.getCurrentLine() != null) {
 			lineEquals = parentTextArea.getCurrentLine().equals(this);
-			drawCursor = parentTextArea.isEditable() && lineEquals && Game.updateCounter / 60 % 2 == 0;
+			drawCursor = parentTextArea.isEditable() && lineEquals && QoT.updateCounter / 60 % 2 == 0;
 		}
 	}
 	
@@ -396,7 +396,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 			
 			for (int i = 0; i < uText.length(); i++) {
 				char c = uText.charAt(i);
-				int cLen = Game.getFontRenderer().getCharWidth(c);
+				int cLen = QoT.getFontRenderer().getCharWidth(c);
 				
 				total += cLen;
 				
@@ -470,7 +470,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 				
 				//System.out.println(xStart + " " + xEnd);
 				
-				drawCursorVertical(xStart, startY + 1, xEnd - 1, startY + 1 + Game.getFontRenderer().FONT_HEIGHT);
+				drawCursorVertical(xStart, startY + 1, xEnd - 1, startY + 1 + QoT.getFontRenderer().FONT_HEIGHT);
 			}
 			else if ((textRecentlyEntered || drawCursor) && hasFocus()) { //draw vertical cursor
 				int textCursorPosLength = getStringWidth(text.substring(0, cursorPosition));

@@ -1,6 +1,6 @@
 package assets.worldTiles;
 
-import gameSystems.textureSystem.GameTexture;
+import renderEngine.textureSystem.GameTexture;
 
 public class WorldTile implements Comparable<WorldTile> {
 	

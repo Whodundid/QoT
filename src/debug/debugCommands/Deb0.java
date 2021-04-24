@@ -1,12 +1,12 @@
 package debug.debugCommands;
 
 import assets.worldTiles.WorldTile;
-import gameSystems.mapSystem.GameWorld;
+import debug.terminal.window.ETerminal;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import main.Game;
-import tempUtil.FloodFill;
-import terminal.window.ETerminal;
+import main.QoT;
+import mapEditor.editorTools.toolUtil.FloodFill;
+import world.GameWorld;
 
 @SuppressWarnings("unused")
 public class Deb0 extends DebugCommand {
@@ -14,7 +14,7 @@ public class Deb0 extends DebugCommand {
 	@Override
 	public void run(ETerminal termIn, Object... args) {
 		
-		File f = new File(Game.settings.getEditorWorldsDir(), "fillTest.twld");
+		File f = new File(QoT.settings.getEditorWorldsDir(), "fillTest.twld");
 		GameWorld world = new GameWorld(f);
 		
 		int[][] intWorld = new int[world.getWidth()][world.getHeight()];

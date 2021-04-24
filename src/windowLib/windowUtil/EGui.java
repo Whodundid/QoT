@@ -1,16 +1,16 @@
 package windowLib.windowUtil;
 
-import gameSystems.fontRenderer.FontRenderer;
-import gameSystems.textureSystem.GameTexture;
-import main.Game;
+import main.QoT;
+import main.WindowSize;
 import mathUtil.NumberUtil;
 import miscUtil.Rotation;
-import openGL_Util.GLObject;
+import renderEngine.GLObject;
+import renderEngine.fontRenderer.FontRenderer;
+import renderEngine.textureSystem.GameTexture;
 import renderUtil.EColors;
 import renderUtil.ScreenLocation;
 import storageUtil.EDimension;
 import storageUtil.StorageBox;
-import tempUtil.WindowSize;
 import windowLib.windowUtil.input.KeyboardInputAcceptor;
 import windowLib.windowUtil.input.MouseInputAcceptor;
 
@@ -18,7 +18,7 @@ import windowLib.windowUtil.input.MouseInputAcceptor;
 
 public abstract class EGui extends GLObject implements KeyboardInputAcceptor, MouseInputAcceptor {
 
-	public Game game = Game.getGame();
+	public QoT game = QoT.getGame();
 	public FontRenderer fontRenderer = game.getFontRenderer();
 	public WindowSize res = game.getWindowSize();
 	public double startXPos, startYPos, startWidth, startHeight;
@@ -92,7 +92,7 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public StorageBox<Double, Double> getInitialPosition() { return new StorageBox<Double, Double>(startXPos, startYPos); }
 	/** Centers the gui in the middle of the screen with the specified dimensions. */
 	public void centerGuiWithSize(double widthIn, double heightIn) {
-		WindowSize res = Game.getWindowSize(); //get the screen size
+		WindowSize res = QoT.getWindowSize(); //get the screen size
 		double sWidth = res.getWidth();
 		double sHeight = res.getHeight();
 		double startX, startY, width, height;

@@ -1,7 +1,6 @@
 package mapEditor.editorTools;
 
 import assets.worldTiles.WorldTile;
-import gameSystems.mapSystem.GameWorld;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorTools.tools.Tool_Brush;
 import mapEditor.editorTools.tools.Tool_Eraser;
@@ -16,6 +15,7 @@ import mapEditor.editorTools.tools.Tool_Selector;
 import mapEditor.editorTools.tools.Tool_Shape;
 import storageUtil.StorageBox;
 import storageUtil.StorageBoxHolder;
+import world.GameWorld;
 
 public class ToolHandler {
 

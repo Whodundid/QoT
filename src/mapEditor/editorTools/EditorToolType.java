@@ -2,7 +2,7 @@ package mapEditor.editorTools;
 
 import assets.textures.EditorTextures;
 import assets.textures.WindowTextures;
-import gameSystems.textureSystem.GameTexture;
+import renderEngine.textureSystem.GameTexture;
 
 public enum EditorToolType {
 	

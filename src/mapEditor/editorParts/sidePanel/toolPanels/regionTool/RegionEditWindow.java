@@ -1,6 +1,5 @@
 package mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import gameSystems.mapSystem.Region;
 import mathUtil.NumberUtil;
 import renderUtil.EColors;
 import windowLib.windowObjects.actionObjects.WindowButton;
@@ -10,6 +9,7 @@ import windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import windowLib.windowObjects.utilityObjects.ColorButton;
 import windowLib.windowTypes.WindowParent;
 import windowLib.windowTypes.interfaces.IActionObject;
+import world.Region;
 
 public class RegionEditWindow extends WindowParent {
 	

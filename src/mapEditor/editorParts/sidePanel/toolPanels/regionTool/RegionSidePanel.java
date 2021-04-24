@@ -1,7 +1,5 @@
 package mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import gameSystems.mapSystem.GameWorld;
-import gameSystems.mapSystem.Region;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorParts.sidePanel.EditorSidePanel;
 import mapEditor.editorParts.sidePanel.SidePanel;
@@ -20,6 +18,8 @@ import windowLib.windowObjects.windows.WindowDialogueBox;
 import windowLib.windowTypes.interfaces.IActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 import windowLib.windowTypes.interfaces.IWindowParent;
+import world.GameWorld;
+import world.Region;
 
 public class RegionSidePanel extends SidePanel {
 	

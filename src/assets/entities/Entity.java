@@ -2,12 +2,12 @@ package assets.entities;
 
 import assets.entities.player.Player;
 import assets.worldTiles.WorldTile;
-import gameSystems.mapSystem.GameWorld;
-import gameSystems.textureSystem.GameTexture;
 import mathUtil.NumberUtil;
 import miscUtil.Direction;
-import openGL_Util.GLObject;
+import renderEngine.GLObject;
+import renderEngine.textureSystem.GameTexture;
 import storageUtil.EDimension;
+import world.GameWorld;
 
 public abstract class Entity extends GLObject {
 	

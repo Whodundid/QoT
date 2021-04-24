@@ -1,7 +1,7 @@
 package assets.worldTiles;
 
 import assets.textures.WorldTextures;
-import gameSystems.textureSystem.GameTexture;
+import renderEngine.textureSystem.GameTexture;
 import renderUtil.EColors;
 
 public enum TileIDs {

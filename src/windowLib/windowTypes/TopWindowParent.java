@@ -3,13 +3,13 @@ package windowLib.windowTypes;
 import input.Mouse;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import main.Game;
-import openGL_Util.GLSettings;
+import main.QoT;
+import main.WindowSize;
+import renderEngine.GLSettings;
 import renderUtil.ScreenLocation;
 import storageUtil.EArrayList;
 import storageUtil.EDimension;
 import storageUtil.StorageBox;
-import tempUtil.WindowSize;
 import windowLib.StaticTopParent;
 import windowLib.StaticWindowObject;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
@@ -56,7 +56,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		if (visible) {
 			
 			//draw debug stuff
-			if (Game.isDebugMode()) { drawDebugInfo(); }
+			if (QoT.isDebugMode()) { drawDebugInfo(); }
 			
 			//draw all child objects
 			for (IWindowObject<?> o : windowObjects) {
@@ -239,7 +239,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	
 	protected void updateBeforeNextDraw(int mXIn, int mYIn) {
 		postEvent(new EventRedraw(this));
-		res = Game.getWindowSize();
+		res = QoT.getWindowSize();
 		setDimensions(res.getWidth(), res.getHeight());
 		
 		mX = mXIn;
@@ -407,7 +407,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	}
 	
 	public void onWindowResized() {
-		WindowSize newRes = Game.getWindowSize();
+		WindowSize newRes = QoT.getWindowSize();
 		
 		//handle windows
 		int oldW = res.getWidth();
@@ -415,7 +415,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		int newW = newRes.getWidth();
 		int newH = newRes.getHeight();
 		
-		res = Game.getWindowSize();
+		res = QoT.getWindowSize();
 		setDimensions(0, 0, res.getWidth(), res.getHeight());
 		
 		for (WindowParent p : getAllActiveWindows()) {

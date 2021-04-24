@@ -1,7 +1,7 @@
 package main.settings;
 
-import gameSystems.configSystem.ConfigSetting;
 import java.io.File;
+import main.settings.config.ConfigSetting;
 import storageUtil.EArrayList;
 
 public class QotGameSettings {

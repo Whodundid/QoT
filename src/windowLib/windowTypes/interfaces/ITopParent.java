@@ -1,12 +1,12 @@
 package windowLib.windowTypes.interfaces;
 
 import input.Mouse;
-import main.Game;
+import main.QoT;
+import main.WindowSize;
 import renderUtil.CenterType;
 import renderUtil.ScreenLocation;
 import storageUtil.EArrayList;
 import storageUtil.EDimension;
-import tempUtil.WindowSize;
 import windowLib.StaticTopParent;
 import windowLib.windowTypes.OverlayWindow;
 import windowLib.windowTypes.WindowParent;
@@ -238,7 +238,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	
 	/** Helper method used in conjunction wth displayWindow that actually positions the newley created window on the screen. */
 	private void setPos(IWindowParent windowIn, IWindowObject objectIn, CenterType typeIn) {
-		WindowSize res = Game.getWindowSize();
+		WindowSize res = QoT.getWindowSize();
 		EDimension gDim = windowIn.getDimensions();
 		double headerHeight = windowIn.hasHeader() ? windowIn.getHeader().height : 0;
 		

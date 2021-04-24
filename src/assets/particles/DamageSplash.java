@@ -1,6 +1,6 @@
 package assets.particles;
 
-import main.Game;
+import main.QoT;
 import renderUtil.EColors;
 import windowLib.windowTypes.WindowObject;
 
@@ -15,7 +15,7 @@ public class DamageSplash extends WindowObject {
 		posX = posXIn;
 		posY = posYIn;
 		damage = damageIn;
-		init(Game.getActiveTopParent(), posX - 10, posY - 10, 20, 20);
+		init(QoT.getActiveTopParent(), posX - 10, posY - 10, 20, 20);
 	}
 	
 	@Override

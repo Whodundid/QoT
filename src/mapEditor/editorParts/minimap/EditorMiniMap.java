@@ -1,12 +1,12 @@
 package mapEditor.editorParts.minimap;
 
 import assets.worldTiles.WorldTile;
-import gameSystems.mapSystem.GameWorld;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorParts.sidePanel.EditorSidePanel;
 import renderUtil.EColors;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IActionObject;
+import world.GameWorld;
 
 public class EditorMiniMap extends WindowObject {
 	

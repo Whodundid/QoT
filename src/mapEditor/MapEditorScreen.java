@@ -1,15 +1,12 @@
 package mapEditor;
 
+import assets.screens.GameScreen;
 import assets.sounds.Songs;
 import assets.worldTiles.WorldTile;
-import gameSystems.fontRenderer.FontRenderer;
-import gameSystems.mapSystem.GameWorld;
-import gameSystems.mapSystem.Region;
-import gameSystems.screenSystem.GameScreen;
 import input.Keyboard;
 import input.Mouse;
 import java.io.File;
-import main.Game;
+import main.QoT;
 import mapEditor.editorParts.sidePanel.EditorSidePanel;
 import mapEditor.editorParts.sidePanel.SidePanel;
 import mapEditor.editorParts.sidePanel.SidePanelType;
@@ -17,9 +14,12 @@ import mapEditor.editorParts.toolBox.EditorToolBox;
 import mapEditor.editorParts.topHeader.EditorScreenTopHeader;
 import mapEditor.editorTools.EditorToolType;
 import mathUtil.NumberUtil;
+import renderEngine.fontRenderer.FontRenderer;
 import renderUtil.EColors;
 import storageUtil.EDimension;
 import windowLib.windowTypes.interfaces.IActionObject;
+import world.GameWorld;
+import world.Region;
 
 public class MapEditorScreen extends GameScreen {
 
@@ -174,7 +174,7 @@ public class MapEditorScreen extends GameScreen {
 	//------------------------
 	
 	private void updateMovement() {
-		if (Game.getTopRenderer().hasFocus()) { return; }
+		if (QoT.getTopRenderer().hasFocus()) { return; }
 		if (System.currentTimeMillis() - timeSinceKey < 37) { return; }
 		
 		if (!Keyboard.isCtrlDown()) {

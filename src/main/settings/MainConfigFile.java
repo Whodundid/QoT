@@ -1,7 +1,7 @@
 package main.settings;
 
-import gameSystems.configSystem.QotConfigFile;
 import java.io.File;
+import main.settings.config.QotConfigFile;
 
 public class MainConfigFile extends QotConfigFile {
 

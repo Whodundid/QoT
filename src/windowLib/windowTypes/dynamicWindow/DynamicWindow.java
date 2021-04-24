@@ -3,7 +3,7 @@ package windowLib.windowTypes.dynamicWindow;
 import eutil.EUtil;
 import java.io.File;
 import java.io.IOException;
-import main.Game;
+import main.QoT;
 import renderUtil.CenterType;
 import storageUtil.EArrayList;
 import storageUtil.StorageBox;
@@ -48,11 +48,11 @@ public class DynamicWindow extends WindowParent {
 				if (parseScripts()) {
 					return true;
 				}
-				else { Game.error("Cannot parse DynamicWindow file: " + dataFile + " for scripts!", new IOException()); }
+				else { QoT.error("Cannot parse DynamicWindow file: " + dataFile + " for scripts!", new IOException()); }
 			}
-			else { Game.error("Cannot parse DynamicWindow file: " + dataFile + " for objects!", new IOException()); }
+			else { QoT.error("Cannot parse DynamicWindow file: " + dataFile + " for objects!", new IOException()); }
 		}
-		else { Game.error("Cannot parse DynamicWindow file: " + dataFile + " for base values!", new IOException()); }
+		else { QoT.error("Cannot parse DynamicWindow file: " + dataFile + " for base values!", new IOException()); }
 		
 		failed = true;
 		return false;

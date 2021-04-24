@@ -4,7 +4,7 @@ import eutil.EUtil;
 import input.Keyboard;
 import input.Mouse;
 import java.util.Deque;
-import main.Game;
+import main.QoT;
 import renderUtil.EColors;
 import renderUtil.ScreenLocation;
 import storageUtil.EArrayList;
@@ -145,7 +145,7 @@ public class StaticTopParent extends EGui {
 
 	/** Debug method used to display topParent information in the top left corner of the screen. */
 	public static void drawDebugInfo(ITopParent<?> objIn) {
-		if (Game.isDebugMode()) {
+		if (QoT.isDebugMode()) {
 			double yPos = 3;
 			double xPos = 0;
 			
