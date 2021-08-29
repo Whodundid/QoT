@@ -1,8 +1,8 @@
 package windowLib.windowObjects.advancedObjects.dropDownList;
 
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 import java.util.Iterator;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IWindowObject;

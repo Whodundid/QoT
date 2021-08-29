@@ -2,11 +2,11 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.io.File;
 import java.io.IOException;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 
 public class Cd extends FileCommand {
 	
@@ -27,7 +27,7 @@ public class Cd extends FileCommand {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		if (args.size() >= 1) {
 			try {
-				String all = EUtil.combineAll(args, " ");
+				String all = StringUtil.combineAll(args, " ");
 				File f = parsePath(termIn, args);
 				
 				if (f.exists()) { setDir(termIn, args, runVisually, f); }

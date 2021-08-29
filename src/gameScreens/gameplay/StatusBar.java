@@ -1,7 +1,7 @@
-package assets.screens.types.gameplay;
+package gameScreens.gameplay;
 
-import mathUtil.NumberUtil;
-import renderUtil.EColors;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IActionObject;
 

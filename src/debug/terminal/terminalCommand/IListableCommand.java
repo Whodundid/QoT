@@ -1,7 +1,7 @@
 package debug.terminal.terminalCommand;
 
 import debug.terminal.window.ETerminal;
-import storageUtil.EArrayList;
+import eutil.storage.EArrayList;
 
 public interface IListableCommand {
 	

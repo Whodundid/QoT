@@ -1,8 +1,7 @@
-package assets.entities.enemy.types;
+package assets.entities;
 
-import assets.entities.enemy.Enemy;
 import assets.textures.EntityTextures;
-import randomUtil.RandomUtil;
+import eutil.random.RandomUtil;
 
 public class Thyrah extends Enemy {
 	
@@ -11,6 +10,8 @@ public class Thyrah extends Enemy {
 		super("Thyrah, the dragon", 1, 4, 4, 0, 0, 1, 0);
 		init(posX, posY, 64, 64);
 		sprite = EntityTextures.thyrah;
+		
+		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 	}
 
 	@Override

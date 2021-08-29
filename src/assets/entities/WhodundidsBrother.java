@@ -1,4 +1,4 @@
-package assets.entities.neutral;
+package assets.entities;
 
 import assets.shops.Shopkeeper;
 import assets.textures.EntityTextures;

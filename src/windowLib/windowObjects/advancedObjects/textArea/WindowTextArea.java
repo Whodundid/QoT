@@ -1,13 +1,13 @@
 package windowLib.windowObjects.advancedObjects.textArea;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import input.Mouse;
 import java.util.Iterator;
-import mathUtil.NumberUtil;
 import renderEngine.GLSettings;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
 import windowLib.windowObjects.advancedObjects.scrollList.WindowScrollList;
 import windowLib.windowTypes.interfaces.IWindowObject;
 import windowLib.windowUtil.windowEvents.eventUtil.FocusType;
@@ -206,7 +206,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	public TextAreaLine<E> addTextLine(TextAreaLine<E> lineIn, int offset) { return addTextLine(lineIn, offset, false); }
 	public TextAreaLine<E> addTextLine(TextAreaLine<E> lineIn, int offset, boolean moveDown) {
 		int moveArg = moveDown ? 1 : 0;
-		EDimension ld = getListDimensions();
+		EDims ld = getListDimensions();
 		lineIn.setDimensions(3, (textDocument.size() * 24) + offset, getStringWidth(lineIn.getText()), 24);
 		textDocument.add(lineIn);
 		addObjectToList(lineIn);

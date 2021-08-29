@@ -1,10 +1,11 @@
 package windowLib.windowObjects.actionObjects;
 
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.strings.StringUtil;
 import input.Keyboard;
 import main.QoT;
-import mathUtil.NumberUtil;
 import renderEngine.fontRenderer.FontRenderer;
-import renderUtil.EColors;
 import windowLib.windowTypes.ActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 import windowLib.windowUtil.windowEvents.events.EventFocus;
@@ -334,6 +335,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 		return this;
 	}
 
+	public WindowTextField setText(Object objectIn) { return setText(StringUtil.toString(objectIn)); }
 	public WindowTextField setText(String textIn) {
 		if (textIn != null) {
 			if (textIn.isEmpty()) {

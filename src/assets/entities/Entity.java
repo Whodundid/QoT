@@ -1,12 +1,11 @@
 package assets.entities;
 
-import assets.entities.player.Player;
 import assets.worldTiles.WorldTile;
-import mathUtil.NumberUtil;
-import miscUtil.Direction;
+import eutil.math.NumberUtil;
+import eutil.misc.Direction;
+import eutil.storage.EDims;
 import renderEngine.GLObject;
 import renderEngine.textureSystem.GameTexture;
-import storageUtil.EDimension;
 import world.GameWorld;
 
 public abstract class Entity extends GLObject {
@@ -16,7 +15,7 @@ public abstract class Entity extends GLObject {
 	public int startX, startY, endX, endY;
 	public int midX, midY;
 	public int width, height;
-	public EDimension collisionBox = new EDimension();
+	public EDims collisionBox = new EDims();
 	public int worldX, worldY;
 	protected String name;
 	protected int level;
@@ -51,7 +50,7 @@ public abstract class Entity extends GLObject {
 		midY = posY + (heightIn) / 2;
 		width = widthIn;
 		height = heightIn;
-		collisionBox = new EDimension(startX, startY, endX, endY);
+		collisionBox = new EDims(startX, startY, endX, endY);
 	}
 	
 	public void onLivingUpdate() {}
@@ -76,8 +75,8 @@ public abstract class Entity extends GLObject {
 	
 	public void move(double x, double y) {
 		if (world != null) {
-			x = Math.signum(x);
-			y = Math.signum(y);
+			//x = Math.signum(x);
+			//y = Math.signum(y);
 			boolean stopMove = false;
 			
 			if (!allowNoClip) {
@@ -97,19 +96,23 @@ public abstract class Entity extends GLObject {
 				double cEX = endX - (width - collisionBox.endX);
 				double cEY = endY - (height - collisionBox.endY);
 				
-				EDimension col = new EDimension(cSX, cSY, cEX, cEY);
+				EDims col = new EDims(cSX, cSY, cEX, cEY);
 				//System.out.println(col);
 				//col = col.expand(1);
 				
-				int lVal = (left) ? -1 : 0;
-				int uVal = (up) ? -1 : 0;
-				int rVal = (right) ? 0 : -1;
-				int dVal = (down) ? 0 : -1;
+				int lVal = (left) ? (int) -x : 0;
+				int uVal = (up) ? (int) -y : 0;
+				int rVal = (right) ? 0 : (int) -x;
+				int dVal = (down) ? 0 : (int) -y;
+				
+				//System.out.println(lVal + " : " + uVal + " : " + rVal + " : " + dVal);
 				
 				int movingToSX = (int) ((col.startX + lVal) / w);
 				int movingToSY = (int) ((col.startY + uVal) / h);
 				int movingToEX = (int) ((col.endX + rVal) / w);
 				int movingToEY = (int) ((col.endY + dVal) / h);
+				
+				//System.out.println(movingToSX + " : " + movingToSY + " : " + movingToEX + " : " + movingToEY);
 				
 				//col.endX += 1;
 				//col.endY += 1;
@@ -135,10 +138,10 @@ public abstract class Entity extends GLObject {
 				double eX = movingToEX * w;
 				double eY = movingToEY * h;
 				
-				EDimension tlDim = new EDimension(sX, sY, sX + w, sY + h);
-				EDimension blDim = new EDimension(sX, eY, sX + w, eY + h);
-				EDimension trDim = new EDimension(eX, sY, eX + w, sY + h);
-				EDimension brDim = new EDimension(eX, eY, eX + w, eY + h);
+				EDims tlDim = new EDims(sX, sY, sX + w, sY + h);
+				EDims blDim = new EDims(sX, eY, sX + w, eY + h);
+				EDims trDim = new EDims(eX, sY, eX + w, sY + h);
+				EDims brDim = new EDims(eX, eY, eX + w, eY + h);
 				
 				//System.out.println("[" + movingToSX + ", " + movingToSY + "] [" + movingToEX + ", " + movingToSY + "]");
 				//System.out.println("[" + movingToSX + ", " + movingToEY + "] [" + movingToEX + ", " + movingToEY + "]");
@@ -292,7 +295,7 @@ public abstract class Entity extends GLObject {
 	public double getDamage() { return damage; }
 	public boolean isDead() { return isDead; }
 	public GameTexture getTexture() { return sprite; }
-	public EDimension getCollision() { return collisionBox; }
+	public EDims getCollision() { return collisionBox; }
 	public boolean isPassable() { return passable; }
 	public boolean isNoClipping() { return allowNoClip; }
 	
@@ -302,7 +305,7 @@ public abstract class Entity extends GLObject {
 	
 	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }
-	public Entity setCollisionBox(double sX, double sY, double eX, double eY) { collisionBox = new EDimension(sX, sY, eX, eY); return this; }
+	public Entity setCollisionBox(double sX, double sY, double eX, double eY) { collisionBox = new EDims(sX, sY, eX, eY); return this; }
 	public Entity setSprite(GameTexture in) { sprite = in; return this; }
 	public Entity setWorldPos(int x, int y) {
 		if (world != null) {

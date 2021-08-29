@@ -3,8 +3,8 @@ package debug.terminal.window.termParts;
 import debug.terminal.TerminalHandler;
 import debug.terminal.window.ETerminal;
 import debug.terminal.window.TerminalRCM;
-import renderUtil.CenterType;
 import windowLib.windowObjects.actionObjects.WindowTextField;
+import windowLib.windowUtil.ObjectPosition;
 
 //Author: Hunter Bragg
 
@@ -30,7 +30,7 @@ public class TerminalTextField extends WindowTextField {
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
-		if (button == 1) { getTopParent().displayWindow(new TerminalRCM(this), CenterType.cursorCorner); }
+		if (button == 1) { getTopParent().displayWindow(new TerminalRCM(this), ObjectPosition.CURSOR_CORNER); }
 	}
 	
 	@Override

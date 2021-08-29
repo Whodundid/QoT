@@ -1,26 +1,11 @@
 package scripting.langMappings;
 
-import envision.exceptions.EnvisionError;
-import envision.interpreter.EnvisionInterpreter;
-import envision.interpreter.util.Scope;
-import envision.interpreter.util.creationUtil.ObjectCreator;
-import envision.lang.objects.classes.ClassInstance;
-import envision.lang.objects.classes.EnvisionClass;
-import envision.lang.objects.objects.EnvisionMethod;
-import envision.lang.objects.util.EnvisionDataType;
-import envision.lang.objects.util.data.ParameterData;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
-import world.GameWorld;
-
 /** Wrapper Envision class for a QoT GameWorld object. */
-public class QoTWorldClass extends EnvisionClass {
+public class QoTWorldClass {}/*extends EnvisionClass {
 	
-	/** The internal game world. */
 	private GameWorld theWorld;
 	
-	private StorageBoxHolder<String, Object> ifields = new StorageBoxHolder();
+	private BoxHolder<String, Object> ifields = new BoxHolder();
 	private EArrayList<EnvisionMethod> imethods = new EArrayList();
 	
 	public QoTWorldClass(GameWorld worldIn) {
@@ -55,7 +40,7 @@ public class QoTWorldClass extends EnvisionClass {
 		
 		Scope s = inst.getScope();
 		
-		for (StorageBox<String, Object> o : ifields) { s.define(o.getA(), ObjectCreator.createObject(o.getB()).setPublic().setFinal()); }
+		for (Box2<String, Object> o : ifields) { s.define(o.getA(), ObjectCreator.createObject(o.getB()).setPublic().setFinal()); }
 		for (EnvisionMethod m : imethods) { s.define(m.getName(), m.setPublic()); }
 		
 		return inst;
@@ -95,3 +80,4 @@ public class QoTWorldClass extends EnvisionClass {
 	}
 	
 }
+*/

@@ -1,6 +1,8 @@
 package main.settings;
 
+import eutil.storage.EArrayList;
 import java.io.File;
+import main.settings.config.ConfigSetting;
 import main.settings.config.QotConfigFile;
 
 public class MainConfigFile extends QotConfigFile {
@@ -13,13 +15,15 @@ public class MainConfigFile extends QotConfigFile {
 	public boolean tryLoad() {
 		boolean good = true;
 		
-		if (!exists()) { trySave(QotGameSettings.getSettings()); }
+		EArrayList<ConfigSetting> settings = QotGameSettings.getSettings();
+		
+		if (!exists()) { trySave(settings); }
 		
 		// attempt to load settings
-		if (!tryLoad(QotGameSettings.getSettings())) { good = false; }
+		if (!tryLoad(settings)) { good = false; }
 		
 		// save again to update the file in case formatting is off
-		if (!trySave(QotGameSettings.getSettings())) { good = false; }
+		if (!trySave(settings)) { good = false; }
 		
 		return false;
 	}

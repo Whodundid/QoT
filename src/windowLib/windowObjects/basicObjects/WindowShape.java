@@ -1,6 +1,6 @@
 package windowLib.windowObjects.basicObjects;
 
-import renderUtil.EColors;
+import eutil.colors.EColors;
 import windowLib.windowTypes.WindowObject;
 
 public abstract class WindowShape<E> extends WindowObject<E> {

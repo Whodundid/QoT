@@ -2,10 +2,10 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.io.File;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 
 public class Rm extends FileCommand {
 	
@@ -73,7 +73,7 @@ public class Rm extends FileCommand {
 			}
 		}
 		else {
-			String all = EUtil.combineAll(args.subList(1, args.size() - 1), " ");
+			String all = StringUtil.combineAll(args.subList(1, args.size() - 1), " ");
 			File f = new File(all);
 			
 			if (f.exists()) {

@@ -1,8 +1,8 @@
 package windowLib.windowObjects.windows;
 
+import eutil.colors.EColors;
 import main.QoT;
 import main.WindowSize;
-import renderUtil.EColors;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.basicObjects.WindowLabel;
 import windowLib.windowTypes.interfaces.IActionObject;

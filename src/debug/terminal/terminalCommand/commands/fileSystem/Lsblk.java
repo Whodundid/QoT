@@ -2,9 +2,9 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.io.File;
-import storageUtil.EArrayList;
 
 public class Lsblk extends FileCommand {
 	
@@ -28,7 +28,7 @@ public class Lsblk extends FileCommand {
 				if (drives != null && drives.length > 0) {
 					String title = String.format("%-10s%-22s%-30s", "Drive", "Total size (gb)", "Free Space (gb)");
 					termIn.writeln(title, 0xff2265f0);
-					termIn.writeln(EUtil.repeatString("-", title.length() - 22), 0xff2265f0);
+					termIn.writeln(StringUtil.repeatString("-", title.length() - 22), 0xff2265f0);
 					
 				    for (File f : drives) {
 				    	double total = (double) ((double) f.getTotalSpace() / 1024d / 1024d / 1024d);

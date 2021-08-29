@@ -2,11 +2,11 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.io.File;
-import renderUtil.CenterType;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.windows.TextEditorWindow;
+import windowLib.windowUtil.ObjectPosition;
 
 public class Edit extends FileCommand {
 	
@@ -30,8 +30,8 @@ public class Edit extends FileCommand {
 				boolean openA = args.getLast().equals("-a");
 				String all = "";
 				
-				if (openA) { all = EUtil.combineAll(args.subList(0, args.size() - 1), " "); }
-				else { all = EUtil.combineAll(args, " "); }
+				if (openA) { all = StringUtil.combineAll(args.subList(0, args.size() - 1), " "); }
+				else { all = StringUtil.combineAll(args, " "); }
 				
 				File f = new File(termIn.getDir(), all);
 				
@@ -82,7 +82,7 @@ public class Edit extends FileCommand {
 			TextEditorWindow window = new TextEditorWindow(path);
 			window.setFocusedObjectOnClose(termIn);
 			
-			termIn.getTopParent().displayWindow(window, CenterType.screen);
+			termIn.getTopParent().displayWindow(window, ObjectPosition.SCREEN_CENTER);
 			
 			window.setFocusToLineIfEmpty();
 		}

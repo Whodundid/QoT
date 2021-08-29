@@ -1,13 +1,13 @@
 package renderEngine;
 
+import eutil.colors.EColors;
+import eutil.misc.Rotation;
 import main.QoT;
 import main.WindowSize;
-import miscUtil.Rotation;
 import org.lwjgl.opengl.GL11;
 import renderEngine.fontRenderer.EStringBuilder;
 import renderEngine.textureSystem.GameTexture;
 import renderEngine.textureSystem.TextureSystem;
-import renderUtil.EColors;
 
 /** The base underlying object that all window objects are drawn from. */
 public abstract class GLObject {
@@ -278,9 +278,9 @@ public abstract class GLObject {
 	}
 	
 	/** Draws a texture with the given dimensions. */
-	public static void drawTexture(double x, double y, double w, double h) { drawTexture(x, y, w, h, TextureSystem.getInstance().getBoundTexture(), false, Rotation.N); }
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) { drawTexture(x, y, w, h, tex, false, Rotation.N); }
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip) { drawTexture(x, y, w, h, tex, false, Rotation.N); }
+	public static void drawTexture(double x, double y, double w, double h) { drawTexture(x, y, w, h, TextureSystem.getInstance().getBoundTexture(), false, Rotation.UP); }
+	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) { drawTexture(x, y, w, h, tex, false, Rotation.UP); }
+	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip) { drawTexture(x, y, w, h, tex, false, Rotation.UP); }
 	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip, Rotation rotation) {
 		//Ensure the texture can actually be drawn
 		if (tex != null && tex.hasBeenRegistered()) {
@@ -436,7 +436,7 @@ public abstract class GLObject {
 	
 	private static void tv(boolean f, Rotation r, double sx, double sy, double ex, double ey) {
 		switch (r) {
-		case N:
+		case UP:
 			GL11.glTexCoord2d(f ? 1 : 0, 0);
 			vertex(tdx(sx), tdy(sy));
 			GL11.glTexCoord2d(f ? 0 : 1, 0);
@@ -446,7 +446,7 @@ public abstract class GLObject {
 			GL11.glTexCoord2d(f ? 1 : 0, 1);
 			vertex(tdx(sx), tdy(ey));
 			break;
-		case E:
+		case LEFT:
 			GL11.glTexCoord2d(f ? 1 : 0, 1);
 			vertex(tdx(sx), tdy(sy));
 			GL11.glTexCoord2d(f ? 1 : 0, 0);
@@ -456,7 +456,7 @@ public abstract class GLObject {
 			GL11.glTexCoord2d(f ? 0 : 1, 1);
 			vertex(tdx(sx), tdy(ey));
 			break;
-		case W:
+		case RIGHT:
 			GL11.glTexCoord2d(f ? 0 : 1, 0);
 			vertex(tdx(sx), tdy(sy));
 			GL11.glTexCoord2d(f ? 0 : 1, 1);
@@ -466,7 +466,7 @@ public abstract class GLObject {
 			GL11.glTexCoord2d(f ? 1 : 0, 0);
 			vertex(tdx(sx), tdy(ey));
 			break;
-		case S:
+		case DOWN:
 			GL11.glTexCoord2d(f ? 0 : 1, 1);
 			vertex(tdx(sx), tdy(sy));
 			GL11.glTexCoord2d(f ? 1 : 0, 1);

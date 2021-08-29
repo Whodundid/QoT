@@ -1,12 +1,12 @@
 package debug.terminal.terminalCommand.commands.game;
 
-import assets.screens.types.MainMenuScreen;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import gameScreens.MainMenuScreen;
 import main.QoT;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 
 public class UnloadWorld extends TerminalCommand {
 	

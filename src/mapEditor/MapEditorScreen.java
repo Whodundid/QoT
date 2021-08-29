@@ -1,8 +1,11 @@
 package mapEditor;
 
-import assets.screens.GameScreen;
 import assets.sounds.Songs;
 import assets.worldTiles.WorldTile;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.storage.EDims;
+import gameScreens.screenUtil.GameScreen;
 import input.Keyboard;
 import input.Mouse;
 import java.io.File;
@@ -13,10 +16,7 @@ import mapEditor.editorParts.sidePanel.SidePanelType;
 import mapEditor.editorParts.toolBox.EditorToolBox;
 import mapEditor.editorParts.topHeader.EditorScreenTopHeader;
 import mapEditor.editorTools.EditorToolType;
-import mathUtil.NumberUtil;
 import renderEngine.fontRenderer.FontRenderer;
-import renderUtil.EColors;
-import storageUtil.EDimension;
 import windowLib.windowTypes.interfaces.IActionObject;
 import world.GameWorld;
 import world.Region;
@@ -289,7 +289,7 @@ public class MapEditorScreen extends GameScreen {
 			worldYPos = (int) (yCheck / h);
 			boolean inMap = worldXPos >= 0 && worldXPos < world.getWidth() && worldYPos >= 0 && worldYPos < world.getHeight();
 			
-			return mouseOver && inMap && EDimension.of(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h)).contains(mXIn, mYIn);
+			return mouseOver && inMap && EDims.of(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h)).contains(mXIn, mYIn);
 		}
 		return false;
 	}

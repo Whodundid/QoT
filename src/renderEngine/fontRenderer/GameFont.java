@@ -1,10 +1,10 @@
 package renderEngine.fontRenderer;
 
+import eutil.storage.Box2;
+import eutil.storage.EArrayList;
 import java.io.File;
 import java.util.Scanner;
 import renderEngine.textureSystem.GameTexture;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
 
 //can only be instantiated after the textureSystem
 public class GameFont {
@@ -43,13 +43,13 @@ public class GameFont {
 	//----------------
 	
 	/** Returns the x and y coordinates within the fontImage for the corresponding character. */
-	public StorageBox<Integer, Integer> getCharImage(char charIn) {
+	public Box2<Integer, Integer> getCharImage(char charIn) {
 		int pos = -1;
 		for (int i = 0; i < maping.size(); i++) {
 			if (maping.get(i) == charIn) { pos = i; break; }
 		}
 		
-		return (pos != -1) ? new StorageBox(pos % 16, pos / 16) : new StorageBox(-1, -1);
+		return (pos != -1) ? new Box2(pos % 16, pos / 16) : new Box2(-1, -1);
 	}
 	
 	public GameTexture getFontTexture() { return fontImage; }

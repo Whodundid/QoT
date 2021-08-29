@@ -1,8 +1,8 @@
 package assets.worldTiles;
 
 import assets.textures.WorldTextures;
+import eutil.colors.EColors;
 import renderEngine.textureSystem.GameTexture;
-import renderUtil.EColors;
 
 public enum TileIDs {
 	STONE(0, "Stone", EColors.gray, WorldTextures.stone),

@@ -12,9 +12,9 @@ import assets.worldTiles.tiles.Stone;
 import assets.worldTiles.tiles.Water;
 import assets.worldTiles.tiles.Wood;
 import eutil.EUtil;
+import eutil.reflection.ReflectionUtil;
+import eutil.storage.EArrayList;
 import java.util.Collections;
-import miscUtil.ReflectionHelper;
-import storageUtil.EArrayList;
 
 public class WorldTiles {
 	
@@ -58,7 +58,7 @@ public class WorldTiles {
 				if (texID == 0) {
 					return tile.getClass().getConstructor().newInstance();
 				}
-				else if (ReflectionHelper.doesConstructorExist(tile, Integer.class)) {
+				else if (ReflectionUtil.doesConstructorExist(tile, Integer.class)) {
 					return tile.getClass().getConstructor(Integer.class).newInstance(texID);
 				}
 			}
@@ -74,7 +74,7 @@ public class WorldTiles {
 		WorldTile tile = EUtil.getFirst(tiles, t -> t.getID() == id);
 		if (tile != null) {
 			try {
-				if (ReflectionHelper.doesConstructorExist(tile, Integer.class)) {
+				if (ReflectionUtil.doesConstructorExist(tile, Integer.class)) {
 					return tile.getClass().getConstructor(Integer.class).newInstance(texID);
 				}
 				else {

@@ -1,6 +1,6 @@
 package windowLib.windowObjects.utilityObjects;
 
-import storageUtil.EDimension;
+import eutil.storage.EDims;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
@@ -17,7 +17,7 @@ public class FocusLockBorder extends WindowObject {
 	
 	public FocusLockBorder(IWindowObject parentIn) {
 		if (parentIn != null) {
-			EDimension dim = parentIn.getDimensions();
+			EDims dim = parentIn.getDimensions();
 			init(parentIn, dim.startX, dim.startY, dim.width, dim.height);
 			startTime = System.currentTimeMillis();
 			//mc.getSoundHandler().playSound(PositionedSoundRecord.create(EMCResources.buttonSound, 1.0F));

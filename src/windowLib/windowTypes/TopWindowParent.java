@@ -1,15 +1,15 @@
 package windowLib.windowTypes;
 
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import input.Mouse;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import main.QoT;
 import main.WindowSize;
 import renderEngine.GLSettings;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
 import windowLib.StaticTopParent;
 import windowLib.StaticWindowObject;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
@@ -28,13 +28,13 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	protected IWindowObject<?> toFront, toBack;
 	protected IWindowObject<?> hoveringTextObject;
 	protected IWindowObject<?> escapeStopper;
-	protected StorageBox<Integer, Integer> mousePos = new StorageBox();
-	protected StorageBox<Integer, Integer> oldMousePos = new StorageBox();
+	protected Box2<Integer, Integer> mousePos = new Box2();
+	protected Box2<Integer, Integer> oldMousePos = new Box2();
 	protected Deque<EventFocus> focusQueue = new ArrayDeque();
 	protected ObjectModifyType modifyType = ObjectModifyType.None;
-	protected ScreenLocation resizingDir = ScreenLocation.out;
+	protected ScreenLocation resizingDir = ScreenLocation.OUT;
 	protected IWindowParent<?> maximizingWindow;
-	protected ScreenLocation maximizingArea = ScreenLocation.out;
+	protected ScreenLocation maximizingArea = ScreenLocation.OUT;
 	protected boolean maximizingHeaderCenter = false;
 	protected int mX = 0, mY = 0;
 	protected long mouseHoverTime = 0l;
@@ -80,7 +80,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 						//draw greyed out overlay over everything if a focus lock object is present
 						if (focusLockObject != null && !o.equals(focusLockObject)) {
 							if (o.isVisible()) {
-								EDimension d = o.getDimensions();
+								EDims d = o.getDimensions();
 								drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 							}
 						}
@@ -163,8 +163,8 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	@Override public void mouseExited(int mX, int mY) {}
 	@Override public boolean isMouseInside() { return false; }
 	@Override public boolean isMouseOver() { return !isMouseInsideObject(); }
-	@Override public TopWindowParent<E> setBoundaryEnforcer(EDimension dimIn) { return this; }
-	@Override public EDimension getBoundaryEnforcer() { return getDimensions(); }
+	@Override public TopWindowParent<E> setBoundaryEnforcer(EDims dimIn) { return this; }
+	@Override public EDims getBoundaryEnforcer() { return getDimensions(); }
 	@Override public boolean isClickable() { return false; }
 	@Override public TopWindowParent<E> setClickable(boolean valIn) { return this; }
 	
@@ -226,7 +226,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		return this;
 	}
 	@Override public TopWindowParent<E> setResizingDir(ScreenLocation areaIn) { resizingDir = areaIn; return this; }
-	@Override public TopWindowParent<E> setModifyMousePos(int mX, int mY) { mousePos.setValues(mX, mY); return this; }
+	@Override public TopWindowParent<E> setModifyMousePos(int mX, int mY) { mousePos.set(mX, mY); return this; }
 	@Override public IWindowObject getModifyingObject() { return modifyingObject; }
 	@Override public IWindowParent getMaximizingWindow() { return maximizingWindow; }
 	@Override public ScreenLocation getMaximizingArea() { return maximizingArea; }
@@ -247,7 +247,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		
 		//handle mouse hover stuff
 		checkMouseHover();
-		oldMousePos.setValues(mX, mY);
+		oldMousePos.set(mX, mY);
 		
 		//update objects
 		if (!objsToBeRemoved.isEmpty()) { StaticWindowObject.removeObjects(this, objsToBeRemoved); }
@@ -261,8 +261,8 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		if (modifyingObject != null) {
 			switch (modifyType) {
 			case Move:
-			case MoveAlreadyClicked: modifyingObject.move(mX - mousePos.getA(), mY - mousePos.getB()); mousePos.setValues(mX, mY); break;
-			case Resize: modifyingObject.resize(mX - mousePos.getA(), mY - mousePos.getB(), resizingDir); mousePos.setValues(mX, mY); break;
+			case MoveAlreadyClicked: modifyingObject.move(mX - mousePos.getA(), mY - mousePos.getB()); mousePos.set(mX, mY); break;
+			case Resize: modifyingObject.resize(mX - mousePos.getA(), mY - mousePos.getB(), resizingDir); mousePos.set(mX, mY); break;
 			default: break;
 			}
 		}
@@ -270,55 +270,55 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		if (maximizingWindow != null) {
 			if (maximizingWindow.isMaximizable()) {
 				switch (maximizingArea) {
-				case topLeft:
+				case TOP_LEFT:
 					maximizingWindow.setPreMax(maximizingWindow.getDimensions());
-					maximizingWindow.setMaximized(ScreenLocation.topLeft);
+					maximizingWindow.setMaximized(ScreenLocation.TOP_LEFT);
 					maximizingWindow.maximize();
 					setFocusedObject(maximizingWindow);
 					break;
-				case botLeft:
+				case BOT_LEFT:
 					maximizingWindow.setPreMax(maximizingWindow.getDimensions());
-					maximizingWindow.setMaximized(ScreenLocation.botLeft);
+					maximizingWindow.setMaximized(ScreenLocation.BOT_LEFT);
 					maximizingWindow.maximize();
 					setFocusedObject(maximizingWindow);
 					break;
-				case topRight:
+				case TOP_RIGHT:
 					maximizingWindow.setPreMax(maximizingWindow.getDimensions());
-					maximizingWindow.setMaximized(ScreenLocation.topRight);
+					maximizingWindow.setMaximized(ScreenLocation.TOP_RIGHT);
 					maximizingWindow.maximize();
 					setFocusedObject(maximizingWindow);
 					break;
-				case botRight:
+				case BOT_RIGHT:
 					maximizingWindow.setPreMax(maximizingWindow.getDimensions());
-					maximizingWindow.setMaximized(ScreenLocation.botRight);
+					maximizingWindow.setMaximized(ScreenLocation.BOT_RIGHT);
 					maximizingWindow.maximize();
 					setFocusedObject(maximizingWindow);
 					break;
-				case left:
+				case LEFT:
 					maximizingWindow.setPreMax(maximizingWindow.getDimensions());
-					maximizingWindow.setMaximized(ScreenLocation.left);
+					maximizingWindow.setMaximized(ScreenLocation.LEFT);
 					maximizingWindow.maximize();
 					setFocusedObject(maximizingWindow);
 					break;
-				case right:
+				case RIGHT:
 					maximizingWindow.setPreMax(maximizingWindow.getDimensions());
-					maximizingWindow.setMaximized(ScreenLocation.right);
+					maximizingWindow.setMaximized(ScreenLocation.RIGHT);
 					maximizingWindow.maximize();
 					setFocusedObject(maximizingWindow);
 					break;
-				case center:
+				case CENTER:
 					maximizingWindow.setPreMax(maximizingWindow.getDimensions());
-					maximizingWindow.setMaximized(ScreenLocation.center);
+					maximizingWindow.setMaximized(ScreenLocation.CENTER);
 					maximizingWindow.maximize();
 					setFocusedObject(maximizingWindow);
 					break;
-				case out:
+				case OUT:
 					if (maximizingWindow.isMaximized()) {
-						maximizingWindow.setMaximized(ScreenLocation.out);
+						maximizingWindow.setMaximized(ScreenLocation.OUT);
 						maximizingWindow.miniaturize();
 						
 						if (maximizingHeaderCenter) {
-							EDimension dims = maximizingWindow.getDimensions();
+							EDims dims = maximizingWindow.getDimensions();
 							WindowHeader header = maximizingWindow.getHeader();
 							double yPos = header != null ? header.height / 2 : 0;
 							
@@ -338,7 +338,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 			}
 			
 			maximizingWindow = null;
-			maximizingArea = ScreenLocation.out;
+			maximizingArea = ScreenLocation.OUT;
 			maximizingHeaderCenter = false;
 		}
 	}
@@ -420,7 +420,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		
 		for (WindowParent p : getAllActiveWindows()) {
 			
-			EDimension oldDims = p.getDimensions();
+			EDims oldDims = p.getDimensions();
 			
 			double newX = (oldDims.startX * newW) / oldW;
 			double newY = (oldDims.startY * newH) / oldH;

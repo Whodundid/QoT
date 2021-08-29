@@ -1,8 +1,7 @@
 package windowLib.windowObjects.advancedObjects.colorPicker;
 
-import renderUtil.CenterType;
-import renderUtil.EColors;
-import storageUtil.EDimension;
+import eutil.colors.EColors;
+import eutil.storage.EDims;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.actionObjects.WindowTextField;
 import windowLib.windowObjects.basicObjects.WindowContainer;
@@ -13,6 +12,7 @@ import windowLib.windowObjects.windows.WindowDialogueBox.DialogueBoxTypes;
 import windowLib.windowTypes.ActionWindowParent;
 import windowLib.windowTypes.interfaces.IActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
+import windowLib.windowUtil.ObjectPosition;
 
 //Author: Hunter Bragg
 
@@ -162,7 +162,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		//drawRect(0xff3b3b3b, 1);
 		
 		if (colorDisplay != null) {
-			EDimension cDim = colorDisplay.getDimensions();
+			EDims cDim = colorDisplay.getDimensions();
 			drawRect(cDim.startX - 1, cDim.startY - 1, cDim.endX + 1, cDim.endY + 1, 0xff000000);
 		}
 		
@@ -211,7 +211,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 			error.setTitleColor(EColors.lred.c());
 			error.setMessage("Cannot parse the value: " + inputField.getText());
 			error.setMessageColor(EColors.lgray.c());
-			getTopParent().displayWindow(error, CenterType.screen);
+			getTopParent().displayWindow(error, ObjectPosition.SCREEN_CENTER);
 			inputField.clear();
 			inputField.setText(inputField.text);
 		}

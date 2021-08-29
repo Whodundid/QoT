@@ -1,18 +1,18 @@
 package windowLib.windowObjects.basicObjects;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import renderEngine.fontRenderer.EStringBuilder;
 import renderEngine.fontRenderer.FontRenderer;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
 public class WindowTextBox<E> extends WindowObject<E> {
 	
-	StorageBoxHolder<String, Integer> lines = new StorageBoxHolder();
+	BoxHolder<String, Integer> lines = new BoxHolder();
 	private boolean centered = false;
 	private boolean shadowed = false;
 	private boolean drawBackground = true;
@@ -60,7 +60,7 @@ public class WindowTextBox<E> extends WindowObject<E> {
 		scissor(scissorX, scissorY, scissorW, scissorH);
 		
 		double yPos = startY + border + 5;
-		for (StorageBox<String, Integer> line : lines) {
+		for (Box2<String, Integer> line : lines) {
 			drawLine(line.getA(), line.getB(), yPos);
 			
 			yPos += FontRenderer.FONT_HEIGHT + lineGap;
@@ -103,7 +103,7 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	//WindowTextBox Internal Methods
 	//------------------------------
 	
-	private EArrayList<StorageBox<String, Integer>> parseLine(String lineIn, int colorIn) {
+	private EArrayList<Box2<String, Integer>> parseLine(String lineIn, int colorIn) {
 		if (lineIn != null) {
 			
 			EArrayList<String> newLineCheck = new EArrayList();
@@ -124,10 +124,10 @@ public class WindowTextBox<E> extends WindowObject<E> {
 				widthAdjusted.addAll(EStringBuilder.createWordWrapString(s, (int) maxWidth));
 			}
 			
-			EArrayList<StorageBox<String, Integer>> createdLines = new EArrayList();
+			EArrayList<Box2<String, Integer>> createdLines = new EArrayList();
 			
 			for (String s : widthAdjusted) {
-				createdLines.add(new StorageBox<String, Integer>(s, colorIn));
+				createdLines.add(new Box2<String, Integer>(s, colorIn));
 			}
 			
 			return createdLines;
@@ -139,7 +139,7 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	private void redimension() {
 		if (lines.isNotEmpty()) {
 			int longest = 0;
-			for (StorageBox<String, Integer> box : lines) {
+			for (Box2<String, Integer> box : lines) {
 				String s = box.getA();
 				int len = getStringWidth(s);
 				if (len > longest) { longest = len; }
@@ -176,25 +176,25 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	
 	public static void drawBox(double x, double y, String... linesIn) {
 		if (linesIn != null) {
-			StorageBox<String, Integer>[] lines = new StorageBox[linesIn.length];
-			for (int i = 0; i < linesIn.length; i++) { lines[i] = new StorageBox(linesIn[i], 0xffffff); }
+			Box2<String, Integer>[] lines = new Box2[linesIn.length];
+			for (int i = 0; i < linesIn.length; i++) { lines[i] = new Box2(linesIn[i], 0xffffff); }
 			drawBox(x, y, 8, 3, true, true, lines);
 		}
 	}
 	
-	public static void drawBox(double x, double y, StorageBoxHolder<String, Integer> linesIn) {
+	public static void drawBox(double x, double y, BoxHolder<String, Integer> linesIn) {
 		if (linesIn != null) { drawBox(x, y, 8, 3, true, true, linesIn.getBoxesAsArray()); }
 	}
 	
-	public static void drawBox(double x, double y, StorageBox<String, Integer>[] linesIn) {
+	public static void drawBox(double x, double y, Box2<String, Integer>[] linesIn) {
 		drawBox(x, y, 8, 3, true, true, linesIn);
 	}
 	
-	public static void drawBox(double xIn, double yIn, double borderIn, double lineGapIn, boolean centered, boolean shadowed, StorageBox<String, Integer>[] linesIn) {
+	public static void drawBox(double xIn, double yIn, double borderIn, double lineGapIn, boolean centered, boolean shadowed, Box2<String, Integer>[] linesIn) {
 		if (linesIn != null) {
 			
 			int longest = 0;
-			for (StorageBox<String, Integer> box : linesIn) {
+			for (Box2<String, Integer> box : linesIn) {
 				String s = box.getA();
 				if (s != null) {
 					int len = getStringWidth(s);
@@ -216,7 +216,7 @@ public class WindowTextBox<E> extends WindowObject<E> {
 			double ty = y + borderIn + (lineGapIn / 2) + (lineGapIn % 2);
 			
 			int i = 0;
-			for (StorageBox<String, Integer> box : linesIn) {
+			for (Box2<String, Integer> box : linesIn) {
 				if (box != null) {
 					String s = box.getA();
 					int c = 0xffffff;

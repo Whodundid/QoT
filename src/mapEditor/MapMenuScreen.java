@@ -1,7 +1,9 @@
 package mapEditor;
 
-import assets.screens.GameScreen;
 import assets.textures.EditorTextures;
+import eutil.colors.EColors;
+import eutil.storage.EDims;
+import gameScreens.screenUtil.GameScreen;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -9,8 +11,6 @@ import java.io.File;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import main.QoT;
-import renderUtil.EColors;
-import storageUtil.EDimension;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.actionObjects.WindowTextField;
 import windowLib.windowObjects.basicObjects.WindowLabel;
@@ -102,7 +102,7 @@ public class MapMenuScreen extends GameScreen {
 				@Override
 				protected JDialog createDialog(Component parent) throws HeadlessException {
 					JDialog dlg = super.createDialog(parent);
-					EDimension d = QoT.getWindowDims();
+					EDims d = QoT.getWindowDims();
 					Dimension fd = getSize();
 					dlg.setLocation((int) (d.startX + (d.width - fd.width) / 2), (int) (d.startY + (d.height - fd.height) / 2));
 					dlg.setModal(true);

@@ -1,19 +1,19 @@
 package world;
 
 import assets.entities.Entity;
-import assets.entities.enemy.types.Goblin;
-import assets.entities.enemy.types.Thyrah;
-import assets.entities.enemy.types.TrollBoar;
-import assets.entities.enemy.types.Whodundid;
-import assets.entities.player.Player;
+import assets.entities.Goblin;
+import assets.entities.Player;
+import assets.entities.Thyrah;
+import assets.entities.TrollBoar;
+import assets.entities.Whodundid;
 import assets.worldTiles.WorldTile;
+import eutil.colors.EColors;
+import eutil.random.RandomUtil;
+import eutil.storage.EArrayList;
 import input.Keyboard;
 import java.util.Comparator;
 import main.QoT;
-import randomUtil.RandomUtil;
 import renderEngine.fontRenderer.FontRenderer;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowUtil.EGui;
 
 //Author: Hunter Bragg
@@ -36,6 +36,8 @@ public class WorldRenderer extends EGui {
 	boolean drawEntityHitboxes = true;
 	boolean drawEntityOutlines = false;
 	
+	WorldTile[][] tiles;
+	
 	public WorldRenderer(GameWorld worldIn) {
 		world = worldIn;
 		
@@ -44,6 +46,7 @@ public class WorldRenderer extends EGui {
 			distY = world.getHeight();
 		}
 		
+		/*
 		for (int i = 0; i < 10; i++) {
 			Entity e = null;
 			switch (RandomUtil.getRoll(0, 3)) {
@@ -60,6 +63,7 @@ public class WorldRenderer extends EGui {
 				e.setWorldPos(x, y);
 			}
 		}
+		*/
 		
 		onWindowResized();
 	}
@@ -81,10 +85,10 @@ public class WorldRenderer extends EGui {
 			x = (int) (midX - (distX * w) - (w / 2));
 			y = (int) (midY - (distY * h) - (h / 2));
 			
-			scissor(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h));
+			//scissor(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h));
 			renderMap();
 			renderEntities();
-			if (drawPosBox) { drawPosBox(); }
+			//if (drawPosBox) { drawPosBox(); }
 			//drawViewBox();
 			
 			/*
@@ -94,30 +98,38 @@ public class WorldRenderer extends EGui {
 			}
 			*/
 			
-			endScissor();
+			//endScissor();
 		}
 		
 		if (world != null) {
 			int tW = (int) (FontRenderer.getInstance().getStringWidth(world.getName()) / 2);
-			drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
-			drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
-			drawStringC(world.getName(), midX, 15);
+			//drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
+			//drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
+			//drawStringC(world.getName(), midX, 15);
 			
-			drawString("Dims: " + world.getWidth() + " " + world.getHeight(), startX + 10, endY + 60);
+			//drawString("Dims: " + world.getWidth() + " " + world.getHeight(), startX + 10, endY + 60);
 		}
 		
 		//drawString("Dist: " + distX + " " + distY, reload.startX + 10, reload.endY + 20);
 		//drawString("Zoom: " + NumUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
 		//drawString("WPos: " + p.worldX + " " + p.worldY, reload.startX + 10, reload.endY + 100);
 		//drawString("PPos: " + p.startX + " " + p.startY, reload.startX + 10, reload.endY + 140);
+		
+		Player p = QoT.thePlayer;
+		oldWorldX = p.worldX;
+		oldWorldY = p.worldY;
+	}
+	
+	@Override
+	public void keyPressed(char typedChar, int keyCode) {
+		//if (typedChar == 'e') { QoT.getActiveTopParent().displayWindow(new InventoryWindow(QoT.getPlayer())); }
+		if (typedChar == 'h') { drawEntityHitboxes = !drawEntityHitboxes; }
+		if (typedChar == 'p') { drawPosBox = !drawPosBox; }
+		if (typedChar == 'o') { drawEntityOutlines = !drawEntityOutlines; }
 	}
 	
 	private void checkArrowPress() {
-		Player p = QoT.thePlayer;
-		if (Keyboard.isWDown()) { p.move(0, -1.5); }
-		if (Keyboard.isADown()) { p.move(-1.5, 0); }
-		if (Keyboard.isSDown()) { p.move(0, 1.5); }
-		if (Keyboard.isDDown()) { p.move(1.5, 0); }
+		
 	}
 	
 	private void renderMap() {
@@ -125,14 +137,22 @@ public class WorldRenderer extends EGui {
 		double offsetX = (p.startX % w);
 		double offsetY = (p.startY % h);
 		
-		WorldTile[][] tiles = world.getTilesAroundPoint(p.worldX, p.worldY, distX, distY);
+		if (tiles == null || p.worldX != oldWorldX || p.worldY != oldWorldY) {
+			tiles = world.getTilesAroundPoint(p.worldX, p.worldY, distX, distY);
+		}
+		
+		int worldTileWidth = -world.getTileWidth();
+		int worldTileHeight = -world.getTileHeight();
+		double pStartX = Math.abs(p.startX);
+		double pStartY = Math.abs(p.startY);
+		
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = 0; j < tiles[0].length; j++) {
 				WorldTile t = tiles[i][j];
 				if (t != null) {
 					
-					double drawPosX = x + ((p.startX < -world.getTileWidth()) ? Math.abs(p.startX) : -offsetX);
-					double drawPosY = y + ((p.startY < -world.getTileHeight()) ? Math.abs(p.startY) : -offsetY);
+					double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
+					double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);
 					
 					if (p.worldX < distX) { drawPosX += (distX - p.worldX) * w; }
 					if (p.worldY < distY) { drawPosY += (distY - p.worldY) * h; }
@@ -208,7 +228,7 @@ public class WorldRenderer extends EGui {
 					double colEX = colSX + e.getCollision().width;
 					double colEY = colSY + e.getCollision().height;
 					
-					//drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
+					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
 				}
 				
 				if (drawEntityOutlines) {

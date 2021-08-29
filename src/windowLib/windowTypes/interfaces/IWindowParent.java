@@ -1,9 +1,9 @@
 package windowLib.windowTypes.interfaces;
 
+import eutil.misc.ScreenLocation;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import java.util.Stack;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
 
 //Author: Hunter Bragg
 
@@ -86,9 +86,9 @@ public interface IWindowParent<E> extends IWindowObject<E> {
 	public void miniaturize();
 	
 	/** Returns the original dimensions for this object before it was maximized. */
-	public EDimension getPreMax();
+	public EDims getPreMax();
 	/** Specifies the dimensions this object had before it was maximized. */
-	public IWindowParent<E> setPreMax(EDimension dimIn);
+	public IWindowParent<E> setPreMax(EDims dimIn);
 	
 	//-------------------------
 	// Special Argument Checks

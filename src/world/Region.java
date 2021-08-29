@@ -1,9 +1,9 @@
 package world;
 
 import assets.entities.Entity;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
-import storageUtil.EDimensionI;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.storage.EDimsI;
 
 public class Region {
 	
@@ -46,7 +46,7 @@ public class Region {
 		midY = startY + height / 2;
 	}
 	
-	public EDimensionI getDimensions() { return new EDimensionI(startX, startY, endX, endY); }
+	public EDimsI getDimensions() { return new EDimsI(startX, startY, endX, endY); }
 	
 	public void moveRegion(int x, int y) {
 		startX += x;

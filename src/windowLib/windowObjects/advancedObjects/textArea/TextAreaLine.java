@@ -1,12 +1,12 @@
 package windowLib.windowObjects.advancedObjects.textArea;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box3;
 import input.Keyboard;
 import input.Mouse;
 import main.QoT;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.TrippleBox;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.actionObjects.WindowTextField;
 import windowLib.windowObjects.basicObjects.WindowLabel;
@@ -230,7 +230,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 			if (b == 0) {
 				startTextTimer();
 				
-				if (isResizeable() && !getEdgeSideMouseIsOn().equals(ScreenLocation.out)) {
+				if (isResizeable() && !getEdgeSideMouseIsOn().equals(ScreenLocation.OUT)) {
 					getTopParent().setModifyingObject(this, ObjectModifyType.Resize);
 					getTopParent().setResizingDir(getEdgeSideMouseIsOn());
 					getTopParent().setModifyMousePos(mX, mY);
@@ -343,7 +343,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	public int getDrawnLineNumber() { return drawnLineNumber; }
 	public int getLineNumber() { return lineNumber; }
 	public long getDoubleClickThreshold() { return doubleClickThreshold; }
-	public TrippleBox<String, Object, Boolean> getLink() { return new TrippleBox(linkText, linkObject, webLink); }
+	public Box3<String, Object, Boolean> getLink() { return new Box3(linkText, linkObject, webLink); }
 	
 	//--------------------
 	//TextAreaLine Setters

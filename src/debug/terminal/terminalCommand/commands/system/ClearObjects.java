@@ -3,7 +3,7 @@ package debug.terminal.terminalCommand.commands.system;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
-import storageUtil.EArrayList;
+import eutil.storage.EArrayList;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg

@@ -1,6 +1,6 @@
 package scripting.builder;
 
-import storageUtil.EArrayList;
+import eutil.storage.EArrayList;
 
 public abstract class ScriptAction {
 	

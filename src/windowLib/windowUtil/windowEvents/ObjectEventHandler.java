@@ -1,6 +1,6 @@
 package windowLib.windowUtil.windowEvents;
 
-import storageUtil.EArrayList;
+import eutil.storage.EArrayList;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg

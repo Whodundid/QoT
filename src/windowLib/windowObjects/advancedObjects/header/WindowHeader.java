@@ -1,12 +1,12 @@
 package windowLib.windowObjects.advancedObjects.header;
 
 import assets.textures.WindowTextures;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
+import eutil.storage.EDims;
 import input.Mouse;
-import mathUtil.NumberUtil;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.WindowParent;
@@ -39,7 +39,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	protected boolean drawParentFocus = true;
 	protected boolean alwaysDrawFocused = false;
 	protected boolean moving = false;
-	private StorageBox<Integer, Integer> clickPos = new StorageBox(-1, -1);
+	private Box2<Integer, Integer> clickPos = new Box2(-1, -1);
 	protected IWindowParent<?> window;
 	private int buttonPos = buttonWidth + 2;
 	private boolean pressed = false;
@@ -53,7 +53,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	public WindowHeader(IWindowObject<?> parentIn, boolean drawDefaultIn, int headerHeight) { this(parentIn, drawDefaultIn, headerHeight, ""); }
 	public WindowHeader(IWindowObject<?> parentIn, boolean drawDefaultIn, int headerHeight, String titleIn) {
 		if (parentIn != null) {
-			EDimension dim = parentIn.getDimensions();
+			EDims dim = parentIn.getDimensions();
 			init(parentIn, dim.startX, dim.startY - headerHeight, dim.width, headerHeight);
 			
 			if (parentIn instanceof IWindowParent<?>) { window = (IWindowParent<?>) parentIn; }
@@ -172,13 +172,13 @@ public class WindowHeader<E> extends WindowObject<E> {
 	@Override
 	public void mousePressed(int mX, int mY, int button) {
 		super.mousePressed(mX, mY, button);
-		clickPos.setValues(mX, mY);
+		clickPos.set(mX, mY);
 		pressed = true;
 		
 		if (getObjectGroup() != null && getObjectGroup().getGroupParent() != null) {
 			IWindowObject groupParent = getObjectGroup().getGroupParent();
 			if (groupParent.isResizeable()) {
-				if (groupParent.getEdgeSideMouseIsOn() != ScreenLocation.out) {
+				if (groupParent.getEdgeSideMouseIsOn() != ScreenLocation.OUT) {
 					getTopParent().setFocusedObject(getWindowParent());
 					groupParent.mousePressed(mX, mY, button);
 				}
@@ -192,31 +192,31 @@ public class WindowHeader<E> extends WindowObject<E> {
 	@Override
 	public void mouseReleased(int mXIn, int mYIn, int button) {
 		if (moving) { moving = false; }
-		clickPos.setValues(-1, -1);
+		clickPos.set(-1, -1);
 		pressed = false;
 		
 		WindowParent<?> p = (WindowParent<?>) window;
 		
 		if (mXIn <= 5 && mYIn <= 8) { //top left
-			getTopParent().setMaximizingWindow(window, ScreenLocation.topLeft, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.TOP_LEFT, false);
 		}
 		else if (mXIn <= 5 && mYIn >= (res.getHeight() - 8)) { //bot left
-			getTopParent().setMaximizingWindow(window, ScreenLocation.botLeft, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.BOT_LEFT, false);
 		}
 		else if (mXIn >= (res.getWidth() - 5) && mYIn <= 8) { //top right
-			getTopParent().setMaximizingWindow(window, ScreenLocation.topRight, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.TOP_RIGHT, false);
 		}
 		else if (mXIn >= (res.getWidth() - 5) && mYIn >= (res.getHeight() - 8)) { //bot right
-			getTopParent().setMaximizingWindow(window, ScreenLocation.botRight, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.BOT_RIGHT, false);
 		}
 		else if (mXIn <= 5) { //left
-			getTopParent().setMaximizingWindow(window, ScreenLocation.left, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.LEFT, false);
 		}
 		else if (mXIn >= (res.getWidth() - 5)) { //right
-			getTopParent().setMaximizingWindow(window, ScreenLocation.right, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.RIGHT, false);
 		}
 		else if (mYIn <= 8) { //top
-			getTopParent().setMaximizingWindow(window, ScreenLocation.center, false);
+			getTopParent().setMaximizingWindow(window, ScreenLocation.CENTER, false);
 		}
 		
 		super.mouseReleased(mXIn, mYIn, button);
@@ -295,9 +295,9 @@ public class WindowHeader<E> extends WindowObject<E> {
 	}
 	
 	private void headerGrabMaximize() {
-		clickPos.setValues(-1, -1);
+		clickPos.set(-1, -1);
 		pressed = false;
-		getTopParent().setMaximizingWindow(window, ScreenLocation.out, true);
+		getTopParent().setMaximizingWindow(window, ScreenLocation.OUT, true);
 	}
 	
 	public WindowHeader<E> updateButtonVisibility() {
@@ -378,14 +378,14 @@ public class WindowHeader<E> extends WindowObject<E> {
 		IWindowParent<?> p = getWindowParent();
 		if (p != null) {
 			if (p.isMaximizable()) {
-				if (p.getMaximizedPosition() == ScreenLocation.center) {
-					p.setMaximized(ScreenLocation.out);
+				if (p.getMaximizedPosition() == ScreenLocation.CENTER) {
+					p.setMaximized(ScreenLocation.OUT);
 					p.miniaturize();
 					getTopParent().setFocusedObject(p);
 				}
 				else {
-					if (p.getMaximizedPosition() == ScreenLocation.out) { p.setPreMax(p.getDimensions()); }
-					p.setMaximized(ScreenLocation.center);
+					if (p.getMaximizedPosition() == ScreenLocation.OUT) { p.setPreMax(p.getDimensions()); }
+					p.setMaximized(ScreenLocation.CENTER);
 					p.maximize();
 					getTopParent().setFocusedObject(p);
 				}
@@ -428,8 +428,8 @@ public class WindowHeader<E> extends WindowObject<E> {
 		maximizeButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
 		
 		if (window != null && window.isMaximizable()) {
-			maximizeButton.setButtonTexture(window.getMaximizedPosition() == ScreenLocation.center ? WindowTextures.min : WindowTextures.max);
-			maximizeButton.setButtonSelTexture(window.getMaximizedPosition() == ScreenLocation.center ? WindowTextures.min_sel : WindowTextures.max_sel);
+			maximizeButton.setButtonTexture(window.getMaximizedPosition() == ScreenLocation.CENTER ? WindowTextures.min : WindowTextures.max);
+			maximizeButton.setButtonSelTexture(window.getMaximizedPosition() == ScreenLocation.CENTER ? WindowTextures.min_sel : WindowTextures.max_sel);
 			
 			maximizeButton.setHoverText(window.isMaximized() ? "Miniaturize" : "Maximize");
 			maximizeButton.setObjectName("maximize button");

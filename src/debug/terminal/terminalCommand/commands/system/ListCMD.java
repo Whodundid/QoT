@@ -4,10 +4,10 @@ import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.IListableCommand;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import main.QoT;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowTypes.WindowParent;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
@@ -156,7 +156,7 @@ public class ListCMD extends TerminalCommand {
 		termIn.writeln("Listing " + windows.size() + " active window" + plural + "..\n", EColors.lgreen);
 		
 		termIn.writeln("(Name | PID | Type)", EColors.lime);
-		termIn.writeln(EUtil.repeatString("-", 16), EColors.lime);
+		termIn.writeln(StringUtil.repeatString("-", 16), EColors.lime);
 		
 		for (WindowParent p : windows) {
 			String out = p.getObjectName() + " | " + p.getObjectID() + " | " + p.getClass().getSimpleName()

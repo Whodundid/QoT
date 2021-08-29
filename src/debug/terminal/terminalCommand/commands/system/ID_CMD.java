@@ -3,8 +3,8 @@ package debug.terminal.terminalCommand.commands.system;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 
 public class ID_CMD extends TerminalCommand {
 	

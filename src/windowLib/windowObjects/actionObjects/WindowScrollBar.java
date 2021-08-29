@@ -1,9 +1,9 @@
 package windowLib.windowObjects.actionObjects;
 
-import mathUtil.NumberUtil;
-import renderUtil.ScreenLocation;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
+import eutil.math.NumberUtil;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
+import eutil.storage.EDims;
 import windowLib.windowTypes.ActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 import windowLib.windowTypes.interfaces.IWindowParent;
@@ -27,18 +27,18 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	public boolean isScrolling = false;
 	public boolean renderThumb = true;
 	protected IWindowParent window;
-	private StorageBox<Integer, Integer> mousePos = new StorageBox(0, 0);
+	private Box2<Integer, Integer> mousePos = new Box2(0, 0);
 	
 	//--------------
 	// Constructors
 	//--------------
 	
 	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn) {
-		this(parentIn, visibleAmountIn, highValIn, -1, -1, ScreenLocation.right, 3); 
+		this(parentIn, visibleAmountIn, highValIn, -1, -1, ScreenLocation.RIGHT, 3); 
 	}
 	
 	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn) {
-		this(parentIn, visibleAmountIn, highValIn, widthIn, heightIn, ScreenLocation.right, 3);
+		this(parentIn, visibleAmountIn, highValIn, widthIn, heightIn, ScreenLocation.RIGHT, 3);
 	}
 	
 	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn) {
@@ -54,21 +54,21 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	}
 	
 	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn, ScreenLocation sideIn, double thicknessIn) {
-		EDimension dim = parentIn.getDimensions();
+		EDims dim = parentIn.getDimensions();
 		
 		scrollBarThickness = thicknessIn;
 		
-		if (sideIn == ScreenLocation.top || sideIn == ScreenLocation.bot) { vertical = false; }
+		if (sideIn == ScreenLocation.TOP || sideIn == ScreenLocation.BOT) { vertical = false; }
 		else { vertical = true; }
 		
 		double sWidth = vertical ? (widthIn < 0 ? scrollBarThickness : widthIn) : (widthIn < 0 ? dim.width - 2 : widthIn);
 		double sHeight = vertical ? (heightIn < 0 ? dim.height - 2 : heightIn) : (heightIn < 0 ? scrollBarThickness : heightIn);
 		
 		switch (sideIn) {
-		case top: init(parentIn, dim.startX + 1, dim.startY + 1, sWidth, sHeight); break;
-		case bot: init(parentIn, dim.startX + 1, dim.endY - scrollBarThickness - 1, sWidth, sHeight); break;
-		case right: init(parentIn, dim.endX - scrollBarThickness - 1, dim.startY + 1, sWidth, sHeight); break;
-		case left: init(parentIn, dim.startX + 1, dim.startY + 1, sWidth, sHeight); break;
+		case TOP: init(parentIn, dim.startX + 1, dim.startY + 1, sWidth, sHeight); break;
+		case BOT: init(parentIn, dim.startX + 1, dim.endY - scrollBarThickness - 1, sWidth, sHeight); break;
+		case RIGHT: init(parentIn, dim.endX - scrollBarThickness - 1, dim.startY + 1, sWidth, sHeight); break;
+		case LEFT: init(parentIn, dim.startX + 1, dim.startY + 1, sWidth, sHeight); break;
 		default: init(parentIn, dim.endX - scrollBarThickness - 1, dim.startY + 1, sWidth, sHeight); break;
 		}
 		
@@ -102,21 +102,21 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		double vResizeVal = 0;
 		
 		switch (areaIn) {
-		case top: vResizeVal = -yIn; hResizeVal = 0; break;
-		case bot: vResizeVal = yIn; hResizeVal = 0; break;
-		case left: vResizeVal = 0; hResizeVal = -xIn; break;
-		case right: vResizeVal = 0; hResizeVal = xIn; break;
-		case botLeft: vResizeVal = yIn; hResizeVal = -xIn; break;
-		case botRight: vResizeVal = yIn; hResizeVal = xIn; break;
-		case topLeft: vResizeVal = -yIn; hResizeVal = -xIn; break;
-		case topRight: vResizeVal = -yIn; hResizeVal = xIn; break;
+		case TOP: vResizeVal = -yIn; hResizeVal = 0; break;
+		case BOT: vResizeVal = yIn; hResizeVal = 0; break;
+		case LEFT: vResizeVal = 0; hResizeVal = -xIn; break;
+		case RIGHT: vResizeVal = 0; hResizeVal = xIn; break;
+		case BOT_LEFT: vResizeVal = yIn; hResizeVal = -xIn; break;
+		case BOT_RIGHT: vResizeVal = yIn; hResizeVal = xIn; break;
+		case TOP_LEFT: vResizeVal = -yIn; hResizeVal = -xIn; break;
+		case TOP_RIGHT: vResizeVal = -yIn; hResizeVal = xIn; break;
 		default: break;
 		}
 		
 		if (window != null) {
 
 			IWindowParent p = window;
-			EDimension d = p.getDimensions();
+			EDims d = p.getDimensions();
 			
 			// unsure why this was commented out ~
 			
@@ -155,7 +155,7 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		if (isScrolling && mousePos != null && mousePos.getA() != null && mousePos.getB() != null) {
 			if (vertical && mY - mousePos.getB() != 0) { moveThumb(0, mY - mousePos.getB()); }
 			else if (mX - mousePos.getA() != 0) { moveThumb(mX - mousePos.getA(), 0); }
-			mousePos.setValues(mX, mY);
+			mousePos.set(mX, mY);
 		}
 		
 		drawRect(startX, startY, startX + width, startY + height, 0xff444444);
@@ -176,7 +176,7 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		super.mousePressed(mX, mY, button);
 		if (isMouseInThumb(mX, mY)) {
 			isScrolling = true;
-			mousePos.setValues(mX, mY);
+			mousePos.set(mX, mY);
 		}
 	}
 	

@@ -2,11 +2,11 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.io.File;
 import java.io.IOException;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 
 public class Ls extends FileCommand {
 	
@@ -30,7 +30,7 @@ public class Ls extends FileCommand {
 			File theFile = null;
 			boolean hidden = false;
 			
-			String all = EUtil.combineAll(args, " ");
+			String all = StringUtil.combineAll(args, " ");
 			EArrayList<String> allArgs = new EArrayList(args);
 			allArgs.add(all);
 			

@@ -1,9 +1,9 @@
 package assets.textures;
 
 import eutil.EUtil;
+import eutil.storage.EArrayList;
 import renderEngine.textureSystem.GameTexture;
 import renderEngine.textureSystem.TextureSystem;
-import storageUtil.EArrayList;
 
 public class CursorTextures {
 	

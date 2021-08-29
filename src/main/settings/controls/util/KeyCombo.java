@@ -1,6 +1,6 @@
 package main.settings.controls.util;
 
-import storageUtil.EArrayList;
+import eutil.storage.EArrayList;
 
 /*
  * Holds a variable amount of lwjgl.Keyboard keyCodes used to trigger an event.

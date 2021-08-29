@@ -1,11 +1,11 @@
 package windowLib.windowTypes.interfaces;
 
 import eutil.EUtil;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import java.util.function.Consumer;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import windowLib.windowUtil.EObjectGroup;
 import windowLib.windowUtil.input.KeyboardInputAcceptor;
@@ -161,7 +161,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Sets this object's position as unmodifiable. */
 	public IWindowObject<E> setMoveable(boolean val);
 	/** Specifies this objects position, width, and height using an EDimension object. */
-	public IWindowObject<E> setDimensions(EDimension dimIn);
+	public IWindowObject<E> setDimensions(EDims dimIn);
 	/** Specifies this object's width and height based on the current starting position. */
 	public IWindowObject<E> setDimensions(double widthIn, double heightIn);
 	/** Specifies this objects position, width, and height. (x, y, width, height) */
@@ -169,11 +169,11 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Specifies the position this object will relocate to when its' position is reset. */
 	public IWindowObject<E> setInitialPosition(double startXIn, double startYIn);
 	/** Returns the position this object will relocate to when reset. */
-	public StorageBox<Double, Double> getInitialPosition();
+	public Box2<Double, Double> getInitialPosition();
 	/** Centers the object around the center of the screen with proper dimensions. */
 	public IWindowObject<E> centerObjectWithSize(double widthIn, double heightIn);
 	/** Returns the current dimensions of this object. */
-	public EDimension getDimensions();
+	public EDims getDimensions();
 	
 	//---------
 	// Objects
@@ -264,9 +264,9 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Returns true if the mouse is currently inside this object and that this is the top most object inside of the parent. */
 	public boolean isMouseOver();
 	/** Specifies a region that this object will adhere to for mouse checks. */
-	public IWindowObject<E> setBoundaryEnforcer(EDimension dimIn);
+	public IWindowObject<E> setBoundaryEnforcer(EDims dimIn);
 	/** Returns an EDimension object containing the boundary this object is bounded by */
-	public EDimension getBoundaryEnforcer();
+	public EDims getBoundaryEnforcer();
 	/** Returns true if this object can be clicked on. */
 	public boolean isClickable();
 	/** Specifies if this object can be clicked on. */

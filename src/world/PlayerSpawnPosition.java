@@ -1,6 +1,6 @@
 package world;
 
-import storageUtil.StorageBox;
+import eutil.storage.Box2;
 
 /** A point in the world where the player will be positioned when being loaded.
  *  The coordinates for positioning are based off of the top left corner of the player's collision box. */
@@ -18,7 +18,7 @@ public class PlayerSpawnPosition {
 	}
 	
 	public GameWorld getWorld() { return theWorld; }
-	public StorageBox<Integer, Integer> getPos() { return new StorageBox(xPos, yPos); }
+	public Box2<Integer, Integer> getPos() { return new Box2(xPos, yPos); }
 	public int getX() { return xPos; }
 	public int getY() { return yPos; }
 	

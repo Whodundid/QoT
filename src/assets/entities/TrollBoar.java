@@ -1,8 +1,7 @@
-package assets.entities.enemy.types;
+package assets.entities;
 
-import assets.entities.enemy.Enemy;
 import assets.textures.EntityTextures;
-import randomUtil.RandomUtil;
+import eutil.random.RandomUtil;
 
 public class TrollBoar extends Enemy {
 

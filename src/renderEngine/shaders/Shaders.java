@@ -1,8 +1,8 @@
 package renderEngine.shaders;
 
+import eutil.storage.EArrayList;
 import org.lwjgl.glfw.GLFW;
 import renderEngine.shaders.types.basic.BasicShader;
-import storageUtil.EArrayList;
 
 /** Stores references to all available shaders. */
 public final class Shaders {

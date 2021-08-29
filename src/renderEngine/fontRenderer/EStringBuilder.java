@@ -1,7 +1,7 @@
 package renderEngine.fontRenderer;
 
-import renderUtil.EColors;
-import storageUtil.EArrayList;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 
 /** Used to concatenate EColors and EnumChatFormating objects within Strings. */
 public class EStringBuilder {

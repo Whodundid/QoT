@@ -1,14 +1,14 @@
 package debug.terminal.terminalCommand.commands.game;
 
-import assets.entities.player.Player;
-import assets.screens.types.gameplay.GamePlayScreen;
+import assets.entities.Player;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import gameScreens.gameplay.GamePlayScreen;
 import java.io.File;
 import main.QoT;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import world.GameWorld;
 
 public class LoadWorld extends TerminalCommand {

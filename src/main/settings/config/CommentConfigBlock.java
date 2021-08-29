@@ -1,8 +1,8 @@
 package main.settings.config;
 
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import java.util.List;
-import storageUtil.EArrayList;
-import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -10,7 +10,7 @@ import storageUtil.StorageBoxHolder;
 public class CommentConfigBlock extends ConfigBlock {
 	
 	public CommentConfigBlock() { super(); }
-	public CommentConfigBlock(StorageBoxHolder<String, List<String>> elementsIn) { super(elementsIn); }
+	public CommentConfigBlock(BoxHolder<String, List<String>> elementsIn) { super(elementsIn); }
 	
 	public CommentConfigBlock(String... comments) {
 		super();

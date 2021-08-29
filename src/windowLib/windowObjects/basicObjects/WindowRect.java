@@ -1,6 +1,6 @@
 package windowLib.windowObjects.basicObjects;
 
-import renderUtil.EColors;
+import eutil.colors.EColors;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg

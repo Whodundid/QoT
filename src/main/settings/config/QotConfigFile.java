@@ -1,6 +1,9 @@
 package main.settings.config;
 
 import eutil.EUtil;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -8,16 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 
 public class QotConfigFile {
 	
 	protected File configPath;
 	protected String configName = "";
 	protected String configTitleLine = null;
-	protected StorageBoxHolder<String, EArrayList<String>> configValues;
+	protected BoxHolder<String, EArrayList<String>> configValues;
 	
 	// temp list used for saving
 	private EArrayList<ConfigBlock> config = new EArrayList();
@@ -27,7 +27,7 @@ public class QotConfigFile {
 		configPath = path;
 		configName = name;
 		configTitleLine = configTitleIn;
-		configValues = new StorageBoxHolder<String, EArrayList<String>>();
+		configValues = new BoxHolder<String, EArrayList<String>>();
 	}
 	
 	public boolean saveConfig() { return trySave(); }
@@ -36,8 +36,8 @@ public class QotConfigFile {
 	
 	/** Attempts to parse through a potentially existing config file and match identifier-value pairs.
 	 *  Returns false if the file cannot be found. */
-	public StorageBoxHolder getConfigContents() {
-		if (configValues == null) { configValues = new StorageBoxHolder<String, EArrayList<String>>(); }
+	public BoxHolder getConfigContents() {
+		if (configValues == null) { configValues = new BoxHolder<String, EArrayList<String>>(); }
 		configValues.clear();
 		parseFile();
 		return configValues;
@@ -51,8 +51,8 @@ public class QotConfigFile {
 	/** Attempts to create an identifier-value pair based on a given keyWord and a specific Class type to parse the value as with a
 	 *  default value to fall back on in case the parsing fails. */
 	protected <Val extends Object> Val getConfigVal(String keyWord, Class<Val> asType, Val defaultVal) throws Exception {
-		StorageBoxHolder holder = configValues;
-		StorageBox<String, EArrayList<String>> box = holder.getBoxWithA(keyWord);
+		BoxHolder holder = configValues;
+		Box2<String, EArrayList<String>> box = holder.getBoxWithA(keyWord);
 		if (box != null) {
 			String sVal = box.getB().get(0);
 			Val returnVal = null;
@@ -202,9 +202,9 @@ public class QotConfigFile {
 			
 			//move on to creating/overwriting the original file
 			for (ConfigBlock block : configContentsIn) {
-				StorageBoxHolder<String, List<String>> blockContents = block.getBlockContents();
+				BoxHolder<String, List<String>> blockContents = block.getBlockContents();
 				
-				for (StorageBox<String, List<String>> line : blockContents) {
+				for (Box2<String, List<String>> line : blockContents) {
 					saver.print(line.getA() + " ");
 					List<String> values = line.getB();
 					for (int i = 0; i < values.size(); i++) {

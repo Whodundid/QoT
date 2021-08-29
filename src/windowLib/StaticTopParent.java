@@ -1,15 +1,15 @@
 package windowLib;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import input.Keyboard;
 import input.Mouse;
 import java.util.Deque;
 import main.QoT;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import windowLib.windowTypes.interfaces.ITopParent;
@@ -412,7 +412,7 @@ public class StaticTopParent extends EGui {
 	//mouse checks
 	/** Returns true if the mouse is over any object edge. */
 	public static boolean isMouseOnObjEdge(ITopParent<?> objIn) {
-		return getEdgeAreaMouseIsOn(objIn) != ScreenLocation.out;
+		return getEdgeAreaMouseIsOn(objIn) != ScreenLocation.OUT;
 	}
 	
 	/** Returns the ScreenLocation type of any object the mouse is currently over. */
@@ -420,9 +420,9 @@ public class StaticTopParent extends EGui {
 		//check in both the objects on screen and the objects being added
 		for (IWindowObject<?> o : EArrayList.combineLists(objIn.getObjects(), objIn.getAddingObjects())) {
 			ScreenLocation loc = o.getEdgeSideMouseIsOn();
-			if (loc != ScreenLocation.out) { return loc; }
+			if (loc != ScreenLocation.OUT) { return loc; }
 		}
-		return ScreenLocation.out; //otherwise, return out becuse it wasn't under an object edge
+		return ScreenLocation.OUT; //otherwise, return out becuse it wasn't under an object edge
 	}
 	
 	/** Returns true if the cursor is currently inside an EGuiHeader object. */
@@ -438,7 +438,7 @@ public class StaticTopParent extends EGui {
 	public static IWindowObject<?> getHighestZObjectUnderMouse(ITopParent<?> objIn) {
 		try {
 			EArrayList<IWindowObject<?>> underMouse = objIn.getAllObjectsUnderMouse();
-			StorageBoxHolder<IWindowObject<?>, EArrayList<IWindowObject<?>>> sortedByParent = new StorageBoxHolder();
+			BoxHolder<IWindowObject<?>, EArrayList<IWindowObject<?>>> sortedByParent = new BoxHolder();
 			
 			//first setup the sorted list
 			for (int i = objIn.getObjects().size() - 1; i >= 0; i--) {
@@ -454,7 +454,7 @@ public class StaticTopParent extends EGui {
 			}
 			
 			//next iterate through each of the sorted parent's found objects to see if they are the highest object
-			for (StorageBox<IWindowObject<?>, EArrayList<IWindowObject<?>>> box : sortedByParent) {
+			for (Box2<IWindowObject<?>, EArrayList<IWindowObject<?>>> box : sortedByParent) {
 				if (box.getB().isEmpty()) { continue; }
 				
 				//get the last object (which should be the highest object)
@@ -484,7 +484,7 @@ public class StaticTopParent extends EGui {
 						IWindowParent<?> wp = (IWindowParent<?>) o;
 						
 						//then check if the mouse is in or around the object if it's resizeable
-						if (o.isMouseInside() || ((o.isResizeable() && o.isMouseOnEdge(mX, mY)) && !(wp.isMinimized() || wp.getMaximizedPosition() == ScreenLocation.center))) {
+						if (o.isMouseInside() || ((o.isResizeable() && o.isMouseOnEdge(mX, mY)) && !(wp.isMinimized() || wp.getMaximizedPosition() == ScreenLocation.CENTER))) {
 							underMouse.add(o);
 						}
 					}

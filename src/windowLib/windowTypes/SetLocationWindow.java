@@ -1,15 +1,15 @@
 package windowLib.windowTypes;
 
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg
 
 public abstract class SetLocationWindow<E> extends OverlayWindow<E> {
 	
-	protected StorageBoxHolder<IWindowObject<?>, Boolean> previousStates = new StorageBoxHolder();
+	protected BoxHolder<IWindowObject<?>, Boolean> previousStates = new BoxHolder();
 	
 	protected SetLocationWindow hideAllOnRenderer(IWindowObject<?>... exceptionsIn) {
 		previousStates.clear();
@@ -28,7 +28,7 @@ public abstract class SetLocationWindow<E> extends OverlayWindow<E> {
 	protected SetLocationWindow unideAllOnRenderer(IWindowObject<?>... exceptionsIn) {
 		EArrayList exceptions = new EArrayList().add(exceptionsIn);
 		
-		for (StorageBox<IWindowObject<?>, Boolean> b : previousStates) {
+		for (Box2<IWindowObject<?>, Boolean> b : previousStates) {
 			if (exceptions.notContains(b.getA())) { b.getA().setHidden(!b.getB()); }
 		}
 		

@@ -1,6 +1,6 @@
 package windowLib.windowObjects.utilityObjects;
 
-import renderUtil.EColors;
+import eutil.colors.EColors;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.interfaces.IWindowObject;
 

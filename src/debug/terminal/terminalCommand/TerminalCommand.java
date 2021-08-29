@@ -1,8 +1,8 @@
 package debug.terminal.terminalCommand;
 
 import debug.terminal.window.ETerminal;
-import mathUtil.NumberUtil;
-import storageUtil.EArrayList;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
 
 //Author: Hunter Bragg
 

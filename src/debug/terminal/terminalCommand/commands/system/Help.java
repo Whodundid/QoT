@@ -4,11 +4,11 @@ import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.IListableCommand;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import main.QoT;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -62,15 +62,15 @@ public class Help extends TerminalCommand implements IListableCommand {
 	@Override
 	public void list(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		termIn.writeln("Listing all terminal commands\n", EColors.lgreen);
-		for (StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> box : QoT.getTerminalHandler().getSortedCommands()) {
+		for (Box2<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>> box : QoT.getTerminalHandler().getSortedCommands()) {
 			boolean norm = false;
-			StorageBoxHolder<String, EArrayList<TerminalCommand>> catHolder = box.getB();
+			BoxHolder<String, EArrayList<TerminalCommand>> catHolder = box.getB();
 			
 			if (box.getA() == CommandType.NORMAL) { termIn.writeln("Built-In", EColors.cyan); norm = true; }
 			if (box.getA() == CommandType.APP) { termIn.writeln("\n" + "EMC App Config Settings:", EColors.cyan); }
 			if (box.getA() == CommandType.APP_COMMAND) { termIn.writeln("\n" + "EMC App Terminal Commands:", EColors.cyan); norm = true; }
 			
-			for (StorageBox<String, EArrayList<TerminalCommand>> catCommands : catHolder) {
+			for (Box2<String, EArrayList<TerminalCommand>> catCommands : catHolder) {
 				EArrayList<TerminalCommand> commands = catCommands.getB();
 				boolean notEmpty = commands.isNotEmpty();
 				

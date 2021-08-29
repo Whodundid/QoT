@@ -1,11 +1,11 @@
 package windowLib.windowObjects.windows;
 
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
 import input.Mouse;
 import java.util.List;
 import main.QoT;
 import renderEngine.textureSystem.GameTexture;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.basicObjects.WindowLabel;
 import windowLib.windowTypes.ActionWindowParent;
@@ -19,7 +19,7 @@ import windowLib.windowUtil.windowEvents.events.EventMouse;
 public class RightClickMenu extends ActionWindowParent {
 	
 	RightClickMenu instance = null;
-	protected StorageBoxHolder<String, WindowButton> options = new StorageBoxHolder();
+	protected BoxHolder<String, WindowButton> options = new BoxHolder();
 	public WindowLabel title;
 	public boolean useTitle = false;
 	protected boolean dontCloseOnPress = false;
@@ -131,9 +131,9 @@ public class RightClickMenu extends ActionWindowParent {
 	
 	public void removeOption(String optionName) {
 		if (optionName != null && options.contains(optionName)) {
-			List<StorageBox<String, WindowButton>> l = options.removeBoxesContainingA(optionName);
+			List<Box2<String, WindowButton>> l = options.removeBoxesContainingA(optionName);
 			if (!l.isEmpty()) {
-				StorageBox<String, WindowButton> s = l.get(0);
+				Box2<String, WindowButton> s = l.get(0);
 				if (s != null) {
 					WindowButton b = s.getB();
 					removeObject(b);
@@ -144,9 +144,9 @@ public class RightClickMenu extends ActionWindowParent {
 	}
 	
 	public RightClickMenu setOptionEnabled(String optionName, boolean enabledVal) {
-		List<StorageBox<String, WindowButton>> boxes = options.getAllBoxesWithA(optionName);
+		List<Box2<String, WindowButton>> boxes = options.getAllBoxesWithA(optionName);
 		if (boxes.size() > 0) {
-			for (StorageBox<String, WindowButton> b : boxes) {
+			for (Box2<String, WindowButton> b : boxes) {
 				if (b.getA().equals(optionName)) { b.getB().setEnabled(enabledVal); }
 			}
 		}

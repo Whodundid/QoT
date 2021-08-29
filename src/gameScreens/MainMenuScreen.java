@@ -1,12 +1,12 @@
-package assets.screens.types;
+package gameScreens;
 
-import assets.screens.GameScreen;
 import assets.sounds.Songs;
+import assets.textures.GeneralTextures;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import gameScreens.screenUtil.GameScreen;
 import main.QoT;
 import mapEditor.MapMenuScreen;
-import mathUtil.NumberUtil;
-import renderEngine.GLSettings;
-import renderUtil.EColors;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.interfaces.IActionObject;
 
@@ -46,14 +46,17 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.rainbow());
-		GLSettings.pushMatrix();
-		double r = 350;
-		double degree = (System.currentTimeMillis() % (360 * 16)) / 16;
-		double dX = midX + r * Math.cos(degree * (Math.PI / 180));
-		double dY = (midY - 50) + r * Math.sin(degree * (Math.PI / 180));
-		drawStringC("QUEST OF THYRAH", dX, dY, EColors.black);
-		GLSettings.popMatrix();
+		//GLSettings.pushMatrix();
+		//double r = 350;
+		//double degree = (System.currentTimeMillis() % (360 * 16)) / 16;
+		//double dX = midX + r * Math.cos(degree * (Math.PI / 180));
+		//double dY = (midY - 50) + r * Math.sin(degree * (Math.PI / 180));
+		//drawStringC("QUEST OF THYRAH", dX, dY, EColors.black);
+		//GLSettings.popMatrix();
 		drawRect(newGame.startX - 10, newGame.startY - 10, newGame.endX + 10, closeGame.endY + 10, EColors.dsteel);
+		double w = 250;
+		
+		drawTexture(midX - w / 2, midY - 400, w, 200, GeneralTextures.logo);
 	}
 	
 	@Override

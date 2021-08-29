@@ -1,4 +1,4 @@
-package assets.screens;
+package gameScreens.screenUtil;
 
 import input.Keyboard;
 import java.util.Stack;

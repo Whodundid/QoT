@@ -1,10 +1,10 @@
 package mapEditor;
 
-import assets.screens.GameScreen;
 import assets.worldTiles.WorldTile;
 import assets.worldTiles.WorldTiles;
+import eutil.colors.EColors;
+import gameScreens.screenUtil.GameScreen;
 import main.QoT;
-import renderUtil.EColors;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.actionObjects.WindowCheckBox;
 import windowLib.windowObjects.actionObjects.WindowTextField;

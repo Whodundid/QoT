@@ -1,6 +1,6 @@
 package main.settings.controls;
 
-import storageUtil.EArrayList;
+import eutil.storage.EArrayList;
 import windowLib.windowUtil.input.KeyboardInputAcceptor;
 import windowLib.windowUtil.input.MouseInputAcceptor;
 

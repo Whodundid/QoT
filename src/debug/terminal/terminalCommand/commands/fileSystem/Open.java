@@ -2,17 +2,17 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
-import renderUtil.CenterType;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.windows.TextEditorWindow;
 import windowLib.windowObjects.windows.TextureDisplayer;
+import windowLib.windowUtil.ObjectPosition;
 
 public class Open extends FileCommand {
 	
@@ -36,8 +36,8 @@ public class Open extends FileCommand {
 				boolean openA = args.getLast().equals("-a");
 				String all = "";
 				
-				if (openA) { all = EUtil.combineAll(args.subList(0, args.size() - 1), " "); }
-				else { all = EUtil.combineAll(args, " "); }
+				if (openA) { all = StringUtil.combineAll(args.subList(0, args.size() - 1), " "); }
+				else { all = StringUtil.combineAll(args, " "); }
 				
 				File f = new File(termIn.getDir(), all);
 				
@@ -111,7 +111,7 @@ public class Open extends FileCommand {
 							BufferedImage img = ImageIO.read(dir);
 							if (img != null) {
 								termIn.writeln("Opening...", EColors.green);
-								termIn.getTopParent().displayWindow(new TextureDisplayer(dir), CenterType.screen);
+								termIn.getTopParent().displayWindow(new TextureDisplayer(dir), ObjectPosition.SCREEN_CENTER);
 							}
 						}
 						catch (IIOException e) {
@@ -134,7 +134,7 @@ public class Open extends FileCommand {
 							TextEditorWindow window = new TextEditorWindow(dir);
 							window.setFocusedObjectOnClose(termIn);
 							
-							termIn.getTopParent().displayWindow(window, CenterType.screen);
+							termIn.getTopParent().displayWindow(window, ObjectPosition.SCREEN_CENTER);
 							
 							window.setFocusToLineIfEmpty();
 						}

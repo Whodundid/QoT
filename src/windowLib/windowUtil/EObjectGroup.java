@@ -1,8 +1,8 @@
 package windowLib.windowUtil;
 
+import eutil.storage.EArrayList;
 import java.util.Iterator;
 import java.util.List;
-import storageUtil.EArrayList;
 import windowLib.windowTypes.interfaces.IWindowObject;
 import windowLib.windowUtil.windowEvents.ObjectEvent;
 

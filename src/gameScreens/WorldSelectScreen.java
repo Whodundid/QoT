@@ -1,8 +1,11 @@
-package assets.screens.types;
+package gameScreens;
 
-import assets.entities.player.Player;
-import assets.screens.GameScreen;
-import assets.screens.types.gameplay.GamePlayScreen;
+import assets.entities.Player;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.storage.EDims;
+import gameScreens.gameplay.GamePlayScreen;
+import gameScreens.screenUtil.GameScreen;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -10,9 +13,6 @@ import java.io.File;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import main.QoT;
-import mathUtil.NumberUtil;
-import renderUtil.EColors;
-import storageUtil.EDimension;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.interfaces.IActionObject;
 import world.GameWorld;
@@ -76,7 +76,7 @@ public class WorldSelectScreen extends GameScreen {
 				@Override
 				protected JDialog createDialog(Component parent) throws HeadlessException {
 					JDialog dlg = super.createDialog(parent);
-					EDimension d = QoT.getWindowDims();
+					EDims d = QoT.getWindowDims();
 					Dimension fd = getSize();
 					dlg.setLocation((int) (d.startX + (d.width - fd.width) / 2), (int) (d.startY + (d.height - fd.height) / 2));
 					dlg.setModal(true);

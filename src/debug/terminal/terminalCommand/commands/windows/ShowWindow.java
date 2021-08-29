@@ -4,8 +4,9 @@ import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
 import eutil.EUtil;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import windowLib.windowTypes.WindowParent;
 
 public class ShowWindow extends TerminalCommand {
@@ -43,7 +44,7 @@ public class ShowWindow extends TerminalCommand {
 			}
 			catch (Exception e) {
 				try {
-					String name = EUtil.combineAll(args, " ").trim();
+					String name = StringUtil.combineAll(args, " ").trim();
 					
 					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					WindowParent theWindow = null;

@@ -1,10 +1,10 @@
 package renderEngine.fontRenderer;
 
+import eutil.colors.EColors;
+import eutil.storage.Box2;
 import main.QoT;
 import org.lwjgl.opengl.GL11;
 import renderEngine.GLObject;
-import renderUtil.EColors;
-import storageUtil.StorageBox;
 
 public class FontRenderer {
 	
@@ -75,7 +75,7 @@ public class FontRenderer {
 			double sX = xIn.doubleValue();
 			for (int i = 0; i < in.length(); i++) {
 				char c = in.charAt(i);
-				StorageBox<Integer, Integer> loc = currentFont.getCharImage(c);
+				Box2<Integer, Integer> loc = currentFont.getCharImage(c);
 				
 				int xPos = loc.getA() * 16;
 				int yPos = loc.getB() * 32;

@@ -5,19 +5,20 @@ import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.termParts.TerminalTextField;
 import debug.terminal.window.termParts.TerminalTextLine;
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box3;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.io.File;
 import main.QoT;
-import mathUtil.NumberUtil;
-import renderUtil.CenterType;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.TrippleBox;
 import windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
 import windowLib.windowTypes.WindowParent;
 import windowLib.windowTypes.interfaces.IActionObject;
 import windowLib.windowUtil.EObjectGroup;
+import windowLib.windowUtil.ObjectPosition;
 import windowLib.windowUtil.windowEvents.ObjectEvent;
 import windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import windowLib.windowUtil.windowEvents.eventUtil.MouseType;
@@ -144,7 +145,7 @@ public class ETerminal<E> extends WindowParent<E> {
 	public void postReInit() {
 		for (TextAreaLine l : lines) {
 			TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getGenericObject(), l.getLineNumber());
-			TrippleBox<String, Object, Boolean> link = l.getLink();
+			Box3<String, Object, Boolean> link = l.getLink();
 			n.setLinkText(link.a, link.b, link.c);
 			history.addTextLine(n);
 		}
@@ -174,7 +175,7 @@ public class ETerminal<E> extends WindowParent<E> {
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
-		if (button == 1) { getTopParent().displayWindow(new TerminalRCM(this), CenterType.cursorCorner); }
+		if (button == 1) { getTopParent().displayWindow(new TerminalRCM(this), ObjectPosition.CURSOR_CORNER); }
 		else { inputField.requestFocus(); }
 	}
 	
@@ -209,7 +210,7 @@ public class ETerminal<E> extends WindowParent<E> {
 	@Override
 	public ETerminal resize(double xIn, double yIn, ScreenLocation areaIn) {
 		try {
-			if (getMaximizedPosition() != ScreenLocation.center && (xIn != 0 || yIn != 0)) {
+			if (getMaximizedPosition() != ScreenLocation.CENTER && (xIn != 0 || yIn != 0)) {
 				String text = inputField.getText();
 				double vPos = history.getVScrollBar().getScrollPos();
 				double hPos = history.getHScrollBar().getScrollPos();
@@ -225,7 +226,7 @@ public class ETerminal<E> extends WindowParent<E> {
 				
 				for (TextAreaLine l : lines) {
 					TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getGenericObject(), l.getLineNumber());
-					TrippleBox<String, Object, Boolean> link = l.getLink();
+					Box3<String, Object, Boolean> link = l.getLink();
 					n.setLinkText(link.a, link.b, link.c);
 					history.addTextLine(n);
 				}
@@ -435,7 +436,7 @@ public class ETerminal<E> extends WindowParent<E> {
 	
 	public void handleTab() {
 		String input = inputField.getText();
-		String command = EUtil.subStringToSpace(input, 0);
+		String command = StringUtil.subStringToSpace(input, 0);
 		
 		//System.out.println("arg: " + startArgPos + " " + getCurrentArg() + " " + isCommand + " " + command + " " + tab1);
 		
@@ -545,7 +546,7 @@ public class ETerminal<E> extends WindowParent<E> {
 			
 			//determine the maximum number of autocomplete options that can fit on one line
 			for (int i = 1; i < dataIn.size() + 1; i++) {
-				textWidth += longest + getStringWidth(EUtil.repeatString(" ", spaceAmount));
+				textWidth += longest + getStringWidth(StringUtil.repeatString(" ", spaceAmount));
 				if (textWidth < width) {
 					maxData = i;
 				}
@@ -570,7 +571,7 @@ public class ETerminal<E> extends WindowParent<E> {
 				if (cur == maxData || amount == 1) {
 					//if (amount == 0) { line += dataIn.get(i) + ", "; cur++; }
 					try {
-						String format = EUtil.repeatString("%-" + (longest / 4) + "s" + EUtil.repeatString(" ", spaceAmount), cur);
+						String format = StringUtil.repeatString("%-" + (longest / 4) + "s" + StringUtil.repeatString(" ", spaceAmount), cur);
 						String[] args = line.split(", ");
 						line = String.format(format, (Object[]) args);
 					}
@@ -612,7 +613,7 @@ public class ETerminal<E> extends WindowParent<E> {
 		int arg = 0;
 		
 		if (inputField.isNotEmpty()) {
-			int spaces = EUtil.countSpaces(inputField.getText());
+			int spaces = StringUtil.countSpaces(inputField.getText());
 			
 			if (spaces == 0) { arg = 0; }
 			else { arg = spaces; }

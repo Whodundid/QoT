@@ -1,9 +1,9 @@
 package windowLib.windowObjects.windows;
 
-import mathUtil.NumberUtil;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
 import renderEngine.fontRenderer.EStringBuilder;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.ActionWindowParent;
 import windowLib.windowTypes.interfaces.IWindowObject;

@@ -1,6 +1,4 @@
-package assets.entities.enemy;
-
-import assets.entities.Entity;
+package assets.entities;
 
 public abstract class Enemy extends Entity {
 

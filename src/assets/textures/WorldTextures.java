@@ -2,9 +2,9 @@ package assets.textures;
 
 import assets.textures.world.Tex_Grass;
 import eutil.EUtil;
+import eutil.storage.EArrayList;
 import renderEngine.textureSystem.GameTexture;
 import renderEngine.textureSystem.TextureSystem;
-import storageUtil.EArrayList;
 
 public class WorldTextures {
 	

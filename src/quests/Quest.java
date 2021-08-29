@@ -1,7 +1,7 @@
 package quests;
 
-import mathUtil.NumberUtil;
-import storageUtil.EArrayList;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
 
 public class Quest {
 	

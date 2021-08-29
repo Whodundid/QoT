@@ -1,9 +1,8 @@
-package assets.entities.enemy.types;
+package assets.entities;
 
-import assets.entities.enemy.Enemy;
 import assets.textures.EntityTextures;
-import miscUtil.Direction;
-import randomUtil.RandomUtil;
+import eutil.misc.Direction;
+import eutil.random.RandomUtil;
 
 public class Goblin extends Enemy {
 	

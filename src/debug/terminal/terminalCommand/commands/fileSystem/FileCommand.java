@@ -3,9 +3,9 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.io.File;
-import storageUtil.EArrayList;
 
 public abstract class FileCommand extends TerminalCommand {
 
@@ -33,7 +33,7 @@ public abstract class FileCommand extends TerminalCommand {
 				
 				File home = new File(System.getProperty("user.dir"));
 				File f = new File(termIn.getDir().getCanonicalPath());
-				String all = EUtil.combineAll(args, " ").replace("/", "\\");
+				String all = StringUtil.combineAll(args, " ").replace("/", "\\");
 				boolean isHome = all.startsWith("~");
 				
 				if (!all.endsWith("/") && !all.endsWith("\\")) { //search for name complete
@@ -46,10 +46,10 @@ public abstract class FileCommand extends TerminalCommand {
 						termIn.setTextTabBeing(args.get(0));
 					}
 					else {
-						int pos = EUtil.findStartingIndex(all, "\\", true);
+						int pos = StringUtil.findStartingIndex(all, "\\", true);
 						if (pos >= 0) {
 							String path = all.substring(isHome ? 1 : 0, pos + 1);
-							termIn.setTabBase(EUtil.subStringToSpace(path, 0, true));
+							termIn.setTabBase(StringUtil.subStringToSpace(path, 0, true));
 							f = new File(path);
 							if (!f.exists()) { f = new File(termIn.getDir(), path); }
 							termIn.setTextTabBeing(path);
@@ -57,7 +57,7 @@ public abstract class FileCommand extends TerminalCommand {
 						}
 					}
 					
-					search = !termIn.getTab1() ? EUtil.subStringToString(all, 0, "\\", true) : termIn.getTextTabBegin();
+					search = !termIn.getTab1() ? StringUtil.subStringToString(all, 0, "\\", true) : termIn.getTextTabBegin();
 					
 					if (f != null && f.listFiles() != null) {
 						for (File file : f.listFiles()) {
@@ -82,7 +82,7 @@ public abstract class FileCommand extends TerminalCommand {
 					else { f = new File(all); }
 					
 					if (!f.exists()) { f = new File(termIn.getDir(), all); }
-					termIn.setTabBase(EUtil.subStringToSpace(all, 0, true) + (isDrive ? "" : "\\"));
+					termIn.setTabBase(StringUtil.subStringToSpace(all, 0, true) + (isDrive ? "" : "\\"));
 					
 					if (f != null && f.listFiles() != null) {
 						for (File file : f.listFiles()) {
@@ -114,7 +114,7 @@ public abstract class FileCommand extends TerminalCommand {
 		File homeFile = new File(System.getProperty("user.dir"));
 		String homePath = homeFile.getAbsolutePath();
 		
-		String all = EUtil.combineAll(args, " ");
+		String all = StringUtil.combineAll(args, " ");
 		boolean found = false;
 		boolean moreThan = false;
 		

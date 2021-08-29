@@ -1,20 +1,20 @@
 package main.settings.config;
 
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import storageUtil.EArrayList;
-import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
 /** Creates a config line with a specified 'identifier' keyword String and pairs it against a corresponding config value. */
 public class ConfigBlock {
 	
-	protected StorageBoxHolder<String, List<String>> blockContents;
+	protected BoxHolder<String, List<String>> blockContents;
 	protected boolean createEmptyLine = false;
 	
-	public ConfigBlock() { blockContents = new StorageBoxHolder<String, List<String>>().setAllowDuplicates(true); }
-	public ConfigBlock(StorageBoxHolder<String, List<String>> elementsIn) { blockContents = elementsIn; }
+	public ConfigBlock() { blockContents = new BoxHolder<String, List<String>>().setAllowDuplicates(true); }
+	public ConfigBlock(BoxHolder<String, List<String>> elementsIn) { blockContents = elementsIn; }
 	
 	public ConfigBlock(String identifier, Boolean... val) { this(identifier, new EArrayList<Boolean>(val)); }
 	public ConfigBlock(String identifier, Character... val) { this(identifier, new EArrayList<Character>(val)); }
@@ -46,6 +46,6 @@ public class ConfigBlock {
 	public ConfigBlock noEmptyLine() { createEmptyLine = false; return this; }
 	
 	public boolean createsEmptyLineAfterBlock() { return createEmptyLine; }
-	public StorageBoxHolder<String, List<String>> getBlockContents() { return blockContents; }
+	public BoxHolder<String, List<String>> getBlockContents() { return blockContents; }
 	
 }

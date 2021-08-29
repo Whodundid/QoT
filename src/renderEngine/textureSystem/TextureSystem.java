@@ -1,18 +1,15 @@
 package renderEngine.textureSystem;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+import eutil.reflection.ReflectionUtil;
+import eutil.storage.EArrayList;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Iterator;
-import javax.imageio.ImageIO;
-import miscUtil.ReflectionHelper;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.stb.STBImage;
-import storageUtil.EArrayList;
 
 public class TextureSystem {
 
@@ -143,17 +140,17 @@ public class TextureSystem {
 				STBImage.stbi_image_free(data);
 				
 				//create bufferedImage object for internal use
-				ByteArrayInputStream bas = new ByteArrayInputStream(data.array());
-				BufferedImage img = ImageIO.read(bas);
+				//ByteArrayInputStream bas = new ByteArrayInputStream(data.array());
+				//BufferedImage img = ImageIO.read(bas);
 				
 				//--------------------------------------------
 				// Set the values onto the GameTexture object
 				//--------------------------------------------
 				
-				ReflectionHelper.setField(textureIn, "width", w);
-				ReflectionHelper.setField(textureIn, "height", h);
-				ReflectionHelper.setField(textureIn, "textureID", texID);
-				ReflectionHelper.setField(textureIn, "bi", img);
+				ReflectionUtil.setField(textureIn, "width", w);
+				ReflectionUtil.setField(textureIn, "height", h);
+				ReflectionUtil.setField(textureIn, "textureID", texID);
+				//ReflectionHelper.setField(textureIn, "bi", img);
 				
 			}
 			catch (Exception e) {

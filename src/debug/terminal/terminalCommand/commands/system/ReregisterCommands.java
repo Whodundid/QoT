@@ -3,8 +3,8 @@ package debug.terminal.terminalCommand.commands.system;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
+import eutil.storage.EArrayList;
 import main.QoT;
-import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

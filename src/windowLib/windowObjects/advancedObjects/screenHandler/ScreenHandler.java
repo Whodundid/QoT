@@ -1,8 +1,8 @@
 package windowLib.windowObjects.advancedObjects.screenHandler;
 
 import eutil.EUtil;
-import mathUtil.NumberUtil;
-import storageUtil.EArrayList;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
 import windowLib.windowTypes.ActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 

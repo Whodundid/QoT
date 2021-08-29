@@ -1,6 +1,8 @@
 package mapEditor.editorParts.sidePanel;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EDims;
 import main.QoT;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorParts.minimap.EditorMiniMap;
@@ -8,8 +10,6 @@ import mapEditor.editorParts.sidePanel.toolPanels.assetTool.AssetSidePanel;
 import mapEditor.editorParts.sidePanel.toolPanels.regionTool.RegionSidePanel;
 import mapEditor.editorParts.sidePanel.toolPanels.scriptTool.ScriptSidePanel;
 import mapEditor.editorParts.sidePanel.toolPanels.terrainTool.TerrainSidePanel;
-import renderUtil.EColors;
-import storageUtil.EDimension;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IActionObject;
 
@@ -30,7 +30,7 @@ public class EditorSidePanel extends WindowObject {
 	
 	protected MapEditorScreen editor;
 	protected EditorMiniMap miniMap;
-	protected EDimension panelDims;
+	protected EDims panelDims;
 	
 	//--------------
 	// Constructors
@@ -49,7 +49,7 @@ public class EditorSidePanel extends WindowObject {
 		int py = (int) miniMap.endY + 5;
 		
 		//apply panelDims
-		panelDims = new EDimension(sx + 5, py, QoT.getWidth() - 5, QoT.getHeight() - 5);
+		panelDims = new EDims(sx + 5, py, QoT.getWidth() - 5, QoT.getHeight() - 5);
 		
 		terrainTool = new TerrainSidePanel(this, in);
 		assetTool = new AssetSidePanel(this, in);
@@ -87,7 +87,7 @@ public class EditorSidePanel extends WindowObject {
 	//---------
 	
 	public MapEditorScreen getEditor() { return editor; }
-	public EDimension getPanelDims() { return panelDims; }
+	public EDims getPanelDims() { return panelDims; }
 	public EditorMiniMap getMiniMap() { return miniMap; }
 	
 	//---------

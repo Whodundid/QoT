@@ -2,10 +2,10 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import java.io.File;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 
 public class RmDir extends FileCommand {
 	
@@ -29,7 +29,7 @@ public class RmDir extends FileCommand {
 				File homeFile = new File(System.getProperty("user.dir"));
 				String homePath = homeFile.getAbsolutePath();
 				
-				String all = EUtil.combineAll(args, " ");
+				String all = StringUtil.combineAll(args, " ");
 				boolean found = false;
 				boolean moreThan = false;
 				

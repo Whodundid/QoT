@@ -1,15 +1,15 @@
 package windowLib.windowTypes.interfaces;
 
+import eutil.misc.ScreenLocation;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import input.Mouse;
 import main.QoT;
 import main.WindowSize;
-import renderUtil.CenterType;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
 import windowLib.StaticTopParent;
 import windowLib.windowTypes.OverlayWindow;
 import windowLib.windowTypes.WindowParent;
+import windowLib.windowUtil.ObjectPosition;
 import windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 
@@ -193,27 +193,27 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	public default <T extends WindowParent> void reloadAllWindowInstances(Class<T> windowIn, Object... args) { getAllWindowInstances(windowIn).forEach(w -> w.sendArgs("Reload", args)); }
 	
 	/** Displays the specified window parent. */
-	public default IWindowParent displayWindow(IWindowParent windowIn) { return displayWindow(windowIn, null, true, false, false, CenterType.screen); }
+	public default IWindowParent displayWindow(IWindowParent windowIn) { return displayWindow(windowIn, null, true, false, false, ObjectPosition.SCREEN_CENTER); }
 	/** Displays the specified window parent around a specific location on the screen. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, CenterType loc) { return displayWindow(windowIn, null, true, false, false, loc); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, ObjectPosition loc) { return displayWindow(windowIn, null, true, false, false, loc); }
 	/** Displays the specified window parent and specifies whether focus should be transfered to it. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus) { return displayWindow(windowIn, null, transferFocus, false, false, CenterType.screen); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus) { return displayWindow(windowIn, null, transferFocus, false, false, ObjectPosition.SCREEN_CENTER); }
 	/** Displays the specified window parent where focus transfer properties can be set along with where it is drawn. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus, CenterType loc) { return displayWindow(windowIn, null, transferFocus, false, false, loc); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus, ObjectPosition loc) { return displayWindow(windowIn, null, transferFocus, false, false, loc); }
 	/** Displays the specified window parent and passes a previous window for history traversal means. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject) { return displayWindow(windowIn, oldObject, true, true, true, CenterType.object); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject) { return displayWindow(windowIn, oldObject, true, true, true, ObjectPosition.OBJECT_CENTER); }
 	/** Displays the specified window parent, passes a previous window, and sets where this window will be relatively positioned. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, CenterType loc) { return displayWindow(windowIn, oldObject, true, true, true, loc); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, ObjectPosition loc) { return displayWindow(windowIn, oldObject, true, true, true, loc); }
 	/** Displays the specified window parent with variable arguments. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(windowIn, oldObject, transferFocus, true, true, CenterType.object); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(windowIn, oldObject, transferFocus, true, true, ObjectPosition.OBJECT_CENTER); }
 	/** Displays the specified window parent with variable arguments. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, CenterType loc) { return displayWindow(windowIn, oldObject, transferFocus, true, true, loc); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, ObjectPosition loc) { return displayWindow(windowIn, oldObject, transferFocus, true, true, loc); }
 	/** Displays the specified window parent with variable arguments. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, true, CenterType.object); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, true, ObjectPosition.OBJECT_CENTER); }
 	/** Displays the specified window parent with variable arguments. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, CenterType.object); }
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, ObjectPosition.OBJECT_CENTER); }
 	/** Displays the specified window parent with variable arguments. */
-	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, CenterType loc) {
+	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
 		if (windowIn != null) {
 			
 			//import window history
@@ -228,7 +228,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 			if (!windowIn.isInit()) { windowIn.initWindow(); }
 			
 			//position and add the window
-			if (loc != CenterType.none) { setPos(windowIn, oldObject instanceof IWindowObject ? (IWindowObject) oldObject : null, loc); }
+			if (loc != ObjectPosition.NONE) { setPos(windowIn, oldObject instanceof IWindowObject ? (IWindowObject) oldObject : null, loc); }
 			addObject(windowIn);
 			windowIn.bringToFront();
 			if (transferFocus) { windowIn.requestFocus(); }
@@ -237,71 +237,71 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Helper method used in conjunction wth displayWindow that actually positions the newley created window on the screen. */
-	private void setPos(IWindowParent windowIn, IWindowObject objectIn, CenterType typeIn) {
+	private void setPos(IWindowParent windowIn, IWindowObject objectIn, ObjectPosition typeIn) {
 		WindowSize res = QoT.getWindowSize();
-		EDimension gDim = windowIn.getDimensions();
+		EDims gDim = windowIn.getDimensions();
 		double headerHeight = windowIn.hasHeader() ? windowIn.getHeader().height : 0;
 		
 		int sX = 0;
 		int sY = 0;
 		
 		switch (typeIn) {
-		case screen:
+		case SCREEN_CENTER:
 			sX = (int) ((res.getWidth() / 2) - (gDim.width / 2));
 			sY = (int) ((res.getHeight() / 2) - (gDim.height / 2));
 			break;
-		case botLeftScreen:
+		case BOT_LEFT:
 			sX = 1;
 			sY = (int) (res.getHeight() - 2 - gDim.height);
 			break;
-		case topLeftScreen:
+		case TOP_LEFT:
 			sX = 1;
 			sY = 2;
 			break;
-		case botRightScreen:
+		case BOT_RIGHT:
 			sX = (int) (res.getWidth() - 1 - gDim.width);
 			sY = (int) (res.getHeight() - 2 - gDim.height);
 			break;
-		case topRightScreen:
+		case TOP_RIGHT:
 			sX = (int) (res.getWidth() - 1 - gDim.width);
 			sY = 2;
 			break;
-		case cursor:
+		case CURSOR_CENTER:
 			sX = (int) (Mouse.getMx() - (gDim.width / 2));
 			sY = (int) (Mouse.getMy() - (gDim.height - headerHeight) / 2 + (gDim.height / 7));
 			break;
-		case cursorCorner:
+		case CURSOR_CORNER:
 			sX = Mouse.getMx();
 			sY = Mouse.getMy();
 			break;
-		case object:
+		case OBJECT_CENTER:
 			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
+				EDims objDim = objectIn.getDimensions();
 				sX = (int) (objDim.midX - (gDim.width / 2));
 				sY = (int) (objDim.midY - (gDim.height / 2));
 			}
 			break;
-		case objectCorner:
+		case OBJECT_CORNER:
 			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
+				EDims objDim = objectIn.getDimensions();
 				sX = (int) objDim.startX;
 				sY = (int) objDim.startY;
 			}
 			break;
-		case objectIndent:
+		case OBJECT_INDENT:
 			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
+				EDims objDim = objectIn.getDimensions();
 				sX = (int) (objDim.startX + 25);
 				sY = (int) (objDim.startY + 25);
 			}
 			break;
-		case existingObjectIndent:
+		case EXISTING_OBJECT_INDENT:
 			EArrayList<WindowParent> windows = new EArrayList();
 			getAllChildren().stream().filter(o -> windowIn.getClass().isInstance(o)).filter(o -> !o.isBeingRemoved()).forEach(w -> windows.add((WindowParent) w));
 			
 			if (windows.isNotEmpty()) {
 				if (windows.get(0) != null) {
-					EDimension objDim = windows.get(0).getDimensions();
+					EDims objDim = windows.get(0).getDimensions();
 					sX = (int) (objDim.startX + 25);
 					sY = (int) (objDim.startY + 25);
 				}

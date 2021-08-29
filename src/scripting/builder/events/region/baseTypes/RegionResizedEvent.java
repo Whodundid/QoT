@@ -1,19 +1,19 @@
 package scripting.builder.events.region.baseTypes;
 
+import eutil.storage.EDimsI;
 import scripting.builder.events.region.RegionEvent;
-import storageUtil.EDimensionI;
 import world.GameWorld;
 import world.Region;
 
 public class RegionResizedEvent extends RegionEvent {
 	
-	private EDimensionI old;
+	private EDimsI old;
 	
-	public RegionResizedEvent(GameWorld theWorld, Region theRegion, EDimensionI oldDims) {
+	public RegionResizedEvent(GameWorld theWorld, Region theRegion, EDimsI oldDims) {
 		super(theWorld, theRegion);
 		old = oldDims;
 	}
 	
-	public EDimensionI getOldDims() { return old; }
+	public EDimsI getOldDims() { return old; }
 	
 }

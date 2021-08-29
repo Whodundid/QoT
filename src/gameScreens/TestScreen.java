@@ -1,7 +1,7 @@
-package assets.screens.types;
+package gameScreens;
 
-import assets.screens.GameScreen;
-import renderUtil.EColors;
+import eutil.colors.EColors;
+import gameScreens.screenUtil.GameScreen;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.interfaces.IActionObject;
 

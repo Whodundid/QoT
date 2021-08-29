@@ -1,19 +1,19 @@
 package renderEngine.textureSystem;
 
 import eutil.EUtil;
+import eutil.random.RandomUtil;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import java.awt.image.BufferedImage;
 import org.lwjgl.opengl.GL11;
-import randomUtil.RandomUtil;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 
 public class GameTexture {
 	
 	/** If this texture is a child variant, this is the parent for which it relates. If this value is null, there is no parent and this is not a child texture. */
 	private GameTexture parentTexture;
 	/** A collection of this texture's child variants. */
-	protected StorageBoxHolder<GameTexture, Integer> children = new StorageBoxHolder<GameTexture, Integer>();
+	protected BoxHolder<GameTexture, Integer> children = new BoxHolder<GameTexture, Integer>();
 	/** The internal name of this texture. */
 	private String name;
 	/** When calling for a random child ID, this percent will indicate the likely hood this specific child will be selected. */
@@ -121,9 +121,9 @@ public class GameTexture {
 	}
 	
 	public void initVariantPercents() {
-		StorageBoxHolder<GameTexture, Integer> total = new StorageBoxHolder(children);
+		BoxHolder<GameTexture, Integer> total = new BoxHolder(children);
 		total.add(this, percent);
-		for (StorageBox<GameTexture, Integer> t : total) {
+		for (Box2<GameTexture, Integer> t : total) {
 			int amount = t.getB();
 		}
 	}

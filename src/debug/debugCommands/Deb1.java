@@ -1,8 +1,8 @@
 package debug.debugCommands;
 
-import assets.screens.types.MainMenuScreen;
-import assets.screens.types.TestScreen;
 import debug.terminal.window.ETerminal;
+import gameScreens.MainMenuScreen;
+import gameScreens.TestScreen;
 import main.QoT;
 
 @SuppressWarnings("unused")

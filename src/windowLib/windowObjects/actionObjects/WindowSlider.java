@@ -1,8 +1,8 @@
 package windowLib.windowObjects.actionObjects;
 
+import eutil.math.NumberUtil;
+import eutil.storage.Box2;
 import java.text.DecimalFormat;
-import mathUtil.NumberUtil;
-import storageUtil.StorageBox;
 import windowLib.windowTypes.ActionObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 import windowLib.windowUtil.windowEvents.events.EventFocus;
@@ -27,7 +27,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 	private double thumbEndX = 0, thumbEndY = 0;
 	public double defaultVal = 0;
 	protected boolean continuouslyRunAction = true;
-	protected StorageBox<Integer, Integer> mousePos = new StorageBox();
+	protected Box2<Integer, Integer> mousePos = new Box2();
 	
 	public WindowSlider(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn, double lowValIn, double highValIn, boolean verticalIn) {
 		this(parentIn, xIn, yIn, widthIn, heightIn, lowValIn, highValIn, 0.0f, verticalIn);
@@ -67,7 +67,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 		if (isSliding && mousePos != null && mousePos.getA() != null && mousePos.getB() != null) {
 			if (vertical) { moveThumb(0, mY - mousePos.getB()); }
 			else { moveThumb(mX - mousePos.getA(), 0); }
-			mousePos.setValues(mX, mY);
+			mousePos.set(mX, mY);
 		}
 		
 		drawRect(startX, startY, endX, endY, 0xff000000); //black border
@@ -123,7 +123,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 		if (button == 0) {
 			if (isMouseInThumb(mX, mY)) {
 				isSliding = true;
-				mousePos.setValues(mX, mY);
+				mousePos.set(mX, mY);
 			}
 			else {
 				calculateSliderPos(true);

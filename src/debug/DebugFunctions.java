@@ -13,7 +13,7 @@ import debug.debugCommands.Deb9;
 import debug.debugCommands.DebugCommand;
 import debug.terminal.window.ETerminal;
 import eutil.EUtil;
-import storageUtil.EArrayList;
+import eutil.storage.EArrayList;
 
 //Author: Hunter Bragg
 

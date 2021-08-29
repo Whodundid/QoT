@@ -1,7 +1,7 @@
 package windowLib.windowObjects.windows;
 
+import eutil.colors.EColors;
 import input.Keyboard;
-import renderUtil.EColors;
 import windowLib.windowTypes.WindowParent;
 import windowLib.windowTypes.interfaces.IActionObject;
 

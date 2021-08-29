@@ -1,8 +1,8 @@
 package windowLib.windowObjects.utilityObjects;
 
 import eutil.EUtil;
-import renderUtil.EColors;
-import storageUtil.EDimension;
+import eutil.colors.EColors;
+import eutil.storage.EDims;
 import windowLib.windowObjects.basicObjects.WindowLabel;
 import windowLib.windowTypes.ActionObject;
 import windowLib.windowTypes.interfaces.IActionObject;
@@ -24,7 +24,7 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 		
 		if (objectIn != null) {
 			object = objectIn;
-			EDimension dims = object.getDimensions();
+			EDims dims = object.getDimensions();
 			
 			label = new WindowLabel(this, dims.endX + 10, dims.startY + 6, title, colorIn);
 			

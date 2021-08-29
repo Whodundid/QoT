@@ -1,7 +1,7 @@
 package windowLib.windowObjects.utilityObjects;
 
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
+import eutil.colors.EColors;
+import eutil.misc.ScreenLocation;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.ActionObject;
 import windowLib.windowTypes.interfaces.IActionObject;
@@ -27,12 +27,12 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 	
 	@Override
 	public void initObjects() {
-		bLeft = (WindowButton<ScreenLocation>) new WindowButton(this, startX + 4, startY + heightRatio - 19, 23, 15, "BL").setGenericObject(ScreenLocation.botLeft);
-		bRight = (WindowButton<ScreenLocation>) new WindowButton(this, endX - 27, startY + heightRatio - 19, 23, 15, "BR").setGenericObject(ScreenLocation.botRight);
-		tLeft = (WindowButton<ScreenLocation>) new WindowButton(this, startX + 4, startY + 4, 23, 15, "TL").setGenericObject(ScreenLocation.topLeft);
-		tRight = (WindowButton<ScreenLocation>) new WindowButton(this, endX - 27, startY + 4, 23, 15, "TR").setGenericObject(ScreenLocation.topRight);
-		center = (WindowButton<ScreenLocation>) new WindowButton(this, startX + width / 2 - 11, startY + (heightRatio / 2) - 7, 23, 15, "C").setGenericObject(ScreenLocation.center);
-		custom = (WindowButton<ScreenLocation>) new WindowButton(this, startX + width / 2 - (95 / 2), endY, 95, 16, "Custom location").setGenericObject(ScreenLocation.custom);
+		bLeft = (WindowButton<ScreenLocation>) new WindowButton(this, startX + 4, startY + heightRatio - 19, 23, 15, "BL").setGenericObject(ScreenLocation.BOT_LEFT);
+		bRight = (WindowButton<ScreenLocation>) new WindowButton(this, endX - 27, startY + heightRatio - 19, 23, 15, "BR").setGenericObject(ScreenLocation.BOT_RIGHT);
+		tLeft = (WindowButton<ScreenLocation>) new WindowButton(this, startX + 4, startY + 4, 23, 15, "TL").setGenericObject(ScreenLocation.TOP_LEFT);
+		tRight = (WindowButton<ScreenLocation>) new WindowButton(this, endX - 27, startY + 4, 23, 15, "TR").setGenericObject(ScreenLocation.TOP_RIGHT);
+		center = (WindowButton<ScreenLocation>) new WindowButton(this, startX + width / 2 - 11, startY + (heightRatio / 2) - 7, 23, 15, "C").setGenericObject(ScreenLocation.CENTER);
+		custom = (WindowButton<ScreenLocation>) new WindowButton(this, startX + width / 2 - (95 / 2), endY, 95, 16, "Custom location").setGenericObject(ScreenLocation.CUSTOM);
 		
 		addObject(bLeft, bRight, tLeft, tRight, center, custom);
 	}
@@ -47,12 +47,12 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 		drawStringS("Select a location to draw " + drawName + ".", midX - getStringWidth("Select a location to draw " + drawName + ".") / 2, startY - heightRatio / 5 - 12, 0xb2b2b2);
 		String msg = "";
 		switch (obj.getScreenLocation()) {
-		case botLeft: msg = "Bottom Left"; bLeft.drawRect(EColors.lred, -1); break;
-		case botRight: msg = "Bottom Right"; bRight.drawRect(EColors.lred, -1); break;
-		case topLeft: msg = "Top Left"; tLeft.drawRect(EColors.lred, -1); break;
-		case topRight: msg = "Top Right"; tRight.drawRect(EColors.lred, -1); break;
-		case center: msg = "Center"; center.drawRect(EColors.lred, -1); break;
-		case custom: msg = "Custom (" + obj.getLocation().getA() + ", " + obj.getLocation().getB() + ")"; break;
+		case BOT_LEFT: msg = "Bottom Left"; bLeft.drawRect(EColors.lred, -1); break;
+		case BOT_RIGHT: msg = "Bottom Right"; bRight.drawRect(EColors.lred, -1); break;
+		case TOP_LEFT: msg = "Top Left"; tLeft.drawRect(EColors.lred, -1); break;
+		case TOP_RIGHT: msg = "Top Right"; tRight.drawRect(EColors.lred, -1); break;
+		case CENTER: msg = "Center"; center.drawRect(EColors.lred, -1); break;
+		case CUSTOM: msg = "Custom (" + obj.getLocation().getA() + ", " + obj.getLocation().getB() + ")"; break;
 		default: msg = "Center"; break;
 		}
 		
@@ -64,11 +64,11 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == bLeft) { obj.setLocation(ScreenLocation.botLeft); }
-		if (object == bRight) { obj.setLocation(ScreenLocation.botRight); }
-		if (object == tLeft) { obj.setLocation(ScreenLocation.topLeft); }
-		if (object == tRight) { obj.setLocation(ScreenLocation.topRight); }
-		if (object == center) { obj.setLocation(ScreenLocation.center); }
+		if (object == bLeft) { obj.setLocation(ScreenLocation.BOT_LEFT); }
+		if (object == bRight) { obj.setLocation(ScreenLocation.BOT_RIGHT); }
+		if (object == tLeft) { obj.setLocation(ScreenLocation.TOP_LEFT); }
+		if (object == tRight) { obj.setLocation(ScreenLocation.TOP_RIGHT); }
+		if (object == center) { obj.setLocation(ScreenLocation.CENTER); }
 		if (object == custom) { getTopParent().displayWindow(obj.getScreenLocationGui()); }
 		performAction();
 	}

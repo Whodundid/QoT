@@ -1,11 +1,11 @@
-package assets.screens;
+package gameScreens.screenUtil;
 
 import debug.terminal.window.ETerminal;
+import eutil.storage.EDims;
 import input.Keyboard;
 import input.Mouse;
 import main.QoT;
 import renderEngine.GLSettings;
-import storageUtil.EDimension;
 import windowLib.windowTypes.TopWindowParent;
 import windowLib.windowTypes.WindowParent;
 import windowLib.windowTypes.interfaces.IWindowObject;
@@ -70,7 +70,7 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 						//draw greyed out overlay over everything if a focus lock object is present
 						if (focusLockObject != null && !o.equals(focusLockObject)) {
 							if (o.isVisible()) {
-								EDimension d = o.getDimensions();
+								EDims d = o.getDimensions();
 								drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 							}
 						}

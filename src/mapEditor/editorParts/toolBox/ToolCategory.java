@@ -1,9 +1,9 @@
 package mapEditor.editorParts.toolBox;
 
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 import java.util.List;
 import mapEditor.editorTools.EditorToolType;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;
 
 public class ToolCategory {

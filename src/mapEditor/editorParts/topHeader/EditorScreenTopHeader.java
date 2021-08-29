@@ -1,11 +1,11 @@
 package mapEditor.editorParts.topHeader;
 
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 import main.QoT;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorParts.sidePanel.SidePanel;
 import mapEditor.editorParts.sidePanel.SidePanelType;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IActionObject;

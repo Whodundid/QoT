@@ -1,7 +1,7 @@
 package debug.terminal.window;
 
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
+import eutil.colors.EColors;
+import eutil.misc.ScreenLocation;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;
 import windowLib.windowObjects.advancedObjects.scrollList.WindowScrollList;

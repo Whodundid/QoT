@@ -1,8 +1,8 @@
 package assets.windowObjects;
 
 
-import mathUtil.NumberUtil;
-import renderUtil.EColors;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IActionObject;
 

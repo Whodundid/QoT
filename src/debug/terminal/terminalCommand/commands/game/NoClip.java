@@ -3,8 +3,8 @@ package debug.terminal.terminalCommand.commands.game;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
+import eutil.storage.EArrayList;
 import main.QoT;
-import storageUtil.EArrayList;
 
 public class NoClip extends TerminalCommand {
 	

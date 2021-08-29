@@ -1,11 +1,11 @@
 package debug.terminal.terminalCommand.commands.system;
 
-import assets.screens.types.MainMenuScreen;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
+import eutil.storage.EArrayList;
+import gameScreens.MainMenuScreen;
 import main.QoT;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.windows.GLKeyChecker;
 
 //Author: Hunter Bragg

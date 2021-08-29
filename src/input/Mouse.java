@@ -64,13 +64,16 @@ public class Mouse extends GLFWMouseButtonCallback {
 		QoT.mouseEvent(action, mXIn, mYIn, button, change);
 	}
 	
-	//----------------------
-	//Mouse Static Functions
-	//----------------------
+	//------------------
+	// Static Functions
+	//------------------
 	
 	public static boolean isButtonDown(int button) {
 		return GLFW.glfwGetMouseButton(QoT.getWindowHandle(), button) == 1;
 	}
+	
+	public static boolean isLeftDown() { return isButtonDown(0); }
+	public static boolean isButtonDown() { return isButtonDown(1); }
 	
 	//--------------------
 	//Mouse Static Getters

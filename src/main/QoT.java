@@ -1,16 +1,22 @@
 package main;
 
-import assets.entities.player.Player;
-import assets.screens.GameScreen;
-import assets.screens.GameTopRenderer;
-import assets.screens.ScreenLevel;
-import assets.screens.types.MainMenuScreen;
+import assets.entities.Player;
+import assets.items.Items;
 import assets.textures.CursorTextures;
 import assets.textures.EditorTextures;
 import assets.textures.EntityTextures;
+import assets.textures.GeneralTextures;
 import assets.textures.WindowTextures;
 import assets.textures.WorldTextures;
 import debug.terminal.TerminalHandler;
+import eutil.storage.EDims;
+import eutil.sys.ESystemInfo;
+import eutil.sys.OSType;
+import eutil.sys.TracingPrintStream;
+import gameScreens.MainMenuScreen;
+import gameScreens.screenUtil.GameScreen;
+import gameScreens.screenUtil.GameTopRenderer;
+import gameScreens.screenUtil.ScreenLevel;
 import input.Keyboard;
 import input.Mouse;
 import input.WindowResizeListener;
@@ -20,9 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.settings.MainConfigFile;
 import main.settings.QotGameSettings;
-import miscUtil.ESystemInfo;
-import miscUtil.OSType;
-import miscUtil.TracingPrintStream;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -30,14 +33,12 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
-import renderEngine.GLSettings;
 import renderEngine.fontRenderer.FontRenderer;
 import renderEngine.shaders.Shaders;
 import renderEngine.textureSystem.TextureSystem;
-import renderUtil.CenterType;
-import storageUtil.EDimension;
 import windowLib.windowTypes.TopWindowParent;
 import windowLib.windowTypes.interfaces.IWindowParent;
+import windowLib.windowUtil.ObjectPosition;
 import world.GameWorld;
 
 public class QoT {
@@ -73,16 +74,16 @@ public class QoT {
 	private static boolean running = false;
 	
 	// Game tick stuff
-	public long lastTime = 0l;
-	private double lag = 0.0;
-	private long lastGameUpdate = 0l;
+	private long UPS = 60;
+	double timeU = 1000000000 / UPS;
 	private int curNumTicks = 0;
-	private final double updateInterval = 16.8;
+	private int ticks = 0;
 	
 	// Framerate stuff
+	private long FPS = 144;
+	double timeF = 1000000000 / FPS;
 	public long startTime = 0l;
 	public long runningTime = 0l;
-	private long frameTime = 0l;
 	private int frames = 0;
 	private int curFrameRate = 0;
 	
@@ -112,6 +113,8 @@ public class QoT {
 		}
 		
 		mainConfig.tryLoad();
+		setTargetFPSi(settings.targetFPS.get());
+		setTargetUPSi(settings.targetUPS.get());
 		
 		GLFWErrorCallback.createPrint(System.err).set();
 		
@@ -168,8 +171,12 @@ public class QoT {
 		EditorTextures.registerTextures(textureSystem);
 		WindowTextures.registerTextures(textureSystem);
 		CursorTextures.registerTextures(textureSystem);
+		GeneralTextures.registerTextures(textureSystem);
 		
 		terminalHandler.initCommands();
+		
+		Items.lesserHealing.setTexture(EntityTextures.thyrah);
+		Items.woodSword.setTexture(WorldTextures.stone);
 	}
 	
 	private boolean setupUserDir() {
@@ -201,7 +208,6 @@ public class QoT {
 		if (!running) {
 			running = true;
 			startTime = System.currentTimeMillis();
-			lastTime = startTime;
 			
 			/*
 			try {
@@ -229,26 +235,39 @@ public class QoT {
 			
 			displayScreen(new MainMenuScreen());
 			
+			long initialTime = System.nanoTime();
+			double deltaU = 0, deltaF = 0;
+			long timer = System.currentTimeMillis();
+			
 			while (running && !GLFW.glfwWindowShouldClose(handle)) {
 				try {
-					long current = System.currentTimeMillis();
-					runningTime = System.currentTimeMillis() - startTime;
-					double elapsed = current - lastTime;
-					lastTime = current;
-					lag += elapsed;
-					
-					//update inputs
-					GLFW.glfwPollEvents();
-					if (GLFW.glfwWindowShouldClose(handle)) { running = false; }
+					long currentTime = System.nanoTime();
+					deltaU += (currentTime - initialTime) / timeU;
+					deltaF += (currentTime - initialTime) / timeF;
+					initialTime = currentTime;
 					
 					//synchronize game inputs to 60 ticks per second
-					while (lag >= updateInterval) {
+					if (deltaU >= 1) {
+						//update inputs
+						GLFW.glfwPollEvents();
+						if (GLFW.glfwWindowShouldClose(handle)) { running = false; }
 						runGameTick();
-						lag -= updateInterval;
+						curNumTicks++;
+						deltaU--;
 					}
 					
-					//render screen
-					onRenderTick((long) (lag / updateInterval));
+					if (deltaF >= 1) {
+						onRenderTick(1);
+						frames++;
+						deltaF--;
+					}
+					
+					if (System.currentTimeMillis() - timer > 1000) {
+						curFrameRate = frames;
+						frames = 0;
+						ticks = 0;
+						timer += 1000;
+					}
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -276,7 +295,7 @@ public class QoT {
 	
 	/** Called from the main game loop to perform all rendering operations. */
 	private void onRenderTick(long partialTicks) {
-		updateFramerate();
+		//updateFramerate();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
 		if (theWorld != null && theWorld.isLoaded()) {
@@ -291,23 +310,12 @@ public class QoT {
 		topRenderer.onRenderTick();
 		
 		GLFW.glfwSwapBuffers(handle);
-		GLSettings.disableAlpha();
-		GLSettings.disableBlend();
+		//GLSettings.disableAlpha();
+		//GLSettings.disableBlend();
 	}
 	
 	public static void stopGame() {
 		if (running) { running = false; }
-	}
-	
-	private void updateFramerate() {
-		frames++;
-		if (System.currentTimeMillis() > frameTime + 1000) {
-			curFrameRate = frames;
-			//System.out.println("TICKS: " + curNumTicks);
-			curNumTicks = 0;
-			frameTime = System.currentTimeMillis();
-			frames = 0;
-		}
 	}
 	
 	//----------------
@@ -326,6 +334,19 @@ public class QoT {
 		topRenderer.onWindowResized();
 	}
 	
+	private long getTargetFPSi() { return FPS; }
+	private long getTargetUPSi() { return UPS; }
+	
+	private void setTargetUPSi(int upsIn) {
+		UPS = upsIn;
+		timeU = 1000000000 / UPS;
+	}
+	
+	private void setTargetFPSi(int fpsIn) {
+		FPS = fpsIn;
+		timeF = 1000000000 / FPS;
+	}
+	
 	//-----------------------
 	// Engine Input Handlers
 	//-----------------------
@@ -333,6 +354,10 @@ public class QoT {
 	public static void keyboardEvent(int action, char typedChar, int keyCode) {
 		if (getGLInit()) {
 			topRenderer.handleKeyboardInput(action, typedChar, keyCode);
+			if (theWorld != null) {
+				if (action == 0) { theWorld.getWorldRenderer().keyReleased(typedChar, keyCode); }
+				if (action == 1 || action == 2) { theWorld.getWorldRenderer().keyPressed(typedChar, keyCode); }
+			}
 			//if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleKeyboardInput(action, typedChar, keyCode); }
 			//worldRenderer.handleKeyboardInput(action, typedChar, keyCode);
 		}
@@ -425,17 +450,17 @@ public class QoT {
 	// Central Window Handles
 	//------------------------
 	
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn) { return displayWindow(level, windowIn, null, true, false, false, CenterType.screen); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, CenterType loc) { return displayWindow(level, windowIn, null, true, false, false, loc); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus) { return displayWindow(level, windowIn, null, transferFocus, false, false, CenterType.screen); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus, CenterType loc) { return displayWindow(level, windowIn, null, transferFocus, false, false, loc); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject) { return displayWindow(level, windowIn, oldObject, true, true, true, CenterType.object); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, CenterType loc) { return displayWindow(level, windowIn, oldObject, true, true, true, loc); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(level, windowIn, oldObject, transferFocus, true, true, CenterType.object); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, CenterType loc) { return displayWindow(level, windowIn, oldObject, transferFocus, true, true, loc); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(level, windowIn, oldObject, transferFocus, closeOld, true, CenterType.object); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(level, windowIn, oldObject, transferFocus, closeOld, transferHistory, CenterType.object); }
-	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, CenterType loc) {
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn) { return displayWindow(level, windowIn, null, true, false, false, ObjectPosition.SCREEN_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, ObjectPosition loc) { return displayWindow(level, windowIn, null, true, false, false, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus) { return displayWindow(level, windowIn, null, transferFocus, false, false, ObjectPosition.SCREEN_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus, ObjectPosition loc) { return displayWindow(level, windowIn, null, transferFocus, false, false, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject) { return displayWindow(level, windowIn, oldObject, true, true, true, ObjectPosition.OBJECT_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, ObjectPosition loc) { return displayWindow(level, windowIn, oldObject, true, true, true, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(level, windowIn, oldObject, transferFocus, true, true, ObjectPosition.OBJECT_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, ObjectPosition loc) { return displayWindow(level, windowIn, oldObject, transferFocus, true, true, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(level, windowIn, oldObject, transferFocus, closeOld, true, ObjectPosition.OBJECT_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(level, windowIn, oldObject, transferFocus, closeOld, transferHistory, ObjectPosition.OBJECT_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
 		switch (level) {
 		case TOP: topRenderer.displayWindow(windowIn); break;
 		case SCREEN: if (currentScreen != null) { currentScreen.displayWindow(windowIn); } break;
@@ -462,6 +487,8 @@ public class QoT {
 	public static boolean getGLInit() { return GLFW.glfwInit(); }
 	
 	public static int getFPS() { return instance.curFrameRate; }
+	public static int getTargetFPS() { return (int) instance.getTargetFPSi(); }
+	public static int getTargetUPS() { return (int) instance.getTargetUPSi(); }
 	
 	/** Returns true if the game is currently running in a debug state. */
 	public static boolean isDebugMode() { return isDebug; }
@@ -491,13 +518,13 @@ public class QoT {
 		return y.get();
 	}
 	
-	public static EDimension getWindowDims() {
+	public static EDims getWindowDims() {
 		IntBuffer xBuff = BufferUtils.createIntBuffer(1);
 		IntBuffer yBuff = BufferUtils.createIntBuffer(1);
 		GLFW.glfwGetWindowPos(handle, xBuff, yBuff);
 		int x = xBuff.get();
 		int y = yBuff.get();
-		return new EDimension(x, y, x + width, y + height);
+		return new EDims(x, y, x + width, y + height);
 	}
 	
 	/** Returns this game's central font rendering system. */
@@ -530,6 +557,7 @@ public class QoT {
 	public static void setDebugMode(boolean val) { isDebug = val; }
 	
 	public static Player setPlayer(Player p) { thePlayer = p; return thePlayer; }
-	
+	public static void setTargetFPS(int fpsIn) { instance.setTargetFPSi(fpsIn); }
+	public static void setTargetUPS(int upsIn) { instance.setTargetUPSi(upsIn); }
 	
 }

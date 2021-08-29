@@ -1,7 +1,7 @@
 package assets.particles;
 
+import eutil.colors.EColors;
 import main.QoT;
-import renderUtil.EColors;
 import windowLib.windowTypes.WindowObject;
 
 public class PointerPress extends WindowObject {

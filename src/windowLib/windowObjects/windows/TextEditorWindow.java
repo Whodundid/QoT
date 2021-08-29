@@ -1,12 +1,12 @@
 package windowLib.windowObjects.windows;
 
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import main.QoT;
-import mathUtil.NumberUtil;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;

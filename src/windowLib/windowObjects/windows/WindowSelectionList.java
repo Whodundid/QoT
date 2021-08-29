@@ -1,10 +1,10 @@
 package windowLib.windowObjects.windows;
 
+import eutil.colors.EColors;
+import eutil.misc.ScreenLocation;
+import eutil.storage.EArrayList;
+import eutil.storage.Box3;
 import java.util.Iterator;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.TrippleBox;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
@@ -18,7 +18,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	
 	protected WindowButton select, cancel;
 	protected WindowTextArea list;
-	protected EArrayList<TrippleBox<String, Integer, Object>> toAdd = new EArrayList();
+	protected EArrayList<Box3<String, Integer, Object>> toAdd = new EArrayList();
 	protected IWindowObject actionReciever;
 	
 	private double vPos, hPos;
@@ -61,9 +61,9 @@ public class WindowSelectionList extends ActionWindowParent {
 		};
 		list.setResetDrawn(false);
 		
-		Iterator<TrippleBox<String, Integer, Object>> it = toAdd.iterator();
+		Iterator<Box3<String, Integer, Object>> it = toAdd.iterator();
 		while (it.hasNext()) {
-			TrippleBox<String, Integer, Object> b = it.next();
+			Box3<String, Integer, Object> b = it.next();
 			add(b.a, b.b, b.c);
 			it.remove();
 		}
@@ -130,7 +130,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	public WindowSelectionList writeLine(String text, EColors color) { return writeLine(text, color.intVal); }
 	public WindowSelectionList writeLine(String text, int color) {
 		if (list != null) { list.addTextLine(text, color); }
-		else { toAdd.add(new TrippleBox(text, color, null)); }
+		else { toAdd.add(new Box3(text, color, null)); }
 		return this;
 	}
 	
@@ -139,7 +139,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	public WindowSelectionList addOption(String text, EColors color, Object arg) { return addOption(text, color.intVal, arg); }
 	public WindowSelectionList addOption(String text, int color, Object arg) {
 		if (list != null) { add(text, color, arg); }
-		else { toAdd.add(new TrippleBox(text, color, arg)); }
+		else { toAdd.add(new Box3(text, color, arg)); }
 		return this;
 	}
 	

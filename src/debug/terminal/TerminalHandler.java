@@ -2,53 +2,18 @@ package debug.terminal;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
-import debug.terminal.terminalCommand.commands.fileSystem.Cat;
-import debug.terminal.terminalCommand.commands.fileSystem.Cd;
-import debug.terminal.terminalCommand.commands.fileSystem.Cp;
-import debug.terminal.terminalCommand.commands.fileSystem.Edit;
-import debug.terminal.terminalCommand.commands.fileSystem.Head;
-import debug.terminal.terminalCommand.commands.fileSystem.Ls;
-import debug.terminal.terminalCommand.commands.fileSystem.Lsblk;
-import debug.terminal.terminalCommand.commands.fileSystem.MkDir;
-import debug.terminal.terminalCommand.commands.fileSystem.Mv;
-import debug.terminal.terminalCommand.commands.fileSystem.Open;
-import debug.terminal.terminalCommand.commands.fileSystem.Pwd;
-import debug.terminal.terminalCommand.commands.fileSystem.Rm;
-import debug.terminal.terminalCommand.commands.fileSystem.RmDir;
-import debug.terminal.terminalCommand.commands.fileSystem.Tail;
-import debug.terminal.terminalCommand.commands.game.CD_Saves;
-import debug.terminal.terminalCommand.commands.game.LoadWorld;
-import debug.terminal.terminalCommand.commands.game.NoClip;
-import debug.terminal.terminalCommand.commands.game.UnloadWorld;
-import debug.terminal.terminalCommand.commands.system.CalcCommand;
-import debug.terminal.terminalCommand.commands.system.ClearObjects;
-import debug.terminal.terminalCommand.commands.system.ClearTerminal;
-import debug.terminal.terminalCommand.commands.system.ClearTerminalHistory;
-import debug.terminal.terminalCommand.commands.system.DebugControl;
-import debug.terminal.terminalCommand.commands.system.ForLoop;
-import debug.terminal.terminalCommand.commands.system.Help;
-import debug.terminal.terminalCommand.commands.system.ID_CMD;
-import debug.terminal.terminalCommand.commands.system.ListCMD;
-import debug.terminal.terminalCommand.commands.system.OpenWindow;
-import debug.terminal.terminalCommand.commands.system.ReregisterCommands;
-import debug.terminal.terminalCommand.commands.system.RuntimeCMD;
-import debug.terminal.terminalCommand.commands.system.Shutdown;
-import debug.terminal.terminalCommand.commands.system.SystemCMD;
-import debug.terminal.terminalCommand.commands.system.Version;
-import debug.terminal.terminalCommand.commands.system.WhoAmI;
-import debug.terminal.terminalCommand.commands.windows.Close;
-import debug.terminal.terminalCommand.commands.windows.MinimizeWindow;
-import debug.terminal.terminalCommand.commands.windows.PinWindow;
-import debug.terminal.terminalCommand.commands.windows.ShowWindow;
-import debug.terminal.terminalCommand.commands.windows.ToFrontWindow;
+import debug.terminal.terminalCommand.commands.fileSystem.*;
+import debug.terminal.terminalCommand.commands.game.*;
+import debug.terminal.terminalCommand.commands.system.*;
+import debug.terminal.terminalCommand.commands.windows.*;
 import debug.terminal.window.ETerminal;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 
 //Author: Hunter Bragg
 
@@ -56,7 +21,7 @@ public class TerminalHandler {
 
 	public static final String version = "1.0";
 	private static TerminalHandler instance;
-	protected StorageBoxHolder<String, TerminalCommand> commands;
+	protected BoxHolder<String, TerminalCommand> commands;
 	protected EArrayList<TerminalCommand> commandList;
 	protected EArrayList<TerminalCommand> customCommandList;
 	public static boolean drawSpace = true;
@@ -67,7 +32,7 @@ public class TerminalHandler {
 	}
 	
 	private TerminalHandler() {
-		commands = new StorageBoxHolder();
+		commands = new BoxHolder();
 		commandList = new EArrayList();
 		customCommandList = new EArrayList();
 	}
@@ -78,7 +43,6 @@ public class TerminalHandler {
 	
 	private void registerBaseCommands(boolean runVisually) { registerBaseCommands(null, runVisually); }
 	private void registerBaseCommands(ETerminal termIn, boolean runVisually) {
-		
 		//file system
 		registerCommand(new Ls(), termIn, runVisually);
 		registerCommand(new Cd(), termIn, runVisually);
@@ -125,6 +89,7 @@ public class TerminalHandler {
 		registerCommand(new NoClip(), termIn, runVisually);
 		registerCommand(new LoadWorld(), termIn, runVisually);
 		registerCommand(new UnloadWorld(), termIn, runVisually);
+		registerCommand(new TPS(), termIn, runVisually);
 	}
 	
 	public void registerCommand(TerminalCommand command, boolean runVisually) { registerCommand(command, null, runVisually); }
@@ -204,7 +169,7 @@ public class TerminalHandler {
 			a.remove();
 		}
 		
-		Iterator<StorageBox<String, TerminalCommand>> b = commands.iterator();
+		Iterator<Box2<String, TerminalCommand>> b = commands.iterator();
 		while (b.hasNext()) {
 			String commandName = b.next().getA();
 			if (termIn != null && runVisually) { termIn.writeln("Unregistering command alias: " + commandName, 0xffb2b2b2); }
@@ -217,7 +182,7 @@ public class TerminalHandler {
 	}
 	
 	public TerminalCommand getCommand(String commandName) {
-		StorageBox<String, TerminalCommand> box = commands.getBoxWithA(commandName);
+		Box2<String, TerminalCommand> box = commands.getBoxWithA(commandName);
 		if (box != null) {
 			return commands.getBoxWithA(commandName).getB();
 		}
@@ -226,11 +191,11 @@ public class TerminalHandler {
 	
 	public static EArrayList<String> getSortedCommandNames() {
 		EArrayList<String> cmds = new EArrayList();
-		StorageBoxHolder<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> sortedAll = getSortedCommands();
+		BoxHolder<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>> sortedAll = getSortedCommands();
 		
-		for (StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> box : sortedAll) {
-			StorageBoxHolder<String, EArrayList<TerminalCommand>> catCommands = box.getB();
-			for (StorageBox<String, EArrayList<TerminalCommand>> byCat : catCommands) {
+		for (Box2<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>> box : sortedAll) {
+			BoxHolder<String, EArrayList<TerminalCommand>> catCommands = box.getB();
+			for (Box2<String, EArrayList<TerminalCommand>> byCat : catCommands) {
 				for (TerminalCommand command : byCat.getB()) {
 					if (command.showInHelp()) {
 						cmds.add(command.getName());
@@ -242,8 +207,8 @@ public class TerminalHandler {
 		return cmds;
 	}
 	
-	public static StorageBoxHolder<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> getSortedCommands() {
-		StorageBoxHolder<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> sortedCommands = new StorageBoxHolder();
+	public static BoxHolder<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>> getSortedCommands() {
+		BoxHolder<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>> sortedCommands = new BoxHolder();
 		EArrayList<TerminalCommand> unsorted = TerminalHandler.getInstance().getCommandList();
 		
 		//filter out commands that should not be shown in help
@@ -257,7 +222,7 @@ public class TerminalHandler {
 		Collections.sort(categories);
 		
 		//collect for each category
-		StorageBoxHolder<String, EArrayList<TerminalCommand>> commandsByCategory = new StorageBoxHolder();
+		BoxHolder<String, EArrayList<TerminalCommand>> commandsByCategory = new BoxHolder();
 		categories.forEach(c -> commandsByCategory.add(c, null));
 		EArrayList<TerminalCommand> toProcess = new EArrayList(unsorted);
 		
@@ -285,28 +250,28 @@ public class TerminalHandler {
 		
 		//isolate the 'none' category
 		if (!commandsByCategory.removeBoxesContainingA("none").isEmpty()) {
-			StorageBox<String, EArrayList<TerminalCommand>> noneCat = commandsByCategory.removeBoxesContainingA("none").get(0);
+			Box2<String, EArrayList<TerminalCommand>> noneCat = commandsByCategory.removeBoxesContainingA("none").get(0);
 			typeToProcess.addAll(noneCat.getB());
 			
 			//filter out commands that have a category but are not normal
-			for (StorageBox<String, EArrayList<TerminalCommand>> byCat : commandsByCategory) {
+			for (Box2<String, EArrayList<TerminalCommand>> byCat : commandsByCategory) {
 				Iterator<TerminalCommand> it = byCat.getB().iterator();
 				while (it.hasNext()) {
 					TerminalCommand c = it.next();
 					if (c.getType() != CommandType.NORMAL) {
-						StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> box = sortedCommands.getBoxWithA(c.getType());
+						Box2<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>> box = sortedCommands.getBoxWithA(c.getType());
 						if (box != null) {
-							StorageBoxHolder<String, EArrayList<TerminalCommand>> cats = box.getB();
-							StorageBox<String, EArrayList<TerminalCommand>> catBox = cats.getBoxWithA(c.getCategory());
+							BoxHolder<String, EArrayList<TerminalCommand>> cats = box.getB();
+							Box2<String, EArrayList<TerminalCommand>> catBox = cats.getBoxWithA(c.getCategory());
 							if (catBox != null) {
 								catBox.getB().add(c);
 							}
 							else {
-								cats.add(new StorageBox(c.getCategory(), new EArrayList(c)));
+								cats.add(new Box2(c.getCategory(), new EArrayList(c)));
 							}
 						}
 						else {
-							sortedCommands.add(c.getType(), new StorageBoxHolder(c.getCategory(), new EArrayList(c)));
+							sortedCommands.add(c.getType(), new BoxHolder(c.getCategory(), new EArrayList(c)));
 						}
 						it.remove();
 					}
@@ -333,20 +298,20 @@ public class TerminalHandler {
 			}
 			
 			if (sortedCommands.getBoxWithA(type) == null) {
-				sortedCommands.add(type, new StorageBoxHolder("nocat", byType));
+				sortedCommands.add(type, new BoxHolder("nocat", byType));
 			}
 		}
 		
 		//add any remaining commands in the 'none' category to the normal command type
-		sortedCommands.getBoxWithA(CommandType.NORMAL).getB().add(new StorageBox("No Category", typeToProcess));
+		sortedCommands.getBoxWithA(CommandType.NORMAL).getB().add(new Box2("No Category", typeToProcess));
 		
 		//ensure correct command type order
-		EArrayList<StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>>> commands = sortedCommands.getBoxes();
+		EArrayList<Box2<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>>> commands = sortedCommands.getBoxes();
 		sortedCommands.clear();
-		Collections.sort(commands, new Comparator<StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>>>() {
+		Collections.sort(commands, new Comparator<Box2<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>>>() {
 
 			@Override
-			public int compare(StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> o1, StorageBox<CommandType, StorageBoxHolder<String, EArrayList<TerminalCommand>>> o2) {
+			public int compare(Box2<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>> o1, Box2<CommandType, BoxHolder<String, EArrayList<TerminalCommand>>> o2) {
 				return o1.getA().compareTo(o2.getA());
 			}
 			

@@ -1,9 +1,9 @@
 package main.settings.config;
 
 import eutil.EUtil;
+import eutil.datatypes.EDataType;
+import eutil.storage.EArrayList;
 import java.util.Collection;
-import miscUtil.EDataType;
-import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 

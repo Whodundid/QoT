@@ -1,17 +1,17 @@
 package windowLib.windowTypes;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.misc.ScreenLocation;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import java.util.Stack;
 import main.QoT;
 import renderEngine.textureSystem.GameTexture;
-import renderUtil.CenterType;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import windowLib.windowTypes.interfaces.IWindowObject;
 import windowLib.windowTypes.interfaces.IWindowParent;
+import windowLib.windowUtil.ObjectPosition;
 
 //Author: Hunter Bragg
 
@@ -25,7 +25,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected boolean moveWithParent = false;
 	protected boolean pinned = false;
 	protected boolean pinnable = false;
-	protected ScreenLocation maximized = ScreenLocation.out;
+	protected ScreenLocation maximized = ScreenLocation.OUT;
 	protected boolean minimizable = true;
 	protected boolean minimized = false;
 	protected boolean maximizable = false;
@@ -35,8 +35,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected Object oldObject = null;
 	protected EArrayList<String> aliases = new EArrayList();
 	protected GameTexture windowIcon = null;
-	protected EDimension preMaxFull = new EDimension();
-	protected EDimension preMaxSide = new EDimension();
+	protected EDims preMaxFull = new EDims();
+	protected EDims preMaxSide = new EDims();
 	protected boolean showInTaskBar = true;
 	protected long initTime = 0l;
 	
@@ -59,7 +59,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		init(parentIn, xIn, yIn, widthIn, heightIn);
 		pullHistoryFrom(oldGuiIn);
 		windowInstance = this;
-		preMaxFull = new EDimension(xIn, yIn, widthIn, heightIn);
+		preMaxFull = new EDims(xIn, yIn, widthIn, heightIn);
 	}
 	
 	//----------------------
@@ -146,7 +146,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 					
 					reInitObjects();
 					
-					if (getMaximizedPosition() != ScreenLocation.out) {
+					if (getMaximizedPosition() != ScreenLocation.OUT) {
 						maximize();
 					}
 					
@@ -166,8 +166,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	@Override public boolean isPinned() { return pinned; }
 	@Override
 	public boolean isMaximized() {
-		return maximized == ScreenLocation.center || maximized == ScreenLocation.left || maximized == ScreenLocation.right ||
-			   maximized == ScreenLocation.topLeft || maximized == ScreenLocation.topRight || maximized == ScreenLocation.botLeft || maximized == ScreenLocation.botRight;
+		return maximized == ScreenLocation.CENTER || maximized == ScreenLocation.LEFT || maximized == ScreenLocation.RIGHT ||
+			   maximized == ScreenLocation.TOP_LEFT || maximized == ScreenLocation.TOP_RIGHT || maximized == ScreenLocation.BOT_LEFT || maximized == ScreenLocation.BOT_RIGHT;
 	}
 	@Override public boolean isMinimized() { return minimized; }
 	@Override public boolean isPinnable() { return pinnable; }
@@ -185,7 +185,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	
 	@Override
 	public void maximize() {
-		EDimension screen = getTopParent().getDimensions();
+		EDims screen = getTopParent().getDimensions();
 		//boolean hasTaskBar = EnhancedMC.getRenderer().getTaskBar() != null;
 		boolean hasTaskBar = true;
 		
@@ -195,31 +195,31 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		double tb = 0;
 		double hh = header.height;
 		
-		if (maximized == ScreenLocation.center) {
+		if (maximized == ScreenLocation.CENTER) {
 			if (hasTaskBar) { setDimensions(0, hh + tb, sw, sh - (hh + tb)); }
 			else { setDimensions(0, hh, sw, sh - hh); }
 		}
-		else if (maximized == ScreenLocation.left) {
+		else if (maximized == ScreenLocation.LEFT) {
 			if (hasTaskBar) { setDimensions(0, hh + tb, sw / 2 + 1, sh - (hh + tb)); }
 			else { setDimensions(0, hh, sw / 2 + 1, sh - hh); }
 		}
-		else if (maximized == ScreenLocation.right) {
+		else if (maximized == ScreenLocation.RIGHT) {
 			if (hasTaskBar) { setDimensions(sw / 2, hh + tb, sw / 2, sh - (hh + tb)); }
 			else { setDimensions(sw / 2, hh, sw / 2, sh - hh); }
 		}
-		else if (maximized == ScreenLocation.topLeft) {
+		else if (maximized == ScreenLocation.TOP_LEFT) {
 			if (hasTaskBar) { setDimensions(0, hh + tb, sw / 2 + 1, (sh / 2) - (hh + tb)); }
 			else { setDimensions(0, hh, sw / 2 + 1, (sh / 2) - hh); }
 		}
-		else if (maximized == ScreenLocation.botLeft) {
+		else if (maximized == ScreenLocation.BOT_LEFT) {
 			if (hasTaskBar) { setDimensions(0, screen.midY + hh - 1, sw / 2 + 1, ((sh - tb - (hh / 2)) / 2) - 2); }
 			else { setDimensions(0, screen.midY + hh - 1, sw / 2 + 1, (sh / 2) - hh + 2); }
 		}
-		else if (maximized == ScreenLocation.topRight) {
+		else if (maximized == ScreenLocation.TOP_RIGHT) {
 			if (hasTaskBar) { setDimensions(sw / 2, hh + tb, sw / 2, (sh / 2) - (hh + tb)); }
 			else { setDimensions(sw / 2, hh, sw / 2, (sh / 2) - hh); }
 		}
-		else if (maximized == ScreenLocation.botRight) {
+		else if (maximized == ScreenLocation.BOT_RIGHT) {
 			if (hasTaskBar) { setDimensions(sw / 2, screen.midY + hh - 1, sw / 2, ((sh - tb - (hh / 2)) / 2) - 2); }
 			else { setDimensions(sw / 2, screen.midY + hh - 1, sw / 2, (sh / 2) - hh + 2); }
 		}
@@ -235,7 +235,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		//double tb = (bar != null) ? bar.height : 0;
 		double tb = 0;
 		
-		EDimension dims = getDimensions();
+		EDims dims = getDimensions();
 		double headerHeight = hasHeader() ? getHeader().height : 0;
 		double sX = dims.startX;
 		double sY = dims.startY;
@@ -251,8 +251,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		reInitObjects();
 	}
 	
-	@Override public EDimension getPreMax() { return preMaxFull; }
-	@Override public IWindowParent<E> setPreMax(EDimension dimIn) { preMaxFull = new EDimension(dimIn); return this; }
+	@Override public EDims getPreMax() { return preMaxFull; }
+	@Override public IWindowParent<E> setPreMax(EDims dimIn) { preMaxFull = new EDims(dimIn); return this; }
 	
 	@Override public boolean isOpWindow() { return false; }
 	@Override public boolean isDebugWindow() { return false; }
@@ -329,7 +329,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 				try {
 					WindowParent<?> newGui = ((WindowParent<?>) Class.forName(oldGuiPass.getClass().getName()).getConstructor().newInstance());
 					newGui.setWindowHistory(((WindowParent<?>) oldGuiPass).getWindowHistory());
-					IWindowParent p = getTopParent().displayWindow(newGui, this, true, true, false, CenterType.object);
+					IWindowParent p = getTopParent().displayWindow(newGui, this, true, true, false, ObjectPosition.OBJECT_CENTER);
 					p.setPinned(isPinned());
 					if (isMaximized() && newGui.isMaximizable()) {
 						newGui.setPreMax(getPreMax());

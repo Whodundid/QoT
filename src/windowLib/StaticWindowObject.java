@@ -1,14 +1,14 @@
 package windowLib;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import main.QoT;
 import main.WindowSize;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import windowLib.windowTypes.WindowParent;
 import windowLib.windowTypes.interfaces.ITopParent;
@@ -100,41 +100,41 @@ public class StaticWindowObject extends EGui {
 	public static void resize(IWindowObject<?> obj, double xIn, double yIn, ScreenLocation areaIn) {
 		obj.postEvent(new EventModify(obj, obj, ObjectModifyType.Resize)); //post an event
 		if (xIn != 0 || yIn != 0) { //make sure that there is actually a change in the cursor position
-			EDimension d = obj.getDimensions();
+			EDims d = obj.getDimensions();
 			//EDimension c = obj.getClickableArea();
 			double x = 0, y = 0, w = 0, h = 0;
 			boolean e = false, s = false;
 			//perform resizing on different sides depending on the side that's being resized
 			switch (areaIn) {
-			case top:
+			case TOP:
 				x = d.startX; y = d.startY + yIn; w = d.width; h = d.height - yIn;
 				//obj.setClickableArea(c.startX, c.startY + yIn, c.width, c.height - yIn);
 				break;
-			case bot:
+			case BOT:
 				x = d.startX; y = d.startY; w = d.width; h = d.height + yIn;
 				//obj.setClickableArea(c.startX, c.startY, c.width, c.height + yIn);
 				break;
-			case right:
+			case RIGHT:
 				x = d.startX; y = d.startY; w = d.width + xIn; h = d.height;
 				//obj.setClickableArea(c.startX, c.startY, c.width + xIn, c.height);
 				break;
-			case left:
+			case LEFT:
 				x = d.startX + xIn; y = d.startY; w = d.width - xIn; h = d.height;
 				//obj.setClickableArea(c.startX + xIn, c.startY, c.width - xIn, c.height);
 				break;
-			case topRight:
+			case TOP_RIGHT:
 				x = d.startX; y = d.startY + yIn; w = d.width + xIn; h = d.height - yIn;
 				//obj.setClickableArea(c.startX, c.startY + yIn, c.width + xIn, c.height - yIn);
 				break;
-			case botRight:
+			case BOT_RIGHT:
 				x = d.startX; y = d.startY; w = d.width + xIn; h = d.height + yIn;
 				//obj.setClickableArea(c.startX, c.startY, c.width + xIn, c.height + yIn);
 				break;
-			case topLeft:
+			case TOP_LEFT:
 				x = d.startX + xIn; y = d.startY + yIn; w = d.width - xIn; h = d.height - yIn;
 				//obj.setClickableArea(c.startX + xIn, c.startY + yIn, c.width - xIn, c.height - yIn);
 				break;
-			case botLeft:
+			case BOT_LEFT:
 				x = d.startX + xIn; y = d.startY; w = d.width - xIn; h = d.height + yIn;
 				//obj.setClickableArea(c.startX + xIn, c.startY, c.width - xIn, c.height + yIn);
 				break;
@@ -144,8 +144,8 @@ public class StaticWindowObject extends EGui {
 			if (w < obj.getMinWidth()) {
 				w = obj.getMinWidth();
 				switch (areaIn) {
-				case right: case topRight: case botRight: x = d.startX; break;
-				case left: case topLeft: case botLeft: x = d.endX - w; break;
+				case RIGHT: case TOP_RIGHT: case BOT_RIGHT: x = d.startX; break;
+				case LEFT: case TOP_LEFT: case BOT_LEFT: x = d.endX - w; break;
 				default: break;
 				}
 			}
@@ -153,8 +153,8 @@ public class StaticWindowObject extends EGui {
 			if (w > obj.getMaxWidth()) {
 				w = obj.getMaxWidth();
 				switch (areaIn) {
-				case right: case topRight: case botRight: x = d.startX; break;
-				case left: case topLeft: case botLeft: x = d.endX - w; break;
+				case RIGHT: case TOP_RIGHT: case BOT_RIGHT: x = d.startX; break;
+				case LEFT: case TOP_LEFT: case BOT_LEFT: x = d.endX - w; break;
 				default: break;
 				}
 			}
@@ -162,8 +162,8 @@ public class StaticWindowObject extends EGui {
 			if (h < obj.getMinHeight()) {
 				h = obj.getMinHeight();
 				switch (areaIn) {
-				case top: case topRight: case topLeft: y = d.endY - h; break;
-				case bot: case botRight: case botLeft: y = d.startY; break;
+				case TOP: case TOP_RIGHT: case TOP_LEFT: y = d.endY - h; break;
+				case BOT: case BOT_RIGHT: case BOT_LEFT: y = d.startY; break;
 				default: break;
 				}
 			}
@@ -171,8 +171,8 @@ public class StaticWindowObject extends EGui {
 			if (h > obj.getMaxHeight()) {
 				h = obj.getMaxHeight();
 				switch (areaIn) {
-				case top: case topRight: case topLeft: y = d.endY - h; break;
-				case bot: case botRight: case botLeft: y = d.startY; break;
+				case TOP: case TOP_RIGHT: case TOP_LEFT: y = d.endY - h; break;
+				case BOT: case BOT_RIGHT: case BOT_LEFT: y = d.startY; break;
 				default: break;
 				}
 			}
@@ -202,11 +202,11 @@ public class StaticWindowObject extends EGui {
 						else { o.move(newX, newY); }
 					}
 				}
-				EDimension d = obj.getDimensions();
+				EDims d = obj.getDimensions();
 				obj.setDimensions(d.startX + newX, d.startY + newY, d.width, d.height); //offset the original position by the specified offset
 				//obj.getClickableArea().move(newX, newY);
 				if (obj.isBoundaryEnforced()) { //also move the boundary enforcer, if there is one
-					EDimension b = obj.getBoundaryEnforcer();
+					EDims b = obj.getBoundaryEnforcer();
 					obj.getBoundaryEnforcer().setPosition(b.startX + newX, b.startY + newY);
 				}
 			}
@@ -217,22 +217,22 @@ public class StaticWindowObject extends EGui {
 	public static void setPosition(IWindowObject<?> obj, double newX, double newY) {
 		//only move this object and its children if it is moveable
 		if (obj.isMoveable()) {
-			EDimension d = obj.getDimensions();
+			EDims d = obj.getDimensions();
 			//EDimension c = obj.getClickableArea();
 			
 			//the object's current position and relative clickArea for shorter code
-			StorageBox<Double, Double> loc = new StorageBox(d.startX, d.startY);
+			Box2<Double, Double> loc = new Box2(d.startX, d.startY);
 			//StorageBox<Integer, Integer> relLoc = new StorageBox(d.startX - c.startX, d.startY - c.startY);
 			
 			//holder to store each object and their relative child locations
-			StorageBoxHolder<IWindowObject<?>, StorageBox<Double, Double>> previousLocations = new StorageBoxHolder();
+			BoxHolder<IWindowObject<?>, Box2<Double, Double>> previousLocations = new BoxHolder();
 			
 			//grab all immediate objects
 			EArrayList<IWindowObject<?>> objs = EArrayList.combineLists(obj.getObjects(), obj.getAddingObjects());
 			
 			//get each of the object's children's relative positions and clickable areas relative to each child
 			for (IWindowObject o : objs) {
-				previousLocations.add(o, new StorageBox(o.getDimensions().startX - loc.getA(), o.getDimensions().startY - loc.getB()));
+				previousLocations.add(o, new Box2(o.getDimensions().startX - loc.getA(), o.getDimensions().startY - loc.getB()));
 				//new StorageBox(o.getClickableArea().startX - o.getDimensions().startX, o.getClickableArea().startY - o.getDimensions().startY))
 			}
 			
@@ -244,7 +244,7 @@ public class StaticWindowObject extends EGui {
 			for (IWindowObject<?> o : objs) {
 				//don't move the child if its position is locked
 				if (o.isMoveable()) {
-					StorageBox<Double, Double> oldLoc = previousLocations.getBoxWithA(o).getB();
+					Box2<Double, Double> oldLoc = previousLocations.getBoxWithA(o).getB();
 					//StorageBox<Integer, Integer> oldClick = previousLocations.getBoxWithObj(o).getValue().getValue();
 					
 					//move the child to the new location with the parent's offest
@@ -389,7 +389,7 @@ public class StaticWindowObject extends EGui {
 	/** Returns the ScreenLocation area the mouse is currently on for an object. */
 	public static ScreenLocation getEdgeAreaMouseIsOn(IWindowObject<?> objIn, int mX, int mY) {
 		boolean left = false, right = false, top = false, bottom = false;
-		EDimension d = objIn.getDimensions();
+		EDims d = objIn.getDimensions();
 		double rStartY = objIn.hasHeader() ? objIn.getHeader().startY : d.startY;
 		if (mX >= d.startX - 5 && mX <= d.endX + 5 && mY >= rStartY - 5 && mY <= d.endY + 4) {
 			if (mX >= d.startX - 5 && mX <= d.startX) { left = true; }
@@ -397,28 +397,28 @@ public class StaticWindowObject extends EGui {
 			if (mY >= rStartY - 6 && mY <= rStartY) { top = true; }
 			if (mY >= d.endY - 4 && mY <= d.endY + 4) { bottom = true; }
 			if (left) {
-				if (top) { return ScreenLocation.topLeft; }
-				else if (bottom) { return ScreenLocation.botLeft; }
-				else { return ScreenLocation.left; }
+				if (top) { return ScreenLocation.TOP_LEFT; }
+				else if (bottom) { return ScreenLocation.BOT_LEFT; }
+				else { return ScreenLocation.LEFT; }
 			}
 			else if (right) {
-				if (top) { return ScreenLocation.topRight; }
-				else if (bottom) { return ScreenLocation.botRight; }
-				else { return ScreenLocation.right; }
+				if (top) { return ScreenLocation.TOP_RIGHT; }
+				else if (bottom) { return ScreenLocation.BOT_RIGHT; }
+				else { return ScreenLocation.RIGHT; }
 			} 
-			else if (top) { return ScreenLocation.top; }
-			else if (bottom) { return ScreenLocation.bot; }
+			else if (top) { return ScreenLocation.TOP; }
+			else if (bottom) { return ScreenLocation.BOT; }
 		}
-		return ScreenLocation.out;
+		return ScreenLocation.OUT;
 	}
 	
 	public static boolean isMouseInside(IWindowObject<?> obj, int mX, int mY) {
 		if (obj != null && (!QoT.getTopRenderer().hasFocus() || obj.isChildOf(QoT.getTopRenderer()))) {
-			EDimension d = obj.getDimensions();
+			EDims d = obj.getDimensions();
 			
 			// check if there is a boundary enforcer limiting the overrall area
 			if (obj.isBoundaryEnforced()) {
-				EDimension b = obj.getBoundaryEnforcer();
+				EDims b = obj.getBoundaryEnforcer();
 				return mX >= d.startX && mX >= b.startX &&
 					   mX <= d.endX && mX <= b.endX &&
 					   mY >= d.startY && mY >= b.startY &&
@@ -441,7 +441,7 @@ public class StaticWindowObject extends EGui {
 		IWindowParent<?> p = objIn.getWindowParent();
 		if (p != null) { p.bringToFront(); }
 		if (!objIn.hasFocus() && objIn.isMouseOver()) { objIn.requestFocus(); }
-		if (button == 0 && objIn.isResizeable() && !objIn.getEdgeSideMouseIsOn().equals(ScreenLocation.out)) {
+		if (button == 0 && objIn.isResizeable() && !objIn.getEdgeSideMouseIsOn().equals(ScreenLocation.OUT)) {
 			objIn.getTopParent().setResizingDir(objIn.getEdgeSideMouseIsOn());
 			objIn.getTopParent().setModifyMousePos(mX, mY);
 			objIn.getTopParent().setModifyingObject(objIn, ObjectModifyType.Resize);

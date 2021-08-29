@@ -1,4 +1,4 @@
-package assets.screens;
+package gameScreens.screenUtil;
 
 public enum ScreenLevel {
 	/** The top renderer (always present). */

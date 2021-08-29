@@ -2,10 +2,10 @@ package debug.terminal.window.termParts;
 
 import debug.terminal.window.ETerminal;
 import debug.terminal.window.TerminalRCM;
+import eutil.colors.EColors;
 import input.Keyboard;
-import renderUtil.CenterType;
-import renderUtil.EColors;
 import windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
+import windowLib.windowUtil.ObjectPosition;
 import windowLib.windowUtil.windowEvents.eventUtil.EventType;
 import windowLib.windowUtil.windowEvents.events.EventFocus;
 
@@ -27,7 +27,7 @@ public class TerminalTextLine extends TextAreaLine {
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		if (button == 1) {
-			getTopParent().displayWindow(new TerminalRCM(this), CenterType.cursorCorner);
+			getTopParent().displayWindow(new TerminalRCM(this), ObjectPosition.CURSOR_CORNER);
 		}
 		else {
 			if (checkLinkClick(mXIn, mYIn, button)) { term.writeln("Opening Link..\n", EColors.seafoam); }
@@ -52,7 +52,7 @@ public class TerminalTextLine extends TextAreaLine {
 		super.onFocusGained(eventIn);
 		if (eventIn.getEventType() == EventType.MOUSE) {
 			if (eventIn.getActionCode() == 1) {
-				getTopParent().displayWindow(new TerminalRCM(this), CenterType.cursorCorner);
+				getTopParent().displayWindow(new TerminalRCM(this), ObjectPosition.CURSOR_CORNER);
 			}
 		}
 	}

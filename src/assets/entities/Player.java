@@ -1,17 +1,15 @@
-package assets.entities.player;
+package assets.entities;
 
-import assets.entities.Entity;
 import assets.items.Item;
 import assets.items.Weapon;
 import assets.textures.EntityTextures;
+import eutil.random.RandomUtil;
 import quests.PathFinder;
 import quests.PlayerStats;
-import randomUtil.RandomUtil;
 
 public class Player extends Entity {
 	
 	public double EXP;
-	public Inventory inventory;
 	public double flameCost = 3;
 	public double healCost = 4.5;
 	public double flameDamage;
@@ -28,7 +26,6 @@ public class Player extends Entity {
 		flameDamage = 10;
 		healAmount = 10;
 		
-		inventory = new Inventory(this);
 		stats = new PlayerStats(this);
 		findPath = new PathFinder(null);
 		
@@ -118,7 +115,6 @@ public class Player extends Entity {
 	// Player Getters
 	//----------------
 	
-	public Inventory getInventory() { return inventory; }
 	public PlayerStats getStats() { return stats; }
 	
 }

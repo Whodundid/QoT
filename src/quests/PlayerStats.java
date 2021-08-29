@@ -1,7 +1,7 @@
 package quests;
 
-import assets.entities.player.Player;
-import storageUtil.EArrayList;
+import assets.entities.Player;
+import eutil.storage.EArrayList;
 
 public class PlayerStats {
 	

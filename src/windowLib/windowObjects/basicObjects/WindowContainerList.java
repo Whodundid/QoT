@@ -1,10 +1,10 @@
 package windowLib.windowObjects.basicObjects;
 
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import java.util.Iterator;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import windowLib.windowObjects.advancedObjects.scrollList.WindowScrollList;
 import windowLib.windowTypes.WindowParent;
@@ -73,17 +73,17 @@ public class WindowContainerList<E> extends WindowContainer<E> {
 	
 	@Override
 	public WindowContainerList<E> setPosition(double newX, double newY) {
-		EDimension d = getDimensions();
-		StorageBox<Integer, Integer> loc = new StorageBox(d.startX, d.startY);
-		StorageBoxHolder<IWindowObject<?>, StorageBox<Integer, Integer>> previousLocations = new StorageBoxHolder();
+		EDims d = getDimensions();
+		Box2<Integer, Integer> loc = new Box2(d.startX, d.startY);
+		BoxHolder<IWindowObject<?>, Box2<Integer, Integer>> previousLocations = new BoxHolder();
 		EArrayList<IWindowObject<?>> objs = EArrayList.combineLists(getObjects(), getAddingObjects());
 		for (IWindowObject o : objs) {
-			previousLocations.add(o, new StorageBox(o.getDimensions().startX - loc.getA(), o.getDimensions().startY - loc.getB()));
+			previousLocations.add(o, new Box2(o.getDimensions().startX - loc.getA(), o.getDimensions().startY - loc.getB()));
 		}
 		setDimensions(newX, newY, d.width, d.height);
 		for (IWindowObject o : objs) {
 			if (!o.isMoveable()) {
-				StorageBox<Integer, Integer> oldLoc = previousLocations.getBoxWithA(o).getB();
+				Box2<Integer, Integer> oldLoc = previousLocations.getBoxWithA(o).getB();
 				o.setInitialPosition(newX + oldLoc.getA(), newY + oldLoc.getB());
 				o.setPosition(newX + oldLoc.getA(), newY + oldLoc.getB());
 			}
@@ -91,10 +91,10 @@ public class WindowContainerList<E> extends WindowContainer<E> {
 		return this;
 	}
 	
-	public EDimension getListDimensions() {
+	public EDims getListDimensions() {
 		double w = (endX - 1) + (startX + 1);
 		double h = (endY - 1) + (startY + titleAreaHeight);
-		return new EDimension(0, 0, w, h);
+		return new EDims(0, 0, w, h);
 	}
 	
 	public WindowContainerList<E> addObjectToContainer(IWindowObject<?>... objsIn) {
@@ -104,10 +104,10 @@ public class WindowContainerList<E> extends WindowContainer<E> {
 					//if (o instanceof EnhancedGui) { continue; }
 					if (o instanceof WindowHeader && hasHeader()) { continue; }
 					
-					EDimension bounds = new EDimension(startX + 1, startY + titleAreaHeight, endX - 1, endY - 1);
+					EDims bounds = new EDims(startX + 1, startY + titleAreaHeight, endX - 1, endY - 1);
 					
 					//apply offset to all added objects so their location is relative to this scrollList
-					EDimension dims = o.getDimensions();
+					EDims dims = o.getDimensions();
 					o.setDimensions(startX + dims.startX, startY + dims.startY, dims.width, dims.height);
 					
 					o.setParent(this).initObjects();

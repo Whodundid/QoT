@@ -1,7 +1,7 @@
 package windowLib.windowObjects.basicObjects;
 
-import renderUtil.EColors;
-import storageUtil.StorageBox;
+import eutil.colors.EColors;
+import eutil.storage.Box2;
 import windowLib.windowTypes.interfaces.IWindowObject;
 
 public class WindowEllipse<E> extends WindowShape<E> {
@@ -34,13 +34,13 @@ public class WindowEllipse<E> extends WindowShape<E> {
 	//EGuiEllipse Getters
 	//-------------------
 	
-	public StorageBox<Integer, Integer> getCenter() { return new StorageBox(cX, cY); }
+	public Box2<Integer, Integer> getCenter() { return new Box2(cX, cY); }
 	
 	//-------------------
 	//EGuiEllipse Setters
 	//-------------------
 	
-	public WindowEllipse<E> setCenter(StorageBox<Integer, Integer> in) { return setCenter(in.getA(), in.getB()); }
+	public WindowEllipse<E> setCenter(Box2<Integer, Integer> in) { return setCenter(in.getA(), in.getB()); }
 	public WindowEllipse<E> setCenter(int x, int y) { cX = x; cY = y; return this; }
 
 }

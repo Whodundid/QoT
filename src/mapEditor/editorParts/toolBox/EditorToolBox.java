@@ -3,10 +3,10 @@ package mapEditor.editorParts.toolBox;
 import static mapEditor.editorTools.EditorToolType.*;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorTools.EditorToolType;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import windowLib.windowObjects.basicObjects.WindowRect;

@@ -1,6 +1,8 @@
 package mapEditor.editorTools;
 
 import assets.worldTiles.WorldTile;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorTools.tools.Tool_Brush;
 import mapEditor.editorTools.tools.Tool_Eraser;
@@ -13,16 +15,14 @@ import mapEditor.editorTools.tools.Tool_Pencil;
 import mapEditor.editorTools.tools.Tool_Region;
 import mapEditor.editorTools.tools.Tool_Selector;
 import mapEditor.editorTools.tools.Tool_Shape;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 import world.GameWorld;
 
 public class ToolHandler {
 
 	MapEditorScreen editor;
 	
-	private StorageBox<Integer, Integer> oldPoint = new StorageBox(-1, -1);
-	private StorageBox<Integer, Integer> clickPoint = new StorageBox(-1, -1);
+	private Box2<Integer, Integer> oldPoint = new Box2(-1, -1);
+	private Box2<Integer, Integer> clickPoint = new Box2(-1, -1);
 	
 	private int button = -1;
 	private boolean pressed = false;
@@ -79,7 +79,7 @@ public class ToolHandler {
 		button = buttonIn;
 		held = false;
 		pressed = false;
-		oldPoint.setValues(-1, -1);
+		oldPoint.set(-1, -1);
 		handleTool(toolIn);
 	}
 	
@@ -169,7 +169,7 @@ public class ToolHandler {
 	
 	private void pencil() {
 		if (pressed && (held && !oldPoint.compare(editor.getWorldMX(), editor.getWorldMY()))) {
-			oldPoint.setValues(editor.getWorldMX(), editor.getWorldMY());
+			oldPoint.set(editor.getWorldMX(), editor.getWorldMY());
 			
 			/*
 			EditorItem item = editor.getCurItem();
@@ -219,7 +219,7 @@ public class ToolHandler {
 	}
 	
 	/** Recursively finds all adjacent tiles matching 'toFind' and adds them to the given 'area'. */
-	private void floodSelect(GameWorld w, int x, int y, WorldTile toFind, StorageBoxHolder<Integer, Integer> area) {
+	private void floodSelect(GameWorld w, int x, int y, WorldTile toFind, BoxHolder<Integer, Integer> area) {
 		
 	}
 	

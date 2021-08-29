@@ -1,10 +1,10 @@
 package windowLib.windowObjects.basicObjects;
 
 import eutil.EUtil;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 import renderEngine.fontRenderer.EStringBuilder;
 import renderEngine.fontRenderer.FontRenderer;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 

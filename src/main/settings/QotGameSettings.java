@@ -1,8 +1,8 @@
 package main.settings;
 
+import eutil.storage.EArrayList;
 import java.io.File;
 import main.settings.config.ConfigSetting;
-import storageUtil.EArrayList;
 
 public class QotGameSettings {
 	
@@ -18,12 +18,16 @@ public class QotGameSettings {
 	//-----------------------
 	
 	public static final ConfigSetting<Integer> musicVolume = new ConfigSetting(Integer.class, "musicVolume", "Music Volume", 100);
+	public static final ConfigSetting<Integer> targetFPS = new ConfigSetting(Integer.class, "targetFPS", "Target FPS", 60);
+	public static final ConfigSetting<Integer> targetUPS = new ConfigSetting(Integer.class, "targetUPS", "Target UPS", 60);
 	public static final ConfigSetting<String> lastMap = new ConfigSetting(String.class, "lastMap", "Last Editor Map", "");
 	
 	//-----------------------
 	
 	static {
 		settings.add(musicVolume);
+		settings.add(targetFPS);
+		settings.add(targetUPS);
 		settings.add(lastMap);
 	}
 	

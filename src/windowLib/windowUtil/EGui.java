@@ -1,16 +1,16 @@
 package windowLib.windowUtil;
 
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.misc.Rotation;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
+import eutil.storage.EDims;
 import main.QoT;
 import main.WindowSize;
-import mathUtil.NumberUtil;
-import miscUtil.Rotation;
 import renderEngine.GLObject;
 import renderEngine.fontRenderer.FontRenderer;
 import renderEngine.textureSystem.GameTexture;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
 import windowLib.windowUtil.input.KeyboardInputAcceptor;
 import windowLib.windowUtil.input.MouseInputAcceptor;
 
@@ -49,11 +49,11 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public void drawHRect(int color, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, 1, color); }
 	public void drawHRect(int color, int size, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, size, color); }
 	
-	public void drawTexture(GameTexture texture) { drawTexture(startX, startY, width, height, texture, false, Rotation.N); }
+	public void drawTexture(GameTexture texture) { drawTexture(startX, startY, width, height, texture, false, Rotation.UP); }
 	public void drawTexture(GameTexture texture, Rotation rotation) { drawTexture(startX, startY, width, height, texture, false, rotation); }
-	public void drawTexture(GameTexture texture, boolean flip) { drawTexture(startX, startY, width, height, texture, flip, Rotation.N); }
+	public void drawTexture(GameTexture texture, boolean flip) { drawTexture(startX, startY, width, height, texture, flip, Rotation.UP); }
 	public void drawTexture(GameTexture texture, Rotation rotation, boolean flip) { drawTexture(startX, startY, width, height, texture, flip, rotation); }
-	public void drawTexture(GameTexture texture, int offset) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, false, Rotation.N); }
+	public void drawTexture(GameTexture texture, int offset) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, false, Rotation.UP); }
 	public void drawTexture(GameTexture texture, int offset, Rotation rotation) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, false, rotation); }
 	public void drawTexture(GameTexture texture, int offset, boolean flip) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, flip); }
 	public void drawTexture(GameTexture texture, int offset, Rotation rotation, boolean flip) { drawTexture(startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), texture, flip, rotation); }
@@ -75,7 +75,7 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public EGui setMaxHeight(double heightIn) { maxHeight = heightIn; return this; }
 	
 	public EGui setPosition(double newX, double newY) { setDimensions(newX, newY, width, height); return this; }
-	public EGui setDimensions(EDimension dimIn) { return setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
+	public EGui setDimensions(EDims dimIn) { return setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
 	public EGui setDimensions(double widthIn, double heightIn) { return setDimensions(startX, startY, widthIn, heightIn); }
 	public EGui setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
 		startX = startXIn;
@@ -89,7 +89,7 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 		return this;
 	}
 	public EGui setInitialPosition(double xIn, double yIn) { startXPos = xIn; startYPos = yIn; return this; }
-	public StorageBox<Double, Double> getInitialPosition() { return new StorageBox<Double, Double>(startXPos, startYPos); }
+	public Box2<Double, Double> getInitialPosition() { return new Box2<Double, Double>(startXPos, startYPos); }
 	/** Centers the gui in the middle of the screen with the specified dimensions. */
 	public void centerGuiWithSize(double widthIn, double heightIn) {
 		WindowSize res = QoT.getWindowSize(); //get the screen size
@@ -119,7 +119,7 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 		
 		setDimensions(startX, startY, width, height); //apply the dimensions to the gui
 	}
-	public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
+	public EDims getDimensions() { return new EDims(startX, startY, endX, endY); }
 	
 	//--------------
 	// Mouse Checks
@@ -134,19 +134,19 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 			if (mY >= startY - 6 && mY <= startY) { top = true; }
 			if (mY >= endY - 4 && mY <= endY + 4) { bottom = true; }
 			if (left) {
-				if (top) { return ScreenLocation.topLeft; }
-				else if (bottom) { return ScreenLocation.botLeft; }
-				else { return ScreenLocation.left; }
+				if (top) { return ScreenLocation.TOP_LEFT; }
+				else if (bottom) { return ScreenLocation.BOT_LEFT; }
+				else { return ScreenLocation.LEFT; }
 			}
 			else if (right) {
-				if (top) { return ScreenLocation.topRight; }
-				else if (bottom) { return ScreenLocation.botRight; }
-				else { return ScreenLocation.right; }
+				if (top) { return ScreenLocation.TOP_RIGHT; }
+				else if (bottom) { return ScreenLocation.BOT_RIGHT; }
+				else { return ScreenLocation.RIGHT; }
 			} 
-			else if (top) { return ScreenLocation.top; }
-			else if (bottom) { return ScreenLocation.bot; }
+			else if (top) { return ScreenLocation.TOP; }
+			else if (bottom) { return ScreenLocation.BOT; }
 		}
-		return ScreenLocation.out;
+		return ScreenLocation.OUT;
 	}
 	
 	public boolean isMouseInside(int mX, int mY) { return mX >= startX && mX <= endX && mY >= startY && mY <= endY; }

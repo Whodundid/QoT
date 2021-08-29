@@ -2,9 +2,9 @@ package debug.terminal.terminalCommand.commands.fileSystem;
 
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 import java.io.File;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 
 public class MkDir extends FileCommand {
 	

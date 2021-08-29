@@ -1,7 +1,7 @@
 package windowLib.windowTypes.interfaces;
 
-import renderUtil.ScreenLocation;
-import storageUtil.StorageBox;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
 
 //Author: Hunter Bragg
 
@@ -9,7 +9,7 @@ public interface IUseScreenLocation {
 	
 	public void setLocation(ScreenLocation locIn);
 	public void setLocation(double xIn, double yIn);
-	public StorageBox<Double, Double> getLocation();
+	public Box2<Double, Double> getLocation();
 	public ScreenLocation getScreenLocation();
 	public IWindowParent<?> getScreenLocationGui();
 	

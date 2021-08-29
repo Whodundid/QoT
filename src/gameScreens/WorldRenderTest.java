@@ -1,20 +1,20 @@
-package assets.screens.types;
+package gameScreens;
 
 import assets.entities.Entity;
-import assets.entities.player.Player;
-import assets.screens.GameScreen;
+import assets.entities.Player;
 import assets.worldTiles.WorldTile;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
+import gameScreens.screenUtil.GameScreen;
 import input.Keyboard;
 import java.io.File;
 import java.util.Stack;
 import main.QoT;
 import mapEditor.NewMapCreatorScreen;
-import mathUtil.NumberUtil;
 import org.lwjgl.glfw.GLFW;
 import renderEngine.fontRenderer.FontRenderer;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowTypes.interfaces.IActionObject;
 import world.GameWorld;
@@ -39,9 +39,10 @@ public class WorldRenderTest extends GameScreen {
 	boolean drawEntityHitboxes = true;
 	boolean drawEntityOutlines = false;
 	
-	
 	boolean mouseInMap = false;
 	boolean mouseOver = false;
+	
+	WorldTile[][] tiles;
 	
 	public WorldRenderTest(File mapFileIn) {
 		super();
@@ -126,6 +127,9 @@ public class WorldRenderTest extends GameScreen {
 		//drawString("Zoom: " + NumberUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
 		drawString("WPos: " + p.worldX + " " + p.worldY, reload.startX + 10, reload.endY + 100);
 		drawString("PPos: " + p.startX + " " + p.startY, reload.startX + 10, reload.endY + 140);
+		
+		oldWorldX = p.worldX;
+		oldWorldY = p.worldY;
 	}
 	
 	@Override
@@ -135,6 +139,8 @@ public class WorldRenderTest extends GameScreen {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
+		//System.out.println("HERE");
+		
 		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_UP)) { actionPerformed(up); }
 		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT)) { actionPerformed(left); }
 		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_DOWN)) { actionPerformed(down); }
@@ -208,8 +214,8 @@ public class WorldRenderTest extends GameScreen {
 			}
 			*/
 			
-			//distX = (Game.getWidth() / world.getTileWidth()) / 2 + 1;
-			//distY = (game.getHeight() / world.getTileHeight()) / 2 + 2;
+			distX = (game.getWidth() / world.getTileWidth()) / 2 + 1;
+			distY = (game.getHeight() / world.getTileHeight()) / 2 + 2;
 			
 			Entity e = world.addEntity(QoT.getPlayer());
 			e.setWorldPos(0, 0);
@@ -238,7 +244,10 @@ public class WorldRenderTest extends GameScreen {
 		double offsetX = (p.startX % w);
 		double offsetY = (p.startY % h);
 		
-		WorldTile[][] tiles = world.getTilesAroundPoint(p.worldX, p.worldY, distX, distY);
+		if (p.worldX != oldWorldX || p.worldY != oldWorldY) {
+			tiles = world.getTilesAroundPoint(p.worldX, p.worldY, distX, distY);
+		}
+		
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = 0; j < tiles[0].length; j++) {
 				WorldTile t = tiles[i][j];
@@ -343,7 +352,7 @@ public class WorldRenderTest extends GameScreen {
 		worldYPos = (double) (mYIn - (y - offsetY) - ((distY - QoT.thePlayer.worldY) * h)) / h;
 		boolean inMap = worldXPos >= 0 && worldXPos < world.getWidth() && worldYPos > 0 && worldYPos < world.getHeight();
 		
-		return mouseOver && inMap && EDimension.of(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h)).contains(mXIn, mYIn);
+		return mouseOver && inMap && EDims.of(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h)).contains(mXIn, mYIn);
 	}
 	
 	private void drawMouseCoords(int x, int y, int w, int h) {

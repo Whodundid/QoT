@@ -3,10 +3,10 @@ package debug.terminal.terminalCommand.commands.game;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
 import java.io.File;
 import main.QoT;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 
 public class CD_Saves extends TerminalCommand {
 	

@@ -1,14 +1,14 @@
 package windowLib.windowTypes.dynamicWindow;
 
 import eutil.EUtil;
+import eutil.storage.Box2;
+import eutil.storage.EArrayList;
 import java.io.File;
 import java.io.IOException;
 import main.QoT;
-import renderUtil.CenterType;
-import storageUtil.EArrayList;
-import storageUtil.StorageBox;
 import windowLib.windowTypes.WindowParent;
 import windowLib.windowTypes.interfaces.IWindowObject;
+import windowLib.windowUtil.ObjectPosition;
 
 /** A special type of WindowParent that can be directly constructed from a serialized file. */
 public class DynamicWindow extends WindowParent {
@@ -19,8 +19,8 @@ public class DynamicWindow extends WindowParent {
 	
 	//parsed values
 	
-	private StorageBox<Double, Double> parsedDims = new StorageBox();
-	private CenterType parsedCenterType = null;
+	private Box2<Double, Double> parsedDims = new Box2();
+	private ObjectPosition parsedCenterType = null;
 	
 	private EArrayList<IWindowObject> parsedObjects = new EArrayList();
 	

@@ -1,7 +1,7 @@
 package mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import mathUtil.NumberUtil;
-import renderUtil.EColors;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.actionObjects.WindowTextField;
 import windowLib.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;

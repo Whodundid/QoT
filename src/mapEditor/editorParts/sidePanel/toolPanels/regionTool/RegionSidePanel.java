@@ -1,16 +1,16 @@
 package mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.storage.Box2;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import mapEditor.MapEditorScreen;
 import mapEditor.editorParts.sidePanel.EditorSidePanel;
 import mapEditor.editorParts.sidePanel.SidePanel;
 import mapEditor.editorParts.sidePanel.SidePanelType;
 import mapEditor.editorParts.toolBox.ToolCategory;
 import mapEditor.editorTools.EditorToolType;
-import mathUtil.NumberUtil;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
@@ -26,7 +26,7 @@ public class RegionSidePanel extends SidePanel {
 	WindowButton edit, delete;
 	WindowTextArea<Region> regionList;
 	
-	StorageBox<Integer, Integer> clickPos = new StorageBox(-1, -1);
+	Box2<Integer, Integer> clickPos = new Box2(-1, -1);
 	
 	public RegionSidePanel(EditorSidePanel panelIn, MapEditorScreen editorIn) {
 		super(panelIn, editorIn, SidePanelType.REGION);
@@ -185,7 +185,7 @@ public class RegionSidePanel extends SidePanel {
 	
 	//-----------------------------------------------------------------------
 	
-	public void createRegion(EDimension dims) {
+	public void createRegion(EDims dims) {
 		
 	}
 	

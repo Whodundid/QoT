@@ -3,10 +3,10 @@ package debug.terminal.terminalCommand.commands.system;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.storage.EArrayList;
+import eutil.sys.ESystemInfo;
 import java.io.File;
-import miscUtil.ESystemInfo;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 
 public class SystemCMD extends TerminalCommand {
 	

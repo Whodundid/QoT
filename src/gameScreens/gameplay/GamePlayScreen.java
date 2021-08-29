@@ -1,12 +1,12 @@
-package assets.screens.types.gameplay;
+package gameScreens.gameplay;
 
-import assets.screens.GameScreen;
-import assets.screens.types.MainMenuScreen;
+import assets.entities.Player;
 import assets.sounds.Songs;
+import eutil.colors.EColors;
+import gameScreens.MainMenuScreen;
+import gameScreens.screenUtil.GameScreen;
 import input.Keyboard;
 import main.QoT;
-import mathUtil.NumberUtil;
-import renderUtil.EColors;
 import windowLib.windowObjects.basicObjects.WindowRect;
 import windowLib.windowTypes.interfaces.IActionObject;
 import world.GameWorld;
@@ -52,7 +52,12 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
-		
+		Player p = QoT.thePlayer;
+		double moveSpeed = 2;
+		if (Keyboard.isWDown()) { p.move(0, -moveSpeed); }
+		if (Keyboard.isSDown()) { p.move(0, moveSpeed); }
+		if (Keyboard.isADown()) { p.move(-moveSpeed, 0); }		
+		if (Keyboard.isDDown()) { p.move(moveSpeed, 0); }
 	}
 	
 	@Override
@@ -62,10 +67,10 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void mouseScrolled(int change) {
-		if (Keyboard.isCtrlDown()) {
-			world.setZoom(world.getZoom() + NumberUtil.round(Math.signum(change) * 0.25, 2));
-			world.setZoom(NumberUtil.clamp(world.getZoom(), 0.25, 5));
-		}
+		//if (Keyboard.isCtrlDown()) {
+		//	world.setZoom(world.getZoom() + NumberUtil.round(Math.signum(change) * 0.25, 2));
+		//	world.setZoom(NumberUtil.clamp(world.getZoom(), 0.25, 5));
+		//}
 	}
 	
 	@Override
@@ -76,7 +81,7 @@ public class GamePlayScreen extends GameScreen {
 	@Override
 	public void onScreenClosed() {
 		//Game.displayScreen(new MainMenuScreen());
-		//Game.loadWorld(null);
+		QoT.loadWorld(null);
 		//Songs.stopAllMusic();
 	}
 	

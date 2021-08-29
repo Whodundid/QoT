@@ -1,10 +1,10 @@
 package windowLib.windowObjects.windows;
 
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
 import java.io.File;
 import java.nio.file.Path;
-import mathUtil.NumberUtil;
 import renderEngine.resources.DynamicTextureHandler;
-import storageUtil.EArrayList;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.basicObjects.WindowImageBox;
 import windowLib.windowTypes.WindowParent;

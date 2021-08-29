@@ -1,12 +1,12 @@
 package windowLib.windowObjects.basicObjects;
 
-import mathUtil.NumberUtil;
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
 import renderEngine.GLSettings;
 import renderEngine.fontRenderer.FontRenderer;
 import renderEngine.resources.ResourceUtil;
 import renderEngine.textureSystem.GameTexture;
-import renderUtil.EColors;
-import storageUtil.EArrayList;
 import windowLib.windowTypes.WindowObject;
 import windowLib.windowTypes.interfaces.IWindowObject;
 

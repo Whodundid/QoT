@@ -3,10 +3,10 @@ package debug.terminal.terminalCommand.commands.system;
 import debug.terminal.terminalCommand.CommandType;
 import debug.terminal.terminalCommand.TerminalCommand;
 import debug.terminal.window.ETerminal;
-import eutil.EUtil;
+import eutil.math.NumberUtil;
+import eutil.storage.EArrayList;
+import eutil.strings.StringUtil;
 import main.QoT;
-import mathUtil.NumberUtil;
-import storageUtil.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -39,15 +39,15 @@ public class ForLoop extends TerminalCommand {
 			
 			if (vals.length() < 3) { termIn.error("Not enough arguments for loop!"); }
 			else if (vals.length() >= 3 && vals.contains("-")) {
-				int pos = EUtil.findStartingIndex(vals, "-");
+				int pos = StringUtil.findStartingIndex(vals, "-");
 				String firstArg = vals.substring(0, pos);
 				String secondParse = vals.substring(pos + 1);
 				
-				String secondArg = EUtil.subStringToString(secondParse, 0, "-");
+				String secondArg = StringUtil.subStringToString(secondParse, 0, "-");
 				System.out.println(secondArg);
 				
 				
-				String thirdArg = EUtil.subStringToString(secondParse, 0, "-", true);
+				String thirdArg = StringUtil.subStringToString(secondParse, 0, "-", true);
 				
 				System.out.println(thirdArg);
 				

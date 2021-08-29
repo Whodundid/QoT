@@ -1,16 +1,16 @@
 package windowLib.windowObjects.advancedObjects.scrollList;
 
+import eutil.colors.EColors;
+import eutil.math.NumberUtil;
+import eutil.misc.ScreenLocation;
+import eutil.storage.Box2;
+import eutil.storage.BoxHolder;
+import eutil.storage.EArrayList;
+import eutil.storage.EDims;
 import input.Keyboard;
 import java.util.Iterator;
 import main.QoT;
-import mathUtil.NumberUtil;
 import renderEngine.GLSettings;
-import renderUtil.EColors;
-import renderUtil.ScreenLocation;
-import storageUtil.EArrayList;
-import storageUtil.EDimension;
-import storageUtil.StorageBox;
-import storageUtil.StorageBoxHolder;
 import windowLib.StaticWindowObject;
 import windowLib.windowObjects.actionObjects.WindowButton;
 import windowLib.windowObjects.actionObjects.WindowScrollBar;
@@ -54,8 +54,8 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	
 	@Override
 	public void initObjects() {
-		verticalScroll = new WindowScrollBar(this, height - 2, scrollableHeight, ScreenLocation.right, 3);
-		horizontalScroll = new WindowScrollBar(this, width - 2, scrollableWidth, ScreenLocation.bot, 3);
+		verticalScroll = new WindowScrollBar(this, height - 2, scrollableHeight, ScreenLocation.RIGHT, 3);
+		horizontalScroll = new WindowScrollBar(this, width - 2, scrollableWidth, ScreenLocation.BOT, 3);
 		
 		reset = new WindowButton(this, endX - 5, endY - 5, 5, 5);
 		
@@ -95,7 +95,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 						if (o.checkDraw()) {
 							if (!o.hasFirstDraw()) { o.onFirstDraw(); }
 							GLSettings.fullBright();
-							EDimension d = o.getDimensions();
+							EDims d = o.getDimensions();
 							o.drawObject(mXIn, mYIn);
 						}
 					}
@@ -157,28 +157,28 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	@Override
 	public WindowScrollList setPosition(double newX, double newY) {
 		if (isMoveable()) {
-			EDimension d = getDimensions();
-			StorageBox<Double, Double> loc = new StorageBox(d.startX, d.startY);
-			StorageBoxHolder<IWindowObject<?>, StorageBox<Double, Double>> previousLocations = new StorageBoxHolder();
+			EDims d = getDimensions();
+			Box2<Double, Double> loc = new Box2(d.startX, d.startY);
+			BoxHolder<IWindowObject<?>, Box2<Double, Double>> previousLocations = new BoxHolder();
 			
 			EArrayList<IWindowObject<?>> objs = getCombinedObjects();
 			
 			for (IWindowObject<?> o : objs) {
-				previousLocations.add(o, new StorageBox(o.getDimensions().startX - loc.getA(), o.getDimensions().startY - loc.getB()));
+				previousLocations.add(o, new Box2(o.getDimensions().startX - loc.getA(), o.getDimensions().startY - loc.getB()));
 			}
 			
 			setDimensions(newX, newY, d.width, d.height);
 			
 			for (IWindowObject<?> o : objs) {
 				if (o.isMoveable()) {
-					StorageBox<Double, Double> oldLoc = previousLocations.getBoxWithA(o).getB();
+					Box2<Double, Double> oldLoc = previousLocations.getBoxWithA(o).getB();
 					o.setInitialPosition(newX + oldLoc.getA(), newY + oldLoc.getB());
 					
 					if (listContents.contains(o) || listObjsToBeAdded.contains(o)) {
 						double eX = endX - (isVScrollDrawn() ? verticalScroll.width + 2 : 1);
 						double eY = endY - (isHScrollDrawn() ? horizontalScroll.height - 4 : 1);
 						
-						EDimension bounds = new EDimension(startX + 1, startY + 1, eX, eY);
+						EDims bounds = new EDims(startX + 1, startY + 1, eX, eY);
 						
 						o.setBoundaryEnforcer(getDimensions());
 						for (IWindowObject<?> q : o.getCombinedObjects()) { q.setBoundaryEnforcer(bounds); }
@@ -216,10 +216,10 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		drawnListObjects.addAll(listObjsToBeAdded.stream().filter(o -> objectInstance.getDimensions().contains(o.getDimensions())).collect(EArrayList.toEArrayList()));
 	}
 	
-	public EDimension getListDimensions() {
+	public EDims getListDimensions() {
 		double w = (endX - (isVScrollDrawn() ? verticalScroll.width + 3 : 1)) - startX;
 		double h = (endY - (isHScrollDrawn() ? horizontalScroll.height - 4 : 1)) - startY - 2;
-		return new EDimension(0, 0, w, h);
+		return new EDims(0, 0, w, h);
 	}
 	
 	public void resetScrollPos() {
@@ -254,13 +254,13 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		
 		//find right
 		for (IWindowObject o : aObjs) {
-			EDimension od = o.getDimensions();
+			EDims od = o.getDimensions();
 			if (od.endX > right) { right = od.endX; }
 		}
 		
 		//find down
 		for (IWindowObject o : aObjs) {
-			EDimension od = o.getDimensions();
+			EDims od = o.getDimensions();
 			if (od.endY > down) { down = od.endY; }
 		}
 		
@@ -323,10 +323,10 @@ public class WindowScrollList<E> extends WindowObject<E> {
 					double eX = endX - (isVScrollDrawn() ? verticalScroll.width + 2 : 2);
 					double eY = endY - (isHScrollDrawn() ? horizontalScroll.height - 4 : 1);
 					
-					EDimension bounds = new EDimension(startX + 1, startY + 1, eX, eY);
+					EDims bounds = new EDims(startX + 1, startY + 1, eX, eY);
 					
 					//apply offset to all added objects so their location is relative to this scrollList
-					EDimension dims = o.getDimensions();
+					EDims dims = o.getDimensions();
 					if (useRelativeCoords) {
 						o.setDimensions(startX + dims.startX, startY + dims.startY, dims.width, dims.height);
 					}
@@ -411,18 +411,18 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	
 	protected void updateVisuals() {
 		if (isHScrollDrawn() && !isVScrollDrawn()) {
-			EDimension h = horizontalScroll.getDimensions();
+			EDims h = horizontalScroll.getDimensions();
 			horizontalScroll.setDimensions(h.startX, h.startY, width - 2 - (isResetDrawn() ? 4 : 0), h.height);
 		}
 		
 		if (isVScrollDrawn() && !isHScrollDrawn()) {
-			EDimension v = verticalScroll.getDimensions();
+			EDims v = verticalScroll.getDimensions();
 			verticalScroll.setDimensions(v.startX, v.startY, v.width, height - 2 - (isResetDrawn() ? 4 : 0));
 		}
 		
 		if (isHScrollDrawn() && isVScrollDrawn()) {
-			EDimension h = horizontalScroll.getDimensions();
-			EDimension v = verticalScroll.getDimensions();
+			EDims h = horizontalScroll.getDimensions();
+			EDims v = verticalScroll.getDimensions();
 			
 			horizontalScroll.setDimensions(h.startX, h.startY, width - 3 - verticalScroll.width - (isResetDrawn() ? 3 : 0), h.height);
 			verticalScroll.setDimensions(v.startX, v.startY, v.width, height - 2 - (isResetDrawn() ? 4 : 0));
