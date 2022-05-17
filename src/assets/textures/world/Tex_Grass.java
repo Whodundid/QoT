@@ -1,7 +1,7 @@
 package assets.textures.world;
 
-import renderEngine.textureSystem.GameTexture;
-import renderEngine.textureSystem.TextureSystem;
+import engine.renderEngine.textureSystem.GameTexture;
+import engine.renderEngine.textureSystem.TextureSystem;
 
 public class Tex_Grass extends GameTexture {
 	

@@ -1,0 +1,65 @@
+package engine.scripting.langMappings.qot_package.methods;
+
+import engine.QoT;
+import engine.screens.GamePlayScreen;
+import engine.settings.QoT_Settings;
+import envision.exceptions.EnvisionError;
+import envision.exceptions.errors.ArgLengthError;
+import envision.exceptions.errors.InvalidArgumentError;
+import envision.interpreter.EnvisionInterpreter;
+import envision.lang.EnvisionObject;
+import envision.lang.classes.ClassInstance;
+import envision.lang.datatypes.EnvisionString;
+import envision.lang.internal.EnvisionFunction;
+import envision.lang.util.Primitives;
+import game.entities.Player;
+import world.GameWorld;
+
+import java.io.File;
+
+/** Creates a mapping between Envision and the QoT terminal. */
+public class LoadWorld_ENV extends EnvisionFunction {
+	
+	public LoadWorld_ENV() {
+		super(Primitives.VAR, "loadWorld");
+	}
+	
+	@Override
+	public void invoke(EnvisionInterpreter interpreter, EnvisionObject[] args) {
+		if (args.length == 0|| args.length > 1) throw new ArgLengthError(this, args.length, 1);
+		
+		if (args[0] instanceof EnvisionString env_str) {
+			String worldName = env_str.get_i();
+			GameWorld world = buildWorld(worldName);
+			
+			if (world.getWorldFile().exists()) {
+				Player p = QoT.setPlayer(new Player("Test"));
+				QoT.displayScreen(new GamePlayScreen());
+				QoT.loadWorld(world);
+				world.addEntity(p);
+			}
+			else throw new EnvisionError("The world '" + worldName + "' does not exist!");
+		}
+		else if (args[0] instanceof ClassInstance inst) {
+			if (inst.getTypeString().equals("World")) {
+				GameWorld world = null;//(GameWorld) inst.get("_iWorld_");
+				
+				if (world != null) {
+					System.out.println("loading...");
+					Player p = QoT.setPlayer(new Player("Test"));
+					QoT.displayScreen(new GamePlayScreen());
+					QoT.loadWorld(world);
+					world.addEntity(p);
+				}
+			}
+			else throw new InvalidArgumentError("Expected a World object!");
+		}
+	}
+	
+	private static GameWorld buildWorld(String worldName) {
+		worldName = (worldName.endsWith(".twld")) ? worldName : worldName + ".twld";
+		File f = new File(QoT_Settings.getEditorWorldsDir(), worldName);
+		return new GameWorld(f);
+	}
+	
+}

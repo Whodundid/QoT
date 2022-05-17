@@ -1,9 +1,9 @@
 package assets.textures;
 
+import engine.renderEngine.textureSystem.GameTexture;
+import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.EUtil;
-import eutil.storage.EArrayList;
-import renderEngine.textureSystem.GameTexture;
-import renderEngine.textureSystem.TextureSystem;
+import eutil.datatypes.EArrayList;
 
 public class EntityTextures {
 	

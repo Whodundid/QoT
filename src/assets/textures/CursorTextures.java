@@ -1,9 +1,10 @@
 package assets.textures;
 
+import engine.renderEngine.textureSystem.GameTexture;
+import engine.renderEngine.textureSystem.TextureSystem;
+import engine.util.CursorHelper;
 import eutil.EUtil;
-import eutil.storage.EArrayList;
-import renderEngine.textureSystem.GameTexture;
-import renderEngine.textureSystem.TextureSystem;
+import eutil.datatypes.EArrayList;
 
 public class CursorTextures {
 	
@@ -15,12 +16,18 @@ public class CursorTextures {
 	public static final GameTexture resize_ns;
 	public static final GameTexture ibeam;
 	
+	public static final long cursor_resize_dl;
+	public static final long cursor_resize_dr;
+	
 	static {
 		resize_dl = new GameTexture("resize_dl", "bin/textures/envision/cursor/resize_dl.png");
 		resize_dr = new GameTexture("resize_dr", "bin/textures/envision/cursor/resize_dr.png");
 		resize_ew = new GameTexture("resize_ew", "bin/textures/envision/cursor/resize_ew.png");
 		resize_ns = new GameTexture("resize_ns", "bin/textures/envision/cursor/resize_ns.png");
 		ibeam = new GameTexture("ibeam", "bin/textures/envision/cursor/text_pos.png");
+		
+		cursor_resize_dl = CursorHelper.createCursorFromGameTexture(resize_dl);
+		cursor_resize_dr = CursorHelper.createCursorFromGameTexture(resize_dr);
 	}
 	
 	public static void registerTextures(TextureSystem systemIn) {

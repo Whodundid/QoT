@@ -1,10 +1,14 @@
-#version 460
+#version 460 core
 
-in vec2 outTexCoord;
-out vec4 fragColor;
+in vec4 passColor;
+in vec2 passTexCoord;
 
-uniform sampler2D texture_sampler;
+out vec4 outColor;
+
+uniform sampler2D tex;
+uniform int isTexture;
 
 void main() {
-    fragColor = texture(texture_sampler, outTexCoord);
+	if (isTexture == 1) outColor = texture(tex, passTexCoord);
+	else outColor = passColor;
 }

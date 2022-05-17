@@ -1,20 +1,17 @@
 package world;
 
-import assets.entities.Entity;
-import assets.entities.Goblin;
-import assets.entities.Player;
-import assets.entities.Thyrah;
-import assets.entities.TrollBoar;
-import assets.entities.Whodundid;
-import assets.worldTiles.WorldTile;
+import engine.GameTopRenderer;
+import engine.QoT;
+import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
-import eutil.random.RandomUtil;
-import eutil.storage.EArrayList;
-import input.Keyboard;
+import eutil.datatypes.EArrayList;
+import eutil.math.NumberUtil;
+import eutil.misc.Rotation;
+import game.entities.Entity;
+import game.entities.Player;
+import world.resources.WorldTile;
+
 import java.util.Comparator;
-import main.QoT;
-import renderEngine.fontRenderer.FontRenderer;
-import windowLib.windowUtil.EGui;
 
 //Author: Hunter Bragg
 
@@ -22,8 +19,8 @@ import windowLib.windowUtil.EGui;
 public class WorldRenderer extends EGui {
 	
 	private GameWorld world;
-	int distX = 15;
-	int distY = 10;
+	int distX = 31;
+	int distY = 17;
 	int tileWidth, tileHeight;
 	int pixelWidth, pixelHeight;
 	int x, y, w, h;
@@ -31,41 +28,30 @@ public class WorldRenderer extends EGui {
 	double worldXPos, worldYPos;
 	int oldWorldX, oldWorldY;
 	
+	int viewDist = 30;
+	
 	boolean firstPress = false;
 	boolean drawPosBox = false;
-	boolean drawEntityHitboxes = true;
+	boolean drawEntityHitboxes = false;
 	boolean drawEntityOutlines = false;
 	
-	WorldTile[][] tiles;
+	//---------------------
+	int left;
+	int top;
+	int right;
+	int bot;
+	int dw; //draw width
+	int dh; //draw height
+	//----------------------
 	
 	public WorldRenderer(GameWorld worldIn) {
 		world = worldIn;
+		onWindowResized();
 		
 		if (world != null) {
-			distX = world.getWidth();
-			distY = world.getHeight();
+			//load entities
+			world.getEntitySpawns().forEach(e -> e.spawnEntity(world));
 		}
-		
-		/*
-		for (int i = 0; i < 10; i++) {
-			Entity e = null;
-			switch (RandomUtil.getRoll(0, 3)) {
-			case 0: e = new Goblin(); break;
-			case 1: e = new Thyrah(); break;
-			case 2: e = new TrollBoar(); break;
-			case 3: e = new Whodundid(); break;
-			}
-			
-			if (e != null) {
-				world.addEntity(e);
-				int x = RandomUtil.getRoll(0, world.getWidth());
-				int y = RandomUtil.getRoll(0, world.getHeight());
-				e.setWorldPos(x, y);
-			}
-		}
-		*/
-		
-		onWindowResized();
 	}
 	
 	public void onRenderTick() {
@@ -73,7 +59,7 @@ public class WorldRenderer extends EGui {
 	}
 	
 	private void renderWorld() {
-		checkArrowPress();
+		Player p = QoT.thePlayer;
 		
 		if (world == null) { drawStringC("Failed to load!", midX, midY); }
 		else if (world.getWidth() < 0 || world.getHeight() < 0 || world.getTileWidth() <= 0 || world.getTileHeight() <= 0) { drawStringC("Bad world dimensions!", midX, midY); }
@@ -85,24 +71,20 @@ public class WorldRenderer extends EGui {
 			x = (int) (midX - (distX * w) - (w / 2));
 			y = (int) (midY - (distY * h) - (h / 2));
 			
-			//scissor(x, y, x + w + (distX * 2 * w), y + h + (distY * 2 * h));
+			//drawTexture((double) -p.worldX * (double) ((double) world.getTileWidth() / 3.5),
+			//			(double) -p.worldY * (double) ((double) world.getTileHeight() / 3.5),
+			//			QoT.getWidth() * 4, QoT.getHeight() * 4, WorldTextures.wood);
+			
 			renderMap();
 			renderEntities();
-			//if (drawPosBox) { drawPosBox(); }
-			//drawViewBox();
 			
-			/*
-			mouseInMap = checkMousePos(x, y, w, h, mX, mY);
-			if (mouseInMap && mouseOver) {
-				drawMouseCoords(x, y, w, h);
-			}
-			*/
 			
-			//endScissor();
+			
+			if (drawPosBox) { drawPosBox(); }
 		}
 		
 		if (world != null) {
-			int tW = (int) (FontRenderer.getInstance().getStringWidth(world.getName()) / 2);
+			//int tW = (int) (FontRenderer.getStringWidth(world.getName()) / 2);
 			//drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
 			//drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
 			//drawStringC(world.getName(), midX, 15);
@@ -113,23 +95,22 @@ public class WorldRenderer extends EGui {
 		//drawString("Dist: " + distX + " " + distY, reload.startX + 10, reload.endY + 20);
 		//drawString("Zoom: " + NumUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
 		//drawString("WPos: " + p.worldX + " " + p.worldY, reload.startX + 10, reload.endY + 100);
-		//drawString("PPos: " + p.startX + " " + p.startY, reload.startX + 10, reload.endY + 140);
+		//drawString("PPos: " + p.startX + " " + p.startY, 10, 10);
 		
-		Player p = QoT.thePlayer;
+		//this.viewDist = 1000;
+		
 		oldWorldX = p.worldX;
 		oldWorldY = p.worldY;
 	}
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		//if (typedChar == 'e') { QoT.getActiveTopParent().displayWindow(new InventoryWindow(QoT.getPlayer())); }
-		if (typedChar == 'h') { drawEntityHitboxes = !drawEntityHitboxes; }
-		if (typedChar == 'p') { drawPosBox = !drawPosBox; }
-		if (typedChar == 'o') { drawEntityOutlines = !drawEntityOutlines; }
-	}
-	
-	private void checkArrowPress() {
-		
+		if (!GameTopRenderer.isTopFocused()) {
+			//if (typedChar == 'e') QoT.getActiveTopParent().displayWindow(new InventoryWindow(QoT.getPlayer()));
+			if (typedChar == 'h') drawEntityHitboxes = !drawEntityHitboxes;
+			if (typedChar == 'p') drawPosBox = !drawPosBox;
+			if (typedChar == 'o') drawEntityOutlines = !drawEntityOutlines;
+		}
 	}
 	
 	private void renderMap() {
@@ -137,8 +118,14 @@ public class WorldRenderer extends EGui {
 		double offsetX = (p.startX % w);
 		double offsetY = (p.startY % h);
 		
-		if (tiles == null || p.worldX != oldWorldX || p.worldY != oldWorldY) {
-			tiles = world.getTilesAroundPoint(p.worldX, p.worldY, distX, distY);
+		//only update values if needed
+		if (p.worldX != oldWorldX || p.worldY != oldWorldY) {
+			left = NumberUtil.clamp(p.worldX - distX, 0, world.getWidth() - 1);
+			top = NumberUtil.clamp(p.worldY - distY, 0, world.getHeight() - 1);
+			right = NumberUtil.clamp(p.worldX + distX, left, world.getWidth() - 1);
+			bot = NumberUtil.clamp(p.worldY + distY, top, world.getHeight() - 1);
+			dw = right - left; //draw width
+			dh = bot - top; //draw height
 		}
 		
 		int worldTileWidth = -world.getTileWidth();
@@ -146,9 +133,9 @@ public class WorldRenderer extends EGui {
 		double pStartX = Math.abs(p.startX);
 		double pStartY = Math.abs(p.startY);
 		
-		for (int i = 0; i < tiles.length; i++) {
-			for (int j = 0; j < tiles[0].length; j++) {
-				WorldTile t = tiles[i][j];
+		for (int i = left, ix = 0; i <= right; i++, ix++) {
+			for (int j = top, jy = 0; j <= bot; j++, jy++) {
+				WorldTile t = world.getWorldData()[i][j];
 				if (t != null) {
 					
 					double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
@@ -157,12 +144,29 @@ public class WorldRenderer extends EGui {
 					if (p.worldX < distX) { drawPosX += (distX - p.worldX) * w; }
 					if (p.worldY < distY) { drawPosY += (distY - p.worldY) * h; }
 					
+					double dX = drawPosX + (ix * w);
+					double dY = drawPosY + (jy * h);
+					
+					//String coords = ("(" + (ix + i) + ", " + (jy + j) + ") : " + "(" + p.worldX + ", " + p.worldY + ")");
+					//drawString(t.getWorldX() + " : " + t.getWorldY() / w, 0, 50, EColors.white);
+					
 					if (t.hasTexture()) {
-						drawTexture(drawPosX + (i * w), drawPosY + (j * h), w, h, t.getTexture());
+						drawTexture(dX, dY, w, h, t.getTexture(), false, calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1));
 					}
 				}
 			}
 		}
+	}
+	
+	private int calcBrightness(int x, int y) {
+		if (world.underground) {
+			Player p = QoT.thePlayer;
+			int distToPlayer = viewDist - (int) (NumberUtil.distance(x, y, p.worldX, p.worldY));
+			distToPlayer = NumberUtil.clamp(distToPlayer, 0, distToPlayer);
+			int ratio = (distToPlayer * 255) / viewDist;
+			return EColors.changeBrightness(0xffffffff, ratio);
+		}
+		return 0xffffffff;
 	}
 	
 	private void drawPosBox() {
@@ -185,10 +189,10 @@ public class WorldRenderer extends EGui {
 	}
 	
 	private void drawViewBox() {
-		int dsX = x;
-		int dsY = y;
-		int deX = x + w + (distX * 2 * w);
-		int deY = y + h + (distY * 2 * h);
+		//int dsX = x;
+		//int dsY = y;
+		//int deX = x + w + (distX * 2 * w);
+		//int deY = y + h + (distY * 2 * h);
 		//drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
 	}
 	
@@ -197,16 +201,17 @@ public class WorldRenderer extends EGui {
 		entities.sort(Comparator.comparingInt(e -> e.startY));
 		
 		for (Entity e : entities) {
-			e.onLivingUpdate();
 			if (e.getTexture() != null) {
 				double drawX = 0;
 				double drawY = 0;
+				boolean flip = e.getFacing() == Rotation.RIGHT || e.getFacing() == Rotation.DOWN;
 				
 				if (e == QoT.thePlayer) {
 					drawX = x + distX * w;
 					drawY = y + distY * h;
 					
-					drawTexture(drawX, drawY, e.width, e.height, e.getTexture());
+					drawTexture(drawX, drawY, e.width, e.height, e.getTexture(), flip, calcBrightness(e.worldX, e.worldY));
+					drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
 				}
 				else {
 					drawX = x + (e.startX) + (distX - QoT.thePlayer.worldX) * w;
@@ -218,7 +223,8 @@ public class WorldRenderer extends EGui {
 					drawY -= offsetY;
 					
 					if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
-						drawTexture(drawX, drawY, e.width, e.height, e.getTexture());
+						drawTexture(drawX, drawY, e.width, e.height, e.getTexture(), flip, calcBrightness(e.worldX, e.worldY));
+						drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
 					}
 				}
 				

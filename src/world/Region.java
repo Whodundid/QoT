@@ -1,9 +1,9 @@
 package world;
 
-import assets.entities.Entity;
 import eutil.colors.EColors;
-import eutil.storage.EArrayList;
-import eutil.storage.EDimsI;
+import eutil.datatypes.EArrayList;
+import eutil.math.EDimensionI;
+import game.entities.Entity;
 
 public class Region {
 	
@@ -28,7 +28,7 @@ public class Region {
 	}
 	
 	@Override
-	public String toString() { return name + "[" + startX + ", " + startY + ", " + endX + ", " + endY + "]"; }
+	public String toString() { return toSaveString(); }
 	
 	public void updateRegion() {
 		
@@ -46,7 +46,7 @@ public class Region {
 		midY = startY + height / 2;
 	}
 	
-	public EDimsI getDimensions() { return new EDimsI(startX, startY, endX, endY); }
+	public EDimensionI getDimensions() { return new EDimensionI(startX, startY, endX, endY); }
 	
 	public void moveRegion(int x, int y) {
 		startX += x;
@@ -95,5 +95,7 @@ public class Region {
 		}
 		return null;
 	}
+	
+	public String toSaveString() { return "r " + getName() + " " + getColor() + " " + startX + " " + startY + " " + endX + " " + endY; }
 	
 }
