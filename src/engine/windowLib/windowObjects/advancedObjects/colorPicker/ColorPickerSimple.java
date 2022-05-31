@@ -69,7 +69,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		
 		double y = colorContainer.startY + 7;
 		double w = 23;
-		double h = 23;
+		double h = 27;
 		
 		lred = new ColorPickerButton(this, colorContainer.startX + 7, y, w, h, EColors.lred);
 		red = new ColorPickerButton(this, lred.endX + 1, y, w, h, EColors.red);
@@ -145,13 +145,13 @@ public class ColorPickerSimple extends ActionWindowParent {
 		colorContainer.addObject(lred, red, maroon, brown, dorange, borange, orange, lorange, yellow);
 		colorContainer.addObject(lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine);
 		colorContainer.addObject(cyan, skyblue, blue, regal, navy, grape, violet, eggplant, purple, magenta, pink, hotpink);
-		colorContainer.addObject(white, lgray, gray, mgray, dgray, pdgray, steel, dsteel, vdgray, black);
+		colorContainer.addObject(white, chalk, lgray, gray, mgray, dgray, pdgray, steel, dsteel, vdgray, black);
 		
 		//add functional objects
 		inputContainer.addObject(inputField, inputLabel);
 		
 		addObject(select, back);
-		addObject(colorDisplay, colorLabel);
+		addObject(colorContainer, colorDisplay, colorLabel);
 		
 		updateValues();
 	}
@@ -187,9 +187,9 @@ public class ColorPickerSimple extends ActionWindowParent {
 			}
 		}
 		else {
-			if (object == inputField) { parseInputColor(); }
+			if (object == inputField) parseInputColor();
 			if (object == select) { performAction(currentColor); close(); }
-			if (object == back) { close(); }
+			if (object == back) close();
 		}
 	}
 	
@@ -236,7 +236,9 @@ public class ColorPickerSimple extends ActionWindowParent {
 				inputField.setText(val);
 			}
 		}
-		catch (Exception e) { e.printStackTrace(); }
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

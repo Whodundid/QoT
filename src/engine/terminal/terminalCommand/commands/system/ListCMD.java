@@ -1,6 +1,5 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.QoT;
 import engine.screens.screenUtil.GameScreen;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.IListableCommand;
@@ -13,6 +12,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.reflection.EModifier;
 import eutil.strings.StringUtil;
+import main.QoT;
 
 //Author: Hunter Bragg
 
@@ -33,7 +33,7 @@ public class ListCMD extends TerminalCommand {
 	@Override
 	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
 		String[] types = {"objects, windows, screens, commands"};
-		super.basicTabComplete(termIn, args, new EArrayList().add(types));
+		super.basicTabComplete(termIn, args, new EArrayList().addA(types));
 	}
 	
 	@Override

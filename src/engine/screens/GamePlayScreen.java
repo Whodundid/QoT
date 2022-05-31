@@ -2,16 +2,17 @@ package engine.screens;
 
 import assets.sounds.Songs;
 import engine.GameTopRenderer;
-import engine.QoT;
 import engine.input.Keyboard;
+import engine.screens.character.CharacterScreen;
 import engine.screens.screenUtil.GameScreen;
 import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
+import engine.windowLib.windowObjects.advancedObjects.StatusBar;
 import engine.windowLib.windowObjects.basicObjects.WindowRect;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.StatusBar;
 import game.entities.Player;
+import main.QoT;
 import world.GameWorld;
 
 //rabbit fish
@@ -84,6 +85,8 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
+		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
+		
 		super.keyPressed(typedChar, keyCode);
 	}
 	
@@ -97,7 +100,7 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == character);
+		if (object == character) openCharScreen();
 	}
 	
 	@Override
@@ -105,6 +108,10 @@ public class GamePlayScreen extends GameScreen {
 		//Game.displayScreen(new MainMenuScreen());
 		//QoT.loadWorld(null);
 		//Songs.stopAllMusic();
+	}
+	
+	private void openCharScreen() {
+		QoT.displayScreen(new CharacterScreen(QoT.thePlayer), this);
 	}
 	
 }

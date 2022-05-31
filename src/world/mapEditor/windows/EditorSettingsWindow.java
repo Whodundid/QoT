@@ -1,10 +1,10 @@
 package world.mapEditor.windows;
 
-import engine.QoT;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
+import main.QoT;
 import world.mapEditor.MapEditorScreen;
 
 public class EditorSettingsWindow extends WindowParent {
@@ -51,7 +51,7 @@ public class EditorSettingsWindow extends WindowParent {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == close) { fileUpAndClose(); }
+		if (object == close) fileUpAndClose();
 	}
 	
 }

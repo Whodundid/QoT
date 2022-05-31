@@ -94,15 +94,18 @@ public class EStringBuilder {
 					int iPos = 0;
 					char end = Character.MIN_VALUE;
 					String buildString = "";
+					System.out.println("HERE 1");
 					
 					while (!(getStringWidth(buildString) >= widthMax) && i < restOfString.length() - 1) {
 						buildString += restOfString.charAt(i);
 						i++;
+						System.out.println("HERE 2");
 					}
 					
 					while (i > 0 && end != ' ') {
 						iPos = i;
 						end = restOfString.charAt(i--);
+						System.out.println("HERE 3");
 					}
 					
 					if (i <= 0) {

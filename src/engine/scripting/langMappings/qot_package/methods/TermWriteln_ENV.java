@@ -1,12 +1,12 @@
 package engine.scripting.langMappings.qot_package.methods;
 
-import engine.QoT;
 import engine.terminal.window.ETerminal;
 import envision.interpreter.EnvisionInterpreter;
 import envision.interpreter.util.EnvisionStringFormatter;
 import envision.lang.EnvisionObject;
 import envision.lang.internal.EnvisionFunction;
 import envision.lang.util.Primitives;
+import main.QoT;
 
 /** Creates a mapping between Envision and the QoT terminal. */
 public class TermWriteln_ENV extends EnvisionFunction {

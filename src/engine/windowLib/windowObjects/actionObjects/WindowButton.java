@@ -58,10 +58,12 @@ public class WindowButton<E> extends ActionObject<E> {
 		boolean mouseHover = isClickable() && isMouseOver();
 		boolean mouseCheck = !Mouse.isButtonDown(0) && mouseHover;
 		int stringColor = isEnabled() ? (mouseCheck ? textHoverColor : color) : (drawDisabledColor ? disabledColor : color + 0xbbbbbb);
-		if (drawSelected) { stringColor = selectedColor; }
+		if (drawSelected) stringColor = selectedColor;
 		
-		drawRect(borderColor);
-		drawRect(backgroundColor, 1);
+		if (drawBackground) {
+			drawRect(borderColor);
+			drawRect(backgroundColor, 1);
+		}
 		
 		//reset the color buffer to prepare for texture drawing
 		GLSettings.fullBright();
@@ -71,16 +73,12 @@ public class WindowButton<E> extends ActionObject<E> {
 			
 			//determine textures to draw
 			if (usingBaseTextures) {
-				if (mouseHover) { bindSel(); }
-				else { bindBase(); }
+				if (mouseHover) bindSel();
+				else bindBase();
 			}
-			else {
-				if (btnTexture != null && btnSelTexture == null) { bindBase(); }
-				else {
-					if (mouseHover) { bindSel(); }
-					else { bindBase(); }
-				}
-			}
+			else if (btnTexture != null && btnSelTexture == null) bindBase();
+			else if (mouseHover) bindSel();
+			else bindBase();
 			
 			//prime the renderer
 			GLSettings.enableBlend();
@@ -89,8 +87,8 @@ public class WindowButton<E> extends ActionObject<E> {
 			
 			//draw the textures
 			if (usingBaseTextures) {
-				if (stretchTextures) { drawTexture(startX, startY, width, height); }
-				else { drawBaseTexture(mouseHover); }
+				if (stretchTextures) drawTexture(startX, startY, width, height);
+				else drawBaseTexture(mouseHover);
 			}
 			else if (btnTexture != null) {
 				
@@ -120,12 +118,12 @@ public class WindowButton<E> extends ActionObject<E> {
 				}
 			}
 			
-			if (forceDrawHover || mouseHover) {
+			if (drawBackgroundHover && (forceDrawHover || mouseHover)) {
 				drawRect(backgroundHoverColor, 1);
 			}
 			
 			//draw disabled overlay
-			if (!isEnabled()) { drawRect(startX, startY, endX, endY, 0x77000000); }
+			if (!isEnabled()) drawRect(startX, startY, endX, endY, 0x77000000);
 		}
 		
 		//------------------------------------
@@ -156,7 +154,7 @@ public class WindowButton<E> extends ActionObject<E> {
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		if (keyCode == GLFW.GLFW_KEY_ENTER) {
-			if (isEnabled() && checkDraw() && isClickable()) { performAction(); }
+			if (isEnabled() && willBeDrawn() && isClickable()) { performAction(); }
 		}
 		super.keyPressed(typedChar, keyCode);
 	}
@@ -166,9 +164,9 @@ public class WindowButton<E> extends ActionObject<E> {
 	//------------------
 	
 	protected void pressButton(int button) {
-		if (enabled && checkDraw()) {
+		if (enabled && willBeDrawn()) {
 			pressedButton = button;
-			if (runActionOnPress) { onPress(button); }
+			if (runActionOnPress) onPress(button);
 			else if (button == 0 || (button == 1 && acceptRightClicks)) {
 				playPressSound();
 				performAction();
@@ -277,8 +275,8 @@ public class WindowButton<E> extends ActionObject<E> {
 	public WindowButton<E> setDrawBackground(boolean val) {
 		drawBackground = val;
 		if (!custom) {
-			if (drawBackground && !drawTextures) { setMaxDims(Integer.MAX_VALUE, Integer.MAX_VALUE); }
-			else { setMaxDims(200, 20); }
+			if (drawBackground && !drawTextures) setMaxDims(Integer.MAX_VALUE, Integer.MAX_VALUE);
+			else setMaxDims(200, 20);
 		}
 		return this;
 	}

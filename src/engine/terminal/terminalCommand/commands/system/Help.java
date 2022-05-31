@@ -1,6 +1,5 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.QoT;
 import engine.terminal.TerminalHandler;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.IListableCommand;
@@ -10,6 +9,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.BoxList;
+import main.QoT;
 
 //Author: Hunter Bragg
 

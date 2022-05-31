@@ -1,7 +1,6 @@
 package engine.windowLib.bundledWindows;
 
 import assets.textures.WindowTextures;
-import engine.QoT;
 import engine.input.Keyboard;
 import engine.windowLib.bundledWindows.utilityWindows.WindowDialogueBox;
 import engine.windowLib.bundledWindows.utilityWindows.WindowDialogueBox.DialogueBoxTypes;
@@ -14,10 +13,12 @@ import engine.windowLib.windowUtil.windowEvents.ObjectEvent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
+import main.QoT;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.PrintWriter;
-import java.util.Scanner;
 
 public class TextEditorWindow extends WindowParent {
 	
@@ -30,10 +31,18 @@ public class TextEditorWindow extends WindowParent {
 	private double vPos, hPos;
 	private TextAreaLine line;
 	
+	private volatile boolean loading = false;
+	private volatile boolean loaded = false;
+	private volatile EArrayList<String> lines;
+	private volatile EArrayList<TextAreaLine<?>> parsed;
+	private boolean restored = false;
+	
 	public TextEditorWindow(File pathIn) {
 		super(QoT.getActiveTopParent());
 		path = pathIn;
 		//windowIcon = EMCResources.textEditorIcon;
+		
+		new Thread(() -> loadFile()).start();
 	}
 	
 	@Override
@@ -54,8 +63,8 @@ public class TextEditorWindow extends WindowParent {
 		document.setBackgroundColor(EColors.steel.intVal);
 		document.setResetDrawn(false);
 		document.registerListener(this);
-		if (!failed) document.setDrawLineNumbers(true);
 		
+		if (!failed) document.setDrawLineNumbers(true);
 		double w = NumberUtil.clamp((width - 30 - 24) / 2, 45, 200);
 		double h = document.endY + (endY - document.endY) / 2 - 20;
 		
@@ -66,13 +75,13 @@ public class TextEditorWindow extends WindowParent {
 		
 		reload.setHoverText("Reload");
 		
-		addObject(cancel, save, cancel, reload);
-		
-		loadFile();
+		addObject(document);
+		addObject(save, cancel, reload);
 	}
 	
 	@Override
 	public void preReInit() {
+		restored = false;
 		vPos = document.getVScrollBar().getScrollPos();
 		hPos = document.getHScrollBar().getScrollPos();
 		line = document.getCurrentLine();
@@ -80,10 +89,20 @@ public class TextEditorWindow extends WindowParent {
 	
 	@Override
 	public void postReInit() {
-		document.getVScrollBar().setScrollPos(vPos);
-		document.getHScrollBar().setScrollPos(hPos);
-		if (line != null) {
-			document.setSelectedLine(document.getLineWithTextAndObject(line.getText(), line.getGenericObject()));
+		if (!this.isResizing()) {
+			document.getVScrollBar().setScrollPos(vPos);
+			document.getHScrollBar().setScrollPos(hPos);
+			
+			if (lines != null) {
+				for (var l : lines) {
+					document.addTextLine(l, EColors.lgray);
+				}
+			}
+			if (line != null) {
+				document.setSelectedLine(document.getLineWithTextAndObject(line.getText(), line.getGenericObject()));
+			}
+			
+			restored = true;
 		}
 	}
 	
@@ -91,6 +110,31 @@ public class TextEditorWindow extends WindowParent {
 	public void drawObject(int mXIn, int mYIn) {
 		drawDefaultBackground();
 		super.drawObject(mXIn, mYIn);
+		checkLoad();
+		checkRestored();
+	}
+	
+	private void checkLoad() {
+		if (loading) {
+			drawStringC("Loading...");
+		}
+		else if (!loaded) {
+			for (var l : lines) {
+				document.addTextLine(l, EColors.lgray);
+			}
+			loaded = true;
+			restored = true;
+		}
+	}
+	
+	private void checkRestored() {
+		if (!restored && !loading) {
+			for (var l : lines) {
+				document.addTextLine(l, EColors.lgray);
+			}
+			loaded = true;
+			restored = true;
+		}
 	}
 	
 	@Override
@@ -114,24 +158,31 @@ public class TextEditorWindow extends WindowParent {
 	}
 	
 	private void loadFile() {
-		if (path != null && document != null) {
-			if (path.exists()) {
-				try (Scanner reader = new Scanner(path)) {
-					while (reader.hasNext()) {
-						document.addTextLine(reader.nextLine(), EColors.lgray);
-					}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-					failed = true;
-					document.addTextLine("Error: Cannot open file!", EColors.red);
-					document.setEditable(false);
-				}
-				
-				document.getVScrollBar().setScrollPos(0);
+		loading = true;
+		loaded = false;
+		
+		if (path == null) return;
+		if (document == null) return;
+		if (!path.exists()) { newFile = true; return; }
+		
+		//all parsed lines
+		lines = new EArrayList();
+		
+		try (BufferedReader r = new BufferedReader(new FileReader(path))) {
+			String line;
+			while ((line = r.readLine()) != null) {
+				lines.add(line);
 			}
-			else newFile = true;
 		}
+		catch (Exception e) {
+			e.printStackTrace();
+			failed = true;
+			document.addTextLine("Error: Cannot open file!", EColors.red);
+			document.setEditable(false);
+		}
+		
+		document.getVScrollBar().setScrollPos(0);
+		loading = false;
 	}
 	
 	private void saveFile() {

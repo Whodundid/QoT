@@ -1,7 +1,7 @@
 package engine.windowLib.windowTypes.interfaces;
 
-import engine.QoT;
 import engine.input.Mouse;
+import engine.terminal.window.ETerminal;
 import engine.windowLib.StaticTopParent;
 import engine.windowLib.windowTypes.OverlayWindow;
 import engine.windowLib.windowTypes.WindowParent;
@@ -11,6 +11,7 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
+import main.QoT;
 
 //Author: Hunter Bragg
 
@@ -152,9 +153,17 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	// Windows
 	//---------
 	
+	public default boolean isTerminalOpen() {
+		return isWindowOpen(ETerminal.class);
+	}
+	
 	/** Returns true if the specified window parent is open. */
 	public default <T extends WindowParent> boolean isWindowOpen(Class<T> windowIn) {
 		return (windowIn != null) ? getCombinedObjects().stream().anyMatch(o -> o.getClass() == windowIn) : false;
+	}
+	
+	public default boolean isWindowOpen(IWindowParent<?> windowIn) {
+		return (windowIn != null) ? getCombinedObjects().contains(windowIn) : false;
 	}
 	
 	/** Returns a list of all actively drawn window parents. */
@@ -165,6 +174,10 @@ public interface ITopParent<E> extends IWindowObject<E> {
 		}
 		catch (Exception e) { e.printStackTrace(); }
 		return windows;
+	}
+	
+	public default ETerminal<?> getTerminalInstance() {
+		return (ETerminal<?>) getWindowInstance(ETerminal.class);
 	}
 	
 	/** Returns the first active instance of a specified type of window parent. If none are active, null is returned instead. */

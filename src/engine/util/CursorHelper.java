@@ -1,9 +1,9 @@
 package engine.util;
 
 
-import engine.QoT;
 import engine.input.Mouse;
 import engine.renderEngine.textureSystem.GameTexture;
+import main.QoT;
 
 import java.awt.MouseInfo;
 import java.awt.Point;

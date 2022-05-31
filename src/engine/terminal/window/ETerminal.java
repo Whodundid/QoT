@@ -1,6 +1,5 @@
 package engine.terminal.window;
 
-import engine.QoT;
 import engine.terminal.TerminalHandler;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.termParts.TerminalTextField;
@@ -22,6 +21,7 @@ import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.StringUtil;
+import main.QoT;
 
 import java.io.File;
 
@@ -132,10 +132,7 @@ public class ETerminal<E> extends WindowParent<E> {
 		vPos = history.getVScrollBar().getScrollPos();
 		hPos = history.getHScrollBar().getScrollPos();
 		
-		lines = new EArrayList();
-		for (TextAreaLine l : new EArrayList<TextAreaLine>(history.getTextDocument())) {
-			if (tabDisplayLines.notContains(l)) { lines.add(l); }
-		}
+		lines = history.getTextDocument();
 		clearTabCompletions();
 		
 		history.clear();
@@ -143,13 +140,7 @@ public class ETerminal<E> extends WindowParent<E> {
 	
 	@Override
 	public void postReInit() {
-		for (TextAreaLine l : lines) {
-			TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getGenericObject(), l.getLineNumber());
-			Box3<String, Object, Boolean> link = l.getLink();
-			n.setLinkText(link.a, link.b, link.c);
-			history.addTextLine(n);
-		}
-		
+		for (TextAreaLine l : lines) history.addTextLine(l);
 		history.getVScrollBar().setScrollPos(vPos);
 		history.getHScrollBar().setScrollPos(hPos);
 		inputField.setText(text);
@@ -209,9 +200,9 @@ public class ETerminal<E> extends WindowParent<E> {
 	}
 	
 	@Override
-	public ETerminal resize(double xIn, double yIn, ScreenLocation areaIn) {
+	public void resize(double xIn, double yIn, ScreenLocation areaIn) {
 		try {
-			if (getMaximizedPosition() != ScreenLocation.CENTER && (xIn != 0 || yIn != 0)) {
+			if (getMaximizedPosition() != ScreenLocation.TOP && (xIn != 0 || yIn != 0)) {
 				String text = inputField.getText();
 				double vPos = history.getVScrollBar().getScrollPos();
 				double hPos = history.getHScrollBar().getScrollPos();
@@ -240,7 +231,6 @@ public class ETerminal<E> extends WindowParent<E> {
 			}
 		}
 		catch (Exception e) { e.printStackTrace(); }
-		return this;
 	}
 	
 	@Override
@@ -331,9 +321,8 @@ public class ETerminal<E> extends WindowParent<E> {
 	}
 	
 	@Override
-	public ETerminal setPosition(double newX, double newY) {
+	public void setPosition(double newX, double newY) {
 		super.setPosition(newX, newY);
-		return this;
 	}
 	
 	@Override
@@ -522,7 +511,7 @@ public class ETerminal<E> extends WindowParent<E> {
 		catch (Exception e) { e.printStackTrace(); }
 	}
 	
-	public ETerminal buildTabCompletions(String... dataIn) { return buildTabCompletions(new EArrayList().add(dataIn)); }
+	public ETerminal buildTabCompletions(String... dataIn) { return buildTabCompletions(new EArrayList().addA(dataIn)); }
 	public ETerminal buildTabCompletions(EArrayList<String> dataIn) {
 		clearTabCompletions();
 		

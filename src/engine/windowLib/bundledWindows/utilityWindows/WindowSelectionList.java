@@ -86,7 +86,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	}
 	
 	@Override
-	public WindowSelectionList resize(double xIn, double yIn, ScreenLocation areaIn) {
+	public void resize(double xIn, double yIn, ScreenLocation areaIn) {
 		if (xIn != 0 || yIn != 0) {
 			double vPos = list.getVScrollBar().getScrollPos();
 			double hPos = list.getHScrollBar().getScrollPos();
@@ -96,7 +96,6 @@ public class WindowSelectionList extends ActionWindowParent {
 			list.getVScrollBar().onResizeUpdate(vPos, xIn, yIn, areaIn);
 			list.getHScrollBar().onResizeUpdate(hPos, xIn, yIn, areaIn);
 		}
-		return this;
 	}
 	
 	@Override

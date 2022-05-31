@@ -2,17 +2,23 @@ package engine.screens.screenUtil;
 
 import java.util.Stack;
 
-import engine.QoT;
 import engine.input.Keyboard;
 import engine.screens.MainMenuScreen;
 import engine.windowLib.windowTypes.TopWindowParent;
 import engine.windowLib.windowTypes.interfaces.ITopParent;
+import eutil.datatypes.EArrayList;
+import main.QoT;
 
 public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopParent<E> {
 	
 	protected Stack<GameScreen<?>> screenHistory = new Stack();
+	protected EArrayList<String> aliases = new EArrayList();
 	
 	public GameScreen() {
+		setDefaultDims();
+	}
+	
+	protected void setDefaultDims() {
 		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
 	}
 	
@@ -33,7 +39,7 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (keyCode == Keyboard.KEY_ESC && !screenHistory.isEmpty()) { closeScreen(false); }
+		if (keyCode == Keyboard.KEY_ESC && !screenHistory.isEmpty()) closeScreen(false);
 		super.keyPressed(typedChar, keyCode);
 	}
 	
@@ -77,10 +83,17 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 		}
 	}
 	
+	public EArrayList<String> getAliases() {
+		return aliases;
+	}
+	
 	public GameScreen<?> getPreviousScreen() {
 		return (!screenHistory.isEmpty()) ? screenHistory.peek() : null;
 	}
 	
-	public GameScreen<E> setWindowSize() { setDimensions(0, 0, QoT.getWidth(), QoT.getHeight()); return this; }
+	public GameScreen<E> setWindowSize() {
+		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
+		return this;
+	}
 	
 }

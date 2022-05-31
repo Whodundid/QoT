@@ -1,12 +1,12 @@
 package engine.windowLib.windowTypes.dynamicWindow;
 
-import engine.QoT;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
+import main.QoT;
 
 import java.io.File;
 import java.io.IOException;

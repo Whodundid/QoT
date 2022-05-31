@@ -1,37 +1,86 @@
 package game;
 
-/** A value that keeps track of experience and level ups. */
+/**
+ * A static helper class which helps to keep track of experience and
+ * level ups.
+ */
 public class EntityLevel {
 	
-	private long xp;
-	private int level;
+	private EntityLevel() {}
 	
-	public EntityLevel() { this(0, 1); }
-	public EntityLevel(long xpIn, int levelIn) {
-		xp = xpIn;
-		level = levelIn;
+	/**
+	 * Returns the amount of experience needed to advance to the next
+	 * given level.
+	 * <p>
+	 * Note: this method calculates for the absolute minimum amount of
+	 * experience needed for a specific level and assumes that it is
+	 * calculating for the next immediate level up.
+	 * <p>
+	 * For instance, if you are currently level 10 and want to know how
+	 * much experience is needed to reach level 11, then pass '11' to this
+	 * method to determine the amount needed.
+	 * 
+	 * @param level The level to reach
+	 * @return The amount of experience needed to reach the given level
+	 *         from the previous level
+	 */
+	public static long getXPNeededForNextLevel(int level) {
+		return (long) (((Math.pow(2, (double) level / 5) * 300 + level)) * 1.25) - 375;
 	}
 	
-	public static long getExpNeededForLevel(int lvl) {
-		return (long) (((Math.pow(2, (double) lvl / 5) * 300 + lvl)) * 1.25) - 375;
-	}
-	
-	public static long getTotalExpNeededForLevel(int lvl) {
+	/**
+	 * Returns the minimum total amount of experience that would be needed
+	 * in order to reach the given level.
+	 * 
+	 * @param level
+	 * @return
+	 */
+	public static long getTotalXPNeeded(int level) {
 		long total = 0;
-		for (int i = 1; i < lvl + 1; i++) {
-			total += getExpNeededForLevel(i);
+		for (int i = 1; i < level + 1; i++) {
+			total += getXPNeededForNextLevel(i);
 		}
 		return total;
 	}
 	
-	public boolean checkCanLevel() {
-		return xp >= getTotalExpNeededForLevel(level + 1);
+	/**
+	 * Returns the minimum level that corresponds to the total amount of
+	 * experience earned.
+	 * 
+	 * @param xp
+	 * @return The level from the given experience
+	 */
+	public static int getLevelFromXP(long xp) {
+		int level = 0;
+		while (xp > 0) {
+			xp -= getXPNeededForNextLevel(level++);
+		}
+		return level;
 	}
 	
-	public int getLevel() { return level; }
-	public long getXP() { return xp; }
+	/**
+	 * Takes in the current level and the total amount of experience earned and
+	 * calculates whether or not there is enough XP for a level up.
+	 * 
+	 * @param level
+	 * @param xp
+	 * @return True if can level up
+	 */
+	public static boolean checkLevelUp(int level, long xp) {
+		return xp >= getTotalXPNeeded(level + 1);
+	}
 	
-	public void addXP(long amount) { xp += amount; }
-	public void levelUp() { level++; }
+	public static int calculateMaxHealth(int hitpointsLevel) {
+		return 7 + (int) Math.ceil(hitpointsLevel * 2.50);
+	}
+	
+	public static int calculateMaxMana(int magicLevel) {
+		return 17 + (int) Math.ceil(magicLevel * 2.50);
+	}
+	
+	public static int calculateBaseDamage(int strengthLevel) {
+		int x = strengthLevel;
+		return (int) (Math.ceil(x*0.516667)+Math.floor(0.04*x*Math.exp(0.0386538*x)));
+	}
 	
 }

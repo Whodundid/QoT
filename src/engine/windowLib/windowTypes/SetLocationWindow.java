@@ -13,10 +13,10 @@ public abstract class SetLocationWindow<E> extends OverlayWindow<E> {
 	
 	protected SetLocationWindow hideAllOnRenderer(IWindowObject<?>... exceptionsIn) {
 		previousStates.clear();
-		EArrayList exceptions = new EArrayList().add(exceptionsIn);
+		EArrayList exceptions = new EArrayList().addA(exceptionsIn);
 		
 		for (IWindowObject<?> o : getTopParent().getAllChildren()) {
-			if (o.isPersistent()) { continue; }
+			if (o.isAlwaysVisible()) { continue; }
 			previousStates.add(o, !o.isHidden());
 		}
 		
@@ -26,7 +26,7 @@ public abstract class SetLocationWindow<E> extends OverlayWindow<E> {
 	}
 	
 	protected SetLocationWindow unideAllOnRenderer(IWindowObject<?>... exceptionsIn) {
-		EArrayList exceptions = new EArrayList().add(exceptionsIn);
+		EArrayList exceptions = new EArrayList().addA(exceptionsIn);
 		
 		for (Box2<IWindowObject<?>, Boolean> b : previousStates) {
 			if (exceptions.notContains(b.getA())) { b.getA().setHidden(!b.getB()); }

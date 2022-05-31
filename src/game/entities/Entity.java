@@ -1,12 +1,13 @@
 package game.entities;
 
-import engine.QoT;
 import engine.renderEngine.GLObject;
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import eutil.misc.Direction;
 import eutil.misc.Rotation;
+import game.EntityLevel;
+import main.QoT;
 import world.GameWorld;
 import world.resources.WorldTile;
 
@@ -21,17 +22,40 @@ public abstract class Entity extends GLObject {
 	public int worldX, worldY;
 	protected String name;
 	protected String headText = "";
-	protected int level;
-	protected int experience;
-	protected int maxHealth;
-	protected int health;
-	protected int maxMana;
-	protected int mana;
-	protected int baseDamage;
-	protected int gold;
 	protected boolean passable = false;
 	protected boolean allowNoClip = false;
 	protected Rotation facing = Rotation.RIGHT;
+	
+	/** This entity's current level. */
+	protected int level;
+	/** This entity's total amount of experience earned. */
+	protected long experience;
+	/** The amount of experience needed for the next immediate level up. */
+	protected long xpNeeded;
+	/** The amount XP an entity would earn upon killing this entity. */
+	protected long experienceWorth;
+	/** The maximum amount of health this entity can have. 'Determined by hitpoints level' */
+	protected int maxHealth;
+	/** The actual current amount of health this entity has. */
+	protected int health;
+	/** The maximum amount of mana this entity can have. 'Determined by magic level' */
+	protected int maxMana;
+	/** The actual amount of mana this entity has. */
+	protected int mana;
+	/** Instead of making the gold an entity has an inventory item, gold is storred directly
+	 *  on the character themselves. */
+	protected int gold;
+	
+	protected int strengthLevel = 0;
+	protected int hitpointsLevel = 0;
+	protected int magicLevel = 0;
+	
+	/**
+	 * An entity's melee damage is calculated from their base strength
+	 * level. Additional modifiers are added in later.
+	 */
+	protected int baseMeleeDamage;
+
 	
 	//--------------
 	// Constructors
@@ -39,6 +63,9 @@ public abstract class Entity extends GLObject {
 	
 	public Entity(String nameIn) {
 		name = nameIn;
+		
+		//determine initial next level
+		xpNeeded = EntityLevel.getXPNeededForNextLevel(level + 1);
 	}
 	
 	//-----------------
@@ -296,54 +323,64 @@ public abstract class Entity extends GLObject {
 		return world != null && world.isLoaded();
 	}
 	
+	public void addXP(long xp) {
+		experience += xp;
+	}
+	
+	public void levelUp() {
+		if (EntityLevel.checkLevelUp(level, experience)) {
+			level++;
+			xpNeeded = EntityLevel.getXPNeededForNextLevel(level);
+		}
+	}
+	
+	/**
+	 * @return True if this entity has less than or equal to zero '0' health remaining.
+	 */
+	public boolean isDead() {
+		return health <= 0;
+	}
+	
 	//---------
 	// Getters
 	//---------
-	
-	public String getName() { return name; }
-	public int getLevel() { return level; }
-	public int getExperience() { return experience; }
-	public int getHealth() { return health; }
-	public int getMana() { return mana; }
-	public int getMaxHealth() { return maxHealth; }
-	public int getMaxMana() { return maxMana; }
-	public int getGold() { return gold; }
-	public int getDamage() { return baseDamage; }
-	public boolean isDead() { return health > 0; }
-	public String getHeadText() { return headText; }
 	
 	public GameTexture getTexture() { return texture; }
 	public EDimension getCollision() { return collisionBox; }
 	public boolean isPassable() { return passable; }
 	public boolean isNoClipping() { return allowNoClip; }
 	public Rotation getFacing() { return facing; }
+	public String getHeadText() { return headText; }
+	
+	public String getName() { return name; }
+
+	public int getLevel() { return level; }
+	public long getExperience() { return experience; }
+	public long getXPNeeded() { return xpNeeded; }
+	
+	public int getMaxHealth() { return maxHealth; }
+	public int getHealth() { return health; }
+	public int getHitpointsLevel() { return hitpointsLevel; }
+	
+	public int getMaxMana() { return maxMana; }
+	public int getMana() { return mana; }
+	public int getMagicLevel() { return magicLevel; }
+	
+	public int getBaseMeleeDamage() { return baseMeleeDamage; }
+	public int getStrengthLevel() { return strengthLevel; }
+	
+	public int getGold() { return gold; }
 	
 	//---------
 	// Setters
 	//---------
-	
-	public Entity setName(String nameIn) { name = nameIn; return this; }
-	public Entity setLevel(int levelIn) { level = levelIn; return this; }
-	public Entity setExperience(int expIn) { experience = expIn; return this; }
-	public Entity setHealth(int healthIn) { health = healthIn; return this; }
-	public Entity setMana(int manaIn) { mana = manaIn; return this; }
-	public Entity setMaxHealth(int maxHealthIn) { maxHealth = maxHealthIn; return this; }
-	public Entity setMaxMana(int maxManaIn) { maxMana = maxManaIn; return this; }
-	public Entity setGold(int amountIn) { gold = amountIn; return this; }
-	public Entity setDamage(int damageIn) { baseDamage = damageIn; return this; }
-	public Entity setHeadText(String textIn) { headText = textIn; return this; }
 	
 	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }
 	public Entity setCollisionBox(double sX, double sY, double eX, double eY) { collisionBox = new EDimension(sX, sY, eX, eY); return this; }
 	public Entity setSprite(GameTexture in) { texture = in; return this; }
 	public Entity setFacing(Rotation dir) { facing = dir; return this; }
-	
-	public Entity setDead(boolean val) {
-		if (val) kill();
-		else health = maxHealth; //if maxHealth is 0, the entity is still dead!
-		return this;
-	}
+	public Entity setHeadText(String textIn) { headText = textIn; return this; }
 	
 	/** Instantaneously moves this entity to the target world coordinates.
 	 *  Note: the entity must actually exist in a world for this to have any effect. */
@@ -364,10 +401,66 @@ public abstract class Entity extends GLObject {
 		}
 		return this;
 	}
+
+	public Entity setName(String nameIn) { name = nameIn; return this; }
 	
-	//-------------------
-	// Protected Methods
-	//-------------------
+	public Entity setMaxHealth(int maxHealthIn) { maxHealth = maxHealthIn; return this; }
+	public Entity setHealth(int healthIn) { health = healthIn; return this; }
+	public void setHitpointsLevel(int levelIn) {
+		hitpointsLevel = levelIn;
+		maxHealth = EntityLevel.calculateMaxHealth(hitpointsLevel);
+		health = NumberUtil.clamp(health, 0, maxHealth);
+	}
+	
+	public Entity setMaxMana(int maxManaIn) { maxMana = maxManaIn; return this; }
+	public Entity setMana(int manaIn) { mana = manaIn; return this; }
+	public void setMagicLevel(int levelIn) {
+		magicLevel = levelIn;
+		maxMana = EntityLevel.calculateMaxMana(magicLevel);
+		mana = NumberUtil.clamp(mana, 0, maxMana);
+	}
+	
+	/**
+	 * Sets this entity's melee damage to the exact amount specified.
+	 * <p>
+	 * Note: This completely disregards the entity's strength level.
+	 * 
+	 * @param damageIn
+	 */
+	public void setBaseMeleeDamage(int damageIn) {
+		baseMeleeDamage = damageIn;
+	}
+	
+	public void setStrengthLevel(int levelIn) {
+		strengthLevel = levelIn;
+		baseMeleeDamage = 2 + (levelIn * 2);
+	}
+	
+	public void setGold(int amountIn) {
+		gold = amountIn;
+	}
+	
+	public void setExperience(long expIn) {
+		experience = expIn;
+		level = EntityLevel.getLevelFromXP(experience);
+		xpNeeded = EntityLevel.getTotalXPNeeded(level);
+	}
+	
+	public void setLevel(int levelIn) {
+		level = levelIn;
+		experience = EntityLevel.getTotalXPNeeded(level);
+		xpNeeded = EntityLevel.getTotalXPNeeded(level);
+	}
+	
+	public Entity setDead(boolean val) {
+		if (val) kill();
+		else health = maxHealth; //if maxHealth is 0, the entity is still dead!
+		return this;
+	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	/** Returns true if this entity had enough mana to use the given spell. */
 	protected boolean manaCheck(int spellCost) {

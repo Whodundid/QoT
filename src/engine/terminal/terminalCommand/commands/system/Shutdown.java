@@ -1,10 +1,10 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.QoT;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.ConfirmationCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import main.QoT;
 
 public class Shutdown extends ConfirmationCommand {
 	

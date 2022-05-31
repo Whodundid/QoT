@@ -1,8 +1,8 @@
 package engine.terminal.window;
 
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
+import engine.windowLib.windowObjects.advancedObjects.WindowScrollList;
 import engine.windowLib.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;
-import engine.windowLib.windowObjects.advancedObjects.scrollList.WindowScrollList;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
@@ -85,7 +85,7 @@ public class TerminalOptionsWindow extends WindowParent {
 	}
 	
 	@Override
-	public TerminalOptionsWindow resize(double xIn, double yIn, ScreenLocation areaIn) {
+	public void resize(double xIn, double yIn, ScreenLocation areaIn) {
 		try {
 			if (xIn != 0 || yIn != 0) {
 				double vPos = settings.getVScrollBar().getScrollPos();
@@ -95,7 +95,6 @@ public class TerminalOptionsWindow extends WindowParent {
 				settings.getHScrollBar().onResizeUpdate(hPos, xIn, yIn, areaIn);
 			}
 		} catch (Exception e) { e.printStackTrace(); }
-		return this;
 	}
 	
 	@Override

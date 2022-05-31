@@ -1,9 +1,9 @@
 package engine.windowLib.windowTypes;
 
-import engine.QoT;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
+import main.QoT;
 
 //Author: Hunter Bragg
 

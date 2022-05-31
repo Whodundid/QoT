@@ -1,6 +1,5 @@
 package engine.screens;
 
-import engine.QoT;
 import engine.input.Keyboard;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.screens.screenUtil.GameScreen;
@@ -12,6 +11,7 @@ import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.entities.Entity;
 import game.entities.Player;
+import main.QoT;
 import world.GameWorld;
 import world.mapEditor.NewMapCreatorScreen;
 import world.resources.WorldTile;
@@ -263,7 +263,7 @@ public class WorldRenderTest extends GameScreen {
 					if (p.worldY < distY) { drawPosY += (distY - p.worldY) * h; }
 					
 					if (t.hasTexture()) {
-						drawTexture(drawPosX + (i * w), drawPosY + (j * h), w, h, t.getTexture());
+						drawTexture(t.getTexture(), drawPosX + (i * w), drawPosY + (j * h), w, h);
 					}
 				}
 			}
@@ -309,7 +309,7 @@ public class WorldRenderTest extends GameScreen {
 					drawX = x + distX * w;
 					drawY = y + distY * h;
 					
-					drawTexture(drawX, drawY, e.width, e.height, e.getTexture());
+					drawTexture(e.getTexture(), drawX, drawY, e.width, e.height);
 				}
 				else {
 					drawX = x + (e.startX) + (distX - QoT.thePlayer.worldX) * w;
@@ -321,7 +321,7 @@ public class WorldRenderTest extends GameScreen {
 					drawY -= offsetY;
 					
 					if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
-						drawTexture(drawX, drawY, e.width, e.height, e.getTexture());
+						drawTexture(e.getTexture(), drawX, drawY, e.width, e.height);
 					}
 				}
 				

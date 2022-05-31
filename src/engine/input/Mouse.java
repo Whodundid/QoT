@@ -1,7 +1,7 @@
 package engine.input;
 
-import engine.QoT;
 import eutil.datatypes.Box2;
+import main.QoT;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;

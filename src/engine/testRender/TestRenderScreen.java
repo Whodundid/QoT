@@ -1,6 +1,5 @@
 package engine.testRender;
 
-import engine.QoT;
 import engine.renderEngine.GLObject;
 import engine.renderEngine.shaders.ShaderProgram;
 import engine.renderEngine.shaders.Shaders;
@@ -11,6 +10,7 @@ import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.Vec2f;
 import eutil.math.Vec3f;
+import main.QoT;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

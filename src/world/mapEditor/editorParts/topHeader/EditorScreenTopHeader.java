@@ -1,13 +1,13 @@
 package world.mapEditor.editorParts.topHeader;
 
 import assets.textures.WindowTextures;
-import engine.QoT;
 import engine.screens.screenUtil.ScreenLevel;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import main.QoT;
 import world.GameWorld;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.editorParts.sidePanel.EditorSidePanel;
@@ -65,10 +65,12 @@ public class EditorScreenTopHeader extends WindowObject {
 		
 		GameWorld world = editor.getWorld();
 		
-		double endName = drawString("Map: " + world.getName(), scripts.endX + 25, startY + 7, EColors.lime);
-		double endSize = drawString("Size: (" + world.getTileWidth() + ", " + world.getTileHeight() + ")", endName + 30, startY + 7, EColors.aquamarine);
-		double endMouse = drawString("Mouse: (" + (editor.getWorldMX() + 1) + ", " + (editor.getWorldMY() + 1) + ")", endSize + 30, startY + 7, EColors.lorange);
-		/*double endZoom = */drawString("Zoom: x" + editor.getZoom(), endMouse + 30, startY + 7);
+		if (world != null) {
+			double endName = drawString("Map: " + world.getName(), scripts.endX + 25, startY + 7, EColors.lime);
+			double endSize = drawString("Size: (" + world.getTileWidth() + ", " + world.getTileHeight() + ")", endName + 30, startY + 7, EColors.aquamarine);
+			double endMouse = drawString("Mouse: (" + (editor.getWorldMX() + 1) + ", " + (editor.getWorldMY() + 1) + ")", endSize + 30, startY + 7, EColors.lorange);
+			/*double endZoom = */drawString("Zoom: x" + editor.getZoom(), endMouse + 30, startY + 7);
+		}
 		
 		super.drawObject(mXIn, mYIn);
 	}

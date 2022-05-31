@@ -1,6 +1,5 @@
 package world.mapEditor;
 
-import engine.QoT;
 import engine.screens.screenUtil.GameScreen;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowCheckBox;
@@ -8,6 +7,7 @@ import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
+import main.QoT;
 import world.GameWorld;
 import world.resources.WorldTile;
 import world.resources.tile_categories.NatureTiles;

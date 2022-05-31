@@ -1,7 +1,5 @@
 package engine.input;
 
-import engine.QoT;
-
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -10,6 +8,8 @@ import java.awt.datatransfer.Transferable;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
+
+import main.QoT;
 
 public class Keyboard extends GLFWKeyCallback {
 	

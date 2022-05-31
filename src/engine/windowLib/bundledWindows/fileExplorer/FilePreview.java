@@ -31,7 +31,7 @@ public class FilePreview<E extends File> extends WindowObject<E> {
 	public void drawObject(int mXIn, int mYIn) {
 		super.drawObject(mXIn, mYIn);
 		
-		drawTexture(startX, midY - texture.getWidth() / 2, 40, 40, texture);
+		drawTexture(texture, startX, midY - texture.getWidth() / 2, 40, 40);
 		drawString(thePath.getName(), startX + 50, midY - FontRenderer.FONT_HEIGHT / 2);
 		
 		//draw transparent highlight overlay

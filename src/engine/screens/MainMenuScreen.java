@@ -2,13 +2,13 @@ package engine.screens;
 
 import assets.sounds.Songs;
 import assets.textures.GeneralTextures;
-import engine.QoT;
 import engine.screens.screenUtil.GameScreen;
 import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.NumberUtil;
+import main.QoT;
 import world.mapEditor.MapMenuScreen;
 import world.resources.tile_categories.DungeonTiles;
 
@@ -16,6 +16,11 @@ public class MainMenuScreen extends GameScreen {
 	
 	WindowButton newGame, loadGame, options, closeGame;
 	WindowButton mapTest;
+	
+	public MainMenuScreen() {
+		super();
+		aliases.add("main", "mainmenu", "titlescreen");
+	}
 	
 	@Override
 	public void initScreen() {
@@ -61,7 +66,7 @@ public class MainMenuScreen extends GameScreen {
 		
 		drawFilledEllipse(midX, midY - 220, 156, 106, 10, EColors.vdgray);
 		drawFilledEllipse(midX, midY - 220, 150, 100, 10, EColors.rainbow());
-		drawTexture(midX - w / 2, midY - 320, w, 200, GeneralTextures.logo);
+		drawTexture(GeneralTextures.logo, midX - w / 2, midY - 320, w, 200);
 	}
 	
 	@Override

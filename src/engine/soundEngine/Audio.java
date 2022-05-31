@@ -1,13 +1,13 @@
 package engine.soundEngine;
 
-import engine.settings.QoT_Settings;
-
 import java.io.File;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
+
+import main.settings.QoT_Settings;
 
 public class Audio {
 	

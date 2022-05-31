@@ -1,5 +1,7 @@
 package engine;
 
+import main.QoT;
+
 public class WindowSize {
 	
 	int width;
@@ -8,7 +10,7 @@ public class WindowSize {
 	//private int[] w = new int[1];
 	//private int[] h = new int[1];
 	
-	public WindowSize(QoT gameIn) {
+	public WindowSize(main.QoT qoT) {
 		//GLFW.glfwGetWindowSize(QoT.getWindowHandle(), w, h);
 		
 		width = QoT.getWidth();

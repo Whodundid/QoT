@@ -1,9 +1,9 @@
 package engine.soundEngine;
 
-import engine.QoT;
-import engine.settings.QoT_Settings;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
+import main.QoT;
+import main.settings.QoT_Settings;
 
 /**
  * A static utility class which manages all playable sounds/songs

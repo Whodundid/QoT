@@ -1,12 +1,9 @@
 package engine.terminal.terminalCommand.commands.game;
 
-import engine.QoT;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
-import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
 
 public class Song_CMD extends TerminalCommand {
 	
@@ -27,7 +24,7 @@ public class Song_CMD extends TerminalCommand {
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) termIn.error(getUsage());
 		
-		String name = StringUtil.combineAll(args);
+		//String name = StringUtil.combineAll(args);
 		
 	}
 }

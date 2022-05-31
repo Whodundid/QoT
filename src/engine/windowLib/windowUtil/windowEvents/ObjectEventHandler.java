@@ -18,7 +18,7 @@ public class ObjectEventHandler {
 	}
 	
 	public void processEvent(ObjectEvent e) {
-		if (parent.getObjectGroup() != null) { parent.getObjectGroup().notifyGroup(e); }
+		if (parent.getObjectGroup() != null) parent.getObjectGroup().notifyGroup(e);
 		sendListenEvent(e);
 	}
 	

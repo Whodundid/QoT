@@ -113,10 +113,9 @@ public class WindowSlider<E> extends ActionObject<E> {
 	}
 	
 	@Override
-	public WindowSlider setPosition(double newX, double newY) {
+	public void setPosition(double newX, double newY) {
 		super.setPosition(newX, newY);
 		setSliderValue(sliderValue);
-		return this;
 	}
 	
 	@Override

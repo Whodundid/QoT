@@ -1,6 +1,5 @@
 package engine.scripting.langMappings.qot_package.methods;
 
-import engine.QoT;
 import engine.terminal.TerminalHandler;
 import engine.terminal.window.ETerminal;
 import envision.interpreter.EnvisionInterpreter;
@@ -8,6 +7,7 @@ import envision.lang.EnvisionObject;
 import envision.lang.internal.EnvisionFunction;
 import envision.lang.util.Primitives;
 import eutil.strings.StringUtil;
+import main.QoT;
 
 /** Creates a mapping between Envision and the QoT terminal. */
 public class TermCall_ENV extends EnvisionFunction {

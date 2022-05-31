@@ -28,7 +28,7 @@ public class WindowRect<E> extends WindowShape<E> {
 	}
 	
 	@Override
-	public WindowRect<E> setSize(double newWidth, double newHeight) {
+	public void setSize(double newWidth, double newHeight) {
 		width = Math.abs(newWidth);
 		height = Math.abs(newHeight);
 		if (newWidth < 0) { startX += newWidth; }
@@ -37,7 +37,6 @@ public class WindowRect<E> extends WindowShape<E> {
 		endY = startY + height;
 		midX = startX + (width / 2);
 		midY = startY + (height / 2);
-		return this;
 	}
 	
 	//----------------

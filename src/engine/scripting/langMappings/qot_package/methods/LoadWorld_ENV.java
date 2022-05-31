@@ -1,8 +1,6 @@
 package engine.scripting.langMappings.qot_package.methods;
 
-import engine.QoT;
 import engine.screens.GamePlayScreen;
-import engine.settings.QoT_Settings;
 import envision.exceptions.EnvisionError;
 import envision.exceptions.errors.ArgLengthError;
 import envision.exceptions.errors.InvalidArgumentError;
@@ -13,6 +11,8 @@ import envision.lang.datatypes.EnvisionString;
 import envision.lang.internal.EnvisionFunction;
 import envision.lang.util.Primitives;
 import game.entities.Player;
+import main.QoT;
+import main.settings.QoT_Settings;
 import world.GameWorld;
 
 import java.io.File;
@@ -24,6 +24,7 @@ public class LoadWorld_ENV extends EnvisionFunction {
 		super(Primitives.VAR, "loadWorld");
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void invoke(EnvisionInterpreter interpreter, EnvisionObject[] args) {
 		if (args.length == 0|| args.length > 1) throw new ArgLengthError(this, args.length, 1);

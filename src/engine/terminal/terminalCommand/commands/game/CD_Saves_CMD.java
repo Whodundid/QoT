@@ -1,12 +1,12 @@
 package engine.terminal.terminalCommand.commands.game;
 
 import engine.input.Keyboard;
-import engine.settings.QoT_Settings;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import main.settings.QoT_Settings;
 
 import java.io.File;
 

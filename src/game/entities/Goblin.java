@@ -1,11 +1,11 @@
 package game.entities;
 
 import assets.textures.EntityTextures;
-import engine.QoT;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
 import eutil.random.RandomUtil;
 import game.combat.CombatScreen;
+import main.QoT;
 
 public class Goblin extends Enemy {
 	

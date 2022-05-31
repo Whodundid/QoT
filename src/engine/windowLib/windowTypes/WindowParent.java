@@ -1,6 +1,5 @@
 package engine.windowLib.windowTypes;
 
-import engine.QoT;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
@@ -11,6 +10,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
+import main.QoT;
 
 import java.util.Stack;
 
@@ -166,16 +166,15 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	@Override public boolean isPinned() { return pinned; }
 	@Override
 	public boolean isMaximized() {
-		return maximized == ScreenLocation.CENTER || maximized == ScreenLocation.LEFT || maximized == ScreenLocation.RIGHT ||
-			   maximized == ScreenLocation.TOP_LEFT || maximized == ScreenLocation.TOP_RIGHT || maximized == ScreenLocation.BOT_LEFT || maximized == ScreenLocation.BOT_RIGHT;
+		return maximized != ScreenLocation.OUT;
 	}
 	@Override public boolean isMinimized() { return minimized; }
 	@Override public boolean isPinnable() { return pinnable; }
 	@Override public boolean isMaximizable() { return maximizable; }
 	@Override public boolean isMinimizable() { return minimizable; }
 	@Override public IWindowParent<E> setPinned(boolean val) { pinned = val; return this; }
-	@Override public IWindowParent<E> setMaximized(ScreenLocation val) { if (maximizable) { maximized = val; } return this; }
-	@Override public IWindowParent setMinimized(boolean val) { if (minimizable) { minimized = val; } return this; }
+	@Override public IWindowParent<E> setMaximized(ScreenLocation val) { if (maximizable) maximized = val; return this; }
+	@Override public IWindowParent setMinimized(boolean val) { if (minimizable) minimized = val; return this; }
 	@Override public ScreenLocation getMaximizedPosition() { return maximized; }
 	@Override public IWindowParent<E> setPinnable(boolean val) { pinnable = val; return this; }
 	@Override public IWindowParent<E> setMaximizable(boolean val) { maximizable = val; return this; }
@@ -195,33 +194,33 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		double tb = 0;
 		double hh = header.height;
 		
-		if (maximized == ScreenLocation.CENTER) {
-			if (hasTaskBar) { setDimensions(0, hh + tb, sw, sh - (hh + tb)); }
-			else { setDimensions(0, hh, sw, sh - hh); }
+		if (maximized == ScreenLocation.TOP) {
+			if (hasTaskBar) setDimensions(0, hh + tb, sw, sh - (hh + tb));
+			else setDimensions(0, hh, sw, sh - hh);
 		}
 		else if (maximized == ScreenLocation.LEFT) {
-			if (hasTaskBar) { setDimensions(0, hh + tb, sw / 2 + 1, sh - (hh + tb)); }
-			else { setDimensions(0, hh, sw / 2 + 1, sh - hh); }
+			if (hasTaskBar) setDimensions(0, hh + tb, sw / 2 + 1, sh - (hh + tb));
+			else setDimensions(0, hh, sw / 2 + 1, sh - hh);
 		}
 		else if (maximized == ScreenLocation.RIGHT) {
-			if (hasTaskBar) { setDimensions(sw / 2, hh + tb, sw / 2, sh - (hh + tb)); }
-			else { setDimensions(sw / 2, hh, sw / 2, sh - hh); }
+			if (hasTaskBar) setDimensions(sw / 2, hh + tb, sw / 2, sh - (hh + tb));
+			else setDimensions(sw / 2, hh, sw / 2, sh - hh);
 		}
 		else if (maximized == ScreenLocation.TOP_LEFT) {
-			if (hasTaskBar) { setDimensions(0, hh + tb, sw / 2 + 1, (sh / 2) - (hh + tb)); }
-			else { setDimensions(0, hh, sw / 2 + 1, (sh / 2) - hh); }
+			if (hasTaskBar) setDimensions(0, hh + tb, sw / 2 + 1, (sh / 2) - (hh + tb));
+			else setDimensions(0, hh, sw / 2 + 1, (sh / 2) - hh);
 		}
 		else if (maximized == ScreenLocation.BOT_LEFT) {
-			if (hasTaskBar) { setDimensions(0, screen.midY + hh - 1, sw / 2 + 1, ((sh - tb - (hh / 2)) / 2) - 2); }
-			else { setDimensions(0, screen.midY + hh - 1, sw / 2 + 1, (sh / 2) - hh + 2); }
+			if (hasTaskBar) setDimensions(0, screen.midY + hh - 1, sw / 2 + 1, ((sh - tb - (hh / 2)) / 2) - 2);
+			else setDimensions(0, screen.midY + hh - 1, sw / 2 + 1, (sh / 2) - hh + 2);
 		}
 		else if (maximized == ScreenLocation.TOP_RIGHT) {
-			if (hasTaskBar) { setDimensions(sw / 2, hh + tb, sw / 2, (sh / 2) - (hh + tb)); }
-			else { setDimensions(sw / 2, hh, sw / 2, (sh / 2) - hh); }
+			if (hasTaskBar) setDimensions(sw / 2, hh + tb, sw / 2, (sh / 2) - (hh + tb));
+			else setDimensions(sw / 2, hh, sw / 2, (sh / 2) - hh);
 		}
 		else if (maximized == ScreenLocation.BOT_RIGHT) {
-			if (hasTaskBar) { setDimensions(sw / 2, screen.midY + hh - 1, sw / 2, ((sh - tb - (hh / 2)) / 2) - 2); }
-			else { setDimensions(sw / 2, screen.midY + hh - 1, sw / 2, (sh / 2) - hh + 2); }
+			if (hasTaskBar) setDimensions(sw / 2, screen.midY + hh - 1, sw / 2, ((sh - tb - (hh / 2)) / 2) - 2);
+			else setDimensions(sw / 2, screen.midY + hh - 1, sw / 2, (sh / 2) - hh + 2);
 		}
 		
 		reInitObjects();

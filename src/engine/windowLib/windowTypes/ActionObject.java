@@ -12,9 +12,9 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 	protected boolean runActionOnRelease = false;
 	protected IWindowObject<?> actionReceiver;
 	
-	//---------------------------
-	// AcitonObject Constructors
-	//---------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	/** Used for internal or highly specific purposes. */
 	protected ActionObject() {}
@@ -50,7 +50,7 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 		super.mouseReleased(mXIn, mYIn, button);
 		
 		//perform the action if set to run on falling edge
-		if (runActionOnRelease) { performAction(); }
+		if (runActionOnRelease) performAction();
 	}
 	
 	//-------------------------
@@ -61,7 +61,7 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 	public void performAction(Object... args) {
 		if (actionReceiver != null) {
 			IWindowParent<?> p = actionReceiver.getWindowParent();
-			if (p != null) { p.bringToFront(); }
+			if (p != null) p.bringToFront();
 			actionReceiver.actionPerformed(this, args);
 		}
 	}

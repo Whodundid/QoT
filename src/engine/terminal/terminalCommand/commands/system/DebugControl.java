@@ -1,12 +1,12 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.QoT;
 import engine.debug.DebugFunctions;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import main.QoT;
 
 //Author: Hunter Bragg
 
@@ -27,7 +27,6 @@ public class DebugControl extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		System.out.println(args);
 		if (args.size() >= 1) {
 			try {
 				int i = Integer.parseInt(args.get(0));

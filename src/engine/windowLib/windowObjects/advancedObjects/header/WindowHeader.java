@@ -1,7 +1,6 @@
 package engine.windowLib.windowObjects.advancedObjects.header;
 
 import assets.textures.WindowTextures;
-import engine.QoT;
 import engine.debug.DebugFunctions;
 import engine.input.Mouse;
 import engine.windowLib.StaticWindowObject;
@@ -20,6 +19,7 @@ import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import eutil.misc.ScreenLocation;
+import main.QoT;
 
 import java.util.Stack;
 
@@ -199,9 +199,9 @@ public class WindowHeader<E> extends WindowObject<E> {
 	 * @return true if any object of (any) parent of this header is focused.
 	 */
 	protected boolean anyFocused() {
-		IWindowObject<?> p = drawDefault ? getWindowParent() : getParent();
+		IWindowObject<?> p = (drawDefault) ? getWindowParent() : getParent();
 		if (p == null) return false;
-		if (p.hasFocus()) return true;
+		if (p.hasFocus() || this.hasFocus()) return true;
 		for (IWindowObject<?> o : p.getAllChildren()) if (o.hasFocus()) return true;
 		return false;
 	}
@@ -302,7 +302,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		//default draw constitutes an always visible close button and
 		//selectively visible fileup button.
 		if (drawDefault) {
-			closeButton.setVisible(val).setPersistent(val);
+			closeButton.setVisible(val).setAlwaysVisible(val);
 			
 			//check for fileup button visibility
 			IWindowParent<?> parent = getWindowParent();
@@ -488,14 +488,14 @@ public class WindowHeader<E> extends WindowObject<E> {
 		IWindowParent<?> p = getWindowParent();
 		if (p != null) {
 			if (p.isMaximizable()) {
-				if (p.getMaximizedPosition() == ScreenLocation.CENTER) {
+				if (p.getMaximizedPosition() == ScreenLocation.TOP) {
 					p.setMaximized(ScreenLocation.OUT);
 					p.miniaturize();
 					getTopParent().setFocusedObject(p);
 				}
 				else {
-					if (p.getMaximizedPosition() == ScreenLocation.OUT) { p.setPreMax(p.getDimensions()); }
-					p.setMaximized(ScreenLocation.CENTER);
+					if (p.getMaximizedPosition() == ScreenLocation.OUT) p.setPreMax(p.getDimensions());
+					p.setMaximized(ScreenLocation.TOP);
 					p.maximize();
 					getTopParent().setFocusedObject(p);
 				}
@@ -538,8 +538,8 @@ public class WindowHeader<E> extends WindowObject<E> {
 		maximizeButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
 		
 		if (window != null && window.isMaximizable()) {
-			maximizeButton.setButtonTexture(window.getMaximizedPosition() == ScreenLocation.CENTER ? WindowTextures.min : WindowTextures.max);
-			maximizeButton.setButtonSelTexture(window.getMaximizedPosition() == ScreenLocation.CENTER ? WindowTextures.min_sel : WindowTextures.max_sel);
+			maximizeButton.setButtonTexture(window.getMaximizedPosition() == ScreenLocation.TOP ? WindowTextures.min : WindowTextures.max);
+			maximizeButton.setButtonSelTexture(window.getMaximizedPosition() == ScreenLocation.TOP ? WindowTextures.min_sel : WindowTextures.max_sel);
 			
 			maximizeButton.setHoverText(window.isMaximized() ? "Miniaturize" : "Maximize");
 			maximizeButton.setObjectName("maximize button");

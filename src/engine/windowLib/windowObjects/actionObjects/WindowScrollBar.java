@@ -144,10 +144,9 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	}
 	
 	@Override
-	public WindowScrollBar setPosition(double newX, double newY) {
+	public void setPosition(double newX, double newY) {
 		super.setPosition(newX, newY);
 		setScrollPos(scrollPos);
-		return this;
 	}
 	
 	@Override

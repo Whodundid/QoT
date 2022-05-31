@@ -1,8 +1,8 @@
 package game.particles;
 
-import engine.QoT;
 import engine.windowLib.windowTypes.WindowObject;
 import eutil.colors.EColors;
+import main.QoT;
 
 public class PointerPress extends WindowObject {
 	

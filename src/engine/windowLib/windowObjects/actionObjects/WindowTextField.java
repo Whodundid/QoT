@@ -1,6 +1,5 @@
 package engine.windowLib.windowObjects.actionObjects;
 
-import engine.QoT;
 import engine.input.Keyboard;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.windowLib.windowTypes.ActionObject;
@@ -9,6 +8,7 @@ import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
 import eutil.math.NumberUtil;
 import eutil.strings.StringUtil;
+import main.QoT;
 
 //Author: Hunter Bragg
 

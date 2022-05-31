@@ -1,12 +1,12 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.QoT;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import envision.Envision;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import main.QoT;
 
 import java.io.File;
 

@@ -1,14 +1,14 @@
 package engine.terminal.terminalCommand.commands.game;
 
-import engine.QoT;
 import engine.screens.GamePlayScreen;
-import engine.settings.QoT_Settings;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import game.entities.Player;
+import main.QoT;
+import main.settings.QoT_Settings;
 
 import java.io.File;
 

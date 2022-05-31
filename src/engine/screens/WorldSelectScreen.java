@@ -1,15 +1,15 @@
 package engine.screens;
 
-import engine.QoT;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.screens.screenUtil.GameScreen;
-import engine.settings.QoT_Settings;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.entities.Player;
+import main.QoT;
+import main.settings.QoT_Settings;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -26,6 +26,11 @@ public class WorldSelectScreen extends GameScreen {
 	WindowButton back;
 	
 	String error;
+	
+	public WorldSelectScreen() {
+		super();
+		aliases.add("worlds", "worldselect", "newgame");
+	}
 	
 	@Override
 	public void initScreen() {

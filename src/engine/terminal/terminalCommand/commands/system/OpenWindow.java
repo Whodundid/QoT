@@ -4,6 +4,7 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import engine.windowLib.bundledWindows.GLKeyChecker;
+import engine.windowLib.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;
 import eutil.datatypes.EArrayList;
 
 //Author: Hunter Bragg
@@ -31,6 +32,8 @@ public class OpenWindow extends TerminalCommand {
 		if (args.isNotEmpty()) {
 			switch (args.get(0).toLowerCase()) {
 			case "keys": termIn.getTopParent().displayWindow(new GLKeyChecker()); break;
+			case "color":
+			case "colors": termIn.getTopParent().displayWindow(new ColorPickerSimple(termIn)); break;
 			default: termIn.error("Unrecognized screen name!");
 			}
 		}

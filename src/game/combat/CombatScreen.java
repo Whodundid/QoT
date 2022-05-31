@@ -1,15 +1,13 @@
 package game.combat;
 
-import engine.QoT;
 import engine.screens.screenUtil.GameScreen;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.misc.Rotation;
-import eutil.random.RandomUtil;
 import game.entities.Entity;
+import main.QoT;
 
 public class CombatScreen extends GameScreen {
 	
@@ -47,14 +45,14 @@ public class CombatScreen extends GameScreen {
 		double aY = midY - (aHeight / 2);
 		double bY = midY - (bHeight / 2);
 		
-		int randX = RandomUtil.getRoll(-3, 3);
-		int randY = RandomUtil.getRoll(-3, 3);
+		//int randX = RandomUtil.getRoll(-3, 3);
+		//int randY = RandomUtil.getRoll(-3, 3);
 		
 		//bX += randX;
 		//bY += randY;
 		
-		drawTexture(aX, aY, aWidth, aHeight, a.texture, true);
-		drawTexture(bX, bY, bWidth, bHeight, b.texture, false);
+		drawTexture(a.texture, aX, aY, aWidth, aHeight, true);
+		drawTexture(b.texture, bX, bY, bWidth, bHeight, false);
 	}
 	
 	@Override

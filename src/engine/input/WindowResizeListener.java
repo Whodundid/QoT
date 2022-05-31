@@ -1,8 +1,8 @@
 package engine.input;
 
-import engine.QoT;
-
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
+
+import main.QoT;
 
 public class WindowResizeListener extends GLFWWindowSizeCallback {
 

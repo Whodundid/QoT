@@ -1,6 +1,5 @@
 package engine.windowLib.bundledWindows.utilityWindows;
 
-import engine.QoT;
 import engine.input.Mouse;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
@@ -12,6 +11,7 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
 import engine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.datatypes.Box2;
 import eutil.datatypes.util.BoxList;
+import main.QoT;
 
 import java.util.List;
 

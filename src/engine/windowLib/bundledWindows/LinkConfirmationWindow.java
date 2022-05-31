@@ -1,12 +1,12 @@
 package engine.windowLib.bundledWindows;
 
-import engine.QoT;
 import engine.windowLib.bundledWindows.utilityWindows.WindowDialogueBox;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
+import main.QoT;
 
 //Author: Hunter Bragg
 

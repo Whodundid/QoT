@@ -1,8 +1,8 @@
 package engine.debug.debugCommands;
 
-import engine.QoT;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.terminal.window.ETerminal;
+import main.QoT;
 
 @SuppressWarnings("unused")
 public class Deb5 extends DebugCommand {

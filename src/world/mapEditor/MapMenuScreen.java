@@ -1,22 +1,18 @@
 package world.mapEditor;
 
 import assets.textures.EditorTextures;
-import engine.QoT;
 import engine.screens.screenUtil.GameScreen;
-import engine.settings.QoT_Settings;
+import engine.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
+import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import eutil.math.EDimension;
+import main.QoT;
+import main.settings.QoT_Settings;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.HeadlessException;
 import java.io.File;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 
 public class MapMenuScreen extends GameScreen {
 	
@@ -24,8 +20,14 @@ public class MapMenuScreen extends GameScreen {
 	WindowButton back;
 	WindowLabel nameLabel;
 	WindowTextField nameField;
+	FileExplorerWindow explorer;
 	
 	String error;
+	
+	public MapMenuScreen() {
+		super();
+		aliases.add("mapeditor", "editor", "leveleditor");
+	}
 	
 	@Override
 	public void initScreen() {
@@ -72,58 +74,57 @@ public class MapMenuScreen extends GameScreen {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == newMap) {
-			QoT_Settings.lastEditorMap.set(nameField.getText());
+		if (object == newMap) newMap();
+		if (object == loadCur || object == nameField) loadMap();
+		if (object == mapDir) openMapChooser();
+		if (object == back) closeScreen();
+		if (object == explorer) onExplorerPick();
+	}
+	
+	//--------------------------
+	
+	private void newMap() {
+		QoT_Settings.lastEditorMap.set(nameField.getText());
+		QoT.saveConfig();
+		QoT.displayScreen(new NewMapCreatorScreen(), this);
+	}
+	
+	private void loadMap() {
+		if (nameField.isNotEmpty()) {
+			String lastMap = nameField.getText();
+			lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
+			
+			QoT_Settings.lastEditorMap.set(lastMap);
 			QoT.saveConfig();
-			QoT.displayScreen(new NewMapCreatorScreen(), this);
-		}
-		
-		if (object == loadCur || object == nameField) {
-			if (nameField.isNotEmpty()) {
-				String lastMap = nameField.getText();
-				lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
-				
-				QoT_Settings.lastEditorMap.set(lastMap);
-				QoT.saveConfig();
-				
-				File f = new File(QoT_Settings.getEditorWorldsDir(), lastMap);
-				if (f.exists()) {
-					QoT.displayScreen(new MapEditorScreen(f), this);
-				}
-				else {
-					error = "'" + lastMap + "' does not exist!";
-				}
-			}
-		}
-		
-		if (object == mapDir) {
-			JFileChooser fc = new JFileChooser() {
-				@Override
-				protected JDialog createDialog(Component parent) throws HeadlessException {
-					JDialog dlg = super.createDialog(parent);
-					EDimension d = QoT.getWindowDims();
-					Dimension fd = getSize();
-					dlg.setLocation((int) (d.startX + (d.width - fd.width) / 2), (int) (d.startY + (d.height - fd.height) / 2));
-					dlg.setModal(true);
-					//dlg.setAlwaysOnTop(true);
-					return dlg;
-				}
-			};
 			
-			fc.setCurrentDirectory(QoT_Settings.getEditorWorldsDir());
-			fc.setDialogTitle("Map Selection");
-			fc.setApproveButtonText("Open");
-			fc.showDialog(null, "Open");
-			File f = fc.getSelectedFile();
-			
-			if (f != null && f.exists() && f.getName().endsWith(".twld")) {
-				QoT_Settings.lastEditorMap.set(f.getName());
-				QoT.saveConfig();
+			File f = new File(QoT_Settings.getEditorWorldsDir(), lastMap);
+			if (f.exists()) {
 				QoT.displayScreen(new MapEditorScreen(f), this);
 			}
+			else {
+				error = "'" + lastMap + "' does not exist!";
+			}
 		}
+	}
+	
+	private void openMapChooser() {
+		explorer = new FileExplorerWindow(this, QoT_Settings.getEditorWorldsDir(), true);
+		explorer.setTitle("Map Selection");
+		setDefaultFocusObject(null);
+		displayWindow(explorer, ObjectPosition.SCREEN_CENTER);
+	}
+	
+	private void onExplorerPick() {
+		if (explorer == null) return;
 		
-		if (object == back) { closeScreen(); }
+		File f = explorer.getSelectedFile();
+		
+		if (f != null && f.exists() && f.getName().endsWith(".twld")) {
+			QoT_Settings.lastEditorMap.set(f.getName());
+			QoT.saveConfig();
+			explorer.close();
+			QoT.displayScreen(new MapEditorScreen(f), this);
+		}
 	}
 	
 }

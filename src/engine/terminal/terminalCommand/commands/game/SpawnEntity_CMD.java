@@ -1,10 +1,10 @@
 package engine.terminal.terminalCommand.commands.game;
 
-import engine.QoT;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import main.QoT;
 
 public class SpawnEntity_CMD extends TerminalCommand {
 	

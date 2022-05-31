@@ -108,7 +108,7 @@ public class WorldTile implements Comparable<WorldTile> {
 		try {
 			WorldTile r = in.getClass().getConstructor().newInstance();
 			GameTexture tex = in.getTexture();
-			if (tex.hasParent()) {
+			if (tex != null && tex.hasParent()) {
 				r.setTexture(tex.getParent().getRandVariant());
 			}
 			return r;

@@ -1,7 +1,6 @@
 package engine.windowLib.bundledWindows;
 
 import assets.textures.WindowTextures;
-import engine.QoT;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.basicObjects.WindowImageBox;
@@ -10,6 +9,7 @@ import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import eutil.misc.FileOpener;
+import main.QoT;
 
 import java.io.File;
 import java.nio.file.Files;

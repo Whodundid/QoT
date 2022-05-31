@@ -1,6 +1,5 @@
 package world.mapEditor;
 
-import engine.QoT;
 import engine.input.Keyboard;
 import engine.input.Mouse;
 import engine.screens.screenUtil.GameScreen;
@@ -9,6 +8,7 @@ import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
+import main.QoT;
 import world.GameWorld;
 import world.Region;
 import world.mapEditor.editorParts.sidePanel.EditorSidePanel;
@@ -45,6 +45,8 @@ public class MapEditorScreen extends GameScreen {
 	public int oldWorldX, oldWorldY;
 	public boolean updateMap = false;
 	
+	private boolean loading = false;
+	
 	//---------------------
 	int left;
 	int top;
@@ -57,13 +59,13 @@ public class MapEditorScreen extends GameScreen {
 	public long timeSinceKey = 0l;
 	
 	public MapEditorScreen(File mapFileIn) {
-		super();
 		mapFile = mapFileIn;
+		setDefaultDims();
 	}
 	
 	public MapEditorScreen(GameWorld worldIn) {
-		super();
 		world = worldIn;
+		setDefaultDims();
 	}
 	
 	@Override
@@ -72,7 +74,10 @@ public class MapEditorScreen extends GameScreen {
 		toolHandler = new ToolHandler(this);
 		SoundEngine.stopAll();
 		firstPress = !Mouse.isButtonDown(0);
-		loadWorld();
+		
+		loading = true;
+		Runnable loader = () -> loadWorld();
+		new Thread(loader).start();
 		
 		settings.currentTool = EditorToolType.SELECTOR;
 	}
@@ -91,6 +96,11 @@ public class MapEditorScreen extends GameScreen {
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.vdgray);
 		mouseOver = isMouseOver();
+		
+		if (loading) {
+			drawStringC("Loading...!", midX, midY);
+			return;
+		}
 		
 		if (world == null || !world.isFileLoaded()) { drawStringC("Failed to load!", midX, midY); }
 		else {
@@ -147,16 +157,18 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	private void updateDrawDist() {
-		double w = world.getTileWidth() * world.getZoom();
-		double h = world.getTileHeight() * world.getZoom();
-		
-		double dw = ((QoT.getWidth() - sidePanel.width) / w) / 2.0;
-		double dh = ((QoT.getHeight() - topHeader.height) / h) / 2.0;
-		
-		drawDistX = (int) Math.ceil(dw);
-		drawDistY = (int) Math.ceil(dh);
-		
-		updateMap = true;
+		if (world != null) {
+			double w = world.getTileWidth() * world.getZoom();
+			double h = world.getTileHeight() * world.getZoom();
+			
+			double dw = ((QoT.getWidth() - sidePanel.width) / w) / 2.0;
+			double dh = ((QoT.getHeight() - topHeader.height) / h) / 2.0;
+			
+			drawDistX = (int) Math.ceil(dw);
+			drawDistY = (int) Math.ceil(dh);
+			
+			updateMap = true;
+		}
 	}
 	
 	@Override
@@ -228,7 +240,7 @@ public class MapEditorScreen extends GameScreen {
 		
 		if (mapFile != null) {
 			double oldZoom = 1;
-			if (world != null) { oldZoom = world.getZoom(); }
+			if (world != null) oldZoom = world.getZoom();
 			world = new GameWorld(mapFile);
 			world.setZoom(oldZoom);
 		}
@@ -243,8 +255,10 @@ public class MapEditorScreen extends GameScreen {
 			midDrawX = world.getWidth() / 2;
 			midDrawY = world.getHeight() / 2;
 			drawDistX = (int) (world.getWidth() / getZoom());
-			drawDistY =(int) (world.getHeight() / getZoom());
+			drawDistY = (int) (world.getHeight() / getZoom());
 		}
+		
+		loading = false;
 	}
 	
 	public void saveWorld() {
@@ -284,7 +298,7 @@ public class MapEditorScreen extends GameScreen {
 					if (midDrawY < drawDistY) { drawPosY += (drawDistY - midDrawY) * h; }
 					
 					if (t.hasTexture()) {
-						drawTexture(drawPosX + (ix * w), drawPosY + (jy * h), w, h, t.getTexture());
+						drawTexture(t.getTexture(), drawPosX + (ix * w), drawPosY + (jy * h), w, h);
 					}
 				}
 			}

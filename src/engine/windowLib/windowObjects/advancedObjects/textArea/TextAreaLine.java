@@ -1,6 +1,5 @@
 package engine.windowLib.windowObjects.advancedObjects.textArea;
 
-import engine.QoT;
 import engine.input.Keyboard;
 import engine.input.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
@@ -19,6 +18,7 @@ import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
 import eutil.misc.ScreenLocation;
+import main.QoT;
 
 //Author: Hunter Bragg
 
@@ -78,7 +78,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		if (checkDraw()) {
+		if (willBeDrawn()) {
 			updateBeforeNextDraw(mXIn, mYIn);
 			updateValues();
 			//boolean current = parentTextArea.getCurrentLine() == this;
@@ -93,7 +93,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 			}
 			
 			for (IWindowObject o : windowObjects) {
-				if (o.checkDraw()) {
+				if (o.willBeDrawn()) {
 					//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		        	o.drawObject(mXIn, mYIn);
 				}
@@ -351,6 +351,11 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	//TextAreaLine Setters
 	//--------------------
 	
+	public void setParentTextArea(WindowTextArea<E> area) {
+		setParent(area);
+		parentTextArea = area;
+	}
+	
 	public TextAreaLine<E> setLinkText(String textIn) { return setLinkText(textIn, null, false); }
 	public TextAreaLine<E> setLinkText(String textIn, Object linkObjectIn) { return setLinkText(textIn, linkObjectIn, false); }
 	public TextAreaLine<E> setLinkText(String textIn, boolean isWebLink) { return setLinkText(textIn, null, isWebLink); }
@@ -445,9 +450,19 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		int selEnd = selectionEnd;
 		boolean hasSel = (selStart != selEnd);
 		
+		/*
+		if (this.getLineNumber() == 1) {
+			double x = midX;
+			double y = midY;
+			//System.out.println(startX + " : " + startY);
+			this.drawCircle(midX, midY, 1, 3, EColors.skyblue);
+			this.drawCircle(midX, midY, 50, 50, EColors.skyblue);
+		}
+		*/
+		
 		//draw text
-		if (drawShadowed) { drawStringS(text, startX + parentTextArea.getLineNumberOffset(), startY + 5, textColor); }
-		else { drawString(text, startX + parentTextArea.getLineNumberOffset(), startY + 5, textColor); }
+		if (drawShadowed) drawStringS(text, startX + parentTextArea.getLineNumberOffset(), startY + 5, textColor);
+		else drawString(text, startX + parentTextArea.getLineNumberOffset(), startY + 5, textColor);
 		
 		if (lineEquals && parentTextArea.isEditable()) {
 			if (hasSel) { //draw highlight

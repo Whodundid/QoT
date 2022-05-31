@@ -1,10 +1,8 @@
 package engine.screens;
 
-import engine.QoT;
 import engine.input.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.screens.screenUtil.GameScreen;
-import engine.settings.QoT_Settings;
 import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowCheckBox;
@@ -13,6 +11,8 @@ import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.NumberUtil;
+import main.QoT;
+import main.settings.QoT_Settings;
 
 public class OptionsScreen extends GameScreen {
 	
@@ -22,6 +22,11 @@ public class OptionsScreen extends GameScreen {
 	WindowTextField upsInput;
 	WindowCheckBox vSync;
 	private boolean changed = false;
+	
+	public OptionsScreen() {
+		super();
+		aliases.add("options", "settings", "controls");
+	}
 	
 	@Override public void initScreen() {}
 	

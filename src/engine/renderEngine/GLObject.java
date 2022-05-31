@@ -1,19 +1,18 @@
 package engine.renderEngine;
 
-import engine.QoT;
 import engine.renderEngine.fontRenderer.EStringBuilder;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.colors.EColors;
 import eutil.math.EDimension;
 import eutil.misc.Rotation;
+import main.QoT;
 
 import org.lwjgl.opengl.GL11;
 
 /** The base underlying object that all window objects are drawn from. */
 public abstract class GLObject {
 	
-	//protected WindowSize res = QoT.getWindowSize();
 	protected float glZLevel;
 	
 	//--------------------------------------
@@ -289,13 +288,13 @@ public abstract class GLObject {
 	}
 	
 	/** Draws a texture with the given dimensions. */
-	public static void drawTexture(double x, double y, double w, double h) { drawTexture(x, y, w, h, TextureSystem.getInstance().getBoundTexture(), false, Rotation.UP, 0xffffffff); }
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex) { drawTexture(x, y, w, h, tex, false, Rotation.UP, 0xffffffff); }
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, Rotation rotation) { drawTexture(x, y, w, h, tex, false, rotation, 0xffffffff); }
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip) { drawTexture(x, y, w, h, tex, flip, Rotation.UP, 0xffffffff); }
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip, int color) { drawTexture(x, y, w, h, tex, flip, Rotation.UP, color); }
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip, Rotation rotation) { drawTexture(x, y, w, h, tex, flip, rotation, 0xffffffff); }
-	public static void drawTexture(double x, double y, double w, double h, GameTexture tex, boolean flip, Rotation rotation, int color) {
+	public static void drawTexture(double x, double y, double w, double h) { drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, false, Rotation.UP, 0xffffffff); }
+	public static void drawTexture(GameTexture tex, double x, double y, double w, double h) { drawTexture(tex, x, y, w, h, false, Rotation.UP, 0xffffffff); }
+	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, Rotation rotation) { drawTexture(tex, x, y, w, h, false, rotation, 0xffffffff); }
+	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, boolean flip) { drawTexture(tex, x, y, w, h, flip, Rotation.UP, 0xffffffff); }
+	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, boolean flip, int color) { drawTexture(tex, x, y, w, h, flip, Rotation.UP, color); }
+	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, boolean flip, Rotation rotation) { drawTexture(tex, x, y, w, h, flip, rotation, 0xffffffff); }
+	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, boolean flip, Rotation rotation, int color) {
 		//Ensure the texture can actually be drawn
 		if (tex != null && tex.hasBeenRegistered()) {
 			
@@ -314,21 +313,21 @@ public abstract class GLObject {
 	}
 	
 	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH) {
-		drawTexture(x, y, w, h, tX, tY, tW, tH, TextureSystem.getInstance().getBoundTexture(), 0xffffffff);
-	}
-	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, GameTexture imageIn) {
-		drawTexture(x, y, w, h, tX, tY, tW, tH, imageIn, 0xffffffff);
+		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, 0xffffffff);
 	}
 	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, EColors color) {
-		drawTexture(x, y, w, h, tX, tY, tW, tH, TextureSystem.getInstance().getBoundTexture(), color.intVal);
+		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, color.intVal);
 	}
 	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color) {
-		drawTexture(x, y, w, h, tX, tY, tW, tH, TextureSystem.getInstance().getBoundTexture(), color);
+		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, color);
 	}
-	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, GameTexture imageIn, EColors color) {
-		drawTexture(x, y, w, h, tX, tY, tW, tH, imageIn, color.intVal);
+	public static void drawTexture(GameTexture imageIn, double x, double y, double w, double h, double tX, double tY, double tW, double tH) {
+		drawTexture(imageIn, x, y, w, h, tX, tY, tW, tH, 0xffffffff);
 	}
-	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, GameTexture imageIn, int color) {
+	public static void drawTexture(GameTexture imageIn, double x, double y, double w, double h, double tX, double tY, double tW, double tH, EColors color) {
+		drawTexture(imageIn, x, y, w, h, tX, tY, tW, tH, color.intVal);
+	}
+	public static void drawTexture(GameTexture imageIn, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color) {
 		if (imageIn != null) {
 			
 			double xVal = tX / (double) imageIn.getWidth();
@@ -377,7 +376,7 @@ public abstract class GLObject {
 		int h = (int) ((endY - startY) * scale);
 		int x = (int) (startX * scale);
 		int y = useGlY ? (int) (startY * scale) : (int) (QoT.getWindowSize().getHeight() - (startY * scale) - h);
-		if (w >= 0 && h >= 0) { GL11.glScissor(x, y, w, h); }
+		if (w >= 0 && h >= 0) GL11.glScissor(x, y, w, h);
 	}
 	
 	/** Stops scissoring an area. */
@@ -423,15 +422,15 @@ public abstract class GLObject {
 	/** Starts drawing a shape with a given draw mode. */
 	private static void begin(GLModes mode) {
 		switch (mode) {
-		case POINTS: GL11.glBegin(GL11.GL_POINTS); break;
-		case LINES: GL11.glBegin(GL11.GL_LINES); break;
-		case LINE_STRIP: GL11.glBegin(GL11.GL_LINE_STRIP); break;
-		case LINE_LOOP: GL11.glBegin(GL11.GL_LINE_LOOP); break;
-		case TRIANGLES: GL11.glBegin(GL11.GL_TRIANGLES); break;
-		case TRIANGLE_STRIP: GL11.glBegin(GL11.GL_TRIANGLE_STRIP); break;
-		case TRIANGLE_FAN: GL11.glBegin(GL11.GL_TRIANGLE_FAN); break;
-		case QUADS: GL11.glBegin(GL11.GL_QUADS); break;
-		case QUAD_STRIP: GL11.glBegin(GL11.GL_QUAD_STRIP); break;
+		case POINTS: 			GL11.glBegin(GL11.GL_POINTS); 			break;
+		case LINES: 			GL11.glBegin(GL11.GL_LINES); 			break;
+		case LINE_STRIP: 		GL11.glBegin(GL11.GL_LINE_STRIP);		break;
+		case LINE_LOOP: 		GL11.glBegin(GL11.GL_LINE_LOOP); 		break;
+		case TRIANGLES: 		GL11.glBegin(GL11.GL_TRIANGLES); 		break;
+		case TRIANGLE_STRIP:	GL11.glBegin(GL11.GL_TRIANGLE_STRIP); 	break;
+		case TRIANGLE_FAN: 		GL11.glBegin(GL11.GL_TRIANGLE_FAN); 	break;
+		case QUADS: 			GL11.glBegin(GL11.GL_QUADS); 			break;
+		case QUAD_STRIP: 		GL11.glBegin(GL11.GL_QUAD_STRIP); 		break;
 		}
 	}
 	
@@ -496,10 +495,8 @@ public abstract class GLObject {
 		}
 	}
 	
-	
 	/** Sets the width of the a drawn line when drawing lines. */
 	private static void lineWidth(int widthIn) { GL11.glLineWidth(widthIn); }
-	
 	
 	/** Concludes the drawing. */
 	private static void draw() { GL11.glEnd(); }

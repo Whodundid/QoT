@@ -1,9 +1,9 @@
 package engine.renderEngine.fontRenderer;
 
-import engine.QoT;
 import engine.renderEngine.GLObject;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
+import main.QoT;
 
 import org.lwjgl.opengl.GL11;
 
@@ -107,7 +107,7 @@ public class FontRenderer {
 		int h = currentFont.getHeight();
 		double sw = currentFont.getScaleW();
 		double sh = currentFont.getScaleH();
-		GLObject.drawTexture(posX, posY, w * sw, h * sh, tX, tY, w, h, currentFont.getFontTexture(), color);
+		GLObject.drawTexture(currentFont.getFontTexture(), posX, posY, w * sw, h * sh, tX, tY, w, h, color);
 		GL11.glPopMatrix();
 	}
 	

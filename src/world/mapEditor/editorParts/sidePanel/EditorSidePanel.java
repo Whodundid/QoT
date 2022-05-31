@@ -1,11 +1,11 @@
 package world.mapEditor.editorParts.sidePanel;
 
-import engine.QoT;
 import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.math.EDimension;
+import main.QoT;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.editorParts.minimap.EditorMiniMap;
 import world.mapEditor.editorParts.sidePanel.toolPanels.assetTool.AssetSidePanel;

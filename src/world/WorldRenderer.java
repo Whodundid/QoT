@@ -1,7 +1,6 @@
 package world;
 
 import engine.GameTopRenderer;
-import engine.QoT;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -9,6 +8,7 @@ import eutil.math.NumberUtil;
 import eutil.misc.Rotation;
 import game.entities.Entity;
 import game.entities.Player;
+import main.QoT;
 import world.resources.WorldTile;
 
 import java.util.Comparator;
@@ -151,7 +151,7 @@ public class WorldRenderer extends EGui {
 					//drawString(t.getWorldX() + " : " + t.getWorldY() / w, 0, 50, EColors.white);
 					
 					if (t.hasTexture()) {
-						drawTexture(dX, dY, w, h, t.getTexture(), false, calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1));
+						drawTexture(t.getTexture(), dX, dY, w, h, false, calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1));
 					}
 				}
 			}
@@ -210,7 +210,7 @@ public class WorldRenderer extends EGui {
 					drawX = x + distX * w;
 					drawY = y + distY * h;
 					
-					drawTexture(drawX, drawY, e.width, e.height, e.getTexture(), flip, calcBrightness(e.worldX, e.worldY));
+					drawTexture(e.getTexture(), drawX, drawY, e.width, e.height, flip, calcBrightness(e.worldX, e.worldY));
 					drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
 				}
 				else {
@@ -223,7 +223,7 @@ public class WorldRenderer extends EGui {
 					drawY -= offsetY;
 					
 					if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
-						drawTexture(drawX, drawY, e.width, e.height, e.getTexture(), flip, calcBrightness(e.worldX, e.worldY));
+						drawTexture(e.getTexture(), drawX, drawY, e.width, e.height, flip, calcBrightness(e.worldX, e.worldY));
 						drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
 					}
 				}

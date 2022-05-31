@@ -1,11 +1,11 @@
 package engine.terminal.terminalCommand.commands.game;
 
-import engine.QoT;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import main.QoT;
 
 public class TPS_CMD extends TerminalCommand {
 	

@@ -1,13 +1,13 @@
 package world;
 
-import engine.QoT;
 import engine.renderEngine.textureSystem.GameTexture;
-import engine.settings.QoT_Settings;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import eutil.misc.Direction;
 import game.doodads.PlayerSpawnPosition;
 import game.entities.Entity;
+import main.QoT;
+import main.settings.QoT_Settings;
 
 import java.awt.Point;
 import java.io.File;

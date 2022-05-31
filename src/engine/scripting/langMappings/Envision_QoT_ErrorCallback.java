@@ -1,9 +1,9 @@
 package engine.scripting.langMappings;
 
-import engine.QoT;
 import engine.terminal.window.ETerminal;
 import envision.EnvisionErrorCallback;
 import envision.exceptions.EnvisionError;
+import main.QoT;
 
 public class Envision_QoT_ErrorCallback extends EnvisionErrorCallback {
 

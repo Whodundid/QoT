@@ -2,7 +2,7 @@ package engine.windowLib.windowObjects.advancedObjects.textArea;
 
 import engine.input.Mouse;
 import engine.renderEngine.GLSettings;
-import engine.windowLib.windowObjects.advancedObjects.scrollList.WindowScrollList;
+import engine.windowLib.windowObjects.advancedObjects.WindowScrollList;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
@@ -63,7 +63,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 		
 		//int scale = 1;//res.getScaleFactor();
 		try {
-			if (checkDraw() && height > (isHScrollDrawn() ? 5 : 2) && width > (isVScrollDrawn() ? 5 : 2)) {
+			if (willBeDrawn() && height > (isHScrollDrawn() ? 5 : 2) && width > (isVScrollDrawn() ? 5 : 2)) {
 				GLSettings.pushMatrix();
 				GLSettings.enableBlend();
 				
@@ -82,8 +82,8 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 					
 					//only draw the objects that are actually in the viewable area
 					for (IWindowObject o : drawnListObjects) {
-						if (o.checkDraw()) {
-							if (!o.hasFirstDraw()) { o.onFirstDraw(); }
+						if (o.willBeDrawn()) {
+							if (!o.hasFirstDraw()) o.onFirstDraw();
 							GLSettings.fullBright();
 							o.drawObject(mXIn, mYIn);
 						}
@@ -103,13 +103,13 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				}
 				endScissor();
 				
-				if (isVScrollDrawn()) { drawRect(endX - vScroll.width - 2, startY + 1, endX - 1, endY - 1, borderColor); }
-				if (isHScrollDrawn()) { drawRect(startX + 1, endY - hScroll.height - 2, endX - 1, endY - 1, borderColor); }
+				if (isVScrollDrawn()) drawRect(endX - vScroll.width - 2, startY + 1, endX - 1, endY - 1, borderColor);
+				if (isHScrollDrawn()) drawRect(startX + 1, endY - hScroll.height - 2, endX - 1, endY - 1, borderColor);
 				
 				//draw non list contents as normal (non scissored)
 				for (IWindowObject o : windowObjects) {
-					if (o.checkDraw() && listContents.notContains(o)) {
-						if (!o.hasFirstDraw()) { o.onFirstDraw(); }
+					if (o.willBeDrawn() && listContents.notContains(o)) {
+						if (!o.hasFirstDraw()) o.onFirstDraw();
 						GLSettings.fullBright();
 	    	        	o.drawObject(mXIn, mYIn);
 	    			}
@@ -118,7 +118,9 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				GLSettings.popMatrix();
 			}
 		}
-		catch (Exception e) { e.printStackTrace(); }
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -160,7 +162,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	//override to prevent cursor updates
 	@Override
 	public void updateCursorImage() {
-		if (!isEditable()) { super.updateCursorImage(); }
+		if (!isEditable()) super.updateCursorImage();
 	}
 	
 	@Override
@@ -190,6 +192,16 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	//WindowTextArea Methods
 	//----------------------
 	
+	public TextAreaLine<E> createTextLine() { return createTextLine("", EColors.white, null); }
+	public TextAreaLine<E> createTextLine(String textIn) { return createTextLine(textIn, EColors.white, null); }
+	public TextAreaLine<E> createTextLine(String textIn, EColors colorIn) { return createTextLine(textIn, colorIn.intVal, null); }
+	public TextAreaLine<E> createTextLine(String textIn, int colorIn) { return createTextLine(textIn, colorIn, null); }
+	public TextAreaLine<E> createTextLine(String textIn, EColors colorIn, E objectIn) { return createTextLine(textIn, colorIn.intVal, objectIn); }
+	public TextAreaLine<E> createTextLine(String textIn, int colorIn, E objectIn) {
+		var l = new TextAreaLine(this, textIn, colorIn, objectIn, 0);
+		return l;
+	}
+	
 	public TextAreaLine<E> addTextLine() { return addTextLine("", EColors.white, null, false); }
 	public TextAreaLine<E> addTextLine(boolean moveDown) { return addTextLine("", EColors.white, null, moveDown); }
 	public TextAreaLine<E> addTextLine(String textIn) { return addTextLine(textIn, EColors.white, null, false); }
@@ -199,7 +211,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	public TextAreaLine<E> addTextLine(String textIn, int colorIn, E objectIn) { return addTextLine(textIn, colorIn, objectIn, false); }
 	public TextAreaLine<E> addTextLine(String textIn, EColors colorIn, E objectIn, boolean moveDown) { return addTextLine(textIn, colorIn.intVal, objectIn, moveDown); }
 	public TextAreaLine<E> addTextLine(String textIn, int colorIn, E objectIn, boolean moveDown) {
-		return addTextLine(new TextAreaLine(this, textIn, colorIn, objectIn, textDocument.size()), 0, moveDown);
+		return addTextLine(createTextLine(textIn, colorIn, objectIn), 0, moveDown);
 	}
 	
 	public TextAreaLine<E> addTextLine(TextAreaLine<E> lineIn) { return addTextLine(lineIn, 0, false); }
@@ -210,6 +222,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 		lineIn.setDimensions(3, (textDocument.size() * 24) + offset, getStringWidth(lineIn.getText()), 24);
 		textDocument.add(lineIn);
 		addObjectToList(lineIn);
+		
 		fitItemsInList(3 + getLineNumberOffset(), 5);
 		updateVisuals();
 		lineIn.setLineNumber(textDocument.size());

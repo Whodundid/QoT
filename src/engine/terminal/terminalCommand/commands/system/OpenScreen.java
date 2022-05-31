@@ -1,13 +1,12 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.QoT;
 import engine.screens.screenUtil.GameScreen;
+import engine.screens.screenUtil.ScreenRepository;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
-import engine.util.ClassFinder;
 import eutil.datatypes.EArrayList;
-import eutil.reflection.EModifier;
+import main.QoT;
 
 //Author: Hunter Bragg
 
@@ -33,13 +32,14 @@ public class OpenScreen extends TerminalCommand {
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			if (args.getFirst().equals("null")) {
+				if (QoT.getWorld() != null) QoT.loadWorld(null);
 				QoT.displayScreen(null);
 			}
 			else {
-				GameScreen s = findScreen(args.getFirst().toLowerCase());
+				GameScreen s = ScreenRepository.getScreen(args.getFirst().toLowerCase());
 				if (s == null) termIn.error("Unrecognized screen name!");
 				else {
-					System.out.println("THE SCREEN: " + s);
+					if (QoT.getWorld() != null) QoT.loadWorld(null);
 					QoT.displayScreen(s);
 				}
 			}
@@ -50,24 +50,4 @@ public class OpenScreen extends TerminalCommand {
 		}
 	}
 	
-	private GameScreen findScreen(String name) {
-		String dir = "engine.screens";
-		
-		EArrayList<Class<GameScreen>> screenClasses = ClassFinder.findClassesOfType(dir, GameScreen.class);
-		
-		for (Class<GameScreen> c : screenClasses) {
-			EModifier m = EModifier.of(c.getModifiers());
-			if (m.isPublic() && !m.isAbstract()) {
-				try {
-					if (c.getConstructor() != null && c.getSimpleName().equalsIgnoreCase(name)) {
-						return c.getConstructor().newInstance();
-					}
-				}
-				catch (NoSuchMethodException e) {}
-				catch (Exception e) { e.printStackTrace(); break; }
-			}
-		}
-		
-		return null;
-	}
 }

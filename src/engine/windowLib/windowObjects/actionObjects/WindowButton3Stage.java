@@ -21,7 +21,7 @@ public class WindowButton3Stage<E> extends WindowButton<E> {
 	
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
-		if (enabled && checkDraw()) {
+		if (enabled && willBeDrawn()) {
 			pressedButton = button;
 			if (runActionOnPress) { onPress(button); }
 			else if (button == 0 || (button == 1 && acceptRightClicks)) {

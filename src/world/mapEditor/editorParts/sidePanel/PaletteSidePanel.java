@@ -36,11 +36,11 @@ public abstract class PaletteSidePanel extends SidePanel {
 		EditorItem primary = editor.getSettings().getPrimaryPalette();
 		EditorItem secondary = editor.getSettings().getSecondaryPalette();
 		
-		if (primary != null) { drawTexture(psx, psy, pw, ph, primary.getTexture()); }
+		if (primary != null) { drawTexture(primary.getTexture(), psx, psy, pw, ph); }
 		else drawRect(psx, psy, pex, pey, EColors.mgray);
 		drawHRect(psx, psy, pex, pey, 1, EColors.black);
 		
-		if (secondary != null) { drawTexture(pex + 10, psy, pw, ph, secondary.getTexture()); }
+		if (secondary != null) { drawTexture(secondary.getTexture(), pex + 10, psy, pw, ph); }
 		else drawRect(pex + 10, psy, pex + 10 + pw, pey, EColors.dgray);
 		drawHRect(pex + 10, psy, pex + 10 + pw, pey, 1, EColors.black);
 		

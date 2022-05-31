@@ -5,12 +5,13 @@ import engine.input.Mouse;
 import engine.renderEngine.GLObject;
 import engine.renderEngine.GLSettings;
 import engine.renderEngine.fontRenderer.FontRenderer;
-import engine.settings.QoT_Settings;
 import engine.terminal.window.ETerminal;
 import engine.windowLib.windowTypes.TopWindowParent;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.math.EDimension;
+import main.QoT;
+import main.settings.QoT_Settings;
 
 /** The renderer that is overlaid onto every other one. (Need a better name). */
 public class GameTopRenderer<E> extends TopWindowParent<E> {
@@ -52,7 +53,7 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 			//draw all child objects
 			for (IWindowObject<?> o : windowObjects) {
 				//only draw if the object is actually visibile
-				if (!o.checkDraw() || o.isHidden()) continue;
+				if (!o.willBeDrawn() || o.isHidden()) continue;
 				boolean draw = true;
 				
 				if (o instanceof WindowParent<?> wp) {
@@ -110,14 +111,14 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 		//debug terminal
 		if (action == 1 && Keyboard.isAltDown() && keyCode == Keyboard.KEY_TILDE) {
 			if (QoT.currentScreen != null) {
-				if (!isWindowOpen(ETerminal.class)) {
+				if (!isTerminalOpen()) {
 					displayWindow(new ETerminal());
 					setFocused(true);
 				}
 				else if (!hasFocus()) {
 					setFocused(true);
-					ETerminal term = (ETerminal) getWindowInstance(ETerminal.class);
-					if (term != null) { term.requestFocus(); }
+					ETerminal term = getTerminalInstance();
+					if (term != null) term.requestFocus();
 				}
 			}
 			else {

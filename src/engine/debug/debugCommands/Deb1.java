@@ -1,16 +1,21 @@
 package engine.debug.debugCommands;
 
-import engine.QoT;
 import engine.screens.MainMenuScreen;
-import engine.screens.TestScreen;
+import engine.screens.character.CharacterScreen;
 import engine.terminal.window.ETerminal;
+import game.entities.Player;
+import main.QoT;
 
 @SuppressWarnings("unused")
 public class Deb1 extends DebugCommand {
 
 	@Override
 	public void run(ETerminal termIn, Object... args) {
-		QoT.displayScreen(new TestScreen(), new MainMenuScreen());
+		Player p = new Player();
+		System.out.println(p.getTexture().getWidth());
+		CharacterScreen charScreen = new CharacterScreen(p);
+		
+		QoT.displayScreen(charScreen, new MainMenuScreen());
 	}
 
 }

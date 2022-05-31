@@ -1,7 +1,6 @@
 package engine.windowLib;
 
 import assets.textures.CursorTextures;
-import engine.QoT;
 import engine.input.Mouse;
 import engine.util.CursorHelper;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
@@ -25,6 +24,7 @@ import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.BoxList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
+import main.QoT;
 
 //Author: Hunter Bragg
 
@@ -61,7 +61,7 @@ public class StaticWindowObject extends EGui {
 	//main draw
 	public static void updateCursorImage(IWindowObject<?> obj) {
 		//make sure that the window isn't maximized
-		if (obj instanceof IWindowParent && ((IWindowParent) obj).getMaximizedPosition() == ScreenLocation.CENTER) {
+		if (obj instanceof IWindowParent p && p.getMaximizedPosition() == ScreenLocation.TOP) {
 			CursorHelper.reset();
 			return;
 		}
@@ -102,18 +102,20 @@ public class StaticWindowObject extends EGui {
 			
 			drawRect(sX, sY, sX + strWidth + 10, sY + 16, EColors.black);
 			drawRect(sX + 1, sY + 1, eX - 1, eY - 1, EColors.steel);
-			drawStringWithShadow(hoverText, sX + 5, sY + 4, textColor);
+			drawStringS(hoverText, sX + 5, sY + 4, textColor);
 		}
 	}
 	
 	//size
 	/** Returns true if the object has an EGuiHeader. */
-	public static boolean hasHeader(IWindowObject<?> obj) { return getHeader(obj) != null; }
+	public static boolean hasHeader(IWindowObject<?> obj) {
+		return getHeader(obj) != null;
+	}
 	
 	/** Returns this objects WindowHeader, if there is one. */
 	public static WindowHeader getHeader(IWindowObject<?> obj) {
 		for (IWindowObject<?> o : obj.getCombinedObjects()) {
-			if (o instanceof WindowHeader<?>) { return (WindowHeader<?>) o; }
+			if (o instanceof WindowHeader<?> h) return h;
 		}
 		return null;
 	}
@@ -204,7 +206,8 @@ public class StaticWindowObject extends EGui {
 			
 			//(lazy approach) remake all the children based on the resized dimensions
 			obj.reInitObjects();
-			if (obj.getTopParent() != null) { obj.getTopParent().setFocusedObject(obj); }
+			var top = obj.getTopParent();
+			if (top != null) top.setFocusedObject(obj);
 		}
 	}
 	
@@ -218,10 +221,10 @@ public class StaticWindowObject extends EGui {
 				//get all of the children in the object that aren't locked in place
 				for (IWindowObject<?> o : EArrayList.combineLists(obj.getObjects(), obj.getAddingObjects())) {
 					if (o.isMoveable()) { //only move the child if it's not locked in place
-						if (o instanceof WindowParent<?>) { //only move the window if it moves with the parent
-							if (((WindowParent<?>) o).movesWithParent()) { o.move(newX, newY); }
+						if (o instanceof WindowParent<?> p) { //only move the window if it moves with the parent
+							if (p.movesWithParent()) o.move(newX, newY);
 						}
-						else { o.move(newX, newY); }
+						else o.move(newX, newY);
 					}
 				}
 				EDimension d = obj.getDimensions();
@@ -281,15 +284,15 @@ public class StaticWindowObject extends EGui {
 	/** Returns true if the given object is a child of the specified parent. */
 	public static boolean isChildOfObject(IWindowObject<?> child, IWindowObject<?> parent) {
 		//prevent checking if there is nothing to check against
-		if (parent == null) { return false; }
+		if (parent == null) return false;
 		
 		IWindowObject<?> parentObj = child.getParent();
 		
 		//recursively check through the object's parent lineage to see if that parent is the possible parent
 		while (parentObj != null) {
-			if (parentObj == parent) { return true; }
+			if (parentObj == parent) return true;
 			//check for infinite loops
-			if (parentObj == parentObj.getParent()) { break; }
+			if (parentObj == parentObj.getParent()) break;
 			parentObj = parentObj.getParent();
 		}
 		
@@ -345,7 +348,7 @@ public class StaticWindowObject extends EGui {
 		EArrayList<IWindowObject<?>> workList = new EArrayList();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
-		obj.getObjects().forEach(o -> { foundObjs.add(o); if (!o.getCombinedObjects().isEmpty()) { objsWithChildren.add(o); } });
+		obj.getObjects().forEach(o -> { foundObjs.add(o); if (!o.getCombinedObjects().isEmpty()) objsWithChildren.add(o); });
 		//load the workList with every child found on each object
 		objsWithChildren.forEach(c -> workList.addAll(c.getCombinedObjects()));
 		
@@ -369,7 +372,7 @@ public class StaticWindowObject extends EGui {
 	/** Returns a list of all children currently under the cursor. */
 	public static EArrayList<IWindowObject<?>> getAllChildrenUnderMouse(IWindowObject<?> obj, int mX, int mY) {
 		//only add objects if they are visible and if the cursor is over them.
-		return obj.getAllChildren().filterNull(o -> o.checkDraw() && o.isMouseInside());
+		return obj.getAllChildren().filterNull(o -> o.willBeDrawn() && o.isMouseInside());
 	}
 	
 	//parents
@@ -378,21 +381,12 @@ public class StaticWindowObject extends EGui {
 		IWindowObject<?> parentObj = obj.getParent();
 		//recursively check through the object's parent lineage to see if that parent is a topParentdw
 		while (parentObj != null) {
-			if (parentObj instanceof ITopParent<?>) {
-				//System.out.println("returning cast of getTopParent");
-				return (ITopParent<?>) parentObj;
-			}
-			
+			if (parentObj instanceof ITopParent<?> top) return top;
 			//break if the parent is itself
-			if (parentObj == parentObj.getParent()) {
-				//System.out.println("breaking getTopParent chain");
-				break;
-			}
-			
+			if (parentObj == parentObj.getParent()) break;
 			parentObj = parentObj.getParent();
 		}
-		
-		return obj instanceof ITopParent<?> ? (ITopParent<?>) obj : null;
+		return obj instanceof ITopParent<?> t ? t : null;
 	}
 	
 	/** Returns the parent window for the specified object, if there is one. */
@@ -400,15 +394,12 @@ public class StaticWindowObject extends EGui {
 		IWindowObject<?> parentObj = obj.getParent();
 		//recursively check through the object's parent lineage to see if that parent is a window
 		while (parentObj != null && !(parentObj instanceof ITopParent<?>)) {
-			if (parentObj instanceof IWindowParent<?>) { return (IWindowParent<?>) parentObj; }
-			
+			if (parentObj instanceof IWindowParent<?> p) return p;
 			//break if the parent is itself
-			if (parentObj == parentObj.getParent()) { break; }
-			
+			if (parentObj == parentObj.getParent()) break;
 			parentObj = parentObj.getParent();
 		}
-		
-		return obj instanceof IWindowParent<?> ? (IWindowParent<?>) obj : null;
+		return obj instanceof IWindowParent<?> p ? p : null;
 	}
 	
 	//mouse checks
@@ -419,22 +410,22 @@ public class StaticWindowObject extends EGui {
 		EDimension d = objIn.getDimensions();
 		double rStartY = objIn.hasHeader() ? objIn.getHeader().startY : d.startY;
 		if (mX >= d.startX - 5 && mX <= d.endX + 5 && mY >= rStartY - 5 && mY <= d.endY + 4) {
-			if (mX >= d.startX - 5 && mX <= d.startX) { left = true; }
-			if (mX >= d.endX - 4 && mX <= d.endX + 5) { right = true; }
-			if (mY >= rStartY - 6 && mY <= rStartY) { top = true; }
-			if (mY >= d.endY - 4 && mY <= d.endY + 4) { bottom = true; }
+			if (mX >= d.startX - 5 && mX <= d.startX) left = true;
+			if (mX >= d.endX - 4 && mX <= d.endX + 5) right = true;
+			if (mY >= rStartY - 6 && mY <= rStartY) top = true;
+			if (mY >= d.endY - 4 && mY <= d.endY + 4) bottom = true;
 			if (left) {
-				if (top) { return ScreenLocation.TOP_LEFT; }
-				else if (bottom) { return ScreenLocation.BOT_LEFT; }
-				else { return ScreenLocation.LEFT; }
+				if (top) return ScreenLocation.TOP_LEFT;
+				else if (bottom) return ScreenLocation.BOT_LEFT;
+				else return ScreenLocation.LEFT;
 			}
 			else if (right) {
-				if (top) { return ScreenLocation.TOP_RIGHT; }
-				else if (bottom) { return ScreenLocation.BOT_RIGHT; }
-				else { return ScreenLocation.RIGHT; }
+				if (top) return ScreenLocation.TOP_RIGHT;
+				else if (bottom) return ScreenLocation.BOT_RIGHT;
+				else return ScreenLocation.RIGHT;
 			} 
-			else if (top) { return ScreenLocation.TOP; }
-			else if (bottom) { return ScreenLocation.BOT; }
+			else if (top) return ScreenLocation.TOP;
+			else if (bottom) return ScreenLocation.BOT;
 		}
 		return ScreenLocation.OUT;
 	}
@@ -466,8 +457,8 @@ public class StaticWindowObject extends EGui {
 	public static void mousePressed(IWindowObject<?> objIn, int mX, int mY, int button) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.PRESSED));
 		IWindowParent<?> p = objIn.getWindowParent();
-		if (p != null) { p.bringToFront(); }
-		if (!objIn.hasFocus() && objIn.isMouseOver()) { objIn.requestFocus(); }
+		if (p != null) p.bringToFront();
+		if (!objIn.hasFocus() && objIn.isMouseOver()) objIn.requestFocus();
 		if (button == 0 && objIn.isResizeable() && !objIn.getEdgeSideMouseIsOn().equals(ScreenLocation.OUT)) {
 			objIn.getTopParent().setResizingDir(objIn.getEdgeSideMouseIsOn());
 			objIn.getTopParent().setModifyMousePos(mX, mY);
@@ -477,9 +468,10 @@ public class StaticWindowObject extends EGui {
 	
 	public static void mouseReleased(IWindowObject<?> objIn, int mX, int mY, int button) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.RELEASED));
-		if (objIn.getTopParent() != null) {
-			if (objIn.getTopParent().getDefaultFocusObject() != null) { objIn.getTopParent().getDefaultFocusObject().requestFocus(); }
-			if (objIn.getTopParent().getModifyType() == ObjectModifyType.Resize) { objIn.getTopParent().clearModifyingObject(); }
+		var top = objIn.getTopParent();
+		if (top != null) {
+			if (top.getDefaultFocusObject() != null) top.getDefaultFocusObject().requestFocus();
+			if (top.getModifyType() == ObjectModifyType.Resize) top.clearModifyingObject();
 		}
 	}
 	
@@ -487,7 +479,7 @@ public class StaticWindowObject extends EGui {
 	
 	public static void mouseScolled(IWindowObject<?> objIn, int mX, int mY, int change) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.SCROLLED));
-		objIn.getObjects().filterForEach(o -> o.isMouseInside() && o.checkDraw(), o -> o.mouseScrolled(change));
+		objIn.getObjects().filterForEach(o -> o.isMouseInside() && o.willBeDrawn(), o -> o.mouseScrolled(change));
 	}
 	
 	public static void keyPressed(IWindowObject<?> objIn, char typedChar, int keyCode) {

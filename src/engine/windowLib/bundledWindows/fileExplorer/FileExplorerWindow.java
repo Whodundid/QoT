@@ -1,11 +1,12 @@
 package engine.windowLib.bundledWindows.fileExplorer;
 
 import assets.textures.WindowTextures;
+import engine.input.Keyboard;
 import engine.windowLib.bundledWindows.TextEditorWindow;
 import engine.windowLib.bundledWindows.TextureDisplayer;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;
-import engine.windowLib.windowObjects.advancedObjects.scrollList.WindowScrollList;
+import engine.windowLib.windowObjects.advancedObjects.WindowScrollList;
 import engine.windowLib.windowTypes.ActionWindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
@@ -20,6 +21,8 @@ import java.io.File;
 public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	
 	private File curDir;
+	private File selectedFile;
+	private String titleToSet;
 	
 	private WindowButton backBtn, forwardBtn, fileUpBtn, refreshBtn;
 	private WindowTextField dirField, searchField;
@@ -29,10 +32,24 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	private EArrayList<FilePreview> order = new EArrayList();
 	private EArrayList<FilePreview> highlighted = new EArrayList();
 	
-	public FileExplorerWindow(IWindowObject<?> parent) { this(parent, System.getProperty("user.dir")); }
-	public FileExplorerWindow(IWindowObject<?> parent, String dirIn) {
+	private boolean selectMode = false;
+	
+	private String text;
+	private double vPos = 0;
+	private EArrayList<Integer> prevHighlight;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public FileExplorerWindow(IWindowObject<?> parent) { this(parent, System.getProperty("user.dir"), false); }
+	public FileExplorerWindow(IWindowObject<?> parent, String dirIn) { this(parent, new File(dirIn), false); }
+	public FileExplorerWindow(IWindowObject<?> parent, File dirIn) { this(parent, dirIn, false); }
+	public FileExplorerWindow(IWindowObject<?> parent, String dirIn, boolean selectModeIn) { this(parent, new File(dirIn), selectModeIn); }
+	public FileExplorerWindow(IWindowObject<?> parent, File dirIn, boolean selectModeIn) {
 		super(parent);
-		curDir = new File(dirIn);
+		curDir = dirIn;
+		selectMode = selectModeIn;
 	}
 	
 	@Override
@@ -47,6 +64,7 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	@Override
 	public void initObjects() {
 		defaultHeader();
+		if (titleToSet != null) header.setTitle(titleToSet);
 		
 		double bW = 32;
 		double topY = startY + 6;
@@ -55,11 +73,20 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		forwardBtn = new WindowButton(this, backBtn.endX + 6, topY, bW, bW);
 		fileUpBtn = new WindowButton(this, forwardBtn.endX + 6, topY, bW, bW);
 		
+		double cW = 160;
+		double cX = endX - 4 - cW;
+		double cY = endY - 4 - bW;
+		
+		if (selectMode) {
+			cancelBtn = new WindowButton(this, cX, cY, cW, bW, "Cancel");
+			selectBtn = new WindowButton(this, cX - 6 - cW, cY, cW, bW, "Select");
+		}
+		
 		backBtn.setTextures(WindowTextures.back, WindowTextures.back_sel);
 		forwardBtn.setTextures(WindowTextures.forward, WindowTextures.forward_sel);
 		fileUpBtn.setTextures(WindowTextures.file_up, WindowTextures.file_up_sel);
 		
-		double dirWidth = (endX - 7) - (fileUpBtn.endX + 12);
+		double dirWidth = (endX - 6) - (fileUpBtn.endX + 12);
 		dirField = new WindowTextField(this, fileUpBtn.endX + 12, topY, dirWidth, bW);
 		dirField.setMaxStringLength(1024);
 		dirField.setText("> " + curDir);
@@ -71,15 +98,37 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		forwardBtn.setHoverText("Forward");
 		fileUpBtn.setHoverText("File Up");
 		
-		double faH = (endY - 2) - (fileUpBtn.endY + 8);
+		double faH = (((selectMode) ? cY : endY) - 2) - (fileUpBtn.endY + 8);
 		fileArea = new WindowScrollList(this, startX + 2, fileUpBtn.endY + 8, width - 4, faH);
 		fileArea.setBackgroundColor(EColors.pdgray);
 		
 		addObject(backBtn, forwardBtn, fileUpBtn);
+		addObject(cancelBtn, selectBtn);
 		addObject(dirField);
 		addObject(fileArea);
 		
 		buildDir();
+	}
+	
+	@Override
+	public void preReInit() {
+		text = dirField.getText();
+		vPos = fileArea.getVScrollBar().getScrollPos();
+		prevHighlight = new EArrayList();
+		/*
+		for (var f : highlighted) {
+			System.out.println(f.getOrderPos());
+		}
+		System.out.println("NONONONONO");
+		*/
+		highlighted.map(f -> f.getOrderPos()).forEach(prevHighlight::add);
+	}
+	
+	@Override
+	public void postReInit() {
+		dirField.setText(text);
+		fileArea.getVScrollBar().setScrollPos(vPos);
+		prevHighlight.forEach(i -> order.get(i).setHighlighted(true));
 	}
 	
 	@Override
@@ -89,6 +138,10 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		drawLine(fileUpBtn.endX + 6, startY, fileUpBtn.endX + 6, backBtn.endY + 6, EColors.black);
 		drawLine(startX, backBtn.endY + 6, endX, backBtn.endY + 6, EColors.black);
 		
+		if (selectBtn != null) {
+			selectBtn.setEnabled(highlighted.hasOne());
+		}
+		
 		super.drawObject(mXIn, mYIn);
 	}
 	
@@ -96,14 +149,25 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	// Methods
 	//---------
 	
+	/**
+	 * Toggles between selection mode or regular explorer mode.
+	 * 
+	 * @param val True for selection mode
+	 */
+	public void setSelectionMode(boolean val) {
+		boolean prev = selectMode;
+		selectMode = val;
+		if (prev != val) reInitObjects();
+	}
+	
 	protected void selectFile(FilePreview f) {
-		if (this.actionReceiver != null) {
-			performAction(f.getFile());
-			close();
-		}
-		else {
-			openFile(f);
-		}
+		if (Keyboard.isCtrlDown() || Keyboard.isShiftDown()) return;
+		if (!highlighted.hasOne()) return;
+		if (actionReceiver == null) { openFile(f); return; }
+		
+		selectedFile = f.getFile();
+		performAction(f.getFile());
+		close();
 	}
 	
 	protected void openFile(FilePreview f) {
@@ -214,7 +278,7 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 			//highlight all within range
 			for (int i = low; i <= high; i++) {
 				var o = order.get(i);
-				highlighted.add(o);
+				highlighted.addIfNotContains(o);
 				o.setHighlighted(true);
 			}
 		}
@@ -230,11 +294,23 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		highlighted.clear();
 	}
 	
+	public File getSelectedFile() {
+		return selectedFile;
+	}
+	
+	public void setTitle(String title) {
+		if (isInit()) getHeader().setTitle(title);
+		else titleToSet = title;
+	}
+	
 	//----------------------------
 	
 	@Override
 	public void actionPerformed(IActionObject<?> object, Object... args) {
 		if (object == fileUpBtn) fileUp();
+		if (object == selectBtn) select();
+		if (object == cancelBtn) cancel();
+		
 		if (object == dirField) {
 			String txt = dirField.getText();
 			if (txt.startsWith("> ")) setDir(txt.substring(2));
@@ -246,15 +322,15 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	
 	private void back() {}
 	private void forward() {}
+	
 	private void fileUp() {
 		//System.out.println(curDir);
 		int index = StringUtil.findStartingIndex(curDir.toString(), "\\", true);
 		setDir(new File(curDir.toString().substring(0, index)));
 	}
-	private void refresh() {
-		setDir(curDir);
-	}
-	private void select() {}
-	private void cancel() {}
+	
+	private void refresh() { setDir(curDir); }
+	private void select() { if (highlighted.hasOne()) selectFile(highlighted.get(0)); }
+	private void cancel() { close(); }
 	
 }

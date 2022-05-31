@@ -4,7 +4,6 @@ import engine.scripting.langMappings.qot_package.methods.LoadWorld_ENV;
 import engine.scripting.langMappings.qot_package.methods.TermCall_ENV;
 import engine.scripting.langMappings.qot_package.methods.TermWriteln_ENV;
 import engine.scripting.langMappings.qot_package.objects.QoTWorldClass;
-import envision.interpreter.EnvisionInterpreter;
 import envision.packages.EnvisionLangPackage;
 
 public class Envision_QoT_Package extends EnvisionLangPackage {

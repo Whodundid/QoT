@@ -1,12 +1,12 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.QoT;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import eutil.strings.StringUtil;
+import main.QoT;
 
 //Author: Hunter Bragg
 

@@ -49,7 +49,7 @@ public abstract class TerminalCommand {
 	// Setters
 	//---------
 	
-	public TerminalCommand setModifiers(String... in) { modifiers = new EArrayList().add(in); return this; }
+	public TerminalCommand setModifiers(String... in) { modifiers = new EArrayList().addA(in); return this; }
 	public TerminalCommand setCategory(String in) { category = in; return this; }
 	public TerminalCommand setShouldRegister(boolean val) { shouldRegister = val; return this; }
 	
