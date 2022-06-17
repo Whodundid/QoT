@@ -1,9 +1,9 @@
 package world.dungeonBuilder;
 
 import eutil.misc.Direction;
+import game.worldTiles.WorldTile;
 import world.EntitySpawn;
 import world.GameWorld;
-import world.resources.WorldTile;
 
 /** A map manager which allows multiple builders to be able to add onto the same map object
  *  at the same time without overlap. */

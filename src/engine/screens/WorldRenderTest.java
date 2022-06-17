@@ -11,10 +11,10 @@ import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.entities.Entity;
 import game.entities.Player;
+import game.worldTiles.WorldTile;
 import main.QoT;
 import world.GameWorld;
 import world.mapEditor.NewMapCreatorScreen;
-import world.resources.WorldTile;
 
 import java.io.File;
 import java.util.Stack;

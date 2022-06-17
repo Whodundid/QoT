@@ -201,8 +201,6 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	@Override public boolean isHidden() { return hidden; }
 	@Override public boolean isAlwaysVisible() { return persistent; }
 	@Override public boolean isBoundaryEnforced() { return boundaryDimension != null; }
-	@Override public boolean isResizing() { ITopParent t = getTopParent(); return t.getModifyingObject() == this && t.getModifyType() == ObjectModifyType.Resize; }
-	@Override public boolean isMoving() { ITopParent t = getTopParent(); return t.getModifyingObject() == this && t.getModifyType() == ObjectModifyType.Move; }
 	@Override public boolean isAlwaysOnTop() { return alwaysOnTop; }
 	@Override public WindowObject<E> setEnabled(boolean val) { enabled = val; return this; }
 	@Override public WindowObject<E> setVisible(boolean val) { visible = val; return this; }

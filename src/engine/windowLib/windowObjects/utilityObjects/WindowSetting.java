@@ -13,9 +13,9 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	E object;
 	WindowLabel label;
 
-	//--------------------------
-	//WindowSetting Constructors
-	//--------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	public WindowSetting(IWindowObject parent, E objectIn, String title) { this(parent, objectIn, title, EColors.lgray.intVal); }
 	public WindowSetting(IWindowObject parent, E objectIn, String title, EColors colorIn) { this(parent, objectIn, title, colorIn.intVal); }
@@ -32,9 +32,9 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 		}
 	}
 	
-	//----------------------
-	//WindowObject Overrides
-	//----------------------
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void initObjects() {
@@ -47,9 +47,9 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 		return this;
 	}
 	
-	//----------------------
-	//ActionObject Overrides
-	//----------------------
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public WindowSetting setActionReceiver(IWindowObject objectIn) {
@@ -58,16 +58,16 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 		return this;
 	}
 	
-	//---------------------
-	//WindowSetting Getters
-	//---------------------
+	//---------
+	// Getters
+	//---------
 	
 	public E getObject() { return object; }
 	public WindowLabel getLabel() { return label; }
 	
-	//---------------------
-	//WindowSetting Setters
-	//---------------------
+	//---------
+	// Setters
+	//---------
 	
 	public WindowSetting setTitle(String title) { return EUtil.nullDoR(label, l -> l.setString(title), this); }
 	public WindowSetting setLabelColor(EColors colorIn) { WindowLabel.setColor(colorIn, label); return this; }

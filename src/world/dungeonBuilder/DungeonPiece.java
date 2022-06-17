@@ -3,8 +3,8 @@ package world.dungeonBuilder;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Direction;
 import eutil.random.RandomUtil;
+import game.worldTiles.WorldTile;
 import world.EntitySpawn;
-import world.resources.WorldTile;
 
 public abstract class DungeonPiece {
 	

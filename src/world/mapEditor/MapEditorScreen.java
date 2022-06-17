@@ -2,12 +2,14 @@ package world.mapEditor;
 
 import engine.input.Keyboard;
 import engine.input.Mouse;
+import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.screens.screenUtil.GameScreen;
 import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
+import game.worldTiles.WorldTile;
 import main.QoT;
 import world.GameWorld;
 import world.Region;
@@ -17,7 +19,6 @@ import world.mapEditor.editorParts.toolBox.EditorToolBox;
 import world.mapEditor.editorParts.topHeader.EditorScreenTopHeader;
 import world.mapEditor.editorTools.EditorToolType;
 import world.mapEditor.editorTools.ToolHandler;
-import world.resources.WorldTile;
 
 import java.io.File;
 
@@ -45,7 +46,14 @@ public class MapEditorScreen extends GameScreen {
 	public int oldWorldX, oldWorldY;
 	public boolean updateMap = false;
 	
+	private boolean recentlySaved = false;
+	private long saveStringTimeout = 0l;
+	private String saveString = "Saved!";
+	private EColors saveStringColor = EColors.lgreen;
 	private boolean loading = false;
+	private boolean hasBeenModified = false;
+	private boolean hasSaved = false;
+	private 
 	
 	//---------------------
 	int left;
@@ -79,7 +87,7 @@ public class MapEditorScreen extends GameScreen {
 		Runnable loader = () -> loadWorld();
 		new Thread(loader).start();
 		
-		settings.currentTool = EditorToolType.SELECTOR;
+		settings.currentTool = EditorToolType.PENCIL;
 	}
 	
 	@Override
@@ -102,7 +110,7 @@ public class MapEditorScreen extends GameScreen {
 			return;
 		}
 		
-		if (world == null || !world.isFileLoaded()) { drawStringC("Failed to load!", midX, midY); }
+		if (world == null || !world.isFileLoaded()) drawStringC("Failed to load!", midX, midY);
 		else {
 			double tileDrawWidth = (world.getTileWidth() * world.getZoom()); //pixel width of each tile
 			double tileDrawHeight = (world.getTileHeight() * world.getZoom()); //pixel height of each tile
@@ -112,31 +120,66 @@ public class MapEditorScreen extends GameScreen {
 			double mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2)); //the top most y coordinate for map drawing
 			
 			//converting to shorthand to reduce footprint
-			double w = tileDrawWidth;
-			double h = tileDrawHeight;
 			double x = mapDrawStartX;
 			double y = mapDrawStartY;
+			double w = tileDrawWidth;
+			double h = tileDrawHeight;
 			
 			//scissor(x, y, deX, deY + 1);
 			//endScissor();
 			
 			drawMap(x, y, w, h);
-			if (settings.drawRegions) { drawRegions(x, y, w, h); }
-			if (settings.drawCenterPositionBox) { drawCenterPositionBox(x, y, w, h); }
+			if (settings.drawRegions) drawRegions(x, y, w, h);
+			if (settings.drawCenterPositionBox) drawCenterPositionBox(x, y, w, h);
 			
 			mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
 			if (drawingMousePos = mouseInMap) {
-				drawMouseCoords((int) x, (int) y, (int) w, (int) h);
+				drawHoveredTileBox((int) x, (int) y, (int) w, (int) h);
 				if (firstPress && getTopParent().getModifyingObject() == null) {
 					//toolHandler.handleToolUpdate(getCurTileTool());
 				}
 			}
 			
-			if (settings.drawMapBorders) { drawMapBorders(x, y, w, h); }
+			if (settings.drawMapBorders) drawMapBorders(x, y, w, h);
+			if (recentlySaved) updateSaveString(drawAreaMidX, drawAreaMidY);
 			
 			oldWorldX = midDrawX;
 			oldWorldY = midDrawY;
+			
 		}
+	}
+	
+	/**
+	 * Draws a box around the currently hovered tile.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 */
+	private void drawHoveredTileBox(int x, int y, int w, int h) {
+		worldXPos = NumberUtil.clamp(worldXPos, 0, world.getWidth() - 1);
+		worldYPos = NumberUtil.clamp(worldYPos, 0, world.getHeight() - 1);
+		
+		double xPos = (x + ((mX - x) / w) * w) - 1; //not sure why need to sub 1 here..
+		double yPos = (y + ((mY - y) / h) * h);
+		
+		//drawString("POS: " + xPos + " : " + yPos, 150, 150);
+		
+		drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.chalk);
+	}
+	
+	private void updateSaveString(double drawAreaMidX, double drawAreaMidY) {
+		double sw = FontRenderer.getStringWidth(saveString);
+		double hsw = (sw / 2);
+		double sbsx = drawAreaMidX - hsw - 12.5;
+		double sbsy = drawAreaMidY - (FontRenderer.FONT_HEIGHT / 2) - 12.5;
+		double sbex = drawAreaMidX + hsw + 12.5;
+		double sbey = drawAreaMidY + (FontRenderer.FONT_HEIGHT / 2) + 12.5;
+		drawRect(sbsx, sbsy, sbex, sbey,  EColors.black);
+		drawRect(sbsx + 2, sbsy + 2, sbex - 2, sbey - 2,  EColors.dgray);
+		drawStringC(saveString, drawAreaMidX, drawAreaMidY - (FontRenderer.FONT_HEIGHT / 2), saveStringColor);
+		if (System.currentTimeMillis() - saveStringTimeout > 600) recentlySaved = false;
 	}
 	
 	@Override
@@ -193,8 +236,22 @@ public class MapEditorScreen extends GameScreen {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (Keyboard.isCtrlS(keyCode)) { saveWorld(); System.out.println("saved"); }
-		if (Keyboard.isCtrlR(keyCode)) { loadWorld(); System.out.println("reloaded"); }
+		if (Keyboard.isCtrlS(keyCode)) saveWorld();
+		if (Keyboard.isCtrlR(keyCode)) {
+			loadWorld();
+			saveString = "Reloaded!";
+			saveStringColor = EColors.lgreen;
+			recentlySaved = true;
+			saveStringTimeout = System.currentTimeMillis();
+		}
+		
+		if (keyCode == Keyboard.KEY_ESC) {
+			if (!hasSaved && hasBeenModified) {
+				
+			}
+			
+			if (!screenHistory.isEmpty()) closeScreen(false);
+		}
 		
 		super.keyPressed(typedChar, keyCode);
 	}
@@ -264,10 +321,18 @@ public class MapEditorScreen extends GameScreen {
 	public void saveWorld() {
 		if (world != null) {
 			if (world.saveWorldToFile()) {
-				
+				saveString = "Saved!";
+				saveStringColor = EColors.lgreen;
+				recentlySaved = true;
+				hasSaved = true;
+				hasBeenModified = false;
+				saveStringTimeout = System.currentTimeMillis();
 			}
 			else {
-				
+				saveString = "Failed to Save!";
+				saveStringColor = EColors.lred;
+				recentlySaved = true;
+				saveStringTimeout = System.currentTimeMillis();
 			}
 		}
 	}
@@ -363,18 +428,6 @@ public class MapEditorScreen extends GameScreen {
 		return false;
 	}
 	
-	private void drawMouseCoords(int x, int y, int w, int h) {
-		worldXPos = NumberUtil.clamp(worldXPos, 0, world.getWidth() - 1);
-		worldYPos = NumberUtil.clamp(worldYPos, 0, world.getHeight() - 1);
-		
-		double xPos = (x + ((mX - x) / w) * w) - 1; //not sure why need to sub 1 here..
-		double yPos = (y + ((mY - y) / h) * h);
-		
-		//drawString("POS: " + xPos + " : " + yPos, 150, 150);
-		
-		drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.chalk);
-	}
-	
 	//---------------------------------
 	//         Public Getters
 	//---------------------------------
@@ -393,12 +446,16 @@ public class MapEditorScreen extends GameScreen {
 	
 	public WorldTile setTileAt(int x, int y, WorldTile in) {
 		world.setTileAt(x, y, in);
+		hasBeenModified = true;
+		hasSaved = false;
 		return in;
 	}
 	
 	public WorldTile setTileAtMouse(WorldTile in) {
 		if (mouseInMap) {
 			world.setTileAt(worldXPos, worldYPos, in);
+			hasBeenModified = true;
+			hasSaved = false;
 		}
 		return in;
 	}

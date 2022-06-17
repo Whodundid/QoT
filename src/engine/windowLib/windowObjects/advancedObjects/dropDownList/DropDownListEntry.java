@@ -15,11 +15,11 @@ public class DropDownListEntry<E> {
 	protected boolean enabled = true;
 	protected boolean globalAction = false;
 	
-	public DropDownListEntry(String textIn) { this(textIn, EColors.lgray.intVal, null, false); }
-	public DropDownListEntry(String textIn, EColors colorIn, E objectIn) { this(textIn, colorIn.intVal, objectIn, false); }
-	public DropDownListEntry(String textIn, int colorIn, E objectIn) { this(textIn, colorIn, objectIn, false); }
-	public DropDownListEntry(String textIn, EColors colorIn, E objectIn, boolean hasActionIn) { this(textIn, colorIn.intVal, objectIn, hasActionIn); }
-	public DropDownListEntry(String textIn, int colorIn, E objectIn, boolean hasActionIn) {
+	DropDownListEntry(String textIn) { this(textIn, EColors.lgray.intVal, null, false); }
+	DropDownListEntry(String textIn, EColors colorIn, E objectIn) { this(textIn, colorIn.intVal, objectIn, false); }
+	DropDownListEntry(String textIn, int colorIn, E objectIn) { this(textIn, colorIn, objectIn, false); }
+	DropDownListEntry(String textIn, EColors colorIn, E objectIn, boolean hasActionIn) { this(textIn, colorIn.intVal, objectIn, hasActionIn); }
+	DropDownListEntry(String textIn, int colorIn, E objectIn, boolean hasActionIn) {
 		text = textIn;
 		color = colorIn;
 		entryObject = objectIn;
@@ -46,7 +46,7 @@ public class DropDownListEntry<E> {
 	public DropDownListEntry<E> setGlobalActionPresent(boolean val) { globalAction = val; return this; }
 	
 	public void runEntryAction() {
-		if (globalAction) { parentList.runGlobalAction(); }
+		if (globalAction) parentList.runGlobalAction();
 	}
 	
 	@Override public String toString() { return text; }

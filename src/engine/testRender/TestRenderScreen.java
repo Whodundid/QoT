@@ -10,6 +10,7 @@ import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.Vec2f;
 import eutil.math.Vec3f;
+import game.worldTiles.WorldTile;
 import main.QoT;
 
 import org.lwjgl.opengl.GL11;
@@ -18,7 +19,6 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
 import world.GameWorld;
-import world.resources.WorldTile;
 
 public class TestRenderScreen extends GameScreen {
 	

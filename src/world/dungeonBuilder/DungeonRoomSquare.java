@@ -3,9 +3,9 @@ package world.dungeonBuilder;
 import eutil.misc.Direction;
 import eutil.random.RandomUtil;
 import game.EntityList;
+import game.worldTiles.WorldTile;
+import game.worldTiles.tileCategories.DungeonTiles;
 import world.EntitySpawn;
-import world.resources.WorldTile;
-import world.resources.tile_categories.DungeonTiles;
 
 public class DungeonRoomSquare extends DungeonPiece {
 	

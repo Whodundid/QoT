@@ -5,19 +5,23 @@ import eutil.colors.EColors;
 
 public abstract class WindowShape<E> extends WindowObject<E> {
 	
-	boolean filled = false;
-	int color = 0xffffffff;
+	//--------
+	// Fields
+	//--------
 	
-	//-----------------
-	//EGuiShape Getters
-	//-----------------
+	protected boolean filled = false;
+	protected int color = 0xffffffff;
+	
+	//---------
+	// Getters
+	//---------
 	
 	public boolean isFilled() { return filled; }
 	public int getColor() { return color; }
 	
-	//-----------------
-	//EGuiShape Setters
-	//-----------------
+	//---------
+	// Setters
+	//---------
 	
 	public WindowShape<E> setFilled(boolean val) { filled = val; return this; }
 	public WindowShape<E> setColor(EColors colorIn) { return setColor(colorIn.intVal); }

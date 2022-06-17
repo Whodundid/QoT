@@ -8,7 +8,7 @@ import envision.lang.classes.ClassInstance;
 import envision.lang.classes.EnvisionClass;
 import envision.lang.datatypes.EnvisionStringClass;
 import eutil.datatypes.Box2;
-import eutil.datatypes.util.BoxList;
+import eutil.datatypes.BoxList;
 import world.GameWorld;
 
 /** Wrapper Envision class for a QoT GameWorld object. */

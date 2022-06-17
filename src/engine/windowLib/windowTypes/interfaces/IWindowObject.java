@@ -11,6 +11,7 @@ import engine.windowLib.windowUtil.windowEvents.ObjectEvent;
 import engine.windowLib.windowUtil.windowEvents.ObjectEventHandler;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import engine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import engine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.EUtil;
@@ -107,9 +108,17 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Returns true if this object's mouse checks are enforced by a boundary. */
 	public boolean isBoundaryEnforced();
 	/** Returns true if this object is resizing. */
-	public boolean isResizing();
+	public default boolean isResizing() {
+		ITopParent t = getTopParent();
+		var modObj = t.getModifyingObject();
+		var modType = t.getModifyType();
+		return modObj == this && modType == ObjectModifyType.Resize && Mouse.isLeftDown();
+	}
 	/** Returns true if this object is moving. */
-	public boolean isMoving();
+	public default boolean isMoving() {
+		ITopParent t = getTopParent();
+		return t.getModifyingObject() == this && t.getModifyType() == ObjectModifyType.Move;
+	}
 	/** Returns true if this object will always be drawn on top. */
 	public boolean isAlwaysOnTop();
 	/** Set this object's enabled state. */

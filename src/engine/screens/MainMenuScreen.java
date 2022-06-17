@@ -8,9 +8,9 @@ import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.NumberUtil;
+import game.worldTiles.tileCategories.DungeonTiles;
 import main.QoT;
 import world.mapEditor.MapMenuScreen;
-import world.resources.tile_categories.DungeonTiles;
 
 public class MainMenuScreen extends GameScreen {
 	

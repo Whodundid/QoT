@@ -1,5 +1,7 @@
 package engine.terminal.window;
 
+import java.io.File;
+
 import engine.terminal.TerminalHandler;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.termParts.TerminalTextField;
@@ -14,6 +16,7 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
 import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import engine.windowLib.windowUtil.windowEvents.events.EventMouse;
+import envision._launch.EnvisionConsoleReceiver;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
@@ -23,11 +26,9 @@ import eutil.misc.ScreenLocation;
 import eutil.strings.StringUtil;
 import main.QoT;
 
-import java.io.File;
-
 //Author: Hunter Bragg
 
-public class ETerminal<E> extends WindowParent<E> {
+public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleReceiver {
 	
 	TerminalTextField inputField;
 	WindowTextArea history;
@@ -63,6 +64,24 @@ public class ETerminal<E> extends WindowParent<E> {
 		dir = new File(System.getProperty("user.dir"));
 		//windowIcon = EMCResources.terminalIcon;
 	}
+	
+	//-------------------------
+	// Envision Console Output
+	//-------------------------
+	
+	@Override
+	public void onEnvisionPrint(String line) {
+		writeln(line);
+	}
+	
+	@Override
+	public void onEnvisionPrintln(String line) {
+		writeln(line);
+	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void initWindow() {

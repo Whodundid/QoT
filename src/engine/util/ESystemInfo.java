@@ -3,7 +3,7 @@ package engine.util;
 import com.sun.management.OperatingSystemMXBean;
 import eutil.EUtil;
 import eutil.datatypes.Box2;
-import eutil.datatypes.util.BoxList;
+import eutil.datatypes.BoxList;
 import eutil.sys.OSType;
 import java.io.File;
 import java.lang.management.ManagementFactory;

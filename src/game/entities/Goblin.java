@@ -4,7 +4,6 @@ import assets.textures.EntityTextures;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
 import eutil.random.RandomUtil;
-import game.combat.CombatScreen;
 import main.QoT;
 
 public class Goblin extends Enemy {
@@ -55,9 +54,9 @@ public class Goblin extends Enemy {
 			
 			headText = "" + testDim.contains(pDims);
 			if (testDim.contains(pDims)) {
-				QoT.pause();
-				QoT.pauseWorldRender();
-				QoT.displayScreen(new CombatScreen(QoT.thePlayer, this), QoT.currentScreen);
+				//QoT.pause();
+				//QoT.pauseWorldRender();
+				//QoT.displayScreen(new CombatScreen(QoT.thePlayer, this), QoT.currentScreen);
 			}
 			move(dirToPlayer);
 		}

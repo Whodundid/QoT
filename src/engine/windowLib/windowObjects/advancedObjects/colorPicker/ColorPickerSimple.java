@@ -1,12 +1,12 @@
 package engine.windowLib.windowObjects.advancedObjects.colorPicker;
 
-import engine.windowLib.bundledWindows.utilityWindows.WindowDialogueBox;
-import engine.windowLib.bundledWindows.utilityWindows.WindowDialogueBox.DialogueBoxTypes;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowObjects.basicObjects.WindowContainer;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowObjects.basicObjects.WindowRect;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox.DialogueBoxTypes;
 import engine.windowLib.windowTypes.ActionWindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;

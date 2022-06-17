@@ -3,7 +3,7 @@ package engine.terminal.window;
 import engine.terminal.TerminalHandler;
 import engine.terminal.window.termParts.TerminalTextField;
 import engine.terminal.window.termParts.TerminalTextLine;
-import engine.windowLib.bundledWindows.utilityWindows.RightClickMenu;
+import engine.windowLib.windowObjects.utilityObjects.RightClickMenu;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 
 public class TerminalRCM extends RightClickMenu {

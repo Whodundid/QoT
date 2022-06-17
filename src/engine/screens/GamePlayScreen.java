@@ -7,8 +7,8 @@ import engine.screens.character.CharacterScreen;
 import engine.screens.screenUtil.GameScreen;
 import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
-import engine.windowLib.windowObjects.advancedObjects.StatusBar;
 import engine.windowLib.windowObjects.basicObjects.WindowRect;
+import engine.windowLib.windowObjects.basicObjects.WindowStatusBar;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import game.entities.Player;
@@ -23,8 +23,11 @@ public class GamePlayScreen extends GameScreen {
 	GameWorld world;
 	WindowRect topHud;
 	WindowRect botHud; //don't know if actually want this one
-	StatusBar health, mana;
+	WindowStatusBar health, mana;
 	WindowButton character;
+	
+	public int midDrawX, midDrawY; //the world coordinates at the center of the screen
+	public int worldXPos, worldYPos; //the world coordinates under the mouse
 	
 	public GamePlayScreen() {
 		super();
@@ -50,11 +53,11 @@ public class GamePlayScreen extends GameScreen {
 		//topHud = new WindowRect(this, 0, 0, QoT.getWidth(), 39, EColors.dgray);
 		//addObject(topHud);
 		
-		health = new StatusBar(this, 5, 5, 200, 30, 0, player.getMaxHealth(), EColors.red);
+		health = new WindowStatusBar(this, 5, 5, 200, 30, 0, player.getMaxHealth(), EColors.red);
 		health.setBarValue(player.getHealth());
 		addObject(health);
 		
-		mana = new StatusBar(this, health.endX + 5, 5, 200, 30, 0, player.getMaxMana(), EColors.blue);
+		mana = new WindowStatusBar(this, health.endX + 5, 5, 200, 30, 0, player.getMaxMana(), EColors.blue);
 		mana.setBarValue(player.getMana());
 		addObject(mana);
 		
@@ -67,7 +70,6 @@ public class GamePlayScreen extends GameScreen {
 		//top hud
 		drawRect(0, 0, QoT.getWidth(), 39, EColors.dgray);
 		drawRect(0, 39, QoT.getWidth(), 41, EColors.vdgray);
-		
 		//mouse pos
 	}
 	
@@ -92,10 +94,7 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void mouseScrolled(int change) {
-		//if (Keyboard.isCtrlDown()) {
-		//	world.setZoom(world.getZoom() + NumberUtil.round(Math.signum(change) * 0.25, 2));
-		//	world.setZoom(NumberUtil.clamp(world.getZoom(), 0.25, 5));
-		//}
+		
 	}
 	
 	@Override

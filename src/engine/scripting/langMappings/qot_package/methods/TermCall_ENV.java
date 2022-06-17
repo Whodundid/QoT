@@ -5,7 +5,7 @@ import engine.terminal.window.ETerminal;
 import envision.interpreter.EnvisionInterpreter;
 import envision.lang.EnvisionObject;
 import envision.lang.internal.EnvisionFunction;
-import envision.lang.util.Primitives;
+import envision.lang.natives.Primitives;
 import eutil.strings.StringUtil;
 import main.QoT;
 

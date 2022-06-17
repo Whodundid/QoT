@@ -2,8 +2,8 @@ package main.settings.config;
 
 import eutil.EUtil;
 import eutil.datatypes.Box2;
+import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.BoxList;
 
 import java.io.File;
 import java.io.FileNotFoundException;

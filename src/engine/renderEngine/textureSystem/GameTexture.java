@@ -1,7 +1,7 @@
 package engine.renderEngine.textureSystem;
 
+import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.BoxList;
 import eutil.random.RandomUtil;
 
 import org.lwjgl.opengl.GL11;

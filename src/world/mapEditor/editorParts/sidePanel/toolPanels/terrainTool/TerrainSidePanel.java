@@ -1,19 +1,29 @@
 package world.mapEditor.editorParts.sidePanel.toolPanels.terrainTool;
 
-import static world.mapEditor.editorTools.EditorToolType.*;
+import static world.mapEditor.editorTools.EditorToolType.BRUSH;
+import static world.mapEditor.editorTools.EditorToolType.ERASER;
+import static world.mapEditor.editorTools.EditorToolType.EYEDROPPER;
+import static world.mapEditor.editorTools.EditorToolType.LINE;
+import static world.mapEditor.editorTools.EditorToolType.MAGICWAND;
+import static world.mapEditor.editorTools.EditorToolType.MOVE;
+import static world.mapEditor.editorTools.EditorToolType.PAINTBUCKET;
+import static world.mapEditor.editorTools.EditorToolType.PENCIL;
+import static world.mapEditor.editorTools.EditorToolType.SHAPE;
 
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import game.worldTiles.GlobalTileList;
+import game.worldTiles.WorldTile;
 import world.mapEditor.MapEditorScreen;
+import world.mapEditor.MapEditorSettings;
 import world.mapEditor.editorParts.sidePanel.EditorSidePanel;
 import world.mapEditor.editorParts.sidePanel.PaletteSidePanel;
 import world.mapEditor.editorParts.sidePanel.SidePanelType;
 import world.mapEditor.editorParts.toolBox.ToolCategory;
 import world.mapEditor.editorParts.util.EditorItem;
-import world.resources.GlobalTileList;
-import world.resources.WorldTile;
+import world.mapEditor.editorTools.EditorToolType;
 
 public class TerrainSidePanel extends PaletteSidePanel {
 	
@@ -83,8 +93,17 @@ public class TerrainSidePanel extends PaletteSidePanel {
 		if (object instanceof WindowButton b && b.getGenericObject() instanceof WorldTile tile) {
 			int button = b.getPressedButton();
 			
-			if (button == 0) editor.getSettings().setPrimaryPalette(EditorItem.of(tile));
-			else editor.getSettings().setSecondaryPalette(EditorItem.of(tile));
+			MapEditorSettings s = editor.getSettings();
+			EditorItem item = EditorItem.of(tile);
+			
+			//Switch the tool back to a pencil if it's currently an eraser
+			// -This is a convenience setting
+			if (s.getCurrentTool() == EditorToolType.ERASER) {
+				s.setCurrentTool(EditorToolType.PENCIL);
+			}
+			
+			if (button == 0) s.setPrimaryPalette(item);
+			else s.setSecondaryPalette(item);
 		}
 	}
 	

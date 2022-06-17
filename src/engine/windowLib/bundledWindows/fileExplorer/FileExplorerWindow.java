@@ -13,8 +13,8 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.misc.FileOpener;
 import eutil.strings.StringUtil;
+import eutil.sys.FileOpener;
 
 import java.io.File;
 

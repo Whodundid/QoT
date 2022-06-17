@@ -2,10 +2,15 @@ package engine.windowLib.windowObjects.basicObjects;
 
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
+import eutil.math.EDimension;
 
 //Author: Hunter Bragg
 
 public class WindowRect<E> extends WindowShape<E> {
+	
+	//--------------
+	// Constructors
+	//--------------
 	
 	public WindowRect(IWindowObject parentIn, double startX, double startY, double endX, double endY) { this(parentIn, startX, startY, endX, endY, true, EColors.black); }
 	public WindowRect(IWindowObject parentIn, double startX, double startY, double endX, double endY, EColors colorIn) { this(parentIn, startX, startY, endX, endY, true, colorIn.intVal); }
@@ -18,11 +23,23 @@ public class WindowRect<E> extends WindowShape<E> {
 		color = colorIn;
 	}
 	
+	public WindowRect(IWindowObject parentIn, EDimension dims) { this(parentIn, dims, true, EColors.black.intVal); }
+	public WindowRect(IWindowObject parentIn, EDimension dims, boolean filledIn) { this(parentIn, dims, filledIn, EColors.black.intVal); }
+	public WindowRect(IWindowObject parentIn, EDimension dims, boolean filledIn, EColors colorIn) { this(parentIn, dims, filledIn, colorIn.intVal); }
+	public WindowRect(IWindowObject parentIn, EDimension dims, boolean filledIn, int colorIn) {
+		init(parentIn, dims.startX, dims.startY, dims.endX, dims.endY);
+		filled = filledIn;
+		color = colorIn;
+	}
+	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		
-		if (filled) { drawRect(startX, startY, endX, endY, color); }
-		else { drawHRect(startX, startY, endX, endY, 1, color); }
+		if (filled) drawRect(startX, startY, endX, endY, color);
+		else drawHRect(startX, startY, endX, endY, 1, color);
 		
 		super.drawObject(mXIn, mYIn);
 	}
@@ -39,15 +56,15 @@ public class WindowRect<E> extends WindowShape<E> {
 		midY = startY + (height / 2);
 	}
 	
-	//----------------
-	//EGuiRect Getters
-	//----------------
+	//---------
+	// Getters
+	//---------
 	
 	public int getColor() { return color; }
 
-	//----------------
-	//EGuiRect Setters
-	//----------------
+	//---------
+	// Setters
+	//---------
 	
 	public WindowRect<E> setColor(EColors colorIn) { return setColor(colorIn.c()); }
 	public WindowRect<E> setColor(int colorIn) { color = colorIn; return this; }

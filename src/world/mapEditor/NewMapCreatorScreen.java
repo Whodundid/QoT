@@ -7,10 +7,10 @@ import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
+import game.worldTiles.WorldTile;
+import game.worldTiles.tileCategories.NatureTiles;
 import main.QoT;
 import world.GameWorld;
-import world.resources.WorldTile;
-import world.resources.tile_categories.NatureTiles;
 
 public class NewMapCreatorScreen extends GameScreen {
 

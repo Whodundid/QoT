@@ -24,12 +24,20 @@ public class ColorPickerButton<E> extends WindowButton<E> {
 	}
 	
 	public ColorPickerButton setParams(String textIn, EColors colorIn) { return setParams(textIn, colorIn.c()); }
-	public ColorPickerButton setParams(String textIn, int colorIn) { setColor(colorIn); setHover(textIn, EColors.seafoam); return this; }
+	public ColorPickerButton setParams(String textIn, int colorIn) {
+		setColor(colorIn);
+		setHover(textIn, EColors.seafoam);
+		return this;
+	}
 	
 	public ColorPickerButton setHover(String textIn, EColors colorIn) { return setHover(textIn, colorIn.c()); }
-	public ColorPickerButton setHover(String textIn, int colorIn) { setHoverText(textIn).setHoverTextColor(colorIn); return this; }
+	public ColorPickerButton setHover(String textIn, int colorIn) {
+		setHoverText(textIn);
+		setHoverTextColor(colorIn);
+		return this;
+	}
 	
-	public ColorPickerButton setColor(EColors colorIn) { setBackgroundColor(colorIn); return this; }
+	public ColorPickerButton setColor(EColors colorIn) { setBackgroundColor(colorIn.intVal); return this; }
 	public ColorPickerButton setColor(int colorIn) { setBackgroundColor(colorIn); return this; }
 	
 	public int getColor() { return getBackgroundColor(); }

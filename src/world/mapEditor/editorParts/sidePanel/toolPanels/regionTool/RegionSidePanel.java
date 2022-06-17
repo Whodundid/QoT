@@ -1,9 +1,9 @@
 package world.mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import engine.windowLib.bundledWindows.utilityWindows.WindowDialogueBox;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;

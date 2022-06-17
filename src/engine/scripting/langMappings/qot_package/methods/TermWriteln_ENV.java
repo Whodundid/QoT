@@ -5,7 +5,7 @@ import envision.interpreter.EnvisionInterpreter;
 import envision.interpreter.util.EnvisionStringFormatter;
 import envision.lang.EnvisionObject;
 import envision.lang.internal.EnvisionFunction;
-import envision.lang.util.Primitives;
+import envision.lang.natives.Primitives;
 import main.QoT;
 
 /** Creates a mapping between Envision and the QoT terminal. */

@@ -7,8 +7,8 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
+import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.BoxList;
 
 public class WindowTextBox<E> extends WindowObject<E> {
 	

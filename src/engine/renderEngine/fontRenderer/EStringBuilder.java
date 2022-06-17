@@ -2,6 +2,7 @@ package engine.renderEngine.fontRenderer;
 
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.debug.Broken;
 
 /** Used to concatenate EColors and EnumChatFormating objects within Strings. */
 public class EStringBuilder {
@@ -84,9 +85,13 @@ public class EStringBuilder {
 	}
 	
 	/** Breaks a String into a list of smaller strings based on a set maximum line width. */
+	@Broken("June 5, 2022")
 	public static EArrayList<String> createWordWrapString(String stringIn, double widthMax) {
 		EArrayList<String> lines = new EArrayList();
 		try {
+			
+			//CURRENTLY STUCK IN INFINITE LOOP HERE!
+			
 			if (stringIn != null && !stringIn.isEmpty() && widthMax > 5 && getStringWidth(stringIn) > widthMax) {
 				String restOfString = stringIn;
 				while (getStringWidth(restOfString) > widthMax) {

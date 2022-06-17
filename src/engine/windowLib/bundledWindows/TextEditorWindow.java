@@ -2,11 +2,11 @@ package engine.windowLib.bundledWindows;
 
 import assets.textures.WindowTextures;
 import engine.input.Keyboard;
-import engine.windowLib.bundledWindows.utilityWindows.WindowDialogueBox;
-import engine.windowLib.bundledWindows.utilityWindows.WindowDialogueBox.DialogueBoxTypes;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox.DialogueBoxTypes;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowUtil.windowEvents.ObjectEvent;
@@ -81,6 +81,8 @@ public class TextEditorWindow extends WindowParent {
 	
 	@Override
 	public void preReInit() {
+		if (!restored) return;
+		
 		restored = false;
 		vPos = document.getVScrollBar().getScrollPos();
 		hPos = document.getHScrollBar().getScrollPos();
@@ -89,21 +91,22 @@ public class TextEditorWindow extends WindowParent {
 	
 	@Override
 	public void postReInit() {
-		if (!this.isResizing()) {
-			document.getVScrollBar().setScrollPos(vPos);
-			document.getHScrollBar().setScrollPos(hPos);
-			
-			if (lines != null) {
-				for (var l : lines) {
-					document.addTextLine(l, EColors.lgray);
-				}
+		/*
+		System.out.println("REINIT");
+		document.getVScrollBar().setScrollPos(vPos);
+		document.getHScrollBar().setScrollPos(hPos);
+		
+		if (lines != null) {
+			for (var l : lines) {
+				document.addTextLine(l, EColors.lgray);
 			}
-			if (line != null) {
-				document.setSelectedLine(document.getLineWithTextAndObject(line.getText(), line.getGenericObject()));
-			}
-			
-			restored = true;
 		}
+		if (line != null) {
+			document.setSelectedLine(document.getLineWithTextAndObject(line.getText(), line.getGenericObject()));
+		}
+		
+		restored = true;
+		*/
 	}
 	
 	@Override
@@ -122,16 +125,23 @@ public class TextEditorWindow extends WindowParent {
 			for (var l : lines) {
 				document.addTextLine(l, EColors.lgray);
 			}
+			
 			loaded = true;
 			restored = true;
 		}
 	}
 	
 	private void checkRestored() {
+		if (isResizing()) return;
 		if (!restored && !loading) {
+			
 			for (var l : lines) {
 				document.addTextLine(l, EColors.lgray);
 			}
+			
+			document.getVScrollBar().setScrollPos(vPos);
+			document.getHScrollBar().setScrollPos(hPos);
+			
 			loaded = true;
 			restored = true;
 		}
@@ -163,11 +173,12 @@ public class TextEditorWindow extends WindowParent {
 		
 		if (path == null) return;
 		if (document == null) return;
-		if (!path.exists()) { newFile = true; return; }
+		if (!path.exists()) newFile = true;
 		
 		//all parsed lines
 		lines = new EArrayList();
 		
+		if (path.exists())
 		try (BufferedReader r = new BufferedReader(new FileReader(path))) {
 			String line;
 			while ((line = r.readLine()) != null) {
@@ -182,7 +193,9 @@ public class TextEditorWindow extends WindowParent {
 		}
 		
 		document.getVScrollBar().setScrollPos(0);
+		
 		loading = false;
+		loaded = true;
 	}
 	
 	private void saveFile() {

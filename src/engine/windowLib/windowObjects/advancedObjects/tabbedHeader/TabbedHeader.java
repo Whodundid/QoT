@@ -14,7 +14,7 @@ import engine.windowLib.windowTypes.WindowObject;
  * the specific side of that object for which the header will be
  * displayed on. By adding a new Tab from the 'addTab(String tabName)'
  * method, a new Tab button and HeaderTab space are created. Existing
- * tab buttons are resized and potentially scrollable (depending on
+ * tab buttons are resized and potentially scroll-able (depending on
  * the amount of tabs and the width of the header itself).
  * <p>
  * HeaderTabs can be manually created and added to this TabbedHeader

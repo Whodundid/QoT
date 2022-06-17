@@ -2,14 +2,15 @@ package game.entities;
 
 import engine.renderEngine.GLObject;
 import engine.renderEngine.textureSystem.GameTexture;
+import eutil.debug.Broken;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import eutil.misc.Direction;
 import eutil.misc.Rotation;
 import game.EntityLevel;
+import game.worldTiles.WorldTile;
 import main.QoT;
 import world.GameWorld;
-import world.resources.WorldTile;
 
 public abstract class Entity extends GLObject {
 	
@@ -123,11 +124,15 @@ public abstract class Entity extends GLObject {
 		}
 	}
 	
+	// broken due to not allowing for movement in any direction greater than 1
+	@Broken
 	public void move(double x, double y) {
 		if (world != null) {
 			x = Math.signum(x);
 			y = Math.signum(y);
 			boolean stopMove = false;
+			
+			if (this != QoT.thePlayer) return;
 			
 			if (!allowNoClip) {
 				boolean left = false, right = false, up = false, down = false;

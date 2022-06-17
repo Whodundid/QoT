@@ -9,7 +9,7 @@ import envision.lang.EnvisionObject;
 import envision.lang.classes.ClassInstance;
 import envision.lang.datatypes.EnvisionString;
 import envision.lang.internal.EnvisionFunction;
-import envision.lang.util.Primitives;
+import envision.lang.natives.Primitives;
 import game.entities.Player;
 import main.QoT;
 import main.settings.QoT_Settings;

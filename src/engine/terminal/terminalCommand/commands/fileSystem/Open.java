@@ -7,8 +7,9 @@ import engine.windowLib.bundledWindows.TextureDisplayer;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.misc.FileOpener;
 import eutil.strings.StringUtil;
+import eutil.sys.FileOpener;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

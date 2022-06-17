@@ -6,6 +6,7 @@ import eutil.math.NumberUtil;
 import eutil.misc.Direction;
 import game.doodads.PlayerSpawnPosition;
 import game.entities.Entity;
+import game.worldTiles.WorldTile;
 import main.QoT;
 import main.settings.QoT_Settings;
 
@@ -13,8 +14,6 @@ import java.awt.Point;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
-
-import world.resources.WorldTile;
 
 public class GameWorld {
 	

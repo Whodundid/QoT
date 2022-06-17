@@ -5,8 +5,8 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import engine.util.ClassFinder;
 import eutil.datatypes.Box2;
+import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.BoxList;
 import eutil.reflection.EModifier;
 
 import java.util.Collections;

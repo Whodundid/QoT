@@ -31,7 +31,7 @@ public class Player extends Entity {
 	
 	@Override
 	public void onLivingUpdate() {
-		headText = startX + " : " + startY;
+		//setHeadText(startX + " : " + startY);
 	}
 	
 }

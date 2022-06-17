@@ -1,6 +1,7 @@
 package world.mapEditor.editorTools;
 
-import eutil.datatypes.util.BoxList;
+import eutil.datatypes.BoxList;
+import game.worldTiles.WorldTile;
 import world.GameWorld;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.editorTools.tools.Tool_Brush;
@@ -14,7 +15,6 @@ import world.mapEditor.editorTools.tools.Tool_Pencil;
 import world.mapEditor.editorTools.tools.Tool_Region;
 import world.mapEditor.editorTools.tools.Tool_Selector;
 import world.mapEditor.editorTools.tools.Tool_Shape;
-import world.resources.WorldTile;
 
 public class ToolHandler {
 

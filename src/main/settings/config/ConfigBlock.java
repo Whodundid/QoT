@@ -1,7 +1,7 @@
 package main.settings.config;
 
+import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.BoxList;
 
 import java.util.List;
 import java.util.stream.Collectors;

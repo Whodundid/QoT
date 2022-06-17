@@ -1,5 +1,9 @@
 package engine.windowLib.windowObjects.actionObjects;
 
+import java.util.function.Consumer;
+
+import org.lwjgl.glfw.GLFW;
+
 import engine.input.Mouse;
 import engine.renderEngine.GLSettings;
 import engine.renderEngine.fontRenderer.FontRenderer;
@@ -8,9 +12,6 @@ import engine.windowLib.windowTypes.ActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
-
-import java.util.function.Consumer;
-import org.lwjgl.glfw.GLFW;
 
 //Author: Hunter Bragg
 

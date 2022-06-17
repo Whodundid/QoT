@@ -3,11 +3,11 @@ package world.mapEditor.editorTools;
 import engine.input.Mouse;
 import eutil.datatypes.Box2;
 import game.entities.Entity;
+import game.worldTiles.WorldTile;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.MapEditorSettings;
 import world.mapEditor.editorParts.util.EditorItem;
 import world.mapEditor.editorTools.ToolHandler.ToolEvent;
-import world.resources.WorldTile;
 
 public abstract class EditorTool {
 	

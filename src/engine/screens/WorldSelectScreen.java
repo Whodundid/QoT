@@ -1,29 +1,25 @@
 package engine.screens;
 
+import java.io.File;
+
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.screens.screenUtil.GameScreen;
+import engine.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
+import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.entities.Player;
 import main.QoT;
 import main.settings.QoT_Settings;
-
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.HeadlessException;
-import java.io.File;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-
 import world.GameWorld;
 
 public class WorldSelectScreen extends GameScreen {
 	
 	WindowButton defaultWorld, loadWorld, lastEditor, lastWorld;
 	WindowButton back;
+	FileExplorerWindow explorer;
 	
 	String error;
 	
@@ -79,70 +75,72 @@ public class WorldSelectScreen extends GameScreen {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == defaultWorld) {
-			File f = new File(QoT_Settings.getEditorWorldsDir(), "test.twld");
-			if (f.exists()) {
-				Player p = QoT.setPlayer(new Player("Test"));
-				GameWorld w = QoT.loadWorld(new GameWorld(f));
-				w.addEntity(p);
-				QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
-				//Game.displayScreen(new WorldRenderTest(new File("test.twld")), this);
-			}
-		}
-		
-		if (object == loadWorld) {
-			JFileChooser fc = new JFileChooser() {
-				@Override
-				protected JDialog createDialog(Component parent) throws HeadlessException {
-					JDialog dlg = super.createDialog(parent);
-					EDimension d = QoT.getWindowDims();
-					Dimension fd = getSize();
-					dlg.setLocation((int) (d.startX + (d.width - fd.width) / 2), (int) (d.startY + (d.height - fd.height) / 2));
-					dlg.setModal(true);
-					//dlg.setAlwaysOnTop(true);
-					return dlg;
-				}
-			};
-			
-			fc.setCurrentDirectory(QoT_Settings.getEditorWorldsDir());
-			fc.setDialogTitle("Map Selection");
-			fc.setApproveButtonText("Open");
-			fc.showDialog(null, "Open");
-			File f = fc.getSelectedFile();
-			
-			if (f != null && f.exists() && f.getName().endsWith(".twld")) {
-				Player p = QoT.setPlayer(new Player("Test"));
-				GameWorld w = QoT.loadWorld(new GameWorld(f));
-				w.addEntity(p);
-				QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
-			}
-		}
-		
-		if (object == lastEditor) {
-			String last = QoT_Settings.lastEditorMap.get();
-			if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
-			else {
-				Player p = QoT.setPlayer(new Player("Test"));
-				GameWorld w = QoT.loadWorld(new GameWorld(new File(last)));
-				w.addEntity(p);
-				QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
-				//Game.displayScreen(new WorldRenderTest(new File(last)), this);
-			}
-		}
-		
-		if (object == lastWorld) {
-			String last = QoT_Settings.lastMap.get();
-			if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
-			else {
-				Player p = QoT.setPlayer(new Player("Test"));
-				GameWorld w = QoT.loadWorld(new GameWorld(new File(last)));
-				w.addEntity(p);
-				QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
-				//Game.displayScreen(new WorldRenderTest(new File(last)), this);
-			}
-		}
-		
+		if (object == defaultWorld) loadDefault();
+		if (object == loadWorld) openMapChooser();
+		if (object == lastEditor) loadLastEditor();
+		if (object == lastWorld) loadLastWorld();
 		if (object == back) closeScreen();
+		if (object == explorer) onExplorerPick();
+	}
+	
+	private void loadDefault() {
+		File f = new File(QoT_Settings.getEditorWorldsDir(), "test.twld");
+		if (f.exists()) {
+			Player p = QoT.setPlayer(new Player("Test"));
+			GameWorld w = QoT.loadWorld(new GameWorld(f));
+			w.addEntity(p);
+			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			//Game.displayScreen(new WorldRenderTest(new File("test.twld")), this);
+		}
+	}
+	
+	private void openMapChooser() {
+		explorer = new FileExplorerWindow(this, QoT_Settings.getEditorWorldsDir(), true);
+		explorer.setTitle("Map Selection");
+		setDefaultFocusObject(null);
+		displayWindow(explorer, ObjectPosition.SCREEN_CENTER);
+	}
+	
+	private void loadLastEditor() {
+		String last = QoT_Settings.lastEditorMap.get();
+		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
+		else {
+			Player p = QoT.setPlayer(new Player("Test"));
+			GameWorld w = QoT.loadWorld(new GameWorld(new File(last)));
+			w.addEntity(p);
+			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			//Game.displayScreen(new WorldRenderTest(new File(last)), this);
+		}
+	}
+	
+	private void loadLastWorld() {
+		String last = QoT_Settings.lastMap.get();
+		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
+		else {
+			Player p = QoT.setPlayer(new Player("Test"));
+			GameWorld w = QoT.loadWorld(new GameWorld(new File(last)));
+			w.addEntity(p);
+			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			//Game.displayScreen(new WorldRenderTest(new File(last)), this);
+		}
+	}
+	
+	private void onExplorerPick() {
+		if (explorer == null) return;
+		
+		File f = explorer.getSelectedFile();
+		
+		if (f != null && f.exists() && f.getName().endsWith(".twld")) {
+			explorer.close();
+			QoT_Settings.lastMap.set(f.getName());
+			QoT.saveConfig();
+			
+			Player p = QoT.setPlayer(new Player("Test"));
+			GameWorld w = QoT.loadWorld(new GameWorld(f));
+			w.addEntity(p);
+			
+			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+		}
 	}
 	
 }

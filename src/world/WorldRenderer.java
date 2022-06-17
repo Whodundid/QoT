@@ -1,6 +1,8 @@
 package world;
 
 import engine.GameTopRenderer;
+import engine.input.Keyboard;
+import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -8,8 +10,8 @@ import eutil.math.NumberUtil;
 import eutil.misc.Rotation;
 import game.entities.Entity;
 import game.entities.Player;
+import game.worldTiles.WorldTile;
 import main.QoT;
-import world.resources.WorldTile;
 
 import java.util.Comparator;
 
@@ -26,7 +28,7 @@ public class WorldRenderer extends EGui {
 	int x, y, w, h;
 	
 	double worldXPos, worldYPos;
-	int oldWorldX, oldWorldY;
+	int oldWorldX = Integer.MIN_VALUE, oldWorldY = Integer.MIN_VALUE;
 	
 	int viewDist = 30;
 	
@@ -34,6 +36,8 @@ public class WorldRenderer extends EGui {
 	boolean drawPosBox = false;
 	boolean drawEntityHitboxes = false;
 	boolean drawEntityOutlines = false;
+	
+	private EArrayList<WorldTile> entityOrder = new EArrayList();
 	
 	//---------------------
 	int left;
@@ -51,65 +55,63 @@ public class WorldRenderer extends EGui {
 		if (world != null) {
 			//load entities
 			world.getEntitySpawns().forEach(e -> e.spawnEntity(world));
+			
+			//add all walls to a separate list
+			int w = world.getWidth();
+			int h = world.getHeight();
+			for (int i = 0; i < w; i++) {
+				for (int j = 0; j < h; j++) {
+					WorldTile t = world.getTileAt(i, j);
+					if (t == null) continue;
+					if (t.isWall()) entityOrder.add(t);
+				}
+			}
+			
+			//entityOrder.addAll(world.getEntitiesInWorld());
 		}
 	}
 	
+	@Override
+	public void keyPressed(char typedChar, int keyCode) {
+		if (!GameTopRenderer.isTopFocused() && !(Keyboard.isCtrlDown() || Keyboard.isAltDown() || Keyboard.isShiftDown())) {
+			if (typedChar == 'h') drawEntityHitboxes = !drawEntityHitboxes;
+			if (typedChar == 'p') drawPosBox = !drawPosBox;
+			if (typedChar == 'o') drawEntityOutlines = !drawEntityOutlines;
+		}
+	}
+	
+	//---------
+	// Methods
+	//---------
+	
+	/**
+	 * Should be called from main game render tick, every tick.
+	 */
 	public void onRenderTick() {
-		if (world != null && world.isFileLoaded()) { renderWorld(); }
+		renderWorld();
 	}
 	
 	private void renderWorld() {
-		Player p = QoT.thePlayer;
-		
-		if (world == null) { drawStringC("Failed to load!", midX, midY); }
-		else if (world.getWidth() < 0 || world.getHeight() < 0 || world.getTileWidth() <= 0 || world.getTileHeight() <= 0) { drawStringC("Bad world dimensions!", midX, midY); }
+		if (world == null) drawStringC("Failed to load!", midX, midY);
+		else if (world.width < 0 || world.height < 0 || world.tileWidth <= 0 || world.tileHeight <= 0) {
+			drawStringC("Bad world dimensions!", midX, midY);
+		}
 		else {
-			
 			w = (int) (world.getTileWidth() * world.getZoom());
 			h = (int) (world.getTileHeight() * world.getZoom());
 			
 			x = (int) (midX - (distX * w) - (w / 2));
 			y = (int) (midY - (distY * h) - (h / 2));
 			
-			//drawTexture((double) -p.worldX * (double) ((double) world.getTileWidth() / 3.5),
-			//			(double) -p.worldY * (double) ((double) world.getTileHeight() / 3.5),
-			//			QoT.getWidth() * 4, QoT.getHeight() * 4, WorldTextures.wood);
-			
 			renderMap();
+			renderWalls();
 			renderEntities();
+			//drawViewBox();
 			
+			if (drawPosBox) drawPosBox();
 			
-			
-			if (drawPosBox) { drawPosBox(); }
-		}
-		
-		if (world != null) {
-			//int tW = (int) (FontRenderer.getStringWidth(world.getName()) / 2);
-			//drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
-			//drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
-			//drawStringC(world.getName(), midX, 15);
-			
-			//drawString("Dims: " + world.getWidth() + " " + world.getHeight(), startX + 10, endY + 60);
-		}
-		
-		//drawString("Dist: " + distX + " " + distY, reload.startX + 10, reload.endY + 20);
-		//drawString("Zoom: " + NumUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
-		//drawString("WPos: " + p.worldX + " " + p.worldY, reload.startX + 10, reload.endY + 100);
-		//drawString("PPos: " + p.startX + " " + p.startY, 10, 10);
-		
-		//this.viewDist = 1000;
-		
-		oldWorldX = p.worldX;
-		oldWorldY = p.worldY;
-	}
-	
-	@Override
-	public void keyPressed(char typedChar, int keyCode) {
-		if (!GameTopRenderer.isTopFocused()) {
-			//if (typedChar == 'e') QoT.getActiveTopParent().displayWindow(new InventoryWindow(QoT.getPlayer()));
-			if (typedChar == 'h') drawEntityHitboxes = !drawEntityHitboxes;
-			if (typedChar == 'p') drawPosBox = !drawPosBox;
-			if (typedChar == 'o') drawEntityOutlines = !drawEntityOutlines;
+			oldWorldX = QoT.thePlayer.worldX;
+			oldWorldY = QoT.thePlayer.worldY;
 		}
 	}
 	
@@ -120,6 +122,7 @@ public class WorldRenderer extends EGui {
 		
 		//only update values if needed
 		if (p.worldX != oldWorldX || p.worldY != oldWorldY) {
+			//restrict drawing to the dimensions of the world
 			left = NumberUtil.clamp(p.worldX - distX, 0, world.getWidth() - 1);
 			top = NumberUtil.clamp(p.worldY - distY, 0, world.getHeight() - 1);
 			right = NumberUtil.clamp(p.worldX + distX, left, world.getWidth() - 1);
@@ -133,26 +136,169 @@ public class WorldRenderer extends EGui {
 		double pStartX = Math.abs(p.startX);
 		double pStartY = Math.abs(p.startY);
 		
+		//this route should not process wall tiles
 		for (int i = left, ix = 0; i <= right; i++, ix++) {
 			for (int j = top, jy = 0; j <= bot; j++, jy++) {
 				WorldTile t = world.getWorldData()[i][j];
-				if (t != null) {
+				if (t == null || !t.hasTexture()) continue;
+				if (t.isWall()) continue;
+				GameTexture tex = t.getTexture();
+				
+				double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
+				double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);
+				
+				if (p.worldX < distX) drawPosX += (distX - p.worldX) * w;
+				if (p.worldY < distY) drawPosY += (distY - p.worldY) * h;
+				
+				double dX = drawPosX + (ix * w);
+				double dY = drawPosY + (jy * h);
+				
+				int brightness = calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1);
+				
+				drawTexture(tex, dX, dY, w, h, false, brightness);
 					
-					double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
-					double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);
+				//draw bottom of map edge or if right above a tile with no texture/void
+				WorldTile tileBelow = null;
+				if ((j + 1) <= bot) tileBelow = world.getWorldData()[i][j + 1];
+				if ((tileBelow == null || !tileBelow.hasTexture()) && !t.isWall()) {
+					drawTexture(tex, dX, dY + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
+				}
+			}
+		}
+	}
+	
+	private void sortEntitiesAndWalls() {
+		for (int i = 1; i < entityOrder.size(); i++) {
+			
+		}
+	}
+	
+	private void renderWalls() {
+		Player p = QoT.thePlayer;
+		double offsetX = (p.startX % w);
+		double offsetY = (p.startY % h);
+		
+		int worldTileWidth = -world.getTileWidth();
+		int worldTileHeight = -world.getTileHeight();
+		double pStartX = Math.abs(p.startX);
+		double pStartY = Math.abs(p.startY);
+		
+		//the tile must be a wall here
+		for (int i = left, ix = 0; i <= right; i++, ix++) {
+			for (int j = top, jy = 0; j <= bot; j++, jy++) {
+				WorldTile t = world.getWorldData()[i][j];
+				if (t == null) continue;
+				if (!t.isWall()) continue;
+				if (!t.hasTexture()) continue;
+				double wh = h * t.getWallHeight(); //wh == 'wallHeight'
+				GameTexture tex = t.getTexture();
+				
+				double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
+				double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);
+				
+				if (p.worldX < distX) drawPosX += (distX - p.worldX) * w;
+				if (p.worldY < distY) drawPosY += (distY - p.worldY) * h;
+				
+				double dX = drawPosX + (ix * w);
+				double dY = drawPosY + (jy * h);
+				
+				//determine tile brightness
+				int brightness = calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1);
+				int tileBrightness = brightness;
+				int wallBrightness = brightness;
+				
+				if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
+				
+				//draw main texture slightly above main location
+				drawTexture(tex, dX, dY - wh, w, h, false, tileBrightness);
+				
+				//check if the tile directly above is a wall
+				//if so - don't draw wall side
+				WorldTile tb = null; // tb == 'tileBelow'
+				if ((j + 1) <= bot) tb = world.getWorldData()[i][j + 1];
+				if ((tb == null ||
+					!tb.hasTexture() ||
+					 tb.getWallHeight() < wh) ||
+					!tb.isWall())
+				{
+					double yPos;
 					
-					if (p.worldX < distX) { drawPosX += (distX - p.worldX) * w; }
-					if (p.worldY < distY) { drawPosY += (distY - p.worldY) * h; }
-					
-					double dX = drawPosX + (ix * w);
-					double dY = drawPosY + (jy * h);
-					
-					//String coords = ("(" + (ix + i) + ", " + (jy + j) + ") : " + "(" + p.worldX + ", " + p.worldY + ")");
-					//drawString(t.getWorldX() + " : " + t.getWorldY() / w, 0, 50, EColors.white);
-					
-					if (t.hasTexture()) {
-						drawTexture(t.getTexture(), dX, dY, w, h, false, calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1));
+					if (wh > 0) {
+						yPos = dY + h - wh;
+						wallBrightness = EColors.changeBrightness(brightness, 125);
 					}
+					else {
+						yPos = dY - wh;
+						wallBrightness = brightness;
+					}
+					
+					//draw wall side slightly below
+					drawTexture(tex, dX, yPos, w, wh, false, wallBrightness);
+				}
+				
+				//draw bottom of map edge or if right above a tile with no texture/void
+				WorldTile tileBelow = null;
+				if ((j + 1) <= bot) tileBelow = world.getWorldData()[i][j + 1];
+				if ((tileBelow == null || !tileBelow.hasTexture())) {
+					drawTexture(tex, dX, dY + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
+				}
+			}
+		}
+	}
+	
+	private void renderEntities() {
+		EArrayList<Entity> entities = world.getEntitiesInWorld();
+		entities.sort(Comparator.comparingInt(e -> e.startY));
+		
+		for (Entity e : entities) {
+			if (e.getTexture() != null) {
+				double drawX = 0;
+				double drawY = 0;
+				boolean flip = e.getFacing() == Rotation.RIGHT || e.getFacing() == Rotation.DOWN;
+				
+				if (e == QoT.thePlayer) {
+					drawX = x + distX * w;
+					drawY = y + distY * h;
+					double dw = e.width * world.zoom;
+					double dh = e.height * world.zoom;
+					
+					drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));
+					drawStringC(e.getHeadText(), drawX + dw / 2, drawY - dh / 2);
+				}
+				else {
+					drawX = x + (e.startX) + (distX - QoT.thePlayer.worldX) * w;
+					drawY = y + (e.startY) + (distY - QoT.thePlayer.worldY) * h;
+					
+					double offsetX = (QoT.thePlayer.startX % w);
+					double offsetY = (QoT.thePlayer.startY % h);
+					drawX -= offsetX;
+					drawY -= offsetY;
+					
+					if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
+						double dw = e.width * world.zoom;
+						double dh = e.height * world.zoom;
+						
+						drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));
+						drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
+					}
+				}
+				
+				if (drawEntityHitboxes) {
+					double colSX = drawX + (e.getCollision().startX * world.zoom);
+					double colSY = drawY + (e.getCollision().startY * world.zoom);
+					double colEX = colSX + (e.getCollision().width * world.zoom);
+					double colEY = colSY + (e.getCollision().height * world.zoom);
+					
+					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
+				}
+				
+				if (drawEntityOutlines) {
+					double colSX = drawX;
+					double colSY = drawY;
+					double colEX = colSX + e.width;
+					double colEY = colSY + e.height;
+					
+					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.blue);
 				}
 			}
 		}
@@ -189,64 +335,11 @@ public class WorldRenderer extends EGui {
 	}
 	
 	private void drawViewBox() {
-		//int dsX = x;
-		//int dsY = y;
-		//int deX = x + w + (distX * 2 * w);
-		//int deY = y + h + (distY * 2 * h);
-		//drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
-	}
-	
-	private void renderEntities() {
-		EArrayList<Entity> entities = world.getEntitiesInWorld();
-		entities.sort(Comparator.comparingInt(e -> e.startY));
-		
-		for (Entity e : entities) {
-			if (e.getTexture() != null) {
-				double drawX = 0;
-				double drawY = 0;
-				boolean flip = e.getFacing() == Rotation.RIGHT || e.getFacing() == Rotation.DOWN;
-				
-				if (e == QoT.thePlayer) {
-					drawX = x + distX * w;
-					drawY = y + distY * h;
-					
-					drawTexture(e.getTexture(), drawX, drawY, e.width, e.height, flip, calcBrightness(e.worldX, e.worldY));
-					drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
-				}
-				else {
-					drawX = x + (e.startX) + (distX - QoT.thePlayer.worldX) * w;
-					drawY = y + (e.startY) + (distY - QoT.thePlayer.worldY) * h;
-					
-					double offsetX = (QoT.thePlayer.startX % w);
-					double offsetY = (QoT.thePlayer.startY % h);
-					drawX -= offsetX;
-					drawY -= offsetY;
-					
-					if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
-						drawTexture(e.getTexture(), drawX, drawY, e.width, e.height, flip, calcBrightness(e.worldX, e.worldY));
-						drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
-					}
-				}
-				
-				if (drawEntityHitboxes) {
-					double colSX = drawX + e.getCollision().startX;
-					double colSY = drawY + e.getCollision().startY;
-					double colEX = colSX + e.getCollision().width;
-					double colEY = colSY + e.getCollision().height;
-					
-					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
-				}
-				
-				if (drawEntityOutlines) {
-					double colSX = drawX;
-					double colSY = drawY;
-					double colEX = colSX + e.width;
-					double colEY = colSY + e.height;
-					
-					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.blue);
-				}
-			}
-		}
+		int dsX = x;
+		int dsY = y;
+		int deX = x + w + (distX * 2 * w);
+		int deY = y + h + (distY * 2 * h);
+		drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
 	}
 	
 	public void onWindowResized() {
@@ -267,5 +360,10 @@ public class WorldRenderer extends EGui {
 		}
 		
 	}
+	
+	public int getDistX() { return distX; }
+	public int getDistY() { return distY; }
+	public void setDistX(int in) { distX = in; }
+	public void setDistY(int in) { distY = in; }
 	
 }

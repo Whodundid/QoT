@@ -8,7 +8,7 @@ import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
-import eutil.misc.FileOpener;
+import eutil.sys.FileOpener;
 import main.QoT;
 
 import java.io.File;
