@@ -87,7 +87,7 @@ public class WorldTile implements Comparable<WorldTile> {
 	 * <p>
 	 * Note: this does NOT represent screen coordinates.
 	 */
-	protected int worldX, worldY;
+	protected int worldX, worldY, worldZ;
 	
 	protected EArrayList<Entity> entitiesOnTile = new EArrayList(10);
 	protected EArrayList<Entity> entitiesAdding = new EArrayList(10);
@@ -166,9 +166,10 @@ public class WorldTile implements Comparable<WorldTile> {
 	public WorldTile setWall(boolean val) { isWall = val; return this; }
 	public WorldTile setWildCard(boolean val) { wildCardTexture = val; return this; }
 	
-	public WorldTile setWorldPos(int x, int y) {
+	public WorldTile setWorldPos(int x, int y, int z) {
 		worldX = x;
 		worldY = y;
+		worldZ = z;
 		return this;
 	}
 	

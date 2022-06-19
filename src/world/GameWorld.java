@@ -26,7 +26,7 @@ public class GameWorld {
 	protected int width, height;
 	protected int tileWidth, tileHeight;
 	protected double zoom = 1;
-	protected WorldTile[][] worldData = new WorldTile[0][0];
+	protected WorldTile[][][] worldData = new WorldTile[0][0][];
 	protected EArrayList<Entity> entityData = new EArrayList();
 	protected EArrayList<EntitySpawn> entitySpawns = new EArrayList();
 	protected EArrayList<Region> regionData = new EArrayList();
@@ -37,6 +37,8 @@ public class GameWorld {
 	
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
+	
+	public static final int WORLD_HEIGHT = 10;
 	
 	//--------------
 	// Constructors
@@ -49,7 +51,7 @@ public class GameWorld {
 		height = heightIn;
 		tileWidth = tileWidthIn;
 		tileHeight = tileHeightIn;
-		worldData = new WorldTile[width][height];
+		worldData = new WorldTile[width][height][WORLD_HEIGHT];
 		entityData = new EArrayList();
 		fileLoaded = true;
 		
@@ -63,7 +65,7 @@ public class GameWorld {
 			height = 0;
 			tileWidth = 0;
 			tileHeight = 0;
-			worldData = new WorldTile[0][0];
+			worldData = new WorldTile[0][0][WORLD_HEIGHT];
 			entityData = new EArrayList();
 			fileLoaded = false;
 		}
@@ -82,7 +84,7 @@ public class GameWorld {
 		tileWidth = 0;
 		tileHeight = 0;
 		zoom = 1;
-		worldData = new WorldTile[0][0];
+		worldData = new WorldTile[0][0][WORLD_HEIGHT];
 		entityData = new EArrayList();
 		fileLoaded = false;
 	}
@@ -285,11 +287,11 @@ public class GameWorld {
 		return false;
 	}
 	
-	public GameWorld fillWith(WorldTile t) { return fillWith(t, true); }
-	public GameWorld fillWith(WorldTile t, boolean randomize) {
+	public GameWorld fillLayerWith(int layer, WorldTile t) { return fillLayerWith(layer, t, true); }
+	public GameWorld fillLayerWith(int layer, WorldTile t, boolean randomize) {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				worldData[i][j] = WorldTile.randVariant(t).setWorldPos(i, j);
+				worldData[i][j][layer] = WorldTile.randVariant(t).setWorldPos(i, j, layer);
 			}
 		}
 		return this;
@@ -358,14 +360,14 @@ public class GameWorld {
 	public int getTileHeight() { return tileHeight; }
 	public int getPixelWidth() { return width * tileWidth; }
 	public int getPixelHeight() { return height * tileHeight; }
-	public WorldTile[][] getWorldData() { return worldData; }
+	public WorldTile[][][] getWorldData() { return worldData; }
 	public File getWorldFile() { return new File(getFileName()); }
 	public boolean exists() { return getWorldFile().exists(); }
 	public double getZoom() { return zoom; }
 	public boolean isUnderground() { return underground; }
 	
-	public WorldTile getTileAt(int xIn, int yIn) {
-		return worldData[xIn][yIn];
+	public WorldTile getTileAt(int xIn, int yIn, int zIn) {
+		return worldData[xIn][yIn][zIn];
 	}
 	
 	public EArrayList<Entity> getEntitiesInWorld() { return entityData; }
@@ -383,9 +385,9 @@ public class GameWorld {
 		return this;
 	}
 	
-	public GameWorld setTileAt(int xIn, int yIn, WorldTile in) {
-		if (in != null) in.setWorldPos(xIn, yIn);
-		worldData[xIn][yIn] = in;
+	public GameWorld setTileAt(int xIn, int yIn, int zIn, WorldTile in) {
+		if (in != null) in.setWorldPos(xIn, yIn, zIn);
+		worldData[xIn][yIn][zIn] = in;
 		return this;
 	}
 	
