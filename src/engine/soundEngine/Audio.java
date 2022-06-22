@@ -14,11 +14,13 @@ public class Audio {
 	private String name;
 	private Clip clip;
 	
-	public Audio(String nameIn, String musicFile) {
+	public Audio(String nameIn, String musicFile) { this(nameIn, null, musicFile); }
+	public Audio(String nameIn, String basePath, String fileName) {
+		if (basePath != null) fileName = basePath + fileName;
 		name = nameIn;
 		
 		try {
-			File file = new File(musicFile);
+			File file = new File(fileName);
 			AudioInputStream sound = AudioSystem.getAudioInputStream(file);
 			clip = AudioSystem.getClip();
 			clip.open(sound);

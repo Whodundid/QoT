@@ -10,7 +10,8 @@ public class WorldTextures {
 	
 	// Textures
 	
-	private static final String world = "bin/textures/world/";
+	private static final String world = "resources/textures/world/";
+	private static final String dung = "resources/textures/world/dungeon/";
 	
 	private static final EArrayList<GameTexture> textures = new EArrayList();
 	
@@ -26,11 +27,11 @@ public class WorldTextures {
 	public static final GameTexture farm2 = new GameTexture("Farm2", world, "farm2.png");
 	public static final GameTexture farm3 = new GameTexture("Farm3", world, "farm3.png");
 	
-	public static final GameTexture dungWallA = new GameTexture("Dungeon Wall A", "bin/textures/world/dungeon/dungenFloorA.png");
-	public static final GameTexture dungWallB = new GameTexture("Dungeon Wall B", "bin/textures/world/dungeon/dungenFloorB.png");
-	public static final GameTexture dungOldWallA = new GameTexture("Dungeon Old Wall A", "bin/textures/world/dungeon/dungeonFloorA.png");
-	public static final GameTexture dungOldWallB = new GameTexture("Dungeon Old Wall B", "bin/textures/world/dungeon/dungeonFloorB.png");
-	public static final GameTexture dungFloor = new GameTexture("Dungeon Floor", "bin/textures/world/dungeon/dungWall.png");
+	public static final GameTexture dungWallA = new GameTexture("Dungeon Wall A", dung, "dungenFloorA.png");
+	public static final GameTexture dungWallB = new GameTexture("Dungeon Wall B", dung, "dungenFloorB.png");
+	public static final GameTexture dungOldWallA = new GameTexture("Dungeon Old Wall A", dung, "dungeonFloorA.png");
+	public static final GameTexture dungOldWallB = new GameTexture("Dungeon Old Wall B", dung, "dungeonFloorB.png");
+	public static final GameTexture dungFloor = new GameTexture("Dungeon Floor", dung, "dungWall.png");
 	
 	public static void registerTextures(TextureSystem systemIn) {
 		systemIn.registerTexture(grass);

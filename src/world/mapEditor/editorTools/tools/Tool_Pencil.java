@@ -17,9 +17,8 @@ public class Tool_Pencil extends EditorTool {
 	public void onPress() {
 		item = (button == 0) ? getPrimary() : getSecondary();
 		
-		if (item != null) {
-			if (item.isTile()) setTile(WorldTile.randVariant(item.getTile()));
-			else if (item.isEntity()) {}
+		if (item != null && item.isTile()) {
+			setTile(WorldTile.randVariant(item.getTile()));
 		}
 		else setTile(null);
 	}

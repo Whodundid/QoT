@@ -50,6 +50,7 @@ public class RegionSidePanel extends SidePanel {
 		loadRegions();
 		
 		editor.getToolBox().setToolsWithSelector(ToolCategory.from("Region", EditorToolType.ADD_REGION));
+		editor.getSettings().setCurrentTool(EditorToolType.SELECTOR);
 	}
 	
 	public void loadRegions() {

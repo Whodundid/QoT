@@ -38,12 +38,6 @@ public class EditorToolBox extends WindowObject {
 	public void initObjects() {
 		//position each tool within the list and actually create and apply the dimensions
 		buildTools(selector);
-		
-		WindowHeader header = new WindowHeader(this, false, 10);
-		header.setDrawTitle(false);
-		header.setDrawParentFocus(false);
-		
-		addObject(header);
 	}
 	
 	@Override
@@ -69,11 +63,29 @@ public class EditorToolBox extends WindowObject {
 		}
 	}
 	
-	public EditorToolBox setTools(ToolCategory... categories) { buildTools(categories); return this; }
-	public EditorToolBox setToolsWithSelector(ToolCategory... categories) { buildTools(EUtil.add(selector, categories)); return this; }
+	public EditorToolBox setTools(ToolCategory... categories) {
+		buildTools(categories);
+		WindowHeader header = new WindowHeader(this, false, 10);
+		header.setDrawTitle(false);
+		header.setDrawParentFocus(false);
+		
+		addObject(header);
+		return this;
+	}
+	
+	public EditorToolBox setToolsWithSelector(ToolCategory... categories) {
+		buildTools(EUtil.add(selector, categories));
+		WindowHeader header = new WindowHeader(this, false, 10);
+		header.setDrawTitle(false);
+		header.setDrawParentFocus(false);
+		
+		addObject(header);
+		return this;
+	}
 	
 	private void buildTools(ToolCategory... categories) {
-		getObjects().removeAll(toolButtons);
+		//getObjects().removeAll(toolButtons);
+		getObjects().clear();
 		toolButtons.clear();
 		
 		int w = (rowWidth * toolSize) + rowWidth + 3;

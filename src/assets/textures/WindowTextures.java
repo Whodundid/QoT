@@ -36,7 +36,7 @@ public class WindowTextures {
 	public static final GameTexture file_up_sel;
 	public static final GameTexture new_folder;
 	
-	private static final String base = "bin/textures/envision/window/";
+	private static final String base = "resources/textures/envision/window/";
 	
 	static {
 		checkmark = new GameTexture("checkmark", base, "checkmark.png");

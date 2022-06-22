@@ -9,14 +9,15 @@ import game.items.Item;
 public class EntitySpawn {
 	
 	private int x, y;
-	private EntityList type;
+	private int type;
 	private EArrayList<Item> spawnItems = new EArrayList();
 	private int initHealth = -1;
 	private int initMana = -1;
 	private Rotation initFacing = Rotation.LEFT;
 	
 	private EntitySpawn() {}
-	public EntitySpawn(int xIn, int yIn, EntityList typeIn) {
+	public EntitySpawn(int xIn, int yIn, Entity entIn) { this(xIn, yIn, entIn.getObjectID()); }
+	public EntitySpawn(int xIn, int yIn, int typeIn) {
 		x = xIn;
 		y = yIn;
 		type = typeIn;
@@ -29,7 +30,7 @@ public class EntitySpawn {
 		String[] tokens = in.split(" ");
 		spawn.x = Integer.parseInt(tokens[0]);
 		spawn.y = Integer.parseInt(tokens[1]);
-		spawn.type = EntityList.getType(Integer.parseInt(tokens[2]));
+		spawn.type = Integer.parseInt(tokens[2]);
 		
 		if (tokens.length > 3) {
 			for (int i = 3; i < tokens.length; i++) {
@@ -60,7 +61,7 @@ public class EntitySpawn {
 	
 	public int getX() { return x; }
 	public int getY() { return y; }
-	public EntityList getType() { return type; }
+	public int getType() { return type; }
 	public EArrayList<Item> getItems() { return spawnItems; }
 	public int getHealth() { return initHealth; }
 	public int getMana() { return initMana; }
@@ -75,7 +76,7 @@ public class EntitySpawn {
 	public String toSaveString() {
 		String out = "ent ";
 		out += x + " " + y;
-		out += " " + type.ID;
+		out += " " + type;
 		out += (initHealth > 0) ? " h " + initHealth : "";
 		out += (initMana > 0) ? " m " + initMana : "";
 		out += (initFacing != Rotation.LEFT) ? " d " + initFacing : "";

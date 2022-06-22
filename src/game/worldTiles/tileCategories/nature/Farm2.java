@@ -8,6 +8,8 @@ public class Farm2 extends WorldTile {
 	public Farm2() {
 		super(TileIDs.FARM2);
 		blocksMovement = true;
+		setWall(true);
+		this.wallHeight = 0.20;
 	}
 	
 }

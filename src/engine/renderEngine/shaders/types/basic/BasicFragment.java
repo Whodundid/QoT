@@ -10,7 +10,7 @@ public class BasicFragment extends FragmentShader {
 	//--------------
 	
 	public BasicFragment() {
-		super("BasicFragment", "bin/shaders/basicFragment.glsl");
+		super("BasicFragment", "resources/shaders/basicFragment.glsl");
 	}
 	
 }

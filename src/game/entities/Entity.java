@@ -1,27 +1,19 @@
 package game.entities;
 
-import engine.renderEngine.GLObject;
-import engine.renderEngine.textureSystem.GameTexture;
 import eutil.debug.Broken;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import eutil.misc.Direction;
 import eutil.misc.Rotation;
 import game.EntityLevel;
+import game.GameObject;
 import game.worldTiles.WorldTile;
 import main.QoT;
 import world.GameWorld;
 
-public abstract class Entity extends GLObject {
+public abstract class Entity extends GameObject {
 	
 	public GameWorld world;
-	public GameTexture texture;
-	public int startX, startY, endX, endY;
-	public int midX, midY;
-	public int width, height;
-	public EDimension collisionBox = new EDimension();
-	public int worldX, worldY;
-	protected String name;
 	protected String headText = "";
 	protected boolean passable = false;
 	protected boolean allowNoClip = false;
@@ -63,7 +55,7 @@ public abstract class Entity extends GLObject {
 	//--------------
 	
 	public Entity(String nameIn) {
-		name = nameIn;
+		super(nameIn);
 		
 		//determine initial next level
 		xpNeeded = EntityLevel.getXPNeededForNextLevel(level + 1);
@@ -132,7 +124,7 @@ public abstract class Entity extends GLObject {
 			y = Math.signum(y);
 			boolean stopMove = false;
 			
-			if (this != QoT.thePlayer) return;
+			//if (this != QoT.thePlayer) return;
 			
 			if (!allowNoClip) {
 				boolean left = false, right = false, up = false, down = false;
@@ -350,14 +342,11 @@ public abstract class Entity extends GLObject {
 	// Getters
 	//---------
 	
-	public GameTexture getTexture() { return texture; }
 	public EDimension getCollision() { return collisionBox; }
 	public boolean isPassable() { return passable; }
 	public boolean isNoClipping() { return allowNoClip; }
 	public Rotation getFacing() { return facing; }
 	public String getHeadText() { return headText; }
-	
-	public String getName() { return name; }
 
 	public int getLevel() { return level; }
 	public long getExperience() { return experience; }
@@ -383,7 +372,6 @@ public abstract class Entity extends GLObject {
 	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }
 	public Entity setCollisionBox(double sX, double sY, double eX, double eY) { collisionBox = new EDimension(sX, sY, eX, eY); return this; }
-	public Entity setSprite(GameTexture in) { texture = in; return this; }
 	public Entity setFacing(Rotation dir) { facing = dir; return this; }
 	public Entity setHeadText(String textIn) { headText = textIn; return this; }
 	
@@ -406,8 +394,6 @@ public abstract class Entity extends GLObject {
 		}
 		return this;
 	}
-
-	public Entity setName(String nameIn) { name = nameIn; return this; }
 	
 	public Entity setMaxHealth(int maxHealthIn) { maxHealth = maxHealthIn; return this; }
 	public Entity setHealth(int healthIn) { health = healthIn; return this; }

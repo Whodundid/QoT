@@ -9,12 +9,17 @@ public class TrollBoar extends Enemy {
 	public TrollBoar(int posX, int posY) {
 		super("Troll Boar");
 		init(posX, posY, 64, 64);
-		texture = EntityTextures.trollboar;
+		sprite = EntityTextures.trollboar;
 	}
 	
 	@Override
 	public void onLivingUpdate() {
 		move(RandomUtil.randomDir());
+	}
+	
+	@Override
+	public int getObjectID() {
+		return 3;
 	}
 	
 }

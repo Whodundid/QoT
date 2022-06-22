@@ -42,6 +42,8 @@ public class TerrainSidePanel extends PaletteSidePanel {
 		buildTiles();
 		if (buttons.size() >= 1) editor.getSettings().setPrimaryPalette(EditorItem.of(buttons.get(0).getGenericObject()));
 		if (buttons.size() >= 2) editor.getSettings().setSecondaryPalette(EditorItem.of(buttons.get(1).getGenericObject()));
+		
+		editor.getSettings().setCurrentTool(EditorToolType.PENCIL);
 	}
 	
 	private void buildTiles() {
@@ -51,6 +53,8 @@ public class TerrainSidePanel extends PaletteSidePanel {
 		int rowWidth = ((int) width - 10) / bw;
 		
 		for (WorldTile t : GlobalTileList.getTiles()) {
+			if (!t.hasTexture()) continue;
+			
 			WindowButton<WorldTile> b = new WindowButton(panel) {
 				@Override
 				public void drawObject(int mXIn, int mYIn) {
@@ -58,6 +62,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
 					drawHRect(EColors.black);
 				}
 			};
+			
 			b.setGenericObject(t);
 			b.setAcceptRightClicks(true);
 			buttons.add(b);

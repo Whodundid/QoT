@@ -30,7 +30,7 @@ public class WorldRenderer extends EGui {
 	double worldXPos, worldYPos;
 	int oldWorldX = Integer.MIN_VALUE, oldWorldY = Integer.MIN_VALUE;
 	
-	int viewDist = 30;
+	int viewDist = 18;
 	
 	boolean firstPress = false;
 	boolean drawPosBox = false;
@@ -77,6 +77,8 @@ public class WorldRenderer extends EGui {
 			if (typedChar == 'h') drawEntityHitboxes = !drawEntityHitboxes;
 			if (typedChar == 'p') drawPosBox = !drawPosBox;
 			if (typedChar == 'o') drawEntityOutlines = !drawEntityOutlines;
+			if (typedChar == '.') viewDist++;
+			if (typedChar == ',') viewDist--;
 		}
 	}
 	
@@ -97,10 +99,17 @@ public class WorldRenderer extends EGui {
 			drawStringC("Bad world dimensions!", midX, midY);
 		}
 		else {
+			//drawRect(0xff4fedff);
+			if (!world.isUnderground()) drawRect(0xff4fbaff);
+			
+			//pixel width of each tile
 			w = (int) (world.getTileWidth() * world.getZoom());
+			//pixel height of each tile
 			h = (int) (world.getTileHeight() * world.getZoom());
 			
+			//the left most x coordinate for map drawing
 			x = (int) (midX - (distX * w) - (w / 2));
+			//the top most y coordinate for map drawing
 			y = (int) (midY - (distY * h) - (h / 2));
 			
 			renderMap();
@@ -250,56 +259,71 @@ public class WorldRenderer extends EGui {
 		EArrayList<Entity> entities = world.getEntitiesInWorld();
 		entities.sort(Comparator.comparingInt(e -> e.startY));
 		
-		for (Entity e : entities) {
-			if (e.getTexture() != null) {
-				double drawX = 0;
-				double drawY = 0;
-				boolean flip = e.getFacing() == Rotation.RIGHT || e.getFacing() == Rotation.DOWN;
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			Entity e = entities.get(i);
+			if (e.getTexture() == null) continue;
+			
+			double drawX = 0;
+			double drawY = 0;
+			boolean flip = e.getFacing() == Rotation.RIGHT || e.getFacing() == Rotation.DOWN;
+			
+			if (e == QoT.thePlayer) {
+				drawX = x + distX * w;
+				drawY = y + distY * h;
+				double dw = e.width * world.zoom;
+				double dh = e.height * world.zoom;
 				
-				if (e == QoT.thePlayer) {
-					drawX = x + distX * w;
-					drawY = y + distY * h;
+				//shadows
+				for (int s = 0; s < 6; s++) {
+					double rX = (e.width / 4) - (s * e.width / 80);
+					double rY = (e.height / 16) - (s * e.height / 64);
+					drawFilledEllipse((drawX + dw / 2), (drawY + dh), rX, rY, 16, EColors.dgray.opacity(0x16));
+				}
+				
+				drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));
+				drawStringC(e.getHeadText(), drawX + dw / 2, drawY - dh / 2);
+			}
+			else {
+				drawX = x + (e.startX) + (distX - QoT.thePlayer.worldX) * w;
+				drawY = y + (e.startY) + (distY - QoT.thePlayer.worldY) * h;
+				
+				double offsetX = (QoT.thePlayer.startX % w);
+				double offsetY = (QoT.thePlayer.startY % h);
+				drawX -= offsetX;
+				drawY -= offsetY;
+				
+				if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
 					double dw = e.width * world.zoom;
 					double dh = e.height * world.zoom;
 					
-					drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));
-					drawStringC(e.getHeadText(), drawX + dw / 2, drawY - dh / 2);
-				}
-				else {
-					drawX = x + (e.startX) + (distX - QoT.thePlayer.worldX) * w;
-					drawY = y + (e.startY) + (distY - QoT.thePlayer.worldY) * h;
-					
-					double offsetX = (QoT.thePlayer.startX % w);
-					double offsetY = (QoT.thePlayer.startY % h);
-					drawX -= offsetX;
-					drawY -= offsetY;
-					
-					if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
-						double dw = e.width * world.zoom;
-						double dh = e.height * world.zoom;
-						
-						drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));
-						drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
+					//shadows
+					for (int s = 0; s < 12; s++) {
+						double rX = (e.width / 4) - (s * e.width / 80);
+						double rY = (e.height / 8) - (s * e.height / 64);
+						drawFilledEllipse((drawX + dw / 2), (drawY + dh - dh / 5), rX, rY, 16, EColors.vdgray.opacity(0x16));
 					}
-				}
-				
-				if (drawEntityHitboxes) {
-					double colSX = drawX + (e.getCollision().startX * world.zoom);
-					double colSY = drawY + (e.getCollision().startY * world.zoom);
-					double colEX = colSX + (e.getCollision().width * world.zoom);
-					double colEY = colSY + (e.getCollision().height * world.zoom);
 					
-					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
+					drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));
+					drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
 				}
+			}
+			
+			if (drawEntityHitboxes) {
+				double colSX = drawX + (e.getCollision().startX * world.zoom);
+				double colSY = drawY + (e.getCollision().startY * world.zoom);
+				double colEX = colSX + (e.getCollision().width * world.zoom);
+				double colEY = colSY + (e.getCollision().height * world.zoom);
 				
-				if (drawEntityOutlines) {
-					double colSX = drawX;
-					double colSY = drawY;
-					double colEX = colSX + e.width;
-					double colEY = colSY + e.height;
-					
-					drawHRect(colSX, colSY, colEX, colEY, 1, EColors.blue);
-				}
+				drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
+			}
+			
+			if (drawEntityOutlines) {
+				double colSX = drawX;
+				double colSY = drawY;
+				double colEX = colSX + e.width;
+				double colEY = colSY + e.height;
+				
+				drawHRect(colSX, colSY, colEX, colEY, 1, EColors.blue);
 			}
 		}
 	}

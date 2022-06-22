@@ -12,9 +12,11 @@ public class GeneralTextures {
 	public static final GameTexture logo;
 	public static final GameTexture noscreens;
 	
+	private static final String base = "resources/textures/general/";
+	
 	static {
-		logo = new GameTexture("logo", "bin/textures/general/qot_logo.png");
-		noscreens = new GameTexture("noscreens", "bin/textures/general/noscreens.jpg");
+		logo = new GameTexture("logo", base, "qot_logo.png");
+		noscreens = new GameTexture("noscreens", base, "noscreens.jpg");
 	}
 	
 	public static void registerTextures(TextureSystem systemIn) {

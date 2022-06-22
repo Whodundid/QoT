@@ -24,21 +24,23 @@ public class EditorTextures {
 	public static final GameTexture play;
 	public static final GameTexture stop;
 	
+	private static final String base = "resources/textures/editor/";
+	
 	static {
-		rectangle = new GameTexture("rectangle", "bin/textures/editor/rectsel.png");
-		move = new GameTexture("move", "bin/textures/editor/move.png");
-		magicWand = new GameTexture("magicWand", "bin/textures/editor/magicwand.png");
-		paintBucket = new GameTexture("paintBucket", "bin/textures/editor/paintbucket.png");
-		brush = new GameTexture("brush", "bin/textures/editor/brush.png");
-		pencil = new GameTexture("pencil", "bin/textures/editor/pencil.png");
-		eyeDropper = new GameTexture("eyeDropper", "bin/textures/editor/eyedropper.png");
-		eraser = new GameTexture("eraser", "bin/textures/editor/eraser.png");
-		line = new GameTexture("line", "bin/textures/editor/line.png");
-		select = new GameTexture("select", "bin/textures/editor/select.png");
-		shape = new GameTexture("shape", "bin/textures/editor/shape.png");
+		rectangle = new GameTexture("rectangle", base, "rectsel.png");
+		move = new GameTexture("move", base, "move.png");
+		magicWand = new GameTexture("magicWand", base, "magicwand.png");
+		paintBucket = new GameTexture("paintBucket", base, "paintbucket.png");
+		brush = new GameTexture("brush", base, "brush.png");
+		pencil = new GameTexture("pencil", base, "pencil.png");
+		eyeDropper = new GameTexture("eyeDropper", base, "eyedropper.png");
+		eraser = new GameTexture("eraser", base, "eraser.png");
+		line = new GameTexture("line", base, "line.png");
+		select = new GameTexture("select", base, "select.png");
+		shape = new GameTexture("shape", base, "shape.png");
 		
-		play = new GameTexture("play", "bin/textures/editor/play.png");
-		stop = new GameTexture("stop", "bin/textures/editor/stop.png");
+		play = new GameTexture("play", base, "play.png");
+		stop = new GameTexture("stop", base, "stop.png");
 	}
 	
 	public static void registerTextures(TextureSystem ts) {

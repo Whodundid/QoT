@@ -10,7 +10,7 @@ public class BasicVertex extends VertexShader {
 	//--------------
 	
 	public BasicVertex() {
-		super("BasicVertex", "bin/shaders/basicVertex.glsl");
+		super("BasicVertex", "resources/shaders/basicVertex.glsl");
 	}
 	
 }

@@ -6,17 +6,19 @@ import engine.soundEngine.SoundEngine;
 /** This contains every song in the game! */
 public class Songs {
 	
-	public static Audio darkCave = new Audio("dark_cave", "bin/sounds/Dark Cave.wav");
-	public static Audio field = new Audio("field", "bin/sounds/Fields of Flowers.wav");
-	public static Audio larkens = new Audio("larkens", "bin/sounds/Larkens.wav");
-	public static Audio nightfall = new Audio("nightfall", "bin/sounds/Nightfall.wav");
-	public static Audio lithinburg = new Audio("lithinburg", "bin/sounds/Lithinburg.wav");
-	public static Audio theme = new Audio("theme", "bin/sounds/QuestOfThyrahTheme.wav");
-	public static Audio rejuvination = new Audio("rejuvination", "bin/sounds/Rejuvination.wav");
-	public static Audio bossTheme = new Audio("boss_theme", "bin/sounds/Rising Chords.wav");
-	public static Audio battleTheme = new Audio("battle_theme", "bin/sounds/Uplifting.wav");
-	public static Audio varthums = new Audio("varthums", "bin/sounds/Varthums.wav");
-	public static Audio zarus = new Audio("zarus", "bin/sounds/Zarus.wav");
+	private static final String base = "resources/sounds/";
+	
+	public static Audio darkCave = new Audio("dark_cave", base, "Dark Cave.wav");
+	public static Audio field = new Audio("field", base, "Fields of Flowers.wav");
+	public static Audio larkens = new Audio("larkens", base, "Larkens.wav");
+	public static Audio nightfall = new Audio("nightfall", base, "Nightfall.wav");
+	public static Audio lithinburg = new Audio("lithinburg", base, "Lithinburg.wav");
+	public static Audio theme = new Audio("theme", base, "QuestOfThyrahTheme.wav");
+	public static Audio rejuvination = new Audio("rejuvination", base, "Rejuvination.wav");
+	public static Audio bossTheme = new Audio("boss_theme", base, "Rising Chords.wav");
+	public static Audio battleTheme = new Audio("battle_theme", base, "Uplifting.wav");
+	public static Audio varthums = new Audio("varthums", base, "Varthums.wav");
+	public static Audio zarus = new Audio("zarus", base, "Zarus.wav");
 	
 	static {
 		SoundEngine.register(darkCave);

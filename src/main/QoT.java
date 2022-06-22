@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
 import assets.textures.CursorTextures;
+import assets.textures.DoodadTextures;
 import assets.textures.EditorTextures;
 import assets.textures.EntityTextures;
 import assets.textures.GeneralTextures;
@@ -199,6 +200,7 @@ public class QoT {
 		WindowTextures.registerTextures(textureSystem);
 		CursorTextures.registerTextures(textureSystem);
 		GeneralTextures.registerTextures(textureSystem);
+		DoodadTextures.registerTextures(textureSystem);
 		
 		terminalHandler.initCommands();
 		

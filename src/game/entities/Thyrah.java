@@ -9,7 +9,7 @@ public class Thyrah extends Enemy {
 	public Thyrah(int posX, int posY) {
 		super("Thyra, the dragon");
 		init(posX, posY, 128, 128);
-		texture = EntityTextures.thyrah;
+		sprite = EntityTextures.thyrah;
 		
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 		
@@ -30,6 +30,11 @@ public class Thyrah extends Enemy {
 		if (System.currentTimeMillis() - lastMove >= moveTime) {
 			move(lastDir);
 		}
+	}
+	
+	@Override
+	public int getObjectID() {
+		return 4;
 	}
 	
 }

@@ -61,11 +61,11 @@ public class Region {
 	}
 	
 	public void onEntityEntered(Entity in, int xPos, int yPos) {
-		world.entityEnteredRegion(this, in, xPos, yPos);
+		//world.entityEnteredRegion(this, in, xPos, yPos);
 	}
 	
 	public void onEntityExited(Entity in, int xPos, int yPos) {
-		world.entityExitedRegion(this, in, xPos, yPos);
+		//world.entityExitedRegion(this, in, xPos, yPos);
 	}
 	
 	public String getName() { return name; }

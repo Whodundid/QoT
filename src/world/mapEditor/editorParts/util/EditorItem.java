@@ -1,16 +1,18 @@
 package world.mapEditor.editorParts.util;
 
 import engine.renderEngine.textureSystem.GameTexture;
-import game.entities.Entity;
+import game.GameObject;
 import game.worldTiles.WorldTile;
 
-/** An item that can be placed and used in the map editor hotbar. 
- *  Can be used to reference any of the game's assests without needing to individually specificy
- *  a different type for each. */
+/**
+ * An item that can be placed and used in the map editor hotbar. Can be used to
+ * reference any of the game's assets without needing to individually specify
+ * a different type for each.
+ */
 public class EditorItem {
 	
 	WorldTile tile;
-	Entity entity;
+	GameObject object;
 	
 	EditorItemCategory type;
 	
@@ -19,22 +21,22 @@ public class EditorItem {
 		type = EditorItemCategory.TILE;
 	}
 	
-	public EditorItem(Entity entityIn) {
-		entity = entityIn;
-		type = EditorItemCategory.ENTITY;
+	public EditorItem(GameObject objectIn) {
+		object = objectIn;
+		type = EditorItemCategory.GAME_OBJECT;
 	}
 	
 	public boolean isTile() { return type == EditorItemCategory.TILE; }
-	public boolean isEntity() { return type == EditorItemCategory.ENTITY; }
+	public boolean isGameObject() { return type == EditorItemCategory.GAME_OBJECT; }
 	
 	public EditorItemCategory getType() { return type; }
 	public WorldTile getTile() { return tile; }
-	public Entity getEntity() { return entity; }
+	public GameObject getGameObject() { return object; }
 	
 	public String getName() {
 		return switch (type) {
 		case TILE -> (tile != null) ? tile.getName() : "null";
-		case ENTITY -> (entity != null) ? entity.getName() : "null";
+		case GAME_OBJECT -> (object != null) ? object.getName() : "null";
 		default -> null;
 		};
 	}
@@ -42,12 +44,12 @@ public class EditorItem {
 	public GameTexture getTexture() {
 		return switch (type) {
 		case TILE -> (tile != null) ? tile.getTexture() : null;
-		case ENTITY -> (entity != null) ? entity.getTexture() : null;
+		case GAME_OBJECT -> (object != null) ? object.getTexture() : null;
 		default -> null;
 		};
 	}
 	
 	public static EditorItem of(WorldTile tileIn) { return new EditorItem(tileIn); }
-	public static EditorItem of(Entity entityIn) { return new EditorItem(entityIn); }
+	public static EditorItem of(GameObject entityIn) { return new EditorItem(entityIn); }
 	
 }

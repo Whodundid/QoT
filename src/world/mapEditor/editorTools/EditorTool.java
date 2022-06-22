@@ -2,6 +2,7 @@ package world.mapEditor.editorTools;
 
 import engine.input.Mouse;
 import eutil.datatypes.Box2;
+import game.GameObject;
 import game.entities.Entity;
 import game.worldTiles.WorldTile;
 import world.mapEditor.MapEditorScreen;
@@ -38,6 +39,16 @@ public abstract class EditorTool {
 	
 	protected WorldTile getTile() { return editor.getWorld().getTileAt(wx, wy); }
 	protected WorldTile getTile(int x, int y) { return editor.getWorld().getTileAt(x, y); }
+	
+	protected void addObjectToWorld(GameObject obj) {
+		if (obj instanceof Entity ent) {
+			ent.worldX = wx - (ent.width / editor.getWorld().getTileWidth()) / 2;
+			ent.worldY = wy - (ent.height / editor.getWorld().getTileHeight()) / 2 - 2;
+			System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
+			editor.getWorld().addEntity(ent);
+			editor.getWorld().addEntitySpawn(ent);
+		}
+	}
 	
 	protected void setTile(WorldTile t) { editor.getWorld().setTileAt(wx, wy, t); }
 	protected void setTile(int x, int y, WorldTile t) { editor.getWorld().setTileAt(x, y, t); }

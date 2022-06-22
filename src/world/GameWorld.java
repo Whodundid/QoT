@@ -26,7 +26,7 @@ public class GameWorld {
 	protected int width, height;
 	protected int tileWidth, tileHeight;
 	protected double zoom = 1;
-	protected WorldTile[][][] worldData = new WorldTile[0][0][];
+	protected WorldTile[][] worldData = new WorldTile[0][0];
 	protected EArrayList<Entity> entityData = new EArrayList();
 	protected EArrayList<EntitySpawn> entitySpawns = new EArrayList();
 	protected EArrayList<Region> regionData = new EArrayList();
@@ -37,8 +37,6 @@ public class GameWorld {
 	
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
-	
-	public static final int WORLD_HEIGHT = 10;
 	
 	//--------------
 	// Constructors
@@ -51,7 +49,7 @@ public class GameWorld {
 		height = heightIn;
 		tileWidth = tileWidthIn;
 		tileHeight = tileHeightIn;
-		worldData = new WorldTile[width][height][WORLD_HEIGHT];
+		worldData = new WorldTile[width][height];
 		entityData = new EArrayList();
 		fileLoaded = true;
 		
@@ -61,13 +59,7 @@ public class GameWorld {
 	public GameWorld(File worldFile) {
 		if (!loadWorldFromFile(worldFile)) {
 			name = worldFile.getName();
-			width = 0;
-			height = 0;
-			tileWidth = 0;
-			tileHeight = 0;
-			worldData = new WorldTile[0][0][WORLD_HEIGHT];
-			entityData = new EArrayList();
-			fileLoaded = false;
+			setDefaultValues();
 		}
 		else {
 			fileLoaded = true;
@@ -84,7 +76,7 @@ public class GameWorld {
 		tileWidth = 0;
 		tileHeight = 0;
 		zoom = 1;
-		worldData = new WorldTile[0][0][WORLD_HEIGHT];
+		worldData = new WorldTile[0][0];
 		entityData = new EArrayList();
 		fileLoaded = false;
 	}
@@ -97,20 +89,16 @@ public class GameWorld {
 		playerSpawn.setPos(x, y);
 	}
 	
+	//---------
+	// Regions
+	//---------
+	
 	public void highlightRegion(Region regionIn) {
 		highlightedRegions.add(regionIn);
 	}
 	
 	public void addRegion(Region regionIn) {
 		regionData.add(regionIn);
-	}
-	
-	public void entityEnteredRegion(Region region, Entity ent, int xIn, int yIn) {
-		
-	}
-	
-	public void entityExitedRegion(Region region, Entity ent, int xIn, int yIn) {
-		
 	}
 	
 	public void updateEntities() {
@@ -143,159 +131,17 @@ public class GameWorld {
 		return ent;
 	}
 	
+	public void addEntitySpawn(Entity entIn) {
+		entitySpawns.add(new EntitySpawn(entIn.worldX, entIn.worldY, entIn));
+	}
+	
 	public void addEntitySpawn(EntitySpawn spawnIn) {
 		entitySpawns.add(spawnIn);
 	}
 	
-	public synchronized boolean loadWorld() { return loadWorldFromFile(new File(QoT_Settings.getEditorWorldsDir(), name)); }
-	public synchronized boolean loadWorldFromFile(File worldFile) {
-		String worldName = worldFile.getName();
-		if (!worldName.endsWith(".twld")) { worldName += ".twld"; }
-		worldFile = new File(QoT_Settings.getEditorWorldsDir(), worldName);
-		
-		if (worldFile != null && worldFile.exists()) {
-			try (Scanner reader = new Scanner(worldFile)) {
-				
-				EArrayList<EntitySpawn> entitySpawnsIn = new EArrayList();
-				EArrayList<Region> regions = new EArrayList();
-				
-				String mapName = reader.nextLine();
-				int mapWidth = reader.nextInt();
-				int mapHeight = reader.nextInt();
-				int mapTileWidth = reader.nextInt();
-				int mapTileHeight = reader.nextInt();
-				int spawnX = reader.nextInt();
-				int spawnY = reader.nextInt();
-				
-				reader.nextLine();
-				
-				WorldTile[][] data = new WorldTile[mapWidth][mapHeight];
-				
-				for (int i = 0; i < mapWidth; i++) {
-					for (int j = 0; j < mapHeight; j++) {
-						if (reader.hasNext()) {
-							String tile = reader.next();
-							
-							if (!tile.isBlank()) {
-								int tileID = -1;
-								int childID = 0;
-								String[] parts = tile.split(":");
-								if (!("n".equals(parts[0]) || "null".equals(parts[0]))) {
-									tileID = Integer.parseInt(parts[0]);
-									if (parts.length > 1) { childID = Integer.parseInt(parts[1]); }
-									
-									WorldTile t = WorldTile.getTileFromID(tileID, childID);
-									if (parts.length == 1) t.setWildCard(true);
-									if (t != null) t.setWorldPos(i, j);
-									data[i][j] = t;
-								}
-								else {
-									data[i][j] = null;
-								}
-							}
-						}
-						else {
-							data[i][j] = null;
-						}
-					}
-				}
-				
-				while (reader.hasNextLine()) {
-					String line = reader.nextLine();
-					if (line.startsWith("r")) {
-						Region r = Region.parseRegion(this, line);
-						if (r != null) { regions.add(r); }
-					}
-					if (line.startsWith("ent")) {
-						EntitySpawn spawn = EntitySpawn.parse(line);
-						if (spawn != null) { entitySpawnsIn.add(spawn); }
-					}
-				}
-				
-				if (reader.hasNextLine()) {
-					String nextLine = reader.nextLine();
-					if (nextLine.equals("underground")) underground = true;
-				}
-				
-				name = mapName;
-				width = mapWidth;
-				height = mapHeight;
-				tileWidth = mapTileWidth;
-				tileHeight = mapTileHeight;
-				playerSpawn.setX(spawnX);
-				playerSpawn.setY(spawnY);
-				worldData = data;
-				regionData = regions;
-				entitySpawns = entitySpawnsIn;
-				
-				fileLoaded = true;
-				//System.out.println("fileLoaded: " + fileLoaded);
-				
-				return true;
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				System.err.println("@ Failed to load map: " + worldFile.getName() + "!");
-			}
-		}
-		return false;
-	}
-	
-	public synchronized boolean saveWorldToFile() { return saveWorldToFile(new File(QoT_Settings.getEditorWorldsDir(), name)); }
-	//public synchronized boolean saveWorldToFile(String fileName) { return saveWorldToFile(new File(QoT.settings.getEditorWorldsDir(), fileName)); }
-	protected synchronized boolean saveWorldToFile(File fileIn) {
-		try {
-			fileIn = (fileIn.getName().endsWith(".twld")) ? fileIn : new File(fileIn.getPath() + ".twld");
-			
-			PrintWriter writer = new PrintWriter(fileIn, "UTF-8");
-			
-			//write map name and dimensions
-			writer.println(name);
-			writer.println(width + " " + height + " " + tileWidth + " " + tileHeight);
-			writer.println(playerSpawn.getX() + " " + playerSpawn.getY());
-			
-			//write map data
-			for (int i = 0; i < width; i++) {
-				for (int j = 0; j < height; j++) {
-					WorldTile t = worldData[i][j];
-					
-					if (t == null) { writer.print("n "); }
-					else {
-						GameTexture tex = t.getTexture();
-						if (tex == null) writer.print("n ");
-						else writer.print(t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + " ");
-					}
-				}
-				writer.println();
-			}
-			
-			//write region data
-			regionData.stream().filter(s -> s != null).forEach(writer::println);
-			
-			//write entity spawn data
-			entitySpawns.stream().filter(s -> s != null).forEach(writer::println);
-			
-			//underground
-			if (underground) writer.println("underground");
-			
-			writer.close();
-			return true;
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	
-	public GameWorld fillLayerWith(int layer, WorldTile t) { return fillLayerWith(layer, t, true); }
-	public GameWorld fillLayerWith(int layer, WorldTile t, boolean randomize) {
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				worldData[i][j][layer] = WorldTile.randVariant(t).setWorldPos(i, j, layer);
-			}
-		}
-		return this;
-	}
+	//----------------------------------
+	// Map Entity Distance Calculations
+	//----------------------------------
 	
 	/**
 	 * Returns the distance in pixels from one entity to another. Returns
@@ -344,6 +190,147 @@ public class GameWorld {
 		return Direction.OUT;
 	}
 	
+	//--------------------------
+	// WORLD LOADING AND SAVING
+	//--------------------------
+	
+	public synchronized boolean loadWorld() { return loadWorldFromFile(new File(QoT_Settings.getEditorWorldsDir(), name)); }
+	public synchronized boolean loadWorldFromFile(File worldFile) {
+		String worldName = worldFile.getName();
+		if (!worldName.endsWith(".twld")) worldName += ".twld";
+		worldFile = new File(QoT_Settings.getEditorWorldsDir(), worldName);
+		
+		if (worldFile != null && worldFile.exists()) {
+			try (Scanner reader = new Scanner(worldFile)) {
+				
+				EArrayList<EntitySpawn> entitySpawnsIn = new EArrayList();
+				EArrayList<Region> regions = new EArrayList();
+				
+				String mapName = reader.nextLine();
+				int mapWidth = reader.nextInt();
+				int mapHeight = reader.nextInt();
+				int mapTileWidth = reader.nextInt();
+				int mapTileHeight = reader.nextInt();
+				int spawnX = reader.nextInt();
+				int spawnY = reader.nextInt();
+				
+				reader.nextLine();
+				
+				WorldTile[][] data = new WorldTile[mapWidth][mapHeight];
+				
+				for (int i = 0; i < mapWidth; i++) {
+					for (int j = 0; j < mapHeight; j++) {
+						if (!reader.hasNext()) {
+							data[i][j] = null;
+							continue;
+						}
+						
+						String tile = reader.next();
+						if (tile.isBlank()) continue;
+						
+						int tileID = -1;
+						int childID = 0;
+						String[] parts = tile.split(":");
+						
+						if (!("n".equals(parts[0]) || "null".equals(parts[0]))) {
+							tileID = Integer.parseInt(parts[0]);
+							if (parts.length > 1) { childID = Integer.parseInt(parts[1]); }
+							
+							WorldTile t = WorldTile.getTileFromID(tileID, childID);
+							if (parts.length == 1) t.setWildCard(true);
+							if (t != null) t.setWorldPos(i, j);
+							data[i][j] = t;
+						}
+						else {
+							data[i][j] = null;
+						}
+					}
+				}
+				
+				while (reader.hasNextLine()) {
+					String line = reader.nextLine();
+					if (line.startsWith("r")) {
+						Region r = Region.parseRegion(this, line);
+						if (r != null) regions.add(r);
+					}
+					if (line.startsWith("ent")) {
+						EntitySpawn spawn = EntitySpawn.parse(line);
+						if (spawn != null) entitySpawnsIn.add(spawn);
+					}
+				}
+				
+				if (reader.hasNextLine()) {
+					String nextLine = reader.nextLine();
+					if (nextLine.equals("underground")) underground = true;
+				}
+				
+				name = mapName;
+				width = mapWidth;
+				height = mapHeight;
+				tileWidth = mapTileWidth;
+				tileHeight = mapTileHeight;
+				playerSpawn.setX(spawnX);
+				playerSpawn.setY(spawnY);
+				worldData = data;
+				regionData = regions;
+				entitySpawns = entitySpawnsIn;
+				
+				fileLoaded = true;
+				//System.out.println("fileLoaded: " + fileLoaded);
+				
+				return true;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("@ Failed to load map: " + worldFile.getName() + "!");
+			}
+		}
+		return false;
+	}
+	
+	public synchronized boolean saveWorldToFile() { return saveWorldToFile(new File(QoT_Settings.getEditorWorldsDir(), name)); }
+	protected synchronized boolean saveWorldToFile(File fileIn) {
+		try {
+			fileIn = (fileIn.getName().endsWith(".twld")) ? fileIn : new File(fileIn.getPath() + ".twld");
+			
+			PrintWriter writer = new PrintWriter(fileIn, "UTF-8");
+			
+			//write map name and dimensions
+			writer.println(name);
+			writer.println(width + " " + height + " " + tileWidth + " " + tileHeight);
+			writer.println(playerSpawn.getX() + " " + playerSpawn.getY());
+			
+			//write map data
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height; j++) {
+					WorldTile t = worldData[i][j];
+					
+					if (t == null) writer.print("n ");
+					else {
+						GameTexture tex = t.getTexture();
+						if (tex == null) writer.print("n ");
+						else writer.print(t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + " ");
+					}
+				}
+				writer.println();
+			}
+			
+			//write region data
+			regionData.stream().filter(s -> s != null).forEach(writer::println);
+			//write entity spawn data
+			entitySpawns.stream().filter(s -> s != null).forEach(writer::println);
+			//underground
+			if (underground) writer.println("underground");
+			
+			writer.close();
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	//---------
 	// Getters
 	//---------
@@ -360,14 +347,14 @@ public class GameWorld {
 	public int getTileHeight() { return tileHeight; }
 	public int getPixelWidth() { return width * tileWidth; }
 	public int getPixelHeight() { return height * tileHeight; }
-	public WorldTile[][][] getWorldData() { return worldData; }
+	public WorldTile[][] getWorldData() { return worldData; }
 	public File getWorldFile() { return new File(getFileName()); }
 	public boolean exists() { return getWorldFile().exists(); }
 	public double getZoom() { return zoom; }
 	public boolean isUnderground() { return underground; }
 	
-	public WorldTile getTileAt(int xIn, int yIn, int zIn) {
-		return worldData[xIn][yIn][zIn];
+	public WorldTile getTileAt(int xIn, int yIn) {
+		return worldData[xIn][yIn];
 	}
 	
 	public EArrayList<Entity> getEntitiesInWorld() { return entityData; }
@@ -385,14 +372,24 @@ public class GameWorld {
 		return this;
 	}
 	
-	public GameWorld setTileAt(int xIn, int yIn, int zIn, WorldTile in) {
-		if (in != null) in.setWorldPos(xIn, yIn, zIn);
-		worldData[xIn][yIn][zIn] = in;
+	public GameWorld setTileAt(int xIn, int yIn, WorldTile in) {
+		if (in != null) in.setWorldPos(xIn, yIn);
+		worldData[xIn][yIn] = in;
 		return this;
 	}
 	
 	public GameWorld setLoaded(boolean val) { loaded = val && isFileLoaded(); return this; }
 	public GameWorld setZoom(double val) { zoom = val; zoom = NumberUtil.clamp(zoom, 0.25, 5); return this; }
 	public GameWorld setUnderground(boolean val) { underground = val; return this; }
+	
+	public GameWorld fillWith(WorldTile t) { return fillWith(t, true); }
+	public GameWorld fillWith(WorldTile t, boolean randomize) {
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				worldData[i][j] = WorldTile.randVariant(t).setWorldPos(i, j);
+			}
+		}
+		return this;
+	}
 	
 }

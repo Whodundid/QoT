@@ -62,14 +62,14 @@ public class GamePlayScreen extends GameScreen {
 		addObject(mana);
 		
 		character = new WindowButton(this, mana.endX + 5, 5, 125, 30, "Stats");
-		addObject(character);
+		//addObject(character);
 	}
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		//top hud
-		drawRect(0, 0, QoT.getWidth(), 39, EColors.dgray);
-		drawRect(0, 39, QoT.getWidth(), 41, EColors.vdgray);
+		drawRect(0, 0, QoT.getWidth(), 39, EColors.lgray);
+		drawRect(0, 39, QoT.getWidth(), 41, EColors.gray);
 		//mouse pos
 	}
 	

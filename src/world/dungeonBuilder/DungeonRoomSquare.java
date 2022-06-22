@@ -32,10 +32,10 @@ public class DungeonRoomSquare extends DungeonPiece {
 		//now open areas
 		for (Direction d : open) {
 			switch (d) {
-			case N: for (int i = (w / 2 - 2); i < (w / 2 - 2) + 5; i++) { tiles[i][0] = DungeonTiles.dungFloor; } break;
-			case W: for (int i = (h / 2 - 2); i < (h / 2 - 2) + 5; i++) { tiles[0][i] = DungeonTiles.dungFloor; } break;
-			case S: for (int i = (h / 2 - 2); i < (h / 2 - 2) + 5; i++) { tiles[i][w - 1] = DungeonTiles.dungFloor; } break;
-			case E: for (int i = (w / 2 - 2); i < (w / 2 - 2) + 5; i++) { tiles[h - 1][i] = DungeonTiles.dungFloor; } break;
+			case N: for (int i = (w/2-2); i < (w/2-2) + 5; i++) { tiles[i][0] = DungeonTiles.dungFloor; } break;
+			case W: for (int i = (h/2-2); i < (h/2-2) + 5; i++) { tiles[0][i] = DungeonTiles.dungFloor; } break;
+			case S: for (int i = (h/2-2); i < (h/2-2) + 5; i++) { tiles[i][w - 1] = DungeonTiles.dungFloor; } break;
+			case E: for (int i = (w/2-2); i < (w/2-2) + 5; i++) { tiles[h - 1][i] = DungeonTiles.dungFloor; } break;
 			default: break;
 			}
 		}
@@ -46,8 +46,8 @@ public class DungeonRoomSquare extends DungeonPiece {
 		int posBy = 3;
 		
 		//entity spawns
-		if (RandomUtil.roll(1, 0, 1)) addEntity(new EntitySpawn(posAx, posAy, EntityList.randomType()));
-		if (RandomUtil.roll(1, 0, 1)) addEntity(new EntitySpawn(posBx, posBy, EntityList.randomType()));
+		if (RandomUtil.roll(1, 0, 1)) addEntity(new EntitySpawn(posAx, posAy, EntityList.randomType().ID));
+		if (RandomUtil.roll(1, 0, 1)) addEntity(new EntitySpawn(posBx, posBy, EntityList.randomType().ID));
 	}
 	
 	public static DungeonRoomSquare createRandom(boolean spawn) {

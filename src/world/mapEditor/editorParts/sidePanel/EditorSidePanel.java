@@ -85,9 +85,16 @@ public class EditorSidePanel extends WindowObject {
 	}
 	
 	//---------
+	// Methods
+	//---------
+	
+	
+	
+	//---------
 	// Getters
 	//---------
 	
+	public SidePanelType getCurrentPanelType() { return (currentPanel != null) ? currentPanel.type : SidePanelType.NONE; }
 	public MapEditorScreen getEditor() { return editor; }
 	public EDimension getPanelDims() { return panelDims; }
 	public EditorMiniMap getMiniMap() { return miniMap; }

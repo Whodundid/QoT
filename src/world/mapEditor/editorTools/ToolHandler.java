@@ -89,7 +89,7 @@ public class ToolHandler {
 	
 	private void handleTool(EditorToolType toolIn, ToolEvent event) {
 		switch (toolIn) {
-		case SELECTOR: break;
+		case SELECTOR: selectorTool.distributeEvent(event, button); break;
 		case REGION: break;
 		case BRUSH: break;
 		case ERASER: eraserTool.distributeEvent(event, button); break; //always press

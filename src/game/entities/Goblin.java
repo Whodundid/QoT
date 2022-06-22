@@ -16,7 +16,7 @@ public class Goblin extends Enemy {
 		setHealth(20);
 		
 		init(posX, posY, 64, 64);
-		texture = EntityTextures.goblin;
+		sprite = EntityTextures.goblin;
 		
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 	}
@@ -69,6 +69,11 @@ public class Goblin extends Enemy {
 				move(dir);
 			}
 		}
+	}
+	
+	@Override
+	public int getObjectID() {
+		return 1;
 	}
 	
 }

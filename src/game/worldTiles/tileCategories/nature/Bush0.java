@@ -7,7 +7,6 @@ public class Bush0 extends WorldTile {
 	
 	public Bush0() {
 		super(TileIDs.BUSH0);
-		blocksMovement = true;
 	}
 	
 }

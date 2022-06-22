@@ -38,6 +38,8 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	private double vPos = 0;
 	private EArrayList<Integer> prevHighlight;
 	
+	private EArrayList<Double> scrollBarPositionHistory = new EArrayList<>();
+	
 	//--------------
 	// Constructors
 	//--------------
@@ -163,7 +165,11 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	protected void selectFile(FilePreview f) {
 		if (Keyboard.isCtrlDown() || Keyboard.isShiftDown()) return;
 		if (!highlighted.hasOne()) return;
-		if (actionReceiver == null) { openFile(f); return; }
+		
+		if (actionReceiver == null) {
+			openFile(f);
+			return;
+		}
 		
 		selectedFile = f.getFile();
 		performAction(f.getFile());
@@ -198,6 +204,7 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	public void setDir(String dir) { setDir(new File(dir)); }
 	public void setDir(File dir) {
 		curDir = dir;
+		scrollBarPositionHistory.push(fileArea.getVScrollBar().getScrollPos());
 		updateDir();
 	}
 	
@@ -324,9 +331,9 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	private void forward() {}
 	
 	private void fileUp() {
-		//System.out.println(curDir);
 		int index = StringUtil.findStartingIndex(curDir.toString(), "\\", true);
 		setDir(new File(curDir.toString().substring(0, index)));
+		
 	}
 	
 	private void refresh() { setDir(curDir); }

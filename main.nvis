@@ -1,0 +1,7 @@
+int x = 5
+int y = 10
+
+scope()
+writeln(x, y, x + 10)
+
+

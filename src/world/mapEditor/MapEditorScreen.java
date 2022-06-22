@@ -1,14 +1,20 @@
 package world.mapEditor;
 
+import java.io.File;
+import java.util.Comparator;
+
 import engine.input.Keyboard;
 import engine.input.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
+import engine.renderEngine.textureSystem.GameTexture;
 import engine.screens.screenUtil.GameScreen;
 import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
+import game.entities.Entity;
 import game.worldTiles.WorldTile;
 import main.QoT;
 import world.GameWorld;
@@ -17,10 +23,9 @@ import world.mapEditor.editorParts.sidePanel.EditorSidePanel;
 import world.mapEditor.editorParts.sidePanel.SidePanelType;
 import world.mapEditor.editorParts.toolBox.EditorToolBox;
 import world.mapEditor.editorParts.topHeader.EditorScreenTopHeader;
+import world.mapEditor.editorParts.util.EditorItem;
 import world.mapEditor.editorTools.EditorToolType;
 import world.mapEditor.editorTools.ToolHandler;
-
-import java.io.File;
 
 public class MapEditorScreen extends GameScreen {
 
@@ -39,10 +44,12 @@ public class MapEditorScreen extends GameScreen {
 	public boolean mouseOver = false;
 	public boolean drawingMousePos = false;
 	
-	public int midDrawX, midDrawY; //the world coordinates at the center of the screen
-	public int drawDistX = 20;
-	public int drawDistY = 15;
-	public int worldXPos, worldYPos; //the world coordinates under the mouse
+	/** the world coordinates at the center of the screen. */
+	public int midDrawX, midDrawY;
+	/** the width and height of the world that the renderer will draw out from the mid. */
+	public int drawDistX = 20, drawDistY = 15;
+	/** the world coordinates under the mouse. */
+	public int worldXPos, worldYPos;
 	public int oldWorldX, oldWorldY;
 	public boolean updateMap = false;
 	
@@ -53,15 +60,28 @@ public class MapEditorScreen extends GameScreen {
 	private boolean loading = false;
 	private boolean hasBeenModified = false;
 	private boolean hasSaved = false;
-	private 
 	
 	//---------------------
 	int left;
 	int top;
 	int right;
 	int bot;
-	int dw; //draw width
-	int dh; //draw height
+	/** draw width */
+	int dw;
+	/** draw height */
+	int dh;
+	
+	public double tileDrawWidth; //pixel width of each tile
+	public double tileDrawHeight; //pixel height of each tile
+	public double drawAreaMidX; //the middle x of the map draw area
+	public double drawAreaMidY; //the middle y of the map draw area
+	public double mapDrawStartX; //the left most x coordinate for map drawing
+	public double mapDrawStartY; //the top most y coordinate for map drawing
+	
+	public double x = mapDrawStartX;
+	public double y = mapDrawStartY;
+	public double w = tileDrawWidth;
+	public double h = tileDrawHeight;
 	//----------------------
 	
 	public long timeSinceKey = 0l;
@@ -112,29 +132,49 @@ public class MapEditorScreen extends GameScreen {
 		
 		if (world == null || !world.isFileLoaded()) drawStringC("Failed to load!", midX, midY);
 		else {
-			double tileDrawWidth = (world.getTileWidth() * world.getZoom()); //pixel width of each tile
-			double tileDrawHeight = (world.getTileHeight() * world.getZoom()); //pixel height of each tile
-			double drawAreaMidX = (QoT.getWidth() - sidePanel.width) / 2; //the middle x of the map draw area
-			double drawAreaMidY = topHeader.endY + (QoT.getHeight() - topHeader.height) / 2; //the middle y of the map draw area
-			double mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2)); //the left most x coordinate for map drawing
-			double mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2)); //the top most y coordinate for map drawing
+			tileDrawWidth = (world.getTileWidth() * world.getZoom()); //pixel width of each tile
+			tileDrawHeight = (world.getTileHeight() * world.getZoom()); //pixel height of each tile
+			drawAreaMidX = (QoT.getWidth() - sidePanel.width) / 2; //the middle x of the map draw area
+			drawAreaMidY = topHeader.endY + (QoT.getHeight() - topHeader.height) / 2; //the middle y of the map draw area
+			mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2)); //the left most x coordinate for map drawing
+			mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2)); //the top most y coordinate for map drawing
 			
 			//converting to shorthand to reduce footprint
-			double x = mapDrawStartX;
-			double y = mapDrawStartY;
-			double w = tileDrawWidth;
-			double h = tileDrawHeight;
+			x = mapDrawStartX;
+			y = mapDrawStartY;
+			w = tileDrawWidth;
+			h = tileDrawHeight;
 			
 			//scissor(x, y, deX, deY + 1);
 			//endScissor();
 			
 			drawMap(x, y, w, h);
+			renderWalls(x, y, w, h);
+			renderEntities(x, y, w, h);
 			if (settings.drawRegions) drawRegions(x, y, w, h);
 			if (settings.drawCenterPositionBox) drawCenterPositionBox(x, y, w, h);
 			
 			mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
 			if (drawingMousePos = mouseInMap) {
-				drawHoveredTileBox((int) x, (int) y, (int) w, (int) h);
+				switch (sidePanel.getCurrentPanelType()) {
+				case ASSET:
+				{
+					//COMPLETELY HASHED TOGETHER :)
+					EditorItem primary = settings.getPrimaryPalette();
+					if (primary == null) break;
+					GameTexture tex = primary.getTexture();
+					double tW = primary.getGameObject().width;
+					double tH = primary.getGameObject().height;
+					double tDrawW = tW * world.getZoom();
+					double tDrawH = tH * world.getZoom();
+					drawTexture(tex, mX - tW / 2, mY - tH, tDrawW, tDrawH);
+					//drawTexture(tex, mX, mY, tDrawW, tDrawH);
+					drawHoveredTileBox((int) x, (int) y, (int) w, (int) h);
+					break;
+				}
+				default:
+					drawHoveredTileBox((int) x, (int) y, (int) w, (int) h);
+				}
 				if (firstPress && getTopParent().getModifyingObject() == null) {
 					//toolHandler.handleToolUpdate(getCurTileTool());
 				}
@@ -353,21 +393,129 @@ public class MapEditorScreen extends GameScreen {
 		for (int i = left, ix = 0; i <= right; i++, ix++) {
 			for (int j = top, jy = 0; j <= bot; j++, jy++) {
 				WorldTile t = world.getWorldData()[i][j];
+				if (t == null) continue;
+				if (t.isWall()) continue;
+				if (!t.hasTexture()) continue;
 				
-				if (t != null) {
-					
-					double drawPosX = x;
-					double drawPosY = y;
-					
-					if (midDrawX < drawDistX) { drawPosX += (drawDistX - midDrawX) * w; }
-					if (midDrawY < drawDistY) { drawPosY += (drawDistY - midDrawY) * h; }
-					
-					if (t.hasTexture()) {
-						drawTexture(t.getTexture(), drawPosX + (ix * w), drawPosY + (jy * h), w, h);
-					}
+				double drawPosX = x;
+				double drawPosY = y;
+				
+				if (midDrawX < drawDistX) drawPosX += (drawDistX - midDrawX) * w;
+				if (midDrawY < drawDistY) drawPosY += (drawDistY - midDrawY) * h;
+				
+				double dX = drawPosX + (ix * w);
+				double dY = drawPosY + (jy * h);
+				
+				drawTexture(t.getTexture(), dX, dY, w, h);
+				
+				//draw bottom of map edge or if right above a tile with no texture/void
+				WorldTile tileBelow = null;
+				if ((j + 1) <= bot) tileBelow = world.getWorldData()[i][j + 1];
+				if ((tileBelow == null || !tileBelow.hasTexture()) && !t.isWall()) {
+					drawTexture(t.getTexture(), dX, dY + h, w, h / 2, false, EColors.changeBrightness(0xffffffff, 125));
 				}
 			}
 		}
+	}
+	
+	private void renderWalls(double x, double y, double w, double h) {
+		//the tile must be a wall here
+		for (int i = left, ix = 0; i <= right; i++, ix++) {
+			for (int j = top, jy = 0; j <= bot; j++, jy++) {
+				WorldTile t = world.getWorldData()[i][j];
+				if (t == null) continue;
+				if (!t.isWall()) continue;
+				if (!t.hasTexture()) continue;
+				
+				double wh = h * t.getWallHeight(); //wh == 'wallHeight'
+				GameTexture tex = t.getTexture();
+				
+				double drawPosX = x;
+				double drawPosY = y;
+				
+				//do this to account for the map moving when at the edge of world
+				if (midDrawX < drawDistX) drawPosX += (drawDistX - midDrawX) * w;
+				if (midDrawY < drawDistY) drawPosY += (drawDistY - midDrawY) * h;
+				
+				double dX = drawPosX + (ix * w);
+				double dY = drawPosY + (jy * h);
+				
+				//determine tile brightness
+				int brightness = 0xffffffff;
+				int tileBrightness = brightness;
+				int wallBrightness = brightness;
+				
+				if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
+				
+				//draw main texture slightly above main location
+				drawTexture(tex, dX, dY - wh, w, h, false, tileBrightness);
+				
+				//check if the tile directly above is a wall
+				//if so - don't draw wall side
+				WorldTile tb = null; // tb == 'tileBelow'
+				if ((j + 1) <= bot) tb = world.getWorldData()[i][j + 1];
+				if ((tb == null ||
+					!tb.hasTexture() ||
+					 tb.getWallHeight() < wh) ||
+					!tb.isWall())
+				{
+					double yPos;
+					
+					if (wh > 0) {
+						yPos = dY + h - wh;
+						wallBrightness = EColors.changeBrightness(brightness, 125);
+					}
+					else {
+						yPos = dY - wh;
+						wallBrightness = brightness;
+					}
+					
+					//draw wall side slightly below
+					drawTexture(tex, dX, yPos, w, wh, false, wallBrightness);
+				}
+				
+				//draw bottom of map edge or if right above a tile with no texture/void
+				WorldTile tileBelow = null;
+				if ((j + 1) <= bot) tileBelow = world.getWorldData()[i][j + 1];
+				if ((tileBelow == null || !tileBelow.hasTexture())) {
+					drawTexture(tex, dX, dY + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
+				}
+			}
+		}
+	}
+	
+	private void renderEntities(double x, double y, double w, double h) {
+		EArrayList<Entity> entities = world.getEntitiesInWorld();
+		entities.sort(Comparator.comparingInt(e -> e.startY));
+		
+		//System.out.println(x + " : " + y + " : " + w + " : " + h);
+		
+		for (int i = 0; i < 1 && i < entities.size(); i++) {
+			Entity ent = entities.get(i);
+			GameTexture tex = ent.getTexture();
+			
+			if (tex == null) continue;
+			
+			// x=3, y=18
+			//System.out.println(ent.worldX + " : " + ent.worldY);
+			
+			double drawX = x + ent.worldX * w;
+			double drawY = y + ent.worldY * h;
+			
+			double drawW = tex.getWidth() * world.getZoom();
+			double drawH = tex.getHeight() * world.getZoom();
+			
+			//System.out.println(drawX + " : " + drawY);
+			drawTexture(tex, drawX, drawY, drawW, drawH);
+		}
+		/*
+		for (Entity e : entities) {
+			double drawX = x;
+			double drawY = y;
+			//System.out.println(x + " : " + y);
+			//System.out.println(e + " : " + e.worldX + " : " + e.worldY + " : " + e.startX + " : " + e.startY);
+		}
+		*/
 	}
 	
 	/** Highlights the tile at the center of the draw area. */

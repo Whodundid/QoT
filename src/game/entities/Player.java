@@ -20,7 +20,7 @@ public class Player extends Entity {
 		setHealth(20);
 		
 		setCollisionBox(startX + 22, endY - 10, endX - 22, endY);
-		texture = EntityTextures.player;
+		sprite = EntityTextures.player;
 	}
 	
 	//----------------
@@ -32,6 +32,11 @@ public class Player extends Entity {
 	@Override
 	public void onLivingUpdate() {
 		//setHeadText(startX + " : " + startY);
+	}
+	
+	@Override
+	public int getObjectID() {
+		return 0;
 	}
 	
 }

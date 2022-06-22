@@ -51,8 +51,8 @@ public class CombatScreen extends GameScreen {
 		//bX += randX;
 		//bY += randY;
 		
-		drawTexture(a.texture, aX, aY, aWidth, aHeight, true);
-		drawTexture(b.texture, bX, bY, bWidth, bHeight, false);
+		drawTexture(a.getTexture(), aX, aY, aWidth, aHeight, true);
+		drawTexture(b.getTexture(), bX, bY, bWidth, bHeight, false);
 	}
 	
 	@Override

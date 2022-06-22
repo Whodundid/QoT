@@ -192,7 +192,9 @@ public class TextEditorWindow extends WindowParent {
 			document.setEditable(false);
 		}
 		
-		document.getVScrollBar().setScrollPos(0);
+		if (isInit()) {
+			document.getVScrollBar().setScrollPos(0);
+		}
 		
 		loading = false;
 		loaded = true;

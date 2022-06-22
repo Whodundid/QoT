@@ -19,12 +19,14 @@ public class CursorTextures {
 	public static final long cursor_resize_dl;
 	public static final long cursor_resize_dr;
 	
+	private static final String base = "resources/textures/envision/cursor/";
+	
 	static {
-		resize_dl = new GameTexture("resize_dl", "bin/textures/envision/cursor/resize_dl.png");
-		resize_dr = new GameTexture("resize_dr", "bin/textures/envision/cursor/resize_dr.png");
-		resize_ew = new GameTexture("resize_ew", "bin/textures/envision/cursor/resize_ew.png");
-		resize_ns = new GameTexture("resize_ns", "bin/textures/envision/cursor/resize_ns.png");
-		ibeam = new GameTexture("ibeam", "bin/textures/envision/cursor/text_pos.png");
+		resize_dl = new GameTexture("resize_dl", base, "resize_dl.png");
+		resize_dr = new GameTexture("resize_dr", base, "resize_dr.png");
+		resize_ew = new GameTexture("resize_ew", base, "resize_ew.png");
+		resize_ns = new GameTexture("resize_ns", base, "resize_ns.png");
+		ibeam = new GameTexture("ibeam", base, "text_pos.png");
 		
 		cursor_resize_dl = CursorHelper.createCursorFromGameTexture(resize_dl);
 		cursor_resize_dr = CursorHelper.createCursorFromGameTexture(resize_dr);

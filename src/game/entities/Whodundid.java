@@ -9,7 +9,7 @@ public class Whodundid extends Enemy {
 	public Whodundid(int posX, int posY) {
 		super("Whodundid");
 		init(posX, posY, 64, 64);
-		texture = EntityTextures.whodundid;
+		sprite = EntityTextures.whodundid;
 		lastDir = RandomUtil.randomDir();
 		
 		setCollisionBox(startX + 6, endY - height / 2, endX - 6, endY);
@@ -31,6 +31,11 @@ public class Whodundid extends Enemy {
 		if (System.currentTimeMillis() - lastMove >= moveTime) {
 			move(lastDir);
 		}
+	}
+	
+	@Override
+	public int getObjectID() {
+		return 2;
 	}
 	
 }

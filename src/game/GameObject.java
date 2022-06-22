@@ -1,11 +1,12 @@
 package game;
 
+import engine.renderEngine.GLObject;
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.math.EDimension;
 
-public abstract class WorldObject {
+public abstract class GameObject extends GLObject {
 	
-	public GameTexture sprite;
+	protected GameTexture sprite;
 	public int startX, startY, endX, endY;
 	public int midX, midY;
 	public int width, height;
@@ -13,9 +14,8 @@ public abstract class WorldObject {
 	public int worldX, worldY;
 	protected String name;
 	
-	protected WorldObject(String nameIn, GameTexture textureIn) {
+	protected GameObject(String nameIn) {
 		name = nameIn;
-		sprite = textureIn;
 	}
 	
 	public void init(int posX, int posY, int widthIn, int heightIn) {
@@ -29,5 +29,14 @@ public abstract class WorldObject {
 		height = heightIn;
 		collisionBox = new EDimension(startX, startY, endX, endY);
 	}
+	
+	/** Returns the hard-coded ID of this object -- used for saving and loading map data. */
+	public abstract int getObjectID();
+	
+	public String getName() { return name; }
+	public GameTexture getTexture() { return sprite; }
+	
+	public GameObject setName(String nameIn) { name = nameIn; return this; }
+	public GameObject setTexture(GameTexture in) { sprite = in; return this; }
 	
 }
