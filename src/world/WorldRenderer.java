@@ -298,9 +298,9 @@ public class WorldRenderer extends EGui {
 					
 					//shadows
 					for (int s = 0; s < 12; s++) {
-						double rX = (e.width / 4) - (s * e.width / 80);
+						double rX = (e.width / 3) - (s * e.width / 80);
 						double rY = (e.height / 8) - (s * e.height / 64);
-						drawFilledEllipse((drawX + dw / 2), (drawY + dh - dh / 5), rX, rY, 16, EColors.vdgray.opacity(0x16));
+						drawFilledEllipse((drawX + dw / 2), (drawY + dh - dh / 32), rX, rY, 16, EColors.vdgray.opacity(0x16));
 					}
 					
 					drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));

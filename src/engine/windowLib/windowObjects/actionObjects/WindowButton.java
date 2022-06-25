@@ -61,7 +61,7 @@ public class WindowButton<E> extends ActionObject<E> {
 		int stringColor = isEnabled() ? (mouseCheck ? textHoverColor : color) : (drawDisabledColor ? disabledColor : color + 0xbbbbbb);
 		if (drawSelected) stringColor = selectedColor;
 		
-		if (drawBackground) {
+		if (drawBackground && btnTexture == null && btnSelTexture == null) {
 			drawRect(borderColor);
 			drawRect(backgroundColor, 1);
 		}
@@ -120,7 +120,7 @@ public class WindowButton<E> extends ActionObject<E> {
 			}
 			
 			if (drawBackgroundHover && (forceDrawHover || mouseHover)) {
-				drawRect(backgroundHoverColor, 1);
+				//drawRect(backgroundHoverColor, 1);
 			}
 			
 			//draw disabled overlay
@@ -133,8 +133,8 @@ public class WindowButton<E> extends ActionObject<E> {
 		if (drawString) {
 			scissor(startX + 1, startY + 1, endX - 1, endY - 1);
 			
-			if (drawCentered) { drawStringC(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor); }
-			else { drawString(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor); }
+			if (drawCentered) drawStringC(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor);
+			else drawString(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor);
 			
 			endScissor();
 		}
@@ -155,7 +155,7 @@ public class WindowButton<E> extends ActionObject<E> {
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		if (keyCode == GLFW.GLFW_KEY_ENTER) {
-			if (isEnabled() && willBeDrawn() && isClickable()) { performAction(); }
+			if (isEnabled() && willBeDrawn() && isClickable()) performAction();
 		}
 		super.keyPressed(typedChar, keyCode);
 	}

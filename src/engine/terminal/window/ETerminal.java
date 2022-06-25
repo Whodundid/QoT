@@ -2,6 +2,7 @@ package engine.terminal.window;
 
 import java.io.File;
 
+import assets.textures.WindowTextures;
 import engine.terminal.TerminalHandler;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.termParts.TerminalTextField;
@@ -62,12 +63,12 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 		super();
 		aliases.add("terminal", "console", "term");
 		dir = new File(System.getProperty("user.dir"));
-		//windowIcon = EMCResources.terminalIcon;
+		windowIcon = WindowTextures.terminal;
 	}
 	
-	//-------------------------
-	// Envision Console Output
-	//-------------------------
+	//--------------------------
+	// Envision Terminal Output
+	//--------------------------
 	
 	@Override
 	public void onEnvisionPrint(String line) {

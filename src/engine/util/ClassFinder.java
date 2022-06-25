@@ -85,7 +85,7 @@ public class ClassFinder {
 				classes.addAll(findClasses(file, packageName + "." + file.getName()));
 			}
 			else if (file.getName().endsWith(".class")) {
-				classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+				classes.add(Class.forName(packageName + "." + file.getName().substring(0, file.getName().length() - 6)));
 			}
 		}
 		

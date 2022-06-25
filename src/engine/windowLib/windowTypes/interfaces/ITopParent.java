@@ -3,6 +3,7 @@ package engine.windowLib.windowTypes.interfaces;
 import engine.input.Mouse;
 import engine.terminal.window.ETerminal;
 import engine.windowLib.StaticTopParent;
+import engine.windowLib.desktopOverlay.TaskBar;
 import engine.windowLib.windowTypes.OverlayWindow;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowUtil.ObjectPosition;
@@ -158,7 +159,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Returns true if the specified window parent is open. */
-	public default <T extends WindowParent> boolean isWindowOpen(Class<T> windowIn) {
+	public default <T extends IWindowParent> boolean isWindowOpen(Class<T> windowIn) {
 		return (windowIn != null) ? getCombinedObjects().stream().anyMatch(o -> o.getClass() == windowIn) : false;
 	}
 	
@@ -167,10 +168,10 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Returns a list of all actively drawn window parents. */
-	public default EArrayList<WindowParent> getAllActiveWindows() {
-		EArrayList<WindowParent> windows = new EArrayList();
+	public default EArrayList<IWindowParent> getAllActiveWindows() {
+		EArrayList<IWindowParent> windows = new EArrayList();
 		try {
-			getCombinedObjects().filterForEach(o -> WindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((WindowParent) w));
+			getCombinedObjects().filterForEach(o -> IWindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((IWindowParent) w));
 		}
 		catch (Exception e) { e.printStackTrace(); }
 		return windows;
@@ -181,12 +182,16 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Returns the first active instance of a specified type of window parent. If none are active, null is returned instead. */
-	public default <T extends WindowParent> WindowParent getWindowInstance(Class<T> windowIn) {
-		return (windowIn != null) ? (WindowParent) (getAllChildren().filter(o -> o.getClass() == windowIn).getFirst()) : null;
+	public default <T extends IWindowParent> IWindowParent getWindowInstance(Class<T> windowIn) {
+		return (windowIn != null) ? (IWindowParent) (getAllChildren().filter(o -> o.getClass() == windowIn).getFirst()) : null;
+	}
+	
+	public default <T extends IWindowParent> EArrayList<? extends IWindowParent> getAllWindowInstances(T in) {
+		return getAllWindowInstances(in.getClass());
 	}
 	
 	/** Returns a list of all actively drawn window parents of a given type. */
-	public default <T extends WindowParent> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
+	public default <T extends IWindowParent> EArrayList<? extends IWindowParent> getAllWindowInstances(Class<T> windowIn) {
 		EArrayList<T> windows = new EArrayList();
 		try {
 			getCombinedObjects().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));
@@ -226,6 +231,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, ObjectPosition.OBJECT_CENTER); }
 	/** Displays the specified window parent with variable arguments. */
 	public default IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
+		if (windowIn == null) return null;
 		if (windowIn != null) {
 			
 			//import window history
@@ -243,6 +249,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 			//position and add the window
 			if (loc != ObjectPosition.NONE) setPos(windowIn, oldObject, loc);
 			addObject(windowIn);
+			if (this == QoT.getTopRenderer()) TaskBar.windowOpened(windowIn);
 			windowIn.bringToFront();
 			if (transferFocus) windowIn.requestFocus();
 		}

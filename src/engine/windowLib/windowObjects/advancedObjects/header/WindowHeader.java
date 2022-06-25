@@ -82,8 +82,10 @@ public class WindowHeader<E> extends WindowObject<E> {
 	public int borderColor = 0xff000000;
 	/** The interior color. Default is dark grey. */
 	public int mainColor = 0xff2d2d2d;
+	//public int mainColor = 0xffe5e5e5;
 	/** The color of the title. Default is light grey. */
 	public int titleColor = 0xffb2b2b2;
+	//public int titleColor = EColors.black.intVal;
 	/** A pixel amount to offset the title's draw position by. */
 	public int titleOffset = 0;
 
@@ -181,6 +183,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 			drawRect(startX + 1, startY, endX - 1, startY + 1, borderColor); //top
 			drawRect(endX - 1, startY, endX, startY + height, borderColor); //right
 			int backColor = anyFocus ? mainColor - 0x1f1f1f : mainColor;
+			//int backColor = anyFocus ? mainColor - 0x4f4f4f : mainColor;
 			drawRect(startX + 1, startY + 1, endX - 1, startY + height, backColor); //mid
 		}
 		
@@ -555,10 +558,10 @@ public class WindowHeader<E> extends WindowObject<E> {
 		minimizeButton.setHoverText("Minimize");
 		minimizeButton.setObjectName("minimize button");
 		
-		//if (CoreApp.enableTaskBar.get() && window != null && window.isMinimizable()) {
-		//	addObject(minimizeButton);
-		//	buttonPos += (buttonWidth + 1);
-		//}
+		if (window != null && window.isMinimizable()) {
+			addObject(minimizeButton);
+			buttonPos += (buttonWidth + 1);
+		}
 	}
 	
 	protected void addPinButton() {

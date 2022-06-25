@@ -5,12 +5,14 @@ import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import game.entities.Entity;
+import main.QoT;
 
 public class LevelUpScreen extends GameScreen {
 	
 	WindowButton back, upHealth, upDamage, upMana, stats, escape;
 	Entity levelingEntity;
 	
+	public LevelUpScreen() { this(QoT.getPlayer()); }
 	public LevelUpScreen(Entity theEntity) {
 		levelingEntity = theEntity;
 	}

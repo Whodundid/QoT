@@ -51,6 +51,8 @@ import world.GameWorld;
 
 public class QoT {
 	
+	public static final String version = "June 25, 2022";
+	
 	/** The primary logging instance for QoT. */
 	public static final Logger QoTLogger = Logger.getLogger("QoT");
 	/** The OpenGL window handle for QoT's display. */
@@ -528,6 +530,8 @@ public class QoT {
 	public static void info(String msg) { QoTLogger.log(Level.INFO, msg); }
 	public static void error(String msg) { QoTLogger.log(Level.SEVERE, msg); }
 	public static void error(String msg, Throwable throwableIn) { QoTLogger.log(Level.SEVERE, msg, throwableIn); }
+	public static void logf(Level levelIn, String msg, String... args) { QoTLogger.log(levelIn, msg, args); }
+	public static void infof(String msg, String... args) { QoTLogger.log(Level.INFO, msg, args); }
 	
 	//----------------
 	// Static Getters

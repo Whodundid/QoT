@@ -1,6 +1,7 @@
 package engine.windowLib.windowTypes;
 
 import engine.renderEngine.textureSystem.GameTexture;
+import engine.windowLib.desktopOverlay.TaskBar;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
@@ -129,33 +130,36 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	
 	@Override
 	public void close() {
+		if (getTopParent() == QoT.getTopRenderer()) TaskBar.windowClosed(this);
 		super.close();
 	}
 	
 	@Override
 	public void sendArgs(Object... args) {
-		if (args.length == 1) {
-			if (args[0] instanceof String) {
-				String msg = (String) args[0];
-				if (msg.equals("Reload")) {
-					boolean any = false;
-					
-					for (IWindowObject<?> o : getAllChildren()) {
-						if (o.hasFocus()) { any = true; break; }
-					}
-					
-					reInitObjects();
-					
-					if (getMaximizedPosition() != ScreenLocation.OUT) {
-						maximize();
-					}
-					
-					if (any) { requestFocus(); }
-				}
-				else {
-					super.sendArgs(args);
+		if (args.length != 1) return;
+		if (!(args[0] instanceof String)) return;
+		
+		String msg = (String) args[0];
+		if (msg.equals("Reload")) {
+			boolean any = false;
+			
+			for (IWindowObject<?> o : getAllChildren()) {
+				if (o.hasFocus()) {
+					any = true;
+					break;
 				}
 			}
+			
+			reInitObjects();
+			
+			if (getMaximizedPosition() != ScreenLocation.OUT) {
+				maximize();
+			}
+			
+			if (any) requestFocus();
+		}
+		else {
+			super.sendArgs(args);
 		}
 	}
 	
@@ -164,10 +168,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	//-------------------------
 	
 	@Override public boolean isPinned() { return pinned; }
-	@Override
-	public boolean isMaximized() {
-		return maximized != ScreenLocation.OUT;
-	}
+	@Override public boolean isMaximized() { return maximized != ScreenLocation.OUT; }
 	@Override public boolean isMinimized() { return minimized; }
 	@Override public boolean isPinnable() { return pinnable; }
 	@Override public boolean isMaximizable() { return maximizable; }
@@ -185,13 +186,11 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	@Override
 	public void maximize() {
 		EDimension screen = getTopParent().getDimensions();
-		//boolean hasTaskBar = EnhancedMC.getRenderer().getTaskBar() != null;
-		boolean hasTaskBar = true;
+		boolean hasTaskBar = QoT.getTopRenderer().getTaskBar() != null;
 		
 		double sw = screen.width;
 		double sh = screen.height;
-		//double tb = TaskBar.drawSize - 1;
-		double tb = 0;
+		double tb = TaskBar.drawSize() - 1;
 		double hh = header.height;
 		
 		if (maximized == ScreenLocation.TOP) {
@@ -278,7 +277,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	public void drawHighlightBorder() {
 		WindowHeader<?> header = getHeader();
 		double sY = (header != null) ? header.startY : startY;
-		drawRect(startX - 1, sY - 1, endX + 1, endY + 1, EColors.red);
+		drawHRect(startX - 1, sY - 1, endX + 1, endY + 1, 1, EColors.red);
 	}
 	
 	@Override public EArrayList<String> getAliases() { return aliases; }
@@ -354,10 +353,15 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	}
 	
 	public void drawDefaultBackground() {
-		drawRect(startX, startY, endX, endY, 0xff000000);
-		drawRect(startX + 1, startY + 1, endX - 1, endY - 1, 0xff383838);
-		drawRect(startX + 2, startY + 2, endX - 2, endY - 2, 0xff3f3f3f);
-		drawRect(startX + 3, startY + 3, endX - 3, endY - 3, 0xff424242);
+		drawRect(0xff000000);
+		drawRect(0xff383838, 1);
+		drawRect(0xff3f3f3f, 2);
+		drawRect(0xff424242, 3);
+		//drawRect(0xffc6c6c6, 1);
+		//drawRect(startX, startY, endX, endY, 0xff000000);
+		//drawRect(startX + 1, startY + 1, endX - 1, endY - 1, 0xff383838);
+		//drawRect(startX + 2, startY + 2, endX - 2, endY - 2, 0xff3f3f3f);
+		//drawRect(startX + 3, startY + 3, endX - 3, endY - 3, 0xff424242);
 	}
 	
 	public WindowParent<E> setHeader(WindowHeader<?> headerIn) {
@@ -372,10 +376,10 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	// WindowParent Getters
 	//----------------------
 	
-	public GameTexture getWindowIcon() { return windowIcon; }
+	@Override public GameTexture getWindowIcon() { return windowIcon; }
 	public WindowHeader<?> getHeader() { return header; }
 	public boolean movesWithParent() { return moveWithParent; }
-	public boolean showInTaskBar() { return showInTaskBar; }
+	@Override public boolean showInTaskBar() { return showInTaskBar; }
 	
 	//----------------------
 	// WindowParent Setters

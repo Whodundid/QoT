@@ -3,6 +3,7 @@ package engine.windowLib.bundledWindows.fileExplorer;
 import engine.input.Keyboard;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.renderEngine.textureSystem.GameTexture;
+import engine.util.file.FileType;
 import engine.windowLib.windowTypes.WindowObject;
 import eutil.colors.EColors;
 

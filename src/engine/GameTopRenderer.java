@@ -6,9 +6,11 @@ import engine.renderEngine.GLObject;
 import engine.renderEngine.GLSettings;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.terminal.window.ETerminal;
+import engine.windowLib.desktopOverlay.TaskBar;
 import engine.windowLib.windowTypes.TopWindowParent;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
+import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import main.QoT;
 import main.settings.QoT_Settings;
@@ -40,10 +42,21 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 		if (hasFocus) {
 			int borderColor = 0xaaff0000;
 			int borderWidth = 4;
-			drawRect(0, 0, borderWidth, height, borderColor); //left
-			drawRect(borderWidth, 0, width - borderWidth, borderWidth, borderColor); //top
-			drawRect(width - borderWidth, 0, width, height, borderColor); //right
-			drawRect(borderWidth, height - borderWidth, width - borderWidth, height, borderColor); //bottom
+			/*
+			TaskBar b = getTaskBar();
+			if (b != null && !b.isHidden()) {
+				double ds = TaskBar.drawSize();
+				drawRect(0, ds, borderWidth, height, borderColor); //left
+				drawRect(borderWidth, ds, width - 1, ds + 1, borderColor); //top
+				drawRect(width - borderWidth, ds, width, height, borderColor); //right
+				drawRect(borderWidth, height - borderWidth, width - 1, height, borderColor); //bottom
+			}
+			else {*/
+				drawRect(0, 0, borderWidth, height, borderColor); //left
+				drawRect(borderWidth, 0, width - borderWidth, borderWidth, borderColor); //top
+				drawRect(width - borderWidth, 0, width, height, borderColor); //right
+				drawRect(borderWidth, height - borderWidth, width - borderWidth, height, borderColor); //bottom
+			//}
 		}
 		
 		if (visible) {
@@ -153,6 +166,21 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 		removeAllObjects();
 	}
 	
+	public void addTaskBar(boolean fromScratch) {
+		addObject(new TaskBar(fromScratch));
+	}
+	
+	public TaskBar getTaskBar() {
+		EArrayList<IWindowObject> objects = new EArrayList(windowObjects);
+		objects.removeAll(objsToBeRemoved);
+		objects.addAll(objsToBeAdded);
+		
+		for (int i = 0; i < objects.size(); i++)
+			if (objects.get(i) instanceof TaskBar b) return b;
+		
+		return null;
+	}
+	
 	@Override
 	public boolean hasFocus() {
 		return hasFocus;
@@ -160,7 +188,10 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 	
 	public void setFocused(boolean val) {
 		hasFocus = val;
-		if (hasFocus) revealHiddenObjects();
+		if (hasFocus) {
+			revealHiddenObjects();
+			if (getTaskBar() == null) addTaskBar(true);
+		}
 		else hideUnpinnedObjects();
 	}
 	
