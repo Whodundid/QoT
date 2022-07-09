@@ -48,6 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
-/bin/
-/.classpath
 /.project
+/.classpath
+/bin/
