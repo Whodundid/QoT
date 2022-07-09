@@ -29,8 +29,15 @@ public class PinWindow extends TerminalCommand {
 		if (args.isEmpty()) {
 			boolean val = termIn.isPinned();
 			termIn.setPinned(!val);
-			if (!val) { termIn.setHidden(false); termIn.bringToFront(); }
-			termIn.writeln("Window: [" + termIn.getObjectName() + " | " + termIn.getObjectID() + "] " + (val ? "un" : "") + "pinned", EColors.green);
+			if (!val) {
+				termIn.setHidden(false);
+				termIn.bringToFront();
+			}
+			termIn.writeln(String.format("Window: [%s] | [%d] %spinned",
+					 					 termIn.getObjectName(),
+					 					 termIn.getObjectID(),
+					 					 val ? "un" : ""), 
+						   EColors.green);
 		}
 		else if (args.size() >= 1) {
 			try {
@@ -41,10 +48,17 @@ public class PinWindow extends TerminalCommand {
 				if (theWindow != null) {
 					boolean val = theWindow.isPinned();
 					theWindow.setPinned(!val);
-					if (!val) { theWindow.setHidden(false); theWindow.bringToFront(); }
-					termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] " + (val ? "un" : "") + "pinned", EColors.green);
+					if (!val) {
+						theWindow.setHidden(false);
+						theWindow.bringToFront();
+					}
+					termIn.writeln(String.format("Window: [%s] | [%d] %spinned",
+												 theWindow.getObjectName(),
+												 theWindow.getObjectID(),
+												 val ? "un" : ""), 
+								   EColors.green);
 				}
-				else { termIn.error("No window with that pid currently exists!"); }
+				else termIn.error("No window with that pid currently exists!");
 				
 			}
 			catch (Exception e) {
@@ -64,9 +78,13 @@ public class PinWindow extends TerminalCommand {
 					if (theWindow != null) {
 						boolean val = theWindow.isPinned();
 						theWindow.setPinned(!val);
-						termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] " + (val ? "un" : "") + "pinned", EColors.green);
+						termIn.writeln(String.format("Window: [%s] | [%d] %spinned",
+								 					 theWindow.getObjectName(),
+								 					 theWindow.getObjectID(),
+								 					 val ? "un" : ""), 
+									   EColors.green);
 					}
-					else { termIn.error("No window with that name currently exists!"); }
+					else termIn.error("No window with that name currently exists!");
 				}
 				catch (Exception q) {
 					termIn.error("Failed to parse input!");

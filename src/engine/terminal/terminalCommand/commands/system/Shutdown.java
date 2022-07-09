@@ -28,7 +28,7 @@ public class Shutdown extends ConfirmationCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { checkConfirm(termIn, args, runVisually); }
+		if (args.isEmpty()) checkConfirm(termIn, args, runVisually);
 	}
 
 	@Override

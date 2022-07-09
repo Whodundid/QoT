@@ -26,7 +26,7 @@ public class Close extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { termIn.close(); }
+		if (args.isEmpty()) termIn.close();
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
@@ -36,13 +36,12 @@ public class Close extends TerminalCommand {
 				if (EUtil.nullDo(theWindow, w -> w.close())) {
 					termIn.writeln("Window: '" + theWindow.getObjectName() + " ; " + theWindow.getObjectID() + "' closed", EColors.green);
 				}
-				else { termIn.error("No window with that pid currently exists!"); }
+				else termIn.error("No window with that pid currently exists!");
 				
 			}
 			catch (Exception e) {
 				try {
 					String name = StringUtil.combineAll(args, " ").toLowerCase().trim();
-					
 					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					
 					if (name.equals("all") ) {
@@ -61,7 +60,6 @@ public class Close extends TerminalCommand {
 					}
 					else {
 						WindowParent theWindow = null;
-						
 						for (WindowParent p : windows) {
 							if (p.getObjectName().toLowerCase().equals(name)) {
 								theWindow = p;
@@ -72,7 +70,7 @@ public class Close extends TerminalCommand {
 						if (EUtil.nullDo(theWindow, w -> w.close())) {
 							termIn.writeln("Window: '" + theWindow.getObjectName() + " ; " + theWindow.getObjectID() + "' closed", EColors.green);
 						}
-						else { termIn.error("No window with that name currently exists!"); }
+						else termIn.error("No window with that name currently exists!");
 					}
 				}
 				catch (Exception q) {

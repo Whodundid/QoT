@@ -73,7 +73,9 @@ public class GlobalTileList {
 				if (hasConstructor(tile, Integer.class)) return c.getConstructor(Integer.class).newInstance(texID);
 				else return c.getConstructor().newInstance();
 			}
-			catch (Exception e) { e.printStackTrace(); }
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}

@@ -12,7 +12,7 @@ public class Ls extends FileCommand {
 	
 	public Ls() {
 		super(CommandType.NORMAL);
-		setModifiers("-a");
+		setAcceptedModifiers("-a");
 		numArgs = 1;
 	}
 	
@@ -28,31 +28,20 @@ public class Ls extends FileCommand {
 		if (args.isEmpty()) { listDir(termIn, false, null); }
 		else if (args.size() >= 1) {
 			File theFile = null;
-			boolean hidden = false;
+			boolean hidden = hasModifier("-a");
 			
 			String all = StringUtil.combineAll(args, " ");
 			EArrayList<String> allArgs = new EArrayList(args);
 			allArgs.add(all);
 			
 			for (String s : allArgs) {
-				if (s.startsWith("-")) {
-					if (checkForModifier(s)) {
-						hidden = s.equals("-a");
-					}
-					else {
-						termIn.error("Invalid modifier: '" + s + "'");
-						return;
-					}
-				}
-				else {
-					theFile = new File(s);
-					if (!theFile.exists()) {
-						theFile = new File(termIn.getDir(), s);
-					}
+				theFile = new File(s);
+				if (!theFile.exists()) {
+					theFile = new File(termIn.getDir(), s);
 				}
 			}
 			
-			if (args.get(0).equals("~")) { theFile = new File(System.getProperty("user.dir")); }
+			if (args.get(0).equals("~")) theFile = new File(System.getProperty("user.dir"));
 			
 			listDir(termIn, hidden, theFile);
 		}

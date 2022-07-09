@@ -6,15 +6,17 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.sys.FileOpener;
 import main.settings.QoT_Settings;
 
 import java.io.File;
 
-public class CD_Saves_CMD extends TerminalCommand {
+public class WorldsDir_CMD extends TerminalCommand {
 	
-	public CD_Saves_CMD() {
+	public WorldsDir_CMD() {
 		super(CommandType.NORMAL);
 		setCategory("Game");
+		setAcceptedModifiers("-c", "-o");
 		numArgs = 0;
 	}
 
@@ -27,23 +29,22 @@ public class CD_Saves_CMD extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.size() > 1) { termIn.error("This command may only take one additional argument! (-c)"); }
+		if (args.size() > 1) { termIn.error("This command may only take one additional argument! (-c, -o)"); }
 		else {
 			try {
 				boolean copy = false;
+				boolean open = false;
 				
-				if (args.hasOne()) {
-					String arg = args.getFirst();
-					if ("-c".equals(arg)) { copy = true; }
-					else { termIn.error("This command may only take one additional argument! (-c)"); return; }
-				}
+				if (hasModifier("-c")) copy = true;
+				if (hasModifier("-o")) open = true;
 				
 				termIn.setDir(QoT_Settings.getEditorWorldsDir());
 				String path = termIn.getDir().getCanonicalPath();
 				String colorPath = "" + EColors.mc_aqua + path;
 				termIn.writeLink("Current Dir: " + colorPath, path, new File(path), false, EColors.yellow);
 				
-				if (copy) { Keyboard.setClipboard(path); }
+				if (copy) Keyboard.setClipboard(path);
+				if (open) FileOpener.openFile(new File(path));
 			}
 			catch (Exception e) {
 				e.printStackTrace();

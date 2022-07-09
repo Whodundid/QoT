@@ -12,6 +12,7 @@ public class Rm extends FileCommand {
 	public Rm() {
 		super(CommandType.NORMAL);
 		numArgs = 1;
+		setAcceptedModifiers("-r");
 	}
 	
 	@Override public String getName() { return "rm"; }

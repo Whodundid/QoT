@@ -10,6 +10,7 @@ public abstract class TerminalCommand {
 	
 	private CommandType type = CommandType.NORMAL;
 	private String category = "none";
+	protected EArrayList<String> acceptedModifiers = new EArrayList();
 	protected EArrayList<String> modifiers = new EArrayList();
 	protected int numArgs = 0;
 	protected boolean shouldRegister = true;
@@ -32,7 +33,25 @@ public abstract class TerminalCommand {
 	public abstract String getHelpInfo(boolean runVisually);
 	public abstract String getUsage();
 	public abstract void handleTabComplete(ETerminal conIn, EArrayList<String> args);
-	public abstract void runCommand(ETerminal conIn, EArrayList<String> args, boolean runVisually);
+	public abstract void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually);
+	
+	//---------
+	// Methods
+	//---------
+	
+	public void preRun(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+		//extract '-[x]' args
+		var it = args.iterator();
+		while (it.hasNext()) {
+			var s = it.next();
+			if (s.startsWith("-") && s.length() > 1) {
+				if (acceptedModifiers.contains(s)) modifiers.add(s);
+				it.remove();
+			}
+		}
+		
+		runCommand(termIn, args, runVisually);
+	}
 	
 	//---------
 	// Getters
@@ -49,7 +68,7 @@ public abstract class TerminalCommand {
 	// Setters
 	//---------
 	
-	public TerminalCommand setModifiers(String... in) { modifiers = new EArrayList().addA(in); return this; }
+	public TerminalCommand setAcceptedModifiers(String... in) { acceptedModifiers.addA(in); return this; }
 	public TerminalCommand setCategory(String in) { category = in; return this; }
 	public TerminalCommand setShouldRegister(boolean val) { shouldRegister = val; return this; }
 	
@@ -59,8 +78,14 @@ public abstract class TerminalCommand {
 	
 	public void onConfirmation(String response) {}
 	
-	protected boolean checkForModifier(String in) {
-		return in != null && in.length() >= 1 && in.startsWith("-") && modifiers.contains(in);
+	/**
+	 * Returns true if the specified modifier was parsed at command start.
+	 * 
+	 * @param in
+	 * @return
+	 */
+	protected boolean hasModifier(String in) {
+		return in != null && in.length() >= 1 && modifiers.contains(in);
 	}
 	
 	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, EArrayList<String> completionsIn) {

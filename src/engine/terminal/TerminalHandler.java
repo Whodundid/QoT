@@ -92,14 +92,14 @@ public class TerminalHandler {
 			for (int i = 1; i < commandParts.length; i++) {
 				commandArguments.add(commandParts[i]);
 			}
-			if (emptyEnd) { commandArguments.add(""); }
+			if (emptyEnd) commandArguments.add("");
 			
 			if (commands.getBoxWithA(baseCommand) != null) {
 				TerminalCommand command = commands.getBoxWithA(baseCommand).getB();
 				
 				if (command == null) {
 					termIn.error("Unrecognized command.");
-					if (!termIn.isChatTerminal()) {	termIn.writeln(); }
+					if (!termIn.isChatTerminal()) termIn.writeln();
 					return;
 				}
 				
@@ -115,13 +115,13 @@ public class TerminalHandler {
 				}
 				
 				if (tab) {
-					if (command.showInHelp()) { command.handleTabComplete(termIn, commandArguments); }
+					if (command.showInHelp()) command.handleTabComplete(termIn, commandArguments);
 				}
 				else {
-					command.runCommand(termIn, commandArguments, runVisually);
+					command.preRun(termIn, commandArguments, runVisually);
 				
 					if (addSpace && (drawSpace && !command.getName().equals("clear"))) {
-						if (!termIn.isChatTerminal()) {	termIn.writeln(); }
+						if (!termIn.isChatTerminal()) termIn.writeln();
 						drawSpace = true;
 					}
 				}
@@ -189,7 +189,7 @@ public class TerminalHandler {
 		//get command categories
 		EArrayList<String> categories = new EArrayList();
 		for (TerminalCommand c : unsorted) {
-			if (c != null) { categories.addIfNotContains(c.getCategory()); }
+			if (c != null) categories.addIfNotContains(c.getCategory());
 		}
 		Collections.sort(categories);
 		

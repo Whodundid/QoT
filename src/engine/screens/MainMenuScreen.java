@@ -24,6 +24,10 @@ public class MainMenuScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
+		if (QoT.theWorld != null) {
+			QoT.loadWorld(null);
+		}
+		
 		if (!SoundEngine.isPlaying(Songs.zarus) && SoundEngine.getAllPlaying().size() == 1) {
 			SoundEngine.stopAll();
 		}

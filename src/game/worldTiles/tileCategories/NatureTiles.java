@@ -6,10 +6,7 @@ import game.worldTiles.tileCategories.nature.Bush0;
 import game.worldTiles.tileCategories.nature.CrackedDirt;
 import game.worldTiles.tileCategories.nature.DarkGrass;
 import game.worldTiles.tileCategories.nature.Dirt;
-import game.worldTiles.tileCategories.nature.Farm0;
-import game.worldTiles.tileCategories.nature.Farm1;
-import game.worldTiles.tileCategories.nature.Farm2;
-import game.worldTiles.tileCategories.nature.Farm3;
+import game.worldTiles.tileCategories.nature.FarmPlot;
 import game.worldTiles.tileCategories.nature.Grass;
 import game.worldTiles.tileCategories.nature.Mud;
 import game.worldTiles.tileCategories.nature.RedSand;
@@ -19,7 +16,7 @@ import game.worldTiles.tileCategories.nature.Stone;
 import game.worldTiles.tileCategories.nature.Water;
 import game.worldTiles.tileCategories.nature.Wood;
 
-public class NatureTiles extends TileCategory {
+public class NatureTiles implements TileCategory {
 	
 	private NatureTiles() {}
 	
@@ -35,9 +32,6 @@ public class NatureTiles extends TileCategory {
 	public static final WorldTile water = new Water();
 	public static final WorldTile wood = new Wood();
 	public static final WorldTile bush = new Bush0();
-	public static final WorldTile farm0 = new Farm0();
-	public static final WorldTile farm1 = new Farm1();
-	public static final WorldTile farm2 = new Farm2();
-	public static final WorldTile farm3 = new Farm3();
+	public static final WorldTile farmPlot = new FarmPlot();
 	
 }

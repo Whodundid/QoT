@@ -40,24 +40,21 @@ public class Help extends TerminalCommand implements IListableCommand {
 			termIn.writeln();
 			termIn.writeln("To see help information on a specific command, type help followed by the command.", EColors.yellow);
 			termIn.writeln("To run a command with more information, add -i after the command. ex: list -i", EColors.yellow);
-			
 		}
-		else if (args.size() == 1) {
-			
+		else {
+			if (args.size() > 1) { termIn.error("Too many arguments!"); return; }
 			String commandName = args.get(0);
-			if (QoT.getTerminalHandler().getCommandNames().contains(commandName)) {
-				TerminalCommand command = QoT.getTerminalHandler().getCommand(commandName);
-				if (command.showInHelp()) {
-					termIn.writeln(command.getHelpInfo(runVisually), 0xffffff00);
-					if (command.getUsage() != null && !command.getUsage().isEmpty()) {
-						termIn.writeln(command.getUsage(), 0xffffff00);
-					}
-				}
-				else { termIn.error("Unrecognized command name"); }
+			
+			var cmds = QoT.getTerminalHandler().getCommandNames();
+			if (!cmds.contains(commandName)) { termIn.error("Unrecognized command name"); return; }
+			TerminalCommand command = QoT.getTerminalHandler().getCommand(commandName);
+			
+			if (!command.showInHelp()) { termIn.error("Unrecognized command name"); return; }
+			termIn.writeln(command.getHelpInfo(runVisually), 0xffffff00);
+			if (command.getUsage() != null && !command.getUsage().isEmpty()) {
+				termIn.writeln(command.getUsage(), 0xffffff00);
 			}
-			else { termIn.error("Unrecognized command name"); }
 		}
-		else { termIn.error("Too many arguments!"); }
 	}
 	
 	@Override
@@ -87,8 +84,8 @@ public class Help extends TerminalCommand implements IListableCommand {
 						String a = EColors.mc_green + "";
 						for (int i = 0; i < command.getAliases().size(); i++) {
 							String commandAlias = command.getAliases().get(i);
-							if (i == command.getAliases().size() - 1) { a += commandAlias; }
-							else { a += (commandAlias + ", "); }
+							if (i == command.getAliases().size() - 1) a += commandAlias;
+							else a += (commandAlias + ", ");
 						}
 						termIn.writeln((norm ? "    " : "  ") + command.getName() + ": " + a, 0xffb2b2b2);
 					}

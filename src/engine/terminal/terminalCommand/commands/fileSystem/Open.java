@@ -21,6 +21,7 @@ public class Open extends FileCommand {
 	public Open() {
 		super(CommandType.NORMAL);
 		numArgs = 1;
+		setAcceptedModifiers("-a");
 	}
 	
 	@Override public String getName() { return "open"; }
@@ -28,14 +29,20 @@ public class Open extends FileCommand {
 	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to open or run a file or application. Add -a to end to always open on computer."; }
 	@Override public String getUsage() { return "ex: open 'file'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+		fileTabComplete(termIn, args);
+	}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { termIn.error("Not enough arguments!"); termIn.info(getUsage()); }
+		if (args.isEmpty()) {
+			termIn.error("Not enough arguments!");
+			termIn.info(getUsage());
+		}
 		else if (args.size() >= 1) {
 			try {
-				boolean openA = args.getLast().equals("-a");
+				//boolean openA = args.getLast().equals("-a");
+				boolean openA = hasModifier("-a");
 				String all = "";
 				
 				if (openA) { all = StringUtil.combineAll(args.subList(0, args.size() - 1), " "); }

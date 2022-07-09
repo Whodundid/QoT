@@ -120,6 +120,15 @@ public class GameWorld {
 		if (nullEntities > 0) {
 			QoT.logWarn("'" + nullEntities + "' were null in world: '" + getName() + "' and have been removed!");
 		}
+		
+		//temporary world tile update
+		
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				WorldTile t = worldData[x][y];
+				if (t != null) t.onWorldTick();
+			}
+		}
 	}
 	
 	public Entity addEntity(Entity ent) {
@@ -234,11 +243,14 @@ public class GameWorld {
 						
 						if (!("n".equals(parts[0]) || "null".equals(parts[0]))) {
 							tileID = Integer.parseInt(parts[0]);
-							if (parts.length > 1) { childID = Integer.parseInt(parts[1]); }
+							if (parts.length > 1) childID = Integer.parseInt(parts[1]);
 							
 							WorldTile t = WorldTile.getTileFromID(tileID, childID);
-							if (parts.length == 1) t.setWildCard(true);
-							if (t != null) t.setWorldPos(i, j);
+							if (t == null) System.out.println("NULL: " + tileID + " : " + childID);
+							if (t != null) {
+								if (parts.length == 1) t.setWildCard(true);
+								t.setWorldPos(i, j);
+							}
 							data[i][j] = t;
 						}
 						else {
