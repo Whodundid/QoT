@@ -41,9 +41,11 @@ public class LoadWorld_CMD extends TerminalCommand {
 			if (args.length() > 1) {
 				try {
 					String flag = args.get(1);
-					if ("-ns".equals(flag)) { switchTo = false; }
+					if ("-ns".equals(flag)) switchTo = false;
 				}
-				catch (Exception e) { e.printStackTrace(); }
+				catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
 			if (world.getWorldFile().exists()) {

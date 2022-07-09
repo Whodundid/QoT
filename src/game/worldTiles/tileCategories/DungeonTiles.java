@@ -8,7 +8,7 @@ import game.worldTiles.tileCategories.dungeon.DungOldWallB;
 import game.worldTiles.tileCategories.dungeon.DungWallA;
 import game.worldTiles.tileCategories.dungeon.DungWallB;
 
-public class DungeonTiles extends TileCategory {
+public class DungeonTiles implements TileCategory {
 	
 	public DungeonTiles() {}
 	

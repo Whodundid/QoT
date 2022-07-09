@@ -1,8 +1,9 @@
 package world;
 
+import java.util.Comparator;
+
 import engine.GameTopRenderer;
 import engine.input.Keyboard;
-import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -12,8 +13,6 @@ import game.entities.Entity;
 import game.entities.Player;
 import game.worldTiles.WorldTile;
 import main.QoT;
-
-import java.util.Comparator;
 
 //Author: Hunter Bragg
 
@@ -113,7 +112,7 @@ public class WorldRenderer extends EGui {
 			y = (int) (midY - (distY * h) - (h / 2));
 			
 			renderMap();
-			renderWalls();
+			//renderWalls();
 			renderEntities();
 			//drawViewBox();
 			
@@ -150,8 +149,8 @@ public class WorldRenderer extends EGui {
 			for (int j = top, jy = 0; j <= bot; j++, jy++) {
 				WorldTile t = world.getWorldData()[i][j];
 				if (t == null || !t.hasTexture()) continue;
-				if (t.isWall()) continue;
-				GameTexture tex = t.getTexture();
+				//if (t.isWall()) continue;
+				//GameTexture tex = t.getTexture();
 				
 				double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
 				double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);
@@ -164,14 +163,17 @@ public class WorldRenderer extends EGui {
 				
 				int brightness = calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1);
 				
-				drawTexture(tex, dX, dY, w, h, false, brightness);
-					
+				t.renderTile(world, dX, dY, w, h, brightness);
+				//drawTexture(tex, dX, dY, w, h, false, brightness);
+				
+				/*
 				//draw bottom of map edge or if right above a tile with no texture/void
 				WorldTile tileBelow = null;
 				if ((j + 1) <= bot) tileBelow = world.getWorldData()[i][j + 1];
 				if ((tileBelow == null || !tileBelow.hasTexture()) && !t.isWall()) {
 					drawTexture(tex, dX, dY + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
 				}
+				*/
 			}
 		}
 	}
@@ -199,8 +201,8 @@ public class WorldRenderer extends EGui {
 				if (t == null) continue;
 				if (!t.isWall()) continue;
 				if (!t.hasTexture()) continue;
-				double wh = h * t.getWallHeight(); //wh == 'wallHeight'
-				GameTexture tex = t.getTexture();
+				//double wh = h * t.getWallHeight(); //wh == 'wallHeight'
+				//GameTexture tex = t.getTexture();
 				
 				double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
 				double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);
@@ -213,11 +215,14 @@ public class WorldRenderer extends EGui {
 				
 				//determine tile brightness
 				int brightness = calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1);
-				int tileBrightness = brightness;
-				int wallBrightness = brightness;
+				//int tileBrightness = brightness;
+				//int wallBrightness = brightness;
 				
-				if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
+				//if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
 				
+				t.renderTile(world, dX, dY, w, h, brightness);
+				
+				/*
 				//draw main texture slightly above main location
 				drawTexture(tex, dX, dY - wh, w, h, false, tileBrightness);
 				
@@ -251,6 +256,7 @@ public class WorldRenderer extends EGui {
 				if ((tileBelow == null || !tileBelow.hasTexture())) {
 					drawTexture(tex, dX, dY + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
 				}
+				*/
 			}
 		}
 	}
@@ -298,9 +304,9 @@ public class WorldRenderer extends EGui {
 					
 					//shadows
 					for (int s = 0; s < 12; s++) {
-						double rX = (e.width / 4) - (s * e.width / 80);
+						double rX = (e.width / 3) - (s * e.width / 80);
 						double rY = (e.height / 8) - (s * e.height / 64);
-						drawFilledEllipse((drawX + dw / 2), (drawY + dh - dh / 5), rX, rY, 16, EColors.vdgray.opacity(0x16));
+						drawFilledEllipse((drawX + dw / 2), (drawY + dh - dh / 32), rX, rY, 16, EColors.vdgray.opacity(0x16));
 					}
 					
 					drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));

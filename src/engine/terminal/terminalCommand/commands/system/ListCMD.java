@@ -167,7 +167,7 @@ public class ListCMD extends TerminalCommand {
 	}
 	
 	private void listScreens(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		String dir = (args.size() >= 2) ? args.get(1) : "assets_screens";
+		String dir = (args.size() >= 2) ? args.get(1) : "engine.screens";
 		
 		EArrayList<Class<GameScreen>> screenClasses = ClassFinder.findClassesOfType(dir, GameScreen.class);
 		EArrayList<String> classNames = new EArrayList();
@@ -175,9 +175,14 @@ public class ListCMD extends TerminalCommand {
 		for (Class<GameScreen> c : screenClasses) {
 			EModifier m = EModifier.of(c.getModifiers());
 			if (m.isPublic() && !m.isAbstract()) {
-				try { if (c.getConstructor() != null) { classNames.add(c.getSimpleName()); } }
+				try {
+					if (c.getConstructor() != null) classNames.add(c.getSimpleName());
+				}
 				catch (NoSuchMethodException e) {}
-				catch (Exception e) { e.printStackTrace(); break; }
+				catch (Exception e) {
+					e.printStackTrace();
+					break;
+				}
 			}
 		}
 		

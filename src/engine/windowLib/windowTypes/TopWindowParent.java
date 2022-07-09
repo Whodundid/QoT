@@ -65,10 +65,9 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 				if (o.willBeDrawn() && !o.isHidden()) {
 					boolean draw = true;
 					
-					if (o instanceof WindowParent<?>) {
-						WindowParent<?> wp = (WindowParent<?>) o;
-						if (!wp.isMinimized() || wp.drawsWhileMinimized()) { draw = true; }
-						else { draw = false; }
+					if (o instanceof WindowParent<?> wp) {
+						if (!wp.isMinimized() || wp.drawsWhileMinimized()) draw = true;
+						else draw = false;
 					}
 					
 					if (draw) {
@@ -79,7 +78,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 						if (!o.hasFirstDraw()) { o.onFirstDraw(); }
 						o.drawObject(mX, mY);
 						
-						//draw greyed out overlay over everything if a focus lock object is present
+						//draw grayed out overlay over everything if a focus lock object is present
 						if (focusLockObject != null && !o.equals(focusLockObject)) {
 							if (o.isVisible()) {
 								EDimension d = o.getDimensions();
@@ -92,7 +91,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 			}
 			
 			//notify hover object
-			if (getHoveringObject() != null) { getHoveringObject().onMouseHover(mX, mY); }
+			if (getHoveringObject() != null) getHoveringObject().onMouseHover(mX, mY);
 		}
 		
 		GLSettings.popMatrix();
@@ -277,12 +276,19 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		if (modifyingObject != null) {
 			switch (modifyType) {
 			case Move:
-			case MoveAlreadyClicked: modifyingObject.move(mX - mousePos.getA(), mY - mousePos.getB()); mousePos.set(mX, mY); break;
-			case Resize: modifyingObject.resize(mX - mousePos.getA(), mY - mousePos.getB(), resizingDir); mousePos.set(mX, mY); break;
+			case MoveAlreadyClicked:
+				modifyingObject.move(mX - mousePos.getA(), mY - mousePos.getB());
+				mousePos.set(mX, mY);
+				break;
+			case Resize:
+				modifyingObject.resize(mX - mousePos.getA(), mY - mousePos.getB(), resizingDir);
+				mousePos.set(mX, mY);
+				break;
 			default: break;
 			}
 		}
 		
+		if (maximizingWindow == null) return;
 		if (maximizingWindow != null) {
 			if (maximizingWindow.isMaximizable()) {
 				if (maximizingArea == ScreenLocation.OUT) {
@@ -344,7 +350,6 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	
 	protected void updateZLayers() {
 		if (toFront != null) {
-			
 			//move the 'toFront' object to the front
 			if (windowObjects.contains(toFront)) {
 				windowObjects.remove(toFront);
@@ -362,7 +367,6 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		}
 		
 		if (toBack != null) {
-			
 			//move the 'toBack' object to the back
 			if (windowObjects.contains(toBack)) {
 				//EArrayList<IWindowObject> objects = new EArrayList();
@@ -394,7 +398,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		res = QoT.getWindowSize();
 		setDimensions(0, 0, res.getWidth(), res.getHeight());
 		
-		for (WindowParent p : getAllActiveWindows()) {
+		for (IWindowParent p : getAllActiveWindows()) {
 			
 			EDimension oldDims = p.getDimensions();
 			
@@ -404,7 +408,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 			p.setPosition(newX, newY);
 			p.reInitObjects();
 			
-			if (p.isMaximized()) { p.maximize(); }
+			if (p.isMaximized()) p.maximize();
 		}
 	}
 	

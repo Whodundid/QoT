@@ -23,7 +23,7 @@ public class RuntimeCMD extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) { termIn.error("This command does not take any arguments"); }
+		if (args.isNotEmpty()) termIn.error("This command does not take any arguments");
 		else {
 			Runtime rt = Runtime.getRuntime();
 			

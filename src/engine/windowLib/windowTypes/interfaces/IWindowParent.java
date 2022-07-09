@@ -6,6 +6,8 @@ import eutil.misc.ScreenLocation;
 
 import java.util.Stack;
 
+import engine.renderEngine.textureSystem.GameTexture;
+
 //Author: Hunter Bragg
 
 public interface IWindowParent<E> extends IWindowObject<E> {
@@ -27,6 +29,10 @@ public interface IWindowParent<E> extends IWindowObject<E> {
 	public void renderTaskBarPreview(double xPos, double yPos);
 	/** Event fired when this window should draw a border around it when it is highlighted. */
 	public void drawHighlightBorder();
+	/** Returns the icon that will be drawn to represent this window on the taskbar. */
+	public default GameTexture getWindowIcon() { return null; }
+	/** Specifies whether or not this window be displayed in the taskbar or not. */
+	public default boolean showInTaskBar() { return true; }
 	
 	//-------------------
 	// Size and Position

@@ -2,6 +2,7 @@ package engine.terminal.window;
 
 import java.io.File;
 
+import assets.textures.WindowTextures;
 import engine.terminal.TerminalHandler;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.termParts.TerminalTextField;
@@ -62,12 +63,12 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 		super();
 		aliases.add("terminal", "console", "term");
 		dir = new File(System.getProperty("user.dir"));
-		//windowIcon = EMCResources.terminalIcon;
+		windowIcon = WindowTextures.terminal;
 	}
 	
-	//-------------------------
-	// Envision Console Output
-	//-------------------------
+	//--------------------------
+	// Envision Terminal Output
+	//--------------------------
 	
 	@Override
 	public void onEnvisionPrint(String line) {
@@ -486,7 +487,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 						//grab everything up to the argument being tabbed
 						String f = "";
 						for (int i = 0, spaces = 0; i < input.length(); i++) {
-							if (spaces == startArgPos) { f = input.substring(0, i - 1); break; }
+							if (spaces == startArgPos && i > 0) { f = input.substring(0, i - 1); break; }
 							else if (input.charAt(i) == ' ') { spaces++; }
 							
 							if (i == input.length() - 1) { f = input.trim(); }
@@ -541,17 +542,19 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 				startArgPos = getCurrentArg();
 			}
 			
-			int textWidth = 100;
+			int textWidth = 0;
 			int maxData = 0;
 			int spaceAmount = 3;
 			int longest = 0;
+			int longestLen = 0;
 			
 			for (String s : dataIn) {
 				int len = getStringWidth(s);
-				if (len > longest) { longest = len; }
+				if (len > longest) {
+					longest = len;
+					longestLen = s.length();
+				}
 			}
-			
-			//System.out.println(longest);
 			
 			//determine the maximum number of autocomplete options that can fit on one line
 			for (int i = 1; i < dataIn.size() + 1; i++) {
@@ -559,7 +562,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 				if (textWidth < width) {
 					maxData = i;
 				}
-				else { break; }
+				else break;
 			}
 			
 			//System.out.println("maxData: " + maxData);
@@ -580,13 +583,15 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 				if (cur == maxData || amount == 1) {
 					//if (amount == 0) { line += dataIn.get(i) + ", "; cur++; }
 					try {
-						String format = StringUtil.repeatString("%-" + (longest / 4) + "s" + StringUtil.repeatString(" ", spaceAmount), cur);
+						String format = StringUtil.repeatString("%-" + longestLen + "s" + StringUtil.repeatString(" ", spaceAmount), cur);
 						String[] args = line.split(", ");
 						line = String.format(format, (Object[]) args);
 					}
-					catch (Exception e) { e.printStackTrace(); }
+					catch (Exception e) {
+						e.printStackTrace();
+					}
 					
-					if (!line.isEmpty()) { tabDisplayLines.add(new TextAreaLine(history, line, EColors.lgray.intVal)); }
+					if (!line.isEmpty()) tabDisplayLines.add(new TextAreaLine(history, line, EColors.lgray.intVal));
 					line = "";
 					cur = 0;
 				}

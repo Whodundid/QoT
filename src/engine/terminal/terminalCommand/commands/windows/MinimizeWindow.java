@@ -26,7 +26,7 @@ public class MinimizeWindow extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
+		if (args.isEmpty()) termIn.error("Not enough arguments!");
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
@@ -36,10 +36,10 @@ public class MinimizeWindow extends TerminalCommand {
 				if (theWindow != null) {
 					boolean val = theWindow.isMinimized();
 					theWindow.setMinimized(!val);
-					if (!val) { theWindow.bringToFront(); }
+					if (!val) theWindow.bringToFront();
 					termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] " + (!val ? "" : "un") + "minimized.", EColors.green);
 				}
-				else { termIn.error("No window with that pid currently exists!"); }
+				else termIn.error("No window with that pid currently exists!");
 				
 			}
 			catch (Exception e) {
@@ -59,10 +59,10 @@ public class MinimizeWindow extends TerminalCommand {
 					if (theWindow != null) {
 						boolean val = theWindow.isMinimized();
 						theWindow.setMinimized(!val);
-						if (!val) { theWindow.bringToFront(); }
+						if (!val) theWindow.bringToFront();
 						termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] " + (!val ? "" : "un") + "minimized.", EColors.green);
 					}
-					else { termIn.error("No window with that name currently exists!"); }
+					else termIn.error("No window with that name currently exists!");
 				}
 				catch (Exception q) {
 					termIn.error("Failed to parse input!");

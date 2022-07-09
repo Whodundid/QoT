@@ -1,10 +1,13 @@
 package game.worldTiles;
 
+import engine.renderEngine.GLObject;
 import engine.renderEngine.textureSystem.GameTexture;
+import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import game.entities.Entity;
+import world.GameWorld;
 
-public class WorldTile implements Comparable<WorldTile> {
+public abstract class WorldTile extends GLObject implements Comparable<WorldTile> {
 	
 	//--------
 	// Fields
@@ -89,6 +92,9 @@ public class WorldTile implements Comparable<WorldTile> {
 	 */
 	protected int worldX, worldY;
 	
+	protected boolean hasSideBrightness = false;
+	protected int sideBrightness = 255;
+	
 	protected EArrayList<Entity> entitiesOnTile = new EArrayList(10);
 	protected EArrayList<Entity> entitiesAdding = new EArrayList(10);
 	protected EArrayList<Entity> entitiesRemoving = new EArrayList(10);
@@ -100,7 +106,6 @@ public class WorldTile implements Comparable<WorldTile> {
 	protected WorldTile(TileIDs idIn) {
 		id = idIn;
 		name = id.name;
-		tex = id.texture;
 	}
 	
 	//-----------
@@ -121,8 +126,77 @@ public class WorldTile implements Comparable<WorldTile> {
 	// Methods
 	//---------
 	
-	public void renderTile() {
+	/**
+	 * Called every time the world updates.
+	 */
+	public void onWorldTick() {}
+	
+	/**
+	 * Called whenever a specific entity click on this tile.
+	 * 
+	 * @param entity The entity performing the action
+	 * @param button The mouse button clicking
+	 */
+	public void onTileClicked(Entity entity, int button) {}
+	
+	/**
+	 * Called from the WorldRenderer whenever the tile is about to be rendered.
+	 * 
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 * @param brightness
+	 */
+	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness) {
+		double wh = h * wallHeight; //wh == 'wallHeight'
 		
+		if (isWall) {
+			//determine tile brightness
+			int tileBrightness = brightness;
+			int wallBrightness = brightness;
+			
+			if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
+			
+			//draw main texture slightly above main location
+			drawTexture(tex, x, y - wh, w, h, false, tileBrightness);
+			
+			//check if the tile directly above is a wall
+			//if so - don't draw wall side
+			WorldTile tb = null; // tb == 'tileBelow'
+			if ((worldY + 1) < world.getHeight()) tb = world.getWorldData()[worldX][worldY + 1];
+			if ((tb == null ||
+				!tb.hasTexture() ||
+				 tb.getWallHeight() < wh) ||
+				!tb.isWall())
+			{
+				double yPos;
+				
+				if (wh > 0) {
+					yPos = y + h - wh;
+					wallBrightness = EColors.changeBrightness(brightness, 125);
+				}
+				else {
+					yPos = y - wh;
+					wallBrightness = brightness;
+				}
+				
+				//draw wall side slightly below
+				GameTexture side = (sideTex != null) ? sideTex : tex;
+				drawTexture(side, x, yPos, w, wh, false, wallBrightness);
+			}
+		}
+		else {
+			drawTexture(tex, x, y, w, h, false, brightness);
+		}
+		
+		//draw bottom of map edge or if right above a tile with no texture/void
+		WorldTile tileBelow = null;
+		if ((worldY + 1) < world.getHeight()) tileBelow = world.getWorldData()[worldX][worldY + 1];
+		if ((tileBelow == null || !tileBelow.hasTexture())) {
+			drawTexture(tex, x, y + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
+		}
 	}
 	
 	//---------
@@ -192,7 +266,9 @@ public class WorldTile implements Comparable<WorldTile> {
 	//----------------
 	
 	public static WorldTile getTileFromID(int id) { return getTileFromID(id, 0); }
-	public static WorldTile getTileFromID(int id, int texNum) { return GlobalTileList.getTileFromID(id, texNum); }
+	public static WorldTile getTileFromID(int id, int texNum) {
+		return GlobalTileList.getTileFromID(id, texNum);
+	}
 	
 	public static int getIDFromTile(WorldTile in) {
 		return (in != null) ? in.getID() : -1;

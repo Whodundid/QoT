@@ -52,6 +52,7 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		super(parent);
 		curDir = dirIn;
 		selectMode = selectModeIn;
+		windowIcon = WindowTextures.file_folder;
 	}
 	
 	@Override
@@ -204,7 +205,6 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	public void setDir(String dir) { setDir(new File(dir)); }
 	public void setDir(File dir) {
 		curDir = dir;
-		scrollBarPositionHistory.push(fileArea.getVScrollBar().getScrollPos());
 		updateDir();
 	}
 	
@@ -320,6 +320,7 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		
 		if (object == dirField) {
 			String txt = dirField.getText();
+			scrollBarPositionHistory.clear();
 			if (txt.startsWith("> ")) setDir(txt.substring(2));
 			else setDir(txt);
 		}
@@ -332,8 +333,12 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	
 	private void fileUp() {
 		int index = StringUtil.findStartingIndex(curDir.toString(), "\\", true);
+		if (scrollBarPositionHistory.isNotEmpty()) {
+			double pos = scrollBarPositionHistory.pop();
+			System.out.println(pos);
+			fileArea.getVScrollBar().setScrollPos(pos);
+		}
 		setDir(new File(curDir.toString().substring(0, index)));
-		
 	}
 	
 	private void refresh() { setDir(curDir); }

@@ -27,7 +27,10 @@ public class ForLoop extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.size() < 2) { termIn.error("Not enought arguments for loop!"); termIn.info(getUsage()); }
+		if (args.size() < 2) {
+			termIn.error("Not enought arguments for loop!");
+			termIn.info(getUsage());
+		}
 		else if (args.size() >= 2) {
 			String vals = args.get(0);
 			

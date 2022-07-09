@@ -19,7 +19,7 @@ public class CursorTextures {
 	public static final long cursor_resize_dl;
 	public static final long cursor_resize_dr;
 	
-	private static final String base = "resources/textures/envision/cursor/";
+	private static final String base = "resources/textures/cursor/";
 	
 	static {
 		resize_dl = new GameTexture("resize_dl", base, "resize_dl.png");

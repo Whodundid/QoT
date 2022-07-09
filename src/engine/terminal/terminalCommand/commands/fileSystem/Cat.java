@@ -1,12 +1,13 @@
 package engine.terminal.terminalCommand.commands.fileSystem;
 
+import java.io.File;
+
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.strings.StringUtil;
-import java.io.File;
-import java.util.Scanner;
+import eutil.sys.LineReader;
 
 public class Cat extends FileCommand {
 	
@@ -25,27 +26,27 @@ public class Cat extends FileCommand {
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		try {
-			if (args.size() == 0) { termIn.error("Not enough arguments!"); }
+			if (args.size() == 0) termIn.error("Not enough arguments!");
 			else if (args.size() >= 1) {
 				String all = StringUtil.combineAll(args, " ");
 				File f = new File(all);
 				
-				if (all.startsWith("..")) { f = new File(termIn.getDir(), args.get(0)); }
+				if (all.startsWith("..")) f = new File(termIn.getDir(), args.get(0));
 				
-				if (f.exists()) { displayFile(termIn, f); }
+				if (f.exists()) displayFile(termIn, f);
 				else {
 					f = new File(termIn.getDir(), all);
 					
-					if (f.exists()) { displayFile(termIn, f); }
+					if (f.exists()) displayFile(termIn, f);
 					else {
-						if (args.get(0).startsWith("..")) { f = new File(termIn.getDir(), args.get(0)); }
-						else { f = new File(args.get(0)); }
+						if (args.get(0).startsWith("..")) f = new File(termIn.getDir(), args.get(0));
+						else f = new File(args.get(0));
 						
-						if (f.exists()) { displayFile(termIn, f); }
+						if (f.exists()) displayFile(termIn, f);
 						else {
 							f = new File(termIn.getDir(), args.get(0));
 							
-							if (f.exists()) { displayFile(termIn, f); }
+							if (f.exists()) displayFile(termIn, f);
 							else {
 								termIn.error("'" + args.get(0) + "' is not a vaild directory!");
 							}
@@ -61,21 +62,18 @@ public class Cat extends FileCommand {
 	}
 	
 	private void displayFile(ETerminal termIn, File fileIn) {
-		if (!fileIn.isDirectory()) {
-			try (Scanner reader = new Scanner(fileIn)) {
-				if (reader.hasNext()) {
-					termIn.info("Displaying content:\n");
-				}
-				while (reader.hasNext()) {
-					String s = reader.nextLine();
-					termIn.writeln(s, EColors.lgray);
-				}
-			}
-			catch (Exception e) {
-				error(termIn, e);
-			}
+		if (fileIn.isDirectory()) {
+			termIn.error(fileIn.getName() + " is a directory not a file!");
+			return;
 		}
-		else { termIn.error(fileIn.getName() + " is a directory not a file!"); }
+		
+		try (var reader = new LineReader(fileIn)) {
+			if (reader.hasNext()) termIn.info("Displaying content:\n");
+			reader.forEach(l -> termIn.writeln(l, EColors.lgray));
+		}
+		catch (Exception e) {
+			error(termIn, e);
+		}
 	}
 	
 }

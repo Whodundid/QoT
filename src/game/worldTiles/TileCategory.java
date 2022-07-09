@@ -1,4 +1,4 @@
 package game.worldTiles;
 
-/** Denotes the following class contains world tiles. */
-public abstract class TileCategory {}
+/** Denotes that the following class contains world tiles. */
+public interface TileCategory {}

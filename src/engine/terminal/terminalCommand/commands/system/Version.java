@@ -4,6 +4,7 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import main.QoT;
 
 //Author: Hunter Bragg
 
@@ -20,14 +21,11 @@ public class Version extends TerminalCommand {
 	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("ver", "v"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "displays the version of the provided argument."; }
 	@Override public String getUsage() { return "ex: v core"; }
-	
-	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
-	}
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		termIn.writeln("0.0.1");
+		termIn.writeln(QoT.version);
 	}
 	
 }

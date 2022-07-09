@@ -30,8 +30,6 @@ public class Cd extends FileCommand {
 				String all = StringUtil.combineAll(args, " ");
 				File f = parsePath(termIn, args);
 				
-				System.out.println(f + " : " + args);
-				
 				if (f.exists()) setDir(termIn, args, runVisually, f);
 				else {
 					f = new File(all);

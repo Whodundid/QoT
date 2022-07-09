@@ -73,11 +73,13 @@ public class GameTexture {
 		return false;
 	}
 	
-	public boolean hasBeenRegistered() { return textureID != -1; }
+	public boolean hasBeenRegistered() {
+		return textureID != -1;
+	}
 	
-	//---------------------
-	// GameTexture Getters
-	//---------------------
+	//---------
+	// Getters
+	//---------
 	
 	public GameTexture getParent() { return parentTexture; }
 	public EArrayList<GameTexture> getChildren() { return children.getAVals(); }

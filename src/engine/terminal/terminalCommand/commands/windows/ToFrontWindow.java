@@ -40,7 +40,7 @@ public class ToFrontWindow extends TerminalCommand {
 					theWindow.bringToFront();
 					termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] brought to front.", EColors.green);
 				}
-				else { termIn.error("No window with that pid currently exists!"); }
+				else termIn.error("No window with that pid currently exists!");
 				
 			}
 			catch (Exception e) {
@@ -61,7 +61,7 @@ public class ToFrontWindow extends TerminalCommand {
 						theWindow.bringToFront();
 						termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] brought to front.", EColors.green);
 					}
-					else { termIn.error("No window with that name currently exists!"); }
+					else termIn.error("No window with that name currently exists!");
 				}
 				catch (Exception q) {
 					termIn.error("Failed to parse input!");

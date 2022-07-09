@@ -24,10 +24,8 @@ public class WhoAmI extends TerminalCommand {
 
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			termIn.writeln("User");
-		}
-		else { termIn.error("This command does not take arguments!"); }
+		if (args.isEmpty()) termIn.writeln("User");
+		else termIn.error("This command does not take arguments!");
 	}
 	
 }
