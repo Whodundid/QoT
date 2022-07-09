@@ -26,6 +26,7 @@ public class QoT_Settings {
 	public static final ConfigSetting<Boolean> drawFPS = new ConfigSetting(Boolean.class, "drawFPS", "Draw FPS", false);
 	public static final ConfigSetting<Boolean> fullscreen = new ConfigSetting(Boolean.class, "fullscreen", "Fullscreen", false);
 	public static final ConfigSetting<Boolean> vsync = new ConfigSetting(Boolean.class, "vSync", "V-Sync", false);
+	public static final ConfigSetting<Integer> resolutionScale = new ConfigSetting(Integer.class, "resScale", "Resolution Scale", 1);
 	
 	//-----------------------
 	

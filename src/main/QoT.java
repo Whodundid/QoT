@@ -75,7 +75,6 @@ public class QoT {
 	private static GameTopRenderer<?> topRenderer;
 	private static TerminalHandler terminalHandler;
 	
-	private static double gameScale = 1;
 	private static int width;
 	private static int height;
 	private static int[] xPos, yPos;
@@ -552,7 +551,7 @@ public class QoT {
 	/** Returns the handle pointer that points to the game's window. */
 	public static long getWindowHandle() { return handle; }
 	/** Returns the game window's draw scale. 1 is default. */
-	public static double getGameScale() { return gameScale; }
+	public static double getGameScale() { return QoT_Settings.resolutionScale.get(); }
 	
 	/** Returns a WindowSize object containing values pertaining to the active game window. */
 	public static WindowSize getWindowSize() { return new WindowSize(QoT.getGame()); }

@@ -21,6 +21,7 @@ public class OptionsScreen extends GameScreen {
 	WindowSlider volumeSlider, fpsSlider;
 	WindowTextField upsInput;
 	WindowCheckBox vSync;
+	WindowButton resolution;
 	private boolean changed = false;
 	
 	public OptionsScreen() {
@@ -55,7 +56,11 @@ public class OptionsScreen extends GameScreen {
 		boolean vS = QoT_Settings.vsync.get();
 		vSync = new WindowCheckBox(this, fullscreen.startX, fullscreen.endY + 20, 50, 50, vS);
 		
+		resolution = new WindowButton(this, fullscreen.startX, vSync.endY + 20, 250, 50);
+		resolution.setString("1920x1080");
+		
 		addObject(back, volumeSlider, fpsSlider, upsInput, fullscreen, vSync);
+		addObject(resolution);
 	}
 	
 	@Override public void onScreenClosed() {}
@@ -83,6 +88,7 @@ public class OptionsScreen extends GameScreen {
 		if (object == upsInput) 		upsInput();
 		if (object == vSync) 			vSync();
 		if (object == fullscreen)		fullscreen();
+		if (object == resolution)		resolution();
 	}
 	
 	//---------------------------------------------
@@ -143,6 +149,25 @@ public class OptionsScreen extends GameScreen {
 	
 	private void fullscreen() {
 		QoT.setFullScreen(!QoT_Settings.fullscreen.get());
+	}
+	
+	private void resolution() {
+		int scale = QoT_Settings.resolutionScale.get();
+		scale++;
+		//TEMPORARY BECAUSE THERE AREN'T ANY OTHER RESOLUTIONS
+		if (scale >= 3) scale = 1;
+		QoT_Settings.resolutionScale.set(scale);
+		
+		switch (scale) {
+		case 1:
+			resolution.setString("1920x1080");
+			break;
+		case 2:
+			resolution.setString("4k");
+			break;
+		case 3:
+		case 4:
+		}
 	}
 	
 }
