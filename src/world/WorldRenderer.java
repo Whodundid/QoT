@@ -149,8 +149,6 @@ public class WorldRenderer extends EGui {
 			for (int j = top, jy = 0; j <= bot; j++, jy++) {
 				WorldTile t = world.getWorldData()[i][j];
 				if (t == null || !t.hasTexture()) continue;
-				//if (t.isWall()) continue;
-				//GameTexture tex = t.getTexture();
 				
 				double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
 				double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);

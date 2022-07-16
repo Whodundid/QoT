@@ -149,7 +149,7 @@ public class MapEditorScreen extends GameScreen {
 			//endScissor();
 			
 			drawMap(x, y, w, h);
-			renderWalls(x, y, w, h);
+			//renderWalls(x, y, w, h);
 			renderEntities(x, y, w, h);
 			if (settings.drawRegions) drawRegions(x, y, w, h);
 			if (settings.drawCenterPositionBox) drawCenterPositionBox(x, y, w, h);
@@ -394,7 +394,7 @@ public class MapEditorScreen extends GameScreen {
 			for (int j = top, jy = 0; j <= bot; j++, jy++) {
 				WorldTile t = world.getWorldData()[i][j];
 				if (t == null) continue;
-				if (t.isWall()) continue;
+				//if (t.isWall()) continue;
 				if (!t.hasTexture()) continue;
 				
 				double drawPosX = x;
@@ -406,6 +406,8 @@ public class MapEditorScreen extends GameScreen {
 				double dX = drawPosX + (ix * w);
 				double dY = drawPosY + (jy * h);
 				
+				t.renderTile(world, dX, dY, w, h, 0xffffffff);
+				/*
 				drawTexture(t.getTexture(), dX, dY, w, h);
 				
 				//draw bottom of map edge or if right above a tile with no texture/void
@@ -414,6 +416,7 @@ public class MapEditorScreen extends GameScreen {
 				if ((tileBelow == null || !tileBelow.hasTexture()) && !t.isWall()) {
 					drawTexture(t.getTexture(), dX, dY + h, w, h / 2, false, EColors.changeBrightness(0xffffffff, 125));
 				}
+				*/
 			}
 		}
 	}
