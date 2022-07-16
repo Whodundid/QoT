@@ -1,20 +1,19 @@
 package engine.terminal.terminalCommand.commands.game;
 
+import java.io.File;
+
 import engine.screens.GamePlayScreen;
 import engine.terminal.terminalCommand.CommandType;
-import engine.terminal.terminalCommand.TerminalCommand;
+import engine.terminal.terminalCommand.commands.fileSystem.FileCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import game.entities.Player;
 import main.QoT;
 import main.settings.QoT_Settings;
-
-import java.io.File;
-
 import world.GameWorld;
 
-public class LoadWorld_CMD extends TerminalCommand {
+public class LoadWorld_CMD extends FileCommand {
 	
 	public LoadWorld_CMD() {
 		super(CommandType.NORMAL);
@@ -27,7 +26,9 @@ public class LoadWorld_CMD extends TerminalCommand {
 	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("lw"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Loads the specified world"; }
 	@Override public String getUsage() { return "ex: lw (world name)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+		fileTabComplete(termIn, QoT_Settings.getEditorWorldsDir(), args);
+	}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
