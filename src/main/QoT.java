@@ -51,7 +51,7 @@ import world.GameWorld;
 
 public class QoT {
 	
-	public static final String version = "June 25, 2022";
+	public static final String version = "July 17, 2022";
 	
 	/** The primary logging instance for QoT. */
 	public static final Logger QoTLogger = Logger.getLogger("QoT");
