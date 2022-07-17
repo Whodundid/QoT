@@ -83,8 +83,8 @@ public class FarmPlot extends WorldTile {
 	
 	@Override
 	public void onWorldTick() {
-		if (growState == 0) return; //ignore if nothing is planted
-		if (growState >= 4) return; //don't grow past fully grown
+		//if (growState == 0) return; //ignore if nothing is planted
+		if (growState >= 3) return; //don't grow past fully grown
 		
 		curGrowAmount++;
 		if (curGrowAmount >= nextGrowStage) {

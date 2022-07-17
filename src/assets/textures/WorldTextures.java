@@ -34,6 +34,7 @@ public class WorldTextures {
 	public static final GameTexture dungFloor = new GameTexture("Dungeon Floor", dung, "dungWall.png");
 	
 	public static final GameTexture wood_siding = new GameTexture("Wood Siding", world, "wood_siding.png");
+	public static final GameTexture stone_wall = new GameTexture("Stone Wall", world, "stone_wall_0.png");
 	
 	public static void registerTextures(TextureSystem systemIn) {
 		systemIn.registerTexture(grass);
@@ -55,6 +56,7 @@ public class WorldTextures {
 		systemIn.registerTexture(dungFloor);
 		
 		systemIn.reg(wood_siding);
+		systemIn.reg(stone_wall);
 		
 		textures.add(grass);
 		textures.add(dirt);
@@ -71,6 +73,7 @@ public class WorldTextures {
 		textures.add(dungFloor);
 		
 		textures.add(wood_siding);
+		textures.add(stone_wall);
 	}
 	
 	public static GameTexture getTextureFromName(String nameIn) {

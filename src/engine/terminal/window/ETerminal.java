@@ -556,7 +556,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 				}
 			}
 			
-			//determine the maximum number of autocomplete options that can fit on one line
+			//determine the maximum number of auto complete options that can fit on one line
 			for (int i = 1; i < dataIn.size() + 1; i++) {
 				textWidth += longest + getStringWidth(StringUtil.repeatString(" ", spaceAmount));
 				if (textWidth < width) {
@@ -568,7 +568,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 			//System.out.println("maxData: " + maxData);
 			maxData = NumberUtil.clamp(maxData, 1, Integer.MAX_VALUE);
 			
-			//position each autocomplete option on one line up to the max line width
+			//position each auto complete option on one line up to the max line width
 			int amount = dataIn.size();
 			int i = 0;
 			int cur = 1;

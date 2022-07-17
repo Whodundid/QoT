@@ -94,7 +94,8 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void mouseScrolled(int change) {
-		
+		//System.out.println("SCROLL: " + change);
+		//world.setZoom(world.getZoom() + ((double) change * 0.1));
 	}
 	
 	@Override
