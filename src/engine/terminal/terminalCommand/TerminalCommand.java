@@ -4,8 +4,11 @@ import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 
-//Author: Hunter Bragg
-
+/**
+ * The base terminal command for which all terminal commands extend from.
+ * 
+ * @author Hunter Bragg
+ */
 public abstract class TerminalCommand {
 	
 	private CommandType type = CommandType.NORMAL;

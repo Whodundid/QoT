@@ -6,9 +6,10 @@ import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
 import eutil.strings.StringUtil;
 import java.io.File;
+import java.io.IOException;
 
 public abstract class FileCommand extends TerminalCommand {
-
+	
 	public FileCommand(CommandType typeIn) {
 		super(typeIn);
 		setCategory("File System");
@@ -16,8 +17,26 @@ public abstract class FileCommand extends TerminalCommand {
 	
 	protected void fileTabComplete(ETerminal termIn, EArrayList<String> args) {
 		try {
+			fileTabComplete(termIn, termIn.getDir().getCanonicalPath(), args);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void fileTabComplete(ETerminal termIn, File dir, EArrayList<String> args) {
+		try {
+			fileTabComplete(termIn, dir.getCanonicalPath(), args);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void fileTabComplete(ETerminal termIn, String dir, EArrayList<String> args) {
+		try {
 			if (args.isEmpty()) {
-				File f = new File(termIn.getDir().getCanonicalPath());
+				File f = new File(dir);
 				
 				EArrayList<String> options = new EArrayList();
 				
@@ -33,7 +52,7 @@ public abstract class FileCommand extends TerminalCommand {
 				EArrayList<String> options = new EArrayList();
 				
 				File home = new File(System.getProperty("user.dir"));
-				File f = new File(termIn.getDir().getCanonicalPath());
+				File f = new File(dir);
 				String all = StringUtil.combineAll(args, " ").replace("/", "\\");
 				boolean isHome = all.startsWith("~");
 				
@@ -93,7 +112,7 @@ public abstract class FileCommand extends TerminalCommand {
 				}
 				
 				termIn.buildTabCompletions(options);
-				if (!termIn.getTab1()) { termIn.setTextTabBeing(args.get(0)); }
+				if (!termIn.getTab1()) termIn.setTextTabBeing(args.get(0));
 			}
 		}
 		catch (Exception e) {
