@@ -4,6 +4,7 @@ import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import main.settings.QoTSettings;
 
 public class GeneralTextures {
 	
@@ -12,11 +13,11 @@ public class GeneralTextures {
 	public static final GameTexture logo;
 	public static final GameTexture noscreens;
 	
-	private static final String base = "resources/textures/general/";
+	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\general\\";
 	
 	static {
-		logo = new GameTexture("logo", base, "qot_logo.png");
-		noscreens = new GameTexture("noscreens", base, "noscreens.jpg");
+		logo = new GameTexture("logo", textureDir, "qot_logo.png");
+		noscreens = new GameTexture("noscreens", textureDir, "noscreens.jpg");
 	}
 	
 	public static void registerTextures(TextureSystem systemIn) {

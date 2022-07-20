@@ -97,6 +97,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void closeGame() {
+		SoundEngine.stopAll();
 		QoT.stopGame();
 	}
 	

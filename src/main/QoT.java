@@ -1,6 +1,5 @@
 package main;
 
-import java.io.File;
 import java.nio.IntBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,23 +34,22 @@ import engine.screens.screenUtil.ScreenLevel;
 import engine.scripting.langMappings.Envision_QoT_ErrorCallback;
 import engine.scripting.langMappings.qot_package.Envision_QoT_Package;
 import engine.terminal.TerminalHandler;
-import engine.util.ESystemInfo;
 import engine.windowLib.windowTypes.TopWindowParent;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import engine.windowLib.windowUtil.ObjectPosition;
 import envision.Envision;
 import eutil.math.EDimension;
-import eutil.sys.OSType;
 import eutil.sys.TracingPrintStream;
 import game.entities.Player;
 import game.items.Items;
-import main.settings.MainConfigFile;
-import main.settings.QoT_Settings;
+import main.launcher.Launcher;
+import main.launcher.LauncherSettings;
+import main.settings.QoTSettings;
 import world.GameWorld;
 
 public class QoT {
 	
-	public static final String version = "July 17, 2022";
+	public static final String version = "July 18, 2022";
 	
 	/** The primary logging instance for QoT. */
 	public static final Logger QoTLogger = Logger.getLogger("QoT");
@@ -59,10 +57,8 @@ public class QoT {
 	public static long handle = -1;
 	/** The singular QoT game instance. */
 	private static QoT instance = null;
-	/** The primary configuration file for the game. */
-	private static MainConfigFile mainConfig;
 	/** The active game settings for this QoT instance. */
-	public static final QoT_Settings settings = new QoT_Settings();
+	public static final QoTSettings settings = new QoTSettings();
 	/** The Envision Scripting Language instance. */
 	public static final Envision envision = new Envision().addBuildPackage(new Envision_QoT_Package());
 	
@@ -77,7 +73,7 @@ public class QoT {
 	
 	private static int width;
 	private static int height;
-	private static int[] xPos, yPos;
+	private static int[] xPos = new int[1], yPos = new int[1];
 	
 	public static Player thePlayer;
 	public static GameWorld theWorld;
@@ -119,41 +115,53 @@ public class QoT {
 	public static void main(String[] args) throws IllegalArgumentException, IllegalAccessException {
 		TracingPrintStream.enableTrace();
 		TracingPrintStream.setTracePrimitives(true);
-		getGame().runGameLoop();
+		Launcher.runLauncher();
 	}
 	
 	//-----------------------------------------------
 	
 	public static QoT getGame() {
-		return (instance != null) ? instance : new QoT();
+		return (instance != null) ? instance : (instance = new QoT());
 	}
 	
-	private QoT() {
-		instance = this;
-		
-		xPos = new int[1];
-		yPos = new int[1];
-		
-		// setup local game directory
-		if (!setupUserDir()) {
-			throw new RuntimeException("Failed to create game local directory!");
+	public static void startGame(LauncherSettings settings) {
+		QoTSettings.init(settings.INSTALL_DIR);
+		setupGLFW();
+		setupQoT();
+		getGame().runGameLoop();
+	}
+	
+	public static void stopGame() {
+		if (running) {
+			running = false;
+			info("Stopping Game!");
 		}
-		
-		mainConfig.tryLoad();
-		setTargetFPSi(QoT_Settings.targetFPS.get());
-		setTargetUPSi(QoT_Settings.targetUPS.get());
+		else {
+			info("Attempted to stop game when not running!");
+		}
+	}
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	private QoT() {}
+	
+	//-------------------
+	// Pre-Setup Methods
+	//-------------------
+	
+	private static void setupGLFW() {
+		width = 1600;
+		height = 900;
 		
 		GLFWErrorCallback.createPrint(System.err).set();
-		envision.setErrorCallback(new Envision_QoT_ErrorCallback());
 		
 		// setup OpenGL
 		if (!GLFW.glfwInit()) {
 			System.err.println("GLFW Failed to initialize.");
 			System.exit(1);
 		}
-		
-		width = 1600;
-		height = 900;
 		
 		handle = GLFW.glfwCreateWindow(width, height, "QoT", 0, 0);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -170,7 +178,7 @@ public class QoT {
 		
 		GLFW.glfwMakeContextCurrent(handle);
 		
-		int interval = (QoT_Settings.vsync.get()) ? 1 : 0;
+		int interval = (QoTSettings.vsync.get()) ? 1 : 0;
 		GL.createCapabilities();
 		GLFW.glfwSwapInterval(interval);
 		
@@ -183,9 +191,6 @@ public class QoT {
 		resizeListener = WindowResizeListener.getInstance();
 		textureSystem = TextureSystem.getInstance();
 		fontRenderer = FontRenderer.getInstance();
-		topRenderer = GameTopRenderer.getInstance();
-		terminalHandler = TerminalHandler.getInstance();
-		//tickManager = new TickManager();
 		
 		GLFW.glfwSetKeyCallback(handle, keyboard);
 		GLFW.glfwSetMouseButtonCallback(handle, mouse);
@@ -194,6 +199,14 @@ public class QoT {
 		GLFW.glfwSetWindowSizeCallback(handle, resizeListener);
 		
 		GLFW.glfwShowWindow(handle);
+	}
+	
+	private static void setupQoT() {
+		envision.setErrorCallback(new Envision_QoT_ErrorCallback());
+		
+		topRenderer = GameTopRenderer.getInstance();
+		terminalHandler = TerminalHandler.getInstance();
+		//tickManager = new TickManager();
 		
 		WorldTextures.registerTextures(textureSystem);
 		EntityTextures.registerTextures(textureSystem);
@@ -209,90 +222,72 @@ public class QoT {
 		Items.woodSword.setTexture(WorldTextures.stone);
 	}
 	
-	private boolean setupUserDir() {
-		// determine user OS and get their home directory
-		OSType os = ESystemInfo.getOS();
-		String homeDir = System.getProperty("user.home");
-		
-		File dir = null;
-		
-		switch (os) {
-		case WINDOWS: dir = new File(homeDir + "\\AppData\\Roaming\\QoT");
-		case MAC:
-		case LINUX:
-		case SOLARIS: // no idea how to handle yet
-		default: break;
-		}
-		
-		// initialize game directories
-		settings.initDirectories(dir);
-		
-		// establish game main config
-		mainConfig = new MainConfigFile(new File(dir, "MainConfig"));
-		
-		// setup successful
-		return init = true;
-	}
+	//-------------------
+	// Primary Game Loop
+	//-------------------
 	
-	public void runGameLoop() {
-		if (!running) {
-			running = true;
-			startTime = System.currentTimeMillis();
-			
-			displayScreen(new MainMenuScreen());
-			
-			long initialTime = System.nanoTime();
-			long timer = System.currentTimeMillis();
-			
-			while (running && !GLFW.glfwWindowShouldClose(handle)) {
-				try {
-					long currentTime = System.nanoTime();
-					deltaU += (currentTime - initialTime) / timeU;
-					deltaF += (currentTime - initialTime) / timeF;
-					initialTime = currentTime;
-					
-					//synchronize game inputs to 60 ticks per second by default
-					if (deltaU >= 1) {
-						//update inputs
-						GLFW.glfwPollEvents();
-						if (GLFW.glfwWindowShouldClose(handle)) { running = false; }
-						runGameTick();
-						if (ticks == Integer.MAX_VALUE) ticks = 0;
-						else ticks++;
-						deltaU--;
-					}
-					
-					if (deltaF >= 1) {
-						onRenderTick(1);
-						frames++;
-						deltaF--;
-					}
-					
-					if (System.currentTimeMillis() - timer > 1000) {
-						curFrameRate = frames;
-						curNumTicks = ticks;
-						frames = 0;
-						ticks = 0;
-						timer += 1000;
-					}
-					
-					if (deltaU > 3 || deltaF > 5) {
-						deltaU = 0;
-						deltaF = 0;
-					}
+	private void runGameLoop() {
+		if (running) return;
+		running = true;
+		
+		setTargetFPS(QoTSettings.targetFPS.get());
+		setTargetUPS(QoTSettings.targetUPS.get());
+		
+		startTime = System.currentTimeMillis();
+		
+		displayScreen(new MainMenuScreen());
+		
+		long initialTime = System.nanoTime();
+		long timer = System.currentTimeMillis();
+		
+		while (running && !GLFW.glfwWindowShouldClose(handle)) {
+			try {
+				long currentTime = System.nanoTime();
+				deltaU += (currentTime - initialTime) / timeU;
+				deltaF += (currentTime - initialTime) / timeF;
+				initialTime = currentTime;
+				
+				//synchronize game inputs to 60 ticks per second by default
+				if (deltaU >= 1) {
+					//update inputs
+					GLFW.glfwPollEvents();
+					if (GLFW.glfwWindowShouldClose(handle)) { running = false; }
+					runGameTick();
+					if (ticks == Integer.MAX_VALUE) ticks = 0;
+					else ticks++;
+					deltaU--;
 				}
-				catch (Exception e) {
-					e.printStackTrace();
+				
+				if (deltaF >= 1) {
+					onRenderTick(1);
+					frames++;
+					deltaF--;
+				}
+				
+				if (System.currentTimeMillis() - timer > 1000) {
+					curFrameRate = frames;
+					curNumTicks = ticks;
+					frames = 0;
+					ticks = 0;
+					timer += 1000;
+				}
+				
+				if (deltaU > 3 || deltaF > 5) {
+					deltaU = 0;
+					deltaF = 0;
 				}
 			}
-			
-			// Dying
-			
-			textureSystem.destroyAllTextures();
-			
-			GLFW.glfwDestroyWindow(handle);
-			GLFW.glfwTerminate();
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		
+		// Dying
+		
+		textureSystem.destroyAllTextures();
+		
+		GLFW.glfwDestroyWindow(handle);
+		GLFW.glfwTerminate();
 	}
 	
 	private void runGameTick() {
@@ -329,16 +324,6 @@ public class QoT {
 		topRenderer.onRenderTick();
 		
 		GLFW.glfwSwapBuffers(handle);
-	}
-	
-	public static void stopGame() {
-		if (running) {
-			running = false;
-			QoT.log("Stopping Game");
-		}
-		else {
-			QoT.log("Attempted to stop game when not running.");
-		}
 	}
 	
 	//----------------
@@ -473,7 +458,7 @@ public class QoT {
 		
 		if (theWorld != null) {
 			//assign as last world loaded
-			QoT_Settings.lastMap.set(theWorld.getName());
+			QoTSettings.lastMap.set(theWorld.getName());
 			
 			//load the world
 			theWorld.setLoaded(true);
@@ -482,7 +467,7 @@ public class QoT {
 			
 			//check if loaded
 			if (!theWorld.isLoaded()) {
-				System.out.println("Failed to load world: ");
+				warn("Failed to load world: ");
 			}
 		}
 		
@@ -519,18 +504,24 @@ public class QoT {
 		return windowIn;
 	}
 	
-	public static TopWindowParent<?> getActiveTopParent() { return (currentScreen != null) ? currentScreen : topRenderer; }
+	public static TopWindowParent<?> getActiveTopParent() {
+		return (currentScreen != null) ? currentScreen : topRenderer;
+	}
 	
 	//--------------
 	// Game Loggers
 	//--------------
 	
+	public static Logger getLogger() { return QoTLogger; }
+	
 	public static void log(Level levelIn, String msg) { QoTLogger.log(levelIn, msg); }
+	public static void logf(Level levelIn, String msg, String... args) { QoTLogger.log(levelIn, msg, args); }
 	public static void info(String msg) { QoTLogger.log(Level.INFO, msg); }
+	public static void infof(String msg, String... args) { QoTLogger.log(Level.INFO, msg, args); }
+	public static void warn(String msg) { QoTLogger.log(Level.WARNING, msg); }
+	public static void warn(String msg, String... args) { QoTLogger.log(Level.WARNING, msg, args); }
 	public static void error(String msg) { QoTLogger.log(Level.SEVERE, msg); }
 	public static void error(String msg, Throwable throwableIn) { QoTLogger.log(Level.SEVERE, msg, throwableIn); }
-	public static void logf(Level levelIn, String msg, String... args) { QoTLogger.log(levelIn, msg, args); }
-	public static void infof(String msg, String... args) { QoTLogger.log(Level.INFO, msg, args); }
 	
 	//----------------
 	// Static Getters
@@ -551,7 +542,7 @@ public class QoT {
 	/** Returns the handle pointer that points to the game's window. */
 	public static long getWindowHandle() { return handle; }
 	/** Returns the game window's draw scale. 1 is default. */
-	public static double getGameScale() { return QoT_Settings.resolutionScale.get(); }
+	public static double getGameScale() { return QoTSettings.resolutionScale.get(); }
 	
 	/** Returns a WindowSize object containing values pertaining to the active game window. */
 	public static WindowSize getWindowSize() { return new WindowSize(QoT.getGame()); }
@@ -585,9 +576,9 @@ public class QoT {
 	
 	public static void setFullScreen(boolean val) {
 		if (!QoT.init) return;
-		QoT_Settings.fullscreen.set(val);
+		QoTSettings.fullscreen.set(val);
 		
-		if (QoT_Settings.fullscreen.get()) {
+		if (QoTSettings.fullscreen.get()) {
 			GLFW.glfwGetWindowPos(handle, xPos, yPos);
 			GLFW.glfwSetWindowMonitor(handle, GLFW.glfwGetPrimaryMonitor(), 0, 0, width, height, 0);
 		}
@@ -595,13 +586,13 @@ public class QoT {
 			GLFW.glfwSetWindowMonitor(handle, 0, xPos[0], yPos[0], width, height, 0);
 		}
 		
-		QoT.instance.onWindowResize();
+		instance.onWindowResize();
 	}
 	
 	public static void setVSync(boolean val) {
 		if (!QoT.init) return;
-		QoT_Settings.vsync.set(val);
-		GLFW.glfwSwapInterval((QoT_Settings.vsync.get()) ? 1 : 0);
+		QoTSettings.vsync.set(val);
+		GLFW.glfwSwapInterval((QoTSettings.vsync.get()) ? 1 : 0);
 	}
 	
 	/** Returns this game's central font rendering system. */
@@ -610,7 +601,7 @@ public class QoT {
 	public static TextureSystem getTextureSystem() { return textureSystem; }
 	/** Returns this game's central top level rendering system. */
 	public static GameTopRenderer<?> getTopRenderer() { return topRenderer; }
-	/** Returns the actively rendererd screen. */
+	/** Returns the actively rendered screen. */
 	public static GameScreen<?> getCurrentScreen() { return currentScreen; }
 	/** Returns this game's central terminal command handler. */
 	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
@@ -621,14 +612,6 @@ public class QoT {
 	public static GameWorld getWorld() { return theWorld; }
 	
 	public static Envision getEnvision() { return envision; }
-	
-	public static MainConfigFile getMainConfig() { return mainConfig; }
-	public static boolean saveConfig() { return mainConfig.trySave(); }
-	
-	public static Logger getLogger() { return QoTLogger; }
-	public static void log(String msg) { QoTLogger.log(Level.INFO, msg); }
-	public static void logWarn(String msg) { QoTLogger.log(Level.WARNING, msg); }
-	public static void logError(String msg) { QoTLogger.log(Level.SEVERE, msg); }
 	
 	//----------------
 	// Static Setters

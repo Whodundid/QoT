@@ -12,7 +12,7 @@ import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.NumberUtil;
 import main.QoT;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 
 public class OptionsScreen extends GameScreen {
 	
@@ -39,7 +39,7 @@ public class OptionsScreen extends GameScreen {
 		back = new WindowButton(this, x, endY - 100, w, 40, "Back");
 		volumeSlider = new WindowSlider(this, midX - 150, midY - 200, 300, 35, 0, 100, false);
 		volumeSlider.setUseIntegers(true);
-		volumeSlider.setSliderValue(QoT_Settings.musicVolume.get());
+		volumeSlider.setSliderValue(QoTSettings.musicVolume.get());
 		
 		fpsSlider = new WindowSlider(this, volumeSlider.startX, volumeSlider.endY + 60, 300, 35, 30, 300, false);
 		fpsSlider.setUseIntegers(true);
@@ -48,12 +48,12 @@ public class OptionsScreen extends GameScreen {
 		upsInput = new WindowTextField(this, fpsSlider.startX, fpsSlider.endY + 60, 75, 35);
 		upsInput.setText(QoT.getTargetUPS());
 		
-		boolean fs = QoT_Settings.fullscreen.get();
+		boolean fs = QoTSettings.fullscreen.get();
 		String fText = (fs) ? "Disable FullScreen" : "Enable FullScreen";
 		double fsW = FontRenderer.getStringWidth("Disable FullScreen") + 40;
 		fullscreen = new WindowButton(this, upsInput.startX, upsInput.endY + 20, fsW, 35, fText);
 		
-		boolean vS = QoT_Settings.vsync.get();
+		boolean vS = QoTSettings.vsync.get();
 		vSync = new WindowCheckBox(this, fullscreen.startX, fullscreen.endY + 20, 50, 50, vS);
 		
 		resolution = new WindowButton(this, fullscreen.startX, vSync.endY + 20, 250, 50);
@@ -75,7 +75,7 @@ public class OptionsScreen extends GameScreen {
 		drawString("V-Sync", vSync.endX + 10, vSync.midY - FontRenderer.FONT_HEIGHT / 2);
 		
 		if (changed && !Mouse.isLeftDown()) {
-			QoT.saveConfig();
+			QoTSettings.saveConfig();
 			changed = false;
 		}
 	}
@@ -113,7 +113,7 @@ public class OptionsScreen extends GameScreen {
 	private void fpsSlider() {
 		double val = fpsSlider.getSliderValue();
 		
-		QoT_Settings.targetFPS.set((int) val);
+		QoTSettings.targetFPS.set((int) val);
 		QoT.setTargetFPS((int) val);
 		changed = true;
 	}
@@ -133,7 +133,7 @@ public class OptionsScreen extends GameScreen {
 			ups = NumberUtil.clamp(ups, 30, 300);
 			upsInput.setText(ups);
 			
-			QoT_Settings.targetUPS.set((int) ups);
+			QoTSettings.targetUPS.set((int) ups);
 			QoT.setTargetUPS(ups);
 			changed = true;
 		}
@@ -144,19 +144,19 @@ public class OptionsScreen extends GameScreen {
 	}
 	
 	private void vSync() {
-		QoT.setVSync(!QoT_Settings.vsync.get());
+		QoT.setVSync(!QoTSettings.vsync.get());
 	}
 	
 	private void fullscreen() {
-		QoT.setFullScreen(!QoT_Settings.fullscreen.get());
+		QoT.setFullScreen(!QoTSettings.fullscreen.get());
 	}
 	
 	private void resolution() {
-		int scale = QoT_Settings.resolutionScale.get();
+		int scale = QoTSettings.resolutionScale.get();
 		scale++;
 		//TEMPORARY BECAUSE THERE AREN'T ANY OTHER RESOLUTIONS
 		if (scale >= 3) scale = 1;
-		QoT_Settings.resolutionScale.set(scale);
+		QoTSettings.resolutionScale.set(scale);
 		
 		switch (scale) {
 		case 1:

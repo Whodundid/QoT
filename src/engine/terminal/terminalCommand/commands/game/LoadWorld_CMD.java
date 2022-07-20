@@ -10,7 +10,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import game.entities.Player;
 import main.QoT;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 import world.GameWorld;
 
 public class LoadWorld_CMD extends FileCommand {
@@ -27,7 +27,7 @@ public class LoadWorld_CMD extends FileCommand {
 	@Override public String getHelpInfo(boolean runVisually) { return "Loads the specified world"; }
 	@Override public String getUsage() { return "ex: lw (world name)"; }
 	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
-		fileTabComplete(termIn, QoT_Settings.getEditorWorldsDir(), args);
+		fileTabComplete(termIn, QoTSettings.getEditorWorldsDir(), args);
 	}
 	
 	@Override
@@ -69,7 +69,7 @@ public class LoadWorld_CMD extends FileCommand {
 	
 	public static GameWorld buildWorld(String worldName) {
 		worldName = (worldName.endsWith(".twld")) ? worldName : worldName + ".twld";
-		File f = new File(QoT_Settings.getEditorWorldsDir(), worldName);
+		File f = new File(QoTSettings.getEditorWorldsDir(), worldName);
 		return new GameWorld(f);
 	}
 	

@@ -1,6 +1,7 @@
 package engine.terminal.terminalCommand.commands.system;
 
 import engine.screens.screenUtil.GameScreen;
+import engine.screens.screenUtil.ScreenRepository;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.IListableCommand;
 import engine.terminal.terminalCommand.TerminalCommand;
@@ -167,6 +168,7 @@ public class ListCMD extends TerminalCommand {
 	}
 	
 	private void listScreens(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+		/**
 		String dir = (args.size() >= 2) ? args.get(1) : "engine.screens";
 		
 		EArrayList<Class<GameScreen>> screenClasses = ClassFinder.findClassesOfType(dir, GameScreen.class);
@@ -189,6 +191,24 @@ public class ListCMD extends TerminalCommand {
 		termIn.writeln("Listing " + classNames.size() + " available screens..\n", EColors.lgreen);
 		for (String s : classNames) {
 			termIn.writeln(s, EColors.lime);
+		}
+		*/
+		
+		termIn.writeln("Listing " + ScreenRepository.getRegisteredScreens().size() + " available screens..\n", EColors.lgreen);
+		for (GameScreen<?> s : ScreenRepository.getRegisteredScreens()) {
+			if (s.getAliases() == null || s.getAliases().isEmpty()) {
+				termIn.writeln("  " + s.getClass().getSimpleName(), 0xffb2b2b2);
+			}
+			else {
+				String a = EColors.mc_green + "";
+				for (int i = 0; i < s.getAliases().size(); i++) {
+					String commandAlias = s.getAliases().get(i);
+					if (i == s.getAliases().size() - 1) a += commandAlias;
+					else a += (commandAlias + ", ");
+				}
+				
+				termIn.writeln("  " + s.getClass().getSimpleName() + ": " + a, 0xffb2b2b2);
+			}
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package engine.renderEngine.shaders.types.basic;
 
 import engine.renderEngine.shaders.util.FragmentShader;
+import main.settings.QoTSettings;
 
 /** Basic fragment shader. */
 public class BasicFragment extends FragmentShader {
@@ -10,7 +11,7 @@ public class BasicFragment extends FragmentShader {
 	//--------------
 	
 	public BasicFragment() {
-		super("BasicFragment", "resources/shaders/basicFragment.glsl");
+		super("BasicFragment", QoTSettings.getResourcesDir() + "\\shaders\\basicFragment.glsl");
 	}
 	
 }

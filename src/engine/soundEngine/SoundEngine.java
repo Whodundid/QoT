@@ -3,7 +3,7 @@ package engine.soundEngine;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import main.QoT;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 
 /**
  * A static utility class which manages all playable sounds/songs
@@ -58,7 +58,7 @@ public class SoundEngine {
 	 */
 	public static Audio play(Audio in) {
 		if (in != null) {
-			if (QoT_Settings.musicVolume.get() > 0) in.start();
+			if (QoTSettings.musicVolume.get() > 0) in.start();
 			currentlyPlaying.add(in);
 		}
 		return in;
@@ -72,7 +72,7 @@ public class SoundEngine {
 	 */
 	public static Audio loop(Audio in) {
 		if (in != null) {
-			if (QoT_Settings.musicVolume.get() > 0) in.loop();
+			if (QoTSettings.musicVolume.get() > 0) in.loop();
 			currentlyPlaying.add(in);
 		}
 		return in;
@@ -152,18 +152,18 @@ public class SoundEngine {
 	public static void setMusicVolume(Number amount) { setMusicVolume(amount.intValue()); }
 	public static void setMusicVolume(int amount) {
 		int val = NumberUtil.clamp(amount, 0, 100);
-		QoT_Settings.musicVolume.set(val);
+		QoTSettings.musicVolume.set(val);
 		//only update config if the volume actually changed
-		if (QoT_Settings.musicVolume.get() != val) QoT.saveConfig();
+		if (QoTSettings.musicVolume.get() != val) QoTSettings.saveConfig();
 	}
 	
 	public static int getMusicVolume() {
-		return QoT_Settings.musicVolume.get();
+		return QoTSettings.musicVolume.get();
 	}
 	
 	/** Utility logging function. */
 	private static void log(String msg) {
-		QoT.log("[Sound_Engine] " + msg);
+		QoT.info("[Sound_Engine] " + msg);
 	}
 	
 }

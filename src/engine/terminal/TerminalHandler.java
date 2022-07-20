@@ -1,18 +1,74 @@
 package engine.terminal;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
+import engine.terminal.terminalCommand.commands.fileSystem.Cat;
+import engine.terminal.terminalCommand.commands.fileSystem.Cd;
+import engine.terminal.terminalCommand.commands.fileSystem.Cp;
+import engine.terminal.terminalCommand.commands.fileSystem.Edit;
+import engine.terminal.terminalCommand.commands.fileSystem.Head;
+import engine.terminal.terminalCommand.commands.fileSystem.Ls;
+import engine.terminal.terminalCommand.commands.fileSystem.Lsblk;
+import engine.terminal.terminalCommand.commands.fileSystem.MkDir;
+import engine.terminal.terminalCommand.commands.fileSystem.Mv;
+import engine.terminal.terminalCommand.commands.fileSystem.Open;
+import engine.terminal.terminalCommand.commands.fileSystem.Pwd;
+import engine.terminal.terminalCommand.commands.fileSystem.Rm;
+import engine.terminal.terminalCommand.commands.fileSystem.RmDir;
+import engine.terminal.terminalCommand.commands.fileSystem.Tail;
+import engine.terminal.terminalCommand.commands.game.CreateDungeon_CMD;
+import engine.terminal.terminalCommand.commands.game.FPS_CMD;
+import engine.terminal.terminalCommand.commands.game.LoadWorld_CMD;
+import engine.terminal.terminalCommand.commands.game.NoClip_CMD;
+import engine.terminal.terminalCommand.commands.game.PauseGame_CMD;
+import engine.terminal.terminalCommand.commands.game.SaveWorld_CMD;
+import engine.terminal.terminalCommand.commands.game.SetFPS_CMD;
+import engine.terminal.terminalCommand.commands.game.SetTPS_CMD;
+import engine.terminal.terminalCommand.commands.game.SetWorldUnderground_CMD;
+import engine.terminal.terminalCommand.commands.game.Song_CMD;
+import engine.terminal.terminalCommand.commands.game.SpawnEntity_CMD;
+import engine.terminal.terminalCommand.commands.game.TPS_CMD;
+import engine.terminal.terminalCommand.commands.game.UnPauseGame_CMD;
+import engine.terminal.terminalCommand.commands.game.UnloadWorld_CMD;
+import engine.terminal.terminalCommand.commands.game.World_CMD;
+import engine.terminal.terminalCommand.commands.game.WorldsDir_CMD;
+import engine.terminal.terminalCommand.commands.system.CalcCommand;
+import engine.terminal.terminalCommand.commands.system.ClearObjects;
+import engine.terminal.terminalCommand.commands.system.ClearTerminal;
+import engine.terminal.terminalCommand.commands.system.ClearTerminalHistory;
+import engine.terminal.terminalCommand.commands.system.CurScreen;
+import engine.terminal.terminalCommand.commands.system.DebugControl;
+import engine.terminal.terminalCommand.commands.system.Envision_CMD;
+import engine.terminal.terminalCommand.commands.system.ForLoop;
+import engine.terminal.terminalCommand.commands.system.Help;
+import engine.terminal.terminalCommand.commands.system.HexToDec;
+import engine.terminal.terminalCommand.commands.system.ID_CMD;
+import engine.terminal.terminalCommand.commands.system.ListCMD;
+import engine.terminal.terminalCommand.commands.system.OpenScreen;
+import engine.terminal.terminalCommand.commands.system.OpenWindow;
+import engine.terminal.terminalCommand.commands.system.ReloadTextures;
+import engine.terminal.terminalCommand.commands.system.ReregisterCommands;
+import engine.terminal.terminalCommand.commands.system.RuntimeCMD;
+import engine.terminal.terminalCommand.commands.system.Shutdown;
+import engine.terminal.terminalCommand.commands.system.SystemCMD;
+import engine.terminal.terminalCommand.commands.system.Version;
+import engine.terminal.terminalCommand.commands.system.WhoAmI;
+import engine.terminal.terminalCommand.commands.windows.Close;
+import engine.terminal.terminalCommand.commands.windows.MinimizeWindow;
+import engine.terminal.terminalCommand.commands.windows.PinWindow;
+import engine.terminal.terminalCommand.commands.windows.ShowWindow;
+import engine.terminal.terminalCommand.commands.windows.ToFrontWindow;
 import engine.terminal.window.ETerminal;
 import engine.util.ClassFinder;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.reflection.EModifier;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 
 //Author: Hunter Bragg
 
@@ -40,7 +96,10 @@ public class TerminalHandler {
 		registerBaseCommands(false);
 	}
 	
-	/** Dynamically finds terminal commands within the given classpath directory. */
+	/** Dynamically finds terminal commands within the given classpath directory.
+	 * 
+	 *  NOTE: THIS ONLY WORKS WHEN RUNNING OUT OF ECLIPSE!!!
+	 */
 	private EArrayList<TerminalCommand> findCommands() {
 		String commandDir = "engine.terminal.terminalCommand";
 		
@@ -60,19 +119,88 @@ public class TerminalHandler {
 	
 	private void registerBaseCommands(boolean runVisually) { registerBaseCommands(null, runVisually); }
 	private void registerBaseCommands(ETerminal termIn, boolean runVisually) {
-		//only register commands which specifically are marked with 'shouldRegister'
-		findCommands().filter(c -> c.shouldRegister()).forEach(c -> registerCommand(c, termIn, runVisually));
+		//findCommands().filter(c -> c.shouldRegister()).forEach(c -> registerCommand(c, termIn, runVisually));
+		
+		//define commands to register here
+		
+		//file system
+		registerCommand(new Ls(), termIn, runVisually);
+		registerCommand(new Cd(), termIn, runVisually);
+		registerCommand(new Pwd(), termIn, runVisually);
+		registerCommand(new Rm(), termIn, runVisually);
+		registerCommand(new RmDir(), termIn, runVisually);
+		registerCommand(new MkDir(), termIn, runVisually);
+		registerCommand(new Mv(), termIn, runVisually);
+		registerCommand(new Cp(), termIn, runVisually);
+		registerCommand(new Lsblk(), termIn, runVisually);
+		registerCommand(new Cat(), termIn, runVisually);
+		registerCommand(new Head(), termIn, runVisually);
+		registerCommand(new Tail(), termIn, runVisually);
+		registerCommand(new Edit(), termIn, runVisually);
+		registerCommand(new Open(), termIn, runVisually);
+		
+		//game
+		registerCommand(new CreateDungeon_CMD(), termIn, runVisually);
+		registerCommand(new FPS_CMD(), termIn, runVisually);
+		registerCommand(new LoadWorld_CMD(), termIn, runVisually);
+		registerCommand(new NoClip_CMD(), termIn, runVisually);
+		registerCommand(new PauseGame_CMD(), termIn, runVisually);
+		registerCommand(new SaveWorld_CMD(), termIn, runVisually);
+		registerCommand(new SetFPS_CMD(), termIn, runVisually);
+		registerCommand(new SetTPS_CMD(), termIn, runVisually);
+		registerCommand(new SetWorldUnderground_CMD(), termIn, runVisually);
+		registerCommand(new Song_CMD(), termIn, runVisually);
+		registerCommand(new SpawnEntity_CMD(), termIn, runVisually);
+		registerCommand(new TPS_CMD(), termIn, runVisually);
+		registerCommand(new UnloadWorld_CMD(), termIn, runVisually);
+		registerCommand(new UnPauseGame_CMD(), termIn, runVisually);
+		registerCommand(new World_CMD(), termIn, runVisually);
+		registerCommand(new WorldsDir_CMD(), termIn, runVisually);
+		
+		//system
+		registerCommand(new CalcCommand(), termIn, runVisually);
+		registerCommand(new ClearObjects(), termIn, runVisually);
+		registerCommand(new ClearTerminal(), termIn, runVisually);
+		registerCommand(new ClearTerminalHistory(), termIn, runVisually);
+		registerCommand(new CurScreen(), termIn, runVisually);
+		registerCommand(new DebugControl(), termIn, runVisually);
+		registerCommand(new Envision_CMD(), termIn, runVisually);
+		registerCommand(new ForLoop(), termIn, runVisually);
+		registerCommand(new Help(), termIn, runVisually);
+		registerCommand(new HexToDec(), termIn, runVisually);
+		registerCommand(new ID_CMD(), termIn, runVisually);
+		registerCommand(new ListCMD(), termIn, runVisually);
+		registerCommand(new OpenScreen(), termIn, runVisually);
+		registerCommand(new OpenWindow(), termIn, runVisually);
+		registerCommand(new ReloadTextures(), termIn, runVisually);
+		registerCommand(new ReregisterCommands(), termIn, runVisually);
+		registerCommand(new RuntimeCMD(), termIn, runVisually);
+		registerCommand(new Shutdown(), termIn, runVisually);
+		registerCommand(new SystemCMD(), termIn, runVisually);
+		registerCommand(new Version(), termIn, runVisually);
+		registerCommand(new WhoAmI(), termIn, runVisually);
+		
+		//windows
+		registerCommand(new Close(), termIn, runVisually);
+		registerCommand(new MinimizeWindow(), termIn, runVisually);
+		registerCommand(new PinWindow(), termIn, runVisually);
+		registerCommand(new ShowWindow(), termIn, runVisually);
+		registerCommand(new ToFrontWindow(), termIn, runVisually);
 	}
 	
 	public void registerCommand(TerminalCommand command, boolean runVisually) { registerCommand(command, null, runVisually); }
 	public void registerCommand(TerminalCommand command, ETerminal termIn, boolean runVisually) {
+		//only register commands which specifically are marked with 'shouldRegister'
+		if (command == null || !command.shouldRegister()) return;
+		
+		//add the command to the command map
 		commandList.add(command);
 		commands.put(command.getName(), command);
-		if (termIn != null & runVisually) { termIn.writeln("Registering command call: " + command.getName(), 0xffffff00); }
+		if (termIn != null & runVisually) termIn.writeln("Registering command call: " + command.getName(), 0xffffff00);
 		if (command.getAliases() != null) {
 			for (int i = 0; i < command.getAliases().size(); i++) {
 				commands.put(command.getAliases().get(i), command);
-				if (termIn != null & runVisually) { termIn.writeln("Registering command alias: " + command.getAliases().get(i), 0xff55ff55); }
+				if (termIn != null & runVisually) termIn.writeln("Registering command alias: " + command.getAliases().get(i), 0xff55ff55);
 			}
 		}
 	}

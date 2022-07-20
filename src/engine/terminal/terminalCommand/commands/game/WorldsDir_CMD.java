@@ -7,7 +7,7 @@ import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.sys.FileOpener;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 
 import java.io.File;
 
@@ -38,7 +38,7 @@ public class WorldsDir_CMD extends TerminalCommand {
 				if (hasModifier("-c")) copy = true;
 				if (hasModifier("-o")) open = true;
 				
-				termIn.setDir(QoT_Settings.getEditorWorldsDir());
+				termIn.setDir(QoTSettings.getEditorWorldsDir());
 				String path = termIn.getDir().getCanonicalPath();
 				String colorPath = "" + EColors.mc_aqua + path;
 				termIn.writeLink("Current Dir: " + colorPath, path, new File(path), false, EColors.yellow);

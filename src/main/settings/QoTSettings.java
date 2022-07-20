@@ -3,13 +3,18 @@ package main.settings;
 import java.io.File;
 
 import eutil.datatypes.EArrayList;
+import main.QoT;
 import main.settings.config.ConfigSetting;
 
-public class QoT_Settings {
+public class QoTSettings {
 	
 	private static File localGameDir;
 	private static File profilesDir;
 	private static File editorWorldsDir;
+	private static File resourcesDir;
+	
+	/** The primary configuration file for the game. */
+	private static MainConfigFile mainConfig;
 	
 	// holder
 	private static final EArrayList<ConfigSetting> settings = new EArrayList();
@@ -19,8 +24,8 @@ public class QoT_Settings {
 	//-----------------------
 	
 	public static final ConfigSetting<Integer> musicVolume = new ConfigSetting(Integer.class, "musicVolume", "Music Volume", 100);
-	public static final ConfigSetting<Integer> targetFPS = new ConfigSetting(Integer.class, "targetFPS", "Target FPS", 60);
-	public static final ConfigSetting<Integer> targetUPS = new ConfigSetting(Integer.class, "targetUPS", "Target UPS", 60);
+	public static final ConfigSetting<Integer> targetFPS = new ConfigSetting(Integer.class, "targetFPS", "Target FPS", 300);
+	public static final ConfigSetting<Integer> targetUPS = new ConfigSetting(Integer.class, "targetUPS", "Target UPS", 300);
 	public static final ConfigSetting<String> lastEditorMap = new ConfigSetting(String.class, "lastEditorMap", "Last Editor Map", "");
 	public static final ConfigSetting<String> lastMap = new ConfigSetting(String.class, "lastMap", "Last Map", "");
 	public static final ConfigSetting<Boolean> drawFPS = new ConfigSetting(Boolean.class, "drawFPS", "Draw FPS", false);
@@ -47,27 +52,54 @@ public class QoT_Settings {
 	// initializers
 	//--------------
 	
-	public boolean initDirectories(File dirPath) {
-		localGameDir = dirPath;
-		
-		// check if file directory has been created and create it if it does not exist
-		if (!dirPath.exists() && !dirPath.mkdir()) {
-			// setup failed
-			return false;
+	public static void init(File installDir) {
+		//ensure installation directory actually exists
+		if (!installDir.exists()) {
+			throw new RuntimeException(String.format("Failed to bind to installation directory '%s'!", installDir));
 		}
 		
-		// create game directories
+		//initialize game directories using installation directory
+		initDirectories(installDir);
+		
+		//establish game main config
+		mainConfig = new MainConfigFile(new File(installDir, "MainConfig"));
+		mainConfig.tryLoad();
+	}
+	
+	private static boolean initDirectories(File dirPath) {
+		localGameDir = dirPath;
+		resourcesDir = new File(dirPath, "resources");
+		
+		//error if resources dir does not exist
+		if (!resourcesDir.exists())
+			throw new RuntimeException(String.format("Failed to bind to resources in installation dir '%s'!", dirPath));
+		
+		//create mappings to game directories
 		profilesDir = new File(localGameDir, "saves");
 		editorWorldsDir = new File(localGameDir, "editorWorlds");
 		
-		if (!profilesDir.exists()) profilesDir.mkdir();
-		if (!editorWorldsDir.exists()) editorWorldsDir.mkdir();
+		if (!profilesDir.exists()) {
+			QoT.warn("Profiles directory not found! Attempting to create new one!");
+			profilesDir.mkdirs();
+		}
+		
+		if (!editorWorldsDir.exists()) {
+			QoT.warn("Editor worlds directory not found! Attempting to create new one!");
+			editorWorldsDir.mkdirs();
+		}
 		
 		return true;
 	}
 	
+	public static boolean saveConfig() {
+		return mainConfig.trySave();
+	}
+	
+	public static File getResourcesDir() { return resourcesDir; }
 	public static File getLocalGameDir() { return localGameDir; }
 	public static File getProfilesDir() { return profilesDir; }
 	public static File getEditorWorldsDir() { return editorWorldsDir; }
+	
+	public static MainConfigFile getGameConfig() { return mainConfig; }
 	
 }

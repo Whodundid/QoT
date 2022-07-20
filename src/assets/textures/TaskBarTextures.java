@@ -4,6 +4,7 @@ import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import main.settings.QoTSettings;
 
 public class TaskBarTextures {
 	
@@ -20,19 +21,19 @@ public class TaskBarTextures {
 	public static final GameTexture textureviewer;
 	public static final GameTexture window;
 	
-	private static final String base = "resources/textures/taskbar/";
+	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\taskbar\\";
 	
 	static {
-		experiment 		= new GameTexture("experiment", base, "experiment.png");
-		info 			= new GameTexture("info", base, "info.png");
-		keyboard 		= new GameTexture("keyboard", base, "keyboard.png");
-		notification 	= new GameTexture("notification", base, "notification.png");
-		opengui 		= new GameTexture("opengui", base, "opengui.png");
-		settings 		= new GameTexture("settings", base, "settings.png");
-		terminal 		= new GameTexture("terminal", base, "terminal.png");
-		texteditor 		= new GameTexture("texteditor", base, "texteditor.png");
-		textureviewer 	= new GameTexture("textureviewer", base, "textureviewer.png");
-		window 			= new GameTexture("window", base, "window.png");
+		experiment 		= new GameTexture("experiment", textureDir, "experiment.png");
+		info 			= new GameTexture("info", textureDir, "info.png");
+		keyboard 		= new GameTexture("keyboard", textureDir, "keyboard.png");
+		notification 	= new GameTexture("notification", textureDir, "notification.png");
+		opengui 		= new GameTexture("opengui", textureDir, "opengui.png");
+		settings 		= new GameTexture("settings", textureDir, "settings.png");
+		terminal 		= new GameTexture("terminal", textureDir, "terminal.png");
+		texteditor 		= new GameTexture("texteditor", textureDir, "texteditor.png");
+		textureviewer 	= new GameTexture("textureviewer", textureDir, "textureviewer.png");
+		window 			= new GameTexture("window", textureDir, "window.png");
 	}
 	
 	public static void registerTextures(TextureSystem systemIn) {

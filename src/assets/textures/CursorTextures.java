@@ -5,6 +5,7 @@ import engine.renderEngine.textureSystem.TextureSystem;
 import engine.util.CursorHelper;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import main.settings.QoTSettings;
 
 public class CursorTextures {
 	
@@ -19,14 +20,14 @@ public class CursorTextures {
 	public static final long cursor_resize_dl;
 	public static final long cursor_resize_dr;
 	
-	private static final String base = "resources/textures/cursor/";
+	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\cursor\\";
 	
 	static {
-		resize_dl = new GameTexture("resize_dl", base, "resize_dl.png");
-		resize_dr = new GameTexture("resize_dr", base, "resize_dr.png");
-		resize_ew = new GameTexture("resize_ew", base, "resize_ew.png");
-		resize_ns = new GameTexture("resize_ns", base, "resize_ns.png");
-		ibeam = new GameTexture("ibeam", base, "text_pos.png");
+		resize_dl = new GameTexture("resize_dl", textureDir, "resize_dl.png");
+		resize_dr = new GameTexture("resize_dr", textureDir, "resize_dr.png");
+		resize_ew = new GameTexture("resize_ew", textureDir, "resize_ew.png");
+		resize_ns = new GameTexture("resize_ns", textureDir, "resize_ns.png");
+		ibeam = new GameTexture("ibeam", textureDir, "text_pos.png");
 		
 		cursor_resize_dl = CursorHelper.createCursorFromGameTexture(resize_dl);
 		cursor_resize_dr = CursorHelper.createCursorFromGameTexture(resize_dr);

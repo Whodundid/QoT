@@ -4,6 +4,7 @@ import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import main.settings.QoTSettings;
 
 public class EditorTextures {
 	
@@ -24,23 +25,23 @@ public class EditorTextures {
 	public static final GameTexture play;
 	public static final GameTexture stop;
 	
-	private static final String base = "resources/textures/editor/";
+	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\editor\\";
 	
 	static {
-		rectangle = new GameTexture("rectangle", base, "rectsel.png");
-		move = new GameTexture("move", base, "move.png");
-		magicWand = new GameTexture("magicWand", base, "magicwand.png");
-		paintBucket = new GameTexture("paintBucket", base, "paintbucket.png");
-		brush = new GameTexture("brush", base, "brush.png");
-		pencil = new GameTexture("pencil", base, "pencil.png");
-		eyeDropper = new GameTexture("eyeDropper", base, "eyedropper.png");
-		eraser = new GameTexture("eraser", base, "eraser.png");
-		line = new GameTexture("line", base, "line.png");
-		select = new GameTexture("select", base, "select.png");
-		shape = new GameTexture("shape", base, "shape.png");
+		rectangle = new GameTexture("rectangle", textureDir, "rectsel.png");
+		move = new GameTexture("move", textureDir, "move.png");
+		magicWand = new GameTexture("magicWand", textureDir, "magicwand.png");
+		paintBucket = new GameTexture("paintBucket", textureDir, "paintbucket.png");
+		brush = new GameTexture("brush", textureDir, "brush.png");
+		pencil = new GameTexture("pencil", textureDir, "pencil.png");
+		eyeDropper = new GameTexture("eyeDropper", textureDir, "eyedropper.png");
+		eraser = new GameTexture("eraser", textureDir, "eraser.png");
+		line = new GameTexture("line", textureDir, "line.png");
+		select = new GameTexture("select", textureDir, "select.png");
+		shape = new GameTexture("shape", textureDir, "shape.png");
 		
-		play = new GameTexture("play", base, "play.png");
-		stop = new GameTexture("stop", base, "stop.png");
+		play = new GameTexture("play", textureDir, "play.png");
+		stop = new GameTexture("stop", textureDir, "stop.png");
 	}
 	
 	public static void registerTextures(TextureSystem ts) {

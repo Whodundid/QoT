@@ -8,7 +8,7 @@ import game.doodads.PlayerSpawnPosition;
 import game.entities.Entity;
 import game.worldTiles.WorldTile;
 import main.QoT;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 
 import java.awt.Point;
 import java.io.File;
@@ -118,7 +118,7 @@ public class GameWorld {
 		}
 		
 		if (nullEntities > 0) {
-			QoT.logWarn("'" + nullEntities + "' were null in world: '" + getName() + "' and have been removed!");
+			QoT.warn("'" + nullEntities + "' were null in world: '" + getName() + "' and have been removed!");
 		}
 		
 		//temporary world tile update
@@ -203,11 +203,11 @@ public class GameWorld {
 	// WORLD LOADING AND SAVING
 	//--------------------------
 	
-	public synchronized boolean loadWorld() { return loadWorldFromFile(new File(QoT_Settings.getEditorWorldsDir(), name)); }
+	public synchronized boolean loadWorld() { return loadWorldFromFile(new File(QoTSettings.getEditorWorldsDir(), name)); }
 	public synchronized boolean loadWorldFromFile(File worldFile) {
 		String worldName = worldFile.getName();
 		if (!worldName.endsWith(".twld")) worldName += ".twld";
-		worldFile = new File(QoT_Settings.getEditorWorldsDir(), worldName);
+		worldFile = new File(QoTSettings.getEditorWorldsDir(), worldName);
 		
 		if (worldFile != null && worldFile.exists()) {
 			try (Scanner reader = new Scanner(worldFile)) {
@@ -300,7 +300,7 @@ public class GameWorld {
 		return false;
 	}
 	
-	public synchronized boolean saveWorldToFile() { return saveWorldToFile(new File(QoT_Settings.getEditorWorldsDir(), name)); }
+	public synchronized boolean saveWorldToFile() { return saveWorldToFile(new File(QoTSettings.getEditorWorldsDir(), name)); }
 	protected synchronized boolean saveWorldToFile(File fileIn) {
 		try {
 			fileIn = (fileIn.getName().endsWith(".twld")) ? fileIn : new File(fileIn.getPath() + ".twld");
@@ -352,7 +352,7 @@ public class GameWorld {
 	public boolean isFileLoaded() { return fileLoaded; }
 	public boolean isLoaded() { return loaded; }
 	public String getName() { return name; }
-	public String getFileName() { return QoT_Settings.getEditorWorldsDir().toString() + "\\" + name + ".twld"; }
+	public String getFileName() { return QoTSettings.getEditorWorldsDir().toString() + "\\" + name + ".twld"; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 	public int getTileWidth() { return tileWidth; }

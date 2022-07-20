@@ -12,7 +12,7 @@ import envision.lang.internal.EnvisionFunction;
 import envision.lang.natives.Primitives;
 import game.entities.Player;
 import main.QoT;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 import world.GameWorld;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class LoadWorld_ENV extends EnvisionFunction {
 	
 	private static GameWorld buildWorld(String worldName) {
 		worldName = (worldName.endsWith(".twld")) ? worldName : worldName + ".twld";
-		File f = new File(QoT_Settings.getEditorWorldsDir(), worldName);
+		File f = new File(QoTSettings.getEditorWorldsDir(), worldName);
 		return new GameWorld(f);
 	}
 	
