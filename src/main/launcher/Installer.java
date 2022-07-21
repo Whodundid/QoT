@@ -128,33 +128,15 @@ public class Installer {
 	 * @param dir The installation directory
 	 */
 	private static void setupResourcesDir(File dir) throws Exception {
-		//get mappings to internal resource directories to prepare for extraction
-//		File internalFontDir = getInternalDir("font");
-//		File internalSoundsDir = getInternalDir("sounds");
-//		File internalTexturesDir = getInternalDir("textures");
-//		File internalShaderDir = getInternalDir("shaders");
-//		File internalMapsDir = getInternalDir("maps");
-		
 		//create output directory for resources within install dir
 		File resourcesDir = new File(dir, "resources");
 		if (!resourcesDir.exists()) resourcesDir.mkdirs();
 		
-		//create each internal directory mapping in install dir
-//		File fontDir = new File(dir, "resources\\font");
-//		File soundsDir = new File(dir, "resources\\sounds");
-//		File texturesDir = new File(dir, "resources\\textures");
-//		File shaderDir = new File(dir, "resources\\shaders");
-//		//create game directories in install dir
+		//create game directories in install dir
 		File profilesDir = new File(dir, "saves");
-		//File editorWorldsDir = new File(dir, "editorWorlds");
-//		
-//		//create dir if it doesn't already exist
-//		if (!fontDir.exists()) fontDir.mkdirs();
-//		if (!soundsDir.exists()) soundsDir.mkdirs();
-//		if (!texturesDir.exists()) texturesDir.mkdirs();
-//		if (!shaderDir.exists()) shaderDir.mkdirs();
+		
+		//create profile dir if it doesn't already exist
 		if (!profilesDir.exists()) profilesDir.mkdirs();
-		//if (!editorWorldsDir.exists()) editorWorldsDir.mkdirs();
 		
 		//extract data from each internal dir into installation dir
 		try { extractDataToDir("font", resourcesDir); }
@@ -165,139 +147,123 @@ public class Installer {
 		catch (Exception e) { e.printStackTrace(); throw e; }
 		try { extractDataToDir("shaders", resourcesDir); }
 		catch (Exception e) { e.printStackTrace(); throw e; }
-		
 		//copy bundled maps into install map dir
 		try { extractDataToDir("editorWorlds", dir); }
 		catch (Exception e) { e.printStackTrace(); throw e; }
 	}
 	
 	/**
-	 * Retrieves the internal resources dir pertaining to the given path.
+	 * Copies the files from one directory to another.
+	 * <p>
+	 * Determines what type of file system methodology to pursue when trying to extract
+	 * resources from internal directories as Jar paths VASTLY differ in complexity
+	 * to a standard IDE environment.
 	 * 
-	 * @param path
-	 * @return The File to the internal path
+	 * @param fromDir The internal dir to get resource data from
+	 * @param toDir The external dir to put extracted data in
+	 * @throws Exception Thrown if any error occurs during extraction
 	 */
-	private static File getInternalDir(String path) throws Exception {
-//		try {
-//			URL url = QoT.class.getResource(path);
-//			File file = null;
-//			
-//			try {
-//				file = new File(url.toURI());
-//			}
-//			catch (URISyntaxException e) {
-//				file = new File(url.getPath());
-//			}
-//			
-//			return file;
-//		}
-//		catch (IllegalArgumentException | NullPointerException e) {
-			//attempt to access jar path directly
-
-				
-//				return tempDir;
-//			}
-//			catch (Exception ee) {
-//				Launcher.logError(ee);
-//			}
-//			finally {
-//				if (jarFile != null) jarFile.close();
-//			}
-//		}
-			
-		return null;
-	}
-	
-	private static File getJarFile() {
+	private static void extractDataToDir(String fromPath, File toDir) throws Exception {
+		//this line is used to specifically grab the class system's file structure to determine
+		//what kind of environment the game is being executed from (an IDE or a Jar)
 		String path = QoT.class.getResource(QoT.class.getSimpleName() + ".class").getFile();
-		if (path.startsWith("/")) return null;
-		path = ClassLoader.getSystemClassLoader().getResource(path).getFile();
-		path = path.substring(path.indexOf(':') + 1);
-		path = path.substring(0, path.lastIndexOf('!'));
-		return new File(path);
+		
+		//if path does not start with a '/' then it's very likely a jar file!
+		if (!path.startsWith("/")) {
+			path = ClassLoader.getSystemClassLoader().getResource(path).getFile();
+			path = path.substring(path.indexOf(':') + 1);
+			path = path.substring(0, path.lastIndexOf('!'));
+			
+			//wrap as file and begin the attempt to extract data from jar file
+			File jarPath = new File(path);
+			extractDataFromJarDir(jarPath, fromPath, toDir);
+			return;
+		}
+		else {
+			//attempt to get path as resource from classpath
+			var url = QoT.class.getResource("/" + fromPath); //append '/' to stop relative path
+			File dir = null;
+			
+			//try to convert resource url to file
+			try {
+				dir = new File(url.getFile());
+			}
+			catch (Exception e) {
+				try {
+					dir = new File(url.getPath());
+				}
+				catch (Exception ee) {
+					e.printStackTrace();
+					Launcher.logError(ee);
+				}
+			}
+			
+			//begin the attempt to extract data from development dir
+			extractDataFromDevDir(dir, toDir);
+		}
 	}
 	
 	/**
-	 * Copies the files from one directory to another.
+	 * Attempts to extract data from a JarFile (probably this one) while running.
+	 * <p>
+	 * Java JarFiles are more structurally similar to a zip file rather
+	 * than a standard file system and require more effort to extract
+	 * data from.
 	 * 
-	 * @param fromDir
+	 * @param jarPath
+	 * @param pathToFind
 	 * @param toDir
 	 * @throws Exception
 	 */
-	private static void extractDataToDir(String fromPath, File toDir) throws Exception {
-		extractDataFromJarDir(fromPath, toDir);
-		
-//		File fromDir = getInternalDir(fromPath);
-//		
-//		if (fromDir == null) {
-//			
-//		}
-//		else
-//		
-//		for (File f : fromDir.listFiles()) {
-//			if (f.isDirectory()) {
-//				File sub = new File(toDir.getAbsolutePath() + "\\" + f.getName());
-//				sub.mkdir();
-//				extractDataToDir(f, sub);
-//			}
-//			else {
-//				Path internalPath = f.toPath();
-//				Path copyPath = Paths.get(toDir.getAbsolutePath() + "\\" + f.getName());
-//				Files.copy(internalPath, copyPath, StandardCopyOption.REPLACE_EXISTING);
-//			}
-//		}
-	}
-	
-	private static void extractDataFromJarDir(String jarPath, File toDir) throws Exception {
+	private static void extractDataFromJarDir(File jarPath, String pathToFind, File toDir) throws Exception {
 		JarFile jarFile = null;
 		
 		try {
-			jarFile = new JarFile(getJarFile());
+			//construct jar file and extract jar entries
+			jarFile = new JarFile(jarPath);
 			var it = jarFile.entries().asIterator();
-			
-			//create temporary directory to store extracted files into
-			//File tempDir = Files.createTempDirectory("qot-"+path+"-").toFile();
-			//FileUtils.forceDeleteOnExit(tempDir);
 			
 			String lastDir = "";
 			boolean found = false;
 			
+			//iterate across entries and attempt to find paths that match the given 
 			while (it.hasNext()) {
 				var entry = it.next();
 				var name = entry.getName();
 				
-				if (name.startsWith(jarPath)) {
+				//ignore the entry if it does not start with the path being searched for
+				if (name.startsWith(pathToFind)) {
 					if (!found) found = true;
 					
-					//grab dir names
+					//dynamically build directory path
 					if (name.endsWith("/")) {
 						if (!name.startsWith(lastDir)) lastDir = name;
 						else lastDir += name;
 						continue;
 					}
 					
-					//Launcher.logError(lastDir + "   :   " + StringUtil.subStringToString(name, "/", true));
+					//create base level directory(ies)
 					File newFile = new File(toDir, name);
 					Path newFilePath = newFile.toPath();
-					Launcher.logError("PARENT: " + newFilePath.getParent());
 					if (!Files.exists(newFilePath)) Files.createDirectories(newFilePath.getParent());
-					//if (!newFile.exists())
 					
-					Launcher.logError(newFile);
-					
+					//because this is extracting from a jar, the resource must be extracted byte-by-byte
 					byte[] bytes = QoT.class.getClassLoader().getResourceAsStream(name).readAllBytes();
 					Launcher.logError("WRITING '" + bytes.length + "' to '" + newFile + "'!");
-					//Files.write(newFilePath, bytes, StandardOpenOption.CREATE_NEW);
 					
+					//copy file to installation path
 					try (var fos = new FileOutputStream(newFile)) {
 						fos.write(bytes);
 					}
 					catch (Exception foserr) {
 						Launcher.logError(foserr);
+						throw foserr;
 					}
-					
-					Launcher.logError(name);
 				}
+				//because of the way jar files are laid out, it can be assumed that as
+				//soon as the underlying entry name no longer matches the path being
+				//searched for, the final resource from that given directory has been
+				//found. This means the while loop can exit early to save on performance.
 				else if (found) break;
 			}
 		}
@@ -309,12 +275,12 @@ public class Installer {
 		}
 	}
 	
-	private static void extractDataToDir(File fromDir, File toDir) throws IOException {
+	private static void extractDataFromDevDir(File fromDir, File toDir) throws IOException {
 		for (File f : fromDir.listFiles()) {
 			if (f.isDirectory()) {
 				var sub = new File(toDir.getAbsolutePath() + "\\" + f.getName());
 				sub.mkdir();
-				extractDataToDir(f, sub);
+				extractDataFromDevDir(f, sub);
 			}
 			else {
 				Path internalPath = f.toPath();
