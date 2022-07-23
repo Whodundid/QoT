@@ -55,6 +55,7 @@ public class Launcher extends JFrame {
 	public static Launcher getLauncher() { return launcher; }
 	public static File getLauncherDir() { return launcherDir; }
 	
+	/** The actual launcher runner. */
 	public static void runLauncher() {
 		//attempt to create launcher directory
 		if (!setupLauncherDir()) return;
@@ -62,6 +63,11 @@ public class Launcher extends JFrame {
 		launcher = new Launcher();
 	}
 	
+	/**
+	 * Attempts to create the launchers directory and settings file to keep track of install path.
+	 * 
+	 * @return
+	 */
 	private static boolean setupLauncherDir() {
 		try {
 			String dir = Installer.getDefaultInstallDir();
@@ -69,16 +75,14 @@ public class Launcher extends JFrame {
 			
 			//check if launcher directory already exists
 			if (!launcherDir.exists() && !launcherDir.mkdirs()) {
-				JOptionPane.showInternalInputDialog(null, "Cannot create the QoT Launcher directory!", "Setup Error!", JOptionPane.ERROR_MESSAGE);
+				logErrorWithDialogBox("Cannot create the QoT Launcher directory!", "Setup Error!");
 				return false;
 			}
 		}
 		catch (Exception e) {
-			JOptionPane.showInternalInputDialog(null, "Cannot create the QoT Launcher directory!", "Setup Error!", JOptionPane.ERROR_MESSAGE);
+			logErrorWithDialogBox(e, "Cannot create the QoT Launcher directory!", "Setup Error!");
 			return false;
 		}
-		
-
 		
 		//check if launcher settings file exists and create default if not
 		try {
@@ -87,14 +91,13 @@ public class Launcher extends JFrame {
 			//create default launcher settings file
 			if (!launcherSettingsFile.exists()) {
 				var defaultSettings = new LauncherSettings();
-				defaultSettings.INSTALL_DIR = new File(Installer.getDefaultInstallDir() + "\\QoT");
+				defaultSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
 				updateLauncherSettingsFile(defaultSettings);
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Launcher.logError(e);
-			JOptionPane.showInternalInputDialog(null, "Cannot create the QoT Launcher directory! \n" + e, "Setup Error!", JOptionPane.ERROR_MESSAGE);
+			logErrorWithDialogBox(e, "Cannot create the QoT Launcher directory!", "Setup Error!");
 			return false;
 		}
 		
@@ -146,7 +149,7 @@ public class Launcher extends JFrame {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Launcher.logError(e);
+			Launcher.log(e);
 		}
 		
 		return dir;
@@ -156,10 +159,18 @@ public class Launcher extends JFrame {
 	// Fields
 	//--------
 	
+	/**
+	 * Keeps track of whether or not the game is actually installed to the current
+	 * install dir.
+	 */
 	private boolean installed = false;
 	
+	/**
+	 * The active working settings for which QoT will be installed to and run with.
+	 */
 	private LauncherSettings launcherSettings;
 	
+	// Launcher window stuff -- can probably be made better!
 	private JPanel contentPane;
 	private JPanel backgroundPanel;
 	private JPanel mainSelectionPanel;
@@ -193,7 +204,7 @@ public class Launcher extends JFrame {
 		
 		//populate with default path if null
 		if (launcherSettings.INSTALL_DIR == null) {
-			launcherSettings.INSTALL_DIR = new File(Installer.getDefaultInstallDir() + "\\QoT");
+			launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
 		}
 		
 		//check if QoT is actually installed at the given installation directory
@@ -206,7 +217,7 @@ public class Launcher extends JFrame {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Launcher.logError(e);
+			Launcher.log(e);
 		}
 		
 		//show
@@ -217,9 +228,14 @@ public class Launcher extends JFrame {
 	 * Determines if QoT is actually installed at the current installation directory
 	 */
 	private boolean checkInstalled() {
+		//verify that the dir is valid -- to some extent..
+		ensureInstallDirEndsWithQoT();
+		
+		//check that dir exists and whether or not it is actually installed
 		if (Installer.doesInstallDirExist(launcherSettings.INSTALL_DIR)) {
 			return installed = Installer.verifyActuallyInstalled(launcherSettings.INSTALL_DIR);
 		}
+		
 		return false;
 	}
 	
@@ -300,7 +316,7 @@ public class Launcher extends JFrame {
 					}
 					catch (Exception ee) {
 						ee.printStackTrace();
-						Launcher.logError(ee);
+						Launcher.log(ee);
 					}
 				}
 			}
@@ -349,9 +365,11 @@ public class Launcher extends JFrame {
 						}
 					}
 					catch (Exception ee) {
-						JOptionPane.showMessageDialog(Launcher.this, "SOMETHING WENT WRONG! " + ee);
+						logErrorWithDialogBox(ee,
+											  "Something went wrong!",
+											  "Installation Error",
+											  "Check the error log at: '" + launcherDir + "'");
 					}
-					
 				}
 			}
 		});
@@ -431,6 +449,9 @@ public class Launcher extends JFrame {
 		contentPane.add(backgroundPanel);
 	}
 	
+	/**
+	 * Garbage way of 'changing' the current """screen""". Smile :)
+	 */
 	private void openSettingsMenu(boolean val) {
 		runLabel.setVisible(!val);
 		runOrInstall.setVisible(!val);
@@ -445,24 +466,65 @@ public class Launcher extends JFrame {
 	}
 	
 	/**
+	 * Makes several checks against the mapped installation directory to confirm
+	 * that the chosen directory is actually valid and ends with 'QoT'.
+	 */
+	private void ensureInstallDirEndsWithQoT() {
+		//if any of the following checks regarding the current installation directory
+		//fail, then the install directory will be reset to the default one
+		
+		//grab the current directory
+		File dir = launcherSettings.INSTALL_DIR;
+		
+		//ensure the directory actually exists
+		if (dir == null) launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
+		
+		//ensure that the directory is not actually empty
+		String path = dir.getAbsolutePath();
+		if (path.isBlank() || path.isEmpty()) {
+			launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
+		}
+		
+		//verify that the given directory even exists
+		if (dir.exists()) {
+			launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
+		}
+		
+		//ensure that the directory is actually a directory
+		if (!dir.isDirectory()) {
+			launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
+		}
+		
+		//ensure that the directory is actually named 'QoT'
+		if (!dir.getName().equals("QoT")) {
+			launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
+		}
+	}
+	
+	/**
 	 * Closes the launcher.
 	 */
 	public static void closeLauncher() {
 		if (launcher == null) return;
+		log("Closing launcher! Have a nice day :)");
 		launcher.dispatchEvent(new WindowEvent(launcher, WindowEvent.WINDOW_CLOSING));
 		launcher.dispose();
 		launcher = null;
 	}
 	
+	//----------------------------------------------------------------
+	// Log handlers for when not running in a development environment
+	//----------------------------------------------------------------
+	
 	private static File logFile = null;
 	
 	private static File createLogFile() {
 		if (logFile != null) return logFile;
-		return logFile = new File(Launcher.getLauncherDir(), "ERROR_LOG_" + EDateTime.getDate() +
+		return logFile = new File(Launcher.getLauncherDir(), "LOG_" + EDateTime.getDate() +
 															 "_" + EDateTime.getTime() + ".log");
 	}
 	
-	public static void logError(Object err) {
+	public static void log(Object err) {
 		File log = createLogFile();
 		try (var fos = new FileOutputStream(log, true);
 			 var str = new PrintStream(fos))
@@ -475,7 +537,7 @@ public class Launcher extends JFrame {
 		}
 	}
 	
-	public static void logError(Exception e) {
+	public static void log(Exception e) {
 		File log = createLogFile();
 		try (var fos = new FileOutputStream(log, true);
 		     var str = new PrintStream(fos))
@@ -487,4 +549,37 @@ public class Launcher extends JFrame {
 			e1.printStackTrace();
 		}
 	}
+	
+	public static void logWithDialogBox(Object e, String boxTitle, Object... args) {
+		String err = String.valueOf(e);
+		String additionalArgs = StringUtil.toString(args, "\n");
+		
+		JOptionPane.showInternalInputDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.INFORMATION_MESSAGE);
+		log(err);
+	}
+	
+	public static void logWithDialogBox(Exception e, String message, String boxTitle, Object... args) {
+		String err = String.valueOf(message);
+		String additionalArgs = StringUtil.toString(args);
+		
+		JOptionPane.showInternalInputDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.INFORMATION_MESSAGE);
+		log(e);
+	}
+	
+	public static void logErrorWithDialogBox(Object e, String boxTitle, Object... args) {
+		String err = String.valueOf(e);
+		String additionalArgs = StringUtil.toString(args, "\n");
+		
+		JOptionPane.showInternalInputDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.ERROR_MESSAGE);
+		log(err);
+	}
+	
+	public static void logErrorWithDialogBox(Exception e, String message, String boxTitle, Object... args) {
+		String err = String.valueOf(message);
+		String additionalArgs = StringUtil.toString(args);
+		
+		JOptionPane.showInternalInputDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.ERROR_MESSAGE);
+		log(e);
+	}
+	
 }
