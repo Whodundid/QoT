@@ -39,10 +39,8 @@ import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import engine.windowLib.windowUtil.ObjectPosition;
 import envision.Envision;
 import eutil.math.EDimension;
-import eutil.sys.TracingPrintStream;
 import game.entities.Player;
 import game.items.Items;
-import main.launcher.Launcher;
 import main.launcher.LauncherSettings;
 import main.settings.QoTSettings;
 import world.GameWorld;
@@ -112,20 +110,12 @@ public class QoT {
 	
 	//-----------------------------------------------
 	
-	public static void main(String[] args) throws IllegalArgumentException, IllegalAccessException {
-		TracingPrintStream.enableTrace();
-		TracingPrintStream.setTracePrimitives(true);
-		Launcher.runLauncher();
-	}
-	
-	//-----------------------------------------------
-	
 	public static QoT getGame() {
 		return (instance != null) ? instance : (instance = new QoT());
 	}
 	
 	public static void startGame(LauncherSettings settings) {
-		QoTSettings.init(settings.INSTALL_DIR);
+		QoTSettings.init(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
 		setupGLFW();
 		setupQoT();
 		getGame().runGameLoop();

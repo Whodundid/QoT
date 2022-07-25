@@ -3,6 +3,8 @@ package main.launcher;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,7 +13,7 @@ import java.util.jar.JarFile;
 
 import engine.util.ESystemInfo;
 import eutil.sys.OSType;
-import main.QoT;
+import main.Main;
 
 public class Installer {
 
@@ -59,6 +61,16 @@ public class Installer {
 			return null;
 		}
 		
+		if (dir != null) {
+			try {
+				dir = URLDecoder.decode(dir, "UTF-8");
+			}
+			catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				Launcher.log(e);
+			}
+		}
+		
 		return dir;
 	}
 	
@@ -80,9 +92,44 @@ public class Installer {
 	 * already exists, InstallerStatus.EXISTS will be returned. If the directory
 	 * could not be created, InstallerStatus.FAILED will be returned.
 	 * 
+	 * @param customDir The directory to install to
+	 * 
 	 * @return The resulting status of the creation attempt
 	 */
 	public static InstallerStatus createInstallDir(File customDir) throws Exception {
+		return createInstallDir(customDir, true);
+	}
+	
+	/**
+	 * Attempts to create the QoT installation directory on this computer's file
+	 * system.
+	 * <p>
+	 * If successful, InstallerStatus.SUCCESS will be returned. If the directory
+	 * already exists, InstallerStatus.EXISTS will be returned. If the directory
+	 * could not be created, InstallerStatus.FAILED will be returned.
+	 * 
+	 * @param customDir The directory to install to
+	 * 
+	 * @return The resulting status of the creation attempt
+	 */
+	public static InstallerStatus createInstallDir(String customDir) throws Exception {
+		return createInstallDir(customDir, true);
+	}
+	
+	/**
+	 * Attempts to create the QoT installation directory on this computer's file
+	 * system.
+	 * <p>
+	 * If successful, InstallerStatus.SUCCESS will be returned. If the directory
+	 * already exists, InstallerStatus.EXISTS will be returned. If the directory
+	 * could not be created, InstallerStatus.FAILED will be returned.
+	 * 
+	 * @param customDir The directory to install to
+	 * @param extractResources Extracts resources to install dir if true
+	 * 
+	 * @return The resulting status of the creation attempt
+	 */
+	public static InstallerStatus createInstallDir(File customDir, boolean extractResources) throws Exception {
 		if (customDir == null) return createInstallDir((String) null);
 		return createInstallDir(customDir.getAbsolutePath());
 	}
@@ -95,9 +142,12 @@ public class Installer {
 	 * already exists, InstallerStatus.EXISTS will be returned. If the directory
 	 * could not be created, InstallerStatus.FAILED will be returned.
 	 * 
+	 * @param customDir The directory to install to
+	 * @param extractResources Extracts resources to install dir if true
+	 * 
 	 * @return The resulting status of the creation attempt
 	 */
-	public static InstallerStatus createInstallDir(String customDir) throws Exception {
+	public static InstallerStatus createInstallDir(String customDir, boolean extractResources) throws Exception {
 		//determine installation path
 		String path = null;
 		if (customDir != null) {
@@ -112,6 +162,8 @@ public class Installer {
 		//wrap path as file
 		File dir = new File(path);
 		
+		Launcher.log("Starting install at target: '" + dir + "'");
+		
 		//setup local game directory
 		if (!dir.exists() && !dir.mkdir()) {
 			return InstallerStatus.FAILED;
@@ -123,7 +175,7 @@ public class Installer {
 		}
 		
 		//extract resources into installation directory
-		setupResourcesDir(dir);
+		setupResourcesDir(dir, extractResources);
 		
 		//setup successful
 		return InstallerStatus.SUCCESS;
@@ -135,29 +187,34 @@ public class Installer {
 	 * 
 	 * @param dir The QoT installation Directory to install to
 	 */
-	private static void setupResourcesDir(File dir) throws Exception {
+	private static void setupResourcesDir(File dir, boolean extractResources) throws Exception {
 		//create output directory for resources within install dir
 		File resourcesDir = new File(dir, "resources");
-		if (!resourcesDir.exists()) resourcesDir.mkdirs();
 		
 		//create game directories in install dir
 		File profilesDir = new File(dir, "saves");
+		File worldsDir = new File(dir, "editorWorlds");
 		
-		//create profile dir if it doesn't already exist
+		//create each dir if they don't already exist
+		if (!resourcesDir.exists()) resourcesDir.mkdirs();
 		if (!profilesDir.exists()) profilesDir.mkdirs();
+		if (!worldsDir.exists()) worldsDir.mkdirs();
 		
-		//extract data from each internal dir into installation dir
-		try { extractDataToDir("font", resourcesDir); }
-		catch (Exception e) { e.printStackTrace(); throw e; }
-		try { extractDataToDir("sounds", resourcesDir); }
-		catch (Exception e) { e.printStackTrace(); throw e; }
-		try { extractDataToDir("textures", resourcesDir); }
-		catch (Exception e) { e.printStackTrace(); throw e; }
-		try { extractDataToDir("shaders", resourcesDir); }
-		catch (Exception e) { e.printStackTrace(); throw e; }
-		//copy bundled maps into install map dir
-		try { extractDataToDir("editorWorlds", dir); }
-		catch (Exception e) { e.printStackTrace(); throw e; }
+		if (extractResources) {
+			//extract data from each internal dir into installation dir
+			try { extractDataToDir("font", resourcesDir); }
+			catch (Exception e) { e.printStackTrace(); throw e; }
+			try { extractDataToDir("sounds", resourcesDir); }
+			catch (Exception e) { e.printStackTrace(); throw e; }
+			try { extractDataToDir("textures", resourcesDir); }
+			catch (Exception e) { e.printStackTrace(); throw e; }
+			try { extractDataToDir("shaders", resourcesDir); }
+			catch (Exception e) { e.printStackTrace(); throw e; }
+			
+			//copy bundled maps into install map dir
+			try { extractDataToDir("editorWorlds", dir); }
+			catch (Exception e) { e.printStackTrace(); throw e; }
+		}
 	}
 	
 	/**
@@ -175,13 +232,17 @@ public class Installer {
 	private static void extractDataToDir(String fromPath, File toDir) throws Exception {
 		//this line is used to specifically grab the class system's file structure to determine
 		//what kind of environment the game is being executed from (an IDE or a Jar)
-		String path = QoT.class.getResource(QoT.class.getSimpleName() + ".class").getFile();
+		String path = Main.class.getResource(Main.class.getSimpleName() + ".class").getFile();
 		
 		//if path does not start with a '/' then it's very likely a jar file!
 		if (!path.startsWith("/")) {
 			path = ClassLoader.getSystemClassLoader().getResource(path).getFile();
 			path = path.substring(path.indexOf(':') + 1);
 			path = path.substring(0, path.lastIndexOf('!'));
+			
+			String orig = path;
+			path = URLDecoder.decode(path, "UTF-8");
+			Launcher.log("Modifying path from: '" + orig + "' to '" + path + "'!");
 			
 			//wrap as file and begin the attempt to extract data from jar file
 			File jarPath = new File(path);
@@ -190,7 +251,7 @@ public class Installer {
 		}
 		else {
 			//attempt to get path as resource from classpath
-			var url = QoT.class.getResource("/" + fromPath); //append '/' to stop relative path
+			var url = Main.class.getResource("/" + fromPath); //append '/' to stop relative path
 			File dir = null;
 			
 			//try to convert resource url to file
@@ -258,7 +319,7 @@ public class Installer {
 					if (!Files.exists(newFilePath)) Files.createDirectories(newFilePath.getParent());
 					
 					//because this is extracting from a jar, the resource must be extracted byte-by-byte
-					byte[] bytes = QoT.class.getClassLoader().getResourceAsStream(name).readAllBytes();
+					byte[] bytes = Main.class.getClassLoader().getResourceAsStream(name).readAllBytes();
 					Launcher.log("Extracting '" + bytes.length + "' bytes to '" + newFile + "'!");
 					
 					//copy file to installation path
@@ -335,7 +396,7 @@ public class Installer {
 	private static boolean verifyDir(String fromPath, File toDir) throws IOException {
 		//this line is used to specifically grab the class system's file structure to determine
 		//what kind of environment the game is being executed from (an IDE or a Jar)
-		String path = QoT.class.getResource(QoT.class.getSimpleName() + ".class").getFile();
+		String path = Main.class.getResource(Main.class.getSimpleName() + ".class").getFile();
 		
 		//if path does not start with a '/' then it's very likely a jar file!
 		if (!path.startsWith("/")) {
@@ -349,7 +410,7 @@ public class Installer {
 		}
 		else {
 			//attempt to get path as resource from classpath
-			var url = QoT.class.getResource("/" + fromPath); //append '/' to stop relative path
+			var url = Main.class.getResource("/" + fromPath); //append '/' to stop relative path
 			File dir = null;
 			
 			//try to convert resource url to file

@@ -52,27 +52,35 @@ public class QoTSettings {
 	// initializers
 	//--------------
 	
-	public static void init(File installDir) {
+	public static void init(File installDir, boolean useInternalResources) {
 		//ensure installation directory actually exists
 		if (!installDir.exists()) {
 			throw new RuntimeException(String.format("Failed to bind to installation directory '%s'!", installDir));
 		}
 		
 		//initialize game directories using installation directory
-		initDirectories(installDir);
+		initDirectories(installDir, useInternalResources);
 		
 		//establish game main config
 		mainConfig = new MainConfigFile(new File(installDir, "MainConfig"));
 		mainConfig.tryLoad();
 	}
 	
-	private static boolean initDirectories(File dirPath) {
+	private static boolean initDirectories(File dirPath, boolean useInternalResources) {
 		localGameDir = dirPath;
-		resourcesDir = new File(dirPath, "resources");
 		
-		//error if resources dir does not exist
-		if (!resourcesDir.exists())
-			throw new RuntimeException(String.format("Failed to bind to resources in installation dir '%s'!", dirPath));
+		//maps resources to internal jar resources instead of the installation directory
+		if (useInternalResources) {
+			resourcesDir = new File("resources\\");
+		}
+		else {
+			resourcesDir = new File(dirPath, "resources");
+			
+			//error if resources dir does not exist
+			if (!resourcesDir.exists()) {
+				throw new RuntimeException(String.format("Failed to bind to resources in installation dir '%s'!", dirPath));
+			}
+		}
 		
 		//create mappings to game directories
 		profilesDir = new File(localGameDir, "saves");
