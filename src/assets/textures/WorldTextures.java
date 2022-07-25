@@ -5,15 +5,19 @@ import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import main.settings.QoTSettings;
 
 public class WorldTextures {
 	
-	// Textures
-	
-	private static final String world = "resources/textures/world/";
-	private static final String dung = "resources/textures/world/dungeon/";
+	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\";
+	private static final String world = textureDir + "world\\";
+	private static final String dung = world + "dungeon\\";
 	
 	private static final EArrayList<GameTexture> textures = new EArrayList();
+	
+	//----------
+	// Textures
+	//----------
 	
 	public static final GameTexture grass = new Tex_Grass();
 	public static final GameTexture dirt = new GameTexture("Dirt", world, "dirt.png");

@@ -4,16 +4,19 @@ import engine.renderEngine.GLObject;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import main.QoT;
+import main.settings.QoTSettings;
 
 import org.lwjgl.opengl.GL11;
 
 public class FontRenderer {
 	
+	private static final String fontDir = QoTSettings.getResourcesDir().toString() + "\\font\\";
+	
 	public static final double FONT_HEIGHT = 24;
-	public static GameFont defaultFont = GameFont.createFont("resources/font/font_map.txt", "resources/font/font.png");
-	public static GameFont newFont = GameFont.createFont("resources/font/control_map.txt", "resources/font/font_test_fix.png");
-	public static GameFont font8 = GameFont.createFont("resources/font/font_map_8x8.txt", "resources/font/font_8x8.png");
-	public static GameFont courier = GameFont.createFont("resources/font/courier_map.txt", "resources/font/courier.png");
+	public static GameFont defaultFont = GameFont.createFont(fontDir + "font_map.txt", fontDir + "font.png");
+	public static GameFont newFont = GameFont.createFont(fontDir + "control_map.txt", fontDir + "font_test_fix.png");
+	public static GameFont font8 = GameFont.createFont(fontDir + "font_map_8x8.txt", fontDir + "font_8x8.png");
+	public static GameFont courier = GameFont.createFont(fontDir + "courier_map.txt", fontDir + "courier.png");
 	
 	private GameFont currentFont;
 	

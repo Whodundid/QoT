@@ -4,6 +4,7 @@ import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import main.settings.QoTSettings;
 
 public class DoodadTextures {
 
@@ -12,11 +13,11 @@ public class DoodadTextures {
 	public static final GameTexture pine_tree;
 	public static final GameTexture player_spawn;
 	
-	private static final String base = "resources/textures/doodads/";
+	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\doodads\\";
 	
 	static {
-		pine_tree = new GameTexture("pine", base, "tree_pine_0.png");
-		player_spawn = new GameTexture("spawn", base, "player_start.png");
+		pine_tree = new GameTexture("pine", textureDir, "tree_pine_0.png");
+		player_spawn = new GameTexture("spawn", textureDir, "player_start.png");
 	}
 	
 	public static void registerTextures(TextureSystem ts) {

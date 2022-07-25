@@ -4,6 +4,7 @@ import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import main.settings.QoTSettings;
 
 public class EntityTextures {
 	
@@ -16,15 +17,15 @@ public class EntityTextures {
 	public static final GameTexture trollboar;
 	public static final GameTexture thyrah;
 	
-	private static final String base = "resources/textures/entities/";
+	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\entities\\";
 	
 	static {
-		goblin = new GameTexture("goblin", base, "goblin/goblin_base.png");
-		player = new GameTexture("player", base, "player/player_base.png");
-		whodundid = new GameTexture("whodundid", base, "whodundid/whodundid_base.png");
-		whodundidsbrother = new GameTexture("who_brother", base, "whodundidsbrother/whodundidsbrother_base.png");
-		trollboar = new GameTexture("trollboar", base, "tollboar/tollboar_base.png");
-		thyrah = new GameTexture("thyrah", base, "thyrah/thyrah_base.png");
+		goblin = new GameTexture("goblin", textureDir, "goblin/goblin_base.png");
+		player = new GameTexture("player", textureDir, "player/player_base.png");
+		whodundid = new GameTexture("whodundid", textureDir, "whodundid/whodundid_base.png");
+		whodundidsbrother = new GameTexture("who_brother", textureDir, "whodundidsbrother/whodundidsbrother_base.png");
+		trollboar = new GameTexture("trollboar", textureDir, "tollboar/tollboar_base.png");
+		thyrah = new GameTexture("thyrah", textureDir, "thyrah/thyrah_base.png");
 	}
 	
 	public static void registerTextures(TextureSystem systemIn) {

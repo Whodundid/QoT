@@ -4,6 +4,7 @@ import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import main.settings.QoTSettings;
 
 public class WindowTextures {
 	
@@ -50,49 +51,49 @@ public class WindowTextures {
 	public static final GameTexture terminal;
 	public static final GameTexture terminal_sel;
 	
-	private static final String base = "resources/textures/window/";
+	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\window\\";
 	
 	static {
-		checkmark 		= new GameTexture("checkmark", 		base, "checkmark.png");
-		close 			= new GameTexture("close", 			base, "close.png");
-		close_sel		= new GameTexture("close_sel", 		base, "close_sel.png");
-		max 			= new GameTexture("max", 			base, "max.png");
-		max_sel 		= new GameTexture("max_sel", 		base, "max_sel.png");
-		min 			= new GameTexture("min", 			base, "min.png");
-		min_sel 		= new GameTexture("min_sel", 		base, "min_sel.png");
-		minimize 		= new GameTexture("minimize", 		base, "minimize.png");
-		minimize_sel 	= new GameTexture("minimize_sel", 	base, "minimize_sel.png");
-		plus 			= new GameTexture("plus", 			base, "plus.png");
-		plus_sel 		= new GameTexture("plus_sel", 		base, "plus_sel.png");
-		refresh 		= new GameTexture("refresh", 		base, "refresh.png");
-		refresh_sel 	= new GameTexture("refresh_sel", 	base, "refresh_sel.png");
-		settings 		= new GameTexture("settings", 		base, "settings.png");
-		settings_sel 	= new GameTexture("settings_sel", 	base, "settings_sel.png");
-		back 			= new GameTexture("back", 			base, "back.png");
-		back_sel 		= new GameTexture("back_sel", 		base, "back_sel.png");
-		forward 		= new GameTexture("forward", 		base, "forward.png");
-		forward_sel 	= new GameTexture("forward_sel", 	base, "forward_sel.png");
-		file 			= new GameTexture("file", 			base, "file.png");
-		file_pic 		= new GameTexture("file_pic", 		base, "file_picture.png");
-		file_txt 		= new GameTexture("file_txt", 		base, "file_text.png");
-		file_folder 	= new GameTexture("file_folder",	base, "folder.png");
-		file_up 		= new GameTexture("file_up", 		base, "fileup.png");
-		file_up_sel 	= new GameTexture("file_up_sel",	base, "fileup_sel.png");
-		new_folder 		= new GameTexture("new_folder",		base, "new_folder.png");
-		info 			= new GameTexture("info",			base, "info.png");
-		info_sel 		= new GameTexture("info_sel", 		base, "info_sel.png");
-		move 			= new GameTexture("move",			base, "move.png");
-		move_sel 		= new GameTexture("move_sel", 		base, "move_sel.png");
-		pin 			= new GameTexture("pin",	 		base, "pin.png");
-		pin_open 		= new GameTexture("pin_open", 		base, "pin_open.png");
-		pin_sel 		= new GameTexture("pin_sel", 		base, "pin_sel.png");
-		pin_open_sel 	= new GameTexture("pin_open_sel",	base, "pin_open_sel.png");
-		problem 		= new GameTexture("problem", 		base, "problem.png");
-		problem_sel 	= new GameTexture("problem_sel",	base, "problem_sel.png");
-		problem_open 	= new GameTexture("problem_open",	base, "problem_open.png");
-		problem_open_sel= new GameTexture("problem_open_sel",base,"problem_open_sel.png");
-		terminal 		= new GameTexture("terminal", 		base, "terminal.png");
-		terminal_sel 	= new GameTexture("terminal_sel",	base, "terminal_sel.png");
+		checkmark 		= new GameTexture("checkmark", 		textureDir, "checkmark.png");
+		close 			= new GameTexture("close", 			textureDir, "close.png");
+		close_sel		= new GameTexture("close_sel", 		textureDir, "close_sel.png");
+		max 			= new GameTexture("max", 			textureDir, "max.png");
+		max_sel 		= new GameTexture("max_sel", 		textureDir, "max_sel.png");
+		min 			= new GameTexture("min", 			textureDir, "min.png");
+		min_sel 		= new GameTexture("min_sel", 		textureDir, "min_sel.png");
+		minimize 		= new GameTexture("minimize", 		textureDir, "minimize.png");
+		minimize_sel 	= new GameTexture("minimize_sel", 	textureDir, "minimize_sel.png");
+		plus 			= new GameTexture("plus", 			textureDir, "plus.png");
+		plus_sel 		= new GameTexture("plus_sel", 		textureDir, "plus_sel.png");
+		refresh 		= new GameTexture("refresh", 		textureDir, "refresh.png");
+		refresh_sel 	= new GameTexture("refresh_sel", 	textureDir, "refresh_sel.png");
+		settings 		= new GameTexture("settings", 		textureDir, "settings.png");
+		settings_sel 	= new GameTexture("settings_sel", 	textureDir, "settings_sel.png");
+		back 			= new GameTexture("back", 			textureDir, "back.png");
+		back_sel 		= new GameTexture("back_sel", 		textureDir, "back_sel.png");
+		forward 		= new GameTexture("forward", 		textureDir, "forward.png");
+		forward_sel 	= new GameTexture("forward_sel", 	textureDir, "forward_sel.png");
+		file 			= new GameTexture("file", 			textureDir, "file.png");
+		file_pic 		= new GameTexture("file_pic", 		textureDir, "file_picture.png");
+		file_txt 		= new GameTexture("file_txt", 		textureDir, "file_text.png");
+		file_folder 	= new GameTexture("file_folder",	textureDir, "folder_icon.png");
+		file_up 		= new GameTexture("file_up", 		textureDir, "fileup.png");
+		file_up_sel 	= new GameTexture("file_up_sel",	textureDir, "fileup_sel.png");
+		new_folder 		= new GameTexture("new_folder",		textureDir, "new_folder.png");
+		info 			= new GameTexture("info",			textureDir, "info.png");
+		info_sel 		= new GameTexture("info_sel", 		textureDir, "info_sel.png");
+		move 			= new GameTexture("move",			textureDir, "move.png");
+		move_sel 		= new GameTexture("move_sel", 		textureDir, "move_sel.png");
+		pin 			= new GameTexture("pin",	 		textureDir, "pin.png");
+		pin_open 		= new GameTexture("pin_open", 		textureDir, "pin_open.png");
+		pin_sel 		= new GameTexture("pin_sel", 		textureDir, "pin_sel.png");
+		pin_open_sel 	= new GameTexture("pin_open_sel",	textureDir, "pin_open_sel.png");
+		problem 		= new GameTexture("problem", 		textureDir, "problem.png");
+		problem_sel 	= new GameTexture("problem_sel",	textureDir, "problem_sel.png");
+		problem_open 	= new GameTexture("problem_open",	textureDir, "problem_open.png");
+		problem_open_sel= new GameTexture("problem_open_sel",textureDir,"problem_open_sel.png");
+		terminal 		= new GameTexture("terminal", 		textureDir, "terminal.png");
+		terminal_sel 	= new GameTexture("terminal_sel",	textureDir, "terminal_sel.png");
 	}
 	
 	public static void registerTextures(TextureSystem in) {

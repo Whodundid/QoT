@@ -10,7 +10,7 @@ import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import main.QoT;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 
 import java.io.File;
 
@@ -47,7 +47,7 @@ public class MapMenuScreen extends GameScreen {
 		loadCur = new WindowButton(this, nameField.endX + 10, nameLabel.endY + 19, nameField.height + 1, nameField.height + 1);
 		loadCur.setButtonTexture(EditorTextures.play);
 		
-		nameField.setText(QoT_Settings.lastEditorMap.get());
+		nameField.setText(QoTSettings.lastEditorMap.get());
 		
 		addObject(newMap, mapDir);
 		addObject(back);
@@ -84,8 +84,8 @@ public class MapMenuScreen extends GameScreen {
 	//--------------------------
 	
 	private void newMap() {
-		QoT_Settings.lastEditorMap.set(nameField.getText());
-		QoT.saveConfig();
+		QoTSettings.lastEditorMap.set(nameField.getText());
+		QoTSettings.saveConfig();
 		QoT.displayScreen(new NewMapCreatorScreen(), this);
 	}
 	
@@ -94,10 +94,10 @@ public class MapMenuScreen extends GameScreen {
 			String lastMap = nameField.getText();
 			lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
 			
-			QoT_Settings.lastEditorMap.set(lastMap);
-			QoT.saveConfig();
+			QoTSettings.lastEditorMap.set(lastMap);
+			QoTSettings.saveConfig();
 			
-			File f = new File(QoT_Settings.getEditorWorldsDir(), lastMap);
+			File f = new File(QoTSettings.getEditorWorldsDir(), lastMap);
 			if (f.exists()) {
 				QoT.displayScreen(new MapEditorScreen(f), this);
 			}
@@ -108,7 +108,7 @@ public class MapMenuScreen extends GameScreen {
 	}
 	
 	private void openMapChooser() {
-		explorer = new FileExplorerWindow(this, QoT_Settings.getEditorWorldsDir(), true);
+		explorer = new FileExplorerWindow(this, QoTSettings.getEditorWorldsDir(), true);
 		explorer.setTitle("Map Selection");
 		setDefaultFocusObject(null);
 		displayWindow(explorer, ObjectPosition.SCREEN_CENTER);
@@ -120,8 +120,8 @@ public class MapMenuScreen extends GameScreen {
 		File f = explorer.getSelectedFile();
 		
 		if (f != null && f.exists() && f.getName().endsWith(".twld")) {
-			QoT_Settings.lastEditorMap.set(f.getName());
-			QoT.saveConfig();
+			QoTSettings.lastEditorMap.set(f.getName());
+			QoTSettings.saveConfig();
 			explorer.close();
 			QoT.displayScreen(new MapEditorScreen(f), this);
 		}

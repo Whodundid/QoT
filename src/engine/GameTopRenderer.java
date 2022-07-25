@@ -13,7 +13,7 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import main.QoT;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 
 /** The renderer that is overlaid onto every other one. (Need a better name). */
 public class GameTopRenderer<E> extends TopWindowParent<E> {
@@ -100,7 +100,7 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 		}
 		
 		//draw game fps
-		if (QoT_Settings.drawFPS.get()) {
+		if (QoTSettings.drawFPS.get()) {
 			String s = "FPS: " + QoT.getFPS();
 			int s_width = FontRenderer.getStringWidth(s);
 			drawString(s, QoT.getWidth() - 10 - s_width, 10);
@@ -143,7 +143,7 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 		}
 		//display framerate
 		else if (action == 1 && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
-			QoT_Settings.drawFPS.set(!QoT_Settings.drawFPS.get());
+			QoTSettings.drawFPS.set(!QoTSettings.drawFPS.get());
 		}
 		else if (hasFocus) {
 			super.handleKeyboardInput(action, typedChar, keyCode);

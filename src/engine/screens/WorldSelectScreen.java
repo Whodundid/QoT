@@ -12,7 +12,7 @@ import eutil.colors.EColors;
 import eutil.math.NumberUtil;
 import game.entities.Player;
 import main.QoT;
-import main.settings.QoT_Settings;
+import main.settings.QoTSettings;
 import world.GameWorld;
 
 public class WorldSelectScreen extends GameScreen {
@@ -40,8 +40,8 @@ public class WorldSelectScreen extends GameScreen {
 		
 		defaultWorld = new WindowButton(this, bw, midY - 200, w, 45, "Default Map");
 		loadWorld = new WindowButton(this, bw, defaultWorld.endY + 5, w, 45, "Load World");
-		lastEditor = new WindowButton(this, bw, loadWorld.endY + 100, w, 45, QoT_Settings.lastEditorMap.get());
-		lastWorld = new WindowButton(this, bw, lastEditor.endY + 40, w, 45, QoT_Settings.lastMap.get());
+		lastEditor = new WindowButton(this, bw, loadWorld.endY + 100, w, 45, QoTSettings.lastEditorMap.get());
+		lastWorld = new WindowButton(this, bw, lastEditor.endY + 40, w, 45, QoTSettings.lastMap.get());
 		
 		back = new WindowButton(this, 5, endY - 45, 150, 40, "Back");
 		
@@ -84,7 +84,7 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	private void loadDefault() {
-		File f = new File(QoT_Settings.getEditorWorldsDir(), "test.twld");
+		File f = new File(QoTSettings.getEditorWorldsDir(), "test.twld");
 		if (f.exists()) {
 			Player p = QoT.setPlayer(new Player("Test"));
 			GameWorld w = QoT.loadWorld(new GameWorld(f));
@@ -95,14 +95,14 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	private void openMapChooser() {
-		explorer = new FileExplorerWindow(this, QoT_Settings.getEditorWorldsDir(), true);
+		explorer = new FileExplorerWindow(this, QoTSettings.getEditorWorldsDir(), true);
 		explorer.setTitle("Map Selection");
 		setDefaultFocusObject(null);
 		displayWindow(explorer, ObjectPosition.SCREEN_CENTER);
 	}
 	
 	private void loadLastEditor() {
-		String last = QoT_Settings.lastEditorMap.get();
+		String last = QoTSettings.lastEditorMap.get();
 		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
 		else {
 			Player p = QoT.setPlayer(new Player("Test"));
@@ -114,7 +114,7 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	private void loadLastWorld() {
-		String last = QoT_Settings.lastMap.get();
+		String last = QoTSettings.lastMap.get();
 		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
 		else {
 			Player p = QoT.setPlayer(new Player("Test"));
@@ -132,8 +132,8 @@ public class WorldSelectScreen extends GameScreen {
 		
 		if (f != null && f.exists() && f.getName().endsWith(".twld")) {
 			explorer.close();
-			QoT_Settings.lastMap.set(f.getName());
-			QoT.saveConfig();
+			QoTSettings.lastMap.set(f.getName());
+			QoTSettings.saveConfig();
 			
 			Player p = QoT.setPlayer(new Player("Test"));
 			GameWorld w = QoT.loadWorld(new GameWorld(f));
