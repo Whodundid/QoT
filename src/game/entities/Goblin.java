@@ -30,8 +30,6 @@ public class Goblin extends Enemy {
 			Direction dirToPlayer = world.getDirectionTo(this, QoT.thePlayer);
 			//headText = (int) distToPlayer + " : " + dirToPlayer;
 			
-			System.out.println(this.health);
-			
 			EDimension testDim;
 			EDimension pDims;
 			{
