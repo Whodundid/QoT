@@ -1,1 +1,9 @@
-for (i to 10) writeln(i)
+int x = 10
+int y = 0
+
+while (y < x) {
+  y++
+  writeln("YOOOOOOO {y}")
+}
+
+writeln("END")

@@ -13,7 +13,7 @@ public class Goblin extends Enemy {
 		super("Goblin");
 		
 		setMaxHealth(20);
-		setHealth(20);
+		//setHealth(20);
 		
 		init(posX, posY, 64, 64);
 		sprite = EntityTextures.goblin;
@@ -30,9 +30,10 @@ public class Goblin extends Enemy {
 			Direction dirToPlayer = world.getDirectionTo(this, QoT.thePlayer);
 			//headText = (int) distToPlayer + " : " + dirToPlayer;
 			
+			System.out.println(this.health);
+			
 			EDimension testDim;
 			EDimension pDims;
-			
 			{
 				double cSX = startX + collisionBox.startX;
 				double cSY = startY + collisionBox.startY;
