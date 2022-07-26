@@ -8,9 +8,9 @@ public class Sand extends WorldTile {
 	
 	public Sand() {
 		super(TileIDs.SAND);
-		setWall(true);
 		setTexture(WorldTextures.sand);
-		wallHeight = 0.1;
+		setWall(true);
+		wallHeight = 0.025;
 	}
 	
 }
