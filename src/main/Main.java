@@ -16,7 +16,7 @@ public class Main {
 	/**
 	 * Runs the game's launcher instead of directly out of a dev environment.
 	 */
-	public static final boolean RUN_LAUNCHER = false;
+	public static final boolean RUN_LAUNCHER = true;
 	
 	/** Uses the internal jar resources instead of the install dir's. */
 	public static final boolean USE_INTERNAL_RESOURCES = true;

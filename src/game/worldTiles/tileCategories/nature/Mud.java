@@ -11,7 +11,7 @@ public class Mud extends WorldTile {
 		super(TileIDs.MUD);
 		setTexture(WorldTextures.mud);
 		setWall(true);
-		wallHeight = -0.25;
+		wallHeight = -0.025;
 	}
 	
 	@Override

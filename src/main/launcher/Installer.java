@@ -14,6 +14,7 @@ import java.util.jar.JarFile;
 import engine.util.ESystemInfo;
 import eutil.sys.OSType;
 import main.Main;
+import main.launcher.Launcher.LauncherLogLevel;
 
 public class Installer {
 
@@ -67,7 +68,7 @@ public class Installer {
 			}
 			catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
-				Launcher.log(e);
+				Launcher.log(LauncherLogLevel.ERROR, e);
 			}
 		}
 		
@@ -170,7 +171,7 @@ public class Installer {
 		}
 		
 		//don't allow a non-empty directory to be installed to
-		if (!dir.getName().equals("QoT") && dir.isDirectory() && dir.list().length > 0) {
+		if (!dir.isDirectory()) {
 			return InstallerStatus.FAILED;
 		}
 		
@@ -264,7 +265,7 @@ public class Installer {
 				}
 				catch (Exception ee) {
 					e.printStackTrace();
-					Launcher.log(ee);
+					Launcher.logError(ee);
 				}
 			}
 			
@@ -328,7 +329,7 @@ public class Installer {
 					}
 					catch (Exception foserr) {
 						foserr.printStackTrace();
-						Launcher.log(foserr);
+						Launcher.logError(foserr);
 						throw foserr;
 					}
 				}
@@ -423,7 +424,7 @@ public class Installer {
 				}
 				catch (Exception ee) {
 					ee.printStackTrace();
-					Launcher.log(ee);
+					Launcher.logError(ee);
 				}
 			}
 			

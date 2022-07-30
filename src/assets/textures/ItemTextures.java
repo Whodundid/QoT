@@ -19,7 +19,7 @@ public class ItemTextures {
 	static {
 		dragon_shield = new GameTexture("Dragon Shield", textureDir, "dragon_shield.png");
 		iron_sword = new GameTexture("Iron Sword", textureDir, "iron_sword.png");
-		wooden_stick = new GameTexture("Wooden Stick", textureDir, "wooden_stick.jpg");
+		wooden_stick = new GameTexture("Wooden Stick", textureDir, "wooden_stick.png");
 	}
 	
 	public static void registerTextures(TextureSystem systemIn) {
