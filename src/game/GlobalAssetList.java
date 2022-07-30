@@ -8,6 +8,7 @@ import game.entities.Player;
 import game.entities.Thyrah;
 import game.entities.TrollBoar;
 import game.entities.Whodundid;
+import game.shops.WhodundidsBrother;
 
 public class GlobalAssetList {
 
@@ -21,6 +22,7 @@ public class GlobalAssetList {
 		assets.add(new Whodundid());
 		assets.add(new PineTree());
 		assets.add(new PlayerSpawnPosition());
+		assets.add(new WhodundidsBrother());
 	}
 	
 	public static EArrayList<GameObject> getAssets() {

@@ -1,6 +1,7 @@
 package engine.screens;
 
 import assets.sounds.Songs;
+import assets.textures.ItemTextures;
 import engine.GameTopRenderer;
 import engine.input.Keyboard;
 import engine.screens.character.CharacterScreen;
@@ -76,6 +77,19 @@ public class GamePlayScreen extends GameScreen {
 		drawRect(0, 0, QoT.getWidth(), 39, EColors.lgray);
 		drawRect(0, 39, QoT.getWidth(), 41, EColors.gray);
 		//mouse pos
+		
+		health.setBarValue(QoT.thePlayer.getHealth());
+		if (QoT.thePlayer != null && QoT.thePlayer.isDead()) {
+			QoT.displayScreen(new DeathScreen());
+		}
+		
+		if (attacking) {
+			drawTexture(ItemTextures.iron_sword, midX - 32, midY - 32, 64, 64);
+			
+			if ((System.currentTimeMillis() - attackDrawStart) >= 100) {
+				attacking = false;
+			}
+		}
 	}
 	
 	@Override

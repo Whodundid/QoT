@@ -11,6 +11,8 @@ public class Water extends WorldTile {
 		super(TileIDs.WATER);
 		setBlocksMovement(true);
 		setTexture(WorldTextures.water);
+		setWall(true);
+		wallHeight = -0.05;
 	}
 	
 	@Override
