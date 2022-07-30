@@ -12,6 +12,10 @@ public class Whodundid extends Enemy {
 		sprite = EntityTextures.whodundid;
 		lastDir = RandomUtil.randomDir();
 		
+		setBaseMeleeDamage(3);
+		setMaxHealth(20);
+		setHealth(20);
+		
 		setCollisionBox(startX + 6, endY - height / 2, endX - 6, endY);
 		
 		randShort = 400l;

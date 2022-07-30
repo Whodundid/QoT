@@ -8,12 +8,16 @@ import main.QoT;
 
 public class Goblin extends Enemy {
 	
+	private boolean hit = false;
+	private long timeSinceLastHit;
+	
 	public Goblin() { this(0, 0); }
 	public Goblin(int posX, int posY) {
 		super("Goblin");
 		
-		setMaxHealth(20);
-		setHealth(20);
+		setBaseMeleeDamage(1);
+		setMaxHealth(10);
+		setHealth(10);
 		
 		init(posX, posY, 64, 64);
 		sprite = EntityTextures.goblin;
@@ -23,6 +27,18 @@ public class Goblin extends Enemy {
 	
 	@Override
 	public void onLivingUpdate() {
+		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
+			waitTime = RandomUtil.getRoll(randShort, randLong);
+			moveTime = RandomUtil.getRoll(randShort, randLong);
+			waitDelay = RandomUtil.getRoll(randShort, randLong);
+			lastMove = System.currentTimeMillis();
+			lastDir = RandomUtil.randomDir();
+		}
+		
+		if (System.currentTimeMillis() - lastMove >= moveTime) {
+			move(lastDir);
+		}
+		
 		double distToPlayer = world.getDistance(this, QoT.thePlayer);
 		
 		//check if distance to player is less than 200 pixels
@@ -52,11 +68,19 @@ public class Goblin extends Enemy {
 				pDims = new EDimension(cSX, cSY, cEX, cEY);
 			}
 			
-			headText = "" + testDim.contains(pDims);
+			headText = "" + getHealth();
 			if (testDim.contains(pDims)) {
-				//QoT.pause();
-				//QoT.pauseWorldRender();
-				//QoT.displayScreen(new CombatScreen(QoT.thePlayer, this), QoT.currentScreen);
+				if (hit) {
+					//System.out.println(System.currentTimeMillis() - timeSinceLastHit);
+					if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
+						hit = false;
+					}
+				}
+				else {
+					hit = true;
+					timeSinceLastHit = System.currentTimeMillis();
+					QoT.thePlayer.drainHealth(getBaseMeleeDamage());
+				}
 			}
 			move(dirToPlayer);
 		}

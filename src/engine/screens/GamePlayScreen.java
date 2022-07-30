@@ -11,6 +11,8 @@ import engine.windowLib.windowObjects.basicObjects.WindowRect;
 import engine.windowLib.windowObjects.basicObjects.WindowStatusBar;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+import game.entities.Entity;
 import game.entities.Player;
 import main.QoT;
 import world.GameWorld;
@@ -28,6 +30,9 @@ public class GamePlayScreen extends GameScreen {
 	
 	public int midDrawX, midDrawY; //the world coordinates at the center of the screen
 	public int worldXPos, worldYPos; //the world coordinates under the mouse
+	
+	private boolean attacking = false;
+	private long attackDrawStart;
 	
 	public GamePlayScreen() {
 		super();
@@ -90,6 +95,32 @@ public class GamePlayScreen extends GameScreen {
 		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
 		
 		super.keyPressed(typedChar, keyCode);
+	}
+	
+	@Override
+	public void mousePressed(int mXIn, int mYIn, int button) {
+		super.mousePressed(mXIn, mYIn, button);
+		
+		if (!attacking) {
+			attacking = true;
+			attackDrawStart = System.currentTimeMillis();
+			
+			EArrayList<Entity> inRange = new EArrayList();
+			for (var e : QoT.theWorld.getEntitiesInWorld()) {
+				if (e == player) continue;
+				if (QoT.theWorld.getDistance(e, player) < 50) inRange.add(e);
+			}
+			
+			for (var e : inRange) {
+				var damage = player.getBaseMeleeDamage();
+				e.drainHealth(damage);
+				//addObject(new DamageSplash(e.startX + e.midX, e.startY + e.midY, damage));
+				if (e.isDead()) {
+					QoT.thePlayer.getStats().addKilled(1);
+					QoT.theWorld.getEntitiesInWorld().remove(e);
+				}
+			}
+		}
 	}
 	
 	@Override

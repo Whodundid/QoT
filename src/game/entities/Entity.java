@@ -39,6 +39,8 @@ public abstract class Entity extends GameObject {
 	 *  on the character themselves. */
 	protected int gold;
 	
+	protected boolean invulnerable = false;
+	
 	protected int strengthLevel = 0;
 	protected int hitpointsLevel = 0;
 	protected int magicLevel = 0;
@@ -48,7 +50,6 @@ public abstract class Entity extends GameObject {
 	 * level. Additional modifiers are added in later.
 	 */
 	protected int baseMeleeDamage;
-
 	
 	//--------------
 	// Constructors
@@ -61,9 +62,9 @@ public abstract class Entity extends GameObject {
 		xpNeeded = EntityLevel.getXPNeededForNextLevel(level + 1);
 	}
 	
-	//-----------------
-	// Backend Methods
-	//-----------------
+	//------------------
+	// Back-end Methods
+	//------------------
 	
 	public void init(int posX, int posY, int widthIn, int heightIn) {
 		startX = posX;
@@ -88,7 +89,10 @@ public abstract class Entity extends GameObject {
 	//---------
 	
 	/** Reduces health by amount. If result is less than or equal to 0, the entity dies. */
-	public void drainHealth(int amount) { health = NumberUtil.clamp(health - amount, 0, health); if (health <= 0) { kill(); } }
+	public void drainHealth(int amount) {
+		health = NumberUtil.clamp(health - amount, 0, health);
+	}
+	
 	/** Reduces mana by amount. */
 	public void drainMana(int amount) { mana = NumberUtil.clamp(mana - amount, 0, Integer.MAX_VALUE); }
 	/** Heals the entity by the given amount. Note: does not exceed max health. */
@@ -96,7 +100,7 @@ public abstract class Entity extends GameObject {
 	/** Restores mana points by the given amount. Note: does not exceed max mana. */
 	public void replenishMana(int amount) { mana = NumberUtil.clamp(mana + amount, Integer.MIN_VALUE, maxMana); }
 	/** Completely restores all hitpoints back to max health. Note: if max health = 0, the entity will still be dead! */
-	public void restoreHealth() { health = maxHealth; }
+	public void fullHeal() { health = maxHealth; }
 	/** Completely restores all mana points back to max mana. */
 	public void restoreMana() { mana = maxMana; }
 	/** Reduces health to 0 effectively killing the entity. */

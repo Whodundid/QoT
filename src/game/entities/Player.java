@@ -18,6 +18,7 @@ public class Player extends Entity {
 		
 		setMaxHealth(20);
 		setHealth(20);
+		setBaseMeleeDamage(5);
 		
 		setCollisionBox(startX + 22, endY - 10, endX - 22, endY);
 		sprite = EntityTextures.player;

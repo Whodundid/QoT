@@ -7,10 +7,11 @@ public class Thyrah extends Enemy {
 	
 	public Thyrah() { this(0, 0); }
 	public Thyrah(int posX, int posY) {
-		super("Thyra, the dragon");
+		super("Thyrah, the dragon");
 		init(posX, posY, 128, 128);
 		sprite = EntityTextures.thyrah;
 		
+		setBaseMeleeDamage(10);
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 		
 		randShort = 200l;
