@@ -152,6 +152,12 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness) {
 		double wh = h * wallHeight; //wh == 'wallHeight'
 		
+		WorldTile tb = null; // tb == 'tileBelow'
+		WorldTile ta = null; // ta == 'tileAbove'
+		
+		if ((worldY + 1) < world.getHeight()) tb = world.getWorldData()[worldX][worldY + 1];
+		if ((worldY - 1) >= 0) ta = world.getWorldData()[worldX][worldY - 1];
+		
 		if (isWall) {
 			//determine tile brightness
 			int tileBrightness = brightness;
@@ -159,43 +165,72 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 			
 			if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
 			
-			//draw main texture slightly above main location
-			drawTexture(tex, x, y - wh, w, h, false, tileBrightness);
+
 			
 			//check if the tile directly above is a wall
 			//if so - don't draw wall side
-			WorldTile tb = null; // tb == 'tileBelow'
-			if ((worldY + 1) < world.getHeight()) tb = world.getWorldData()[worldX][worldY + 1];
-			if ((tb == null ||
-				!tb.hasTexture() ||
-				 tb.getWallHeight() < wh) ||
-				!tb.isWall())
-			{
-				double yPos;
+			if (wh >= 0) {
+				//draw main texture slightly above main location
+				drawTexture(tex, x, y - wh, w, h, false, tileBrightness);
 				
-				if (wh > 0) {
-					yPos = y + h - wh;
-					wallBrightness = EColors.changeBrightness(brightness, 125);
-				}
-				else {
-					yPos = y - wh;
-					wallBrightness = brightness;
-				}
+				GameTexture side = (sideTex != null) ? sideTex : tex;
+				
+				double yPos = y + h - wh;
+				wallBrightness = EColors.changeBrightness(brightness, 145);
 				
 				//draw wall side slightly below
-				GameTexture side = (sideTex != null) ? sideTex : tex;
 				drawTexture(side, x, yPos, w, wh, false, wallBrightness);
+				
+				//draw bottom of map edge or if right above a tile with no texture/void
+				if ((tb == null || !tb.hasTexture())) {
+					drawTexture(tex, x, y + h, w, h / 2, false, EColors.changeBrightness(brightness, 145));
+				}
+			}
+			else {
+				wh = -wh;
+				double yPos = y + wh;
+				
+				//draw main texture slightly below main location
+				drawTexture(tex, x, yPos, w, h, false, tileBrightness);
+				
+				//I don't want to draw if ta is null
+				//but
+				//I also don't want to draw if ta is a wall and has the same wall height as this one
+				
+				if (ta != null && (!ta.isWall || ((h * ta.wallHeight) != -wh))) {
+					GameTexture side = (sideTex != null) ? sideTex : tex;
+					
+					wallBrightness = EColors.changeBrightness(brightness, 145);
+					side = (ta.sideTex != null) ? ta.sideTex : ta.tex;
+					
+					double sideWallY = yPos - wh;
+					
+					//THIS IS NOT QUITE RIGHT -- the yPos needs to take into account whether or
+					//not the tile above is a wall and if so what height the wall is at and then
+					//size the wh accordingly to fit the area in between the ta's end wh and this
+					//tiles yPos
+					
+					//if (ta.isWall) {
+					//	if (ta.wallHeight < 0)
+					//}
+					
+					//draw wall side slightly above
+					drawTexture(side, x, sideWallY, w, wh, false, wallBrightness);
+				}
+				
+				//draw bottom of map edge or if right above a tile with no texture/void
+				if (tb == null || !tb.hasTexture()) {
+					drawTexture(tex, x, yPos + h, w, (h / 2) - wh, false, EColors.changeBrightness(brightness, 145));
+				}
 			}
 		}
 		else {
 			drawTexture(tex, x, y, w, h, false, brightness);
-		}
-		
-		//draw bottom of map edge or if right above a tile with no texture/void
-		WorldTile tileBelow = null;
-		if ((worldY + 1) < world.getHeight()) tileBelow = world.getWorldData()[worldX][worldY + 1];
-		if ((tileBelow == null || !tileBelow.hasTexture())) {
-			drawTexture(tex, x, y + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
+			
+			//draw bottom of map edge or if right above a tile with no texture/void
+			if ((tb == null || !tb.hasTexture())) {
+				drawTexture(tex, x, y + h, w, h / 2, false, EColors.changeBrightness(brightness, 145));
+			}
 		}
 	}
 	

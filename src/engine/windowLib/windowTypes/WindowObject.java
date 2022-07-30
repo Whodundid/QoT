@@ -152,7 +152,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 				
 				//draw all child objects
 				for (IWindowObject o : windowObjects) {
-					//only draw if the object is actually visibile
+					//only draw if the object is actually visible
 					if (!o.willBeDrawn() || o.isHidden()) continue;
 					GLSettings.fullBright();
 					
@@ -161,7 +161,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 					//actually draw the object
 					o.drawObject(mX, mY);
 					
-					//draw greyed out overlay over everything if a focus lock object is present
+					//draw grayed out overlay over everything if a focus lock object is present
 					IWindowObject f = getTopParent().getFocusLockObject();
 					if (f != null && o instanceof WindowHeader && (!o.equals(f) && !f.getAllChildren().contains(o))) {
 						if (o.isVisible()) {

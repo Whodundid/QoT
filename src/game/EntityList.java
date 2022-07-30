@@ -8,6 +8,7 @@ import game.entities.Player;
 import game.entities.Thyrah;
 import game.entities.TrollBoar;
 import game.entities.Whodundid;
+import game.shops.WhodundidsBrother;
 
 public enum EntityList {
 	PLAYER(0),
@@ -16,6 +17,7 @@ public enum EntityList {
 	TROLLBOAR(3),
 	THYRAH(4),
 	PINE_TREE(5),
+	WHODUNDIDS_BROTHER(6),
 	;
 	
 	public final int ID;
@@ -41,6 +43,7 @@ public enum EntityList {
 		case TROLLBOAR: return new TrollBoar();
 		case THYRAH: return new Thyrah();
 		case PINE_TREE: return new PineTree();
+		case WHODUNDIDS_BROTHER: return new WhodundidsBrother();
 		default: return null;
 		}
 	}

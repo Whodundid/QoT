@@ -1,6 +1,7 @@
 package engine.screens;
 
 import assets.sounds.Songs;
+import assets.textures.ItemTextures;
 import engine.GameTopRenderer;
 import engine.input.Keyboard;
 import engine.screens.character.CharacterScreen;
@@ -11,6 +12,8 @@ import engine.windowLib.windowObjects.basicObjects.WindowRect;
 import engine.windowLib.windowObjects.basicObjects.WindowStatusBar;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+import game.entities.Entity;
 import game.entities.Player;
 import main.QoT;
 import world.GameWorld;
@@ -28,6 +31,9 @@ public class GamePlayScreen extends GameScreen {
 	
 	public int midDrawX, midDrawY; //the world coordinates at the center of the screen
 	public int worldXPos, worldYPos; //the world coordinates under the mouse
+	
+	private boolean attacking = false;
+	private long attackDrawStart;
 	
 	public GamePlayScreen() {
 		super();
@@ -71,6 +77,19 @@ public class GamePlayScreen extends GameScreen {
 		drawRect(0, 0, QoT.getWidth(), 39, EColors.lgray);
 		drawRect(0, 39, QoT.getWidth(), 41, EColors.gray);
 		//mouse pos
+		
+		health.setBarValue(QoT.thePlayer.getHealth());
+		if (QoT.thePlayer != null && QoT.thePlayer.isDead()) {
+			QoT.displayScreen(new DeathScreen());
+		}
+		
+		if (attacking) {
+			drawTexture(ItemTextures.iron_sword, midX - 32, midY - 32, 64, 64);
+			
+			if ((System.currentTimeMillis() - attackDrawStart) >= 100) {
+				attacking = false;
+			}
+		}
 	}
 	
 	@Override
@@ -90,6 +109,31 @@ public class GamePlayScreen extends GameScreen {
 		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
 		
 		super.keyPressed(typedChar, keyCode);
+	}
+	
+	@Override
+	public void mousePressed(int mXIn, int mYIn, int button) {
+		super.mousePressed(mXIn, mYIn, button);
+		
+		if (!attacking) {
+			attacking = true;
+			attackDrawStart = System.currentTimeMillis();
+			
+			EArrayList<Entity> inRange = new EArrayList();
+			for (var e : QoT.theWorld.getEntitiesInWorld()) {
+				if (QoT.theWorld.getDistance(e, player) < 50) inRange.add(e);
+			}
+			
+			for (var e : inRange) {
+				var damage = player.getBaseMeleeDamage();
+				e.drainHealth(damage);
+				//addObject(new DamageSplash(e.startX + e.midX, e.startY + e.midY, damage));
+				if (e.isDead()) {
+					QoT.thePlayer.getStats().addKilled(1);
+					QoT.theWorld.getEntitiesInWorld().remove(e);
+				}
+			}
+		}
 	}
 	
 	@Override

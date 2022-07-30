@@ -20,6 +20,8 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -45,11 +47,17 @@ public class Launcher extends JFrame {
 	// Static Runner
 	//---------------
 	
+	private static final Logger logger = Logger.getLogger("Launcher");
+	
 	private static final String INSTALL_PATH_SETTING = "INSTALL_PATH: ";
+	private static final String LAUNCHER_LOG_LEVEL = "LAUNCHER_LOG_LEVEL [all, only_errors]: ";
+	private static final String RUN_LAUNCHER_SETTING = "RUN_LAUNCHER: ";
 	
 	private static Launcher launcher;
 	private static File launcherDir;
 	private static File launcherSettingsFile;
+	private static boolean runLauncher = true;
+	private static LogOutputLevel logLevel = LogOutputLevel.ONLY_ERRORS;
 	
 	public static Launcher getLauncher() { return launcher; }
 	public static File getLauncherDir() { return launcherDir; }
@@ -59,7 +67,16 @@ public class Launcher extends JFrame {
 		//attempt to create launcher directory
 		if (!setupLauncherDir()) return;
 		
-		launcher = new Launcher();
+		if (launcherSettingsFile != null && launcherSettingsFile.exists()) {
+			//assume that the launcher should be run
+			runLauncher = getConfigSetting(RUN_LAUNCHER_SETTING, Boolean.class, true);
+			//assume that the log level will only log errors
+			logLevel = getConfigSetting(LAUNCHER_LOG_LEVEL, LogOutputLevel.class, LogOutputLevel.ONLY_ERRORS);
+		}
+		
+		if (runLauncher) {
+			launcher = new Launcher();
+		}
 	}
 	
 	/**
@@ -114,21 +131,21 @@ public class Launcher extends JFrame {
 		launcherSettingsFile = new File(launcherDir, "settings");
 		
 		try (var writer = new FileWriter(launcherSettingsFile, Charset.forName("UTF-8"))) {
-			String version = "QoT Version: " + QoT.version;
-			writer.write(StringUtil.repeatString("-", version.length()) + "\n");
+			String version = "# QoT Version: " + QoT.version;
+			String dashes = StringUtil.repeatString("-", version.length());
+			writer.write("#" + dashes + "\n");
 			writer.write(version);
-			writer.write("\n" + StringUtil.repeatString("-", version.length()) + "\n");
+			writer.write("\n#" + dashes + "\n");
 			
-			if (settings != null) {
-				Launcher.log("Updating from launcher settings: " + settings);
-			}
-			
+			if (settings != null) Launcher.log("Updating from launcher settings: " + settings);
 			File installDir = (settings != null) ? settings.INSTALL_DIR : null;
 			String dirPath = (installDir != null) ? installDir.getAbsolutePath() : "";
-			
 			Launcher.log("Writing install path: " + dirPath);
 			
+			writer.write("\n# Specifies the directory QoT is/will be installed to");
 			writer.write("\n" + INSTALL_PATH_SETTING + dirPath);
+			writer.write("\n\n# Sets the level for logging -- if 'ONLY_ERRORS' then no debug outputs will be logged");
+			writer.write("\n" + LAUNCHER_LOG_LEVEL + logLevel);
 		}
 		catch (Exception e) {
 			throw e;
@@ -156,10 +173,54 @@ public class Launcher extends JFrame {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Launcher.log(e);
+			Launcher.logError(e);
 		}
 		
 		return dir;
+	}
+	
+	private static <E> E getConfigSetting(String valueName, Class<E> asType, E defaultValue) {
+		if (launcherSettingsFile == null) return defaultValue;
+		if (valueName == null) return null;
+		
+		try (var br = new BufferedReader(new InputStreamReader(new FileInputStream(launcherSettingsFile)))) {
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				//ignore comments
+				if (line.startsWith("#")) continue;
+				//check for matching line
+				if (line.startsWith(valueName)) {
+					String value = line.substring(valueName.length());
+					if (value.isBlank() || value.isEmpty()) return defaultValue;
+					E r = null;
+					
+					try {
+						if (asType.isAssignableFrom(Boolean.class)) r = asType.cast(Boolean.parseBoolean(value));
+						if (asType.isAssignableFrom(Byte.class)) r = asType.cast(Byte.parseByte(value));
+						if (asType.isAssignableFrom(Short.class)) r = asType.cast(Short.parseShort(value));
+						if (asType.isAssignableFrom(Integer.class)) r = asType.cast(Integer.parseInt(value));
+						if (asType.isAssignableFrom(Long.class)) r = asType.cast(Long.parseLong(value));
+						if (asType.isAssignableFrom(Float.class)) r = asType.cast(Float.parseFloat(value));
+						if (asType.isAssignableFrom(Double.class)) r = asType.cast(Double.parseDouble(value));
+						if (asType.isAssignableFrom(String.class)) r = asType.cast(value);
+						if (asType.isEnum()) r = (E) Enum.valueOf((Class) asType, value.toUpperCase());
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+						Launcher.logError(e);
+						return defaultValue;
+					}
+					
+					if (r != null) return r;
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			Launcher.logError(e);
+		}
+		
+		return defaultValue;
 	}
 	
 	//--------
@@ -240,7 +301,7 @@ public class Launcher extends JFrame {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Launcher.log(e);
+			Launcher.logError(e);
 		}
 		
 		//show
@@ -316,12 +377,12 @@ public class Launcher extends JFrame {
 				File file = fileChooser.getSelectedFile();
 				if (file != null) {
 					//append 'QoT' to the end of the path if it doesn't already have it
-					System.out.println("FILE NAME: " + file.getName());
+					//System.out.println("FILE NAME: " + file.getName());
 					//if (!file.getName().endsWith("QoT")) file = new File(file, "QoT");
 					
 					//set path as install dir
-					launcherSettings.INSTALL_DIR = file;
 					Launcher.log("Changing install path to: '" + file + "'");
+					launcherSettings.INSTALL_DIR = file;
 					checkInstalled();
 					installDirOutputLabel.setText(file.getAbsolutePath());
 					
@@ -331,7 +392,7 @@ public class Launcher extends JFrame {
 					}
 					catch (Exception ee) {
 						ee.printStackTrace();
-						Launcher.log(ee);
+						Launcher.logError(ee);
 					}
 				}
 			}
@@ -538,7 +599,7 @@ public class Launcher extends JFrame {
 	 */
 	public static void closeLauncher() {
 		if (launcher == null) return;
-		log("Closing launcher! Have a nice day :)");
+		Launcher.log("Closing launcher! Have a nice day :)");
 		launcher.dispatchEvent(new WindowEvent(launcher, WindowEvent.WINDOW_CLOSING));
 		launcher.dispose();
 		launcher = null;
@@ -549,6 +610,8 @@ public class Launcher extends JFrame {
 	//----------------------------------------------------------------
 	
 	private static File logFile = null;
+	static enum LauncherLogLevel { DEBUG, ERROR; }
+	private static enum LogOutputLevel { ALL, ONLY_ERRORS; }
 	
 	private static File createLogFile() {
 		if (logFile != null) return logFile;
@@ -556,12 +619,23 @@ public class Launcher extends JFrame {
 															 "_" + EDateTime.getTime() + ".log");
 	}
 	
-	public static void log(Object err) {
+	public static void log(Object obj) { log(LauncherLogLevel.DEBUG, obj); }
+	public static void logError(Object obj) { log(LauncherLogLevel.ERROR, obj); }
+	public static void logError(Exception e) { log(LauncherLogLevel.ERROR, e); }
+	
+	public static void log(LauncherLogLevel level, Object obj) {
+		//check if logging to the log file
+		if (level == LauncherLogLevel.DEBUG &&
+			logLevel == LogOutputLevel.ONLY_ERRORS) return;
+		
+		logger.log(Level.SEVERE, "[LAUNCHER]: " + String.valueOf(obj));
+		
+		//prepare to log to file
 		File log = createLogFile();
 		try (var fos = new FileOutputStream(log, true);
 			 var str = new PrintStream(fos))
 		{
-			str.append(String.valueOf(err));
+			str.append(String.valueOf(obj));
 			str.append('\n');
 		}
 		catch (Exception e1) {
@@ -569,7 +643,14 @@ public class Launcher extends JFrame {
 		}
 	}
 	
-	public static void log(Exception e) {
+	public static void log(LauncherLogLevel level, Exception e) {
+		//check if logging to the log file
+		if (level == LauncherLogLevel.DEBUG &&
+			logLevel == LogOutputLevel.ONLY_ERRORS) return;
+		
+		logger.log(Level.SEVERE, "[LAUNCHER]: " + String.valueOf(e));
+		
+		//prepare to log to file
 		File log = createLogFile();
 		try (var fos = new FileOutputStream(log, true);
 		     var str = new PrintStream(fos))
@@ -582,20 +663,20 @@ public class Launcher extends JFrame {
 		}
 	}
 	
-	public static void logWithDialogBox(Object e, String boxTitle, Object... args) {
+	public static void logWithDialogBox(LauncherLogLevel level, Object e, String boxTitle, Object... args) {
 		String err = String.valueOf(e);
 		String additionalArgs = StringUtil.toString(args, "\n");
 		
 		JOptionPane.showMessageDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.INFORMATION_MESSAGE);
-		log(err);
+		log(level, err);
 	}
 	
-	public static void logWithDialogBox(Exception e, String message, String boxTitle, Object... args) {
+	public static void logWithDialogBox(LauncherLogLevel level, Exception e, String message, String boxTitle, Object... args) {
 		String err = String.valueOf(message);
 		String additionalArgs = StringUtil.toString(args);
 		
 		JOptionPane.showMessageDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.INFORMATION_MESSAGE);
-		log(e);
+		log(level, e);
 	}
 	
 	public static void logErrorWithDialogBox(Object e, String boxTitle, Object... args) {
@@ -603,7 +684,7 @@ public class Launcher extends JFrame {
 		String additionalArgs = StringUtil.toString(args, "\n");
 		
 		JOptionPane.showMessageDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.ERROR_MESSAGE);
-		log(err);
+		logError(err);
 	}
 	
 	public static void logErrorWithDialogBox(Exception e, String message, String boxTitle, Object... args) {
@@ -611,7 +692,7 @@ public class Launcher extends JFrame {
 		String additionalArgs = StringUtil.toString(args);
 		
 		JOptionPane.showMessageDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.ERROR_MESSAGE);
-		log(e);
+		logError(e);
 	}
 	
 }
