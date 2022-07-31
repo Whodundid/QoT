@@ -1,6 +1,6 @@
 package engine.windowLib.windowObjects.utilityObjects;
 
-import engine.input.Mouse;
+import engine.inputHandlers.Mouse;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;

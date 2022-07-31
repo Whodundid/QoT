@@ -1,16 +1,16 @@
 package world.mapEditor;
 
-import engine.screens.screenUtil.GameScreen;
+import engine.screenEngine.GameScreen;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowCheckBox;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.worldTiles.WorldTile;
-import game.worldTiles.tileCategories.NatureTiles;
 import main.QoT;
 import world.GameWorld;
+import world.worldTiles.WorldTile;
+import world.worldTiles.categories.NatureTiles;
 
 public class NewMapCreatorScreen extends GameScreen {
 

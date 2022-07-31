@@ -1,7 +1,6 @@
 package engine.windowLib.bundledWindows.fileExplorer;
 
-import assets.textures.WindowTextures;
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import engine.windowLib.bundledWindows.TextEditorWindow;
 import engine.windowLib.bundledWindows.TextureDisplayer;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
@@ -17,6 +16,8 @@ import eutil.strings.StringUtil;
 import eutil.sys.FileOpener;
 
 import java.io.File;
+
+import assets.textures.WindowTextures;
 
 public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	

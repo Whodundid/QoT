@@ -1,7 +1,7 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.screens.screenUtil.GameScreen;
-import engine.screens.screenUtil.ScreenRepository;
+import engine.screenEngine.GameScreen;
+import engine.screenEngine.ScreenRepository;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.IListableCommand;
 import engine.terminal.terminalCommand.TerminalCommand;

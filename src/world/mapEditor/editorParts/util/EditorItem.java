@@ -2,7 +2,7 @@ package world.mapEditor.editorParts.util;
 
 import engine.renderEngine.textureSystem.GameTexture;
 import game.GameObject;
-import game.worldTiles.WorldTile;
+import world.worldTiles.WorldTile;
 
 /**
  * An item that can be placed and used in the map editor hotbar. Can be used to

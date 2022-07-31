@@ -1,9 +1,9 @@
 package engine.windowLib.windowTypes;
 
-import engine.GameTopRenderer;
-import engine.input.Mouse;
+import engine.inputHandlers.CursorHelper;
+import engine.inputHandlers.Mouse;
 import engine.renderEngine.GLSettings;
-import engine.util.CursorHelper;
+import engine.windowLib.GameTopRenderer;
 import engine.windowLib.StaticTopParent;
 import engine.windowLib.StaticWindowObject;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;

@@ -1,6 +1,6 @@
 package engine.windowLib;
 
-import engine.input.Mouse;
+import engine.inputHandlers.Mouse;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import engine.windowLib.windowTypes.interfaces.ITopParent;

@@ -1,7 +1,6 @@
 package engine.windowLib.bundledWindows;
 
-import assets.textures.WindowTextures;
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
@@ -19,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
+
+import assets.textures.WindowTextures;
 
 public class TextEditorWindow extends WindowParent {
 	

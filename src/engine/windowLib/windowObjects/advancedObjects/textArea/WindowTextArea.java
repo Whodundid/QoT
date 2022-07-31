@@ -1,6 +1,6 @@
 package engine.windowLib.windowObjects.advancedObjects.textArea;
 
-import engine.input.Mouse;
+import engine.inputHandlers.Mouse;
 import engine.renderEngine.GLSettings;
 import engine.windowLib.windowObjects.advancedObjects.WindowScrollList;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;

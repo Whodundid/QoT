@@ -1,7 +1,9 @@
 package game.items;
 
-import game.items.types.Healing_Lesser;
-import game.items.types.Sword_Wooden;
+import game.items.potions.Potion;
+import game.items.potions.healing.Healing_Lesser;
+import game.items.weapons.Weapon;
+import game.items.weapons.melee.swords.Sword_Wooden;
 
 public class Items {
 	

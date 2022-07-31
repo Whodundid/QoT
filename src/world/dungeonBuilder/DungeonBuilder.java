@@ -1,8 +1,8 @@
 package world.dungeonBuilder;
 
 import eutil.random.RandomUtil;
-import game.worldTiles.WorldTile;
 import world.GameWorld;
+import world.worldTiles.WorldTile;
 
 public class DungeonBuilder {
 	

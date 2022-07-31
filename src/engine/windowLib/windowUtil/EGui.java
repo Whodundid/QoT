@@ -1,9 +1,9 @@
 package engine.windowLib.windowUtil;
 
-import engine.WindowSize;
 import engine.renderEngine.GLObject;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.renderEngine.textureSystem.GameTexture;
+import engine.windowLib.WindowSize;
 import engine.windowLib.windowUtil.input.KeyboardInputAcceptor;
 import engine.windowLib.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;

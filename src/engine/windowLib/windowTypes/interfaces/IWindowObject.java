@@ -1,6 +1,6 @@
 package engine.windowLib.windowTypes.interfaces;
 
-import engine.input.Mouse;
+import engine.inputHandlers.Mouse;
 import engine.windowLib.StaticWindowObject;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import engine.windowLib.windowObjects.utilityObjects.FocusLockBorder;

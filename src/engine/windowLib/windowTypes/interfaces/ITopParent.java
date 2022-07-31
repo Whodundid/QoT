@@ -1,6 +1,6 @@
 package engine.windowLib.windowTypes.interfaces;
 
-import engine.input.Mouse;
+import engine.inputHandlers.Mouse;
 import engine.terminal.window.ETerminal;
 import engine.windowLib.StaticTopParent;
 import engine.windowLib.desktopOverlay.TaskBar;

@@ -1,8 +1,8 @@
 package engine.debug.debugCommands;
 
-import engine.screens.testingStuff.TestScreen;
 import engine.terminal.window.ETerminal;
-import game.EntityLevel;
+import game.entities.EntityLevel;
+import game.screens.testingStuff.TestScreen;
 import main.QoT;
 
 @SuppressWarnings("unused")

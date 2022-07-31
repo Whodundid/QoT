@@ -1,6 +1,6 @@
 package engine.windowLib.windowObjects.advancedObjects;
 
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import engine.renderEngine.GLSettings;
 import engine.windowLib.StaticWindowObject;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;

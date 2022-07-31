@@ -1,8 +1,8 @@
 package engine.windowLib;
 
 import assets.textures.CursorTextures;
-import engine.input.Mouse;
-import engine.util.CursorHelper;
+import engine.inputHandlers.CursorHelper;
+import engine.inputHandlers.Mouse;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.ITopParent;

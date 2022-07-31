@@ -1,7 +1,6 @@
 package world.mapEditor;
 
-import assets.textures.EditorTextures;
-import engine.screens.screenUtil.GameScreen;
+import engine.screenEngine.GameScreen;
 import engine.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;
@@ -13,6 +12,8 @@ import main.QoT;
 import main.settings.QoTSettings;
 
 import java.io.File;
+
+import assets.textures.EditorTextures;
 
 public class MapMenuScreen extends GameScreen {
 	

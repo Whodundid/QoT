@@ -1,6 +1,6 @@
 package engine.windowLib.bundledWindows;
 
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;

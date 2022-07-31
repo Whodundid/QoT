@@ -1,8 +1,7 @@
 package engine.windowLib.windowObjects.advancedObjects.header;
 
-import assets.textures.WindowTextures;
 import engine.debug.DebugFunctions;
-import engine.input.Mouse;
+import engine.inputHandlers.Mouse;
 import engine.windowLib.StaticWindowObject;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowObject;
@@ -22,6 +21,8 @@ import eutil.misc.ScreenLocation;
 import main.QoT;
 
 import java.util.Stack;
+
+import assets.textures.WindowTextures;
 
 //Author: Hunter Bragg
 

@@ -1,7 +1,7 @@
 package engine.windowLib.windowObjects.advancedObjects.textArea;
 
-import engine.input.Keyboard;
-import engine.input.Mouse;
+import engine.inputHandlers.Keyboard;
+import engine.inputHandlers.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;

@@ -1,6 +1,5 @@
 package engine.windowLib.bundledWindows;
 
-import assets.textures.WindowTextures;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.basicObjects.WindowImageBox;
@@ -14,6 +13,8 @@ import main.QoT;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import assets.textures.WindowTextures;
 
 public class TextureDisplayer extends WindowParent {
 	

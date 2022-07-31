@@ -1,6 +1,6 @@
 package engine.debug.debugCommands;
 
-import engine.screens.screenUtil.ScreenLevel;
+import engine.screenEngine.ScreenLevel;
 import engine.terminal.window.ETerminal;
 import engine.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
 import main.QoT;

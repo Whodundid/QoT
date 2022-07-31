@@ -1,7 +1,7 @@
 package game.shops;
 
 import game.items.Item;
-import game.items.types.Healing_Lesser;
+import game.items.potions.healing.Healing_Lesser;
 
 import java.util.ArrayList;
 

@@ -3,11 +3,11 @@ package world.mapEditor;
 import java.io.File;
 import java.util.Comparator;
 
-import engine.input.Keyboard;
-import engine.input.Mouse;
+import engine.inputHandlers.Keyboard;
+import engine.inputHandlers.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.renderEngine.textureSystem.GameTexture;
-import engine.screens.screenUtil.GameScreen;
+import engine.screenEngine.GameScreen;
 import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
@@ -15,7 +15,6 @@ import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.entities.Entity;
-import game.worldTiles.WorldTile;
 import main.QoT;
 import world.GameWorld;
 import world.Region;
@@ -26,6 +25,7 @@ import world.mapEditor.editorParts.topHeader.EditorScreenTopHeader;
 import world.mapEditor.editorParts.util.EditorItem;
 import world.mapEditor.editorTools.EditorToolType;
 import world.mapEditor.editorTools.ToolHandler;
+import world.worldTiles.WorldTile;
 
 public class MapEditorScreen extends GameScreen {
 

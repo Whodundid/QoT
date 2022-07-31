@@ -1,6 +1,6 @@
 package engine.windowLib.windowUtil.input;
 
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 
 public interface KeyboardInputAcceptor {
 	

@@ -1,6 +1,6 @@
 package engine.windowLib.windowObjects.actionObjects;
 
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.windowLib.windowTypes.ActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;

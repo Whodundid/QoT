@@ -2,8 +2,8 @@ package world;
 
 import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
-import game.EntityList;
 import game.entities.Entity;
+import game.entities.EntityList;
 import game.items.Item;
 
 public class EntitySpawn {

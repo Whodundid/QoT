@@ -1,8 +1,8 @@
 package engine.debug.debugCommands;
 
 import engine.terminal.terminalCommand.TerminalCommand;
+import engine.terminal.terminalUtil.ClassFinder;
 import engine.terminal.window.ETerminal;
-import engine.util.ClassFinder;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
 import eutil.reflection.EModifier;

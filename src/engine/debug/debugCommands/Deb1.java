@@ -1,9 +1,9 @@
 package engine.debug.debugCommands;
 
-import engine.screens.MainMenuScreen;
-import engine.screens.character.CharacterScreen;
 import engine.terminal.window.ETerminal;
-import game.entities.Player;
+import game.entities.player.Player;
+import game.screens.character.CharacterScreen;
+import game.screens.primary.MainMenuScreen;
 import main.QoT;
 
 @SuppressWarnings("unused")

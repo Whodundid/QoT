@@ -1,13 +1,13 @@
 package engine.debug.debugCommands;
 
-import engine.screens.combat.BattleScreen;
-import engine.screens.combat.Party;
 import engine.terminal.window.ETerminal;
-import game.entities.Goblin;
-import game.entities.Player;
-import game.entities.Thyrah;
-import game.entities.TrollBoar;
-import game.entities.Whodundid;
+import game.entities.enemies.Goblin;
+import game.entities.enemies.Thyrah;
+import game.entities.enemies.TrollBoar;
+import game.entities.enemies.Whodundid;
+import game.entities.player.Player;
+import game.screens.gameplay.combat.BattleScreen;
+import game.screens.gameplay.combat.Party;
 import main.QoT;
 
 @SuppressWarnings("unused")

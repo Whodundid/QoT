@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.jar.JarFile;
 
-import engine.util.ESystemInfo;
+import engine.terminal.terminalUtil.ESystemInfo;
 import eutil.sys.OSType;
 import main.Main;
 import main.launcher.Launcher.LauncherLogLevel;

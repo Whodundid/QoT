@@ -2,8 +2,8 @@ package engine.terminal.terminalCommand.commands.system;
 
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
+import engine.terminal.terminalUtil.ESystemInfo;
 import engine.terminal.window.ETerminal;
-import engine.util.ESystemInfo;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 

@@ -2,17 +2,17 @@ package world;
 
 import java.util.Comparator;
 
-import engine.GameTopRenderer;
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
+import engine.windowLib.GameTopRenderer;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import eutil.misc.Rotation;
 import game.entities.Entity;
-import game.entities.Player;
-import game.worldTiles.WorldTile;
+import game.entities.player.Player;
 import main.QoT;
+import world.worldTiles.WorldTile;
 
 //Author: Hunter Bragg
 
