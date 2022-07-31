@@ -132,7 +132,20 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	
 	@Override
 	public void close() {
-		if (getTopParent() == QoT.getTopRenderer()) TaskBar.windowClosed(this);
+		if (getTopParent() == QoT.getTopRenderer()) {
+			//update the taskbar
+			TaskBar.windowClosed(this);
+			
+			//get all active windows on the top renderer
+			var windows = QoT.getTopRenderer().getAllActiveWindows();
+			
+			//check if this is the only window on the top renderer
+			//if so, close the top renderer when closing the window
+			if (windows.size() == 1 && windows.getFirst() == this) {
+				QoT.getTopRenderer().setFocused(false);
+			}
+		}
+		
 		super.close();
 	}
 	
