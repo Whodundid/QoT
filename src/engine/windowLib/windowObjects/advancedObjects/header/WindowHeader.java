@@ -1,13 +1,12 @@
 package engine.windowLib.windowObjects.advancedObjects.header;
 
+import assets.textures.WindowTextures;
 import engine.debug.DebugFunctions;
 import engine.inputHandlers.Mouse;
-import engine.windowLib.StaticWindowObject;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
-import engine.windowLib.windowTypes.interfaces.ITopParent;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import engine.windowLib.windowUtil.EObjectGroup;
@@ -19,10 +18,6 @@ import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import eutil.misc.ScreenLocation;
 import main.QoT;
-
-import java.util.Stack;
-
-import assets.textures.WindowTextures;
 
 //Author: Hunter Bragg
 
@@ -76,7 +71,6 @@ public class WindowHeader<E> extends WindowObject<E> {
 	/** True if this header is currently moving the parent window. */
 	protected boolean moving = false;
 
-
 	/** The title of this header. */
 	public String title = "";
 	/** The outer boarder color. Default is black. */
@@ -91,7 +85,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	public int titleOffset = 0;
 
 	/** A position clicked on the header. Used to determine header movement if delta is large enough. */
-	private Box2<Integer, Integer> clickPos = new Box2(-1, -1);
+	private Box2<Integer, Integer> clickPos = new Box2<>(-1, -1);
 	/** Used to dynamically keep track of the last created header button position. */
 	private int buttonPos = buttonWidth + 2;
 	
@@ -102,13 +96,13 @@ public class WindowHeader<E> extends WindowObject<E> {
 	/** Used to denote whether or not this header has tabs or not. */
 	private boolean isTabHeader = false;
 	/** Used to keep track of all tabs on this header. */
-	private EArrayList<HeaderTab> tabList;
+	private EArrayList<HeaderTab<?>> tabList;
 	/** The currently selected header tab. */
-	private HeaderTab currentTab;
+	private HeaderTab<?> currentTab;
 	
-	//-------------------------
-	//WindowHeader Constructors
-	//-------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	/**
 	 * Parameterless constructor for custom creation.
@@ -144,9 +138,9 @@ public class WindowHeader<E> extends WindowObject<E> {
 		else title = titleIn;
 	}
 	
-	//-----------------------
-	//IWindowObject Overrides
-	//-----------------------
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mX, int mY) {
@@ -157,11 +151,11 @@ public class WindowHeader<E> extends WindowObject<E> {
 		}
 		
 		//reset parent moving status if conditions not met
-		if (!moving && !Mouse.isButtonDown(0) && StaticWindowObject.isParentMoving(this)) {
+		if (!moving && !Mouse.isButtonDown(0) && isParentMoving()) {
 			getTopParent().clearModifyingObject();
 		}
 		
-		//check for header grabs with maximizable windows
+		//check for header grabs with maximize-able windows
 		if (pressed && window != null && window.isMaximized()) {
 			double dist = NumberUtil.distance(mX, mY, clickPos.getA(), clickPos.getB());
 			if (dist >= 5) headerGrabMaximize();
@@ -174,80 +168,6 @@ public class WindowHeader<E> extends WindowObject<E> {
 		}
 		
 		handleMaximizeDraw(mX, mY);
-	}
-	
-	protected void drawHeader() {
-		boolean anyFocus = alwaysDrawFocused || (drawParentFocus) ? anyFocused() : false;
-		
-		if (drawBackground) {
-			drawRect(startX, startY, startX + 1, startY + height, borderColor); //left
-			drawRect(startX + 1, startY, endX - 1, startY + 1, borderColor); //top
-			drawRect(endX - 1, startY, endX, startY + height, borderColor); //right
-			int backColor = anyFocus ? mainColor - 0x1f1f1f : mainColor;
-			//int backColor = anyFocus ? mainColor - 0x4f4f4f : mainColor;
-			drawRect(startX + 1, startY + 1, endX - 1, startY + height, backColor); //mid
-		}
-		
-		//prevent focusLockObjects from being minimized
-		if (minimizeButton != null) {
-			minimizeButton.setVisible(getTopParent().getFocusLockObject() != window);
-		}
-		
-		scissor(1);
-		if (isTabHeader) drawTabs();
-		else if (drawTitle) drawTitle();
-		endScissor();
-	}
-	
-	/**
-	 * @return true if any object of (any) parent of this header is focused.
-	 */
-	protected boolean anyFocused() {
-		IWindowObject<?> p = (drawDefault) ? getWindowParent() : getParent();
-		if (p == null) return false;
-		if (p.hasFocus() || this.hasFocus()) return true;
-		for (IWindowObject<?> o : p.getAllChildren()) if (o.hasFocus()) return true;
-		return false;
-	}
-	
-	/**
-	 * Organized logic for handling header title drawing.
-	 */
-	protected void drawTitle() {
-		double tx = startX + 4 + titleOffset;
-		String tempTitle = title;
-		IWindowParent<?> p = getWindowParent();
-		
-		//state whether or not the window is pinned
-		if (p != null && p.isPinned()) {
-			tempTitle += "" + EColors.mc_lightpurple + "   Pinned";
-		}
-		
-		//debug title stuff
-		if (QoT.isDebugMode()) {
-			if (p != null && p.isMaximized()) {
-				if (DebugFunctions.drawWindowPID) tempTitle += EColors.mc_aqua + "    PID: " + EColors.yellow + p.getObjectID();
-				if (DebugFunctions.drawWindowInit) {
-					if (DebugFunctions.drawWindowPID) tempTitle += "  ";
-					tempTitle += EColors.mc_aqua + "InitTime: " + EColors.yellow + String.valueOf(p.getInitTime());
-				}
-			}
-		}
-		
-		if (fileUpButton != null && fileUpButton.isVisible()) tx += buttonWidth + 2;
-		
-		//update position if title should be drawn centered
-		if (titleCentered) {
-			double tw = getStringWidth(tempTitle);
-			//determine exact x position for which to center title within
-			tx = startX + (width / 2 - tw / 2) + titleOffset + 1;
-		}
-		
-		drawString(tempTitle, tx, startY + height / 2 - 8, titleColor);
-	}
-	
-	protected void drawTabs() {
-		
 	}
 	
 	@Override
@@ -300,18 +220,19 @@ public class WindowHeader<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public WindowHeader setEnabled(boolean val) {
+	public void setEnabled(boolean val) {
 		drawHeader = val;
 		
 		//default draw constitutes an always visible close button and
 		//selectively visible fileup button.
 		if (drawDefault) {
-			closeButton.setVisible(val).setAlwaysVisible(val);
+			closeButton.setVisible(val);
+			closeButton.setAlwaysVisible(val);
 			
 			//check for fileup button visibility
 			IWindowParent<?> parent = getWindowParent();
 			if (parent != null) {
-				Stack<IWindowParent<?>> hist = parent.getWindowHistory();
+				var hist = parent.getWindowHistory();
 				
 				//if there is a fileup button, enable visibility if there is a window history
 				if (fileUpButton != null) {
@@ -320,9 +241,95 @@ public class WindowHeader<E> extends WindowObject<E> {
 			}
 		}
 		
-		getObjects().forEach(o -> o.setVisible(val));
+		getChildren().forEach(o -> o.setVisible(val));
+	}
+	
+	@Override
+	public void actionPerformed(IActionObject<?> object, Object... args) {
+		if (object == closeButton) 		handleClose();
+		if (object == maximizeButton) 	handleMaximize();
+		if (object == minimizeButton) 	handleMinimize();
+		if (object == pinButton) 		handlePin();
+		if (object == fileUpButton) 	handleFileUp();
+	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
+	
+	protected void drawHeader() {
+		boolean anyFocus = alwaysDrawFocused || (drawParentFocus) ? anyFocused() : false;
 		
-		return this;
+		if (drawBackground) {
+			drawRect(startX, startY, startX + 1, startY + height, borderColor); //left
+			drawRect(startX + 1, startY, endX - 1, startY + 1, borderColor); //top
+			drawRect(endX - 1, startY, endX, startY + height, borderColor); //right
+			int backColor = anyFocus ? mainColor - 0x1f1f1f : mainColor;
+			//int backColor = anyFocus ? mainColor - 0x4f4f4f : mainColor;
+			drawRect(startX + 1, startY + 1, endX - 1, startY + height, backColor); //mid
+		}
+		
+		//prevent focusLockObjects from being minimized
+		if (minimizeButton != null) {
+			minimizeButton.setVisible(getTopParent().getFocusLockObject() != window);
+		}
+		
+		scissor(1);
+		if (isTabHeader) drawTabs();
+		else if (drawTitle) drawTitle();
+		endScissor();
+	}
+	
+	/**
+	 * @return true if any object of (any) parent of this header is focused.
+	 */
+	protected boolean anyFocused() {
+		var p = (drawDefault) ? getWindowParent() : getParent();
+		if (p == null) return false;
+		if (p.hasFocus() || this.hasFocus()) return true;
+		for (var o : p.getAllChildren())
+			if (o.hasFocus()) return true;
+		return false;
+	}
+	
+	/**
+	 * Organized logic for handling header title drawing.
+	 */
+	protected void drawTitle() {
+		double tx = startX + 4 + titleOffset;
+		String tempTitle = title;
+		var p = getWindowParent();
+		
+		//state whether or not the window is pinned
+		if (p != null && p.isPinned()) {
+			tempTitle += "" + EColors.mc_lightpurple + "   Pinned";
+		}
+		
+		//debug title stuff
+		if (QoT.isDebugMode()) {
+			if (p != null && p.isMaximized()) {
+				if (DebugFunctions.drawWindowPID) tempTitle += EColors.mc_aqua + "    PID: " + EColors.yellow + p.getObjectID();
+				if (DebugFunctions.drawWindowInit) {
+					if (DebugFunctions.drawWindowPID) tempTitle += "  ";
+					tempTitle += EColors.mc_aqua + "InitTime: " + EColors.yellow + String.valueOf(p.getInitTime());
+				}
+			}
+		}
+		
+		if (fileUpButton != null && fileUpButton.isVisible()) tx += buttonWidth + 2;
+		
+		//update position if title should be drawn centered
+		if (titleCentered) {
+			double tw = getStringWidth(tempTitle);
+			//determine exact x position for which to center title within
+			tx = startX + (width / 2 - tw / 2) + titleOffset + 1;
+		}
+		
+		drawString(tempTitle, tx, startY + height / 2 - 8, titleColor);
+	}
+	
+	protected void drawTabs() {
+		
 	}
 	
 	/**
@@ -371,23 +378,23 @@ public class WindowHeader<E> extends WindowObject<E> {
 	 * @param button The mouse button pressed
 	 */
 	protected void headerClick(int button) {
-		ITopParent<?> topParent = getTopParent();
+		var topParent = getTopParent();
 		if (button == 0) {
-			IWindowObject<?> parent = getParent();
-			if (parent instanceof WindowParent p) {
+			var parent = getParent();
+			if (parent instanceof WindowParent<?> p) {
 				p.bringToFront();
 				
 				if (headerMoveable && !window.isMaximized()) {
 					moving = true;
-					topParent.setModifyingObject(parent, ObjectModifyType.Move);
-					topParent.setModifyMousePos(mX, mY);
+					topParent.setModifyingObject(parent, ObjectModifyType.MOVE);
+					topParent.setModifyMousePos(Mouse.getMx(), Mouse.getMy());
 				}
 			}
 			else {
 				if (headerMoveable) {
 					moving = true;
-					topParent.setModifyingObject(parent, ObjectModifyType.Move);
-					topParent.setModifyMousePos(mX, mY);
+					topParent.setModifyingObject(parent, ObjectModifyType.MOVE);
+					topParent.setModifyMousePos(Mouse.getMx(), Mouse.getMy());
 				}
 			}
 		}
@@ -400,6 +407,10 @@ public class WindowHeader<E> extends WindowObject<E> {
 		getTopParent().setMaximizingWindow(window, ScreenLocation.OUT, true);
 	}
 	
+	//---------
+	// Methods
+	//---------
+	
 	/**
 	 * Performs logic calls based on this header's host parent to
 	 * determine which default header buttons should be visible.
@@ -407,52 +418,49 @@ public class WindowHeader<E> extends WindowObject<E> {
 	 * @return This header
 	 */
 	public WindowHeader<E> updateButtonVisibility() {
-		if (getParent() instanceof WindowParent<?>) {
-			WindowParent<?> window = (WindowParent<?>) getParent();
-			if (window != null) {
-				int buttonPos = buttonWidth * 2 + 3;
-				
-				if (maximizeButton != null) {
-					if (!window.isMaximizable()) {
-						maximizeButton.setVisible(false);
-					}
-					else {
-						maximizeButton.setVisible(true);
-						maximizeButton.setDimensions(endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
-						buttonPos += (buttonWidth + 1);
-					}
+		if (getParent() instanceof WindowParent<?> window) {
+			int buttonPos = buttonWidth * 2 + 3;
+			
+			if (maximizeButton != null) {
+				if (!window.isMaximizable()) {
+					maximizeButton.setVisible(false);
 				}
-				
-				if (minimizeButton != null) {
-					if (!window.isMinimizable()) {
-						minimizeButton.setVisible(false);
-					}
-					else {
-						minimizeButton.setVisible(true);
-						minimizeButton.setDimensions(endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
-						buttonPos += (buttonWidth + 1);
-					}
+				else {
+					maximizeButton.setVisible(true);
+					maximizeButton.setDimensions(endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
+					buttonPos += (buttonWidth + 1);
 				}
-				
-				if (pinButton != null) {
-					if (!window.isPinnable()) {
-						pinButton.setVisible(false);
-					}
-					else {
-						pinButton.setVisible(true);
-						pinButton.setDimensions(endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
-						buttonPos += (buttonWidth + 1);
-					}
+			}
+			
+			if (minimizeButton != null) {
+				if (!window.isMinimizable()) {
+					minimizeButton.setVisible(false);
 				}
-				
-				if (fileUpButton != null) {
-					if (window.getWindowHistory() != null && window.getWindowHistory().isEmpty()) {
-						fileUpButton.setVisible(false);
-					}
-					else {
-						fileUpButton.setVisible(true);
-						fileUpButton.setDimensions(startX + 2, startY + 2, buttonWidth, buttonWidth);
-					}
+				else {
+					minimizeButton.setVisible(true);
+					minimizeButton.setDimensions(endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
+					buttonPos += (buttonWidth + 1);
+				}
+			}
+			
+			if (pinButton != null) {
+				if (!window.isPinnable()) {
+					pinButton.setVisible(false);
+				}
+				else {
+					pinButton.setVisible(true);
+					pinButton.setDimensions(endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
+					buttonPos += (buttonWidth + 1);
+				}
+			}
+			
+			if (fileUpButton != null) {
+				if (window.getWindowHistory() != null && window.getWindowHistory().isEmpty()) {
+					fileUpButton.setVisible(false);
+				}
+				else {
+					fileUpButton.setVisible(true);
+					fileUpButton.setDimensions(startX + 2, startY + 2, buttonWidth, buttonWidth);
 				}
 			}
 		}
@@ -468,28 +476,19 @@ public class WindowHeader<E> extends WindowObject<E> {
 		return this;
 	}
 	
-	@Override
-	public void actionPerformed(IActionObject<?> object, Object... args) {
-		if (object == closeButton) 		handleClose();
-		if (object == maximizeButton) 	handleMaximize();
-		if (object == minimizeButton) 	handleMinimize();
-		if (object == pinButton) 		handlePin();
-		if (object == fileUpButton) 	handleFileUp();
-	}
-	
 	protected void handleClose() {
-		parent.close();
+		getParent().close();
 	}
 	
 	protected void handlePin() {
-		IWindowParent<?> p = getWindowParent();
+		var p = getWindowParent();
 		if (p != null) {
 			if (pinButton.getPressedButton() == 0) p.setPinned(!p.isPinned());
 		}
 	}
 	
 	protected void handleMaximize() {
-		IWindowParent<?> p = getWindowParent();
+		var p = getWindowParent();
 		if (p != null) {
 			if (p.isMaximizable()) {
 				if (p.getMaximizedPosition() == ScreenLocation.TOP) {
@@ -519,22 +518,22 @@ public class WindowHeader<E> extends WindowObject<E> {
 	}
 	
 	protected void handleFileUp() {
-		if (getParent() instanceof WindowParent) {
-			((WindowParent) getParent()).fileUpAndClose();
+		if (getParent() instanceof WindowParent<?> wp) {
+			wp.fileUpAndClose();
 		}
-		else if (getTopParent() != null) { getTopParent().close(true); }
+		else if (getTopParent() != null) getTopParent().close(true);
 	}
 	
-	//-----------------------------
-	//WindowHeader Function Buttons
-	//-----------------------------
+	//------------------
+	// Function Buttons
+	//------------------
 	
 	protected void addCloseButton() {
 		closeButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
 		closeButton.setTextures(WindowTextures.close, WindowTextures.close_sel);
 		closeButton.setHoverText("Close");
 		closeButton.setObjectName("close button");
-		addObject(closeButton);
+		addChild(closeButton);
 		buttonPos += buttonWidth;
 	}
 	
@@ -548,7 +547,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 			maximizeButton.setHoverText(window.isMaximized() ? "Miniaturize" : "Maximize");
 			maximizeButton.setObjectName("maximize button");
 			
-			addObject(maximizeButton);
+			addChild(maximizeButton);
 			buttonPos += (buttonWidth + 1);
 		}
 	}
@@ -560,7 +559,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		minimizeButton.setObjectName("minimize button");
 		
 		if (window != null && window.isMinimizable()) {
-			addObject(minimizeButton);
+			addChild(minimizeButton);
 			buttonPos += (buttonWidth + 1);
 		}
 	}
@@ -577,10 +576,11 @@ public class WindowHeader<E> extends WindowObject<E> {
 		};
 		if (window != null && window.isPinnable()) {
 			//pinButton.setTextures(EMCResources.guiPinButtonOpen, EMCResources.guiPinButtonOpenSel);
-			pinButton.setDrawBackground(true).setBackgroundColor(0xffbb0000);
+			pinButton.setDrawBackground(true);
+			pinButton.setBackgroundColor(0xffbb0000);
 			pinButton.setHoverText("Pin to Hud");
 			pinButton.setObjectName("pin button");
-			addObject(pinButton);
+			addChild(pinButton);
 			buttonPos += (buttonWidth + 1);
 		}
 	}
@@ -590,13 +590,13 @@ public class WindowHeader<E> extends WindowObject<E> {
 		//fileUpButton.setTextures(EMCResources.backButton, EMCResources.backButtonSel).setVisible(false);
 		fileUpButton.setHoverText("Go Back");
 		fileUpButton.setObjectName("back button");
-		addObject(fileUpButton);
+		addChild(fileUpButton);
 		//buttonPos += (buttonWidth + 1);
 	}
 	
-	//--------------------
-	//WindowHeader Getters
-	//--------------------
+	//---------
+	// Getters
+	//---------
 	
 	public int getTitleColor() { return titleColor; }
 	public String getTitle() { return title; }
@@ -604,31 +604,30 @@ public class WindowHeader<E> extends WindowObject<E> {
 	public boolean isHeaderMoveable() { return headerMoveable; }
 	public boolean isHeaderMoving() { return moving; }
 	
-	//--------------------
-	//WindowHeader Setters
-	//--------------------
+	//---------
+	// Setters
+	//---------
 	
-	public WindowHeader<E> setDrawButtons(boolean val) {
+	public void setDrawButtons(boolean val) {
 		if (minimizeButton != null) minimizeButton.setVisible(val);
 		if (maximizeButton != null) maximizeButton.setVisible(val);
 		if (fileUpButton != null) fileUpButton.setVisible(val);
 		if (pinButton != null) pinButton.setVisible(val);
 		if (closeButton != null) closeButton.setVisible(val);
-		return this;
 	}
 	
-	public WindowHeader<E> setAlwaysDrawFocused(boolean val) { alwaysDrawFocused = val; return this; }
-	public WindowHeader<E> setMoveable(boolean val) { headerMoveable = val; return this; }
-	public WindowHeader<E> setTitleColor(int colorIn) { titleColor = colorIn; return this; }
-	public WindowHeader<E> setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowHeader<E> setBackgroundColor(int colorIn) { mainColor = colorIn; return this; }
-	public WindowHeader<E> setTitle(String stringIn) { title = stringIn; return this; }
-	public WindowHeader<E> setTitleOffset(int offsetIn) { titleOffset = offsetIn; return this; }
-	public WindowHeader<E> setDrawTitleCentered(boolean val) { titleCentered = val; return this; }
-	public WindowHeader<E> setDrawTitle(boolean val) { drawTitle = val; return this; }
-	public WindowHeader<E> setDrawBackground(boolean val) { drawBackground = val; return this; }
-	public WindowHeader<E> setDrawHeader(boolean val) { drawHeader = val; return this; }
-	public WindowHeader<E> setDrawParentFocus(boolean val) { drawParentFocus = val; return this; }
-	public WindowHeader<E> setHeaderMoving(boolean val) { moving = val; pressed = true; return this; }
+	public void setMoveable(boolean val) { headerMoveable = val; }
+	public void setAlwaysDrawFocused(boolean val) { alwaysDrawFocused = val; }
+	public void setTitleColor(int colorIn) { titleColor = colorIn; }
+	public void setBorderColor(int colorIn) { borderColor = colorIn; }
+	public void setBackgroundColor(int colorIn) { mainColor = colorIn; }
+	public void setTitle(String stringIn) { title = stringIn; }
+	public void setTitleOffset(int offsetIn) { titleOffset = offsetIn; }
+	public void setDrawTitleCentered(boolean val) { titleCentered = val; }
+	public void setDrawTitle(boolean val) { drawTitle = val; }
+	public void setDrawBackground(boolean val) { drawBackground = val; }
+	public void setDrawHeader(boolean val) { drawHeader = val; }
+	public void setDrawParentFocus(boolean val) { drawParentFocus = val; }
+	public void setHeaderMoving(boolean val) { moving = val; pressed = true; }
 	
 }

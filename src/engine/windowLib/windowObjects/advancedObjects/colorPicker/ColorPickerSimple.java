@@ -5,8 +5,8 @@ import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowObjects.basicObjects.WindowContainer;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowObjects.basicObjects.WindowRect;
-import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
-import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox.DialogueBoxTypes;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogBox;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogBox.DialogBoxTypes;
 import engine.windowLib.windowTypes.ActionWindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
@@ -18,27 +18,39 @@ import eutil.math.EDimension;
 
 public class ColorPickerSimple extends ActionWindowParent {
 	
+	//--------
+	// Fields
+	//--------
+	
 	//color buttons
-	ColorPickerButton lred, red, maroon, brown, dorange, borange, orange, lorange, yellow;
-	ColorPickerButton lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine;
-	ColorPickerButton cyan, skyblue, blue, regal, grape, navy, violet, eggplant, purple, magenta, pink, hotpink;
-	ColorPickerButton white, chalk, lgray, gray, mgray, dgray, pdgray, steel, dsteel, vdgray, black;
+	private ColorPickerButton<?> lred, red, maroon, brown, dorange, borange, orange, lorange, yellow;
+	private ColorPickerButton<?> lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine;
+	private ColorPickerButton<?> cyan, skyblue, blue, regal, grape, navy, violet, eggplant, purple, magenta, pink, hotpink;
+	private ColorPickerButton<?> white, chalk, lgray, gray, mgray, dgray, pdgray, steel, dsteel, vdgray, black;
 	
 	//functional objects
-	WindowTextField inputField;
-	WindowButton select, back;
-	WindowButton advanced;
-	WindowRect colorDisplay;
-	WindowLabel colorLabel, inputLabel;
+	private WindowTextField<?> inputField;
+	private WindowButton<?> select, back;
+	private WindowButton<?> advanced;
+	private WindowRect<?> colorDisplay;
+	private WindowLabel<?> colorLabel, inputLabel;
 	
 	//the current color
-	int currentColor = 0xffffffff;
+	private int currentColor = 0xffffffff;
 	
-	public ColorPickerSimple(IWindowObject parentIn) { this(parentIn, 0xffffffff); }
-	public ColorPickerSimple(IWindowObject parentIn, int colorIn) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public ColorPickerSimple(IWindowObject<?> parentIn) { this(parentIn, 0xffffffff); }
+	public ColorPickerSimple(IWindowObject<?> parentIn, int colorIn) {
 		super(parentIn);
 		currentColor = colorIn;
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void initWindow() {
@@ -48,7 +60,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		//initialize header
 		defaultHeader(this);
 		
@@ -61,7 +73,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		updateValues();
 		
 		//create color buttons
-		WindowContainer colorContainer = new WindowContainer(this, startX + 5, colorDisplay.endY + 16, width - 10, 100);
+		WindowContainer<?> colorContainer = new WindowContainer(this, startX + 5, colorDisplay.endY + 16, width - 10, 100);
 		colorContainer.setTitle("Color Palette");
 		colorContainer.setTitleColor(EColors.lgray.intVal);
 		colorContainer.setBackgroundColor(0xff383838);
@@ -118,7 +130,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		black = new ColorPickerButton(this, vdgray.endX + 1, y2, w, h, EColors.black);
 		
 		//create manual color input field & label
-		WindowContainer inputContainer = new WindowContainer(this, startX + 5, colorContainer.endY + 6, width - 10, 107);
+		WindowContainer<?> inputContainer = new WindowContainer(this, startX + 5, colorContainer.endY + 6, width - 10, 107);
 		inputContainer.setTitle("Hex Color Code");
 		inputContainer.setTitleColor(EColors.lgray.intVal);
 		inputContainer.setBackgroundColor(0xff383838);
@@ -139,19 +151,19 @@ public class ColorPickerSimple extends ActionWindowParent {
 		select.setStringColor(EColors.lgreen);
 		
 		//add containers
-		addObject(inputContainer);
+		addChild(inputContainer);
 		
 		//add color buttons
-		colorContainer.addObject(lred, red, maroon, brown, dorange, borange, orange, lorange, yellow);
-		colorContainer.addObject(lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine);
-		colorContainer.addObject(cyan, skyblue, blue, regal, navy, grape, violet, eggplant, purple, magenta, pink, hotpink);
-		colorContainer.addObject(white, chalk, lgray, gray, mgray, dgray, pdgray, steel, dsteel, vdgray, black);
+		colorContainer.addChild(lred, red, maroon, brown, dorange, borange, orange, lorange, yellow);
+		colorContainer.addChild(lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine);
+		colorContainer.addChild(cyan, skyblue, blue, regal, navy, grape, violet, eggplant, purple, magenta, pink, hotpink);
+		colorContainer.addChild(white, chalk, lgray, gray, mgray, dgray, pdgray, steel, dsteel, vdgray, black);
 		
 		//add functional objects
-		inputContainer.addObject(inputField, inputLabel);
+		inputContainer.addChild(inputField, inputLabel);
 		
-		addObject(select, back);
-		addObject(colorContainer, colorDisplay, colorLabel);
+		addChild(select, back);
+		addChild(colorContainer, colorDisplay, colorLabel);
 		
 		updateValues();
 	}
@@ -171,11 +183,8 @@ public class ColorPickerSimple extends ActionWindowParent {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object instanceof ColorPickerButton) {
-			ColorPickerButton b = (ColorPickerButton) object;
-			
-			if (args.length > 0 && args[0] instanceof String) {
-				String val = (String) args[0];
+		if (object instanceof ColorPickerButton b) {
+			if (args.length > 0 && args[0] instanceof String val) {
 				if (val != null && val.equals("dc")) {
 					performAction(b.getColor());
 					close();
@@ -193,6 +202,10 @@ public class ColorPickerSimple extends ActionWindowParent {
 		}
 	}
 	
+	//------------------
+	// Internal Methods
+	//------------------
+	
 	private void parseInputColor() {
 		try {
 			if (inputField.getText().length() > 6) {
@@ -206,7 +219,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			WindowDialogueBox error = new WindowDialogueBox(this, DialogueBoxTypes.ok);
+			WindowDialogBox error = new WindowDialogBox(this, DialogBoxTypes.OK);
 			error.setTitle("Error!");
 			error.setTitleColor(EColors.lred.c());
 			error.setMessage("Cannot parse the value: " + inputField.getText());
@@ -220,7 +233,8 @@ public class ColorPickerSimple extends ActionWindowParent {
 	private void updateValues() {
 		colorDisplay.setColor(currentColor);
 		EColors c = EColors.byIntVal(currentColor);
-		colorDisplay.setHoverText(c != null ? c.name : "" + currentColor).setHoverTextColor(EColors.seafoam.intVal);
+		colorDisplay.setHoverText(c != null ? c.name : "" + currentColor);
+		colorDisplay.setHoverTextColor(EColors.seafoam.intVal);
 		String cs = "" + (c != null ? c.name : "0x" + Integer.toHexString(currentColor));
 		colorLabel.setString(cs);
 		try {

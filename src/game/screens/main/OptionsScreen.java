@@ -1,4 +1,4 @@
-package game.screens.primary;
+package game.screens.main;
 
 import engine.inputHandlers.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
@@ -32,7 +32,7 @@ public class OptionsScreen extends GameScreen {
 	@Override public void initScreen() {}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		double w = NumberUtil.clamp(QoT.getWidth() / 4, 150, 390);
 		double x = midX - w / 2;
 		
@@ -59,8 +59,8 @@ public class OptionsScreen extends GameScreen {
 		resolution = new WindowButton(this, fullscreen.startX, vSync.endY + 20, 250, 50);
 		resolution.setString("1920x1080");
 		
-		addObject(back, volumeSlider, fpsSlider, upsInput, fullscreen, vSync);
-		addObject(resolution);
+		addChild(back, volumeSlider, fpsSlider, upsInput, fullscreen, vSync);
+		//addChild(resolution);
 	}
 	
 	@Override public void onScreenClosed() {}

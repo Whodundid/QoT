@@ -1,4 +1,4 @@
-package game.screens.primary;
+package game.screens.main;
 
 import assets.sounds.Songs;
 import assets.textures.GeneralTextures;
@@ -36,7 +36,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		double w = NumberUtil.clamp(QoT.getWidth() / 4, 200, 320);
 		double x = midX - w / 2;
 		double y = midY - 50;
@@ -50,8 +50,8 @@ public class MainMenuScreen extends GameScreen {
 		
 		mapTest = new WindowButton(this, 10, 10, w, h, "Map Editor");
 		
-		addObject(newGame, loadGame, options, closeGame);
-		addObject(mapTest);
+		addChild(newGame, loadGame, options, closeGame);
+		addChild(mapTest);
 	}
 	
 	@Override

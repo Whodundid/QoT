@@ -3,7 +3,7 @@ package world;
 import java.util.Comparator;
 
 import engine.inputHandlers.Keyboard;
-import engine.windowLib.GameTopRenderer;
+import engine.topOverlay.GameTopRenderer;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;

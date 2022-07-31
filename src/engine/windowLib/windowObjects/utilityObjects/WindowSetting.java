@@ -10,16 +10,20 @@ import eutil.math.EDimension;
 
 public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	
-	E object;
-	WindowLabel label;
+	//--------
+	// Fields
+	//--------
+	
+	private E object;
+	private WindowLabel<?> label;
 
 	//--------------
 	// Constructors
 	//--------------
 	
-	public WindowSetting(IWindowObject parent, E objectIn, String title) { this(parent, objectIn, title, EColors.lgray.intVal); }
-	public WindowSetting(IWindowObject parent, E objectIn, String title, EColors colorIn) { this(parent, objectIn, title, colorIn.intVal); }
-	public WindowSetting(IWindowObject parent, E objectIn, String title, int colorIn) {
+	public WindowSetting(IWindowObject<?> parent, E objectIn, String title) { this(parent, objectIn, title, EColors.lgray.intVal); }
+	public WindowSetting(IWindowObject<?> parent, E objectIn, String title, EColors colorIn) { this(parent, objectIn, title, colorIn.intVal); }
+	public WindowSetting(IWindowObject<?> parent, E objectIn, String title, int colorIn) {
 		super(parent);
 		
 		if (objectIn != null) {
@@ -37,25 +41,19 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	//-----------
 	
 	@Override
-	public void initObjects() {
-		addObject(object, label);
+	public void initChildren() {
+		addChild(object, label);
 	}
 	
 	@Override
-	public WindowSetting setHoverText(String textIn) {
+	public void setHoverText(String textIn) {
 		setHoverText(textIn);
-		return this;
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
-	
 	@Override
-	public WindowSetting setActionReceiver(IWindowObject objectIn) {
+	public void setActionReceiver(IWindowObject<?> objectIn) {
 		super.setActionReceiver(objectIn);
 		EUtil.nullDo(object, o -> o.setActionReceiver(objectIn));
-		return this;
 	}
 	
 	//---------
@@ -69,8 +67,8 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	// Setters
 	//---------
 	
-	public WindowSetting setTitle(String title) { return EUtil.nullDoR(label, l -> l.setString(title), this); }
-	public WindowSetting setLabelColor(EColors colorIn) { WindowLabel.setColor(colorIn, label); return this; }
-	public WindowSetting setLabelColor(int colorIn) { WindowLabel.setColor(colorIn, label); return this; }
+	public void setTitle(String title) { EUtil.nullDo(label, l -> l.setString(title)); }
+	public void setLabelColor(EColors colorIn) { WindowLabel.setColor(colorIn, label); }
+	public void setLabelColor(int colorIn) { WindowLabel.setColor(colorIn, label); }
 	
 }

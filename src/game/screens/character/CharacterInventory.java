@@ -25,7 +25,7 @@ public class CharacterInventory extends WindowObject {
 	//-----------
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		
 	}
 	

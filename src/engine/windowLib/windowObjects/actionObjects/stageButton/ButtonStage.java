@@ -8,8 +8,8 @@ public class ButtonStage {
 	// Fields
 	//--------
 	
-	String stageName;
-	int stageColor;
+	private String stageName;
+	private int stageColor;
 	
 	//--------------
 	// Constructors

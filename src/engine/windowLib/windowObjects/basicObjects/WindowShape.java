@@ -23,8 +23,8 @@ public abstract class WindowShape<E> extends WindowObject<E> {
 	// Setters
 	//---------
 	
-	public WindowShape<E> setFilled(boolean val) { filled = val; return this; }
-	public WindowShape<E> setColor(EColors colorIn) { return setColor(colorIn.intVal); }
-	public WindowShape<E> setColor(int colorIn) { color = colorIn; return this; }
+	public void setFilled(boolean val) { filled = val; }
+	public void setColor(EColors colorIn) { setColor(colorIn.intVal); }
+	public void setColor(int colorIn) { color = colorIn; }
 
 }

@@ -9,16 +9,28 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.EventType;
 
 public class EventAction extends ObjectEvent {
 	
-	IActionObject actionObject = null;
-	Object[] args = null;
+	//--------
+	// Fields
+	//--------
 	
-	public EventAction(IWindowObject parentObjectIn, IActionObject actionObjectIn, Object[] argsIn) {
+	private final IActionObject<?> actionObject;
+	private final Object[] args;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public EventAction(IWindowObject<?> parentObjectIn, IActionObject<?> actionObjectIn, Object[] argsIn) {
 		super(parentObjectIn, EventType.ACTION);
 		actionObject = actionObjectIn;
 		args = argsIn;
 	}
 	
-	public IActionObject getActionObject() { return actionObject; }
+	//---------
+	// Getters
+	//---------
+	
+	public IActionObject<?> getActionObject() { return actionObject; }
 	public Object[] getArgs() { return args; }
 	
 }

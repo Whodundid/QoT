@@ -1,4 +1,4 @@
-package game.screens.primary;
+package game.screens.main;
 
 import java.io.File;
 
@@ -35,7 +35,7 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		int w = NumberUtil.clamp(QoT.getWidth() / 4, 150, 350);
 		double bw = midX - w / 2;
 		
@@ -46,12 +46,12 @@ public class WorldSelectScreen extends GameScreen {
 		
 		back = new WindowButton(this, 5, endY - 45, 150, 40, "Back");
 		
-		addObject(defaultWorld, loadWorld);
+		addChild(defaultWorld, loadWorld);
 		if (!lastEditor.getString().isBlank() && !lastEditor.getString().isEmpty()) {
-			addObject(lastEditor);
+			addChild(lastEditor);
 		}
-		addObject(lastWorld);
-		addObject(back);
+		addChild(lastWorld);
+		addChild(back);
 	}
 	
 	@Override

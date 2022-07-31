@@ -1,5 +1,7 @@
 package engine.windowLib;
 
+import java.util.Deque;
+
 import engine.inputHandlers.Mouse;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
@@ -16,35 +18,29 @@ import engine.windowLib.windowUtil.windowEvents.events.EventKeyboard;
 import engine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.misc.ScreenLocation;
 import main.QoT;
 
-import java.util.Deque;
-
 //Author: Hunter Bragg
 
 public class StaticTopParent extends EGui {
-
-	private static int curPID = 0;
-	public static int getNextPID() { return curPID++; }
 	
-	//-----------------------------------
-	//StaticTopParent Basic Input Methods
-	//-----------------------------------
+	//---------------------
+	// Basic Input Methods
+	//---------------------
 	
 	/** Notify the focused object that a mouse button was just pressed. */
 	public static void mousePressed(ITopParent<?> objIn, int mX, int mY, int button, Deque<EventFocus> focusQueue) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.PRESSED)); //post an event
-		IWindowObject<?> underMouse = objIn.getHighestZObjectUnderMouse(); //get the highest object under the mouse
+		var underMouse = objIn.getHighestZObjectUnderMouse(); //get the highest object under the mouse
 		
 		if (objIn.getFocusLockObject() != null) { //first check if there is a focusLock
 			if (underMouse != null) { //if there is, then check if there is actually anything under the cursor
 				//allow focus to be passed to the object under the cursor if it is the focusLockObject, a child of the focusLockObject or an EGuiHeader
 				if (underMouse.equals(objIn.getFocusLockObject()) || underMouse.isChildOf(objIn.getFocusLockObject()) || underMouse instanceof WindowHeader) {
-					focusQueue.add(new EventFocus(objIn, underMouse, FocusType.MousePress, button, mX, mY));
+					focusQueue.add(new EventFocus(objIn, underMouse, FocusType.MOUSE_PRESS, button, mX, mY));
 				}
 				else { //otherwise, annoy the user
 					if (objIn.getFocusLockObject() instanceof IWindowParent<?> p) p.bringToFront();
@@ -57,16 +53,15 @@ public class StaticTopParent extends EGui {
 			}
 		}
 		else if (underMouse != null) { //if there is no lock, check if there was actually an object under the cursor
-			
 			//check if the object is the focused object, if it is, pass the event to it, otherwise, start a focus request
 			if (underMouse.equals(objIn.getFocusedObject())) {
 				
-				IWindowObject<?> focused = objIn.getFocusedObject();
+				var focused = objIn.getFocusedObject();
 				focused.mousePressed(mX, mY, button);
 				
-				//check if the object was recently pressed and is elligible for a double click event
+				//check if the object was recently pressed and is eligible for a double click event
 				if (button == 0) {
-					IWindowObject<?> lastClicked = objIn.getLastClickedObject();
+					var lastClicked = objIn.getLastClickedObject();
 					if (lastClicked == focused) {
 						long clickTime = objIn.getLastClickTime();
 						
@@ -79,7 +74,7 @@ public class StaticTopParent extends EGui {
 				objIn.setLastClickedObject(focused);
 				objIn.setLastClickTime(System.currentTimeMillis());
 			}
-			else focusQueue.add(new EventFocus(objIn, underMouse, FocusType.MousePress, button, mX, mY));
+			else focusQueue.add(new EventFocus(objIn, underMouse, FocusType.MOUSE_PRESS, button, mX, mY));
 		}
 		else { //there was no lock and there was nothing under the cursor
 			objIn.clearFocusedObject();
@@ -94,30 +89,31 @@ public class StaticTopParent extends EGui {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.RELEASED)); //post an event
 		
 		//clear the modifying object if it the modify type was MoveAlreadyClicked -- mainly used for headers to stop moving when the mouse is released
-		if (objIn.getModifyingObject() != null && objIn.getModifyType() == ObjectModifyType.MoveAlreadyClicked) {
-			objIn.setModifyingObject(objIn.getModifyingObject(), ObjectModifyType.None);
+		if (objIn.getModifyingObject() != null && objIn.getModifyType() == ObjectModifyType.MOVE_ALREADY_CLICKED) {
+			objIn.setModifyingObject(objIn.getModifyingObject(), ObjectModifyType.NONE);
 		}
 		
 		//pass the event to the focused object, if it exists and if it isn't the parent itself
 		if (objIn.getFocusedObject() != null && objIn.getFocusedObject() != objIn) objIn.getFocusedObject().mouseReleased(mX, mY, button);
-		if (objIn.getModifyType() == ObjectModifyType.Resize) objIn.clearModifyingObject(); //stop resizing windows when the mouse isn't pressed
-		if (objIn.getDefaultFocusObject() != null) { objIn.getDefaultFocusObject().requestFocus(); } //transfer focus back to the defaultFocusObject, if it exists
+		if (objIn.getModifyType() == ObjectModifyType.RESIZE) objIn.clearModifyingObject(); //stop resizing windows when the mouse isn't pressed
+		if (objIn.getDefaultFocusObject() != null) objIn.getDefaultFocusObject().requestFocus(); //transfer focus back to the defaultFocusObject, if it exists
 	}
 	
 	/** Notify the focused object that the mouse was just dragged. */
 	public static void mouseDragged(ITopParent<?> objIn, int mX, int mY, int button, long timeSinceLastClick) {
-		IWindowObject<?> fo = objIn.getFocusedObject();
-		if (fo != null && fo != objIn) { fo.mouseDragged(mX, mY, button, timeSinceLastClick); }
+		var fo = objIn.getFocusedObject();
+		if (fo != null && fo != objIn) fo.mouseDragged(mX, mY, button, timeSinceLastClick);
 	}
 	
 	/** Notify any objects under the cursor that the mouse was just scrolled. */
 	public static void mouseScrolled(ITopParent<?> objIn, int mX, int mY, int change) {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.SCROLLED));
 		
+		var highest = objIn.getHighestZObjectUnderMouse();
 		//if there are actually any objects under the mouse
-		if (objIn.getHighestZObjectUnderMouse() != null) {
-			IWindowObject<?> obj = objIn.getHighestZObjectUnderMouse();
-			IWindowParent<?> p = obj.getWindowParent();
+		if (highest != null) {
+			var obj = highest;
+			var p = obj.getWindowParent();
 			
 			//only scroll the top most window under the mouse
 			if (p != null) p.mouseScrolled(change);
@@ -127,23 +123,23 @@ public class StaticTopParent extends EGui {
 	
 	/** Notify the focused object that the keyboard just had a key pressed. */
 	public static void keyPressed(ITopParent<?> objIn, char typedChar, int keyCode) {
-		objIn.postEvent(new EventKeyboard(objIn, typedChar, keyCode, KeyboardType.Pressed));
+		objIn.postEvent(new EventKeyboard(objIn, typedChar, keyCode, KeyboardType.PRESSED));
 		//post a new event too
-		IWindowObject<?> fo = objIn.getFocusedObject();
+		var fo = objIn.getFocusedObject();
 		if (fo != null && fo != objIn) fo.keyPressed(typedChar, keyCode);
 	}
 	
 	/** Notify the focused object that the keyboard just had a key released. */
 	public static void keyReleased(ITopParent<?> objIn, char typedChar, int keyCode) {
-		IWindowObject<?> fo = objIn.getFocusedObject();
+		var fo = objIn.getFocusedObject();
 		//post a new event too
-		objIn.postEvent(new EventKeyboard(objIn, typedChar, keyCode, KeyboardType.Released));
+		objIn.postEvent(new EventKeyboard(objIn, typedChar, keyCode, KeyboardType.RELEASED));
 		if (fo != null && fo != objIn) fo.keyReleased(typedChar, keyCode);
 	}
 	
-	//-------------------------------
-	//StaticTopParent Drawing Methods
-	//-------------------------------
+	//-----------------
+	// Drawing Methods
+	//-----------------
 
 	/** Debug method used to display topParent information in the top left corner of the screen. */
 	public static void drawDebugInfo(ITopParent<?> objIn) {
@@ -156,9 +152,9 @@ public class StaticTopParent extends EGui {
 			//	yPos = b.endY + 4;
 			//}
 			
-			IWindowObject<?> ho = objIn.getHighestZObjectUnderMouse();
+			var ho = objIn.getHighestZObjectUnderMouse();
 			String out = "null";
-			int zLevel = (ho instanceof IWindowParent<?>) ? ((IWindowParent<?>) ho).getZLevel() : -1;
+			int zLevel = (ho instanceof IWindowParent<?> wp) ? wp.getZLevel() : -1;
 			
 			String topParent = "TopParent: " + objIn.getTopParent();
 			String focusedObject = "";
@@ -231,19 +227,19 @@ public class StaticTopParent extends EGui {
 		}
 	}
 	
-	//------------------------------
-	//StaticTopParent Object Methods
-	//------------------------------
+	//----------------
+	// Object Methods
+	//----------------
 	
 	/** Returns the object with the highest z level, this could even be the topParent itself. */
 	public static IWindowObject<?> getHighestZLevelObject(ITopParent<?> objIn) {
-		var objs = objIn.getObjects();
+		var objs = objIn.getChildren();
 		return (objs.isNotEmpty()) ? objs.getLast() : objIn;
 	}
 	
 	/** Hides all objects that are not pinned to the hud. */
 	public static void hideUnpinnedObjects(ITopParent<?> objIn) {
-		for (IWindowObject<?> o : objIn.getCombinedObjects()) {
+		for (var o : objIn.getCombinedChildren()) {
 			if (o.closesWithHud()) o.close();
 			else if (o instanceof IWindowParent<?> wp) {
 				if (!wp.isPinned()) o.setHidden(true);
@@ -254,8 +250,8 @@ public class StaticTopParent extends EGui {
 	
 	/** Hides all objects except for the specified ones. */
 	public static void hideAllExcept(ITopParent<?> topIn, IWindowObject<?> exception, IWindowObject<?>... additional) {
-		for (IWindowObject<?> o : topIn.getCombinedObjects()) {
-			for (IWindowObject<?> e : EUtil.add(exception, additional)) {
+		for (var o : topIn.getCombinedChildren()) {
+			for (var e : EUtil.add(exception, additional)) {
 				if (o != e || o.isChildOf(e)) {
 					o.setHidden(true);
 				}
@@ -265,22 +261,21 @@ public class StaticTopParent extends EGui {
 	
 	/** Makes all objects that were hidden now visible. */
 	public static void revealHiddenObjects(ITopParent<?> objIn) {
-		objIn.getCombinedObjects().filter(o -> o.isHidden()).forEach(o -> o.setHidden(false));
+		objIn.getCombinedChildren().filter(o -> o.isHidden()).forEach(o -> o.setHidden(false));
 	}
 	
 	/** Removes all windows from the topParent that are not pinned. */
 	public static void removeUnpinnedObjects(ITopParent<?> objIn) {
-		
 		//check in both the current objects and the objects that will be added
-		EArrayList<IWindowParent<?>> windows = new EArrayList();
+		EArrayList<IWindowParent<?>> windows = new EArrayList<>();
 		
-		for (IWindowObject<?> o : objIn.getCombinedObjects()) {
+		for (var o : objIn.getCombinedChildren()) {
 			//only windows can be pinned
 			if (o instanceof IWindowParent<?> wp) {
 				if (!wp.isPinned()) windows.add(wp);
 			}
 			else {
-				EArrayList<IWindowObject<?>> childObjects = objIn.getAllChildren();
+				var childObjects = objIn.getAllChildren();
 				for (int i = childObjects.size() - 1; i >= 0; i--) {
 					IWindowObject<?> u = childObjects.get(i);
 					u.close();
@@ -288,8 +283,8 @@ public class StaticTopParent extends EGui {
 			}
 		}
 		
-		for (IWindowParent<?> p : windows) {
-			EArrayList<IWindowObject<?>> childObjects = p.getAllChildren();
+		for (var p : windows) {
+			var childObjects = p.getAllChildren();
 			for (int i = childObjects.size() - 1; i >= 0; i--) {
 				childObjects.get(i).close();
 			}
@@ -298,12 +293,9 @@ public class StaticTopParent extends EGui {
 	}
 	
 	public static void removeAllObjects(ITopParent<?> objIn) {
-		
 		//check in both the current objects and the objects that will be added
-		EArrayList<IWindowObject<?>> objects = objIn.getCombinedObjects();
-		
-		for (IWindowObject<?> p : objects) {
-			EArrayList<IWindowObject<?>> childObjects = p.getAllChildren();
+		for (var p : objIn.getCombinedChildren()) {
+			var childObjects = p.getAllChildren();
 			for (int i = childObjects.size() - 1; i >= 0; i--) {
 				childObjects.get(i).close();
 			}
@@ -314,10 +306,9 @@ public class StaticTopParent extends EGui {
 	/** Returns true if there are any pinned windows within the specified topParent. */
 	public static boolean hasPinnedObjects(ITopParent<?> objIn) {
 		//check in both the current objects and the objects that will be added
-		for (IWindowObject<?> o : EArrayList.combineLists(objIn.getObjects(), objIn.getAddingObjects())) {
-			if (o instanceof IWindowParent<?>) { //only windows can be pinned
-				if (((IWindowParent<?>) o).isPinned()) { return true; }
-			}
+		for (var o : objIn.getCombinedChildren()) {
+			//only windows can be pinned
+			if (o instanceof IWindowParent<?> wp && wp.isPinned()) return true;
 		}
 		return false;
 	}
@@ -329,17 +320,17 @@ public class StaticTopParent extends EGui {
 	/** Removes any object that possesses a focus lock on the specified topParent. */
 	public static void clearFocusLockObject(ITopParent<?> objIn) {
 		var flo = objIn.getFocusLockObject();
-		if (flo != null) flo.onFocusLost(new EventFocus(objIn, flo, FocusType.Lost));
+		if (flo != null) flo.onFocusLost(new EventFocus(objIn, flo, FocusType.LOST));
 		objIn.setFocusLockObject(null); 
 	}
 	
 	/** Forces the currently focused object, if there is one, to return focus to either the defaultFocusObject, if there is one, or the topParent. */
 	public static void clearFocusedObject(ITopParent<?> objIn) {
-		IWindowObject<?> fo = objIn.getFocusedObject();
+		var fo = objIn.getFocusedObject();
 		var dfo = objIn.getDefaultFocusObject();
 		
 		if (fo != null && fo != objIn) {
-			fo.onFocusLost(new EventFocus(objIn, fo, FocusType.Lost));
+			fo.onFocusLost(new EventFocus(objIn, fo, FocusType.LOST));
 			//transfer focus back to the defaultFocusObject or the topParent
 			if (dfo != null) objIn.setFocusedObject(dfo);
 			else objIn.setFocusedObject(objIn);
@@ -353,11 +344,8 @@ public class StaticTopParent extends EGui {
 	
 	/** Method used to process focus events that are present in the specified topParent. */
 	public static void updateFocus(ITopParent<?> objIn, Deque<EventFocus> focusQueue) {
-		//IWindowObject<?> mod = objIn.getModifyingObject();
-		//ObjectModifyType mType = objIn.getModifyType();
-		
 		//remove any lingering focused objects if they are no longer within in the parent
-		EArrayList<IWindowObject<?>> children = objIn.getAllChildren();
+		var children = objIn.getAllChildren();
 		if (objIn.getFocusedObject() != null && !children.contains(objIn.getFocusedObject())) objIn.clearFocusedObject();
 		if (objIn.getFocusLockObject() != null && !children.contains(objIn.getFocusLockObject())) objIn.clearFocusLockObject();
 		if (objIn.getDefaultFocusObject() != null && !children.contains(objIn.getDefaultFocusObject())) objIn.setDefaultFocusObject(null);
@@ -375,7 +363,7 @@ public class StaticTopParent extends EGui {
 							passFocus(objIn, objIn.getFocusedObject(), obj, event);
 						}
 						else if (objIn.getFocusedObject() != objIn.getFocusLockObject()) {
-							passFocus(objIn, objIn.getFocusedObject(), objIn.getFocusLockObject(), new EventFocus(objIn, objIn.getFocusLockObject(), FocusType.DefaultFocusObject));
+							passFocus(objIn, objIn.getFocusedObject(), objIn.getFocusLockObject(), new EventFocus(objIn, objIn.getFocusLockObject(), FocusType.DEFAULT_FOCUS_OBJECT));
 						}
 					}
 					else {
@@ -394,7 +382,7 @@ public class StaticTopParent extends EGui {
 			}
 		}
 		else if (objIn.getFocusedObject() == null) {
-			passFocus(objIn, objIn.getFocusedObject(), objIn, new EventFocus(objIn, objIn, FocusType.DefaultFocusObject));
+			passFocus(objIn, objIn.getFocusedObject(), objIn, new EventFocus(objIn, objIn, FocusType.DEFAULT_FOCUS_OBJECT));
 		}
 	}
 	
@@ -405,9 +393,9 @@ public class StaticTopParent extends EGui {
 		to.onFocusGained(event);
 	}
 	
-	//----------------------------
-	//StaticTopParent Mouse Checks
-	//----------------------------
+	//--------------
+	// Mouse Checks
+	//--------------
 	
 	//mouse checks
 	/** Returns true if the mouse is over any object edge. */
@@ -418,7 +406,7 @@ public class StaticTopParent extends EGui {
 	/** Returns the ScreenLocation type of any object the mouse is currently over. */
 	public static ScreenLocation getEdgeAreaMouseIsOn(ITopParent<?> objIn) {
 		//check in both the objects on screen and the objects being added
-		for (IWindowObject<?> o : objIn.getCombinedObjects()) {
+		for (var o : objIn.getCombinedChildren()) {
 			ScreenLocation loc = o.getEdgeSideMouseIsOn();
 			if (loc != ScreenLocation.OUT) return loc;
 		}
@@ -440,28 +428,28 @@ public class StaticTopParent extends EGui {
 	/** Returns the object that has the highest z level under the cursor. */
 	public static IWindowObject<?> getHighestZObjectUnderMouse(ITopParent<?> objIn) {
 		try {
-			EArrayList<IWindowObject<?>> underMouse = objIn.getAllObjectsUnderMouse();
-			BoxList<IWindowObject<?>, EArrayList<IWindowObject<?>>> sortedByParent = new BoxList();
+			BoxList<IWindowObject<?>, EArrayList<IWindowObject<?>>> sortedByParent = new BoxList<>();
+			var underMouse = objIn.getAllObjectsUnderMouse();
 			
 			//first setup the sorted list
-			for (int i = objIn.getObjects().size() - 1; i >= 0; i--) {
-				sortedByParent.add(objIn.getObjects().get(i), new EArrayList());
+			for (int i = objIn.getChildren().size() - 1; i >= 0; i--) {
+				sortedByParent.add(objIn.getChildren().get(i), new EArrayList());
 			}
 			
 			//next iterate through each of the objects found under the mouse and add them to the corresponding parents
-			for (IWindowObject<?> o : underMouse) {
+			for (var o : underMouse) {
 				for (int i = 0; i < sortedByParent.size(); i++) {
-					IWindowObject<?> parent = sortedByParent.getA(i);
+					var parent = sortedByParent.getA(i);
 					if (o.equals(parent) || parent.getAllChildren().contains(o)) sortedByParent.getB(i).add(o);
 				}
 			}
 			
 			//next iterate through each of the sorted parent's found objects to see if they are the highest object
-			for (Box2<IWindowObject<?>, EArrayList<IWindowObject<?>>> box : sortedByParent) {
+			for (var box : sortedByParent) {
 				if (box.getB().isEmpty()) continue;
 				
 				//get the last object (which should be the highest object)
-				EArrayList<IWindowObject<?>> objects = box.getB();
+				var objects = box.getB();
 				return objects.getLast();
 			}
 		}
@@ -471,16 +459,16 @@ public class StaticTopParent extends EGui {
 	
 	/** Returns a list of all objects that currently under the cursor. */
 	public static EArrayList<IWindowObject<?>> getAllObjectsUnderMouse(ITopParent<?> objIn) {
-		EArrayList<IWindowObject<?>> underMouse = new EArrayList();
+		EArrayList<IWindowObject<?>> underMouse = new EArrayList<>();
 		EArrayList<IWindowObject<?>> children = objIn.getAllChildren();
 		
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();
 		
 		//don't check if an object is being resized
-		if (objIn.getModifyType() != ObjectModifyType.Resize) {
+		if (objIn.getModifyType() != ObjectModifyType.RESIZE) {
 			
-			for (IWindowObject<?> o : children) {
+			for (var o : children) {
 				//check if the object can even be selected
 				if (o.isVisible() && (o.isClickable() || o.getHoverText() != null)) {
 					if (o instanceof IWindowParent<?> wp) {
@@ -491,7 +479,7 @@ public class StaticTopParent extends EGui {
 					}
 					//then check if the mouse is in or around the object if it's resizeable
 					else if (o.isMouseInside() || (o.isResizeable() && o.isMouseOnEdge(mX, mY))) {
-						IWindowParent<?> wp = o.getWindowParent();
+						var wp = o.getWindowParent();
 						if (wp != null) {
 							if (!wp.isMinimized()) underMouse.add(o);
 						}

@@ -2,15 +2,21 @@ package engine.windowLib.windowObjects.basicObjects;
 
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.windowLib.windowTypes.WindowObject;
+import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.math.NumberUtil;
 
 public class WindowStatusBar extends WindowObject {
 	
+	//--------
+	// Fields
+	//--------
+	
 	private double min;
 	private double max;
 	private double current;
 	private int color;
+	
 	// draw stuff
 	double x;
 	double y;
@@ -20,13 +26,19 @@ public class WindowStatusBar extends WindowObject {
 	double ex;
 	double ey;
 	
-	public WindowStatusBar(WindowObject parent, double xIn, double yIn, double width, double height, double min, double max) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowStatusBar(IWindowObject<?> parent, double xIn, double yIn, double width, double height, double min, double max) {
 		this(parent, xIn, yIn, width, height, min, max, 0xffffffff);
 	}
-	public WindowStatusBar(WindowObject parent, double xIn, double yIn, double width, double height, double min, double max, EColors color) {
+	
+	public WindowStatusBar(IWindowObject<?> parent, double xIn, double yIn, double width, double height, double min, double max, EColors color) {
 		this(parent, xIn, yIn, width, height, min, max, color.intVal);
 	}
-	public WindowStatusBar(WindowObject parent, double xIn, double yIn, double width, double height, double minIn, double maxIn, int colorIn) {
+	
+	public WindowStatusBar(IWindowObject<?> parent, double xIn, double yIn, double width, double height, double minIn, double maxIn, int colorIn) {
 		init(parent, xIn, yIn, width, height);
 		min = minIn;
 		max = maxIn;
@@ -34,6 +46,10 @@ public class WindowStatusBar extends WindowObject {
 		current = max;
 		updateDrawing();
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
@@ -47,6 +63,10 @@ public class WindowStatusBar extends WindowObject {
 		
 		super.drawObject(mXIn, mYIn);
 	}
+
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	private void updateDrawing() {
 		x = startX + 5;
@@ -58,15 +78,26 @@ public class WindowStatusBar extends WindowObject {
 		ey = endY - 5;
 	}
 	
+	//---------
+	// Methods
+	//---------
+	
 	public void decrementVal(double amount) { setBarValue(current - amount); }
 	public void incrementVal(double amount) { setBarValue(current + amount); }
 	
-	public WindowStatusBar setBarValue(double val) {
-		current = NumberUtil.clamp(val, min, max);
-		updateDrawing();
-		return this;
-	}
+	//---------
+	// Getters
+	//---------
 	
 	public double getCurrentVal() { return current; }
+	
+	//---------
+	// Setters
+	//---------
+	
+	public void setBarValue(double val) {
+		current = NumberUtil.clamp(val, min, max);
+		updateDrawing();
+	}
 	
 }

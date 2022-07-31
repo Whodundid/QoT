@@ -83,7 +83,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
 			b.setHoverText(tile.getName());
 			
 			//add to list first then dimension
-			panel.addObject(b);
+			panel.addChild(b);
 			b.setDimensions(bx, by, bw, bw);
 		}
 	}

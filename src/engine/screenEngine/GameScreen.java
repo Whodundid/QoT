@@ -6,7 +6,7 @@ import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowTypes.TopWindowParent;
 import engine.windowLib.windowTypes.interfaces.ITopParent;
 import eutil.datatypes.EArrayList;
-import game.screens.primary.MainMenuScreen;
+import game.screens.main.MainMenuScreen;
 import main.QoT;
 
 public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopParent<E> {
@@ -24,7 +24,7 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		drawScreen(mX, mY);
+		drawScreen(mXIn, mYIn);
 		super.drawObject(mXIn, mYIn);
 	}
 	
@@ -45,7 +45,7 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	
 	public void onWindowResized() {
 		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
-		reInitObjects();
+		reInitChildren();
 	}
 	
 	public Stack<GameScreen<?>> getScreenHistory() { return screenHistory; }

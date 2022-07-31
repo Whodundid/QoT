@@ -21,6 +21,10 @@ import assets.textures.WindowTextures;
 
 public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	private File curDir;
 	private File selectedFile;
 	private String titleToSet;
@@ -56,6 +60,10 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		windowIcon = WindowTextures.file_folder;
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
 	public void initWindow() {
 		setObjectName("File Explorer");
@@ -66,7 +74,7 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader();
 		if (titleToSet != null) header.setTitle(titleToSet);
 		
@@ -106,10 +114,10 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		fileArea = new WindowScrollList(this, startX + 2, fileUpBtn.endY + 8, width - 4, faH);
 		fileArea.setBackgroundColor(EColors.pdgray);
 		
-		addObject(backBtn, forwardBtn, fileUpBtn);
-		addObject(cancelBtn, selectBtn);
-		addObject(dirField);
-		addObject(fileArea);
+		addChild(backBtn, forwardBtn, fileUpBtn);
+		addChild(cancelBtn, selectBtn);
+		addChild(dirField);
+		addChild(fileArea);
 		
 		buildDir();
 	}
@@ -149,9 +157,46 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		super.drawObject(mXIn, mYIn);
 	}
 	
+	@Override
+	public void actionPerformed(IActionObject<?> object, Object... args) {
+		if (object == fileUpBtn) fileUp();
+		if (object == selectBtn) select();
+		if (object == cancelBtn) cancel();
+		
+		if (object == dirField) {
+			String txt = dirField.getText();
+			scrollBarPositionHistory.clear();
+			if (txt.startsWith("> ")) setDir(txt.substring(2));
+			else setDir(txt);
+		}
+	}
+	
 	//---------
 	// Methods
 	//---------
+	
+	public void clearHighlighted() {
+		highlighted.forEach(f -> f.setHighlighted(false));
+		highlighted.clear();
+	}
+	
+	//---------
+	// Getters
+	//---------
+	
+	public File getSelectedFile() {
+		return selectedFile;
+	}
+	
+	//---------
+	// Setters
+	//---------
+	
+	public void setDir(String dir) { setDir(new File(dir)); }
+	public void setDir(File dir) {
+		curDir = dir;
+		updateDir();
+	}
 	
 	/**
 	 * Toggles between selection mode or regular explorer mode.
@@ -161,53 +206,17 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	public void setSelectionMode(boolean val) {
 		boolean prev = selectMode;
 		selectMode = val;
-		if (prev != val) reInitObjects();
+		if (prev != val) reInitChildren();
 	}
 	
-	protected void selectFile(FilePreview f) {
-		if (Keyboard.isCtrlDown() || Keyboard.isShiftDown()) return;
-		if (!highlighted.hasOne()) return;
-		
-		if (actionReceiver == null) {
-			openFile(f);
-			return;
-		}
-		
-		selectedFile = f.getFile();
-		performAction(f.getFile());
-		close();
+	public void setTitle(String title) {
+		if (isInit()) getHeader().setTitle(title);
+		else titleToSet = title;
 	}
 	
-	protected void openFile(FilePreview f) {
-		File dir = f.getFile();
-		
-		try {
-			switch (f.getFileType()) {
-			case PICTURE:
-				getTopParent().displayWindow(new TextureDisplayer(dir), ObjectPosition.SCREEN_CENTER);
-				break;
-			case TEXT:
-				TextEditorWindow txtWindow = new TextEditorWindow(f.getFile());
-				getTopParent().displayWindow(txtWindow, ObjectPosition.SCREEN_CENTER);
-				break;
-			case FOLDER:
-				setDir(f.getFile());
-				break;
-			case FILE:
-				FileOpener.openFile(f.getFile());
-				break;
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void setDir(String dir) { setDir(new File(dir)); }
-	public void setDir(File dir) {
-		curDir = dir;
-		updateDir();
-	}
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	private void updateDir() {
 		dirField.setText("> " + curDir);
@@ -297,33 +306,42 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		}
 	}
 	
-	public void clearHighlighted() {
-		highlighted.forEach(f -> f.setHighlighted(false));
-		highlighted.clear();
-	}
-	
-	public File getSelectedFile() {
-		return selectedFile;
-	}
-	
-	public void setTitle(String title) {
-		if (isInit()) getHeader().setTitle(title);
-		else titleToSet = title;
-	}
-	
-	//----------------------------
-	
-	@Override
-	public void actionPerformed(IActionObject<?> object, Object... args) {
-		if (object == fileUpBtn) fileUp();
-		if (object == selectBtn) select();
-		if (object == cancelBtn) cancel();
+	protected void selectFile(FilePreview f) {
+		if (Keyboard.isCtrlDown() || Keyboard.isShiftDown()) return;
+		if (!highlighted.hasOne()) return;
 		
-		if (object == dirField) {
-			String txt = dirField.getText();
-			scrollBarPositionHistory.clear();
-			if (txt.startsWith("> ")) setDir(txt.substring(2));
-			else setDir(txt);
+		if (actionReceiver == null) {
+			openFile(f);
+			return;
+		}
+		
+		selectedFile = f.getFile();
+		performAction(f.getFile());
+		close();
+	}
+	
+	protected void openFile(FilePreview f) {
+		File dir = f.getFile();
+		
+		try {
+			switch (f.getFileType()) {
+			case PICTURE:
+				getTopParent().displayWindow(new TextureDisplayer(dir), ObjectPosition.SCREEN_CENTER);
+				break;
+			case TEXT:
+				TextEditorWindow txtWindow = new TextEditorWindow(f.getFile());
+				getTopParent().displayWindow(txtWindow, ObjectPosition.SCREEN_CENTER);
+				break;
+			case FOLDER:
+				setDir(f.getFile());
+				break;
+			case FILE:
+				FileOpener.openFile(f.getFile());
+				break;
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

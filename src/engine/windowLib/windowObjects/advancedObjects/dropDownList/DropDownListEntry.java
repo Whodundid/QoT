@@ -6,6 +6,10 @@ import eutil.colors.EColors;
 
 public class DropDownListEntry<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	protected int entryID = -1;
 	protected int color = 0xffffffff;
 	protected WindowDropDownList<E> parentList;
@@ -14,6 +18,10 @@ public class DropDownListEntry<E> {
 	protected boolean visible = true;
 	protected boolean enabled = true;
 	protected boolean globalAction = false;
+	
+	//--------------
+	// Constructors
+	//--------------
 	
 	DropDownListEntry(String textIn) { this(textIn, EColors.lgray.intVal, null, false); }
 	DropDownListEntry(String textIn, EColors colorIn, E objectIn) { this(textIn, colorIn.intVal, objectIn, false); }
@@ -26,6 +34,24 @@ public class DropDownListEntry<E> {
 		globalAction = hasActionIn;
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
+	@Override public String toString() { return text; }
+	
+	//---------
+	// Methods
+	//---------
+	
+	public void runEntryAction() {
+		if (globalAction) parentList.runGlobalAction();
+	}
+	
+	//---------
+	// Getters
+	//---------
+	
 	public int getEntryID() { return entryID; }
 	public WindowDropDownList<E> getParentList() { return parentList; }
 	public String getText() { return text; }
@@ -35,20 +61,18 @@ public class DropDownListEntry<E> {
 	public boolean isEnabled() { return enabled; }
 	public boolean isThereGlobalAction() { return globalAction; }
 	
-	public DropDownListEntry<E> setEntryID(int idIn) { entryID = idIn; return this; }
-	public DropDownListEntry<E> setParentList(WindowDropDownList<E> parentIn) { parentList = parentIn; return this; }
-	public DropDownListEntry<E> setText(String textIn) { text = textIn; return this; }
-	public DropDownListEntry<E> setColor(EColors colorIn) { return setColor(colorIn.intVal); }
-	public DropDownListEntry<E> setColor(int colorIn) { setColor(colorIn); return this; }
-	public DropDownListEntry<E> setEntryObject(E objectIn) { entryObject = objectIn; return this; }
-	public DropDownListEntry<E> setVisibility(boolean val) { visible = val; return this; }
-	public DropDownListEntry<E> setEnabled(boolean val) { enabled = val; return this; }
-	public DropDownListEntry<E> setGlobalActionPresent(boolean val) { globalAction = val; return this; }
+	//---------
+	// Setters
+	//---------
 	
-	public void runEntryAction() {
-		if (globalAction) parentList.runGlobalAction();
-	}
-	
-	@Override public String toString() { return text; }
+	public void setEntryID(int idIn) { entryID = idIn; }
+	public void setParentList(WindowDropDownList<E> parentIn) { parentList = parentIn; }
+	public void setText(String textIn) { text = textIn; }
+	public void setColor(EColors colorIn) { setColor(colorIn.intVal); }
+	public void setColor(int colorIn) { setColor(colorIn); }
+	public void setEntryObject(E objectIn) { entryObject = objectIn; }
+	public void setVisibility(boolean val) { visible = val; }
+	public void setEnabled(boolean val) { enabled = val; }
+	public void setGlobalActionPresent(boolean val) { globalAction = val; }
 	
 }

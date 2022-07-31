@@ -36,7 +36,7 @@ public class MapMenuScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		newMap = new WindowButton(this, midX - 100, midY - 200, 200, 45, "New Map");
 		mapDir = new WindowButton(this, midX - 100, newMap.endY + 5, 200, 45, "Map Folder");
 		
@@ -50,10 +50,10 @@ public class MapMenuScreen extends GameScreen {
 		
 		nameField.setText(QoTSettings.lastEditorMap.get());
 		
-		addObject(newMap, mapDir);
-		addObject(back);
-		addObject(nameLabel, nameField);
-		addObject(loadCur);
+		addChild(newMap, mapDir);
+		addChild(back);
+		addChild(nameLabel, nameField);
+		addChild(loadCur);
 		
 		setDefaultFocusObject(nameField);
 	}

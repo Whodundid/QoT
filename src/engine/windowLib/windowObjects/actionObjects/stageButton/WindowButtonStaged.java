@@ -37,7 +37,7 @@ public class WindowButtonStaged<E> extends WindowButton<E> {
 	
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
-		if (enabled && willBeDrawn()) {
+		if (isEnabled() && willBeDrawn()) {
 			pressedButton = button;
 			if (runActionOnPress) { onPress(button); }
 			else if (button == 0 || (button == 1 && acceptRightClicks)) {
@@ -89,11 +89,11 @@ public class WindowButtonStaged<E> extends WindowButton<E> {
 	}
 	
 	public String getCurStageString() {
-		return (!stages.isEmpty()) ? stages.get(curStage).stageName : "undef";
+		return (!stages.isEmpty()) ? stages.get(curStage).getName() : "undef";
 	}
 	
 	public int getCurStageColor() {
-		return (!stages.isEmpty()) ? stages.get(curStage).stageColor : EColors.lgray.intVal;
+		return (!stages.isEmpty()) ? stages.get(curStage).getColor() : EColors.lgray.intVal;
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class WindowButtonStaged<E> extends WindowButton<E> {
 	 * @return
 	 */
 	public String getStageString(int stageNum) {
-		return stages.get(stageNum).stageName;
+		return stages.get(stageNum).getName();
 	}
 	
 	/**
@@ -113,7 +113,7 @@ public class WindowButtonStaged<E> extends WindowButton<E> {
 	 * @return
 	 */
 	public int getStageColor(int stageNum) {
-		return stages.get(stageNum).stageColor;
+		return stages.get(stageNum).getColor();
 	}
 	
 	//---------
@@ -121,12 +121,15 @@ public class WindowButtonStaged<E> extends WindowButton<E> {
 	//---------
 	
 	public void setEveryString(String nameIn) {
-		stages.forEach(s -> s.stageName = nameIn);
+		stages.forEach(s -> s.setName(nameIn));
 	}
 	
-	public void setEveryColor(EColors colorIn) { setEveryColor(colorIn.intVal); }
+	public void setEveryColor(EColors colorIn) {
+		setEveryColor(colorIn.intVal);
+	}
+	
 	public void setEveryColor(int colorIn) {
-		stages.forEach(s -> s.stageColor = colorIn);
+		stages.forEach(s -> s.setColor(colorIn));
 	}
 	
 	public void setCurStageValues(String newName, int colorIn) {

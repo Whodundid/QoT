@@ -1,5 +1,6 @@
 package engine.windowLib.windowObjects.utilityObjects;
 
+import engine.inputHandlers.Keyboard;
 import engine.renderEngine.fontRenderer.EStringBuilder;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.ActionWindowParent;
@@ -10,19 +11,31 @@ import eutil.math.NumberUtil;
 
 //Author: Hunter Bragg
 
-public class WindowDialogueBox extends ActionWindowParent {
+public class WindowDialogBox extends ActionWindowParent {
+	
+	//-------
+	// Types
+	//-------
+	
+	public static enum DialogBoxTypes { YES_NO, OK, CUSTOM; }
+	
+	//--------
+	// Fields
+	//--------
 	
 	public int messageColor = 0xffffffff, titleColor = 0xffffffff;
 	public String message = "", title = "";
 	protected EArrayList<String> wordWrappedLines;
-	protected IWindowObject defaultObject;
+	protected IWindowObject<?> defaultObject;
 	protected WindowButton yes, no, okButton;
-	protected DialogueBoxTypes type;
+	protected DialogBoxTypes type;
 	
-	public enum DialogueBoxTypes { yesNo, ok, custom; }
+	//--------------
+	// Constructors
+	//--------------
 	
-	public WindowDialogueBox(IWindowObject parentIn) { this(parentIn, DialogueBoxTypes.custom); }
-	public WindowDialogueBox(IWindowObject parentIn, DialogueBoxTypes typeIn) {
+	public WindowDialogBox(IWindowObject<?> parentIn) { this(parentIn, DialogBoxTypes.CUSTOM); }
+	public WindowDialogBox(IWindowObject<?> parentIn, DialogBoxTypes typeIn) {
 		super(parentIn);
 		type = typeIn;
 		setSize(400, 200);
@@ -30,15 +43,19 @@ public class WindowDialogueBox extends ActionWindowParent {
 		setMinDims(350, 150);
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		getHeader().setTitle(title);
 		getHeader().setTitleColor(titleColor);
 		
 		if (type != null) {
 			switch (type) {
-			case yesNo:
+			case YES_NO:
 				double bw = NumberUtil.clamp((width - 10) / 3, 0, 140);
 				double g = width / 30;
 				
@@ -48,20 +65,20 @@ public class WindowDialogueBox extends ActionWindowParent {
 				no.setStringColor(EColors.yellow);
 				yes.setStringColor(EColors.lgreen);
 				
-				addObject(yes, no);
+				addChild(yes, no);
 				
 				defaultObject = yes;
 				break;
-			case ok:
+			case OK:
 				okButton = new WindowButton(this, midX - 40, endY - 30, 80, 20, "Ok") {
 					@Override
 					public void onPress(int button) {
 						playPressSound();
-						parent.close();
+						getParent().close();
 					}
 				};
 				okButton.setRunActionOnPress(true);
-				addObject(okButton);
+				addChild(okButton);
 				
 				defaultObject = okButton;
 				break;
@@ -93,24 +110,40 @@ public class WindowDialogueBox extends ActionWindowParent {
 	
 	@Override
 	public void keyPressed(char typedKey, int keyCode) {
-		if (keyCode == 28) { //enter
-			if (defaultObject != null && defaultObject instanceof WindowButton) {
-				((WindowButton) defaultObject).performAction();
+		if (keyCode == Keyboard.KEY_ENTER) {
+			if (defaultObject instanceof WindowButton<?> wb) {
+				wb.performAction();
 			}
 		}
 	}
 	
-	public WindowDialogueBox setDefaultObject(IWindowObject objIn) { defaultObject = objIn; return this; }
-	public WindowDialogueBox setTitle(String stringIn) { title = stringIn; setObjectName(title); if (getHeader() != null) { header.setTitle(title); } return this; }
-	public WindowDialogueBox setTitleColor(int colorIn) { titleColor = colorIn; if (getHeader() != null) { header.setTitleColor(titleColor); } return this; }
-	public WindowDialogueBox setMessageColor(EColors colorIn) { return setMessageColor(colorIn.intVal); }
-	public WindowDialogueBox setMessageColor(int colorIn) { messageColor = colorIn; return this; }
-	public WindowDialogueBox setMessage(String stringIn) {
-		message = stringIn;
-		wordWrappedLines = EStringBuilder.createWordWrapString(message, (int) width - 20);
-		return this;
+	//---------
+	// Getters
+	//---------
+	
+	public IWindowObject<?> getPrimaryObject() { return defaultObject; }
+	
+	//---------
+	// Setters
+	//---------
+	
+	public void setDefaultObject(IWindowObject objIn) { defaultObject = objIn; }
+	public void setMessageColor(EColors colorIn) { setMessageColor(colorIn.intVal); }
+	public void setMessageColor(int colorIn) { messageColor = colorIn; }
+	
+	public void setTitle(String stringIn) {
+		title = stringIn; setObjectName(title);
+		if (getHeader() != null) header.setTitle(title);
 	}
 	
-	public IWindowObject getPrimaryObject() { return defaultObject; }
+	public void setTitleColor(int colorIn) {
+		titleColor = colorIn;
+		if (getHeader() != null) header.setTitleColor(titleColor);
+	}
+	
+	public void setMessage(String stringIn) {
+		message = stringIn;
+		wordWrappedLines = EStringBuilder.createWordWrapString(message, (int) width - 20);
+	}
 	
 }

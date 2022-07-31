@@ -4,20 +4,31 @@ import main.QoT;
 
 public class WindowSize {
 	
-	int width;
-	int height;
+	//--------
+	// Fields
+	//--------
 	
-	//private int[] w = new int[1];
-	//private int[] h = new int[1];
+	private final int width;
+	private final int height;
 	
-	public WindowSize(main.QoT qoT) {
-		//GLFW.glfwGetWindowSize(QoT.getWindowHandle(), w, h);
-		
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowSize(QoT qoT) {
 		width = QoT.getWidth();
 		height = QoT.getHeight();
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override public String toString() { return width + ", " + height; }
+	
+	//---------
+	// Getters
+	//---------
 	
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }

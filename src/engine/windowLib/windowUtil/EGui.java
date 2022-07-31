@@ -18,16 +18,16 @@ import main.QoT;
 
 public abstract class EGui extends GLObject implements KeyboardInputAcceptor, MouseInputAcceptor {
 
+	//--------
+	// Fields
+	//--------
+	
 	public FontRenderer fontRenderer = QoT.getFontRenderer();
 	public WindowSize res = QoT.getWindowSize();
 	public double startXPos, startYPos, startWidth, startHeight;
 	public double startX, startY, endX, endY;
 	public double width, height;
 	public double midX, midY;
-	/** Temporarily cached X mouse coordinate. */
-	public int mX;
-	/** Temporarily cached Y mouse coordinate. */
-	public int mY;
 	public double minWidth = 0;
 	public double minHeight = 0;
 	public double maxWidth = Double.MAX_VALUE;
@@ -76,34 +76,10 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public void scissor() { scissor(startX, startY, endX, endY); }
 	public void scissor(double offset) { scissor(startX + offset, startY + offset, endX - offset, endY - offset); }
 	
-	//----------------------
+	//---------
+	// Methods
+	//---------
 	
-	public double getMinWidth() { return minWidth; }
-	public double getMinHeight() { return minHeight; }
-	public double getMaxWidth() { return maxWidth; }
-	public double getMaxHeight() { return maxHeight; }
-	public EGui setMinDims(double widthIn, double heightIn) { setMinWidth(widthIn).setMinHeight(heightIn); return this; }
-	public EGui setMaxDims(double widthIn, double heightIn) { setMaxWidth(widthIn).setMaxHeight(heightIn); return this; }
-	public EGui setMinWidth(double widthIn) { minWidth = widthIn; return this; }
-	public EGui setMinHeight(double heightIn) { minHeight = heightIn; return this; }
-	public EGui setMaxWidth(double widthIn) { maxWidth = widthIn; return this; }
-	public EGui setMaxHeight(double heightIn) { maxHeight = heightIn; return this; }
-	
-	public void setPosition(double newX, double newY) { setDimensions(newX, newY, width, height); }
-	public void setDimensions(EDimension dimIn) { setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
-	public void setSize(double widthIn, double heightIn) { setDimensions(startX, startY, widthIn, heightIn); }
-	public void setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
-		startX = startXIn;
-		startY = startYIn;
-		width = NumberUtil.clamp(widthIn, minWidth, maxWidth);
-		height = NumberUtil.clamp(heightIn, minHeight, maxHeight);
-		endX = startX + width;
-		endY = startY + height;
-		midX = startX + width / 2.0;
-		midY = startY + height / 2.0;
-	}
-	public void setInitialPosition(double xIn, double yIn) { startXPos = xIn; startYPos = yIn; }
-	public Box2<Double, Double> getInitialPosition() { return new Box2<Double, Double>(startXPos, startYPos); }
 	/** Centers the gui in the middle of the screen with the specified dimensions. */
 	public void centerGuiWithSize(double widthIn, double heightIn) {
 		double sWidth = QoT.getWidth();
@@ -132,11 +108,6 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 		
 		setDimensions(startX, startY, width, height); //apply the dimensions to the gui
 	}
-	public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
-	
-	//--------------
-	// Mouse Checks
-	//--------------
 	
 	/** Returns the ScreenLocation area the mouse is currently on for an object. */
 	public ScreenLocation getEdgeAreaMouseIsOn(int mX, int mY) {
@@ -165,5 +136,47 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public boolean isMouseInside(int mX, int mY) {
 		return mX >= startX && mX <= endX && mY >= startY && mY <= endY;
 	}
+	
+	//---------
+	// Getters
+	//---------
+	
+	public Box2<Double, Double> getPosition() { return new Box2<Double, Double>(startX, startY); }
+	public Box2<Double, Double> getInitialPosition() { return new Box2<Double, Double>(startXPos, startYPos); }
+	public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
+	
+	public Box2<Double, Double> getMinDims() { return new Box2<>(minWidth, minHeight); }
+	public Box2<Double, Double> getMaxDims() { return new Box2<>(maxWidth, maxHeight); }
+	public double getMinWidth() { return minWidth; }
+	public double getMinHeight() { return minHeight; }
+	public double getMaxWidth() { return maxWidth; }
+	public double getMaxHeight() { return maxHeight; }
+	
+	//---------
+	// Setters
+	//---------
+	
+	public void setPosition(double newX, double newY) { setDimensions(newX, newY, width, height); }
+	public void setInitialPosition(double xIn, double yIn) { startXPos = xIn; startYPos = yIn; }
+	public void setSize(double widthIn, double heightIn) { setDimensions(startX, startY, widthIn, heightIn); }
+	
+	public void setDimensions(EDimension dimIn) { setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
+	public void setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
+		startX = startXIn;
+		startY = startYIn;
+		width = NumberUtil.clamp(widthIn, minWidth, maxWidth);
+		height = NumberUtil.clamp(heightIn, minHeight, maxHeight);
+		endX = startX + width;
+		endY = startY + height;
+		midX = startX + width / 2.0;
+		midY = startY + height / 2.0;
+	}
+	
+	public void setMinDims(double widthIn, double heightIn) { minWidth = widthIn; minHeight = heightIn; }
+	public void setMaxDims(double widthIn, double heightIn) { maxWidth = widthIn; maxHeight = heightIn; }
+	public void setMinWidth(double widthIn) { minWidth = widthIn; }
+	public void setMinHeight(double heightIn) { minHeight = heightIn; }
+	public void setMaxWidth(double widthIn) { maxWidth = widthIn; }
+	public void setMaxHeight(double heightIn) { maxHeight = heightIn; }
 	
 }

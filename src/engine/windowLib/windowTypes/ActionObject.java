@@ -8,6 +8,10 @@ import engine.windowLib.windowTypes.interfaces.IWindowParent;
 
 public abstract class ActionObject<E> extends WindowObject<E> implements IActionObject<E> {
 
+	//--------
+	// Fields
+	//--------
+	
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
 	protected IWindowObject<?> actionReceiver;
@@ -23,25 +27,19 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 		actionReceiver = parentIn;
 	}
 	
-	//------------------------
-	// WindowObject Overrides
-	//------------------------
+	//--------------------------
+	// Overrides : WindowObject
+	//--------------------------
 	
 	@Override
-	public void init(IWindowObject<?> objIn, double xIn, double yIn) {
+	public void init(IWindowObject<?> objIn, Number xIn, Number yIn) {
 		super.init(objIn, xIn, yIn);
 		actionReceiver = objIn;
 	}
 	
 	@Override
-	public void init(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn) {
-		init(objIn, xIn, yIn, widthIn, heightIn, -1);
-		actionReceiver = objIn;
-	}
-	
-	@Override
-	public void init(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn, int objectIdIn) {
-		super.init(objIn, xIn, yIn, widthIn, heightIn, objectIdIn);
+	public void init(IWindowObject<?> objIn, Number xIn, Number yIn, Number widthIn, Number heightIn) {
+		super.init(objIn, xIn, yIn, widthIn, heightIn);
 		actionReceiver = objIn;
 	}
 	
@@ -53,9 +51,9 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 		if (runActionOnRelease) performAction();
 	}
 	
-	//-------------------------
-	// IActionObject Overrides
-	//-------------------------
+	//---------------------------
+	// Overrides : IActionObject
+	//---------------------------
 	
 	@Override
 	public void performAction(Object... args) {
@@ -69,9 +67,9 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 	@Override public void onPress(int button) {}
 	@Override public boolean runsActionOnPress() { return runActionOnPress; }
 	@Override public boolean runsActionOnRelease() { return runActionOnRelease; }
-	@Override public IActionObject<E> setRunActionOnPress(boolean value) { runActionOnPress = value; return this; }
-	@Override public IActionObject<E> setRunActionOnRelease(boolean val) { runActionOnRelease = val; return this; }
-	@Override public IActionObject<E> setActionReceiver(IWindowObject objIn) { actionReceiver = objIn; return this; }
+	@Override public void setRunActionOnPress(boolean value) { runActionOnPress = value; }
+	@Override public void setRunActionOnRelease(boolean val) { runActionOnRelease = val; }
+	@Override public void setActionReceiver(IWindowObject<?> objIn) { actionReceiver = objIn; }
 	@Override public IWindowObject<?> getActionReceiver() { return actionReceiver; }
 	
 }

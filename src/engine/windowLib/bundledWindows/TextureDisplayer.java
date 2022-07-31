@@ -14,12 +14,17 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import assets.textures.TaskBarTextures;
 import assets.textures.WindowTextures;
 
 public class TextureDisplayer extends WindowParent {
 	
-	private WindowButton previous, next, open;
-	private WindowImageBox imageBox;
+	//--------
+	// Fields
+	//--------
+	
+	private WindowButton<?> previous, next, open;
+	private WindowImageBox<?> imageBox;
 	private Path path;
 	private File file;
 	private EArrayList<Path> paths;
@@ -32,18 +37,18 @@ public class TextureDisplayer extends WindowParent {
 	private boolean centered = false;
 	private boolean navigationDrawn = false;
 	
-	//-----------------------------
-	//TextureDisplayer Constructors
-	//-----------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	public TextureDisplayer() { this((GameTexture) null); }
 	public TextureDisplayer(Path pathIn) { path = pathIn; }
 	public TextureDisplayer(File fileIn) { file = fileIn; }
 	public TextureDisplayer(GameTexture textureIn) { tex = textureIn; }
 	
-	//----------------------
-	//WindowObject Overrides
-	//----------------------
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void initWindow() {
@@ -53,13 +58,13 @@ public class TextureDisplayer extends WindowParent {
 		setMinDims(144, 100);
 		setObjectName("Texture Viewer");
 		
-		//windowIcon = EMCResources.textureViewerIcon;
+		windowIcon = TaskBarTextures.textureviewer;
 		
 		parseForImage();
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		double w = NumberUtil.clamp((width - 10 - (width / 6)) / 2, 50, 100);
@@ -81,7 +86,7 @@ public class TextureDisplayer extends WindowParent {
 		imageBox.setImage(tex);
 		imageBox.setCenterImage(centered);
 		
-		addObject(imageBox, previous, next, open);
+		addChild(imageBox, previous, next, open);
 	}
 	
 	@Override
@@ -92,9 +97,9 @@ public class TextureDisplayer extends WindowParent {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == previous) { previousImage(); }
-		if (object == next) { nextImage(); }
-		if (object == open) { FileOpener.openFile(files.get(curFile)); }
+		if (object == previous) previousImage();
+		if (object == next) nextImage();
+		if (object == open) FileOpener.openFile(files.get(curFile));
 	}
 	
 	@Override
@@ -103,9 +108,9 @@ public class TextureDisplayer extends WindowParent {
 		super.close();
 	}
 	
-	//---------------------------------
-	//TextureDisplayer Internal Methods
-	//---------------------------------
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	private void parseForImage() {
 		if (tex != null) {
@@ -132,14 +137,16 @@ public class TextureDisplayer extends WindowParent {
 						
 						int i = 0;
 						for (Path p : paths) {
-							if (p.equals(path)) { break; }
+							if (p.equals(path)) break;
 							i++;
 						}
-						if (i < paths.size()) { curPath = i; }
+						if (i < paths.size()) curPath = i;
 					}
 				}
 			}
-			catch (Exception e) { e.printStackTrace(); }
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		if (file != null) {
@@ -153,51 +160,53 @@ public class TextureDisplayer extends WindowParent {
 				}
 				
 				if (file.getParentFile() != null) {
-					EArrayList<File> unprocessed = new EArrayList<File>().addA(file.getParentFile().listFiles());
-					files = unprocessed.stream().filter(f -> isImage(f.getPath())).collect(EArrayList.toEArrayList());
+					var unprocessed = new EArrayList<File>().addA(file.getParentFile().listFiles());
+					files = unprocessed.filter(f -> isImage(f.getPath()));
 					
 					if (files.size() > 1) {
 						navigationDrawn = true;
 						
 						int i = 0;
 						for (File f : files) {
-							if (f.getPath().equals(file.getPath())) { break; }
+							if (f.getPath().equals(file.getPath())) break;
 							i++;
 						}
-						if (i < files.size()) { curFile = i; }
+						if (i < files.size()) curFile = i;
 					}
 				}
 			}
-			catch (Exception e) { e.printStackTrace(); }
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	private void previousImage() {
 		if (file != null) {
-			if (tex != null) { tex.destroy(); }
+			if (tex != null) tex.destroy();
 			curFile--;
-			if (curFile < 0) { curFile = files.size() - 1; }
+			if (curFile < 0) curFile = files.size() - 1;
 			loadImage(true);
 		}
 		else if (path != null) {
-			if (tex != null) { tex.destroy(); }
+			if (tex != null) tex.destroy();
 			curPath--;
-			if (curPath < 0) { curPath = paths.size() - 1; }
+			if (curPath < 0) curPath = paths.size() - 1;
 			loadImage(false);
 		}
 	}
 	
 	private void nextImage() {
 		if (file != null) {
-			if (tex != null) { tex.destroy(); }
+			if (tex != null) tex.destroy();
 			curFile++;
-			if (curFile == files.size()) { curFile = 0; }
+			if (curFile == files.size()) curFile = 0;
 			loadImage(true);
 		}
 		else if (path != null) {
-			if (tex != null) { tex.destroy(); }
+			if (tex != null) tex.destroy();
 			curPath++;
-			if (curPath == paths.size()) { curPath = 0; }
+			if (curPath == paths.size()) curPath = 0;
 			loadImage(false);
 		}
 	}
@@ -208,7 +217,7 @@ public class TextureDisplayer extends WindowParent {
 				try {
 					File newFile = files.get(curFile);
 					setObjectName(newFile.getName());
-					if (getHeader() != null) { getHeader().setTitle(newFile.getName()); }
+					if (getHeader() != null) getHeader().setTitle(newFile.getName());
 					
 					tex = new GameTexture(newFile.toString());
 					QoT.getTextureSystem().registerTexture(tex);
@@ -217,14 +226,16 @@ public class TextureDisplayer extends WindowParent {
 						imageBox.setImage(tex);
 					}
 				}
-				catch (Exception e) { e.printStackTrace(); }
+				catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		else if (paths != null) {	
 			try {
 				Path newPath = paths.get(curPath);
 				setObjectName(newPath.getFileName().toString());
-				if (getHeader() != null) { getHeader().setTitle(newPath.getFileName().toString()); }
+				if (getHeader() != null) getHeader().setTitle(newPath.getFileName().toString());
 				
 				tex = new GameTexture(paths.get(curPath).toString());
 				QoT.getTextureSystem().registerTexture(tex);
@@ -233,12 +244,18 @@ public class TextureDisplayer extends WindowParent {
 					imageBox.setImage(tex);
 				}
 			}
-			catch (Exception e) { e.printStackTrace(); }
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	private boolean isImage(String path) {
-		return path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".gif") || path.endsWith(".tga") || path.endsWith(".bmp");
+		return path.endsWith(".png") ||
+			   path.endsWith(".jpg") ||
+			   path.endsWith(".gif") ||
+			   path.endsWith(".tga") ||
+			   path.endsWith(".bmp");
 	}
 
 }

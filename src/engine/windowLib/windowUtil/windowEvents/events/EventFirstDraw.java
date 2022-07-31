@@ -8,7 +8,11 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.EventType;
 
 public class EventFirstDraw extends ObjectEvent {
 	
-	public EventFirstDraw(IWindowObject parentObjectIn) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public EventFirstDraw(IWindowObject<?> parentObjectIn) {
 		super(parentObjectIn, EventType.FIRSTDRAW);
 	}
 	

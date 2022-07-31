@@ -7,20 +7,24 @@ import eutil.math.NumberUtil;
 
 public class WindowScreen<E> {
 	
-	private EArrayList<IWindowObject<?>> objects = new EArrayList();
+	//--------
+	// Fields
+	//--------
+	
+	private EArrayList<IWindowObject<?>> objects = new EArrayList<>();
 	private int curStage = 0;
 	private int numStages = 1;
 	
-	//-------------------------
-	//WindowScreen Constructors
-	//-------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	public WindowScreen() { this(1); }
 	public WindowScreen(int numStagesIn) { numStages = numStagesIn; curStage = 0; }
 	
-	//--------------------
-	//WindowScreen Methods
-	//--------------------
+	//---------
+	// Methods
+	//---------
 	
 	public void drawScreen(double mXIn, double mYIn) {}
 	public void onLoaded() {}
@@ -34,21 +38,18 @@ public class WindowScreen<E> {
 	public void showScreen() { objects.forEach(o -> EUtil.nullDo(o, i -> i.setVisible(true))); }
 	public void hideScreen() { objects.forEach(o -> EUtil.nullDo(o, i -> i.setVisible(false))); }
 	
-	//--------------------
-	//WindowScreen Getters
-	//--------------------
+	//---------
+	// Getters
+	//---------
 	
 	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
 	public int getNumStages() { return numStages; }
 	public int getCurrentStage() { return curStage; }
 	
-	//--------------------
-	//WindowScreen Setters
-	//--------------------
+	//---------
+	// Setters
+	//---------
 	
-	public WindowScreen setObjects(IWindowObject<?>... objectsIn) {
-		objects.add(objectsIn);
-		return this;
-	}
+	public void setObjects(IWindowObject<?>... objectsIn) { objects.add(objectsIn); }
 	
 }

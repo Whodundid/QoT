@@ -27,7 +27,7 @@ public class EditorMiniMap extends WindowObject {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		
 	}
 	

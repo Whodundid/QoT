@@ -1,6 +1,5 @@
 package engine.windowLib.windowUtil;
 
-import java.util.Iterator;
 import java.util.List;
 
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
@@ -11,39 +10,51 @@ import eutil.datatypes.EArrayList;
 
 public class EObjectGroup {
 	
-	protected EArrayList<IWindowObject> objects = new EArrayList();
-	protected IWindowObject groupParent;
+	//--------
+	// Fields
+	//--------
+	
+	private EArrayList<IWindowObject<?>> objects = new EArrayList();
+	private IWindowObject<?> groupParent;
+	
+	//--------------
+	// Constructors
+	//--------------
 	
 	public EObjectGroup() {}
-	public EObjectGroup(IWindowObject parentIn) {
+	public EObjectGroup(IWindowObject<?> parentIn) {
 		objects.add(parentIn);
 		groupParent = parentIn;
 	}
 	
+	//---------
+	// Methods
+	//---------
+	
 	/** does not accept duplicates */
-	public EObjectGroup addObject(IWindowObject... objectIn) {
+	public EObjectGroup addObject(IWindowObject<?>... objectIn) {
 		if (objectIn != null) {
-			for (IWindowObject o : objectIn) {
+			for (var o : objectIn) {
 				objects.addNullContains(o);
 			}
 		}
 		return this;
 	}
 	
-	public EObjectGroup addObjects(List<IWindowObject> objectsIn) {
+	public EObjectGroup addObjects(List<IWindowObject<?>> objectsIn) {
 		if (objectsIn != null) {
-			for (IWindowObject o : objectsIn) {
+			for (var o : objectsIn) {
 				objects.addIfNotContains(o);
 			}
 		}
 		return this;
 	}
 	
-	public EObjectGroup removeObject(IWindowObject... objectIn) {
-		Iterator<IWindowObject> it = objects.iterator();
+	public EObjectGroup removeObject(IWindowObject<?>... objectIn) {
+		var it = objects.iterator();
 		while (it.hasNext()) {
-			for (IWindowObject o : objectIn) {
-				if (o.equals(it.next())) { it.remove(); }
+			for (var o : objectIn) {
+				if (o.equals(it.next())) it.remove();
 			}
 		}
 		return this;
@@ -59,22 +70,30 @@ public class EObjectGroup {
 	}
 	
 	public boolean doAnyHaveFocus() {
-		for (IWindowObject o : objects) {
-			if (o.hasFocus()) { return true; }
+		for (var o : objects) {
+			if (o.hasFocus()) return true;
 		}
 		return false;
 	}
 	
 	public boolean isMouseOverAny(int mXIn, int mYIn) {
-		for (IWindowObject o : objects) {
-			if (o.isMouseOver()) { return true; }
+		for (var o : objects) {
+			if (o.isMouseOver()) return true;
 		}
 		return false;
 	}
 	
-	public EObjectGroup setGroupParent(IWindowObject parentIn) { groupParent = parentIn; return this; }
+	//---------
+	// Getters
+	//---------
 	
-	public EArrayList<IWindowObject> getObjects() { return objects; }
-	public IWindowObject getGroupParent() { return groupParent; }
+	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
+	public IWindowObject<?> getGroupParent() { return groupParent; }
+	
+	//---------
+	// Setters
+	//---------
+	
+	public EObjectGroup setGroupParent(IWindowObject<?> parentIn) { groupParent = parentIn; return this; }
 	
 }

@@ -1,9 +1,9 @@
 package engine.screenEngine;
 
 import eutil.datatypes.EArrayList;
-import game.screens.primary.MainMenuScreen;
-import game.screens.primary.OptionsScreen;
-import game.screens.primary.WorldSelectScreen;
+import game.screens.main.MainMenuScreen;
+import game.screens.main.OptionsScreen;
+import game.screens.main.WorldSelectScreen;
 import world.mapEditor.MapMenuScreen;
 
 import java.lang.reflect.Constructor;

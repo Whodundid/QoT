@@ -8,15 +8,27 @@ import eutil.colors.EColors;
 
 public class WindowRadioButton<E> extends ActionObject<E> {
 
-	boolean checked = false;
-	int color = EColors.green.intVal;
+	//--------
+	// Fields
+	//--------
 	
-	public WindowRadioButton(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, false); }
-	public WindowRadioButton(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn, boolean checkedIn) {
+	private boolean checked = false;
+	private int color = EColors.green.intVal;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowRadioButton(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, false); }
+	public WindowRadioButton(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn, boolean checkedIn) {
 		init(objIn, xIn, yIn, widthIn, heightIn);
 		checked = checkedIn;
 	}
 
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawFilledEllipse(midX, midY, width / 2, height / 2, 30, EColors.black);
@@ -36,11 +48,19 @@ public class WindowRadioButton<E> extends ActionObject<E> {
 		}
 	}
 	
-	public boolean isChecked() { return checked; }
+	//---------
+	// Getters
+	//---------
+	
+	public boolean getIsChecked() { return checked; }
 	public int getColor() { return color; }
 	
-	public WindowRadioButton setChecked(boolean val) { checked = val; return this; }
-	public WindowRadioButton setColor(EColors colorIn) { color = colorIn.c(); return this; }
-	public WindowRadioButton setColor(int colorIn) { color = colorIn; return this; }
+	//---------
+	// Setters
+	//---------
+	
+	public void setIsChecked(boolean val) { checked = val; }
+	public void setColor(EColors colorIn) { color = colorIn.intVal;  }
+	public void setColor(int colorIn) { color = colorIn; }
 	
 }

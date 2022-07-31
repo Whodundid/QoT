@@ -1,4 +1,4 @@
-package engine.windowLib;
+package engine.topOverlay;
 
 import engine.inputHandlers.Keyboard;
 import engine.inputHandlers.Mouse;
@@ -6,10 +6,10 @@ import engine.renderEngine.GLObject;
 import engine.renderEngine.GLSettings;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.terminal.window.ETerminal;
-import engine.windowLib.desktopOverlay.TaskBar;
+import engine.topOverlay.desktopOverlay.TaskBar;
 import engine.windowLib.windowTypes.TopWindowParent;
 import engine.windowLib.windowTypes.WindowParent;
-import engine.windowLib.windowTypes.interfaces.IWindowObject;
+import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import main.QoT;
@@ -20,6 +20,7 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 	
 	public static GameTopRenderer<?> instance;
 	private static boolean hasFocus = false;
+	private static TaskBar<?> taskBar;
 	
 	public static GameTopRenderer<?> getInstance() {
 		return instance = (instance != null) ? instance : new GameTopRenderer();
@@ -27,12 +28,12 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 	
 	private GameTopRenderer() {
 		res = QoT.getWindowSize();
-		initObjects();
+		initChildren();
 	}
 	
 	public void onRenderTick() {
 		updateBeforeNextDraw(Mouse.getMx(), Mouse.getMy());
-		if (getObjects().isEmpty()) hasFocus = false;
+		if (getChildren().isEmpty()) hasFocus = false;
 		
 		//prime renderer
 		GLSettings.pushMatrix();
@@ -40,32 +41,35 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 		GLSettings.clearDepth();
 		
 		if (hasFocus) {
+			drawRect(EColors.dsteel.opacity(140));
+			
 			int borderColor = 0xaaff0000;
 			int borderWidth = 4;
-			/*
-			TaskBar b = getTaskBar();
+			var b = getTaskBar();
 			if (b != null && !b.isHidden()) {
 				double ds = TaskBar.drawSize();
 				drawRect(0, ds, borderWidth, height, borderColor); //left
-				drawRect(borderWidth, ds, width - 1, ds + 1, borderColor); //top
+				drawRect(borderWidth, ds, width - borderWidth, ds + borderWidth, borderColor); //top
 				drawRect(width - borderWidth, ds, width, height, borderColor); //right
-				drawRect(borderWidth, height - borderWidth, width - 1, height, borderColor); //bottom
+				drawRect(borderWidth, height - borderWidth, width - borderWidth, height, borderColor); //bottom
 			}
-			else {*/
+			else {
 				drawRect(0, 0, borderWidth, height, borderColor); //left
 				drawRect(borderWidth, 0, width - borderWidth, borderWidth, borderColor); //top
 				drawRect(width - borderWidth, 0, width, height, borderColor); //right
 				drawRect(borderWidth, height - borderWidth, width - borderWidth, height, borderColor); //bottom
-			//}
+			}
+			
+			drawString("Debug", borderWidth + 2, endY - borderWidth - FontRenderer.FONT_HEIGHT, EColors.dgray);
 		}
 		
-		if (visible) {
+		if (isVisible()) {
 			//draw debug stuff
 			if (QoT.isDebugMode()) drawDebugInfo();
 			
 			//draw all child objects
-			for (IWindowObject<?> o : windowObjects) {
-				//only draw if the object is actually visibile
+			for (var o : getChildren()) {
+				//only draw if the object is actually visible
 				if (!o.willBeDrawn() || o.isHidden()) continue;
 				boolean draw = true;
 				
@@ -73,30 +77,30 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 					draw = (wp.drawsWhileMinimized() || !wp.isMinimized());
 				}
 				
-				if (draw) {
-					GLSettings.fullBright();
-					GLSettings.clearDepth();
-					GLSettings.disableScissor();
-					
-					//notify object on first draw
-					if (!o.hasFirstDraw()) o.onFirstDraw();
-					//actually draw the object
-					o.drawObject(mX, mY);
-					
-					//draw greyed out overlay over everything if a focus lock object is present
-					if (focusLockObject != null && !o.equals(focusLockObject)) {
-						if (o.isVisible()) {
-							drawRect(o.getDimensions(), 0x77000000);
-							EDimension d = o.getDimensions();
-							GLObject.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
-						}
+				if (!draw) continue;
+				
+				GLSettings.fullBright();
+				GLSettings.clearDepth();
+				GLSettings.disableScissor();
+				
+				//notify object on first draw
+				if (!o.hasFirstDraw()) o.onFirstDraw();
+				//actually draw the object
+				o.drawObject(Mouse.getMx(), Mouse.getMy());
+				
+				//draw grayed out overlay over everything if a focus lock object is present
+				if (focusLockObject != null && !o.equals(focusLockObject)) {
+					if (o.isVisible()) {
+						drawRect(o.getDimensions(), 0x77000000);
+						EDimension d = o.getDimensions();
+						GLObject.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 					}
 				}
 			}
 			
 			//notify hover object
-			IWindowObject<?> hoveringObject = getHoveringObject();
-			if (hoveringObject != null) hoveringObject.onMouseHover(mX, mY);
+			var hoveringObject = getHoveringObject();
+			if (hoveringObject != null) hoveringObject.onMouseHover(Mouse.getMx(), Mouse.getMy());
 		}
 		
 		//draw game fps
@@ -135,7 +139,7 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 				}
 			}
 			else {
-				ETerminal term = (ETerminal) getWindowInstance(ETerminal.class);
+				var term = getTerminalInstance();
 				if (term != null) term.requestFocus();
 				else displayWindow(new ETerminal());
 				setFocused(true);
@@ -166,17 +170,28 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 		removeAllObjects();
 	}
 	
-	public void addTaskBar(boolean fromScratch) {
-		addObject(new TaskBar(fromScratch));
+	public void addTaskBar(TaskBar b) {
+		if (taskBar == null) removeChild(taskBar);
+		addChild(taskBar = b);
 	}
 	
-	public TaskBar getTaskBar() {
-		EArrayList<IWindowObject> objects = new EArrayList(windowObjects);
-		objects.removeAll(objsToBeRemoved);
-		objects.addAll(objsToBeAdded);
+	public void addTaskBar(boolean fromScratch) {
+		addChild(taskBar = new TaskBar(fromScratch));
+	}
+	
+	public TaskBar<?> getTaskBar() {
+		var objects = new EArrayList(getChildren());
+		objects.removeAll(getRemovingChildren());
+		objects.addAll(getAddingChildren());
 		
-		for (int i = 0; i < objects.size(); i++)
-			if (objects.get(i) instanceof TaskBar b) return b;
+		if (taskBar != null) return taskBar;
+		else {
+			for (int i = 0; i < objects.size(); i++) {
+				if (objects.get(i) instanceof TaskBar<?> b) {
+					return taskBar = b;
+				}
+			}
+		}
 		
 		return null;
 	}

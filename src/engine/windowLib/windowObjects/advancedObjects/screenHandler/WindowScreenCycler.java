@@ -8,6 +8,10 @@ import eutil.math.NumberUtil;
 
 public class WindowScreenCycler<E> extends ActionObject<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	private IWindowObject<?> parent;
 	private EArrayList<WindowScreen<E>> screens = new EArrayList();
 	private int currentScreen = 0;
@@ -18,8 +22,8 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowScreenCycler(IWindowObject<?> parentIn) { this(parentIn, (WindowScreen[]) null); }
-	public WindowScreenCycler(IWindowObject<?> parentIn, WindowScreen... screensIn) {
+	public WindowScreenCycler(IWindowObject<?> parentIn) { this(parentIn, (WindowScreen<E>[]) null); }
+	public WindowScreenCycler(IWindowObject<?> parentIn, WindowScreen<E>... screensIn) {
 		super(parentIn);
 		if (screensIn != null) screens.add(screensIn);
 		atBeginning = true;
@@ -69,7 +73,7 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	
 	public boolean nextScreenStage() {
 		if (screens.isNotEmpty()) {
-			WindowScreen screen = screens.get(currentScreen);
+			var screen = screens.get(currentScreen);
 			if (screen != null) {
 				if (screen.getCurrentStage() < screen.getNumStages() - 1) {
 					screen.nextStage();
@@ -83,7 +87,7 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	}
 	
 	public boolean previousScreenStage() {
-		WindowScreen screen = screens.get(currentScreen);
+		var screen = screens.get(currentScreen);
 		if (screen != null) {
 			if (screen.getCurrentStage() >= 1) {
 				screen.prevStage();
@@ -117,25 +121,22 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	// Setters
 	//---------
 	
-	public WindowScreenCycler<E> setCurrentScreen(int screenNum, int stageNum) {
+	public void setCurrentScreen(int screenNum, int stageNum) {
 		setCurrentScreen(screenNum);
 		setCurrentStage(stageNum);
-		return this;
 	}
 	
-	public WindowScreenCycler<E> setCurrentScreen(int num) {
+	public void setCurrentScreen(int num) {
 		currentScreen = NumberUtil.clamp(num, 0, screens.size() - 1);
 		checkScreen();
-		return this;
 	}
 	
-	public WindowScreenCycler<E> setCurrentStage(int num) {
+	public void setCurrentStage(int num) {
 		WindowScreen<E> screen = screens.get(currentScreen);
 		if (screen != null) {
 			num = NumberUtil.clamp(num, 0, screen.getNumStages());
 			screen.setCurrentStage(num);
 		}
-		return this;
 	}
 	
 	//------------------
@@ -143,7 +144,7 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	//------------------
 	
 	private void checkScreen() {
-		WindowScreen<E> s = screens.get(currentScreen);
+		var s = screens.get(currentScreen);
 		
 		atBeginning = false;
 		atEnd = false;

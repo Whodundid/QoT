@@ -46,7 +46,7 @@ public class NewMapCreatorScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		double x = midX - 150;
 		double y = midY - 250;
 		
@@ -69,7 +69,7 @@ public class NewMapCreatorScreen extends GameScreen {
 		
 		tileSelection.setButtonTexture(fillTile.getTexture());
 		
-		empty = emptyMap.isChecked();
+		empty = emptyMap.getIsChecked();
 		fillWithLabel.setVisible(!empty);
 		tileSelection.setVisible(!empty);
 		
@@ -79,12 +79,12 @@ public class NewMapCreatorScreen extends GameScreen {
 		widthField.setText(width + "");
 		heightField.setText(height + "");
 		
-		addObject(back);
-		addObject(nameLabel, nameField);
-		addObject(widthHeightLabel, widthField, heightField);
-		addObject(emptyLabel, emptyMap);
-		addObject(fillWithLabel, tileSelection);
-		addObject(create);
+		addChild(back);
+		addChild(nameLabel, nameField);
+		addChild(widthHeightLabel, widthField, heightField);
+		addChild(emptyLabel, emptyMap);
+		addChild(fillWithLabel, tileSelection);
+		addChild(create);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class NewMapCreatorScreen extends GameScreen {
 		if (object == back) closeScreen();
 		
 		if (object == emptyMap) {
-			empty = emptyMap.isChecked();
+			empty = emptyMap.getIsChecked();
 			fillWithLabel.setVisible(!empty);
 			tileSelection.setVisible(!empty);
 		}

@@ -35,7 +35,7 @@ public class EditorToolBox extends WindowObject {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		//position each tool within the list and actually create and apply the dimensions
 		buildTools(selector);
 	}
@@ -69,7 +69,7 @@ public class EditorToolBox extends WindowObject {
 		header.setDrawTitle(false);
 		header.setDrawParentFocus(false);
 		
-		addObject(header);
+		addChild(header);
 		return this;
 	}
 	
@@ -79,13 +79,13 @@ public class EditorToolBox extends WindowObject {
 		header.setDrawTitle(false);
 		header.setDrawParentFocus(false);
 		
-		addObject(header);
+		addChild(header);
 		return this;
 	}
 	
 	private void buildTools(ToolCategory... categories) {
 		//getObjects().removeAll(toolButtons);
-		getObjects().clear();
+		getChildren().clear();
 		toolButtons.clear();
 		
 		int w = (rowWidth * toolSize) + rowWidth + 3;
@@ -114,7 +114,7 @@ public class EditorToolBox extends WindowObject {
 				button.setHoverText(theTool.hoverText);
 				
 				//add to list first then dimension
-				addObject(button);
+				addChild(button);
 				button.setDimensions(bx, by, toolSize, toolSize);
 			}
 			
@@ -126,7 +126,7 @@ public class EditorToolBox extends WindowObject {
 			if (c < categories.length - 1) {
 				WindowRect r = new WindowRect(this, 0, 0, 0, 0, 0xff303030);
 				WindowRect t = new WindowRect(this, 0, 0, 0, 0, EColors.vdgray);
-				addObject(t);
+				addChild(t);
 				r.setDimensions(startX + 1, curY, w - 2, 3);
 				t.setDimensions(startX + 1, curY + 1, w - 2, 1);
 				

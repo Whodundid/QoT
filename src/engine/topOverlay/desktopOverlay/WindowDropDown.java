@@ -1,4 +1,4 @@
-package engine.windowLib.desktopOverlay;
+package engine.topOverlay.desktopOverlay;
 
 import assets.textures.WindowTextures;
 import engine.windowLib.windowObjects.advancedObjects.dropDownList.DropDownListEntry;
@@ -11,42 +11,53 @@ import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import engine.windowLib.windowUtil.ObjectPosition;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
-import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import eutil.misc.ScreenLocation;
 import main.QoT;
 
 public class WindowDropDown extends WindowDropDownList {
 
-	private TaskButton parentButton;
-	private DropDownListEntry last = null;
+	//--------
+	// Fields
+	//--------
+	
+	private TaskBarButton<?> parentButton;
+	private DropDownListEntry<?> last = null;
 	private RightClickMenu rcm = null;
 	
-	public WindowDropDown(TaskButton taskButtonIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowDropDown(TaskBarButton<?> taskButtonIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
 		super(taskButtonIn, x, y, entryHeightIn, useGlobalAction);
 		parentButton = taskButtonIn;
 		setAlwaysOpen(true);
 		setDrawTop(false);
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		super.drawObject(mXIn, mYIn);
 		
 		if (rcm == null) {
-			DropDownListEntry entry = getHoveringEntry(mXIn, mYIn);
+			var entry = getHoveringEntry(mXIn, mYIn);
 			if (entry != null) {
 				if (entry != last) {
 					last = entry;
-					EArrayList<IWindowParent> windows = QoT.getTopRenderer().getAllActiveWindows();
+					var windows = QoT.getTopRenderer().getAllActiveWindows();
 					QoT.getTopRenderer().revealHiddenObjects();
 					
-					for (IWindowParent w : windows) {
+					for (var w : windows) {
 						w.setDrawWhenMinimized(true);
 					}
 					
-					if (entry.getEntryObject() instanceof IWindowParent p) {
-						for (IWindowParent w : windows) {
+					if (entry.getEntryObject() instanceof IWindowParent<?> p) {
+						for (var w : windows) {
 							if (w != p) {
 								w.setHidden(true);
 								w.setDrawWhenMinimized(false);
@@ -80,7 +91,7 @@ public class WindowDropDown extends WindowDropDownList {
 	
 	@Override
 	public void onFocusGained(EventFocus eventIn) {
-		if (eventIn.getFocusType().equals(FocusType.MousePress)) {
+		if (eventIn.getFocusType().equals(FocusType.MOUSE_PRESS)) {
 			if (eventIn.getActionCode() == 0) {
 				DropDownListEntry entry = getHoveringEntry(eventIn.getMX(), eventIn.getMY());
 				if (entry != null) {
@@ -106,7 +117,7 @@ public class WindowDropDown extends WindowDropDownList {
 			else {
 				QoT.getTopRenderer().revealHiddenObjects();
 				
-				for (IWindowParent w : QoT.getTopRenderer().getAllActiveWindows()) {
+				for (var w : QoT.getTopRenderer().getAllActiveWindows()) {
 					w.setDrawWhenMinimized(false);
 				}
 				
@@ -152,7 +163,7 @@ public class WindowDropDown extends WindowDropDownList {
 				p.setSize(maxW, maxH);
 				p.centerObjectWithSize(maxW, maxH);
 				p.setPosition(p.startX, p.startY + hh);
-				p.reInitObjects();
+				p.reInitChildren();
 				break;
 			}
 		}
@@ -166,6 +177,10 @@ public class WindowDropDown extends WindowDropDownList {
 			rcm = null;
 		}
 	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
 
 	private void openRCM(int mXIn, int mYIn) {
 		if (rcm != null) {
@@ -174,9 +189,9 @@ public class WindowDropDown extends WindowDropDownList {
 		}
 		
 		DropDownListEntry entry = getHoveringEntry(mXIn, mYIn);
-		if (entry != null && entry.getEntryObject() instanceof WindowParent p) {
+		if (entry != null && entry.getEntryObject() instanceof WindowParent<?> p) {
 			int total = 0;
-			if (p.isCloseable()) total++;
+			if (p.isClosable()) total++;
 			if (p.isMaximizable()) total++;
 			if (p.isMoveable()) total++;
 			
@@ -194,7 +209,7 @@ public class WindowDropDown extends WindowDropDownList {
 				rcm.setActionReceiver(this);
 				rcm.setGenericObject(p);
 				
-				if (p.isCloseable()) rcm.addOption("Close", WindowTextures.close);
+				if (p.isClosable()) rcm.addOption("Close", WindowTextures.close);
 				if (p.isMaximizable()) {
 					if (p.isMaximized()) rcm.addOption("Minimize", WindowTextures.min);
 					else rcm.addOption("Maximize", WindowTextures.max);

@@ -9,11 +9,19 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
 
 public class EventMouse extends ObjectEvent {
 	
-	MouseType type;
-	int mX = 0, mY = 0;
-	int button = -1;
+	//--------
+	// Fields
+	//--------
 	
-	public EventMouse(IWindowObject parentObjectIn, int mXIn, int mYIn, int buttonIn, MouseType typeIn) {
+	private final int mX, mY;
+	private final int button;
+	private final MouseType type;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public EventMouse(IWindowObject<?> parentObjectIn, int mXIn, int mYIn, int buttonIn, MouseType typeIn) {
 		super(parentObjectIn, EventType.MOUSE);
 		mX = mXIn;
 		mY = mYIn;
@@ -21,9 +29,13 @@ public class EventMouse extends ObjectEvent {
 		type = typeIn;
 	}
 
-	public MouseType getMouseType() { return type; }
+	//---------
+	// Getters
+	//---------
+	
 	public int getMouseX() { return mX; }
 	public int getMouseY() { return mY; }
 	public int getMouseButton() { return button; }
+	public MouseType getMouseType() { return type; }
 	
 }

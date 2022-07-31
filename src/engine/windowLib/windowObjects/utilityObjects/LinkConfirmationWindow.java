@@ -9,20 +9,32 @@ import main.QoT;
 
 //Author: Hunter Bragg
 
-public class LinkConfirmationWindow extends WindowDialogueBox {
+public class LinkConfirmationWindow extends WindowDialogBox {
 	
-	String link;
-	WindowButton yes, copy, no;
+	//--------
+	// Fields
+	//--------
+	
+	private String link;
+	private WindowButton<?> yes, copy, no;
+	
+	//--------------
+	// Constructors
+	//--------------
 	
 	public LinkConfirmationWindow(String linkIn) { this(QoT.getActiveTopParent(), linkIn); }
-	public LinkConfirmationWindow(IWindowObject parentIn, String linkIn) {
+	public LinkConfirmationWindow(IWindowObject<?> parentIn, String linkIn) {
 		super(parentIn);
 		setResizeable(false);
 		link = linkIn;
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		String prompt = "Confirm";
 		String warning = "Warning";
 		
@@ -38,9 +50,18 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 		double y = res.getHeight() / 2 - 60;
 		double w = longestString > 400 ? 400 : longestString + 30;
 		
-		WindowLabel promptLabel = new WindowLabel(this, res.getWidth() / 2, y + 18, prompt).setDrawCentered(true).setColor(0xffbb00);
-		WindowLabel linkLabel = new WindowLabel(this, res.getWidth() / 2, y + 33, link).setDrawCentered(true).enableWordWrap(true, longestString);
-		WindowLabel warningLabel = new WindowLabel(this, res.getWidth() / 2, y + 38 + linkLabel.getTextHeight(), warning).setDrawCentered(true).setColor(0xff5555);
+		WindowLabel promptLabel = new WindowLabel(this, res.getWidth() / 2, y + 18, prompt);
+		WindowLabel linkLabel = new WindowLabel(this, res.getWidth() / 2, y + 33, link);
+		WindowLabel warningLabel = new WindowLabel(this, res.getWidth() / 2, y + 38 + linkLabel.getTextHeight(), warning);
+		
+		promptLabel.setDrawCentered(true);
+		promptLabel.setColor(0xffffbb00);
+		
+		linkLabel.setDrawCentered(true);
+		linkLabel.enableWordWrap(true, longestString);
+		
+		warningLabel.setDrawCentered(true);
+		warningLabel.setColor(0xffff5555);
 		
 		double h = 100 + linkLabel.getTextHeight() < 110 ? 110 : 100 + linkLabel.getTextHeight();
 		
@@ -50,13 +71,17 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 		setTitle("Opening Web Link");
 		setTitleColor(EColors.lgray.intVal);
 		
-		yes = new WindowButton(this, midX - copyLength - 35, endY - 35, 75, 20, "Yes").setStringColor(0x55ff55);
-		copy = new WindowButton(this, midX - (copyLength  + 8) / 2, endY - 35, copyLength + 8, 20, "Copy").setStringColor(0xffffff);
-		no = new WindowButton(this, midX + copyLength - 39, endY - 35, 75, 20, "No").setStringColor(0xff5555);
+		yes = new WindowButton(this, midX - copyLength - 35, endY - 35, 75, 20, "Yes");
+		copy = new WindowButton(this, midX - (copyLength  + 8) / 2, endY - 35, copyLength + 8, 20, "Copy");
+		no = new WindowButton(this, midX + copyLength - 39, endY - 35, 75, 20, "No");
 		
-		addObject(promptLabel, linkLabel, warningLabel, yes, copy, no);
+		yes.setStringColor(0xff55ff55);
+		copy.setStringColor(0xffffffff);
+		no.setStringColor(0xffff5555);
 		
-		super.initObjects();
+		addChild(promptLabel, linkLabel, warningLabel, yes, copy, no);
+		
+		super.initChildren();
 	}
 	
 	@Override

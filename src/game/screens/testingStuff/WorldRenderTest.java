@@ -1,6 +1,7 @@
 package game.screens.testingStuff;
 
 import engine.inputHandlers.Keyboard;
+import engine.inputHandlers.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.screenEngine.GameScreen;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
@@ -62,7 +63,7 @@ public class WorldRenderTest extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		left = new WindowButton(this, midX - 60, endY - 45, 40, 40, "<");
 		down = new WindowButton(this, left.endX + 5, left.startY, 40, 40, "V");
 		up = new WindowButton(this, down.startX, down.startY - 45, 40, 40, "^");
@@ -77,10 +78,10 @@ public class WorldRenderTest extends GameScreen {
 		reload = new WindowButton(this, 10, 10, 140, 40, "Reload");
 		back = new WindowButton(this, 10, endY - 45, 140, 40, "Back");
 		
-		addObject(up, left, down, right);
-		addObject(distUpX, distDownX);
-		addObject(distUpY, distDownY);
-		addObject(reload, back);
+		addChild(up, left, down, right);
+		addChild(distUpX, distDownX);
+		addChild(distUpY, distDownY);
+		addChild(reload, back);
 	}
 
 	@Override
@@ -370,8 +371,8 @@ public class WorldRenderTest extends GameScreen {
 		double offsetX = (QoT.thePlayer.startX % w);	
 		double offsetY = (QoT.thePlayer.startY % h);
 		
-		double xPos = (x - offsetX) + ((mX - (int) (x - offsetX)) / w) * w;
-		double yPos = (y - offsetY) + ((mY - (int) (y - offsetY)) / h) * h;
+		double xPos = (x - offsetX) + ((Mouse.getMx() - (int) (x - offsetX)) / w) * w;
+		double yPos = (y - offsetY) + ((Mouse.getMy() - (int) (y - offsetY)) / h) * h;
 		
 		drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.vdgray);
 	}

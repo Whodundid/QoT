@@ -17,7 +17,7 @@ public class InventorySlot extends WindowObject {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		
 	}
 	

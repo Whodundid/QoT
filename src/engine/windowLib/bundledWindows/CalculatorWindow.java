@@ -1,5 +1,6 @@
 package engine.windowLib.bundledWindows;
 
+import assets.textures.TaskBarTextures;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
@@ -9,28 +10,44 @@ import eutil.colors.EColors;
 
 public class CalculatorWindow<E> extends WindowParent<E> {
 
-	WindowTextField<?> outputField;
-	WindowButton<?> sin, cos, tan, backspace, clear;
-	WindowButton<?> sqrt, square, pow, pi, divide;
-	WindowButton<?> log, seven, eight, nine, multiply;
-	WindowButton<?> ln, four, five, six, subtract;
-	WindowButton<?> e2x, one, two, three, plus;
-	WindowButton<?> second, zero, decimal, negate, enter;
-	WindowTextArea<?> history;
+	//--------
+	// Fields
+	//--------
 	
-	String val = null;
-	String lastVal = null;
-	boolean historyDrawn = false;
-	boolean toBeCleared = false;
-	boolean is2nd = false;
-	boolean isInOpearation = false;
-	boolean funcSelected = false;
-	boolean empty = true;
-	Function currentFunction = Function.none;
-	Function lastFunction = Function.none;
-	Function reference = null;
+	private WindowTextField<?> outputField;
+	private WindowButton<?> sin, cos, tan, backspace, clear;
+	private WindowButton<?> sqrt, square, pow, pi, divide;
+	private WindowButton<?> log, seven, eight, nine, multiply;
+	private WindowButton<?> ln, four, five, six, subtract;
+	private WindowButton<?> e2x, one, two, three, plus;
+	private WindowButton<?> second, zero, decimal, negate, enter;
+	private WindowTextArea<?> history;
 	
-	String input = "";
+	private String val = null;
+	private String lastVal = null;
+	private boolean historyDrawn = false;
+	private boolean toBeCleared = false;
+	private boolean is2nd = false;
+	private boolean isInOpearation = false;
+	private boolean funcSelected = false;
+	private boolean empty = true;
+	private Function currentFunction = Function.NONE;
+	private Function lastFunction = Function.NONE;
+	private Function reference = null;
+	
+	private String input = "";
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public CalculatorWindow() {
+		windowIcon = TaskBarTextures.calculator;
+	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void initWindow() {
@@ -42,7 +59,7 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		outputField = new WindowTextField(this, startX + 6, startY + 5, width - 14, (height - 7) / 7);
@@ -142,13 +159,13 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		
 		WindowButton.setStringColor(is2nd ? EColors.yellow.intVal : 14737632, sin, cos, tan, ln);
 		
-		addObject(outputField);
-		addObject(sin, cos, tan, backspace, clear);
-		addObject(sqrt, square, pow, pi, divide);
-		addObject(log, seven, eight, nine, multiply);
-		addObject(ln, four, five, six, subtract);
-		addObject(e2x, one, two, three, plus);
-		addObject(second, zero, decimal, negate, enter);
+		addChild(outputField);
+		addChild(sin, cos, tan, backspace, clear);
+		addChild(sqrt, square, pow, pi, divide);
+		addChild(log, seven, eight, nine, multiply);
+		addChild(ln, four, five, six, subtract);
+		addChild(e2x, one, two, three, plus);
+		addChild(second, zero, decimal, negate, enter);
 	}
 	
 	@Override
@@ -166,13 +183,13 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		drawDefaultBackground();
 		//drawRect(0xffe4f4fc, 1);
 		
-		if (currentFunction != Function.none) {
+		if (currentFunction != Function.NONE) {
 			switch (currentFunction) {
-			case add: plus.drawRect(EColors.lred, -1); break;
-			case sub: subtract.drawRect(EColors.lred, -1); break;
-			case mul: multiply.drawRect(EColors.lred, -1); break;
-			case div: divide.drawRect(EColors.lred, -1); break;
-			case pow: pow.drawRect(EColors.lred, -1); break;
+			case ADD: plus.drawRect(EColors.lred, -1); break;
+			case SUB: subtract.drawRect(EColors.lred, -1); break;
+			case MUL: multiply.drawRect(EColors.lred, -1); break;
+			case DIV: divide.drawRect(EColors.lred, -1); break;
+			case POW: pow.drawRect(EColors.lred, -1); break;
 			default: break;
 			}
 		}
@@ -189,16 +206,16 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		super.keyPressed(typedChar, keyCode);
 		
 		try {
-			if (keyCode == 28) { evaluate(); } //enter
-			if (keyCode == 14) { backspace(); } //backspace
-			if (Character.isDigit(typedChar)) { write("" + typedChar); }
+			if (keyCode == 28) evaluate(); //enter
+			if (keyCode == 14) backspace(); //backspace
+			if (Character.isDigit(typedChar)) write("" + typedChar);
 			
 			switch (typedChar) {
-			case '+': setVal(Function.add); break;
-			case '-': setVal(Function.sub); break;
-			case '*': setVal(Function.mul); break;
-			case '/': setVal(Function.div); break;
-			case '^': setVal(Function.pow); break;
+			case '+': setVal(Function.ADD); break;
+			case '-': setVal(Function.SUB); break;
+			case '*': setVal(Function.MUL); break;
+			case '/': setVal(Function.DIV); break;
+			case '^': setVal(Function.POW); break;
 			case '.': write("."); break;
 			default: break;
 			}
@@ -213,40 +230,40 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		try {
-			if (object == zero) { write("0"); }
-			if (object == one) { write("1"); }
-			if (object == two) { write("2"); }
-			if (object == three) { write("3"); }
-			if (object == four) { write("4"); }
-			if (object == five) { write("5"); }
-			if (object == six) { write("6"); }
-			if (object == seven) { write("7"); }
-			if (object == eight) { write("8"); }
-			if (object == nine) { write("9"); }
-			if (object == decimal) { write("."); }
+			if (object == zero) write("0");
+			if (object == one) write("1");
+			if (object == two) write("2");
+			if (object == three) write("3");
+			if (object == four) write("4");
+			if (object == five) write("5");
+			if (object == six) write("6");
+			if (object == seven) write("7");
+			if (object == eight) write("8");
+			if (object == nine) write("9");
+			if (object == decimal) write(".");
 			
-			if (object == second) { toggleSecond(); }
+			if (object == second) toggleSecond();
 			
-			if (object == plus) { setVal(Function.add); }
-			if (object == subtract) { setVal(Function.sub); }
-			if (object == multiply) { setVal(Function.mul); }
-			if (object == divide) { setVal(Function.div); }
+			if (object == plus) setVal(Function.ADD);
+			if (object == subtract) setVal(Function.SUB);
+			if (object == multiply) setVal(Function.MUL);
+			if (object == divide) setVal(Function.DIV);
 			
-			if (object == negate) { write("NEGATE"); }
-			if (object == backspace) { backspace(); }
-			if (object == clear) { clear(); }
-			if (object == enter) { evaluate(); }
+			if (object == negate) write("NEGATE");
+			if (object == backspace) backspace();
+			if (object == clear) clear();
+			if (object == enter) evaluate();
 			
-			if (object == sqrt) { sqrt(); }
-			if (object == square) { square(); }
-			if (object == pow) { setVal(Function.pow); }
-			if (object == pi) { write(String.valueOf(Math.PI)); }
-			if (object == log) { log(); }
-			if (object == ln) { ln(); }
-			if (object == e2x) { e2x(); }
-			if (object == sin) { sin(); }
-			if (object == cos) { cos(); }
-			if (object == tan) { tan(); }
+			if (object == sqrt) sqrt();
+			if (object == square) square();
+			if (object == pow) setVal(Function.POW);
+			if (object == pi) write(String.valueOf(Math.PI));
+			if (object == log) log();
+			if (object == ln) ln();
+			if (object == e2x) e2x();
+			if (object == sin) sin();
+			if (object == cos) cos();
+			if (object == tan) tan();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -255,23 +272,40 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		}
 	}
 	
+	//------------------
+	// Internal Methods
+	//------------------
+	
 	private void write(String in) {
-		if (toBeCleared) { outputField.clear(); toBeCleared = false; }
+		if (toBeCleared) {
+			outputField.clear();
+			toBeCleared = false;
+		}
 		
 		boolean add = true;
 		
-		if (in.equals(".") && empty) { outputField.text = "0"; empty = false; }
-		if (in.equals("NEGATE")) { outputField.text = "-" + outputField.text; add = false; }
+		if (in.equals(".") && empty) {
+			outputField.text = "0";
+			empty = false;
+		}
+		
+		if (in.equals("NEGATE")) {
+			outputField.text = "-" + outputField.text;
+			add = false;
+		}
 		
 		if (add) {
 			if (empty) {
 				outputField.text = in;
 				empty = false;
 			}
-			else { outputField.text += in; }
+			else outputField.text += in;
 		}
 		
-		if (funcSelected) { lastVal = outputField.text; funcSelected = false; }
+		if (funcSelected) {
+			lastVal = outputField.text;
+			funcSelected = false;
+		}
 	}
 	
 	private void toggleSecond() {
@@ -297,15 +331,14 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		outputField.text = "0";
 		val = null;
 		empty = true;
-		currentFunction = Function.none;
-		lastFunction = Function.none;
+		currentFunction = Function.NONE;
+		lastFunction = Function.NONE;
 		reference = null;
 		outputField.setTextColor(EColors.lgray.intVal);
 	}
 	
 	private void backspace() {
 		if (outputField.isNotEmpty()) {
-			
 			if (outputField.text.toLowerCase().equals("infinity") || outputField.text.toLowerCase().equals("nan")) { clear(); }
 			else {
 				if (!toBeCleared) { toBeCleared = false; }
@@ -316,7 +349,6 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 					empty = true;
 				}
 			}
-			
 		}
 	}
 	
@@ -393,42 +425,45 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		Double parsedVal = null;
 		
 		if (!outputField.text.equals("error")) {
-			if (currentFunction != Function.none) { lastFunction = currentFunction; }
+			if (currentFunction != Function.NONE) { lastFunction = currentFunction; }
 			
-			if (currentFunction != Function.none && val != null) {
+			if (currentFunction != Function.NONE && val != null) {
 				parsed = parseExpression(outputField.text);
 				parsedVal = parseExpression(val);
 				
 				switch (currentFunction) {
-				case add: outputField.text = format(parsedVal + parsed); break;
-				case sub: outputField.text = format(parsedVal - parsed); break;
-				case mul: outputField.text = format(parsedVal * parsed); break;
-				case div:
+				case ADD: outputField.text = format(parsedVal + parsed); break;
+				case SUB: outputField.text = format(parsedVal - parsed); break;
+				case MUL: outputField.text = format(parsedVal * parsed); break;
+				case DIV:
 					if (parsed == 0) { outputField.text = "error"; toBeCleared = true; }
 					else { outputField.text = format(parsedVal / parsed); }
 					break;
-				case pow:
+				case POW:
 					if (parsedVal == 0.0 && parsed == 0.0) { outputField.text = "error"; toBeCleared = true; }
 					else { outputField.text = format(Math.pow(parsedVal, parsed)); }
 					break;
 				default: break;
 				}
 			}
-			else if (lastFunction != Function.none && lastVal != null) {
+			else if (lastFunction != Function.NONE && lastVal != null) {
 				parsed = parseExpression(outputField.text);
 				parsedVal = parseExpression(lastVal);
 				
 				switch (lastFunction) {
-				case add: outputField.text = format(parsedVal + parsed); break;
-				case sub: outputField.text = format(parsed - parsedVal); break; //switches for repeated
-				case mul: outputField.text = format(parsedVal * parsed); break;
-				case div:
-					if (parsed == 0) { outputField.text = "error"; }
-					else { outputField.text = format(parsed / parsedVal); } //switches for repeated
+				case ADD: outputField.text = format(parsedVal + parsed); break;
+				case SUB: outputField.text = format(parsed - parsedVal); break; //switches for repeated
+				case MUL: outputField.text = format(parsedVal * parsed); break;
+				case DIV:
+					if (parsed == 0) outputField.text = "error";
+					else outputField.text = format(parsed / parsedVal); //switches for repeated
 					break;
-				case pow:
-					if (parsedVal == 0 && parsed == 0) { outputField.text = "error"; toBeCleared = true; }
-					else { outputField.text = format(Math.pow(parsedVal, parsed)); }
+				case POW:
+					if (parsedVal == 0 && parsed == 0) {
+						outputField.text = "error";
+						toBeCleared = true;
+					}
+					else outputField.text = format(Math.pow(parsedVal, parsed));
 					break;
 				default: break;
 				}
@@ -437,7 +472,7 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		
 		val = null;
 		toBeCleared = true;
-		currentFunction = Function.none;
+		currentFunction = Function.NONE;
 		reference = lastFunction;
 		
 		outputField.setTextColor(EColors.lgray.intVal);
@@ -445,14 +480,14 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 	
 	private void parseFunction(Function in, Double parsed, Double parsedVal) {
 		switch (in) {
-		case add: outputField.text = format(parsedVal + parsed); break;
-		case sub: outputField.text = format(parsedVal - parsed); break;
-		case mul: outputField.text = format(parsedVal * parsed); break;
-		case div:
-			if (parsed == 0) { outputField.text = "error"; }
-			else { outputField.text = format(parsedVal / parsed); }
+		case ADD: outputField.text = format(parsedVal + parsed); break;
+		case SUB: outputField.text = format(parsedVal - parsed); break;
+		case MUL: outputField.text = format(parsedVal * parsed); break;
+		case DIV:
+			if (parsed == 0) outputField.text = "error";
+			else outputField.text = format(parsedVal / parsed);
 			break;
-		case pow: outputField.text = format(Math.pow(parsedVal, parsed)); break;
+		case POW: outputField.text = format(Math.pow(parsedVal, parsed)); break;
 		default: break;
 		}
 	}
@@ -463,7 +498,9 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 				Double testVal = Double.parseDouble(in);
 				return testVal;
 			}
-			catch (Exception e) { e.printStackTrace(); }
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -475,7 +512,10 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		if (sVal.contains(".")) {
 			for (int i = sVal.length() - 1; i >= 0; i--) {
 				char c = sVal.charAt(i);
-				if (c == '.') { theVal = sVal.substring(0, i); break; }
+				if (c == '.') {
+					theVal = sVal.substring(0, i);
+					break;
+				}
 				if (c != '0') {
 					int pos = (i + 1 <= sVal.length()) ? i + 1 : i;
 					theVal = sVal.substring(0, pos);
@@ -483,11 +523,11 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 				}
 			}
 		}
-		else { theVal = sVal; }
+		else theVal = sVal;
 		
 		return theVal;
 	}
 	
-	private enum Function { add, sub, mul, div, pow, none; }
+	private static enum Function { ADD, SUB, MUL, DIV, POW, NONE; }
 	
 }

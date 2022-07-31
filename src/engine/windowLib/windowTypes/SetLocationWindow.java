@@ -9,7 +9,15 @@ import eutil.datatypes.EArrayList;
 
 public abstract class SetLocationWindow<E> extends OverlayWindow<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	protected BoxList<IWindowObject<?>, Boolean> previousStates = new BoxList();
+	
+	//---------
+	// Methods
+	//---------
 	
 	protected SetLocationWindow hideAllOnRenderer(IWindowObject<?>... exceptionsIn) {
 		previousStates.clear();

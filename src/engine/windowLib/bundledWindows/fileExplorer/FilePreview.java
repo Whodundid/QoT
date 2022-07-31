@@ -11,7 +11,11 @@ import java.io.File;
 
 public class FilePreview<E extends File> extends WindowObject<E> {
 	
-	private FileExplorerWindow window;
+	//--------
+	// Fields
+	//--------
+	
+	private FileExplorerWindow<?> window;
 	private E thePath;
 	private GameTexture texture;
 	private boolean isDir;
@@ -19,7 +23,11 @@ public class FilePreview<E extends File> extends WindowObject<E> {
 	private FileType fileType;
 	private int orderPos;
 	
-	public FilePreview(FileExplorerWindow windowIn, E pathIn, int orderPosIn) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public FilePreview(FileExplorerWindow<?> windowIn, E pathIn, int orderPosIn) {
 		window = windowIn;
 		thePath = pathIn;
 		orderPos = orderPosIn;
@@ -27,6 +35,10 @@ public class FilePreview<E extends File> extends WindowObject<E> {
 		fileType = FileType.getFileType(thePath);
 		texture = FileType.getFileTexture(fileType);
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
@@ -58,12 +70,21 @@ public class FilePreview<E extends File> extends WindowObject<E> {
 		else window.selectFile(this);
 	}
 	
-	public FileExplorerWindow getFileExplorerWindow() { return window; }
+	//---------
+	// Getters
+	//---------
+	
+	public FileExplorerWindow<?> getFileExplorerWindow() { return window; }
 	public File getFile() { return thePath; }
 	public boolean isDir() { return isDir; }
-	public void setHighlighted(boolean val) { isHighlighted = val; }
 	public FileType getFileType() { return fileType; }
 	public int getOrderPos() { return orderPos; }
 	public boolean isHighlighted() { return isHighlighted; }
+	
+	//---------
+	// Setters
+	//---------
+	
+	public void setHighlighted(boolean val) { isHighlighted = val; }
 	
 }

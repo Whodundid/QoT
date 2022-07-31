@@ -18,14 +18,14 @@ public class TestScreen extends GameScreen {
 	//---------------------------
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		b1 = new WindowButton(this, startX + 15, startY + 15, 50, 35, "T");
 		textField = new WindowTextField(this, startX + 200, startY + 200, 150, 30);
 		
 		IActionObject.setActionReceiver(this, b1, textField);
 		
-		addObject(b1);
-		addObject(textField);
+		addChild(b1);
+		addChild(textField);
 	}
 
 	@Override

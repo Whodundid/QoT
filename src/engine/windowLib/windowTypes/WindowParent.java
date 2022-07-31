@@ -1,7 +1,9 @@
 package engine.windowLib.windowTypes;
 
+import engine.debug.DebugFunctions;
+import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.renderEngine.textureSystem.GameTexture;
-import engine.windowLib.desktopOverlay.TaskBar;
+import engine.topOverlay.desktopOverlay.TaskBar;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
@@ -18,8 +20,12 @@ import java.util.Stack;
 //Author: Hunter Bragg
 
 public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>, Comparable<WindowParent<?>> {
-	
+
 	public static int defaultWidth = 220, defaultHeight = 255;
+	
+	//--------
+	// Fields
+	//--------
 	
 	public WindowParent<E> windowInstance;
 	protected WindowHeader<?> header;
@@ -34,7 +40,6 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected boolean drawMinimized = false;
 	protected boolean drawDefaultBackground = false;
 	protected Stack<IWindowParent<?>> WindowHistory = new Stack();
-	protected Object oldObject = null;
 	protected EArrayList<String> aliases = new EArrayList();
 	protected GameTexture windowIcon = null;
 	protected EDimension preMaxFull = new EDimension();
@@ -42,11 +47,11 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected boolean showInTaskBar = true;
 	protected long initTime = 0l;
 	
-	//---------------------------
-	// WindowParent Constructors
-	//---------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
-	/** By default, set the parent to the EMC Renderer. */
+	/** By default, set the parent to the QoT top overlay. */
 	public WindowParent() { this(QoT.getActiveTopParent(), null); }
 	public WindowParent(IWindowParent<?> oldGuiIn) { this(QoT.getActiveTopParent(), oldGuiIn); }
 	public WindowParent(int xPos, int yPos) { windowInstance = this; initTime = System.currentTimeMillis(); }
@@ -64,21 +69,19 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		preMaxFull = new EDimension(xIn, yIn, widthIn, heightIn);
 	}
 	
-	//----------------------
-	// Comparable Overrides
-	//----------------------
+	//-----------
+	// Overrides
+	//-----------
 	
-	@Override public int compareTo(WindowParent<?> p) { return Long.compare(initTime, p.getInitTime()); }
-	
-	//-------------------------
-	// IWindowObject Overrides
-	//-------------------------
+	@Override
+	public int compareTo(WindowParent<?> p) {
+		return Long.compare(initTime, p.getInitTime());
+	}
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		if (drawDefaultBackground) { drawDefaultBackground(); }
-		/*
-		if (EnhancedMC.isDebugMode()) {
+		if (drawDefaultBackground) drawDefaultBackground();
+		if (QoT.isDebugMode()) {
 			if (!isMaximized()) {
 				double y = hasHeader() ? getHeader().startY - 9 : startY - 9;
 				int pos = 0;
@@ -86,7 +89,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 				String draw = "";
 				String time = String.valueOf(initTime);
 				
-				if (time.length() > 6) { time = time.substring(time.length() - 6); }
+				if (time.length() > 6) time = time.substring(time.length() - 6);
 				
 				if (DebugFunctions.drawWindowPID) {
 					pos = getStringWidth("ID: " + EColors.yellow + getObjectID());
@@ -103,22 +106,21 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 					draw += "InitTime: " + EColors.yellow + time;
 				}
 				
-				drawRect(startX, y - 1, startX + pos + 5, y + FONT_HEIGHT + 1, EColors.black);
-				drawRect(startX + 1, y, startX + pos + 4, y + FONT_HEIGHT, EColors.dgray);
-				if (half > 0) { drawRect(startX + half, y, startX + half + 1, y + FONT_HEIGHT, EColors.black); }
+				drawRect(startX, y - 1, startX + pos + 5, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+				drawRect(startX + 1, y, startX + pos + 4, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+				if (half > 0) drawRect(startX + half, y, startX + half + 1, y + FontRenderer.FONT_HEIGHT, EColors.black);
 				drawString(draw, startX + 3, y + 1, EColors.cyan);
 				
 				if (DebugFunctions.drawWindowDimensions) {
 					String dims = "[" + (int) startX + ", " + (int) startY + ", " + width + " " + height + "]";
 					int eX = getStringWidth(dims);
 					
-					drawRect(startX + pos + 5, y - 1, startX + pos + eX + 9, y + FONT_HEIGHT + 1, EColors.black);
-					drawRect(startX + pos + 5, y, startX + pos + eX + 8, y + FONT_HEIGHT, EColors.dgray);
+					drawRect(startX + pos + 5, y - 1, startX + pos + eX + 9, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+					drawRect(startX + pos + 5, y, startX + pos + eX + 8, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
 					drawString(dims, startX + pos + 7, y + 1, EColors.seafoam);
 				}
 			}
 		}
-		*/
 		super.drawObject(mXIn, mYIn);
 	}
 	
@@ -140,17 +142,17 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		if (!(args[0] instanceof String)) return;
 		
 		String msg = (String) args[0];
-		if (msg.equals("Reload")) {
+		if (msg.toLowerCase().equals("reload")) {
 			boolean any = false;
 			
-			for (IWindowObject<?> o : getAllChildren()) {
+			for (var o : getAllChildren()) {
 				if (o.hasFocus()) {
 					any = true;
 					break;
 				}
 			}
 			
-			reInitObjects();
+			reInitChildren();
 			
 			if (getMaximizedPosition() != ScreenLocation.OUT) {
 				maximize();
@@ -163,24 +165,20 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		}
 	}
 	
-	//-------------------------
-	// IWindowParent Overrides
-	//-------------------------
-	
 	@Override public boolean isPinned() { return pinned; }
 	@Override public boolean isMaximized() { return maximized != ScreenLocation.OUT; }
 	@Override public boolean isMinimized() { return minimized; }
 	@Override public boolean isPinnable() { return pinnable; }
 	@Override public boolean isMaximizable() { return maximizable; }
 	@Override public boolean isMinimizable() { return minimizable; }
-	@Override public IWindowParent<E> setPinned(boolean val) { pinned = val; return this; }
-	@Override public IWindowParent<E> setMaximized(ScreenLocation val) { if (maximizable) maximized = val; return this; }
-	@Override public IWindowParent setMinimized(boolean val) { if (minimizable) minimized = val; return this; }
+	@Override public void setPinned(boolean val) { pinned = val; }
+	@Override public void setMaximized(ScreenLocation val) { if (maximizable) maximized = val; }
+	@Override public void setMinimized(boolean val) { if (minimizable) minimized = val; }
 	@Override public ScreenLocation getMaximizedPosition() { return maximized; }
-	@Override public IWindowParent<E> setPinnable(boolean val) { pinnable = val; return this; }
-	@Override public IWindowParent<E> setMaximizable(boolean val) { maximizable = val; return this; }
-	@Override public IWindowParent<E> setMinimizable(boolean val) { minimizable = val; return this; }
-	@Override public IWindowParent<E> setDrawWhenMinimized(boolean val) { drawMinimized = val; return this; }
+	@Override public void setPinnable(boolean val) { pinnable = val; }
+	@Override public void setMaximizable(boolean val) { maximizable = val; }
+	@Override public void setMinimizable(boolean val) { minimizable = val; }
+	@Override public void setDrawWhenMinimized(boolean val) { drawMinimized = val; }
 	@Override public boolean drawsWhileMinimized() { return drawMinimized; }
 	
 	@Override
@@ -222,7 +220,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 			else setDimensions(sw / 2, screen.midY + hh - 1, sw / 2, (sh / 2) - hh + 2);
 		}
 		
-		reInitObjects();
+		reInitChildren();
 	}
 	
 	@Override
@@ -246,54 +244,56 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		sY = sY + h > res.getHeight() ? -4 + sY - (sY + h - res.getHeight()) : sY;
 		setDimensions(sX, sY, w, h);
 		
-		reInitObjects();
+		reInitChildren();
 	}
 	
 	@Override public EDimension getPreMax() { return preMaxFull; }
-	@Override public IWindowParent<E> setPreMax(EDimension dimIn) { preMaxFull = new EDimension(dimIn); return this; }
+	@Override public void setPreMax(EDimension dimIn) { preMaxFull = new EDimension(dimIn); }
 	
-	@Override public boolean isOpWindow() { return false; }
+	@Override public boolean isDevWindow() { return false; }
 	@Override public boolean isDebugWindow() { return false; }
 	@Override public boolean showInLists() { return true; }
 	
-	@Override public Stack<IWindowParent<?>> getWindowHistory() { return WindowHistory; }
+	@Override
+	public Stack<IWindowParent<?>> getWindowHistory() {
+		return WindowHistory;
+	}
 	
 	@Override
-	public WindowParent<E> setWindowHistory(Stack<IWindowParent<?>> historyIn) {
+	public void setWindowHistory(Stack<IWindowParent<?>> historyIn) {
 		WindowHistory = historyIn;
-		if (header != null) { header.updateButtonVisibility(); }
-		return this;
+		if (header != null) header.updateButtonVisibility();
 	}
 	
 	@Override public long getInitTime() { return initTime; }
 	
-	/** Not planned for 1.0 */
-	@Override
-	public void renderTaskBarPreview(double xPos, double yPos) {
-		
-	}
-	
 	@Override
 	public void drawHighlightBorder() {
-		WindowHeader<?> header = getHeader();
+		var header = getHeader();
 		double sY = (header != null) ? header.startY : startY;
 		drawHRect(startX - 1, sY - 1, endX + 1, endY + 1, 1, EColors.red);
 	}
 	
 	@Override public EArrayList<String> getAliases() { return aliases; }
+	@Override public GameTexture getWindowIcon() { return windowIcon; }
+	@Override public boolean showInTaskBar() { return showInTaskBar; }
 	
 	//--------
 	// zLevel
 	//--------
 	
 	@Override public int getZLevel() { return windowZLevel; }
-	@Override public IWindowParent<E> setZLevel(int zLevelIn) { windowZLevel = zLevelIn; return this; }
-	@Override public IWindowParent<E> bringToFront() { return EUtil.nullDoR(getTopParent(), p -> p.bringObjectToFront(this), this); }
-	@Override public IWindowParent<E> sendToBack() { return EUtil.nullDoR(getTopParent(), p -> p.sendObjectToBack(this), this); }
+	@Override public void setZLevel(int zLevelIn) { windowZLevel = zLevelIn; }
+	@Override public void bringToFront() { EUtil.nullDo(getTopParent(), p -> p.bringObjectToFront(this)); }
+	@Override public void sendToBack() { EUtil.nullDo(getTopParent(), p -> p.sendObjectToBack(this)); }
 	
-	//----------------------
-	// WindowParent Methods
-	//----------------------
+	//------------------
+	// Internal Methods
+	//------------------
+	
+	protected void defaultDims() { setDimensions(startX, startY, defaultWidth, defaultHeight); }
+	protected void defaultHeader() { setHeader(new WindowHeader(this)); }
+	protected void defaultHeader(IWindowParent<?> in) { setHeader(new WindowHeader(in)); }
 	
 	private void initDefaultPos(IWindowObject<?> parentIn) {
 		init(parentIn);
@@ -307,49 +307,41 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	
 	private void pullHistoryFrom(IWindowParent<?> objectIn) {
 		if (objectIn != null) {
-			oldObject = objectIn;
-			if (objectIn instanceof WindowParent<?>) {
-				WindowHistory = ((WindowParent<?>) objectIn).getWindowHistory();
+			if (objectIn instanceof WindowParent<?> wp) {
+				WindowHistory = wp.getWindowHistory();
 				WindowHistory.push(objectIn);
 			}
 		}
 	}
 	
-	@Override public void initWindow() {}
-	
-	protected void defaultDims() { setDimensions(startX, startY, defaultWidth, defaultHeight); }
-	protected void defaultHeader() { setHeader(new WindowHeader(this)); }
-	protected void defaultHeader(IWindowParent<?> in) { setHeader(new WindowHeader(in)); }
+	//---------
+	// Methods
+	//---------
 	
 	public void fileUpAndClose() {
 		if (!WindowHistory.isEmpty() && WindowHistory.peek() != null) {
-			Object oldGuiPass = WindowHistory.pop();
-			if (oldGuiPass instanceof WindowParent<?>) {
-				try {
-					WindowParent<?> newGui = ((WindowParent<?>) Class.forName(oldGuiPass.getClass().getName()).getConstructor().newInstance());
-					newGui.setWindowHistory(((WindowParent<?>) oldGuiPass).getWindowHistory());
-					IWindowParent p = getTopParent().displayWindow(newGui, this, true, true, false, ObjectPosition.OBJECT_CENTER);
-					p.setPinned(isPinned());
-					if (isMaximized() && newGui.isMaximizable()) {
-						newGui.setPreMax(getPreMax());
-						newGui.setMaximized(getMaximizedPosition());
-						newGui.maximize();
-					}
-					
-					//THIS IS NOT RIGHT
-					// V V V V V V V V
-					
-					getTopParent().setFocusedObject(p);
+			var oldGuiPass = WindowHistory.pop();
+			try {
+				var newGui = oldGuiPass.getClass().getConstructor().newInstance();
+				newGui.setWindowHistory(oldGuiPass.getWindowHistory());
+				IWindowParent p = getTopParent().displayWindow(newGui, this, true, true, false, ObjectPosition.OBJECT_CENTER);
+				p.setPinned(isPinned());
+				if (isMaximized() && newGui.isMaximizable()) {
+					newGui.setPreMax(getPreMax());
+					newGui.setMaximized(getMaximizedPosition());
+					newGui.maximize();
 				}
-				catch (Exception e) { e.printStackTrace(); }
+				
+				//THIS IS NOT RIGHT
+				// V V V V V V V V
+				
+				getTopParent().setFocusedObject(p);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		close();
-	}
-	
-	public WindowParent<E> enableHeader(boolean val) {
-		if (header != null) { header.setEnabled(val); }
-		return this;
 	}
 	
 	public void drawDefaultBackground() {
@@ -364,28 +356,29 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		//drawRect(startX + 3, startY + 3, endX - 3, endY - 3, 0xff424242);
 	}
 	
-	public WindowParent<E> setHeader(WindowHeader<?> headerIn) {
-		if (header != null) removeObject();
-		header = headerIn;
-		if (header != null) header.updateButtonVisibility();
-		addObject(header);
-		return this;
+	public void enableHeader(boolean val) {
+		if (header != null) header.setEnabled(val);
 	}
 	
-	//----------------------
-	// WindowParent Getters
-	//----------------------
+	//---------
+	// Getters
+	//---------
 	
-	@Override public GameTexture getWindowIcon() { return windowIcon; }
-	public WindowHeader<?> getHeader() { return header; }
 	public boolean movesWithParent() { return moveWithParent; }
-	@Override public boolean showInTaskBar() { return showInTaskBar; }
 	
-	//----------------------
-	// WindowParent Setters
-	//----------------------	
+	//---------
+	// Setters
+	//---------
 	
-	public WindowParent<E> setDrawDefaultBackground(boolean val) { drawDefaultBackground = val; return this; }
-	public WindowParent<E> setMoveWithParent(boolean val) { moveWithParent = val; return this; }
+	public void setDrawDefaultBackground(boolean val) { drawDefaultBackground = val; }
+	public void setMoveWithParent(boolean val) { moveWithParent = val; }
+	
+	public WindowParent<E> setHeader(WindowHeader<?> headerIn) {
+		if (header != null) removeChild();
+		header = headerIn;
+		if (header != null) header.updateButtonVisibility();
+		addChild(header);
+		return this;
+	}
 	
 }

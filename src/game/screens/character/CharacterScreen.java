@@ -66,7 +66,7 @@ public class CharacterScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		back = new WindowButton(this, 5, endY - 60, 100, 95, "Back");
 		
 		double bH = height / 20;
@@ -78,7 +78,7 @@ public class CharacterScreen extends GameScreen {
 		
 		WindowButton.setTextures(WindowTextures.plus, WindowTextures.plus_sel, upHealth, upStrength, upMana);
 		
-		addObject(upHealth, upStrength, upMana);
+		addChild(upHealth, upStrength, upMana);
 	}
 	
 	@Override
@@ -173,7 +173,7 @@ public class CharacterScreen extends GameScreen {
 	public void onWindowResized() {
 		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
 		updateDrawDimensions();
-		reInitObjects();
+		reInitChildren();
 	}
 	
 	private void levelHP() {}

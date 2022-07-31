@@ -8,7 +8,11 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.EventType;
 
 public class EventRedraw extends ObjectEvent {
 	
-	public EventRedraw(IWindowObject parentObjectIn) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public EventRedraw(IWindowObject<?> parentObjectIn) {
 		super(parentObjectIn, EventType.REDRAW);
 	}
 	

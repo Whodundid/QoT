@@ -69,6 +69,7 @@ import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.reflection.EModifier;
+import main.QoT;
 
 //Author: Hunter Bragg
 
@@ -442,4 +443,17 @@ public class TerminalHandler {
 	public List<String> getCommandNames() { return commands.getAVals(); }
 	public EArrayList<String> getHistory() { return cmdHistory; }
 	public TerminalHandler clearHistory() { cmdHistory.clear(); return this; }
+	
+	/**
+	 * Searches for the first terminal instance on the top renderer and returns it.
+	 * If there is no terminal instance found, a new one is created and returned.
+	 * 
+	 * @return The active terminal instance on the top renderer
+	 */
+	public static ETerminal getActiveTerminal() {
+		ETerminal term = QoT.getTopRenderer().getTerminalInstance();
+		if (term == null) term = new ETerminal();
+		return term;
+	}
+	
 }

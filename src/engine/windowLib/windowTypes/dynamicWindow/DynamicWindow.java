@@ -15,49 +15,56 @@ import engine.windowLib.windowUtil.ObjectPosition;
 /** A special type of WindowParent that can be directly constructed from a serialized file. */
 public class DynamicWindow extends WindowParent {
 	
+	//--------
+	// Fields
+	//--------
+	
 	private File dataFile;
 	private boolean failed = false;
 	private boolean built = false;
 	
 	//parsed values
 	
-	private Box2<Double, Double> parsedDims = new Box2();
+	private Box2<Double, Double> parsedDims = new Box2<>();
 	private ObjectPosition parsedCenterType = null;
 	
-	private EArrayList<IWindowObject> parsedObjects = new EArrayList();
+	private EArrayList<IWindowObject<?>> parsedObjects = new EArrayList<>();
 	
-	//--------------------------
-	//DynamicWindow Constructors
-	//--------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	public DynamicWindow(File fileIn) {
 		dataFile = fileIn;
 	}
 	
-	//---------------------
-	//DynamicWindow Methods
-	//---------------------
+	//---------
+	// Methods
+	//---------
 	
 	/** Attempts to construct a WindowParent object from the associated serialized file. */
 	public boolean build() {
 		return built = EUtil.tryFileCodeR(dataFile, a -> parseFile());
 	}
 	
+	//------------------
+	// Internal Methods
+	//------------------
+	
 	/** Returns true if, and only if, each and every step of the file reading process succeeds. */
 	protected boolean parseFile() {
-		if (parseBase()) {
-			if (parseObjects()) {
-				if (parseScripts()) {
-					return true;
-				}
-				else { QoT.error("Cannot parse DynamicWindow file: " + dataFile + " for scripts!", new IOException()); }
-			}
-			else { QoT.error("Cannot parse DynamicWindow file: " + dataFile + " for objects!", new IOException()); }
+		try {
+			String t = "Cannot prase DynamicWindow file: ";
+			if (!parseBase()) throw QoT.error(t + dataFile + " for scripts!", new IOException());
+			if (!parseObjects()) throw QoT.error(t + dataFile + " for objects!", new IOException());
+			if (!parseScripts()) throw QoT.error(t + dataFile + " for base values!", new IOException());
 		}
-		else { QoT.error("Cannot parse DynamicWindow file: " + dataFile + " for base values!", new IOException()); }
+		catch (Exception e) {
+			failed = true;
+			return false;
+		}
 		
-		failed = true;
-		return false;
+		return true;
 	}
 	
 	protected boolean parseBase() {

@@ -1,11 +1,9 @@
-package engine.windowLib.desktopOverlay;
+package engine.topOverlay.desktopOverlay;
 
 import assets.textures.WindowTextures;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.utilityObjects.RightClickMenu;
-import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
-import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
@@ -13,9 +11,13 @@ import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import main.QoT;
 
-public class TaskButton extends WindowButton implements Comparable<TaskButton> {
+public class TaskBarButton<E> extends WindowButton<E> implements Comparable<TaskBarButton<?>> {
 	
-	TaskBar parentBar;
+	//--------
+	// Fields
+	//--------
+	
+	private TaskBar<?> parentBar;
 	private IWindowParent base;
 	private boolean pressed = false;
 	private int total = 0;
@@ -25,7 +27,11 @@ public class TaskButton extends WindowButton implements Comparable<TaskButton> {
 	private boolean listMade = false;
 	private WindowDropDown dropDown;
 	
-	public TaskButton(TaskBar barIn, IWindowParent baseIn) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public TaskBarButton(TaskBar<?> barIn, IWindowParent<?> baseIn) {
 		super(barIn);
 		parentBar = barIn;
 		base = baseIn;
@@ -43,8 +49,12 @@ public class TaskButton extends WindowButton implements Comparable<TaskButton> {
 		setImage();
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
-	public int compareTo(TaskButton b) {
+	public int compareTo(TaskBarButton<?> b) {
 		return Long.compare(getEarliest(), b.getEarliest());
 	}
 	
@@ -57,7 +67,7 @@ public class TaskButton extends WindowButton implements Comparable<TaskButton> {
 		}
 		
 		//draw highlight if the currently focused window is of the same type as this button's base
-		IWindowObject o = QoT.getTopRenderer().getFocusedObject();
+		var o = QoT.getTopRenderer().getFocusedObject();
 		if (base != null &&
 			o != null &&
 			o.getWindowParent() != null &&
@@ -99,7 +109,7 @@ public class TaskButton extends WindowButton implements Comparable<TaskButton> {
 	
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
-		if (enabled && willBeDrawn()) {
+		if (isEnabled() && willBeDrawn()) {
 			pressedButton = button;
 			if (runActionOnPress) onPress(button);
 			else if (button == 0) {
@@ -109,7 +119,7 @@ public class TaskButton extends WindowButton implements Comparable<TaskButton> {
 				
 				if (total == 1) {
 					destroyList();
-					WindowParent p = getWindows().get(0);
+					var p = getWindows().get(0);
 					
 					if (p.isMinimizable()) {
 						//check if at front
@@ -128,10 +138,10 @@ public class TaskButton extends WindowButton implements Comparable<TaskButton> {
 				}
 			}
 			else if (button == 1) {
-				EArrayList<WindowParent> windows = getWindows();
+				var windows = getWindows();
 				
 				RightClickMenu rcm = new RightClickMenu();
-				rcm.setTitle(hoverText);
+				rcm.setTitle(getHoverText());
 				rcm.setActionReceiver(parentBar);
 				rcm.setGenericObject(base);
 				
@@ -165,15 +175,35 @@ public class TaskButton extends WindowButton implements Comparable<TaskButton> {
 		System.out.println(object);
 	}
 	
-	/** Sets the image of the window that this button represents. */
-	private void setImage() {
-		if (base != null) setTextures(base.getWindowIcon(), base.getWindowIcon());
-		else setButtonTexture(WindowTextures.problem);
-	}
+	//---------
+	// Methods
+	//---------
 	
 	/** Updates the visible number of window instances represented by this button. */
 	public void update() {
 		total = getTotal();
+	}
+	
+	public void destroyList() {
+		if (dropDown != null) {
+			dropDown.close();
+			dropDown = null;
+			QoT.getTopRenderer().revealHiddenObjects();
+			for (var w : QoT.getTopRenderer().getAllActiveWindows()) {
+				w.setDrawWhenMinimized(false);
+			}
+		}
+		listMade = false;
+	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
+	
+	/** Sets the image of the window that this button represents. */
+	private void setImage() {
+		if (base != null) setTextures(base.getWindowIcon(), base.getWindowIcon());
+		else setButtonTexture(WindowTextures.problem);
 	}
 	
 	private void drawTotal() {
@@ -186,52 +216,47 @@ public class TaskButton extends WindowButton implements Comparable<TaskButton> {
 	private void createList() {
 		dropDown = new WindowDropDown(this, startX, endY, 20, false);
 		
-		EArrayList<WindowParent> windows = getWindows();
+		var windows = getWindows();
 		
 		for (int i = 1; i <= windows.size(); i++) {
-			WindowParent p = windows.get(i - 1);
+			var p = windows.get(i - 1);
 			dropDown.addEntry(i + ": " + EColors.green + p.getObjectName(), EColors.lorange, p);
 		}
 		
-		QoT.getTopRenderer().addObject(dropDown);
+		QoT.getTopRenderer().addChild(dropDown);
 		
 		listMade = true;
 	}
 	
-	public void destroyList() {
-		if (dropDown != null) {
-			dropDown.close();
-			dropDown = null;
-			QoT.getTopRenderer().revealHiddenObjects();
-			for (IWindowParent w : QoT.getTopRenderer().getAllActiveWindows()) {
-				w.setDrawWhenMinimized(false);
-			}
-		}
-		listMade = false;
+	//---------
+	// Getters
+	//---------
+	
+	public IWindowParent<?> getWindowType() { return base; }
+	public TaskBarButton<?> setPinned(boolean val) { pinned = val; return this; }
+	public boolean isPinned() { return pinned; }
+	public long getEarliest() { return earliest; }
+	
+	/**
+	 * Returns a list of all current window instances of the same type
+	 * that this button represents.
+	 */
+	public EArrayList<IWindowParent<?>> getWindows() {
+		return (EArrayList<IWindowParent<?>>) QoT.getTopRenderer().getAllWindowInstances(base.getClass());
 	}
 	
 	/** Returns the total number of window instances that this button represents. */
 	public int getTotal() {
-		var windows = QoT.getTopRenderer().getAllWindowInstances(base);
+		var windows = QoT.getTopRenderer().getAllWindowInstances(base.getClass());
 		
 		if (total != windows.size()) {
 			earliest = Long.MAX_VALUE;
-			for (IWindowParent w : windows) {
+			for (var w : windows) {
 				if (earliest < w.getInitTime()) earliest = w.getInitTime();
 			}
 		}
 		
 		return windows.size();
 	}
-	
-	/** Returns a list of all current window instances of the same type that this button represents. */
-	public EArrayList<WindowParent> getWindows() {
-		return (EArrayList<WindowParent>) QoT.getTopRenderer().getAllWindowInstances(base.getClass());
-	}
-	
-	public IWindowParent getWindowType() { return base; }
-	public TaskButton setPinned(boolean val) { pinned = val; return this; }
-	public boolean isPinned() { return pinned; }
-	public long getEarliest() { return earliest; }
 
 }

@@ -28,7 +28,7 @@ public class EditorScreenTopHeader extends WindowObject {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		settings = new WindowButton(this, startX + 3, startY + 3, 28, 28);
 		terrain = new WindowButton(this, settings.endX + 3, startY + 3, 140, 28, "Terrain");
 		assets = new WindowButton(this, terrain.endX + 3, startY + 3, 140, 28, "Assets");
@@ -49,8 +49,8 @@ public class EditorScreenTopHeader extends WindowObject {
 		WindowButton.setStringColor(EColors.chalk, terrain, assets, regions, scripts);
 		WindowButton.setSelectedColor(EColors.green, terrain, assets, regions, scripts);
 		
-		addObject(settings);
-		addObject(terrain, scripts, assets, regions);
+		addChild(settings);
+		addChild(terrain, scripts, assets, regions);
 	}
 	
 	@Override

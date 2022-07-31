@@ -8,7 +8,7 @@ import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
-import game.screens.primary.MainMenuScreen;
+import game.screens.main.MainMenuScreen;
 import main.QoT;
 
 public class DeathScreen extends GameScreen {
@@ -23,7 +23,7 @@ public class DeathScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		double w = 200;
 		double h = 40;
 		
@@ -31,7 +31,7 @@ public class DeathScreen extends GameScreen {
 		
 		IActionObject.setActionReceiver(this, mainMenu);
 		
-		addObject(mainMenu);
+		addChild(mainMenu);
 	}
 	
 	@Override

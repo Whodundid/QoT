@@ -5,7 +5,7 @@ import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.screens.primary.MainMenuScreen;
+import game.screens.main.MainMenuScreen;
 import main.QoT;
 
 public class TestInventory<E> extends WindowParent<E> {
@@ -34,7 +34,7 @@ public class TestInventory<E> extends WindowParent<E> {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		close = new WindowButton(this, startX + 10, startY + 10, 50, 50);
@@ -53,14 +53,14 @@ public class TestInventory<E> extends WindowParent<E> {
 			}
 			
 			@Override
-			public void initObjects() {
+			public void initChildren() {
 				defaultHeader(this);
 				header.height = 10;
 				
 				sayHi = new WindowButton(this, startX + 5, startY + 5, 100, 30, "Say Hi");
 				sayHi.setActionReceiver(this);
 				
-				addObject(sayHi);
+				addChild(sayHi);
 			}
 			
 			@Override
@@ -89,8 +89,8 @@ public class TestInventory<E> extends WindowParent<E> {
 		
 		innerWindow.setMoveWithParent(true);
 		
-		addObject(close);
-		addObject(innerWindow);
+		addChild(close);
+		addChild(innerWindow);
 	}
 	
 	@Override

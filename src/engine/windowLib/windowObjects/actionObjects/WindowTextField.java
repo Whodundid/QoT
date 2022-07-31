@@ -14,6 +14,10 @@ import main.QoT;
 
 public class WindowTextField<E> extends ActionObject<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	public String text = "", textWhenEmpty = "";
 	public int maxStringLength = 32;
 	public int textWhenEmptyColor = 0xffb2b2b2;
@@ -37,11 +41,20 @@ public class WindowTextField<E> extends ActionObject<E> {
 	protected int cursorPosition;
 	protected int selectionEnd;
 
+	//--------------
+	// Constructors
+	//--------------
+	
 	protected WindowTextField() {}
-	public WindowTextField(IWindowObject parentIn, double x, double y, double widthIn, double heightIn) {
+	
+	public WindowTextField(IWindowObject<?> parentIn, double x, double y, double widthIn, double heightIn) {
 		init(parentIn, x, y, widthIn, heightIn);
 		//Keyboard.enableRepeatEvents(true);
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mX, int mY) {
@@ -100,7 +113,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 	public void mouseReleased(int mXIn, int mYIn, int button) {
 		super.mouseReleased(mXIn, mYIn, button);
 		
-		if (clickStartPos != -1) { clickStartPos = -1; }
+		if (clickStartPos != -1) clickStartPos = -1;
 	}
 	
 	@Override
@@ -122,20 +135,20 @@ public class WindowTextField<E> extends ActionObject<E> {
 		//}
 		else {
 			switch (keyCode) {
-			case 259: //backspace
+			case Keyboard.KEY_BACKSPACE: //backspace
 				if (isEnabled()) {
 					if (Keyboard.isCtrlDown()) deleteWords(-1);
 					else deleteFromCursor(-1);
 				}
 				break;
-			case 257: //enter
+			case Keyboard.KEY_ENTER: //enter
 				performAction();
 				break;
-			case 268: //home
+			case Keyboard.KEY_HOME: //home
 				if (Keyboard.isShiftDown()) setSelPos(0);
 				else setCursorPosZero();
 				break;
-			case 263: //left
+			case Keyboard.KEY_LEFT: //left
 				startTextTimer();
 				if (Keyboard.isShiftDown()) {
 					if (Keyboard.isCtrlDown()) setSelPos(getNthWordFromPos(-1, getSelEnd()));
@@ -144,7 +157,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 				else if (Keyboard.isCtrlDown()) setCursorPos(getNthWordFromCursor(-1));
 				else moveCursorBy(-1);
 				break;
-			case 262: //right
+			case Keyboard.KEY_RIGHT: //right
 				startTextTimer();
 				if (Keyboard.isShiftDown()) {
 					if (Keyboard.isCtrlDown()) setSelPos(getNthWordFromPos(1, getSelEnd()));
@@ -153,11 +166,11 @@ public class WindowTextField<E> extends ActionObject<E> {
 				else if (Keyboard.isCtrlDown()) setCursorPos(getNthWordFromCursor(1));
 				else moveCursorBy(1);
 				break;
-			case 269: //end
+			case Keyboard.KEY_END: //end
 				if (Keyboard.isShiftDown()) setSelPos(text.length());
 				else setCursorPositionEnd();
 				break;
-			case 261: //delete
+			case Keyboard.KEY_DELETE: //delete
 				startTextTimer();
 				if (isEnabled()) {
 					if (Keyboard.isCtrlDown()) deleteWords(1);
@@ -198,91 +211,10 @@ public class WindowTextField<E> extends ActionObject<E> {
 		}
 	}
 	
-	public void startTextTimer() {
-		startTime = System.currentTimeMillis();
-		textRecentlyEntered = true;
-	}
+	//------------------
+	// Internal Methods
+	//------------------
 	
-	public void writeText(String textIn) {
-		String s = "";
-		String s1 = Keyboard.removeUntypables(textIn);
-		int i = cursorPosition < selectionEnd ? cursorPosition : selectionEnd;
-		int j = cursorPosition < selectionEnd ? selectionEnd : cursorPosition;
-		int k = maxStringLength - text.length() - (i - j);
-		int l = 0;
-		
-		if (text.length() > 0) s = s + text.substring(0, i);
-		
-		if (k < s1.length()) {
-			s = s + s1.substring(0, k);
-			l = k;
-		}
-		else {
-			s = s + s1;
-			l = s1.length();
-		}
-		
-		if (text.length() > 0 && j < text.length()) s = s + text.substring(j);
-		
-		text = s;
-		moveCursorBy(i - selectionEnd + l);
-		startTextTimer();
-	}
-
-	/** Deletes the specified number of words starting at the cursor position. Negative numbers will delete words left of the cursor. */
-	public void deleteWords(int numberOfWords) {
-		if (text.length() != 0) {
-			if (selectionEnd != cursorPosition) writeText("");
-			else deleteFromCursor(getNthWordFromCursor(numberOfWords) - cursorPosition);
-		}
-	}
-
-	/** delete the selected text, otherwsie deletes characters from either side of the cursor. params: delete num */
-	public void deleteFromCursor(int p_146175_1_) {
-		if (text.length() != 0) {
-			if (selectionEnd != cursorPosition) {
-				writeText("");
-			}
-			else {
-				boolean flag = p_146175_1_ < 0;
-				int i = flag ? cursorPosition + p_146175_1_ : cursorPosition;
-				int j = flag ? cursorPosition : cursorPosition + p_146175_1_;
-				String s = "";
-				if (i >= 0) s = text.substring(0, i);
-				if (j < text.length()) s = s + text.substring(j);
-				text = s;
-				if (flag) moveCursorBy(p_146175_1_);
-			}
-		}
-	}
-
-	/** see @getNthWordFromPos() params: N, position */
-	public int getNthWordFromCursor(int pos) { return getNthWordFromPos(pos, getCursorPosition()); }
-	
-	/** gets the position of the nth word. N may be negative, then it looks backwards. params: N, position */
-	public int getNthWordFromPos(int posIn, int cursorPos) { return getNthWordFromPos(posIn, cursorPos, true); }
-	public int getNthWordFromPos(int posIn, int cursorPos, boolean p_146197_3_) {
-		int i = cursorPos;
-		boolean flag = posIn < 0;
-		int j = Math.abs(posIn);
-		for (int k = 0; k < j; ++k) {
-			if (!flag) {
-				int l = text.length();
-				i = text.indexOf(32, i);
-				
-				if (i == -1) i = l;
-				else {
-					while (p_146197_3_ && i < l && text.charAt(i) == 32) ++i;
-				}
-			}
-			else {
-				while (p_146197_3_ && i > 0 && text.charAt(i - 1) == 32) --i;
-				while (i > 0 && text.charAt(i - 1) != 32) --i;
-			}
-		}
-		return i;
-	}
-
 	/** draws the vertical line cursor in the textbox */
 	protected void drawCursorVertical(double x, double y, double w, double h) {
 		if (x < w) {
@@ -314,28 +246,176 @@ public class WindowTextField<E> extends ActionObject<E> {
 		//GlStateManager.enableTexture2D();
 	}
 	
+	//---------
+	// Methods
+	//---------
+	
+	public void moveCursorBy(int moveAmount) { setCursorPos(selectionEnd + moveAmount); }
+	public void clear() { setText(""); }
+	public void updateCursorCounter() { cursorCounter++; }
+	
+	public void startTextTimer() {
+		startTime = System.currentTimeMillis();
+		textRecentlyEntered = true;
+	}
+	
+	public void writeText(String textIn) {
+		String s = "";
+		String s1 = Keyboard.removeUntypables(textIn);
+		int i = cursorPosition < selectionEnd ? cursorPosition : selectionEnd;
+		int j = cursorPosition < selectionEnd ? selectionEnd : cursorPosition;
+		int k = maxStringLength - text.length() - (i - j);
+		int l = 0;
+		
+		if (text.length() > 0) s = s + text.substring(0, i);
+		
+		if (k < s1.length()) {
+			s = s + s1.substring(0, k);
+			l = k;
+		}
+		else {
+			s = s + s1;
+			l = s1.length();
+		}
+		
+		if (text.length() > 0 && j < text.length()) s = s + text.substring(j);
+		
+		text = s;
+		moveCursorBy(i - selectionEnd + l);
+		startTextTimer();
+	}
+
+	/**
+	 * Deletes the specified number of words starting at the cursor
+	 * position. Negative numbers will delete words left of the cursor.
+	 */
+	public void deleteWords(int numberOfWords) {
+		if (text.length() != 0) {
+			if (selectionEnd != cursorPosition) writeText("");
+			else deleteFromCursor(getNthWordFromCursor(numberOfWords) - cursorPosition);
+		}
+	}
+
+	/**
+	 * delete the selected text, otherwise deletes characters from either
+	 * side of the cursor. params: delete num
+	 */
+	public void deleteFromCursor(int p_146175_1_) {
+		if (text.length() != 0) {
+			if (selectionEnd != cursorPosition) {
+				writeText("");
+			}
+			else {
+				boolean flag = p_146175_1_ < 0;
+				int i = flag ? cursorPosition + p_146175_1_ : cursorPosition;
+				int j = flag ? cursorPosition : cursorPosition + p_146175_1_;
+				String s = "";
+				if (i >= 0) s = text.substring(0, i);
+				if (j < text.length()) s = s + text.substring(j);
+				text = s;
+				if (flag) moveCursorBy(p_146175_1_);
+			}
+		}
+	}
+	
+	//---------
+	// Getters
+	//---------
+
+	public int getMaxStringLength() { return maxStringLength; }
+	public int getCursorPosition() { return cursorPosition; }
+	public boolean getEnableBackgroundDrawing() { return enableBackgroundDrawing; }
+	public boolean onlyAcceptsletters() { return onlyAcceptLetters; }
+	public boolean onlyAcceptsNumbers() { return onlyAcceptNumbers; }
+	public boolean drawsShadowed() { return drawShadowed; }
+	public boolean allowsClipboardPastes() { return allowClipboardPastes; }
+	public int getSelEnd() { return selectionEnd; }
+	public double getWidth() { return getEnableBackgroundDrawing() ? width - 8 : width; }
+	public String getText() { return text; }
+	public boolean isEmpty() { return text != null ? text.isEmpty() : true; }
+	public boolean isNotEmpty() { return text != null ? !text.isEmpty() : false; }
+	public int getTextColor() { return textColor; }
+	public int getTextEmptyColor() { return textWhenEmptyColor; }
+	public int getBorderColor() { return borderColor; }
+	
+	/** see @getNthWordFromPos() params: N, position */
+	public int getNthWordFromCursor(int pos) {
+		return getNthWordFromPos(pos, getCursorPosition());
+	}
+	
+	/**
+	 * gets the position of the nth word. N may be negative, then it looks
+	 * backwards. params: N, position
+	 */
+	public int getNthWordFromPos(int posIn, int cursorPos) { return getNthWordFromPos(posIn, cursorPos, true); }
+	public int getNthWordFromPos(int posIn, int cursorPos, boolean p_146197_3_) {
+		int i = cursorPos;
+		boolean flag = posIn < 0;
+		int j = Math.abs(posIn);
+		for (int k = 0; k < j; ++k) {
+			if (!flag) {
+				int l = text.length();
+				i = text.indexOf(32, i);
+				
+				if (i == -1) i = l;
+				else {
+					while (p_146197_3_ && i < l && text.charAt(i) == 32) ++i;
+				}
+			}
+			else {
+				while (p_146197_3_ && i > 0 && text.charAt(i - 1) == 32) --i;
+				while (i > 0 && text.charAt(i - 1) != 32) --i;
+			}
+		}
+		return i;
+	}
+	
 	public String getSelectedText() {
 		int startPos = cursorPosition < selectionEnd ? cursorPosition : selectionEnd;
 		int endPos = cursorPosition < selectionEnd ? selectionEnd : cursorPosition;
 		return text.substring(startPos, endPos);
 	}
+
+	//---------
+	// Setters
+	//---------
 	
-	public WindowTextField setCursorPos(int posIn) {
+	public void setCursorPosZero() { setCursorPos(0); }
+	public void setCursorPositionEnd() { setCursorPos(text.length()); }
+	public void setEnableBackgroundDrawing(boolean val) { enableBackgroundDrawing = val; }
+	public void setEditable(boolean val) { editable = val; }
+	public void setTextColor(int colorIn) { textColor = colorIn; }
+	public void setTextColor(EColors colorIn) { textColor = colorIn.intVal; }
+	public void setDisabledTextColor(int colorIn) { disabledColor = colorIn; }
+	public void setDisabledTextColor(EColors colorIn) { disabledColor = colorIn.intVal; }
+	public void setAlwaysDrawCursor(boolean val) { alwaysDrawCursor = val; }
+	public void setUseObjectGroupForCursorDraws(boolean val) { useObjectGroupForCursorDraw = val; }
+	public void setOnlyAcceptLetters(boolean val) { onlyAcceptLetters = val; }
+	public void setOnlyAcceptNumbers(boolean val) { onlyAcceptNumbers = val; }
+	public void setAllowClipboardPastes(boolean val) { allowClipboardPastes = val; }
+	public void setTextWhenEmpty(String textIn) { textWhenEmpty = textIn; if (text.isEmpty()) { text = textWhenEmpty; } setTextColor(textWhenEmptyColor); }
+	public void setTextWhenEmptyColor(int colorIn) { textWhenEmptyColor = colorIn; }
+	public void setTextWhenEmptyColor(EColors colorIn) { textWhenEmptyColor = colorIn.intVal; }
+	public void setBackgroundColor(int colorIn) { backgroundColor = colorIn; }
+	public void setBackgroundColor(EColors colorIn) { backgroundColor = colorIn.intVal; }
+	public void setBorderColor(int colorIn) { borderColor = colorIn; }
+	public void setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; }
+	public void setDrawShadowed(boolean val) { drawShadowed = val; }
+	
+	public void setCursorPos(int posIn) {
 		cursorPosition = posIn;
 		int i = text.length();
 		cursorPosition = NumberUtil.clamp(cursorPosition, 0, i);
 		setSelPos(cursorPosition);
-		return this;
 	}
-
-	public WindowTextField setMaxStringLength(int lengthIn) {
+	
+	public void setMaxStringLength(int lengthIn) {
 		maxStringLength = lengthIn;
 		if (text.length() > lengthIn) text = text.substring(0, lengthIn);
-		return this;
 	}
 	
 	/** Sets the position of the selection anchor (i.e. position the selection was started at) */
-	public WindowTextField setSelPos(int posIn) {
+	public void setSelPos(int posIn) {
 		int i = text.length();
 		if (posIn > i) posIn = i;
 		if (posIn < 0) posIn = 0;
@@ -353,11 +433,10 @@ public class WindowTextField<E> extends ActionObject<E> {
 			else if (posIn <= lineScrollOffset) lineScrollOffset -= lineScrollOffset - posIn;
 			lineScrollOffset = NumberUtil.clamp(lineScrollOffset, 0, i);
 		}
-		return this;
 	}
 
-	public WindowTextField setText(Object objectIn) { return setText(StringUtil.toString(objectIn)); }
-	public WindowTextField setText(String textIn) {
+	public void setText(Object objectIn) { setText(StringUtil.toString(objectIn)); }
+	public void setText(String textIn) {
 		if (textIn != null) {
 			if (textIn.isEmpty()) {
 				text = textWhenEmpty;
@@ -374,48 +453,6 @@ public class WindowTextField<E> extends ActionObject<E> {
 		}
 		else text = "";
 		setCursorPositionEnd();
-		return this;
 	}
-	
-	public void updateCursorCounter() { cursorCounter++; }
-	public int getMaxStringLength() { return maxStringLength; }
-	public int getCursorPosition() { return cursorPosition; }
-	public boolean getEnableBackgroundDrawing() { return enableBackgroundDrawing; }
-	public boolean onlyAcceptsletters() { return onlyAcceptLetters; }
-	public boolean onlyAcceptsNumbers() { return onlyAcceptNumbers; }
-	public boolean drawsShadowed() { return drawShadowed; }
-	public boolean allowsClipboardPastes() { return allowClipboardPastes; }
-	public int getSelEnd() { return selectionEnd; }
-	public double getWidth() { return getEnableBackgroundDrawing() ? width - 8 : width; }
-	public String getText() { return text; }
-	public boolean isEmpty() { return text != null ? text.isEmpty() : true; }
-	public boolean isNotEmpty() { return text != null ? !text.isEmpty() : false; }
-	public int getTextColor() { return textColor; }
-	public int getTextEmptyColor() { return textWhenEmptyColor; }
-	public int getBorderColor() { return borderColor; }
-	
-	public WindowTextField setCursorPosZero() { setCursorPos(0); return this; }
-	public WindowTextField setCursorPositionEnd() { setCursorPos(text.length()); return this; }
-	public WindowTextField setEnableBackgroundDrawing(boolean val) { enableBackgroundDrawing = val; return this; }
-	public WindowTextField setEditable(boolean val) { editable = val; return this; }
-	public WindowTextField setTextColor(int colorIn) { textColor = colorIn; return this; }
-	public WindowTextField setTextColor(EColors colorIn) { textColor = colorIn.intVal; return this; }
-	public WindowTextField setDisabledTextColor(int colorIn) { disabledColor = colorIn; return this; }
-	public WindowTextField setDisabledTextColor(EColors colorIn) { disabledColor = colorIn.intVal; return this; }
-	public WindowTextField setAlwaysDrawCursor(boolean val) { alwaysDrawCursor = val; return this; }
-	public WindowTextField setUseObjectGroupForCursorDraws(boolean val) { useObjectGroupForCursorDraw = val; return this; }
-	public WindowTextField setOnlyAcceptLetters(boolean val) { onlyAcceptLetters = val; return this; }
-	public WindowTextField setOnlyAcceptNumbers(boolean val) { onlyAcceptNumbers = val; return this; }
-	public WindowTextField setAllowClipboardPastes(boolean val) { allowClipboardPastes = val; return this; }
-	public WindowTextField setTextWhenEmpty(String textIn) { textWhenEmpty = textIn; if (text.isEmpty()) { text = textWhenEmpty; } setTextColor(textWhenEmptyColor); return this; }
-	public WindowTextField setTextWhenEmptyColor(int colorIn) { textWhenEmptyColor = colorIn; return this; }
-	public WindowTextField setTextWhenEmptyColor(EColors colorIn) { textWhenEmptyColor = colorIn.intVal; return this; }
-	public WindowTextField moveCursorBy(int moveAmount) { setCursorPos(selectionEnd + moveAmount); return this; }
-	public WindowTextField clear() { setText(""); return this; }
-	public WindowTextField setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
-	public WindowTextField setBackgroundColor(EColors colorIn) { backgroundColor = colorIn.intVal; return this; }
-	public WindowTextField setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowTextField setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; return this; }
-	public WindowTextField setDrawShadowed(boolean val) { drawShadowed = val; return this; }
 	
 }

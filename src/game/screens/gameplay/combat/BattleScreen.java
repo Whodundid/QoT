@@ -54,10 +54,10 @@ public class BattleScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		tempNextTurn = new WindowButton(this, midX - 100, endY - 100, 200, 40, "Next Turn");
 		
-		addObject(tempNextTurn);
+		addChild(tempNextTurn);
 		
 		renderTeamA();
 		renderTeamB();
@@ -86,7 +86,7 @@ public class BattleScreen extends GameScreen {
 			double y = sYA - (q * distY);
 			
 			var b = new BattleCharacter(e, x, y, dW, dH, true);
-			addObject(b);
+			addChild(b);
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class BattleScreen extends GameScreen {
 			double y = sYB - (q * distY);
 			
 			var b = new BattleCharacter(e, x, y, dW, dH, false);
-			addObject(b);
+			addChild(b);
 		}
 	}
 	

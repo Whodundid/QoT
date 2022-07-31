@@ -5,7 +5,7 @@ import assets.textures.ItemTextures;
 import engine.inputHandlers.Keyboard;
 import engine.screenEngine.GameScreen;
 import engine.soundEngine.SoundEngine;
-import engine.windowLib.GameTopRenderer;
+import engine.topOverlay.GameTopRenderer;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.basicObjects.WindowRect;
 import engine.windowLib.windowObjects.basicObjects.WindowStatusBar;
@@ -16,7 +16,7 @@ import game.entities.Entity;
 import game.entities.player.Player;
 import game.screens.character.CharacterScreen;
 import game.screens.gameplay.combat.DeathScreen;
-import game.screens.primary.MainMenuScreen;
+import game.screens.main.MainMenuScreen;
 import main.QoT;
 import world.GameWorld;
 
@@ -52,8 +52,8 @@ public class GamePlayScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
-		windowObjects.clear();
+	public void initChildren() {
+		getChildren().clear();
 		
 		//assign player field
 		player = QoT.getPlayer();
@@ -63,11 +63,11 @@ public class GamePlayScreen extends GameScreen {
 		
 		health = new WindowStatusBar(this, 5, 5, 200, 30, 0, player.getMaxHealth(), EColors.red);
 		health.setBarValue(player.getHealth());
-		addObject(health);
+		addChild(health);
 		
 		mana = new WindowStatusBar(this, health.endX + 5, 5, 200, 30, 0, player.getMaxMana(), EColors.blue);
 		mana.setBarValue(player.getMana());
-		addObject(mana);
+		addChild(mana);
 		
 		character = new WindowButton(this, mana.endX + 5, 5, 125, 30, "Stats");
 		//addObject(character);

@@ -12,6 +12,10 @@ import eutil.datatypes.EArrayList;
 
 public class WindowLabel<E> extends WindowObject<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	public String displayString = "";
 	public int displayStringColor = 0xffffffff;
 	protected EArrayList<String> wordWrappedLines;
@@ -21,14 +25,22 @@ public class WindowLabel<E> extends WindowObject<E> {
 	protected boolean shadow = true;
 	protected double gapSize = 0;
 	
-	public WindowLabel(IWindowObject parentIn, double xPos, double yPos) { this(parentIn, xPos, yPos, "", 0xffffffff); }
-	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn) { this(parentIn, xPos, yPos, stringIn, 0xffffffff); }
-	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn, EColors colorIn) { this(parentIn, xPos, yPos, stringIn, colorIn.c()); }
-	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn, int colorIn) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos) { this(parentIn, xPos, yPos, "", 0xffffffff); }
+	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn) { this(parentIn, xPos, yPos, stringIn, 0xffffffff); }
+	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn, EColors colorIn) { this(parentIn, xPos, yPos, stringIn, colorIn.c()); }
+	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn, int colorIn) {
 		init(parentIn, xPos, yPos, getStringWidth(stringIn), FontRenderer.FONT_HEIGHT);
 		displayString = stringIn;
 		displayStringColor = colorIn;
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mX, int mY) {
@@ -46,7 +58,8 @@ public class WindowLabel<E> extends WindowObject<E> {
 				}
 				i++;
 			}
-		} else {
+		}
+		else {
 			if (centered) {
 				drawStringC(displayString, startX, startY, displayStringColor);
 				//if (shadow) { drawCenteredStringWithShadow(displayString, startX, startY, displayStringColor); }
@@ -62,7 +75,45 @@ public class WindowLabel<E> extends WindowObject<E> {
 		super.drawObject(mX, mY);
 	}
 	
-	public WindowLabel<E> setString(String stringIn) {
+	//---------
+	// Methods
+	//---------
+	
+	public boolean isEmpty() { return (displayString != null) ? displayString.isEmpty() : true; }
+	public void clear() { if (displayString != null) displayString = ""; }
+	
+	public void enableWordWrap(boolean val, double widthMaxIn) {
+		widthMax = widthMaxIn;
+		wordWrap = val;
+		setString(displayString);
+	}
+	
+	//---------
+	// Getters
+	//---------
+
+	public String getString() { return displayString; }
+	public int getColor() { return displayStringColor; }
+	
+	public double getTextHeight() {
+		var size = wordWrappedLines.size();
+		return wordWrap ? (size * FontRenderer.FONT_HEIGHT + size * gapSize) : FontRenderer.FONT_HEIGHT;
+	}
+	
+	//---------
+	// Setters
+	//---------
+	
+	public void setLineGapHeight(int heightIn) { gapSize = heightIn; }
+	public void enableShadow(boolean val) { shadow = val; }
+	public void setDrawCentered(boolean val) { centered = val; }
+	
+	public void setColor(int colorIn) { displayStringColor = colorIn; }
+	public void setColor(EColors colorIn) {
+		if (colorIn != null) displayStringColor = colorIn.intVal;
+	}
+	
+	public void setString(String stringIn) {
 		displayString = stringIn;
 		if (wordWrap) {
 			wordWrappedLines = EStringBuilder.createWordWrapString(displayString, widthMax);
@@ -70,7 +121,7 @@ public class WindowLabel<E> extends WindowObject<E> {
 			int longest = 0;
 			for (String s : wordWrappedLines) {
 				int len = getStringWidth(s);
-				if (len > longest) { longest = len; }
+				if (len > longest) longest = len;
 			}
 			
 			double w = longest;
@@ -81,37 +132,19 @@ public class WindowLabel<E> extends WindowObject<E> {
 		else {
 			setSize(getStringWidth(displayString), FontRenderer.FONT_HEIGHT);
 		}
-		return this;
 	}
 	
-	public WindowLabel<E> enableWordWrap(boolean val, double widthMaxIn) {
-		//boolean oldVal = wordWrap;
-		widthMax = widthMaxIn;
-		wordWrap = val;
-		setString(displayString);
-		return this;
-	}
+	//----------------
+	// Static Methods
+	//----------------
 	
-	public double getTextHeight() { return wordWrap ? (wordWrappedLines.size() * FontRenderer.FONT_HEIGHT + wordWrappedLines.size() * gapSize) : FontRenderer.FONT_HEIGHT; }
-	public String getString() { return displayString; }
-	public int getColor() { return displayStringColor; }
-	
-	public boolean isEmpty() { return (displayString != null) ? displayString.isEmpty() : true; }
-	
-	public WindowLabel<E> clear() { if (displayString != null) { displayString = ""; } return this; }
-	public WindowLabel<E> setLineGapHeight(int heightIn) { gapSize = heightIn; return this; }
-	public WindowLabel<E> setColor(int colorIn) { displayStringColor = colorIn; return this; }
-	public WindowLabel<E> setColor(EColors colorIn) { if (colorIn != null) { displayStringColor = colorIn.c(); } return this; }
-	public WindowLabel<E> enableShadow(boolean val) { shadow = val; return this; }
-	public WindowLabel<E> setDrawCentered(boolean val) { centered = val; return this; }
-	
-	public static void setColor(EColors colorIn, WindowLabel label, WindowLabel... additional) { setColor(colorIn.intVal, label, additional); }
-	public static void setColor(int colorIn, WindowLabel label, WindowLabel... additional) {
-		EUtil.filterNullForEachA(l -> l.setColor(colorIn), EUtil.add(label, additional));
-	}
-	
-	public static void enableShadow(boolean val, WindowLabel label, WindowLabel... additional) {
+	public static void enableShadow(boolean val, WindowLabel<?> label, WindowLabel<?>... additional) {
 		EUtil.filterNullForEachA(l -> l.enableShadow(val), EUtil.add(label, additional));
+	}
+	
+	public static void setColor(EColors colorIn, WindowLabel<?> label, WindowLabel<?>... additional) { setColor(colorIn.intVal, label, additional); }
+	public static void setColor(int colorIn, WindowLabel<?> label, WindowLabel<?>... additional) {
+		EUtil.filterNullForEachA(l -> l.setColor(colorIn), EUtil.add(label, additional));
 	}
 	
 }

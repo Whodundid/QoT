@@ -2,9 +2,11 @@ package engine.windowLib.windowUtil;
 
 //Author: Hunter Bragg
 
-/** An enum which specifies a relative location on the physical monitor for how IWindowParents can be positioned at or around. */
+/**
+ * An enum which specifies a relative location on the physical monitor
+ * for how IWindowParents can be positioned at or around.
+ */
 public enum ObjectPosition {
-	
 	/** Center of window is positioned around the center of the screen. */
 	SCREEN_CENTER,
 	/** Bottom left corner of window is positioned at the bottom left corner of screen. */
@@ -29,5 +31,4 @@ public enum ObjectPosition {
 	EXISTING_OBJECT_INDENT,
 	/** No special positioning, window is positioned at top left corner of screen by default. */
 	NONE;
-	
 }

@@ -111,10 +111,10 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	@Override
-	public void initObjects() {
-		addObject(topHeader = new EditorScreenTopHeader(this));
-		addObject(toolBox = new EditorToolBox(this));
-		addObject(sidePanel = new EditorSidePanel(this));
+	public void initChildren() {
+		addChild(topHeader = new EditorScreenTopHeader(this));
+		addChild(toolBox = new EditorToolBox(this));
+		addChild(sidePanel = new EditorSidePanel(this));
 		
 		sidePanel.setCurrentPanel(SidePanelType.TERRAIN);
 		updateDrawDist();
@@ -167,7 +167,7 @@ public class MapEditorScreen extends GameScreen {
 					double tH = primary.getGameObject().height;
 					double tDrawW = tW * world.getZoom();
 					double tDrawH = tH * world.getZoom();
-					drawTexture(tex, mX - tW / 2, mY - tH, tDrawW, tDrawH);
+					drawTexture(tex, Mouse.getMx() - tW / 2, Mouse.getMy() - tH, tDrawW, tDrawH);
 					//drawTexture(tex, mX, mY, tDrawW, tDrawH);
 					drawHoveredTileBox((int) x, (int) y, (int) w, (int) h);
 					break;
@@ -201,8 +201,8 @@ public class MapEditorScreen extends GameScreen {
 		worldXPos = NumberUtil.clamp(worldXPos, 0, world.getWidth() - 1);
 		worldYPos = NumberUtil.clamp(worldYPos, 0, world.getHeight() - 1);
 		
-		double xPos = (x + ((mX - x) / w) * w) - 1; //not sure why need to sub 1 here..
-		double yPos = (y + ((mY - y) / h) * h);
+		double xPos = (x + ((Mouse.getMx() - x) / w) * w) - 1; //not sure why need to sub 1 here..
+		double yPos = (y + ((Mouse.getMy() - y) / h) * h);
 		
 		//drawString("POS: " + xPos + " : " + yPos, 150, 150);
 		

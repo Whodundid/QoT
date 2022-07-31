@@ -4,19 +4,30 @@ import engine.windowLib.windowTypes.ActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 
-
 //Author: Hunter Bragg
 
 public class WindowCheckBox<E> extends ActionObject<E> {
 	
-	boolean checked = false;
-	boolean drawX = false;
+	//--------
+	// Fields
+	//--------
 	
-	public WindowCheckBox(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, false); }
-	public WindowCheckBox(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn, boolean checkedIn) {
+	private boolean checked = false;
+	private boolean drawX = false;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowCheckBox(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, false); }
+	public WindowCheckBox(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn, boolean checkedIn) {
 		init(objIn, xIn, yIn, widthIn, heightIn);
 		checked = checkedIn;
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
@@ -41,10 +52,18 @@ public class WindowCheckBox<E> extends ActionObject<E> {
 		}
 	}
 	
-	public boolean drawsX() { return drawX; }
-	public boolean isChecked() { return checked; }
+	//---------
+	// Methods
+	//---------
 	
-	public WindowCheckBox setDrawX(boolean val) { drawX = val; return this; }
-	public WindowCheckBox setChecked(boolean val) { checked = val; return this; }
+	public boolean getDrawsX() { return drawX; }
+	public boolean getIsChecked() { return checked; }
+	
+	//---------
+	// Setters
+	//---------
+	
+	public void setDrawX(boolean val) { drawX = val; }
+	public void setIsChecked(boolean val) { checked = val; }
 	
 }

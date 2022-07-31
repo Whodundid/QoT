@@ -20,7 +20,7 @@ public class LevelUpScreen extends GameScreen {
 	@Override public void initScreen() {}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		back = new WindowButton(this, 5, endY - 60, 100, 95, "Back");
 	}
 	

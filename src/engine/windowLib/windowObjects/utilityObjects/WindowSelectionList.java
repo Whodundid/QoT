@@ -1,27 +1,29 @@
 package engine.windowLib.windowObjects.utilityObjects;
 
-import eutil.colors.EColors;
-import eutil.datatypes.Box3;
-import eutil.datatypes.EArrayList;
-import eutil.misc.ScreenLocation;
-
-import java.util.Iterator;
-
+import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
 import engine.windowLib.windowTypes.ActionWindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
+import eutil.colors.EColors;
+import eutil.datatypes.Box3;
+import eutil.datatypes.EArrayList;
+import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
 public class WindowSelectionList extends ActionWindowParent {
 	
+	//--------
+	// Fields
+	//--------
+	
 	protected WindowButton select, cancel;
 	protected WindowTextArea list;
-	protected EArrayList<Box3<String, Integer, Object>> toAdd = new EArrayList();
-	protected IWindowObject actionReciever;
+	protected EArrayList<Box3<String, Integer, Object>> toAdd = new EArrayList<>();
+	protected IWindowObject<?> actionReciever;
 	
 	private double vPos, hPos;
 	
@@ -29,7 +31,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	// Constructors
 	//--------------
 	
-	public WindowSelectionList(IWindowObject parent) {
+	public WindowSelectionList(IWindowObject<?> parent) {
 		super(parent);
 	}
 	
@@ -46,7 +48,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		select = new WindowButton(this, endX - 85, endY - 25, 80, 20, "Select");
@@ -63,15 +65,15 @@ public class WindowSelectionList extends ActionWindowParent {
 		};
 		list.setResetDrawn(false);
 		
-		Iterator<Box3<String, Integer, Object>> it = toAdd.iterator();
+		var it = toAdd.iterator();
 		while (it.hasNext()) {
-			Box3<String, Integer, Object> b = it.next();
+			var b = it.next();
 			add(b.a, b.b, b.c);
 			it.remove();
 		}
-		if (!list.getTextDocument().isEmpty()) { list.setSelectedLine(list.getTextLine(0)); }
+		if (!list.getTextDocument().isEmpty()) list.setSelectedLine(list.getTextLine(0));
 		
-		addObject(select, cancel, list);
+		addChild(select, cancel, list);
 	}
 	
 	@Override
@@ -112,48 +114,50 @@ public class WindowSelectionList extends ActionWindowParent {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (keyCode == 28) { selectCurrentOptionAndClose(); }
+		if (keyCode == Keyboard.KEY_ENTER) selectCurrentOptionAndClose();
 		super.keyPressed(typedChar, keyCode);
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == select) { selectCurrentOptionAndClose(); }
-		if (object == cancel) { close(); }
+		if (object == select) selectCurrentOptionAndClose();
+		if (object == cancel) close();
 	}
 	
 	//---------
 	// Methods
 	//---------
 	
-	public WindowSelectionList writeLine() { return writeLine("", 0); }
-	public WindowSelectionList writeLine(String text) { return writeLine(text, EColors.white.intVal); }
-	public WindowSelectionList writeLine(String text, EColors color) { return writeLine(text, color.intVal); }
-	public WindowSelectionList writeLine(String text, int color) {
-		if (list != null) { list.addTextLine(text, color); }
-		else { toAdd.add(new Box3(text, color, null)); }
-		return this;
+	public void writeLine() { writeLine("", 0); }
+	public void writeLine(String text) { writeLine(text, EColors.white.intVal); }
+	public void writeLine(String text, EColors color) { writeLine(text, color.intVal); }
+	public void writeLine(String text, int color) {
+		if (list != null) list.addTextLine(text, color);
+		else toAdd.add(new Box3(text, color, null));
 	}
 	
-	public WindowSelectionList addOption(String text) { return addOption(text, EColors.green.intVal, text); }
-	public WindowSelectionList addOption(String text, Object arg) { return addOption(text, EColors.green.intVal, arg); }
-	public WindowSelectionList addOption(String text, EColors color, Object arg) { return addOption(text, color.intVal, arg); }
-	public WindowSelectionList addOption(String text, int color, Object arg) {
-		if (list != null) { add(text, color, arg); }
-		else { toAdd.add(new Box3(text, color, arg)); }
-		return this;
+	public void addOption(String text) { addOption(text, EColors.green.intVal, text); }
+	public void addOption(String text, Object arg) { addOption(text, EColors.green.intVal, arg); }
+	public void addOption(String text, EColors color, Object arg) { addOption(text, color.intVal, arg); }
+	public void addOption(String text, int color, Object arg) {
+		if (list != null) add(text, color, arg);
+		else toAdd.add(new Box3(text, color, arg));
 	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	protected void selectCurrentOptionAndClose() {
 		if (list.getCurrentLine() != null && list.getCurrentLine().getGenericObject() != null) {
-			genericObject = list.getCurrentLine().getGenericObject();
+			setGenericObject(list.getCurrentLine().getGenericObject());
 			performAction(null, null);
 			close();
 		}
 	}
 	
 	private void add(String text, int color, Object arg) {
-		TextAreaLine l = new TextAreaLine(list, text, color, arg) {
+		var l = new TextAreaLine(list, text, color, arg) {
 			@Override
 			public void onDoubleClick() {
 				if (list.getCurrentLine() != null && list.getCurrentLine().getGenericObject() != null) {
@@ -163,7 +167,7 @@ public class WindowSelectionList extends ActionWindowParent {
 			@Override
 			public void keyPressed(char typedChar, int keyCode) {
 				super.keyPressed(typedChar, keyCode);
-				if (keyCode == 28) {
+				if (keyCode == Keyboard.KEY_ENTER) {
 					selectCurrentOptionAndClose();
 				}
 			}

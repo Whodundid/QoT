@@ -1,4 +1,4 @@
-package engine.windowLib.desktopOverlay;
+package engine.topOverlay.desktopOverlay;
 
 public enum ShortcutType {
 	FILE,

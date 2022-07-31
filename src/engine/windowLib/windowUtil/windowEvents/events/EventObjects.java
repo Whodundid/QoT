@@ -9,16 +9,28 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.ObjectEventType;
 
 public class EventObjects extends ObjectEvent {
 	
-	ObjectEventType type;
-	IWindowObject targetObject;
+	//--------
+	// Fields
+	//--------
 	
-	public EventObjects(IWindowObject parentIn, IWindowObject targetObjectIn, ObjectEventType typeIn) {
+	private final ObjectEventType type;
+	private final IWindowObject<?> targetObject;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public EventObjects(IWindowObject<?> parentIn, IWindowObject<?> targetObjectIn, ObjectEventType typeIn) {
 		super(parentIn, EventType.OBJECT);
 		targetObject = targetObjectIn;
 		type = typeIn;
 	}
 	
+	//---------
+	// Getters
+	//---------
+	
 	public ObjectEventType getObjectEventType() { return type; }
-	public IWindowObject getTargetObject() { return targetObject; }
+	public IWindowObject<?> getTargetObject() { return targetObject; }
 	
 }
