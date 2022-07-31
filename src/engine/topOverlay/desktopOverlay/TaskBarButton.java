@@ -1,6 +1,8 @@
 package engine.topOverlay.desktopOverlay;
 
+import assets.textures.TaskBarTextures;
 import assets.textures.WindowTextures;
+import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.utilityObjects.RightClickMenu;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
@@ -85,17 +87,17 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 		double h = height;
 		double smaller = 0;
 		
-		if (btnTexture != null) {
-			iW = btnTexture.getWidth();
-			iH = btnTexture.getHeight();
-			w = NumberUtil.clamp(iW, 0, width - 3);
-			h = NumberUtil.clamp(iH, 0, height - 3);
-			smaller = (w < h) ? w : h;
-			sX = startX + (width - smaller) / 2.0;
-			sY = startY + 0.5 + (height - smaller) / 2.0;
-		}
+		GameTexture icon = btnTexture;
+		if (icon == null) icon = TaskBarTextures.window;
 		
-		drawTexture(btnTexture, sX, sY, smaller, smaller);
+		iW = icon.getWidth();
+		iH = icon.getHeight();
+		w = NumberUtil.clamp(iW, 0, width - 3);
+		h = NumberUtil.clamp(iH, 0, height - 3);
+		smaller = (w < h) ? w : h;
+		sX = startX + (width - smaller) / 2.0;
+		sY = startY + 0.5 + (height - smaller) / 2.0;
+		drawTexture(icon, sX, sY, smaller, smaller);
 		
 		super.drawObject(mXIn, mYIn);
 		

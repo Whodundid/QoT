@@ -1,5 +1,6 @@
 package engine.windowLib.bundledWindows;
 
+import assets.textures.TaskBarTextures;
 import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowTypes.WindowParent;
 import eutil.colors.EColors;
@@ -21,6 +22,7 @@ public class GLKeyChecker extends WindowParent {
 	public GLKeyChecker() {
 		super();
 		aliases.add("keychecker", "glkey");
+		windowIcon = TaskBarTextures.experiment;
 	}
 	
 	//-----------
