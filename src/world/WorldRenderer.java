@@ -263,9 +263,9 @@ public class WorldRenderer extends EGui {
 	
 	private void renderEntities() {
 		EArrayList<Entity> entities = world.getEntitiesInWorld();
-		entities.sort(Comparator.comparingInt(e -> e.startY));
+		entities.sort(Comparator.comparingInt(e -> e.endY));
 		
-		for (int i = entities.size() - 1; i >= 0; i--) {
+		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			if (e.getTexture() == null) continue;
 			
