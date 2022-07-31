@@ -49,7 +49,6 @@ public class EntitySpawn {
 		if (initHealth != -1) ent.setHealth(initHealth);
 		if (initMana != -1) ent.setMana(initMana);
 		ent.setWorldPos(x, y);
-		//System.out.println(x + " : " + y);
 		
 		world.addEntity(ent);
 	}

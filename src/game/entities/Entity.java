@@ -12,6 +12,10 @@ import world.worldTiles.WorldTile;
 
 public abstract class Entity extends GameObject {
 	
+	//--------
+	// Fields
+	//--------
+	
 	public GameWorld world;
 	protected String headText = "";
 	protected boolean passable = false;
@@ -34,7 +38,7 @@ public abstract class Entity extends GameObject {
 	protected int maxMana;
 	/** The actual amount of mana this entity has. */
 	protected int mana;
-	/** Instead of making the gold an entity has an inventory item, gold is storred directly
+	/** Instead of making the gold an entity has an inventory item, gold is stored directly
 	 *  on the character themselves. */
 	protected int gold;
 	
@@ -49,6 +53,9 @@ public abstract class Entity extends GameObject {
 	 * level. Additional modifiers are added in later.
 	 */
 	protected int baseMeleeDamage;
+	
+	/** The ID of this entity within the world. -1 by default. */
+	private int entityID = -1;
 	
 	//--------------
 	// Constructors
@@ -345,6 +352,8 @@ public abstract class Entity extends GameObject {
 	// Getters
 	//---------
 	
+	public int getEntityID() { return entityID; }
+	
 	public EDimension getCollision() { return collisionBox; }
 	public boolean isPassable() { return passable; }
 	public boolean isNoClipping() { return allowNoClip; }
@@ -371,6 +380,8 @@ public abstract class Entity extends GameObject {
 	//---------
 	// Setters
 	//---------
+	
+	public void setEntityID(int idIn) { entityID = idIn; }
 	
 	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }
