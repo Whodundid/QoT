@@ -408,7 +408,6 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 	@Override
 	public void close() {
 		super.close();
-		//if (isChat) { EnhancedMC.getEMCApp().unregisterChatTerminal(this); }
 	}
 	
 	//-----------------
