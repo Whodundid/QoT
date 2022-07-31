@@ -1,14 +1,15 @@
 package engine.windowLib.windowObjects.advancedObjects.dropDownList;
 
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+
+import java.util.Iterator;
+
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-
-import java.util.Iterator;
 
 //Author: Hunter Bragg
 

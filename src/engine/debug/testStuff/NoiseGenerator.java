@@ -1,4 +1,4 @@
-package engine.testStuff;
+package engine.debug.testStuff;
 
 //JAVA REFERENCE IMPLEMENTATION OF IMPROVED NOISE - COPYRIGHT 2002 KEN PERLIN.
 

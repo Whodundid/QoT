@@ -1,17 +1,18 @@
 package engine.windowLib.windowObjects.utilityObjects;
 
-import engine.windowLib.windowObjects.actionObjects.WindowButton;
-import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
-import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import engine.windowLib.windowTypes.ActionWindowParent;
-import engine.windowLib.windowTypes.interfaces.IActionObject;
-import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
 import eutil.datatypes.EArrayList;
 import eutil.misc.ScreenLocation;
 
 import java.util.Iterator;
+
+import engine.windowLib.windowObjects.actionObjects.WindowButton;
+import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
+import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
+import engine.windowLib.windowTypes.ActionWindowParent;
+import engine.windowLib.windowTypes.interfaces.IActionObject;
+import engine.windowLib.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg
 

@@ -1,12 +1,13 @@
 package engine.windowLib.windowObjects.actionObjects;
 
-import engine.windowLib.windowTypes.ActionObject;
-import engine.windowLib.windowTypes.interfaces.IWindowObject;
-import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import eutil.datatypes.Box2;
 import eutil.math.NumberUtil;
 
 import java.text.DecimalFormat;
+
+import engine.windowLib.windowTypes.ActionObject;
+import engine.windowLib.windowTypes.interfaces.IWindowObject;
+import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
 
 //Author: Hunter Bragg
 

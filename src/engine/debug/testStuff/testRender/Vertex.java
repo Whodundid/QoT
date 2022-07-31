@@ -1,4 +1,4 @@
-package engine.testStuff.testRender;
+package engine.debug.testStuff.testRender;
 
 import eutil.math.Vec2f;
 import eutil.math.Vec3f;

@@ -1,8 +1,5 @@
 package engine.windowLib.windowTypes.dynamicWindow;
 
-import engine.windowLib.windowTypes.WindowParent;
-import engine.windowLib.windowTypes.interfaces.IWindowObject;
-import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
@@ -10,6 +7,10 @@ import main.QoT;
 
 import java.io.File;
 import java.io.IOException;
+
+import engine.windowLib.windowTypes.WindowParent;
+import engine.windowLib.windowTypes.interfaces.IWindowObject;
+import engine.windowLib.windowUtil.ObjectPosition;
 
 /** A special type of WindowParent that can be directly constructed from a serialized file. */
 public class DynamicWindow extends WindowParent {

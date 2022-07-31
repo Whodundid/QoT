@@ -1,11 +1,11 @@
 package world.mapEditor.editorParts.toolBox;
 
-import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 
 import java.util.List;
 
+import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import world.mapEditor.editorTools.EditorToolType;
 
 public class ToolCategory {

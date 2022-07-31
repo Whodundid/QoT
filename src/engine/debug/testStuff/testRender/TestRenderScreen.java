@@ -1,4 +1,4 @@
-package engine.testStuff.testRender;
+package engine.debug.testStuff.testRender;
 
 import engine.renderEngine.GLObject;
 import engine.renderEngine.shaders.ShaderProgram;
