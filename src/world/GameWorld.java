@@ -17,6 +17,13 @@ import java.util.Scanner;
 
 public class GameWorld {
 	
+	//-------------------------------------------------------------
+	
+	private int nextEntityID = 0;
+	public int getNextEntityID() { return nextEntityID++; }
+	
+	//-------------------------------------------------------------
+	
 	public static final int DEFAULT_TILE_WIDTH = 32;
 	public static final int DEFAULT_TILE_HEIGHT = 32;
 	public static final int DEFAULT_RANGE = 12;
@@ -132,11 +139,18 @@ public class GameWorld {
 	}
 	
 	public Entity addEntity(Entity ent) {
+		//assign world and add
 		ent.world = this;
 		entityData.add(ent);
+		
+		//assign entity ID
+		ent.setEntityID(getNextEntityID());
+		
+		//check if player
 		if (ent == QoT.thePlayer) {
 			QoT.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
 		}
+		
 		return ent;
 	}
 	
