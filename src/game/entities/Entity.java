@@ -78,7 +78,7 @@ public abstract class Entity extends GameObject {
 		collisionBox = new EDimension(startX, startY, endX, endY);
 	}
 	
-	/** Can be overriden in child classes to denote specific entity behavior. */
+	/** Can be overridden in child classes to denote specific entity behavior. */
 	public void onLivingUpdate() {}
 	
 	/** Called from the world whenever an entity collides with another entity. */
