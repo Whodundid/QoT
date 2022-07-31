@@ -3,7 +3,7 @@ package world.mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogBox;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
@@ -44,8 +44,8 @@ public class RegionSidePanel extends SidePanel {
 		
 		IWindowObject.setEnabledS(false, edit, delete);
 		
-		panel.addObject(regionList);
-		panel.addObject(edit, delete);
+		panel.addChild(regionList);
+		panel.addChild(edit, delete);
 		
 		loadRegions();
 		
@@ -86,7 +86,7 @@ public class RegionSidePanel extends SidePanel {
 		if (object == edit) { edit(); }
 		if (object == delete) { delete(); }
 		
-		if (object instanceof WindowDialogueBox b) {
+		if (object instanceof WindowDialogBox b) {
 			if (args.length >= 1 && args[0] instanceof Integer code && b.getGenericObject() instanceof TextAreaLine line && line.getGenericObject() instanceof Region) {
 				try {
 					switch (code) {
@@ -145,7 +145,7 @@ public class RegionSidePanel extends SidePanel {
 	}
 	
 	private void openDeleter(TextAreaLine<Region> lineIn) {
-		WindowDialogueBox deletingBox = new WindowDialogueBox(panel) {
+		WindowDialogBox deletingBox = new WindowDialogBox(panel) {
 			
 			WindowButton yes, cancel;
 			
@@ -158,18 +158,21 @@ public class RegionSidePanel extends SidePanel {
 			}
 			
 			@Override
-			public void initObjects() {
-				super.initObjects();
+			public void initChildren() {
+				super.initChildren();
 				
 				setMessage(EColors.orange + "Are you sure? " + EColors.lgray + "(" + lineIn.getGenericObject().getName() + ")");
 				
 				double bw = NumberUtil.clamp((width - 10) / 3, 100, 200);
 				double g = width / 30;
 				
-				yes = new WindowButton(this, midX - g - bw, endY - 50, bw, 28, "Delete").setStringColor(EColors.lred);
-				cancel = new WindowButton(this, midX + g, endY - 50, bw, 28, "Cancel").setStringColor(EColors.green);
+				yes = new WindowButton(this, midX - g - bw, endY - 50, bw, 28, "Delete");
+				cancel = new WindowButton(this, midX + g, endY - 50, bw, 28, "Cancel");
 				
-				addObject(cancel);
+				yes.setStringColor(EColors.lred);
+				cancel.setStringColor(EColors.green);
+				
+				addChild(cancel);
 			}
 			
 			@Override

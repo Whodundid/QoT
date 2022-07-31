@@ -1,6 +1,6 @@
 package main.settings.controls;
 
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import main.settings.controls.util.KeyCategory;
 import main.settings.controls.util.KeyCombo;
 

@@ -37,7 +37,7 @@ public class EditorSettingsWindow extends WindowParent {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		close = new WindowButton(this, startX + 3, endY - 38, 150, 35, "Close");
@@ -56,10 +56,10 @@ public class EditorSettingsWindow extends WindowParent {
 		incDistY.setTextures(WindowTextures.plus, WindowTextures.plus_sel);
 		decDistY.setTextures(WindowTextures.minimize, WindowTextures.minimize_sel);
 		
-		addObject(distX, incDistX, decDistX);
-		addObject(distY, incDistY, decDistY);
+		addChild(distX, incDistX, decDistX);
+		addChild(distY, incDistY, decDistY);
 		
-		addObject(close);
+		addChild(close);
 	}
 	
 	@Override

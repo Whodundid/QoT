@@ -12,7 +12,11 @@ import eutil.datatypes.EArrayList;
 
 public class WindowTextBox<E> extends WindowObject<E> {
 	
-	BoxList<String, Integer> lines = new BoxList();
+	//--------
+	// Fields
+	//--------
+	
+	private BoxList<String, Integer> lines = new BoxList<>();
 	private boolean centered = false;
 	private boolean shadowed = false;
 	private boolean drawBackground = true;
@@ -22,12 +26,12 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	private double lineGap = 0;
 	private double xPos, yPos;
 	
-	//--------------------------
-	//WindowTextBox Constructors
-	//--------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
-	public WindowTextBox(IWindowObject parent, double x, double y) { this(parent, x, y, null); }
-	public WindowTextBox(IWindowObject parent, double x, double y, EArrayList<String> linesIn) {
+	public WindowTextBox(IWindowObject<?> parent, double x, double y) { this(parent, x, y, null); }
+	public WindowTextBox(IWindowObject<?> parent, double x, double y, EArrayList<String> linesIn) {
 		init(parent);
 		xPos = x;
 		yPos = y;
@@ -35,9 +39,9 @@ public class WindowTextBox<E> extends WindowObject<E> {
 		redimension();
 	}
 	
-	//---------------------------
-	//EnhancedGuiObject Overrides
-	//---------------------------
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
@@ -60,7 +64,7 @@ public class WindowTextBox<E> extends WindowObject<E> {
 		scissor(scissorX, scissorY, scissorW, scissorH);
 		
 		double yPos = startY + border + 5;
-		for (Box2<String, Integer> line : lines) {
+		for (var line : lines) {
 			drawLine(line.getA(), line.getB(), yPos);
 			
 			yPos += FontRenderer.FONT_HEIGHT + lineGap;
@@ -71,42 +75,41 @@ public class WindowTextBox<E> extends WindowObject<E> {
 		super.drawObject(mXIn, mYIn);
 	}
 	
-	//---------------------
-	//WindowTextBox Methods
-	//---------------------
+	//---------
+	// Methods
+	//---------
 	
-	public WindowTextBox<E> addLine(String lineIn) { return addLine(lineIn, 0xffffff); }
-	public WindowTextBox<E> addLine(String lineIn, int color) {
+	public void addLine(String lineIn) { addLine(lineIn, 0xffffff); }
+	public void addLine(String lineIn, int color) {
 		EUtil.nullDo(parseLine(lineIn, color), l -> lines.addAll(l));
 		redimension();
-		return this;
 	}
 	
-	//---------------------
-	//WindowTextBox Getters
-	//---------------------
+	//---------
+	// Getters
+	//---------
 	
 	public double getMaxWidth() { return maxWidth; }
 	public double getMaxHeight() { return maxHeight; }
 	
-	//---------------------
-	//WindowTextBox Setters
-	//---------------------
+	//---------
+	// Setters
+	//---------
 	
-	public WindowTextBox<E> setMaxWidth(double widthIn) { maxWidth = widthIn; redimension(); return this; }
-	public WindowTextBox<E> setMaxHeight(double heightIn) { maxHeight = heightIn; redimension(); return this; }
-	public WindowTextBox<E> setBorderSize(int sizeIn) { border = sizeIn; redimension(); return this; }
-	public WindowTextBox<E> setLineGap(int gapIn) { lineGap = gapIn; redimension(); return this; }
-	public WindowTextBox<E> setDrawBackground(boolean val) { drawBackground = val; return this; }
+	public void setMaxWidth(double widthIn) { maxWidth = widthIn; redimension(); }
+	public void setMaxHeight(double heightIn) { maxHeight = heightIn; redimension(); }
+	public void setBorderSize(int sizeIn) { border = sizeIn; redimension(); }
+	public void setLineGap(int gapIn) { lineGap = gapIn; redimension(); }
+	public void setDrawBackground(boolean val) { drawBackground = val; }
 	
-	//------------------------------
-	//WindowTextBox Internal Methods
-	//------------------------------
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	private EArrayList<Box2<String, Integer>> parseLine(String lineIn, int colorIn) {
 		if (lineIn != null) {
 			
-			EArrayList<String> newLineCheck = new EArrayList();
+			EArrayList<String> newLineCheck = new EArrayList<>();
 			
 			//check for new line characters
 			int pos = 0;
@@ -118,13 +121,13 @@ public class WindowTextBox<E> extends WindowObject<E> {
 				}
 			}
 			
-			EArrayList<String> widthAdjusted = new EArrayList();
+			EArrayList<String> widthAdjusted = new EArrayList<>();
 			
 			for (String s : newLineCheck) {
 				widthAdjusted.addAll(EStringBuilder.createWordWrapString(s, (int) maxWidth));
 			}
 			
-			EArrayList<Box2<String, Integer>> createdLines = new EArrayList();
+			EArrayList<Box2<String, Integer>> createdLines = new EArrayList<>();
 			
 			for (String s : widthAdjusted) {
 				createdLines.add(new Box2<String, Integer>(s, colorIn));
@@ -139,10 +142,10 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	private void redimension() {
 		if (lines.isNotEmpty()) {
 			int longest = 0;
-			for (Box2<String, Integer> box : lines) {
+			for (var box : lines) {
 				String s = box.getA();
 				int len = getStringWidth(s);
-				if (len > longest) { longest = len; }
+				if (len > longest) longest = len;
 			}
 			
 			double w = longest + border;
@@ -160,24 +163,24 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	private void drawLine(String s, int color, double i) {
 		if (s != null) {
 			if (centered) {
-				if (shadowed) { drawStringCS(s, xPos, startY + (i * 9) + (i > 0 ? i * lineGap : 0), color); }
-				else { drawStringC(s, xPos, startY + (i * 9) + (i > 0 ? i * lineGap : 0), color); }
+				if (shadowed) drawStringCS(s, xPos, startY + (i * 9) + (i > 0 ? i * lineGap : 0), color);
+				else drawStringC(s, xPos, startY + (i * 9) + (i > 0 ? i * lineGap : 0), color);
 			}
 			else {
-				if (shadowed) { drawStringS(s, startX, startY + (i * 9) + (i > 0 ? i * lineGap : 0), color); }
-				else { drawString(s, startX, startY + (i * 9) + (i > 0 ? i * lineGap : 0), color); }
+				if (shadowed) drawStringS(s, startX, startY + (i * 9) + (i > 0 ? i * lineGap : 0), color);
+				else drawString(s, startX, startY + (i * 9) + (i > 0 ? i * lineGap : 0), color);
 			}
 		}
 	}
 	
-	//----------------------------
-	//WindowTextBox Static Methods
-	//----------------------------
+	//----------------
+	// Static Methods
+	//----------------
 	
 	public static void drawBox(double x, double y, String... linesIn) {
 		if (linesIn != null) {
-			Box2<String, Integer>[] lines = new Box2[linesIn.length];
-			for (int i = 0; i < linesIn.length; i++) { lines[i] = new Box2(linesIn[i], 0xffffff); }
+			var lines = new Box2[linesIn.length];
+			for (int i = 0; i < linesIn.length; i++) lines[i] = new Box2<>(linesIn[i], 0xffffff);
 			drawBox(x, y, 8, 3, true, true, lines);
 		}
 	}
@@ -194,11 +197,11 @@ public class WindowTextBox<E> extends WindowObject<E> {
 		if (linesIn != null) {
 			
 			int longest = 0;
-			for (Box2<String, Integer> box : linesIn) {
+			for (var box : linesIn) {
 				String s = box.getA();
 				if (s != null) {
 					int len = getStringWidth(s);
-					if (len > longest) { longest = len; }
+					if (len > longest) longest = len;
 				}
 			}
 			
@@ -216,29 +219,23 @@ public class WindowTextBox<E> extends WindowObject<E> {
 			double ty = y + borderIn + (lineGapIn / 2) + (lineGapIn % 2);
 			
 			int i = 0;
-			for (Box2<String, Integer> box : linesIn) {
+			for (var box : linesIn) {
 				if (box != null) {
 					String s = box.getA();
-					int c = 0xffffff;
-					
-					//generics fuckery
-					Object cVal = box.getB();
-					if (cVal instanceof EColors) { c = ((EColors) cVal).intVal; }
-					else if (cVal instanceof Number) { c = ((Integer) cVal).intValue(); }
+					int c = box.getB();
 					
 					//draw
 					if (centered) {
-						if (shadowed) { drawStringCS(s, xIn, ty + (i * 9) + (i > 0 ? i * lineGapIn : 0), c); }
-						else { drawStringC(s, xIn, ty + (i * 9) + (i > 0 ? i * lineGapIn : 0), c); }
+						if (shadowed) drawStringCS(s, xIn, ty + (i * 9) + (i > 0 ? i * lineGapIn : 0), c);
+						else drawStringC(s, xIn, ty + (i * 9) + (i > 0 ? i * lineGapIn : 0), c);
 					}
 					else {
-						if (shadowed) { drawStringS(s, x + borderIn, ty + (i * 9) + (i > 0 ? i * lineGapIn : 0), c); }
-						else { drawString(s, x + borderIn, ty + (i * 9) + (i > 0 ? i * lineGapIn : 0), c); }
+						if (shadowed) drawStringS(s, x + borderIn, ty + (i * 9) + (i > 0 ? i * lineGapIn : 0), c);
+						else drawString(s, x + borderIn, ty + (i * 9) + (i > 0 ? i * lineGapIn : 0), c);
 					}
 				}
 				i++;
 			}
-			
 		}
 	}
 	

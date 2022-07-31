@@ -1,8 +1,8 @@
 package assets.textures;
 
+import engine.inputHandlers.CursorHelper;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.renderEngine.textureSystem.TextureSystem;
-import engine.util.CursorHelper;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
 import main.settings.QoTSettings;

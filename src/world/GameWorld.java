@@ -4,11 +4,11 @@ import engine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import eutil.misc.Direction;
-import game.doodads.PlayerSpawnPosition;
 import game.entities.Entity;
-import game.worldTiles.WorldTile;
 import main.QoT;
 import main.settings.QoTSettings;
+import world.mapEditor.editorUtil.PlayerSpawnPosition;
+import world.worldTiles.WorldTile;
 
 import java.awt.Point;
 import java.io.File;

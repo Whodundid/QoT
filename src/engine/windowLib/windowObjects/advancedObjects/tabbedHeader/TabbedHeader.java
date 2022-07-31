@@ -24,7 +24,6 @@ import engine.windowLib.windowTypes.WindowObject;
  * The only restriction on new tabs is that the same tab cannot be added
  * multiple times to the same header.
  * 
- * 
  * @author Hunter Bragg
  *
  * @param <E>

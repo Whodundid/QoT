@@ -9,17 +9,28 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 
 public class EventModify extends ObjectEvent {
 	
-	IWindowObject modifyingObject = null;
-	ObjectModifyType modifyType = ObjectModifyType.None;
+	//--------
+	// Fields
+	//--------
 	
-	public EventModify(IWindowObject parentObjectIn, IWindowObject modifyingObjectIn, ObjectModifyType modifyingTypeIn) {
+	private final IWindowObject<?> modifyingObject;
+	private final ObjectModifyType modifyType;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public EventModify(IWindowObject<?> parentObjectIn, IWindowObject<?> modifyingObjectIn, ObjectModifyType modifyingTypeIn) {
 		super(parentObjectIn, EventType.MODIFY);
-		parentObject = parentObjectIn;
 		modifyingObject = modifyingObjectIn;
 		modifyType = modifyingTypeIn;
 	}
 	
-	public IWindowObject getModifyingObect() { return modifyingObject; }
+	//---------
+	// Getters
+	//---------
+	
+	public IWindowObject<?> getModifyingObect() { return modifyingObject; }
 	public ObjectModifyType getModifyType() { return modifyType; }
 	
 }

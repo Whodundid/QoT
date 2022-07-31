@@ -8,6 +8,10 @@ import eutil.math.EDimension;
 
 public class FocusLockBorder extends WindowObject {
 	
+	//--------
+	// Fields
+	//--------
+	
 	protected long startTime = 0l;
 	protected boolean first = false;
 	protected boolean second = false;
@@ -15,7 +19,11 @@ public class FocusLockBorder extends WindowObject {
 	protected int borderColor = 0xffff2222;
 	protected int preservedColor = 0;
 	
-	public FocusLockBorder(IWindowObject parentIn) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public FocusLockBorder(IWindowObject<?> parentIn) {
 		if (parentIn != null) {
 			EDimension dim = parentIn.getDimensions();
 			init(parentIn, dim.startX, dim.startY, dim.width, dim.height);
@@ -24,7 +32,7 @@ public class FocusLockBorder extends WindowObject {
 		}
 	}
 	
-	public FocusLockBorder(IWindowObject parentIn, double startXIn, double startYIn, double widthIn, double heightIn) {
+	public FocusLockBorder(IWindowObject<?> parentIn, double startXIn, double startYIn, double widthIn, double heightIn) {
 		if (parentIn != null) {
 			init(parentIn, startXIn, startYIn, widthIn, heightIn);
 			startTime = System.currentTimeMillis();
@@ -32,17 +40,25 @@ public class FocusLockBorder extends WindowObject {
 		}
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		if (System.currentTimeMillis() - startTime >= 200) {
 			//mc.getSoundHandler().playSound(PositionedSoundRecord.create(EMCResources.buttonSound, 1.0F));
-			if (second) { parent.removeObject(); drawingBorder = false; }
+			if (second) { getParent().removeChild(); drawingBorder = false; }
 			if (first) { second = true; drawingBorder = true; }
 			if (!first) { first = true; drawingBorder = false; }
 			startTime = System.currentTimeMillis();
 		}
-		if (drawingBorder) { drawBorder(); }
+		if (drawingBorder) drawBorder();
 	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	protected void drawBorder() {
 		drawRect(startX - 1, startY, startX, endY, borderColor);

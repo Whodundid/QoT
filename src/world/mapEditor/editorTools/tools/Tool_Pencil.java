@@ -1,9 +1,9 @@
 package world.mapEditor.editorTools.tools;
 
-import game.worldTiles.WorldTile;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.editorParts.util.EditorItem;
 import world.mapEditor.editorTools.EditorTool;
+import world.worldTiles.WorldTile;
 
 public class Tool_Pencil extends EditorTool {
 

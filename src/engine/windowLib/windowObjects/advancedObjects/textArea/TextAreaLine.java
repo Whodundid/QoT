@@ -1,7 +1,7 @@
 package engine.windowLib.windowObjects.advancedObjects.textArea;
 
-import engine.input.Keyboard;
-import engine.input.Mouse;
+import engine.inputHandlers.Keyboard;
+import engine.inputHandlers.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;
@@ -24,9 +24,13 @@ import main.QoT;
 
 public class TextAreaLine<E> extends WindowTextField<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	protected WindowTextArea<E> parentTextArea;
-	protected WindowLabel numberLabel;
-	protected IWindowObject focusRequester;
+	protected WindowLabel<?> numberLabel;
+	protected IWindowObject<?> focusRequester;
 	public int lineNumberColor = 0xff555555;
 	protected int lineNumber = 0;
 	protected int drawnLineNumber = 0;
@@ -45,9 +49,9 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	protected boolean webLink;
 	protected Object linkObject;
 	
-	//-------------------------
-	//TextAreaLine Constructors
-	//-------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	public TextAreaLine(WindowTextArea<E> textAreaIn) { this(textAreaIn, "", 0xffffff, null, -1); }
 	public TextAreaLine(WindowTextArea<E> textAreaIn, String textIn) { this(textAreaIn, textIn, 0xffffff, null, -1); }
@@ -57,7 +61,6 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	public TextAreaLine(WindowTextArea<E> textAreaIn, String textIn, int colorIn, E objectIn, int lineNumberIn) {
 		init(textAreaIn, 0, 0, 0, 0);
 		setMaxStringLength(1500);
-		parent = textAreaIn;
 		parentTextArea = textAreaIn;
 		lineNumber = lineNumberIn;
 		setText(textIn);
@@ -66,15 +69,15 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		setDrawShadowed(false);
 	}
 	
-	//----------------
-	//Object Overrides
-	//----------------
+	//--------------------
+	// Overrides : Object
+	//--------------------
 	
 	@Override public String toString() { return "[" + lineNumber + ": " + getText() + "]"; }
 	
-	//----------------------
-	//WindowObject Overrides
-	//----------------------
+	//---------------------------
+	// Overrides : IWindowObject
+	//---------------------------
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
@@ -92,7 +95,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 				}
 			}
 			
-			for (IWindowObject o : windowObjects) {
+			for (var o : getChildren()) {
 				if (o.willBeDrawn()) {
 					//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		        	o.drawObject(mXIn, mYIn);
@@ -112,110 +115,114 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
+		if (!hasFocus()) return;
 		
-		if (hasFocus()) {
-			parentTextArea.keyPressed(typedChar, keyCode);
-			
-			if (Keyboard.isCtrlA(keyCode)) { setCursorPositionEnd(); }
-			else if (Keyboard.isCtrlC(keyCode)) { Keyboard.setClipboard(getSelectedText()); }
-			else if (Keyboard.isCtrlV(keyCode) && isEnabled()) { writeText(Keyboard.getClipboard()); }
-			else if (Keyboard.isCtrlX(keyCode)) {
-				Keyboard.setClipboard(getSelectedText());
-				if (isEnabled() && parentTextArea.isEditable()) {
-					writeText("");
-				}
+		parentTextArea.keyPressed(typedChar, keyCode);
+		
+		if (Keyboard.isCtrlA(keyCode)) setCursorPositionEnd();
+		else if (Keyboard.isCtrlC(keyCode)) Keyboard.setClipboard(getSelectedText());
+		else if (Keyboard.isCtrlV(keyCode) && isEnabled()) writeText(Keyboard.getClipboard());
+		else if (Keyboard.isCtrlX(keyCode)) {
+			Keyboard.setClipboard(getSelectedText());
+			if (isEnabled() && parentTextArea.isEditable()) {
+				writeText("");
 			}
-			else {
-				switch (keyCode) {
-				case 257: //enter
-					if (parentTextArea.isEditable()) {
-						parentTextArea.createNewLineAfter(this);
-						setDimensions(startX, startY, getStringWidth(text), height);
+		}
+		else {
+			switch (keyCode) {
+			case Keyboard.KEY_ENTER: //enter
+				if (parentTextArea.isEditable()) {
+					parentTextArea.createNewLineAfter(this);
+					setDimensions(startX, startY, getStringWidth(text), height);
+				}
+				break;
+			case Keyboard.KEY_UP: //up
+				parentTextArea.selectPreviousLine(this, getCursorPosition());
+				break;
+			case Keyboard.KEY_DOWN: //down
+				parentTextArea.selectNextLine(this, getCursorPosition());
+				break;
+			case Keyboard.KEY_BACKSPACE: //backspace
+				if (parentTextArea.isEditable()) {
+					
+					if (getText().isEmpty() || cursorPosition == 0) {
+						TextAreaLine l = parentTextArea.deleteLineAndAddPrevious(this);
+						if (l != null) {
+							l.setDimensions(l.startX, l.startY, getStringWidth(l.getText()), l.height);
+						}
 					}
-					break;
-				case 265: //up
-					parentTextArea.selectPreviousLine(this, getCursorPosition());
-					break;
-				case 264: //down
-					parentTextArea.selectNextLine(this, getCursorPosition());
-					break;
-				case 259: //backspace
-					if (parentTextArea.isEditable()) {
-						
-						if (getText().isEmpty() || cursorPosition == 0) {
-							TextAreaLine l = parentTextArea.deleteLineAndAddPrevious(this);
-							if (l != null) {
-								l.setDimensions(l.startX, l.startY, getStringWidth(l.getText()), l.height);
-							}
-						}
-						else if (Keyboard.isCtrlDown()) {
-							if (isEnabled()) {
-								deleteWords(-1);
-								setDimensions(startX, startY, getStringWidth(text), height);
-							}
-						}
-						else if (isEnabled()) {
-							deleteFromCursor(-1);
+					else if (Keyboard.isCtrlDown()) {
+						if (isEnabled()) {
+							deleteWords(-1);
 							setDimensions(startX, startY, getStringWidth(text), height);
 						}
-						
+					}
+					else if (isEnabled()) {
+						deleteFromCursor(-1);
+						setDimensions(startX, startY, getStringWidth(text), height);
+					}
+					
+					startTextTimer();
+				}
+				break;
+			case Keyboard.KEY_HOME: //home
+				if (Keyboard.isShiftDown()) setSelPos(0);
+				else setCursorPosZero();
+				break;
+			case Keyboard.KEY_LEFT: //left
+				if (Keyboard.isShiftDown()) {
+					if (Keyboard.isCtrlDown()) setSelPos(getNthWordFromPos(-1, getSelEnd()));
+					else setSelPos(getSelEnd() - 1);
+				}
+				else if (Keyboard.isCtrlDown()) setCursorPos(getNthWordFromCursor(-1));
+				else moveCursorBy(-1);
+				startTextTimer();
+				break;
+			case Keyboard.KEY_RIGHT: //right
+				if (Keyboard.isShiftDown()) {
+					if (Keyboard.isCtrlDown()) setSelPos(getNthWordFromPos(1, getSelEnd()));
+					else setSelPos(getSelEnd() + 1);
+				}
+				else if (Keyboard.isCtrlDown()) setCursorPos(getNthWordFromCursor(1));
+				else moveCursorBy(1);
+				startTextTimer();
+				break;
+			case Keyboard.KEY_END: //end
+				if (Keyboard.isShiftDown()) setSelPos(text.length());
+				else setCursorPositionEnd();
+				break;
+			case Keyboard.KEY_DELETE: //delete
+				if (parentTextArea.isEditable()) {
+					if (Keyboard.isCtrlDown()) {
+						if (isEnabled()) {
+							deleteWords(1);
+							startTextTimer();
+						}
+					}
+					else if (isEnabled()) {
+						deleteFromCursor(1);
 						startTextTimer();
 					}
-					break;
-				case 268: //home
-					if (Keyboard.isShiftDown()) { setSelPos(0); }
-					else { setCursorPosZero(); }
-					break;
-				case 263: //left
-					if (Keyboard.isShiftDown()) {
-						if (Keyboard.isCtrlDown()) { setSelPos(getNthWordFromPos(-1, getSelEnd())); }
-						else { setSelPos(getSelEnd() - 1); }
-					}
-					else if (Keyboard.isCtrlDown()) { setCursorPos(getNthWordFromCursor(-1)); }
-					else { moveCursorBy(-1); }
-					startTextTimer();
-					break;
-				case 262: //right
-					if (Keyboard.isShiftDown()) {
-						if (Keyboard.isCtrlDown()) { setSelPos(getNthWordFromPos(1, getSelEnd())); }
-						else { setSelPos(getSelEnd() + 1); }
-					}
-					else if (Keyboard.isCtrlDown()) { setCursorPos(getNthWordFromCursor(1)); }
-					else { moveCursorBy(1); }
-					startTextTimer();
-					break;
-				case 269: //end
-					if (Keyboard.isShiftDown()) { setSelPos(text.length()); }
-					else { setCursorPositionEnd(); }
-					break;
-				case 261: //delete
-					if (parentTextArea.isEditable()) {
-						if (Keyboard.isCtrlDown()) {
-							if (isEnabled()) { deleteWords(1); startTextTimer(); }
-						}
-						else if (isEnabled()) { deleteFromCursor(1); startTextTimer(); }
-					}
-					break;
-				default:
-					if (parentTextArea.isEditable()) {
-						if (isEnabled()) {
-							if (Keyboard.isTypable(typedChar, keyCode)) {
-								typedChar = (Keyboard.isShiftDown()) ? Keyboard.getUppercase(keyCode) : typedChar;
-								writeText(Character.toString(typedChar));
-								setDimensions(startX, startY, getStringWidth(text), height);
-								startTextTimer();
-							}
+				}
+				break;
+			default:
+				if (parentTextArea.isEditable()) {
+					if (isEnabled()) {
+						if (Keyboard.isTypable(typedChar, keyCode)) {
+							typedChar = (Keyboard.isShiftDown()) ? Keyboard.getUppercase(keyCode) : typedChar;
+							writeText(Character.toString(typedChar));
+							setDimensions(startX, startY, getStringWidth(text), height);
+							startTextTimer();
 						}
 					}
-				} //switch
-				
-			}
+				}
+			} //switch
 		}
 	}
 	
 	@Override 
 	public void mousePressed(int mXIn, int mYIn, int button) {
-		postEvent(new EventMouse(this, mX, mY, button, MouseType.PRESSED));
+		postEvent(new EventMouse(this, Mouse.getMx(), Mouse.getMy(), button, MouseType.PRESSED));
 		
 		int mX = mXIn;
 		int mY = mYIn;
@@ -228,15 +235,16 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		}
 		
 		try {
-			if (isMouseOver()) { EUtil.nullDo(getWindowParent(), w -> w.bringToFront()); }
+			if (isMouseOver()) EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
 			if (b == 0) {
 				startTextTimer();
 				
 				if (isResizeable() && !getEdgeSideMouseIsOn().equals(ScreenLocation.OUT)) {
-					getTopParent().setModifyingObject(this, ObjectModifyType.Resize);
+					getTopParent().setModifyingObject(this, ObjectModifyType.RESIZE);
 					getTopParent().setResizingDir(getEdgeSideMouseIsOn());
 					getTopParent().setModifyMousePos(mX, mY);
 				}
+				
 				if (parentTextArea.isEditable()) {
 					int i = (int) (mX - startX - parentTextArea.getLineNumberOffset() + 3);
 					int cursorPos = QoT.getFontRenderer().trimToWidth(text, i).length();
@@ -244,13 +252,15 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 					setCursorPos(cursorPos);
 					selectionEnd = cursorPosition;
 					
-					if (clickStartPos == -1) { clickStartPos = cursorPos; }
+					if (clickStartPos == -1) clickStartPos = cursorPos;
 				}
 				
 				checkLinkClick(mX, mY, b);
 			}
 		}
-		catch (Exception e) { e.printStackTrace(); }
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/** Prevent cursor updates. */
@@ -294,7 +304,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 			focusRequester.requestFocus();
 		}
 		
-		if (eventIn.getFocusType() == FocusType.MousePress) {
+		if (eventIn.getFocusType() == FocusType.MOUSE_PRESS) {
 			startTextTimer();
 			
 			checkLinkClick(mX, mY, b);
@@ -303,7 +313,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 				setCursorPos(text.length() + 1);
 				selectionEnd = cursorPosition;
 				
-				if (clickStartPos == -1) { clickStartPos = text.length() + 1; }
+				if (clickStartPos == -1) clickStartPos = text.length() + 1;
 			}
 			else if (mX >= startX) {
 				//int i = (int) (mX - startX - parentTextArea.getLineNumberOffset() + 3);
@@ -318,7 +328,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 				setCursorPos(0);
 				selectionEnd = cursorPosition;
 				
-				if (clickStartPos == -1) { clickStartPos = 0; }
+				if (clickStartPos == -1) clickStartPos = 0;
 			}
 		}
 	}
@@ -329,62 +339,64 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		super.onFocusLost(eventIn);
 	}
 	
-	//--------------------
-	//TextAreaLine Methods
-	//--------------------
+	//---------
+	// Methods
+	//---------
 	
-	public TextAreaLine<E> incrementLineNumber() { setLineNumber(lineNumber + 1); return this; }
-	public TextAreaLine<E> decrementLineNumber() { setLineNumber(lineNumber - 1); return this; }
-	public TextAreaLine<E> indent() { setText("    " + getText()); return this; }
+	public void incrementLineNumber() { setLineNumber(lineNumber + 1); }
+	public void decrementLineNumber() { setLineNumber(lineNumber - 1); }
+	public void indent() { setText("    " + getText()); }
 	
-	//--------------------
-	//TextAreaLine Getters
-	//--------------------
+	//---------
+	// Getters
+	//---------
 	
 	public IWindowObject<?> getFocusRequester() { return focusRequester; }
 	public int getDrawnLineNumber() { return drawnLineNumber; }
 	public int getLineNumber() { return lineNumber; }
 	public long getDoubleClickThreshold() { return doubleClickThreshold; }
-	public Box3<String, Object, Boolean> getLink() { return new Box3(linkText, linkObject, webLink); }
+	public Box3<String, Object, Boolean> getLink() { return new Box3<>(linkText, linkObject, webLink); }
 	
-	//--------------------
-	//TextAreaLine Setters
-	//--------------------
+	//---------
+	// Setters
+	//---------
 	
 	public void setParentTextArea(WindowTextArea<E> area) {
 		setParent(area);
 		parentTextArea = area;
 	}
 	
-	public TextAreaLine<E> setLinkText(String textIn) { return setLinkText(textIn, null, false); }
-	public TextAreaLine<E> setLinkText(String textIn, Object linkObjectIn) { return setLinkText(textIn, linkObjectIn, false); }
-	public TextAreaLine<E> setLinkText(String textIn, boolean isWebLink) { return setLinkText(textIn, null, isWebLink); }
-	public TextAreaLine<E> setLinkText(String textIn, Object linkObjectIn, boolean isWebLink) {
+	public void setLinkText(String textIn) {setLinkText(textIn, null, false); }
+	public void setLinkText(String textIn, Object linkObjectIn) { setLinkText(textIn, linkObjectIn, false); }
+	public void setLinkText(String textIn, boolean isWebLink) { setLinkText(textIn, null, isWebLink); }
+	public void setLinkText(String textIn, Object linkObjectIn, boolean isWebLink) {
 		linkText = textIn;
 		linkObject = linkObjectIn;
 		webLink = isWebLink;
-		return this;
 	}
 	
-	public TextAreaLine<E> setHighlighted(boolean val) {
+	public void setHighlighted(boolean val) {
 		cursorPosition = 0;
 		selectionEnd = val ? text.length() : 0;
-		return this;
 	}
 	
-	public TextAreaLine<E> setLineNumber(int numberIn) { lineNumber = numberIn; lineNumberWidth = getStringWidth(String.valueOf(lineNumber)); return this; }
-	public TextAreaLine<E> setLineNumberColor(EColors colorIn) { lineNumberColor = colorIn.intVal; return this; }
-	public TextAreaLine<E> setLineNumberColor(int colorIn) { lineNumberColor = colorIn; return this; }
-	public TextAreaLine<E> setDrawnLineNumber(int numberIn) { drawnLineNumber = numberIn; return this; }
-	public TextAreaLine<E> setDoubleClickThreshold(long timeIn) { doubleClickThreshold = timeIn; return this; }
-	public TextAreaLine<E> setFocusRequester(IWindowObject obj) { focusRequester = obj; return this; }
+	public void setLineNumber(int numberIn) { lineNumber = numberIn; lineNumberWidth = getStringWidth(String.valueOf(lineNumber)); }
+	public void setLineNumberColor(EColors colorIn) { lineNumberColor = colorIn.intVal; }
+	public void setLineNumberColor(int colorIn) { lineNumberColor = colorIn; }
+	public void setDrawnLineNumber(int numberIn) { drawnLineNumber = numberIn; }
+	public void setDoubleClickThreshold(long timeIn) { doubleClickThreshold = timeIn; }
+	public void setFocusRequester(IWindowObject obj) { focusRequester = obj; }
 	
-	//------------------------------
-	//TextAreaLine Protecetd Methods
-	//------------------------------
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	protected void updateValues() {
-		if (clicked && System.currentTimeMillis() - doubleClickTimer >= doubleClickThreshold) { clicked = false; doubleClickTimer = 0l; }
+		if (clicked && System.currentTimeMillis() - doubleClickTimer >= doubleClickThreshold) {
+			clicked = false;
+			doubleClickTimer = 0l;
+		}
+		
 		if (parentTextArea != null && parentTextArea.getCurrentLine() != null) {
 			lineEquals = parentTextArea.getCurrentLine().equals(this);
 			drawCursor = parentTextArea.isEditable() && lineEquals && QoT.updateCounter / 60 % 2 == 0;
@@ -437,7 +449,9 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 						//if (linkObject instanceof Keyboard) { GuiOpener.openGui(linkObject.getClass()); return true; }
 					}
 				}
-				catch (Exception e) { e.printStackTrace(); }
+				catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
 		} //if null link

@@ -6,12 +6,20 @@ import eutil.colors.EColors;
 
 public class WindowLine<E> extends WindowObject<E> {
 	
-	double x1, y1, x2, y2;
-	int color;
+	//--------
+	// Fields
+	//--------
 	
-	public WindowLine(IWindowObject parentIn, double x1, double y1, double x2, double y2) { this(parentIn, x1, y1, x2, y2, 0xff000000); }
-	public WindowLine(IWindowObject parentIn, double x1, double y1, double x2, double y2, EColors colorIn) { this(parentIn, x1, y1, x2, y2, colorIn.intVal); }
-	public WindowLine(IWindowObject parentIn, double x1, double y1, double x2, double y2, int colorIn) {
+	private double x1, y1, x2, y2;
+	private int color;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowLine(IWindowObject<?> parentIn, double x1, double y1, double x2, double y2) { this(parentIn, x1, y1, x2, y2, 0xff000000); }
+	public WindowLine(IWindowObject<?> parentIn, double x1, double y1, double x2, double y2, EColors colorIn) { this(parentIn, x1, y1, x2, y2, colorIn.intVal); }
+	public WindowLine(IWindowObject<?> parentIn, double x1, double y1, double x2, double y2, int colorIn) {
 		
 		if (x1 > x2) {
 			double temp = x1;
@@ -32,6 +40,10 @@ public class WindowLine<E> extends WindowObject<E> {
 		
 		init(parentIn, x1, y1, w, h);
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {

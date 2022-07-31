@@ -6,7 +6,7 @@ package engine.windowLib.windowTypes.interfaces;
 public interface IActionObject<E> extends IWindowObject<E> {
 	
 	//---------
-	// actions
+	// Actions
 	//---------
 	
 	/** Used to notify the action receiver object that this action object is performing its action. */
@@ -19,11 +19,11 @@ public interface IActionObject<E> extends IWindowObject<E> {
 	/** Returns true if this object will perform its action when the left mouse button is released. (falling edge) */
 	public boolean runsActionOnRelease();
 	/** Sets this object to perform its action on left mouse presses. */
-	public IActionObject<E> setRunActionOnPress(boolean val);
+	public void setRunActionOnPress(boolean val);
 	/** Sets this object to perform its action when the left mouse button is released. */
-	public IActionObject<E> setRunActionOnRelease(boolean val);
+	public void setRunActionOnRelease(boolean val);
 	/** Specifies the object that will receive updates on when actions by this object are performed. */
-	public IActionObject<E> setActionReceiver(IWindowObject<?> objIn);
+	public void setActionReceiver(IWindowObject<?> objIn);
 	/** Returns the object that is receiving actions by this object. */
 	public IWindowObject<?> getActionReceiver();
 	
@@ -33,7 +33,7 @@ public interface IActionObject<E> extends IWindowObject<E> {
 	
 	/** Used to specify the action receiver for multiple IActionObjects at once. */
 	public static void setActionReceiver(IWindowObject<?> receiver, IActionObject<?>... objects) {
-		for (IActionObject<?> o : objects) o.setActionReceiver(receiver);
+		for (var o : objects) o.setActionReceiver(receiver);
 	}
 	
 }

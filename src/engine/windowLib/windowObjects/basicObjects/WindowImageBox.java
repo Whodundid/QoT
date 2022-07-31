@@ -13,34 +13,46 @@ import eutil.math.NumberUtil;
 
 public class WindowImageBox<E> extends WindowObject<E> {
 	
-	EArrayList<GameTexture> images = new EArrayList();
-	int borderColor = EColors.black.c();
-	int backgroundColor = EColors.vdgray.c();
-	boolean drawImage = true;
-	boolean drawBorder = true;
-	boolean drawBackground = true;
-	boolean centerImage = true;
-	boolean drawStretched = false;
-	boolean singleImage = false;
-	String nullText = "Texture is null!";
-	int nullTextColor = EColors.lred.intVal;
-	long updateInterval = 500l;
-	long timeSince = 0l;
-	int curImage = 0;
-	double zoom = 0, zoomX = 0, zoomY = 0;
-	double panX = 0, panY = 0;
+	//--------
+	// Fields
+	//--------
 	
-	public WindowImageBox(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, (GameTexture) null); }
-	public WindowImageBox(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn, GameTexture imageIn) {
+	private EArrayList<GameTexture> images = new EArrayList();
+	private int borderColor = EColors.black.c();
+	private int backgroundColor = EColors.vdgray.c();
+	private boolean drawImage = true;
+	private boolean drawBorder = true;
+	private boolean drawBackground = true;
+	private boolean centerImage = true;
+	private boolean drawStretched = false;
+	private boolean singleImage = false;
+	private String nullText = "Texture is null!";
+	private int nullTextColor = EColors.lred.intVal;
+	private long updateInterval = 500l;
+	private long timeSince = 0l;
+	private int curImage = 0;
+	private double zoom = 0, zoomX = 0, zoomY = 0;
+	private double panX = 0, panY = 0;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowImageBox(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, (GameTexture) null); }
+	public WindowImageBox(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn, GameTexture imageIn) {
 		init(objIn, xIn, yIn, widthIn, heightIn);
 		images.add(imageIn);
 		singleImage = true;
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		if (drawBorder) { drawRect(startX, startY, endX, endY, borderColor); }
-		if (drawBackground) { drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor); }
+		if (drawBorder) drawRect(startX, startY, endX, endY, borderColor);
+		if (drawBackground) drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor);
 		if (drawImage) {
 			if (images.isNotEmpty() && images.get(0) != null) {
 				GLSettings.enableAlpha();
@@ -86,7 +98,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 				else {
 					if (System.currentTimeMillis() - timeSince >= updateInterval) {
 						curImage++;
-						if (curImage == images.size()) { curImage = 0; }
+						if (curImage == images.size()) curImage = 0;
 						timeSince = System.currentTimeMillis();
 					}
 					bindTexture(images.get(curImage));
@@ -122,9 +134,11 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	@Override
 	public void mouseDragged(int mXIn, int mYIn, int button, long timeSinceLastClick) {
 		super.mouseDragged(mXIn, mYIn, button, timeSinceLastClick);
-		
-		
 	}
+	
+	//---------
+	// Getters
+	//---------
 	
 	public EArrayList<GameTexture> getImages() { return images; }
 	public int getBorderColor() { return borderColor; }
@@ -135,34 +149,36 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	public boolean drawsBackground() { return drawBackground; }
 	public boolean drawsStretched() { return drawStretched; }
 	
-	public WindowImageBox<E> setImage(GameTexture imageIn) {
+	//---------
+	// Setters
+	//---------
+	
+	public void setDrawStretched(boolean val) { drawStretched = val; }
+	public void setNullText(String textIn) { nullText = textIn; }
+	public void setNullTextColor(EColors colorIn) { setNullTextColor(colorIn.intVal); }
+	public void setNullTextColor(int colorIn) { nullTextColor = colorIn; }
+	public void setUpdateInterval(long time) { updateInterval = (long) NumberUtil.clamp(time, 0, Long.MAX_VALUE); }
+	public void setDrawImage(boolean val) { drawImage = val; }
+	public void setDrawBorder(boolean val) { drawBorder = val; }
+	public void setDrawBackground(boolean val) { drawBackground = val; }
+	public void setCenterImage(boolean val) { centerImage = val; }
+	public void setBorderColor(EColors colorIn) { setBorderColor(colorIn.intVal); }
+	public void setBorderColor(int colorIn) { borderColor = colorIn; }
+	public void setBackgroundColor(EColors colorIn) { setBackgroundColor(colorIn.intVal); }
+	public void setBackgroundColor(int colorIn) { backgroundColor = colorIn; }
+	
+	public void setImage(GameTexture imageIn) {
 		if (imageIn != null) {
 			images = new EArrayList(imageIn);
 			singleImage = true;
 		}
-		return this;
 	}
 	
-	public WindowImageBox<E> setImages(GameTexture... imagesIn) {
+	public void setImages(GameTexture... imagesIn) {
 		if (imagesIn != null) {
 			images = new EArrayList((Object[]) imagesIn);
 			singleImage = images.size() == 1;
 		}
-		return this;
 	}
-	
-	public WindowImageBox<E> setDrawStretched(boolean val) { drawStretched = val; return this; }
-	public WindowImageBox<E> setNullText(String textIn) { nullText = textIn; return this; }
-	public WindowImageBox<E> setNullTextColor(EColors colorIn) { return setNullTextColor(colorIn.intVal); }
-	public WindowImageBox<E> setNullTextColor(int colorIn) { nullTextColor = colorIn; return this; }
-	public WindowImageBox<E> setUpdateInterval(long time) { updateInterval = (long) NumberUtil.clamp(time, 0, Long.MAX_VALUE); return this; }
-	public WindowImageBox<E> setDrawImage(boolean val) { drawImage = val; return this; }
-	public WindowImageBox<E> setDrawBorder(boolean val) { drawBorder = val; return this; }
-	public WindowImageBox<E> setDrawBackground(boolean val) { drawBackground = val; return this; }
-	public WindowImageBox<E> setCenterImage(boolean val) { centerImage = val; return this; }
-	public WindowImageBox<E> setBorderColor(EColors colorIn) { return setBorderColor(colorIn.c()); }
-	public WindowImageBox<E> setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowImageBox<E> setBackgroundColor(EColors colorIn) { return setBackgroundColor(colorIn.c()); }
-	public WindowImageBox<E> setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
 	
 }

@@ -14,8 +14,6 @@ import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import game.worldTiles.GlobalTileList;
-import game.worldTiles.WorldTile;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.MapEditorSettings;
 import world.mapEditor.editorParts.sidePanel.EditorSidePanel;
@@ -24,6 +22,8 @@ import world.mapEditor.editorParts.sidePanel.SidePanelType;
 import world.mapEditor.editorParts.toolBox.ToolCategory;
 import world.mapEditor.editorParts.util.EditorItem;
 import world.mapEditor.editorTools.EditorToolType;
+import world.worldTiles.GlobalTileList;
+import world.worldTiles.WorldTile;
 
 public class TerrainSidePanel extends PaletteSidePanel {
 	
@@ -83,7 +83,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
 			b.setHoverText(tile.getName());
 			
 			//add to list first then dimension
-			panel.addObject(b);
+			panel.addChild(b);
 			b.setDimensions(bx, by, bw, bw);
 		}
 	}

@@ -9,25 +9,28 @@ import main.QoT;
 
 public abstract class ActionWindowParent<E> extends WindowParent<E> implements IActionObject<E> {
 
+	//--------
+	// Fields
+	//--------
+	
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
 	protected IWindowObject<?> actionReceiver;
 	
-	//-------------------------------
-	//ActionWindowParent Constructors
-	//-------------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
-	/** Instantiates this ActionWindowParent with the givent parent. */
+	/** Instantiates this ActionWindowParent with the given parent. */
 	protected ActionWindowParent(IWindowObject<?> parentIn) {
 		actionReceiver = parentIn;
 		windowInstance = this;
-		instance = this;
 		res = QoT.getWindowSize();
 	}
 	
-	//-----------------------
-	//IActionObject Overrides
-	//-----------------------
+	//---------------------------
+	// Overrides : IActionObject
+	//---------------------------
 	
 	@Override
 	public void performAction(Object... args) {
@@ -40,9 +43,9 @@ public abstract class ActionWindowParent<E> extends WindowParent<E> implements I
 	@Override public void onPress(int button) {}
 	@Override public boolean runsActionOnPress() { return runActionOnPress; }
 	@Override public boolean runsActionOnRelease() { return runActionOnRelease; }
-	@Override public IActionObject<E> setRunActionOnPress(boolean value) { runActionOnPress = value; return this; }
-	@Override public IActionObject<E> setRunActionOnRelease(boolean val) { runActionOnRelease = val; return this; }
-	@Override public IActionObject<E> setActionReceiver(IWindowObject<?> objIn) { actionReceiver = objIn; return this; }
+	@Override public void setRunActionOnPress(boolean value) { runActionOnPress = value; }
+	@Override public void setRunActionOnRelease(boolean val) { runActionOnRelease = val; }
+	@Override public void setActionReceiver(IWindowObject<?> objIn) { actionReceiver = objIn; }
 	@Override public IWindowObject<?> getActionReceiver() { return actionReceiver; }
 	
 }

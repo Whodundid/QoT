@@ -10,21 +10,30 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 /** Event that is fired when a focus change occurs. */
 public class EventFocus extends ObjectEvent {
 	
-	IWindowObject eventObject;
-	FocusType type;
-	int actionCode = -1;
-	int mX = -1, mY = -1;
+	//--------
+	// Fields
+	//--------
 	
-	public EventFocus(IWindowObject parentObjectIn, IWindowObject eventObjectIn, FocusType typeIn) {
+	private final IWindowObject<?> eventObject;
+	private final FocusType type;
+	private final int actionCode;
+	private final int mX, mY;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public EventFocus(IWindowObject<?> parentObjectIn, IWindowObject<?> eventObjectIn, FocusType typeIn) {
 		super(parentObjectIn, EventType.FOCUS);
-		parentObject = parentObjectIn;
 		eventObject = eventObjectIn;
 		type = typeIn;
+		actionCode = -1;
+		mX = -1;
+		mY = -1;
 	}
 	
-	public EventFocus(IWindowObject parentObjectIn, IWindowObject eventObjectIn, FocusType typeIn, int actionCodeIn, int mXIn, int mYIn) {
+	public EventFocus(IWindowObject<?> parentObjectIn, IWindowObject<?> eventObjectIn, FocusType typeIn, int actionCodeIn, int mXIn, int mYIn) {
 		super(parentObjectIn, EventType.FOCUS);
-		parentObject = parentObjectIn;
 		eventObject = eventObjectIn;
 		type = typeIn;
 		actionCode = actionCodeIn;
@@ -32,7 +41,11 @@ public class EventFocus extends ObjectEvent {
 		mY = mYIn;
 	}
 	
-	public IWindowObject getFocusObject() { return eventObject; }
+	//---------
+	// Getters
+	//---------
+	
+	public IWindowObject<?> getFocusObject() { return eventObject; }
 	public FocusType getFocusType() { return type; }
 	public int getActionCode() { return actionCode; }
 	public int getMX() { return mX; }

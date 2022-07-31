@@ -2,17 +2,17 @@ package world;
 
 import java.util.Comparator;
 
-import engine.GameTopRenderer;
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
+import engine.topOverlay.GameTopRenderer;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import eutil.misc.Rotation;
 import game.entities.Entity;
-import game.entities.Player;
-import game.worldTiles.WorldTile;
+import game.entities.player.Player;
 import main.QoT;
+import world.worldTiles.WorldTile;
 
 //Author: Hunter Bragg
 
@@ -263,9 +263,9 @@ public class WorldRenderer extends EGui {
 	
 	private void renderEntities() {
 		EArrayList<Entity> entities = world.getEntitiesInWorld();
-		entities.sort(Comparator.comparingInt(e -> e.startY));
+		entities.sort(Comparator.comparingInt(e -> e.endY));
 		
-		for (int i = entities.size() - 1; i >= 0; i--) {
+		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			if (e.getTexture() == null) continue;
 			

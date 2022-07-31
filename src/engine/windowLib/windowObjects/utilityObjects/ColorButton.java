@@ -6,23 +6,27 @@ import eutil.colors.EColors;
 
 public class ColorButton<E> extends WindowButton<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	private int color = 0xffffffff;
 	private boolean drawBorder = true;
 	
-	//------------------------
-	//ColorButton Constructors
-	//------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
-	public ColorButton(IWindowObject parent, double xIn, double yIn, double widthIn, double heightIn) { this(parent, xIn, yIn, widthIn, heightIn, 0xffffffff); }
-	public ColorButton(IWindowObject parent, double xIn, double yIn, double widthIn, double heightIn, int colorIn) {
+	public ColorButton(IWindowObject<?> parent, double xIn, double yIn, double widthIn, double heightIn) { this(parent, xIn, yIn, widthIn, heightIn, 0xffffffff); }
+	public ColorButton(IWindowObject<?> parent, double xIn, double yIn, double widthIn, double heightIn, int colorIn) {
 		super(parent, xIn, yIn, widthIn, heightIn);
 		color = colorIn;
 		setDrawTextures(false);
 	}
 	
-	//----------------------
-	//WindowButton Overrides
-	//----------------------
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
@@ -37,18 +41,18 @@ public class ColorButton<E> extends WindowButton<E> {
 		}
 	}
 	
-	//-------------------
-	//ColorButton Getters
-	//-------------------
+	//---------
+	// Getters
+	//---------
 	
 	public int getColor() { return color; }
 	
-	//-------------------
-	//ColorButton Setters
-	//-------------------
+	//---------
+	// Setters
+	//---------
 	
-	public ColorButton<E> setColor(EColors colorIn) { if (colorIn != null) { color = colorIn.intVal; } return this; }
-	public ColorButton<E> setColor(int colorIn) { color = colorIn; return this; }
-	public ColorButton<E> setDrawBorder(boolean val) { drawBorder = val; return this; }
+	public void setColor(EColors colorIn) { if (colorIn != null) { color = colorIn.intVal; } }
+	public void setColor(int colorIn) { color = colorIn; }
+	public void setDrawBorder(boolean val) { drawBorder = val; }
 	
 }

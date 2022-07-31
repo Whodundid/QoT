@@ -1,6 +1,6 @@
 package engine.terminal.terminalCommand.commands.game;
 
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;

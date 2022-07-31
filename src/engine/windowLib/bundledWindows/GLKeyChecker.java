@@ -1,20 +1,33 @@
 package engine.windowLib.bundledWindows;
 
-import engine.input.Keyboard;
+import assets.textures.TaskBarTextures;
+import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowTypes.WindowParent;
-import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 
 public class GLKeyChecker extends WindowParent {
 	
-	int lastKeyCode = -1;
-	char lastKey = '\u0000';
-	boolean typed = false;
+	//--------
+	// Fields
+	//--------
+	
+	private int lastKeyCode = -1;
+	private char lastKey = '\u0000';
+	private boolean typed = false;
+	
+	//--------------
+	// Constructors
+	//--------------
 	
 	public GLKeyChecker() {
 		super();
 		aliases.add("keychecker", "glkey");
+		windowIcon = TaskBarTextures.experiment;
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void initWindow() {
@@ -27,7 +40,7 @@ public class GLKeyChecker extends WindowParent {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 	}
 	
@@ -55,11 +68,6 @@ public class GLKeyChecker extends WindowParent {
 		lastKeyCode = keyCode;
 		lastKey = typedChar;
 		super.keyPressed(typedChar, keyCode);
-	}
-	
-	@Override
-	public void actionPerformed(IActionObject object, Object... args) {
-		//no actions
 	}
 
 }

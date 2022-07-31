@@ -1,12 +1,18 @@
 package engine.windowLib.bundledWindows;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+
+import assets.textures.TaskBarTextures;
 import assets.textures.WindowTextures;
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
-import engine.windowLib.windowObjects.utilityObjects.WindowDialogueBox.DialogueBoxTypes;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogBox;
+import engine.windowLib.windowObjects.utilityObjects.WindowDialogBox.DialogBoxTypes;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowUtil.windowEvents.ObjectEvent;
@@ -15,21 +21,20 @@ import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import main.QoT;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-
 public class TextEditorWindow extends WindowParent {
 	
-	File path = null;
-	WindowTextArea document;
-	WindowButton save, cancel, reload;
-	boolean failed = false;
-	boolean newFile = false;
+	//--------
+	// Fields
+	//--------
+	
+	private File path = null;
+	private WindowTextArea<?> document;
+	private WindowButton<?> save, cancel, reload;
+	private boolean failed = false;
+	private boolean newFile = false;
 	
 	private double vPos, hPos;
-	private TextAreaLine line;
+	private TextAreaLine<?> line;
 	
 	private volatile boolean loading = false;
 	private volatile boolean loaded = false;
@@ -37,13 +42,21 @@ public class TextEditorWindow extends WindowParent {
 	private volatile EArrayList<TextAreaLine<?>> parsed;
 	private boolean restored = false;
 	
+	//--------------
+	// Constructors
+	//--------------
+	
 	public TextEditorWindow(File pathIn) {
 		super(QoT.getActiveTopParent());
 		path = pathIn;
-		//windowIcon = EMCResources.textEditorIcon;
+		windowIcon = TaskBarTextures.texteditor;
 		
 		new Thread(() -> loadFile()).start();
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void initWindow() {
@@ -55,7 +68,7 @@ public class TextEditorWindow extends WindowParent {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		document = new WindowTextArea(this, startX + 2, startY + 2, width - 4, height - 50);
@@ -75,8 +88,8 @@ public class TextEditorWindow extends WindowParent {
 		
 		reload.setHoverText("Reload");
 		
-		addObject(document);
-		addObject(save, cancel, reload);
+		addChild(document);
+		addChild(save, cancel, reload);
 	}
 	
 	@Override
@@ -117,6 +130,38 @@ public class TextEditorWindow extends WindowParent {
 		checkRestored();
 	}
 	
+	@Override
+	public void keyPressed(char typedChar, int keyCode) {
+		//tap into 'ctrl + s'
+		if (Keyboard.isCtrlS(keyCode)) saveFile();
+		
+		super.keyPressed(typedChar, keyCode);
+	}
+	
+	@Override
+	public void actionPerformed(IActionObject object, Object... args) {
+		if (object == save) saveFile();
+		if (object == cancel) close();
+		if (object == reload) reloadFile();
+	}
+	
+	@Override
+	public void onEvent(ObjectEvent e) {
+		//System.out.println(e);
+	}
+	
+	//---------
+	// Methods
+	//---------
+	
+	public void setFocusToLineIfEmpty() {
+		if (newFile) document.addTextLine().requestFocus();
+	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
+	
 	private void checkLoad() {
 		if (loading) {
 			drawStringC("Loading...");
@@ -145,26 +190,6 @@ public class TextEditorWindow extends WindowParent {
 			loaded = true;
 			restored = true;
 		}
-	}
-	
-	@Override
-	public void keyPressed(char typedChar, int keyCode) {
-		//tap into 'ctrl + s'
-		if (Keyboard.isCtrlS(keyCode)) saveFile();
-		
-		super.keyPressed(typedChar, keyCode);
-	}
-	
-	@Override
-	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == save) saveFile();
-		if (object == cancel) close();
-		if (object == reload) reloadFile();
-	}
-	
-	@Override
-	public void onEvent(ObjectEvent e) {
-		//System.out.println(e);
 	}
 	
 	private void loadFile() {
@@ -210,9 +235,9 @@ public class TextEditorWindow extends WindowParent {
 			try (PrintWriter writer = new PrintWriter(path, "UTF-8")) {
 				
 				if (document != null) {
-					EArrayList<TextAreaLine> lines = document.getTextDocument();
+					var lines = document.getTextDocument();
 					
-					for (TextAreaLine l : lines) {
+					for (var l : lines) {
 						writer.println(l.getText());
 					}
 				}
@@ -227,18 +252,11 @@ public class TextEditorWindow extends WindowParent {
 	}
 	
 	private void reloadFile() {
-		reInitObjects();
-	}
-	
-	public WindowTextArea getTextArea() { return document; }
-	
-	public TextEditorWindow setFocusToLineIfEmpty() {
-		if (newFile) document.addTextLine().requestFocus();
-		return this;
+		reInitChildren();
 	}
 	
 	private void openDialogue(boolean pass) {
-		WindowDialogueBox box = new WindowDialogueBox(this, DialogueBoxTypes.ok);
+		WindowDialogBox box = new WindowDialogBox(this, DialogBoxTypes.OK);
 		
 		box.setTitle("Saving File");
 		box.setTitleColor(EColors.lgray.intVal);
@@ -247,5 +265,11 @@ public class TextEditorWindow extends WindowParent {
 		
 		getTopParent().displayWindow(box);
 	}
+	
+	//---------
+	// Getters
+	//---------
+	
+	public WindowTextArea<?> getTextArea() { return document; }
 
 }

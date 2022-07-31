@@ -1,5 +1,6 @@
 package engine.windowLib.windowObjects.advancedObjects.dropDownList;
 
+import engine.inputHandlers.Mouse;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
@@ -8,39 +9,49 @@ import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 
-import java.util.Iterator;
-
 //Author: Hunter Bragg
 
 public class WindowDropDownList<E> extends WindowObject<E> {
 	
-	EArrayList<DropDownListEntry<E>> listContents = new EArrayList();
-	DropDownListEntry<E> selectedEntry;
-	double entryHeight = 17;
-	boolean listOpen = false;
-	boolean fixedWidth = false;
-	boolean globalAction = false;
-	boolean drawTop = true;
-	boolean alwaysOpen = false;
-	boolean drawHighlight = true;
-	int selectedColor = EColors.steel.intVal;
-	int borderColor = EColors.black.intVal;
-	int backColor = EColors.dgray.intVal;
+	//--------
+	// Fields
+	//--------
 	
-	public WindowDropDownList(IWindowObject parentIn, double x, double y) { init(parentIn, x, y, 75, entryHeight); }
-	public WindowDropDownList(IWindowObject parentIn, double x, double y, double entryHeightIn) { this(parentIn, x, y, entryHeightIn, false); }
-	public WindowDropDownList(IWindowObject parentIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
+	private EArrayList<DropDownListEntry<E>> listContents = new EArrayList();
+	private DropDownListEntry<E> selectedEntry;
+	private double entryHeight = 17;
+	private boolean listOpen = false;
+	private boolean fixedWidth = false;
+	private boolean globalAction = false;
+	private boolean drawTop = true;
+	private boolean alwaysOpen = false;
+	private boolean drawHighlight = true;
+	private int selectedColor = EColors.steel.intVal;
+	private int borderColor = EColors.black.intVal;
+	private int backColor = EColors.dgray.intVal;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y) { init(parentIn, x, y, 75, entryHeight); }
+	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y, double entryHeightIn) { this(parentIn, x, y, entryHeightIn, false); }
+	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
 		init(parentIn, x, y, width, entryHeightIn);
 		entryHeight = entryHeightIn;
 		globalAction = useGlobalAction;
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mX, int mY) {
 		drawRect(borderColor);
 		//drawRect(backColor, 1);
 		
-		if (!hasFocus() && listOpen && !alwaysOpen) { closeList(); }
+		if (!hasFocus() && listOpen && !alwaysOpen) closeList();
 		
 		if (selectedEntry != null) {
 			//drawStringC(selectedEntry, startX + (width / 2), startY + (entryHeight / 3), selectedEntry.getColor());
@@ -55,10 +66,10 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 				drawRect(selectedColor, 1);
 				drawStringC("...", midX, startY + (entryHeight / 4), EColors.lgray);
 			}
-			else { offset = -entryHeight; }
+			else offset = -entryHeight;
 			
 			for (int i = 0; i < listContents.size(); i++) {
-				DropDownListEntry entry = listContents.get(i);
+				var entry = listContents.get(i);
 				double yPos = startY + (i * entryHeight) + entryHeight + offset;
 				
 				drawRect(startX, yPos, endX, yPos + entryHeight, borderColor);
@@ -82,26 +93,78 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	
 	@Override
 	public void mousePressed(int mX, int mY, int button) {
-
 		if (button == 0) {
-			if (listOpen) {	selectListOption(); }
-			else { openList(); }
+			if (listOpen)	selectListOption();
+			else openList();
 		}
-		
 		super.mousePressed(mX, mY, button);
 	}
 	
 	@Override
 	public void onFocusGained(EventFocus eventIn) {
-		if (eventIn.getFocusType().equals(FocusType.MousePress)) {
+		if (eventIn.getFocusType().equals(FocusType.MOUSE_PRESS)) {
 			if (eventIn.getActionCode() == 0) {
-				if (listOpen) {	selectListOption(); }
-				else { openList(); }
+				if (listOpen) selectListOption();
+				else openList();
 			}
 		}
 	}
 	
-	@Override public void onFocusLost(EventFocus eventin) { closeList(); }
+	@Override
+	public void onFocusLost(EventFocus eventin) {
+		closeList();
+	}
+	
+	//---------
+	// Methods
+	//---------
+	
+	public void runGlobalAction() {}
+	
+	public WindowDropDownList<E> addEntry(String title) { return addEntry(title, EColors.lgray, null); }
+	public WindowDropDownList<E> addEntry(String title, EColors colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn.intVal, objIn)); }
+	public WindowDropDownList<E> addEntry(String title, int colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn, objIn)); }
+	public WindowDropDownList<E> addEntry(DropDownListEntry<E> entryIn) {
+		entryIn.setEntryID(listContents.size());
+		entryIn.setParentList(this);
+		entryIn.setGlobalActionPresent(globalAction);
+		
+		listContents.add(entryIn);
+		if (listContents.size() == 1) selectedEntry = entryIn;
+		adjustWidth();
+		return this;
+	}
+	
+	public synchronized void removeEntry(DropDownListEntry<E> entryIn) {
+		var it = listContents.iterator();
+		while (it.hasNext()) {
+			if (it.next().equals(entryIn)) {
+				it.remove();
+				break;
+			}
+		}
+		
+		if (listContents.size() == 0) selectedEntry = null;
+		if (listContents.size() > 0) selectedEntry = listContents.get(0);
+		if (!fixedWidth) adjustWidth();
+	}
+	
+	public synchronized void removeEntry(int entryIdIn) {
+		var it = listContents.iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			if (i == entryIdIn) { it.remove(); break; }
+			i++;
+		}
+		
+		if (listContents.size() == 0) selectedEntry = null;
+		if (listContents.size() > 0) selectedEntry = listContents.get(0);
+		if (!fixedWidth) adjustWidth();
+	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	protected void openList() {
 		listOpen = true;
@@ -119,8 +182,8 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 			
 			double offset = drawTop ? entryHeight : 0;
 			
-			if (mY >= startY + offset) {
-				int relClickPosY = (int) (mY - (startY + offset));
+			if (Mouse.getMy() >= startY + offset) {
+				int relClickPosY = (int) (Mouse.getMy() - (startY + offset));
 				int selectedPos = (int) (relClickPosY / entryHeight);
 				selectedEntry = listContents.get(selectedPos);
 				selectedEntry.runEntryAction();
@@ -131,40 +194,6 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 				closeList();
 			}
 		}
-	}
-	
-	public WindowDropDownList<E> addEntry(String title) { return addEntry(title, EColors.lgray, null); }
-	public WindowDropDownList<E> addEntry(String title, EColors colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn.intVal, objIn)); }
-	public WindowDropDownList<E> addEntry(String title, int colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn, objIn)); }
-	public WindowDropDownList<E> addEntry(DropDownListEntry<E> entryIn) {
-		listContents.add(entryIn.setEntryID(listContents.size()).setParentList(this).setGlobalActionPresent(globalAction));
-		if (listContents.size() == 1) { selectedEntry = entryIn; }
-		adjustWidth();
-		return this;
-	}
-	
-	public synchronized WindowDropDownList<E> removeEntry(DropDownListEntry<E> entryIn) {
-		Iterator<DropDownListEntry<E>> it = listContents.iterator();
-		while (it.hasNext()) {
-			if (it.next().equals(entryIn)) { it.remove(); break; }
-		}
-		if (listContents.size() == 0) { selectedEntry = null; }
-		if (listContents.size() > 0) { selectedEntry = listContents.get(0); }
-		if (!fixedWidth) { adjustWidth(); }
-		return this;
-	}
-	
-	public synchronized WindowDropDownList<E> removeEntry(int entryIdIn) {
-		Iterator<DropDownListEntry<E>> it = listContents.iterator();
-		int i = 0;
-		while (it.hasNext()) {
-			if (i == entryIdIn) { it.remove(); break; }
-			i++;
-		}
-		if (listContents.size() == 0) { selectedEntry = null; }
-		if (listContents.size() > 0) { selectedEntry = listContents.get(0); }
-		if (!fixedWidth) { adjustWidth(); }
-		return this;
 	}
 	
 	private void adjustWidth() {
@@ -187,13 +216,17 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 		}
 	}
 	
+	//---------
+	// Getters
+	//---------
+	
 	public DropDownListEntry<E> getHoveringEntry(int mXIn, int mYIn) {
 		if (isMouseInside()) {
 			
 			double offset = drawTop ? entryHeight : 0;
 			
-			if (mY >= startY + offset) {
-				int relClickPosY = (int) (mY - (startY + offset));
+			if (Mouse.getMy() >= startY + offset) {
+				int relClickPosY = (int) (Mouse.getMy() - (startY + offset));
 				int selectedPos = (int) (relClickPosY / entryHeight);
 				if (selectedPos <= listContents.size() - 1) {
 					return listContents.get(selectedPos);
@@ -207,26 +240,32 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	public EArrayList<DropDownListEntry<E>> getEntries() { return listContents; }
 	public DropDownListEntry<E> getSelectedEntry() { return selectedEntry; }
 	public DropDownListEntry<E> getEntryFromObject(E objIn) {
-		for (DropDownListEntry<E> e : listContents) { if (e.getEntryObject().equals(objIn)) { return e; } }
+		for (var e : listContents) {
+			if (e.getEntryObject().equals(objIn)) return e;
+		}
 		return null;
 	}
 	
-	public WindowDropDownList<E> setDrawHighlight(boolean val) { drawHighlight = val; return this; }
-	public WindowDropDownList<E> setAlwaysOpen(boolean val) { alwaysOpen = val; if (val) { openList(); } return this; }
-	public WindowDropDownList<E> setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; return this; }
-	public WindowDropDownList<E> setBackColor(EColors colorIn) { backColor = colorIn.intVal; return this; }
-	public WindowDropDownList<E> setSelectedColor(EColors colorIn) { selectedColor = colorIn.intVal; return this; }
-	public WindowDropDownList<E> setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowDropDownList<E> setBackColor(int colorIn) { backColor = colorIn; return this; }
-	public WindowDropDownList<E> setSelectedColor(int colorIn) { selectedColor = colorIn; return this; }
-	public WindowDropDownList<E> setDrawTop(boolean val) { drawTop = val; return this; }
-	public WindowDropDownList<E> setFixedWidth(boolean val) { fixedWidth = val; return this; }
-	public WindowDropDownList<E> setFixedWidth(int newWidth) { fixedWidth = true; setWidth(newWidth); return this; }
-	public WindowDropDownList<E> setWidth(int widthIn) {  setDimensions(startX, startY, widthIn, height); return this; }
-	public WindowDropDownList<E> setSelectedEntry(int entry) { selectedEntry = listContents.get(entry); return this; }
-	public WindowDropDownList<E> setSelectedEntry(DropDownListEntry<E> entry) { return setSelectedEntry(entry, false); }
+	//---------
+	// Setters
+	//---------
 	
-	public WindowDropDownList<E> setSelectedEntry(DropDownListEntry<E> entry, boolean addIfNotContains) {
+	public void setDrawHighlight(boolean val) { drawHighlight = val; }
+	public void setAlwaysOpen(boolean val) { alwaysOpen = val; if (val) { openList(); } }
+	public void setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; }
+	public void setBackColor(EColors colorIn) { backColor = colorIn.intVal; }
+	public void setSelectedColor(EColors colorIn) { selectedColor = colorIn.intVal; }
+	public void setBorderColor(int colorIn) { borderColor = colorIn; }
+	public void setBackColor(int colorIn) { backColor = colorIn; }
+	public void setSelectedColor(int colorIn) { selectedColor = colorIn; }
+	public void setDrawTop(boolean val) { drawTop = val; }
+	public void setFixedWidth(boolean val) { fixedWidth = val; }
+	public void setFixedWidth(int newWidth) { fixedWidth = true; setWidth(newWidth); }
+	public void setWidth(int widthIn) {  setDimensions(startX, startY, widthIn, height); }
+	public void setSelectedEntry(int entry) { selectedEntry = listContents.get(entry); }
+	public void setSelectedEntry(DropDownListEntry<E> entry) { setSelectedEntry(entry, false); }
+	
+	public void setSelectedEntry(DropDownListEntry<E> entry, boolean addIfNotContains) {
 		if (entry != null) {
 			if (listContents.contains(entry)) { selectedEntry = entry; }
 			else if (addIfNotContains) {
@@ -234,9 +273,6 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 				selectedEntry = entry;
 			}
 		}
-		return this;
 	}
-	
-	public void runGlobalAction() {}
 	
 }

@@ -1,6 +1,6 @@
 package engine.terminal.window.termParts;
 
-import engine.input.Keyboard;
+import engine.inputHandlers.Keyboard;
 import engine.terminal.window.ETerminal;
 import engine.terminal.window.TerminalRCM;
 import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;

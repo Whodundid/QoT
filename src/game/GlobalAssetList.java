@@ -1,14 +1,14 @@
 package game;
 
 import eutil.datatypes.EArrayList;
-import game.doodads.PineTree;
-import game.doodads.PlayerSpawnPosition;
-import game.entities.Goblin;
-import game.entities.Player;
-import game.entities.Thyrah;
-import game.entities.TrollBoar;
-import game.entities.Whodundid;
-import game.shops.WhodundidsBrother;
+import game.doodads.nature.PineTree;
+import game.entities.enemies.Goblin;
+import game.entities.enemies.Thyrah;
+import game.entities.enemies.TrollBoar;
+import game.entities.enemies.Whodundid;
+import game.entities.neutral.WhodundidsBrother;
+import game.entities.player.Player;
+import world.mapEditor.editorUtil.PlayerSpawnPosition;
 
 public class GlobalAssetList {
 

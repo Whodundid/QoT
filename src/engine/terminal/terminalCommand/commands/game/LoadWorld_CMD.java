@@ -2,13 +2,13 @@ package engine.terminal.terminalCommand.commands.game;
 
 import java.io.File;
 
-import engine.screens.GamePlayScreen;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.commands.fileSystem.FileCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import game.entities.Player;
+import game.entities.player.Player;
+import game.screens.gameplay.GamePlayScreen;
 import main.QoT;
 import main.settings.QoTSettings;
 import world.GameWorld;

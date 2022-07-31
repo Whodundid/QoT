@@ -25,12 +25,12 @@ public class ClearObjects extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		EArrayList<IWindowObject> objs = termIn.getTopParent().getCombinedObjects();
+		EArrayList<IWindowObject> objs = termIn.getTopParent().getCombinedChildren();
 		if (objs.contains(termIn)) objs.remove(termIn);
 		if (objs.isNotEmpty()) {
 			termIn.writeln("Closing Renderer Objects..", 0xff00ffff);
 			for (IWindowObject o : objs) {
-				if (o.isCloseable()) {
+				if (o.isClosable()) {
 					if (runVisually) termIn.writeln("Closing: " + o, 0xffffff00);
 					o.close();
 				}

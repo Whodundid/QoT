@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
 
-import engine.input.Mouse;
+import engine.inputHandlers.Mouse;
 import engine.renderEngine.GLSettings;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.renderEngine.textureSystem.GameTexture;
@@ -16,6 +16,10 @@ import eutil.colors.EColors;
 //Author: Hunter Bragg
 
 public class WindowButton<E> extends ActionObject<E> {
+	
+	//--------
+	// Fields
+	//--------
 	
 	public static int defaultColor = 0xffababab;
 	public int color = EColors.white.intVal;
@@ -46,13 +50,27 @@ public class WindowButton<E> extends ActionObject<E> {
 	protected GameTexture btnSelTexture = null;
 	protected String displayString;
 	
-	public WindowButton(IWindowObject<?> parentIn) { super(parentIn); custom = true; }
+	//--------------
+	// Constructors
+	//--------------
 	
-	public WindowButton(IWindowObject<?> parentIn, double posX, double posY, double width, double height) { this(parentIn, posX, posY, width, height, ""); }
+	public WindowButton(IWindowObject<?> parentIn) {
+		super(parentIn);
+		custom = true;
+	}
+	
+	public WindowButton(IWindowObject<?> parentIn, double posX, double posY, double width, double height) {
+		this(parentIn, posX, posY, width, height, "");
+	}
+	
 	public WindowButton(IWindowObject<?> parentIn, double posX, double posY, double width, double height, String displayStringIn) {
 		init(parentIn, posX, posY, width, height);
 		displayString = displayStringIn;
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 
 	@Override
 	public void drawObject(int mX, int mY) {
@@ -160,12 +178,35 @@ public class WindowButton<E> extends ActionObject<E> {
 		super.keyPressed(typedChar, keyCode);
 	}
 	
+	//---------
+	// Methods
+	//---------
+	
+	public void updateTrueFalseDisplay() {
+		if (trueFalseButton) {
+			String cur = getString();
+			boolean val = cur.equals("False");
+			setString(val ? "True" : "False");
+			setStringColor(val ? 0x55ff55 : 0xff5555);
+		}
+	}
+	
+	public void updateTrueFalseDisplay(boolean val) {
+		if (trueFalseButton) {
+			setString(val ? "True" : "False");
+			setStringColor(val ? 0x55ff55 : 0xff5555);
+		}
+	}
+	
+	public void setDrawStringCentered(boolean val) { drawCentered = val; }
+	public void setDisplayStringOffset(int offsetIn) { textOffset = offsetIn; }
+	
 	//------------------
-	//EGuiButton Methods
+	// Internal Methods
 	//------------------
 	
 	protected void pressButton(int button) {
-		if (enabled && willBeDrawn()) {
+		if (isEnabled() && willBeDrawn()) {
 			pressedButton = button;
 			if (runActionOnPress) onPress(button);
 			else if (button == 0 || (button == 1 && acceptRightClicks)) {
@@ -175,30 +216,13 @@ public class WindowButton<E> extends ActionObject<E> {
 		}
 	}
 	
-	public WindowButton<E> updateTrueFalseDisplay() {
-		if (trueFalseButton) {
-			String cur = getString();
-			boolean val = cur.equals("False");
-			setString(val ? "True" : "False").setStringColor(val ? 0x55ff55 : 0xff5555);
-		}
-		return this;
-	}
-	
-	public WindowButton<E> updateTrueFalseDisplay(boolean val) {
-		if (trueFalseButton) { setString(val ? "True" : "False").setStringColor(val ? 0x55ff55 : 0xff5555); }
-		return this;
-	}
-	
-	public WindowButton<E> setDrawStringCentered(boolean val) { drawCentered = val; return this; }
-	public WindowButton<E> setDisplayStringOffset(int offsetIn) { textOffset = offsetIn; return this; }
-	
-	//----------------------
-	//Drawing Helper Methods
-	//----------------------
+	//---------------------------------
+	// Internal Helper Drawing Methods
+	//---------------------------------
 	
 	//texture binding methods
-	private void bindBase() { if (btnTexture != null) { bindTexture(btnTexture); } }
-	private void bindSel() { if (btnSelTexture != null ) { bindTexture(btnSelTexture); } }
+	private void bindBase() { if (btnTexture != null) bindTexture(btnTexture); }
+	private void bindSel() { if (btnSelTexture != null ) bindTexture(btnSelTexture); }
 	
 	//draw method
 	private void drawBaseTexture(boolean mouseHover) {
@@ -223,9 +247,9 @@ public class WindowButton<E> extends ActionObject<E> {
 		//usingBaseTextures = EMCResources.guiButtonBase.equals(btnTexture) && EMCResources.guiButtonSel.equals(btnSelTexture);
 	}
 	
-	//------------------
-	//EGuiButton Getters
-	//------------------
+	//---------
+	// Getters
+	//---------
 	
 	public int getPressedButton() { return pressedButton; }
 	public int getBackgroundColor() { return backgroundColor; }
@@ -234,57 +258,55 @@ public class WindowButton<E> extends ActionObject<E> {
 	public String getString() { return displayString; }
 	public boolean getAcceptsRightClicks() { return acceptRightClicks; }
 	
-	//------------------
-	//EGuiButton Setters
-	//------------------
+	//---------
+	// Setters
+	//---------
 	
-	public WindowButton<E> setForceDrawHover(boolean val) { forceDrawHover = val; return this; }
-	public WindowButton<E> setTextures(GameTexture base, GameTexture sel) { setButtonTexture(base); setButtonSelTexture(sel); return this; }
-	public WindowButton<E> setButtonTexture(GameTexture loc) { btnTexture = loc; checkForBaseTextures(); return this; }
-	public WindowButton<E> setButtonSelTexture(GameTexture loc) { btnSelTexture = loc; checkForBaseTextures(); return this; }
-	public WindowButton<E> setString(String stringIn) { displayString = stringIn; return this; }
-	public WindowButton<E> setStringColor(int colorIn) { color = colorIn; return this; }
-	public WindowButton<E> setStringColor(EColors colorIn) { if (colorIn != null) { color = colorIn.c(); } return this; }
-	public WindowButton<E> setStringDisabledColor(int colorIn) { disabledColor = colorIn; return this; }
-	public WindowButton<E> setStringDisabledColor(EColors colorIn) { if (colorIn != null) { disabledColor = colorIn.c(); } return this; }
-	public WindowButton<E> setStringHoverColor(int colorIn) { textHoverColor = colorIn; return this; }
-	public WindowButton<E> setStringHoverColor(EColors colorIn) { if (colorIn != null) { textHoverColor = colorIn.c(); } return this; }
-	public WindowButton<E> setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
-	public WindowButton<E> setBackgroundColor(EColors colorIn) { if (colorIn != null) { backgroundColor = colorIn.c(); } return this; }
-	public WindowButton<E> setBackgroundHoverColor(int colorIn) { backgroundHoverColor = colorIn; return this; }
-	public WindowButton<E> setBackgroundHoverColor(EColors colorIn) { if (colorIn != null) { backgroundHoverColor = colorIn.c(); } return this; }
-	public WindowButton<E> setTrueFalseButton(boolean val) { return setTrueFalseButton(val, false); }
-	public WindowButton<E> setTrueFalseButton(boolean val, boolean initial) { trueFalseButton = val; updateTrueFalseDisplay(initial); return this; }
-	public WindowButton<E> setDrawString(boolean val) { drawString = val; return this; }
-	public WindowButton<E> setDrawDisabledColor(boolean val) { drawDisabledColor = val; return this; }
-	public WindowButton<E> setDrawStretched(boolean val) { stretchTextures = val; return this; }
-	public WindowButton<E> setDrawBackgroundHover(boolean val) { drawBackgroundHover = val; return this; }
-	public WindowButton<E> setDrawSelected(boolean val) { drawSelected = val; return this; }
-	public WindowButton<E> setSelectedColor(EColors colorIn) { return setSelectedColor(colorIn.intVal); }
-	public WindowButton<E> setSelectedColor(int colorIn) { selectedColor = colorIn; return this; }
-	public WindowButton<E> setAcceptRightClicks(boolean val) { acceptRightClicks = val; return this; }
+	public void setForceDrawHover(boolean val) { forceDrawHover = val; }
+	public void setTextures(GameTexture base, GameTexture sel) { setButtonTexture(base); setButtonSelTexture(sel); }
+	public void setButtonTexture(GameTexture loc) { btnTexture = loc; checkForBaseTextures(); }
+	public void setButtonSelTexture(GameTexture loc) { btnSelTexture = loc; checkForBaseTextures(); }
+	public void setString(String stringIn) { displayString = stringIn; }
+	public void setStringColor(int colorIn) { color = colorIn; }
+	public void setStringColor(EColors colorIn) { if (colorIn != null) { color = colorIn.c(); } }
+	public void setStringDisabledColor(int colorIn) { disabledColor = colorIn; }
+	public void setStringDisabledColor(EColors colorIn) { if (colorIn != null) { disabledColor = colorIn.intVal; } }
+	public void setStringHoverColor(int colorIn) { textHoverColor = colorIn; }
+	public void setStringHoverColor(EColors colorIn) { if (colorIn != null) { textHoverColor = colorIn.intVal; } }
+	public void setBackgroundColor(int colorIn) { backgroundColor = colorIn; }
+	public void setBackgroundColor(EColors colorIn) { if (colorIn != null) { backgroundColor = colorIn.intVal; } }
+	public void setBackgroundHoverColor(int colorIn) { backgroundHoverColor = colorIn; }
+	public void setBackgroundHoverColor(EColors colorIn) { if (colorIn != null) { backgroundHoverColor = colorIn.intVal; } }
+	public void setTrueFalseButton(boolean val) { setTrueFalseButton(val, false); }
+	public void setTrueFalseButton(boolean val, boolean initial) { trueFalseButton = val; updateTrueFalseDisplay(initial); }
+	public void setDrawString(boolean val) { drawString = val; }
+	public void setDrawDisabledColor(boolean val) { drawDisabledColor = val; }
+	public void setDrawStretched(boolean val) { stretchTextures = val; }
+	public void setDrawBackgroundHover(boolean val) { drawBackgroundHover = val; }
+	public void setDrawSelected(boolean val) { drawSelected = val; }
+	public void setSelectedColor(EColors colorIn) { setSelectedColor(colorIn.intVal); }
+	public void setSelectedColor(int colorIn) { selectedColor = colorIn; }
+	public void setAcceptRightClicks(boolean val) { acceptRightClicks = val; }
 	
-	public WindowButton<E> setDrawTextures(boolean val) {
+	public void setDrawTextures(boolean val) {
 		drawTextures = val;
 		if (!custom) {
 			if (drawBackground && !drawTextures) { setMaxDims(Integer.MAX_VALUE, Integer.MAX_VALUE); }
 			else { setMaxDims(200, 20); }
 		}
-		return this;
 	}
 	
-	public WindowButton<E> setDrawBackground(boolean val) {
+	public void setDrawBackground(boolean val) {
 		drawBackground = val;
 		if (!custom) {
 			if (drawBackground && !drawTextures) setMaxDims(Integer.MAX_VALUE, Integer.MAX_VALUE);
 			else setMaxDims(200, 20);
 		}
-		return this;
 	}
 	
-	//--------------
-	//Static Methods
-	//--------------
+	//----------------
+	// Static Methods
+	//----------------
 	
 	public static void playPressSound() {
 		

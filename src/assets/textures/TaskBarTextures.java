@@ -20,6 +20,7 @@ public class TaskBarTextures {
 	public static final GameTexture texteditor;
 	public static final GameTexture textureviewer;
 	public static final GameTexture window;
+	public static final GameTexture calculator;
 	
 	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\taskbar\\";
 	
@@ -34,14 +35,21 @@ public class TaskBarTextures {
 		texteditor 		= new GameTexture("texteditor", textureDir, "texteditor.png");
 		textureviewer 	= new GameTexture("textureviewer", textureDir, "textureviewer.png");
 		window 			= new GameTexture("window", textureDir, "window.png");
+		calculator		= new GameTexture("calc", textureDir, "calculator.png");
 	}
 	
 	public static void registerTextures(TextureSystem systemIn) {
-		//systemIn.registerTexture(logo);
-		//systemIn.registerTexture(noscreens);
-		
-		//textures.add(logo);
-		//textures.add(noscreens);
+		systemIn.reg(textures.addR(experiment));
+		systemIn.reg(textures.addR(info));
+		systemIn.reg(textures.addR(keyboard));
+		systemIn.reg(textures.addR(notification));
+		systemIn.reg(textures.addR(opengui));
+		systemIn.reg(textures.addR(settings));
+		systemIn.reg(textures.addR(terminal));
+		systemIn.reg(textures.addR(texteditor));
+		systemIn.reg(textures.addR(textureviewer));
+		systemIn.reg(textures.addR(window));
+		systemIn.reg(textures.addR(calculator));
 	}
 	
 	public static GameTexture getTextureFromName(String nameIn) {

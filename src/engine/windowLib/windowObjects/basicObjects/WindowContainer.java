@@ -7,13 +7,16 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 
 public class WindowContainer<E> extends WindowObject<E> {
 	
-	public String title = "";
-	//public int displayStringColor = 0x47ff96;
-	public int titleColor = 0xffffff;
-	public int titleBorderColor = 0xff000000;
-	public int titleBackgroundColor = 0xff222222;
-	public int borderColor = 0xff000000;
-	public int backgroundColor = 0xff4c4c4c;
+	//--------
+	// Fields
+	//--------
+	
+	protected String title = "";
+	protected int titleColor = 0xffffffff; //0xff47ff96;
+	protected int titleBorderColor = 0xff000000;
+	protected int titleBackgroundColor = 0xff222222;
+	protected int borderColor = 0xff000000;
+	protected int backgroundColor = 0xff4c4c4c;
 	protected boolean drawTitle = true;
 	protected boolean drawBackground = true;
 	protected boolean drawBorder = true;
@@ -24,6 +27,10 @@ public class WindowContainer<E> extends WindowObject<E> {
 	protected double titleAreaWidth = 0;
 	protected double titleAreaHeight = 0;
 	
+	//--------------
+	// Constructors
+	//--------------
+	
 	public WindowContainer(IWindowObject<?> parentIn, double xIn, double yIn, double widthIn, double heightIn) {
 		this(parentIn, xIn, yIn, widthIn, heightIn, true);
 	}
@@ -33,19 +40,23 @@ public class WindowContainer<E> extends WindowObject<E> {
 		drawTitle = drawTitleIn;
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		if (drawBorder) { drawRect(startX, startY, endX, endY, borderColor); } //border
-		if (drawBackground) { drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor); } //inner
+		if (drawBorder) drawRect(startX, startY, endX, endY, borderColor); //border
+		if (drawBackground) drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor); //inner
 		if (drawTitle) {
 			titleAreaHeight = height >= 28 ? 28 : height;
 			double drawWidth = titleWidth + 6;
-			if (useCustomWidth) { drawWidth = titleAreaWidth; }
-			if (drawTitleFullWidth) { drawWidth = width - 1; }
+			if (useCustomWidth) drawWidth = titleAreaWidth;
+			if (drawTitleFullWidth) drawWidth = width - 1;
 			drawRect(startX + 1, startY + 1, startX + drawWidth + 1, startY + titleAreaHeight, titleBorderColor);
 			drawRect(startX + 1, startY + 1, startX + drawWidth, startY + titleAreaHeight - 1, titleBackgroundColor);
-			if (center) { drawStringCS(title, midX, startY + 5, titleColor); }
-			else { drawStringS(title, startX + 4, startY + 5, titleColor); }
+			if (center) drawStringCS(title, midX, startY + 5, titleColor);
+			else drawStringS(title, startX + 4, startY + 5, titleColor);
 			
 		}
 		
@@ -54,21 +65,29 @@ public class WindowContainer<E> extends WindowObject<E> {
 		endScissor();
 	}
 	
+	//---------
+	// Getters
+	//---------
+	
 	public double getTitleWidth() { return titleWidth; }
 	public double getTitleAreaWidth() { return titleAreaWidth; }
 	public double getTitleAreaHeight() { return titleAreaHeight; }
 	
-	public WindowContainer<E> setTitle(String stringIn) { title = stringIn; titleWidth = getStringWidth(stringIn); return this; }
-	public WindowContainer<E> setTitleColor(int colorIn) { titleColor = colorIn; return this; }
-	public WindowContainer<E> setBorderColor(int colorIn) { borderColor = colorIn; return this; }
-	public WindowContainer<E> setBackgroundColor(int colorIn) { backgroundColor = colorIn; return this; }
-	public WindowContainer<E> setTitleBorderColor(int colorIn) { titleBorderColor = colorIn; return this; }
-	public WindowContainer<E> setTitleBackgroundColor(int colorIn) { titleBackgroundColor = colorIn; return this; }
-	public WindowContainer<E> setDrawTitle(boolean val) { drawTitle = val; return this; }
-	public WindowContainer<E> setDrawBackground(boolean val) { drawBackground = val; return this; }
-	public WindowContainer<E> setDrawBorder(boolean val) { drawBorder = val; return this; }
-	public WindowContainer<E> setTitleWidth(int widthIn) { if (widthIn > 0) { useCustomWidth = true; titleAreaWidth = widthIn; } return this; }
-	public WindowContainer<E> setTitleFullWidth(boolean val) { drawTitleFullWidth = val; return this; }
-	public WindowContainer<E> setTitleCentered(boolean val) { center = val; return this; }
+	//---------
+	// Setters
+	//---------
+	
+	public void setTitle(String stringIn) { title = stringIn; titleWidth = getStringWidth(stringIn); }
+	public void setTitleColor(int colorIn) { titleColor = colorIn; }
+	public void setBorderColor(int colorIn) { borderColor = colorIn; }
+	public void setBackgroundColor(int colorIn) { backgroundColor = colorIn; }
+	public void setTitleBorderColor(int colorIn) { titleBorderColor = colorIn; }
+	public void setTitleBackgroundColor(int colorIn) { titleBackgroundColor = colorIn; }
+	public void setDrawTitle(boolean val) { drawTitle = val; }
+	public void setDrawBackground(boolean val) { drawBackground = val; }
+	public void setDrawBorder(boolean val) { drawBorder = val; }
+	public void setTitleWidth(int widthIn) { if (widthIn > 0) { useCustomWidth = true; titleAreaWidth = widthIn; } }
+	public void setTitleFullWidth(boolean val) { drawTitleFullWidth = val; }
+	public void setTitleCentered(boolean val) { center = val; }
 	
 }

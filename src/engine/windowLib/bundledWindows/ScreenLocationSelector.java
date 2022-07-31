@@ -12,10 +12,18 @@ import eutil.misc.ScreenLocation;
 
 public class ScreenLocationSelector<E> extends ActionObject<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	protected IUseScreenLocation obj;
 	protected WindowButton<ScreenLocation> bLeft, bRight, tLeft, tRight, center, custom, chatDraw;
 	protected int heightRatio = 0, widthRatio = 0;
 	public String drawName = "";
+	
+	//--------------
+	// Constructors
+	//--------------
 	
 	public ScreenLocationSelector(IWindowObject parentIn, IUseScreenLocation objIn, double posX, double posY, double size) {
 		init(parentIn, posX, posY, size, size - 10);
@@ -25,16 +33,27 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 		widthRatio = (int) (width * 0.5);
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
 	@Override
-	public void initObjects() {
-		bLeft = (WindowButton<ScreenLocation>) new WindowButton(this, startX + 4, startY + heightRatio - 19, 23, 15, "BL").setGenericObject(ScreenLocation.BOT_LEFT);
-		bRight = (WindowButton<ScreenLocation>) new WindowButton(this, endX - 27, startY + heightRatio - 19, 23, 15, "BR").setGenericObject(ScreenLocation.BOT_RIGHT);
-		tLeft = (WindowButton<ScreenLocation>) new WindowButton(this, startX + 4, startY + 4, 23, 15, "TL").setGenericObject(ScreenLocation.TOP_LEFT);
-		tRight = (WindowButton<ScreenLocation>) new WindowButton(this, endX - 27, startY + 4, 23, 15, "TR").setGenericObject(ScreenLocation.TOP_RIGHT);
-		center = (WindowButton<ScreenLocation>) new WindowButton(this, startX + width / 2 - 11, startY + (heightRatio / 2) - 7, 23, 15, "C").setGenericObject(ScreenLocation.CENTER);
-		custom = (WindowButton<ScreenLocation>) new WindowButton(this, startX + width / 2 - (95 / 2), endY, 95, 16, "Custom location").setGenericObject(ScreenLocation.CUSTOM);
+	public void initChildren() {
+		bLeft = new WindowButton(this, startX + 4, startY + heightRatio - 19, 23, 15, "BL");
+		bRight = new WindowButton(this, endX - 27, startY + heightRatio - 19, 23, 15, "BR");
+		tLeft = new WindowButton(this, startX + 4, startY + 4, 23, 15, "TL");
+		tRight = new WindowButton(this, endX - 27, startY + 4, 23, 15, "TR");
+		center = new WindowButton(this, startX + width / 2 - 11, startY + (heightRatio / 2) - 7, 23, 15, "C");
+		custom = new WindowButton(this, startX + width / 2 - (95 / 2), endY, 95, 16, "Custom location");
 		
-		addObject(bLeft, bRight, tLeft, tRight, center, custom);
+		bLeft.setGenericObject(ScreenLocation.BOT_LEFT);
+		bRight.setGenericObject(ScreenLocation.BOT_RIGHT);
+		tLeft.setGenericObject(ScreenLocation.TOP_LEFT);
+		tRight.setGenericObject(ScreenLocation.TOP_RIGHT);
+		center.setGenericObject(ScreenLocation.CENTER);
+		custom.setGenericObject(ScreenLocation.CUSTOM);
+		
+		addChild(bLeft, bRight, tLeft, tRight, center, custom);
 	}
 	
 	@Override
@@ -63,19 +82,20 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 	}
 	
 	@Override
-	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == bLeft) obj.setLocation(ScreenLocation.BOT_LEFT);
-		if (object == bRight) obj.setLocation(ScreenLocation.BOT_RIGHT);
-		if (object == tLeft) obj.setLocation(ScreenLocation.TOP_LEFT);
-		if (object == tRight) obj.setLocation(ScreenLocation.TOP_RIGHT);
-		if (object == center) obj.setLocation(ScreenLocation.CENTER);
-		if (object == custom) getTopParent().displayWindow(obj.getScreenLocationGui());
+	public void actionPerformed(IActionObject<?> object, Object... args) {
+		if (object == bLeft) 	obj.setLocation(ScreenLocation.BOT_LEFT);
+		if (object == bRight) 	obj.setLocation(ScreenLocation.BOT_RIGHT);
+		if (object == tLeft) 	obj.setLocation(ScreenLocation.TOP_LEFT);
+		if (object == tRight) 	obj.setLocation(ScreenLocation.TOP_RIGHT);
+		if (object == center) 	obj.setLocation(ScreenLocation.CENTER);
+		if (object == custom) 	getTopParent().displayWindow(obj.getScreenLocationGui());
 		performAction();
 	}
 	
-	public ScreenLocationSelector<E> setDisplayName(String nameIn) {
-		drawName = nameIn;
-		return this;
-	}
+	//---------
+	// Setters
+	//---------
+	
+	public void setDisplayName(String nameIn) { drawName = nameIn; }
 	
 }

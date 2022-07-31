@@ -2,7 +2,7 @@ package engine.terminal.window;
 
 import java.io.File;
 
-import assets.textures.WindowTextures;
+import assets.textures.TaskBarTextures;
 import engine.terminal.TerminalHandler;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.termParts.TerminalTextField;
@@ -63,7 +63,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 		super();
 		aliases.add("terminal", "console", "term");
 		dir = new File(System.getProperty("user.dir"));
-		windowIcon = WindowTextures.terminal;
+		windowIcon = TaskBarTextures.terminal;
 	}
 	
 	//--------------------------
@@ -96,7 +96,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		inputField = new TerminalTextField(this, startX + 1, endY - 31, width - 2, 30);
@@ -128,13 +128,14 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 		history.setLineNumberSeparatorColor(EColors.vdgray);
 		history.setResetDrawn(false);
 		
-		objectGroup = new EObjectGroup(this);
+		var objectGroup = new EObjectGroup(this);
 		objectGroup.addObject(header, history, inputField);
+		setObjectGroup(objectGroup);
 		header.setObjectGroup(objectGroup);
 		history.setObjectGroup(objectGroup);
 		inputField.setObjectGroup(objectGroup);
 		
-		addObject(inputField, history);
+		addChild(inputField, history);
 		
 		if (!init) {
 			//history.addTextLine("EMC Terminal initialized..", 0xffff00);
@@ -198,7 +199,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 	
 	@Override
 	public void onFocusGained(EventFocus eventIn) {
-		if (eventIn.getFocusType().equals(FocusType.MousePress))
+		if (eventIn.getFocusType().equals(FocusType.MOUSE_PRESS))
 			mousePressed(eventIn.getMX(), eventIn.getMY(), eventIn.getActionCode());
 		else inputField.requestFocus();
 	}
@@ -361,7 +362,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 			clearTabCompletions();
 			
 			history.clear();
-			reInitObjects();
+			reInitChildren();
 			
 			for (TextAreaLine l : lines) {
 				TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getGenericObject(), l.getLineNumber());
@@ -390,7 +391,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 		clearTabCompletions();
 		
 		history.clear();
-		reInitObjects();
+		reInitChildren();
 		
 		for (TextAreaLine l : lines) {
 			TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getGenericObject(), l.getLineNumber());
@@ -670,7 +671,8 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 		
 		for (String s : lines) {
 			TerminalTextLine line = new TerminalTextLine(this, s, colorIn);
-			line.setFocusRequester(this).setObjectGroup(objectGroup);
+			line.setFocusRequester(this);
+			line.setObjectGroup(getObjectGroup());
 			history.addTextLine(line);
 			
 		}
@@ -686,7 +688,8 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 	public ETerminal writeLink(String msgIn, String linkTextIn, Object linkObjectIn, boolean isWebLink, int colorIn) {
 		TerminalTextLine line = new TerminalTextLine(this, msgIn, colorIn);
 		line.setLinkText(linkTextIn, linkObjectIn, isWebLink);
-		line.setFocusRequester(this).setObjectGroup(objectGroup);
+		line.setFocusRequester(this);
+		line.setObjectGroup(getObjectGroup());
 		history.addTextLine(line);
 		return this;
 	}

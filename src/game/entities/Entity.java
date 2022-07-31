@@ -5,11 +5,10 @@ import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import eutil.misc.Direction;
 import eutil.misc.Rotation;
-import game.EntityLevel;
 import game.GameObject;
-import game.worldTiles.WorldTile;
 import main.QoT;
 import world.GameWorld;
+import world.worldTiles.WorldTile;
 
 public abstract class Entity extends GameObject {
 	

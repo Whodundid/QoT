@@ -64,7 +64,7 @@ public class EditorSidePanel extends WindowObject {
 	//-----------
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		
 	}
 	
@@ -117,7 +117,7 @@ public class EditorSidePanel extends WindowObject {
 		
 		if (currentPanel != null) {
 			//remove current tool's objects
-			windowObjects.clear();
+			getChildren().clear();
 		}
 		
 		//determine correct tool from type

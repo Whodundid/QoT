@@ -1,7 +1,7 @@
 package engine.terminal.terminalCommand.commands.system;
 
-import engine.screens.screenUtil.GameScreen;
-import engine.screens.screenUtil.ScreenRepository;
+import engine.screenEngine.GameScreen;
+import engine.screenEngine.ScreenRepository;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.IListableCommand;
 import engine.terminal.terminalCommand.TerminalCommand;
@@ -89,7 +89,7 @@ public class ListCMD extends TerminalCommand {
 		termIn.writeln("Listing all current objects in this top renderer\n", EColors.lgreen);
 		if (runVisually) {
 			int grandTotal = 0; //this isn't completely right tree wise, but whatever
-			for (IWindowObject<?> obj : termIn.getTopParent().getObjects()) {
+			for (IWindowObject<?> obj : termIn.getTopParent().getChildren()) {
 				termIn.writeln(obj.toString(), EColors.green);
 				
 				//int depth = 3;
@@ -99,9 +99,12 @@ public class ListCMD extends TerminalCommand {
 				EArrayList<IWindowObject<?>> workList = new EArrayList();
 				
 				//grab all immediate children and add them to foundObjs, then check if any have children of their own
-				obj.getObjects().forEach(o -> { foundObjs.add(o); if (!o.getObjects().isEmpty()) { objsWithChildren.add(o); } });
+				obj.getChildren().forEach(o -> {
+					foundObjs.add(o);
+					if (!o.getChildren().isEmpty()) objsWithChildren.add(o);
+				});
 				//load the workList with every child found on each object
-				objsWithChildren.forEach(c -> workList.addAll(c.getObjects()));
+				objsWithChildren.forEach(c -> workList.addAll(c.getChildren()));
 				
 				for (IWindowObject o : EArrayList.combineLists(objsWithChildren, workList)) {
 					String s = "   ";
@@ -117,11 +120,11 @@ public class ListCMD extends TerminalCommand {
 					
 					//for the current layer, find all objects that have children
 					objsWithChildren.clear();
-					workList.stream().filter(o -> !o.getObjects().isEmpty()).forEach(objsWithChildren::add);
+					workList.stream().filter(o -> !o.getChildren().isEmpty()).forEach(objsWithChildren::add);
 					
 					//put all children on the next layer into the work list
 					workList.clear();
-					objsWithChildren.forEach(c -> workList.addAll(c.getObjects()));
+					objsWithChildren.forEach(c -> workList.addAll(c.getChildren()));
 					
 					for (IWindowObject o : EArrayList.combineLists(objsWithChildren, workList)) {
 						String s = "   ";
@@ -139,10 +142,10 @@ public class ListCMD extends TerminalCommand {
 			termIn.writeln("Grand total: " + grandTotal, EColors.orange);
 		}
 		else {
-			for (IWindowObject obj : termIn.getTopParent().getObjects()) {
+			for (IWindowObject obj : termIn.getTopParent().getChildren()) {
 				termIn.writeln(obj.toString(), EColors.green);
 			}
-			termIn.writeln("Total objects: " + termIn.getTopParent().getObjects().size(), 0xffffff00);
+			termIn.writeln("Total objects: " + termIn.getTopParent().getChildren().size(), 0xffffff00);
 		}
 	}
 	

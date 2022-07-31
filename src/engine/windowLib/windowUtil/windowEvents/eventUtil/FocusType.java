@@ -3,11 +3,11 @@ package engine.windowLib.windowUtil.windowEvents.eventUtil;
 //Author: Hunter Bragg
 
 public enum FocusType {
-	Gained,
-	Lost,
-	Transfer,
-	MousePress,
-	KeyPress,
-	DefaultFocusObject,
-	None;
+	GAINED,
+	LOST,
+	TRANSFER,
+	MOUSE_PRESS,
+	KEY_PRESS,
+	DEFAULT_FOCUS_OBJECT,
+	NONE;
 }

@@ -1,264 +1,739 @@
 package engine.windowLib.windowTypes.interfaces;
 
-import engine.input.Mouse;
-import engine.windowLib.StaticWindowObject;
+import java.util.function.Consumer;
+
+import assets.textures.CursorTextures;
+import engine.inputHandlers.CursorHelper;
+import engine.inputHandlers.Mouse;
+import engine.renderEngine.GLObject;
+import engine.renderEngine.GLSettings;
+import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import engine.windowLib.windowObjects.utilityObjects.FocusLockBorder;
+import engine.windowLib.windowTypes.WindowObject;
+import engine.windowLib.windowTypes.WindowObjectProperties;
+import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowUtil.EObjectGroup;
+import engine.windowLib.windowUtil.FutureTaskEventType;
+import engine.windowLib.windowUtil.FutureTaskManager;
 import engine.windowLib.windowUtil.input.KeyboardInputAcceptor;
 import engine.windowLib.windowUtil.input.MouseInputAcceptor;
 import engine.windowLib.windowUtil.windowEvents.ObjectEvent;
 import engine.windowLib.windowUtil.windowEvents.ObjectEventHandler;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import engine.windowLib.windowUtil.windowEvents.eventUtil.ObjectEventType;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import engine.windowLib.windowUtil.windowEvents.events.EventAction;
 import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
+import engine.windowLib.windowUtil.windowEvents.events.EventModify;
 import engine.windowLib.windowUtil.windowEvents.events.EventMouse;
+import engine.windowLib.windowUtil.windowEvents.events.EventObjects;
+import engine.windowLib.windowUtil.windowEvents.events.EventRedraw;
 import eutil.EUtil;
+import eutil.colors.EColors;
 import eutil.datatypes.Box2;
+import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
-
-import java.util.function.Consumer;
+import main.QoT;
 
 //Author: Hunter Bragg
 
-/** An interface outlining behavior for WindowObjects. */
+/** An interface outlining the behavior for all WindowObjects. */
 public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAcceptor {
+	
+	//-------------------
+	// Object Properties
+	//-------------------
+	
+	/** Returns the current properties of this object. */
+	public WindowObjectProperties<E> properties();
+	/** Returns the underlying object instance. */
+	public default WindowObject<E> instance() { return properties().instance; }
 	
 	//------
 	// Init
 	//------
+
+	/**
+	 * Event fired from the top parent upon being fully added to the
+	 * parent so that this object can safely initialize all of it's own
+	 * children.
+	 */
+	public default void initChildren() {}
+	/** Internal event that happens before children are reinitialized. */
+	public default void preReInit() {}
+	/** Internal event that happens after children are reinitialized. */
+	public default void postReInit() {}
 	
-	/** Returns true if this object has been fully initialized with all
-	 *  of its values and children. */
-	public boolean isInit();
-	/** Returns true if initObjects has been fully completed. */
-	public boolean isObjectInit();
-	/** Internal method used to denote that this object and all of its
-	 *  children have been fully initialized. */
-	public void completeInit();
-	/** Event fired from the top parent upon being fully added to the parent
-	 *  so that this object can safely initialize all of it's own children. */
-	public void initObjects();
-	/** Removes all children and re-runs the initObjects method. */
-	public void reInitObjects();
-	/** Internal event that happens before objects are reinitialized. */
-	public void preReInit();
-	/** Internal event that happens after objects are reinitialized. */
-	public void postReInit();
+	/** Removes all children and re-runs the initChildren method. */
+	public default void reInitChildren() {
+		properties().isChildInit = false;
+		var p = getTopParent();
+		var children = getAllChildren();
+		if (!(p.getModifyType() == ObjectModifyType.RESIZE)) {
+			if (children.contains(p.getFocusedObject())) p.clearFocusedObject();
+			if (children.contains(p.getFocusLockObject())) p.clearFocusLockObject();
+			if (children.contains(p.getModifyingObject())) p.clearModifyingObject();
+		}
+		properties().children.clear();
+		properties().childrenToBeAdded.clear();
+		
+		preReInit();
+		initChildren();
+		postReInit();
+		properties().isChildInit = true;
+	}
+	
+	//-------------------------
+	// Basic Object Properties
+	//-------------------------
+	
+	/** Returns true if this object is currently enabled. */
+	public default boolean isEnabled() { return properties().isEnabled; }
+	/** Returns true if this object is visible. */
+	public default boolean isVisible() { return properties().isVisible; }
+	/** Returns true if this object is hidden when the top overlay is not drawn. */
+	public default boolean isHidden() { return properties().isHidden; }
+	/** Returns true if this object will be drawn regardless of it being visible or enabled. */
+	public default boolean isAlwaysVisible() { return properties().isAlwaysVisible; }
+	/** Returns true if this object will always be drawn on top. */
+	public default boolean isAlwaysOnTop() { return properties().isAlwaysOnTop; }
+	/** Returns true if this object is resizeable. */
+	public default boolean isResizeable() { return properties().isResizeable; }
+	/** Returns true if this object's position cannot be modified. */
+	public default boolean isMoveable() { return properties().isMoveable; }
+	/** Returns true if this object can be clicked on. */
+	public default boolean isClickable() { return properties().isClickable; }
+	/** Returns whether this object can be closed or not. */
+	public default boolean isClosable() { return properties().isClosable; }
+	
+	/** Set this object's enabled state. */
+	public default void setEnabled(boolean val) { properties().isEnabled = val; }
+	/** Set this object's visibility. A non-visible object can still run actions if it is still enabled. */
+	public default void setVisible(boolean val) { properties().isVisible = val; }
+	/** Sets this object as hidden when the top overlay is not drawn. */
+	public default void setHidden(boolean val) { properties().isHidden = val; }
+	/** Sets this object to be drawn regardless of it being visible or enabled. */
+	public default void setAlwaysVisible(boolean val) { properties().isAlwaysVisible = val; }
+	/** Sets this object to always be drawn on top. */
+	public default void setAlwaysOnTop(boolean val) { properties().isAlwaysOnTop = val; }
+	/** Sets whether this object can be resized or not. */
+	public default void setResizeable(boolean val) { properties().isResizeable = val; }
+	/** Sets this object's position as unmodifiable. */
+	public default void setMoveable(boolean val) { properties().isMoveable = val; }
+	/** Specifies if this object can be clicked on. */
+	public default void setClickable(boolean val) { properties().isClickable = val; }
+	/** Sets whether this object can be closed or not. */
+	public default void setCloseable(boolean val) { properties().isClosable = val; }
+	
+	//-----------------------
+	// Tracked Object States
+	//-----------------------
+	
+	/** Tracked state of whether or not this object has been initialized. */
+	public default boolean isInit() { return properties().isInit; }
+	/** Tracked state of whether or not this object has had its children initialized. */
+	public default boolean isChildInit() { return properties().isChildInit; }
+	/** Tracked state of whether or not this object has been drawn at least once. */
+	public default boolean hasFirstDraw() { return properties().isInit; }
+	/** Tracked state of whether or not this object has received focus at least once. */
+	public default boolean hasReceivedFocus() { return properties().isInit; }
+	/** Tracked state of whether or not this object is currently being added to some parent object. */
+	public default boolean isBeingAdded() { return properties().isBeingAdded; }
+	/** Tracked state of whether or not this object has been fully added to its parent. */
+	public default boolean isAdded() { return properties().isInit; }
+	/** Tracked state of whether or not this object is currently being removed from its current parent object. */
+	public default boolean isBeingRemoved() { return properties().isBeingRemoved; }
+	/** Tracked state of whether or not this object has been fully removed from its most recent parent object. */
+	public default boolean isRemoved() { return properties().isInit; }
+	/** Tracked state of whether or not this object is in the process of being closed. */
+	public default boolean isClosing() { return properties().isClosing; }
+	/** Tracked state of whether or not this object has been closed. */
+	public default boolean isClosed() { return properties().isInit; }
+	
+	//---------------
+	// Future Events
+	//---------------
+	
+	/** Returns this object's FutureTaskManager. */
+	public default FutureTaskManager getFutureTaskManager() { return properties().futureTaskManager; }
+	
+	/** Event fired once this object has been fully initialized with all of its children. */
+	public default void onInit() {
+		properties().isInit = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_INIT);
+	}
+	
+	/** Event fired once this object has initialized all of its children. */
+	public default void onChildrenInit() {
+		properties().isChildInit = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_CHILDREN_INIT);
+	}
+	
+	/** Event fired from the top parent when the object is drawn for the first time. */
+	public default void onFirstDraw() {
+		properties().hasFirstDraw = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_FIRST_DRAW);
+	}
+	
+	/** Event fired when this object first receives focus. */
+	public default void onInitialFocusGained() {
+		properties().hasReceivedFocus = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_INITIAL_FOCUS_GAINED);
+	}
+	
 	/** Event called when this object has actually been added to its parent. */
-	public void onAdded();
+	public default void onAdded() {
+		properties().isAdded = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_ADDED);
+	}
+	
+	/** Event fired when this object is removed from its parent. */
+	public default void onRemoved() {
+		properties().isRemoved = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_REMOVED);
+	}
+	
+	/** Event fired when object is closed. */
+	public default void onClosed() {
+		properties().isClosed = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_CLOSED);
+	}
+	
+	/**
+	 * Adds a task to be executed once the specified future task event
+	 * type event is run.
+	 * 
+	 * @param type The type of future tasks to add to
+	 * @param task The task to be eventually performed
+	 */
+	public default void addFutureTask(FutureTaskEventType type, Runnable task) {
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.addFutureTask(type, task);
+	}
+	
+	/**
+	 * Removes all future tasks that were scheduled to run for the given
+	 * future task type.
+	 * 
+	 * @param type The type of future tasks to clear out
+	 */
+	public default void clearFutureTasks(FutureTaskEventType type) {
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.clearTasks(type);
+	}
+	
+	/**
+	 * Returns all of the tasks that are scheduled to be run once the
+	 * given future task event type is fired.
+	 * 
+	 * @param type The type of future tasks to be executed
+	 * @return A list of all tasks that will be run for the given type
+	 */
+	public default EArrayList<Runnable> getFutureTasks(FutureTaskEventType type) {
+		var ftm = getFutureTaskManager();
+		if (ftm != null) return ftm.getFutureTasks(type);
+		return new EArrayList<>();
+	}
 	
 	//-----------
 	// Main Draw
 	//-----------
 	
 	/** Event fired from the top parent to draw this object. */
-	public void drawObject(int mXIn, int mYIn);
-	/** Event fired from the top parent when the object is drawn for the first time. */
-	public void onFirstDraw();
-	/** Returns true if this object has been drawn at least once. */
-	public boolean hasFirstDraw();
-	/** Event fired from this object's pre draw setup to perform cursorImage changes. */
-	public void updateCursorImage();
-	/** Event fired from the top parent when the mouse has been hovering over this
-	 *  object for a short period of time. */
-	public void onMouseHover(int mX, int mY);
-	/** Hook that indicates when the object is drawing its hovering layer. */
-	public boolean isDrawingHover();
-	/** Gets the hover text. */
-	public String getHoverText();
-	/** Gets the hover text color. */
-	public int getHoverTextColor();
-	/** Sets generic mouse hovering background with specified text. */
-	public IWindowObject<E> setHoverText(String textIn);
-	/** Sets hover text color. */
-	public IWindowObject<E> setHoverTextColor(int colorIn);
+	public default void drawObject(int mXIn, int mYIn) {
+		updateBeforeNextDraw(mXIn, mYIn);
+		try {
+			if (!willBeDrawn()) return;
+			GLSettings.pushMatrix();
+			GLSettings.enableBlend();
+			
+			//draw all child objects
+			for (var o : getChildren()) {
+				//only draw if the object is actually visible
+				if (!o.willBeDrawn() || o.isHidden()) continue;
+				GLSettings.fullBright();
+				
+				//notify object on first draw
+				if (!o.hasFirstDraw()) o.onFirstDraw();
+				//actually draw the object
+				o.drawObject(mXIn, mYIn);
+				
+				//draw grayed out overlay over everything if a focus lock object is present
+				var f = getTopParent().getFocusLockObject();
+				if (f != null && o instanceof WindowHeader<?> && (!o.equals(f) && !f.getAllChildren().contains(o))) {
+					if (o.isVisible()) {
+						EDimension d = o.getDimensions();
+						GLObject.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
+					}
+				}
+			}
+			
+			GLSettings.popMatrix();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
-	//---------
-	// Obj IDs
-	//---------
+	/**
+	 * Event fired from this object's pre draw setup to perform
+	 * cursorImage changes.
+	 */
+	public default void updateCursorImage() {
+		//make sure that the window isn't maximized
+		if (this instanceof IWindowParent<?> p && p.getMaximizedPosition() == ScreenLocation.TOP) {
+			CursorHelper.reset();
+			return;
+		}
+		
+		if (this != null && isResizeable() && getTopParent().getModifyType() != ObjectModifyType.RESIZE) {
+			//double rStartY = obj.hasHeader() ? obj.getHeader().startY : obj.getDimensions().startY;
+			if (!Mouse.isButtonDown(0)) {
+				switch (getEdgeSideMouseIsOn()) {
+				case TOP: case BOT: CursorHelper.updateCursor(CursorHelper.vresize); break;
+				case LEFT: case RIGHT: CursorHelper.updateCursor(CursorHelper.hresize); break;
+				case TOP_RIGHT: case BOT_LEFT: CursorHelper.updateCursor(CursorTextures.cursor_resize_dr); break;
+				case TOP_LEFT: case BOT_RIGHT: CursorHelper.updateCursor(CursorTextures.cursor_resize_dl); break;
+				default: CursorHelper.reset(); break;
+				}
+			}
+		}
+		else if (!CursorHelper.isArrow()) CursorHelper.reset();
+	}
+	
+	//--------------------
+	// Mouse Hover Checks
+	//--------------------
+	
+	/** Gets the hover text. */
+	public default String getHoverText() { return properties().hoverText; }
+	/** Gets the hover text color. */
+	public default int getHoverTextColor() { return properties().hoverTextColor; }
+	
+	/** Sets generic mouse hovering background with specified text. */
+	public default void setHoverText(String textIn) { properties().hoverText = textIn; }
+	/** Sets hover text color. */
+	public default void setHoverTextColor(int colorIn) { properties().hoverTextColor = colorIn; }
+	
+	/**
+	 * Event fired from the top parent when the mouse has been hovering
+	 * over this object for a short period of time.
+	 */
+	public default void onMouseHover(int mX, int mY) {
+		if (properties().hoverText == null || properties().hoverText.isEmpty()) return;
+			
+		int strWidth = FontRenderer.getStringWidth(properties().hoverText);
+		int sX = mX + 8;
+		int sY = mY - 7;
+		
+		sX = sX < 0 ? 1 : sX;
+		sY = (sY - 7) < 2 ? 2 + 7 : sY;
+		if (sX + strWidth + 10 > QoT.getWidth()) {
+			sX = -1 + sX - (sX + strWidth + 10 - QoT.getWidth() + 6);
+			sY -= 10;
+		}
+		sY = sY + 16 > QoT.getHeight() ? -2 + sY - (sY + 16 - QoT.getHeight() + 6) : sY;
+		
+		int eX = sX + strWidth + 10;
+		int eY = sY + 16;
+		
+		GLObject.drawRect(sX, sY, sX + strWidth + 10, sY + 16, EColors.black);
+		GLObject.drawRect(sX + 1, sY + 1, eX - 1, eY - 1, EColors.steel);
+		GLObject.drawStringS(properties().hoverText, sX + 5, sY + 4, properties().hoverTextColor);
+	}
+
+	/**
+	 * Hook that indicates when the object is drawing its hovering layer.
+	 */
+	public default boolean isDrawingHover() {
+		var tp = getTopParent();
+		return tp != null && this.equals(tp.getHoveringObject());
+	}
+	
+	/**
+	 * Called right before the next draw cycle will occur so that any
+	 * updates can be performed safely outside of the draw loop.
+	 */
+	public default void updateBeforeNextDraw(int mXIn, int mYIn) {
+		postEvent(new EventRedraw(this));
+		instance().res = QoT.getWindowSize();
+		
+		//check for mouse entered event
+		if (!properties().mouseEntered && isMouseOver()) {
+			properties().mouseEntered = true;
+			mouseEntered(mXIn, mYIn);
+		}
+		
+		//check for mouse exited event
+		if (properties().mouseEntered && !isMouseOver()) {
+			properties().mouseEntered = false;
+			mouseExited(mXIn, mYIn);
+		}
+		
+		//remove all children scheduled to be removed
+		if (!properties().childrenToBeRemoved.isEmpty()) {
+			for (var o : properties().childrenToBeRemoved) {
+				//prevent null removals, self removals, and non-children from being removed
+				if (o == null || o == this || !getChildren().contains(o)) continue;
+				
+				o.properties().isBeingRemoved = true;
+				properties().children.remove(o);
+				o.onRemoved();
+				o.properties().isBeingRemoved = false;
+				postEvent(new EventObjects(this, o, ObjectEventType.OBJECT_REMOVED));
+			}
+			properties().childrenToBeRemoved.clear();
+		}
+		
+		//add all children scheduled to be added
+		if (!properties().childrenToBeAdded.isEmpty()) {
+			for (var o : properties().childrenToBeAdded) {
+				//prevent null additions, self additions, and already existing children from being added
+				if (o == null || o == this || getChildren().contains(o)) continue;
+				
+				o.properties().isBeingAdded = true;
+				properties().children.add(o);
+				o.onAdded();
+				o.properties().isBeingAdded = false;
+				postEvent(new EventObjects(this, o, ObjectEventType.OBJECT_ADDED));
+			}
+			properties().childrenToBeAdded.clear();
+		}
+	}
+	
+	//------------
+	// Object IDs
+	//------------
 	
 	/** Returns this object's set ID number. */
-	public long getObjectID();
-	/** Designates this object with the specified ID number. Useful for
-	 *  ordering objects and referencing objects by shorthand calls. */
-	public IWindowObject<E> setObjectID(long l);
+	public default long getObjectID() { return properties().objectId; }
 	/** Returns the name of this object. */
-	public String getObjectName();
+	public default String getObjectName() { return properties().objectName; }
+	
 	/** Sets the name of this object. */
-	public IWindowObject<E> setObjectName(String nameIn);
+	public default void setObjectName(String nameIn) { properties().objectName = nameIn; }
 	
 	//----------------
 	// Drawing Checks
 	//----------------
 	
 	/** Returns true if this object will be drawn on the next draw cycle. */
-	public boolean willBeDrawn();
-	/** Returns true if this object is currently enabled. */
-	public boolean isEnabled();
-	/** Returns true if this object is visible. */
-	public boolean isVisible();
-	/** Returns true if this object is hidden when the hud is not drawn. */
-	public boolean isHidden();
-	/** Returns true if this object will be drawn regardless of it being visible or enabled. */
-	public boolean isAlwaysVisible();
+	public default boolean willBeDrawn() { return properties().isAlwaysVisible || properties().isVisible; }
 	/** Returns true if this object's mouse checks are enforced by a boundary. */
-	public boolean isBoundaryEnforced();
+	public default boolean isBoundaryEnforced() { return properties().boundaryDimension != null; }
+	
 	/** Returns true if this object is resizing. */
 	public default boolean isResizing() {
-		ITopParent t = getTopParent();
+		var t = getTopParent();
 		var modObj = t.getModifyingObject();
 		var modType = t.getModifyType();
-		return modObj == this && modType == ObjectModifyType.Resize && Mouse.isLeftDown();
+		return modObj == this && modType == ObjectModifyType.RESIZE && Mouse.isLeftDown();
 	}
+	
 	/** Returns true if this object is moving. */
 	public default boolean isMoving() {
-		ITopParent t = getTopParent();
-		return t.getModifyingObject() == this && t.getModifyType() == ObjectModifyType.Move;
+		var t = getTopParent();
+		return t.getModifyingObject() == this && t.getModifyType() == ObjectModifyType.MOVE;
 	}
-	/** Returns true if this object will always be drawn on top. */
-	public boolean isAlwaysOnTop();
-	/** Set this object's enabled state. */
-	public IWindowObject<E> setEnabled(boolean val);
-	/** Set this object's visibility. A non-visible object can still run actions if it is still enabled. */
-	public IWindowObject<E> setVisible(boolean val);
-	/** Sets this object to be drawn regardless of it being visible or enabled. */
-	public IWindowObject<E> setAlwaysVisible(boolean val);
-	/** Sets this object to always be drawn on top. */
-	public IWindowObject<E> setAlwaysOnTop(boolean val);
-	/** Sets this object as hidden when the hud is not drawn. */
-	public IWindowObject<E> setHidden(boolean val);
 	
 	//--------
 	// Header
 	//--------
 	
 	/** Returns true if this object has a header. */
-	public default boolean hasHeader() {
-		return StaticWindowObject.hasHeader(this);
-	}
+	public default boolean hasHeader() { return getHeader() != null; }
 	/** If this object has a header, returns the header object, otherwise returns null. */
-	public default WindowHeader getHeader() {
-		return StaticWindowObject.getHeader(this);
+	public default WindowHeader<?> getHeader() {
+		for (var o : getCombinedChildren()) {
+			if (o instanceof WindowHeader<?> h) return h;
+		}
+		return null;
 	}
 	
 	//-------------------
 	// Size And Position
 	//-------------------
 	
-	/** Returns true if this object is resizeable. */
-	public boolean isResizeable();
-	/** Returns true if this object's position cannot be modified. */
-	public boolean isMoveable();
-	/** Returns the minimum width that this object can have. */
-	public double getMinWidth();
-	/** Returns the minimum height that this object can have. */
-	public double getMinHeight();
-	/** Returns the maximum width that this object can have. */
-	public double getMaxWidth();
-	/** Returns the maximum height that this object can have. */
-	public double getMaxHeight();
-	/** Sets both the minimum width and height for this object. */
-	public IWindowObject<E> setMinDims(double widthIn, double heightIn);
-	/** Sets both the maximum width and height for this object. */
-	public IWindowObject<E> setMaxDims(double widthIn, double heightIn);
-	/** Sets the minimum width for this object when resizing. */
-	public IWindowObject<E> setMinWidth(double widthIn);
-	/** Sets the minimum height for this object when resizing. */
-	public IWindowObject<E> setMinHeight(double heightIn);
-	/** Sets the maximum width for this object when resizing. */
-	public IWindowObject<E> setMaxWidth(double widthIn);
-	/** Sets the maximum height for this object when resizing. */
-	public IWindowObject<E> setMaxHeight(double heightIn);
-	/** Sets whether this object can be resized or not. */
-	public IWindowObject<E> setResizeable(boolean val);
-	/** Sets this object's position as unmodifiable. */
-	public IWindowObject<E> setMoveable(boolean val);
-	/** Returns the current position of this object. */
-	public Box2<Double, Double> getPosition();
-	/** Returns the position this object will relocate to when reset. */
-	public Box2<Double, Double> getInitialPosition();
-	/** Specifies the position this object will relocate to when its' position is reset. */
-	public void setInitialPosition(double startXIn, double startYIn);
 	/** Returns the current dimensions of this object. */
-	public EDimension getDimensions();
-	/** Specifies this objects position, width, and height. (x, y, width, height) */
-	public void setDimensions(double startXIn, double startYIn, double widthIn, double heightIn);
-	/** Centers the object around the center of the screen with proper dimensions. */
-	public IWindowObject<E> centerObjectWithSize(double widthIn, double heightIn);
-	/** Moves this object back to it's initial position that it had upon its creation. */
-	public IWindowObject<E> resetPosition();
+	public default EDimension getDimensions() { return instance().getDimensions(); }
+	/** Returns the current position of this object. */
+	public default Box2<Double, Double> getPosition() { return instance().getPosition(); }
+	/** Returns the position this object will relocate to when reset. */
+	public default Box2<Double, Double> getInitialPosition() { return instance().getInitialPosition(); }
+	/** Returns the minimum width and height that this object can have. */
+	public default Box2<Double, Double> getMinDims() { return instance().getMinDims(); }
+	/** Returns the maximum width and height that this object can have. */
+	public default Box2<Double, Double> getMaxDims() { return instance().getMaxDims(); }
+	/** Returns the minimum width that this object can have. */
+	public default double getMinWidth() { return instance().getMinWidth(); }
+	/** Returns the minimum height that this object can have. */
+	public default double getMinHeight() { return instance().getMinHeight(); }
+	/** Returns the maximum width that this object can have. */
+	public default double getMaxWidth() { return instance().getMaxWidth(); }
+	/** Returns the maximum height that this object can have. */
+	public default double getMaxHeight() { return instance().getMaxHeight(); }
 	
 	/** Specifies this objects position, width, and height using an EDimension object. */
-	public default void setDimensions(EDimension dimIn) {
-		setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height);
-	}
-	
+	public default void setDimensions(EDimension dimIn) { instance().setDimensions(dimIn); }
+	/** Specifies this objects position, width, and height. (x, y, width, height) */
+	public default void setDimensions(double x, double y, double w, double h) { instance().setDimensions(x, y, w, h); }
+	/** Specifies the position this object will relocate to when its' position is reset. */
+	public default void setInitialPosition(double x, double y) { instance().setInitialPosition(x, y); }
+	/** Sets both the minimum width and height for this object. */
+	public default void setMinDims(double w, double h) { instance().setMinDims(w, h); }
+	/** Sets both the maximum width and height for this object. */
+	public default void setMaxDims(double w, double h) { instance().setMaxDims(w, h); }
+	/** Sets the minimum width for this object when resizing. */
+	public default void setMinWidth(double w) { instance().setMinWidth(w); }
+	/** Sets the minimum height for this object when resizing. */
+	public default void setMinHeight(double h) { instance().setMinHeight(h); }
+	/** Sets the maximum width for this object when resizing. */
+	public default void setMaxWidth(double w) { instance().setMaxWidth(w); }
+	/** Sets the maximum height for this object when resizing. */
+	public default void setMaxHeight(double h) { instance().setMaxHeight(h); }
+
 	/** Specifies this object's width and height based on the current starting position. */
-	public default void setSize(double widthIn, double heightIn) {
-		EDimension dims = getDimensions();
-		setDimensions(dims.startX, dims.startY, widthIn, heightIn);
+	public default void setSize(double widthIn, double heightIn) { instance().setSize(widthIn, heightIn); }
+	
+	/** Centers the object around the center of the screen with proper dimensions. */
+	public default void centerObjectWithSize(double w, double h) { instance().centerGuiWithSize(w, h); }
+	/** Moves this object back to it's initial position that it had upon its creation. */
+	public default void resetPosition() { instance().resetPosition(); }
+
+	/**
+	 * Returns true if the parent of this object is moving in regards to
+	 * its top parent
+	 * 
+	 * @return True if base object's parent is moving
+	 */
+	public default boolean isParentMoving() {
+		return isObjectMoving(getParent());
 	}
 	
 	/** Moves the object by the specified x and y values. Does not move the
 	 *  object to specified coordinates however. Use setPosition() instead. */
 	public default void move(double newX, double newY) {
-		StaticWindowObject.move(this, newX, newY);
+		//only move if actually move-able and there is a value to move by
+		if (!isMoveable() || (newX == 0 && newY == 0)) return;
+		
+		//post moving event
+		postEvent(new EventModify(this, this, ObjectModifyType.MOVE));
+		
+		//get all of the children in the object that aren't locked in place
+		for (var o : getCombinedChildren().filter(o -> o.isMoveable())) {
+			//only move the window if it moves with the parent
+			if (o instanceof WindowParent<?> p) {
+				if (p.movesWithParent()) o.move(newX, newY);
+			}
+			else o.move(newX, newY);
+		}
+		
+		EDimension d = getDimensions();
+		//offset the original position by the specified offset
+		setDimensions(d.startX + newX, d.startY + newY, d.width, d.height);
+		
+		//also move the boundary enforcer, if there is one
+		if (isBoundaryEnforced()) {
+			EDimension b = getBoundaryEnforcer();
+			getBoundaryEnforcer().setPosition(b.startX + newX, b.startY + newY);
+		}
 	}
 	
-	/** Resizes this object by an amount in both the x and y axies, specified
+	/** Resizes this object by an amount in both the x and y axis, specified
 	 *  by the given Direction. */
 	public default void resize(double xIn, double yIn, ScreenLocation areaIn) {
-		StaticWindowObject.resize(this, xIn, yIn, areaIn);
+		postEvent(new EventModify(this, this, ObjectModifyType.RESIZE)); //post an event
+		//make sure that there is actually a change in the cursor position
+		if (xIn == 0 && yIn == 0) return;
+
+		EDimension d = getDimensions();
+		double minW = getMinWidth();
+		double minH = getMinHeight();
+		double maxW = getMaxWidth();
+		double maxH = getMaxHeight();
+		double x = 0, y = 0, w = 0, h = 0;
+		
+		//boolean e = false, s = false;
+		//perform resizing on different sides depending on the side that's being resized
+		switch (areaIn) {
+		case TOP: x = d.startX; y = d.startY + yIn; w = d.width; h = d.height - yIn; break;
+		case BOT: x = d.startX; y = d.startY; w = d.width; h = d.height + yIn; break;
+		case RIGHT: x = d.startX; y = d.startY; w = d.width + xIn; h = d.height; break;
+		case LEFT: x = d.startX + xIn; y = d.startY; w = d.width - xIn; h = d.height; break;
+		case TOP_RIGHT: x = d.startX; y = d.startY + yIn; w = d.width + xIn; h = d.height - yIn; break;
+		case BOT_RIGHT: x = d.startX; y = d.startY; w = d.width + xIn; h = d.height + yIn; break;
+		case TOP_LEFT: x = d.startX + xIn; y = d.startY + yIn; w = d.width - xIn; h = d.height - yIn; break;
+		case BOT_LEFT: x = d.startX + xIn; y = d.startY; w = d.width - xIn; h = d.height + yIn; break;
+		default: break;
+		}
+		
+		//restrict the object to its allowed minimum width
+		if (w < minW) {
+			w = minW;
+			switch (areaIn) {
+			case RIGHT: case TOP_RIGHT: case BOT_RIGHT: x = d.startX; break;
+			case LEFT: case TOP_LEFT: case BOT_LEFT: x = d.endX - w; break;
+			default: break;
+			}
+		}
+		
+		//restrict the object to its allowed maximum width
+		if (w > maxW) {
+			w = maxW;
+			switch (areaIn) {
+			case RIGHT: case TOP_RIGHT: case BOT_RIGHT: x = d.startX; break;
+			case LEFT: case TOP_LEFT: case BOT_LEFT: x = d.endX - w; break;
+			default: break;
+			}
+		}
+		
+		//restrict the object to its allowed minimum height
+		if (h < minH) {
+			h = minH;
+			switch (areaIn) {
+			case TOP: case TOP_RIGHT: case TOP_LEFT: y = d.endY - h; break;
+			case BOT: case BOT_RIGHT: case BOT_LEFT: y = d.startY; break;
+			default: break;
+			}
+		}
+		
+		//restrict the object to its allowed maximum height
+		if (h > maxH) {
+			h = maxH;
+			switch (areaIn) {
+			case TOP: case TOP_RIGHT: case TOP_LEFT: y = d.endY - h; break;
+			case BOT: case BOT_RIGHT: case BOT_LEFT: y = d.startY; break;
+			default: break;
+			}
+		}
+		
+		//set the dimensions of the object to the resized dimensions
+		setDimensions(x, y, w, h);
+		
+		//(lazy approach) re-make all the children based on the resized dimensions
+		reInitChildren();
+		var top = getTopParent();
+		if (top != null) top.setFocusedObject(this);
 	}
 	
 	/** Move this object and all of its children to the specified x and y coordinates.
 	 *  The specified position represents the top left corner of this object. All children
 	 *  will remain in their original positions relative to the parent object. */
 	public default void setPosition(double newX, double newY) {
-		StaticWindowObject.setPosition(this, newX, newY);
+		//only move this object and its children if it is move-able
+		if (!isMoveable()) return;
+		
+		EDimension d = getDimensions();		
+		//the object's current position and relative clickArea for shorter code
+		var loc = new Box2<>(d.startX, d.startY);
+		
+		//holder to store each object and their relative child locations
+		BoxList<IWindowObject<?>, Box2<Double, Double>> previousLocations = new BoxList<>();
+		
+		//grab all immediate objects
+		var objs = getCombinedChildren();
+		
+		//get each of the object's children's relative positions and click-able areas relative to each child
+		for (var o : objs) {
+			var dims = o.getDimensions();
+			var prev = new Box2<>(dims.startX - loc.getA(), dims.startY - loc.getB());
+			previousLocations.add(o, prev);
+		}
+		
+		//apply the new location to parent
+		setDimensions(newX, newY, d.width, d.height); //move the object to the new position
+		
+		//apply the new location to each child
+		for (var o : objs) {
+			//don't move the child if its position is locked
+			if (!o.isMoveable()) continue;
+			
+			var oldLoc = previousLocations.getBoxWithA(o).getB();
+			//move the child to the new location with the parent's offset
+			o.setPosition(newX + oldLoc.getA(), newY + oldLoc.getB()); 
+		}
 	}
 	
-	//--------
-	// Groups
-	//--------
+	//---------------
+	// Object Groups
+	//---------------
 	
 	/** Returns this object's object group, if any. */
-	public default EObjectGroup getObjectGroup() { return null; }
+	public default EObjectGroup getObjectGroup() { return properties().objectGroup; }
 	/** Sets this object's object group. */
-	public default IWindowObject<E> setObjectGroup(EObjectGroup groupIn) { return this; }
+	public default void setObjectGroup(EObjectGroup groupIn) { properties().objectGroup = groupIn; }
 	/** Event fired when any object within the object group fires an event. */
 	public default void onGroupNotification(ObjectEvent e) {}
 	
-	//---------
-	// Objects
-	//---------
+	//----------
+	// Children
+	//----------
 
 	/** Returns a list of all objects that are directly children of this object. */
-	public EArrayList<IWindowObject<?>> getObjects();
+	public default EArrayList<IWindowObject<?>> getChildren() { return properties().children; }
 	/** Returns a list of all objects that are going to be added on the next draw cycle */
-	public EArrayList<IWindowObject<?>> getAddingObjects();
+	public default EArrayList<IWindowObject<?>> getAddingChildren() { return properties().childrenToBeAdded; }
 	/** Returns a list of all objects that are going to be removed on the next draw cycle */
-	public EArrayList<IWindowObject<?>> getRemovingObjects();
+	public default EArrayList<IWindowObject<?>> getRemovingChildren() { return properties().childrenToBeRemoved; }
 
-	/** Returns a list of all objects that descend from this parent. */
+	/** Returns a list of all children that descend from this parent. */
 	public default EArrayList<IWindowObject<?>> getAllChildren() {
-		return StaticWindowObject.getAllChildren(this);
+		EArrayList<IWindowObject<?>> foundObjs = new EArrayList<>();
+		EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList<>();
+		EArrayList<IWindowObject<?>> workList = new EArrayList<>();
+		
+		//grab all immediate children and add them to foundObjs, then check if any have children of their own
+		getChildren().forEach(o -> {
+			foundObjs.add(o);
+			if (!o.getCombinedChildren().isEmpty()) objsWithChildren.add(o);
+		});
+		
+		//load the workList with every child found on each object
+		objsWithChildren.forEach(c -> workList.addAll(c.getCombinedChildren()));
+		
+		//only work as long as there are still child layers to process
+		while (workList.isNotEmpty()) {
+			//update the foundObjs
+			foundObjs.addAll(workList);
+			
+			//for the current layer, find all objects that have children
+			objsWithChildren.clear();
+			workList.filterForEach(o -> o.getCombinedChildren().isNotEmpty(), objsWithChildren::add);
+			
+			//put all children on the next layer into the work list
+			workList.clear();
+			objsWithChildren.forEach(c -> workList.addAll(c.getCombinedChildren()));
+		}
+		
+		return foundObjs;
 	}
 	
-	/** Returns a list of all children from 'getAllChildren()' that
-	 *  are currently under the mouse. */
+	/**
+	 * Returns a list of all children from 'getAllChildren()' that are
+	 * currently under the mouse.
+	 */
 	public default EArrayList<IWindowObject<?>> getAllChildrenUnderMouse() {
-		return StaticWindowObject.getAllChildrenUnderMouse(this, Mouse.getMx(), Mouse.getMy());
+		//only add objects if they are visible and if the cursor is over them.
+		return getAllChildren().filterNull(o -> o.willBeDrawn() && o.isMouseInside());
 	}
 	
-	/** Returns true if the specified object is a child of the parent
-	 *  or is being added to the parent. */
+	/**
+	 * Returns true if the specified object is a child of the parent or is
+	 * being added to the parent.
+	 */
 	public default boolean containsObject(IWindowObject<?> object) {
-		return getCombinedObjects().contains(object);
+		return getCombinedChildren().contains(object);
 	}
 	
 	/** Returns true if the specified object type is a child of the
@@ -268,29 +743,93 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	}
 	
 	/** Checks if this object is a child of the specified object. */
-	public default boolean isChildOf(IWindowObject<?> objIn) {
-		return StaticWindowObject.isChildOfObject(this, objIn);
+	public default boolean isChildOf(IWindowObject<?> parent) {
+		//prevent checking if there is nothing to check against
+		if (parent == null) return false;
+		
+		//keep track of current parent
+		var parentObj = getParent();
+		
+		//recursively check through the object's parent lineage to see if that parent is the possible parent
+		while (parentObj != null) {
+			if (parentObj == parent) return true;
+			//check for infinite loops
+			if (parentObj == parentObj.getParent()) break;
+			parentObj = parentObj.getParent();
+		}
+		
+		return false;
 	}
 	
-	/** Adds a child IWindowObject to this object. The object is added
-	 *  before the next draw cycle. */
-	public default IWindowObject<E> addObject(IWindowObject<?>... objs) {
-		StaticWindowObject.addObject(this, objs);
-		return this;
+	/**
+	 * Adds a child IWindowObject to this object. The object is added
+	 * before the next draw cycle.
+	 * <p>
+	 * This method starts the process of adding a child to this object.
+	 * Children are fully added on the next draw cycle. There is an issue
+	 * where a child of a child can be added to the parent again.
+	 * 
+	 * @param objs The objects to add as children
+	 */
+	public default void addChild(IWindowObject<?>... objs) {
+		for (var o : objs) {
+			//prevent null additions
+			if (o == null) continue;
+			//prevent self additions
+			if (o == this) continue;
+			//don't add if already being removed
+			if (getRemovingChildren().contains(o)) continue;
+			//don't add if the object is either being added or is already in the object
+			//this only goes 1 layer deep however!
+			if (getCombinedChildren().contains(o)) {
+				System.out.println(this + " already contains " + o + "!");
+				continue;
+			}
+			
+			try {
+				o.properties().isBeingAdded = true;
+				
+				//prevent multiple headers being added
+				if (o instanceof WindowHeader<?> && hasHeader()) continue;
+				//if it's a window, do it's init
+				if (o instanceof WindowParent<?> p && !o.isInit()) p.initWindow();
+				
+				//initialize all of the children's children
+				o.setParent(this);
+				o.initChildren();
+				o.onChildrenInit();
+				
+				//o.setZLevel(parent.getZLevel() + o.getZLevel() + 1); //increment the child's z layer based off of the parent
+				//if the parent has a boundary enforcer, apply it to the child as well
+				if (isBoundaryEnforced()) o.setBoundaryEnforcer(getBoundaryEnforcer());
+				
+				//give the processed child to the parent so that it will be added
+				getAddingChildren().add(o);
+				//tell the child that it has been fully initialized and that it is ready to be added on the next draw cycle
+				o.onInit();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	/** Removes a child IWindowObject to this object. If this object does
-	 *  not contain the specified child, no action is performed. The object
-	 *  is removed before the next draw cycle. */
-	public default IWindowObject<E> removeObject(IWindowObject<?>... objs) {
-		StaticWindowObject.removeObject(this, objs);
-		return this;
+	/**
+	 * Removes a child IWindowObject to this object. If this object does
+	 * not contain the specified child, no action is performed. The object
+	 * is removed before the next draw cycle.
+	 */
+	public default void removeChild(IWindowObject<?>... objs) {
+		EUtil.filterNullForEach(objs, o -> o.properties().isBeingRemoved = true);
+		getRemovingChildren().add(objs);
 	}
 	
-	/** Returns a list combining the objects currently within within this
-	 *  object as well as the ones being added. */
-	public default EArrayList<IWindowObject<?>> getCombinedObjects() {
-		return EArrayList.combineLists(getObjects(), getAddingObjects());
+	/**
+	 * Returns a list combining the objects currently within within this
+	 * object as well as the ones being added.
+	 */
+	public default EArrayList<IWindowObject<?>> getCombinedChildren() {
+		return EArrayList.combineLists(getChildren(), getAddingChildren());
 	}
 	
 	//---------
@@ -298,71 +837,102 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//---------
 	
 	/** Returns this object's direct parent object. */
-	public IWindowObject<?> getParent();
+	public default IWindowObject<?> getParent() { return properties().parent; }
 	/** Sets this object's parent. */
-	public IWindowObject<E> setParent(IWindowObject<?> parentIn);
+	public default void setParent(IWindowObject<?> parentIn) { properties().parent = parentIn; }
 	
 	/** Returns the top most parent object in the parent chain. */
 	public default ITopParent<?> getTopParent() {
-		return StaticWindowObject.getTopParent(this);
+		var parentObj = getParent();
+		//recursively check through the object's parent lineage to see if that parent is a topParentdw
+		while (parentObj != null) {
+			if (parentObj instanceof ITopParent<?> top) return top;
+			//break if the parent is itself
+			if (parentObj == parentObj.getParent()) break;
+			parentObj = parentObj.getParent();
+		}
+		return (this instanceof ITopParent<?> t) ? t : null;
 	}
 	
 	/** Returns the first instance of a WindowParent in the parent chain. */
 	public default IWindowParent<?> getWindowParent() {
-		return StaticWindowObject.getWindowParent(this);
+		var parentObj = getParent();
+		//recursively check through the object's parent lineage to see if that parent is a window
+		while (parentObj != null && !(parentObj instanceof ITopParent<?>)) {
+			if (parentObj instanceof IWindowParent<?> p) return p;
+			//break if the parent is itself
+			if (parentObj == parentObj.getParent()) break;
+			parentObj = parentObj.getParent();
+		}
+		return (this instanceof IWindowParent<?> p) ? p : null;
 	}
 	
 	//-------
 	// Focus
 	//-------
 	
-	/** Returns the object that will recieve foucs by default when
-	 *  the base object has foucs transfered to it. */
-	public IWindowObject<?> getDefaultFocusObject();
-	/** Sets a default focus object for this object. When the main
-	 *  object recieves focus, the top parent will attempt to transfer
-	 *  focus to the specified default focus object. */
-	public IWindowObject<E> setDefaultFocusObject(IWindowObject<?> objectIn);
-	
-	/** Returns true if this object is the current focus owner in
-	 *  it's top parent object. */
-	public default boolean hasFocus() {
-		ITopParent<?> t = getTopParent();
-		if (t.getFocusedObject() != null) {
-			return t.getFocusedObject().equals(this);
-		}
-		return false;
+	/**
+	 * Returns the object that will receive focus by default when the base
+	 * object has focus transfered to it.
+	 */
+	public default IWindowObject<?> getDefaultFocusObject() {
+		return properties().defaultFocusObject;
 	}
 	
-	/** Signals the top parent to transfer focus from this object to the
-	 *  top parent's default focus object on the next draw cycle. If this
-	 *  object has a focus lock set, the lock will be removed and focus will
-	 *  be transfered to the top parent's default focus object on the next draw cycle. */
+	/**
+	 * Sets a default focus object for this object. When the main object
+	 * receives focus, the top parent will attempt to transfer focus to
+	 * the specified default focus object.
+	 */
+	public default void setDefaultFocusObject(IWindowObject<?> objectIn) {
+		properties().defaultFocusObject = objectIn;
+	}
+	
+	/**
+	 * Returns true if this object is the current focus owner in it's top
+	 * parent object.
+	 */
+	public default boolean hasFocus() {
+		var fo = getTopParent().getFocusedObject();
+		return (fo != null) ? fo.equals(this) : false;
+	}
+	
+	/**
+	 * Signals the top parent to transfer focus from this object to the
+	 * top parent's default focus object on the next draw cycle. If this
+	 * object has a focus lock set, the lock will be removed and focus
+	 * will be transfered to the top parent's default focus object on the
+	 * next draw cycle.
+	 */
 	public default boolean relinquishFocus() {
-		ITopParent<?> t = getTopParent();
+		var t = getTopParent();
 		if (t.doesFocusLockExist()) {
 			if (t.getFocusLockObject().equals(this)) {
-				t.setObjectRequestingFocus(t, FocusType.Transfer);
+				t.setObjectRequestingFocus(t, FocusType.TRANSFER);
 				return true;
 			}
 			return false;
 		}
-		t.setObjectRequestingFocus(t, FocusType.Transfer);
+		t.setObjectRequestingFocus(t, FocusType.TRANSFER);
 		return true;
 	}
 	
-	/** Focus event that is called when this object is given focus from its top parent. */
+	/**
+	 * Focus event that is called when this object is given focus from its
+	 * top parent.
+	 */
 	public default void onFocusGained(EventFocus eventIn) {
-		postEvent(new EventFocus(this, this, FocusType.Gained));
+		postEvent(new EventFocus(this, this, FocusType.GAINED));
+		//check if this is the first time this object has received parent focus
+		if (!hasReceivedFocus()) onInitialFocusGained();
 		
-		if (eventIn.getFocusType().equals(FocusType.MousePress)) {
+		if (eventIn.getFocusType().equals(FocusType.MOUSE_PRESS)) {
 			mousePressed(eventIn.getMX(), eventIn.getMY(), eventIn.getActionCode());
+			var t = getTopParent();
 			
-			ITopParent<?> t = getTopParent();
-			
-			//check if elligible for a double click event
+			//check if eligible for a double click event
 			if (eventIn.getActionCode() == 0) {
-				IWindowObject<?> lastClicked = t.getLastClickedObject();
+				var lastClicked = t.getLastClickedObject();
 				if (lastClicked == this) {
 					long clickTime = t.getLastClickTime();
 					
@@ -379,26 +949,36 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		if (default_obj != null) default_obj.requestFocus();
 	}
 	
-	/** Focus event that is called when this object loses focus in any way. */
+	/**
+	 * Focus event that is called when this object loses focus in any way.
+	 */
 	public default void onFocusLost(EventFocus eventIn) {
-		postEvent(new EventFocus(this, this, FocusType.Lost));
+		postEvent(new EventFocus(this, this, FocusType.LOST));
 	}
 	
-	/** Signals the top parent to transfer focus from this object to the object specified on the next draw cycle. */
+	/**
+	 * Signals the top parent to transfer focus from this object to the
+	 * object specified on the next draw cycle.
+	 */
 	public default void transferFocus(IWindowObject<?> objIn) {
-		ITopParent<?> t = getTopParent();
+		var t = getTopParent();
 		
 		if (t.doesFocusLockExist() && getTopParent().getFocusLockObject().equals(this)) {
 			if (objIn != null) {
 				t.clearFocusLockObject();
-				t.setObjectRequestingFocus(objIn, FocusType.Transfer);
+				t.setObjectRequestingFocus(objIn, FocusType.TRANSFER);
 			}
 		}
-		else if (objIn != null) t.setObjectRequestingFocus(objIn, FocusType.Transfer);
+		else if (objIn != null) t.setObjectRequestingFocus(objIn, FocusType.TRANSFER);
 	}
-	/** Used to draw a visible border around an object whose focus is locked. A focus lock does not need to be in place in order for this to be called however. */
+	
+	/**
+	 * Used to draw a visible border around an object whose focus is
+	 * locked. A focus lock does not need to be in place in order for this
+	 * to be called however.
+	 */
 	public default void drawFocusLockBorder() {
-		if (willBeDrawn() && getObjects().containsNoInstanceOf(FocusLockBorder.class)) {
+		if (willBeDrawn() && getChildren().containsNoInstanceOf(FocusLockBorder.class)) {
 			WindowHeader h = getHeader();
 			EDimension dims = getDimensions();
 			FocusLockBorder flb;
@@ -408,19 +988,23 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 			}
 			else flb = new FocusLockBorder(this);
 			
-			addObject(flb);
+			addChild(flb);
 		}
 	}
 	
-	/** Signals the top parent to try transfering focus to this object
-	 *  on the next draw cycle. If another object has a focus lock, this
-	 *  object will not receive focus */ 
+	/**
+	 * Signals the top parent to try transferring focus to this object on
+	 * the next draw cycle. If another object has a focus lock, this
+	 * object will not receive focus
+	 */
 	public default void requestFocus() {
-		requestFocus(FocusType.Transfer);
+		requestFocus(FocusType.TRANSFER);
 	}
 	
-	/** Same as the previous request focus but the exact type of focus
-	 *  event can be specified. */
+	/**
+	 * Same as the previous request focus but the exact type of focus
+	 * event can be specified.
+	 */
 	public default void requestFocus(FocusType typeIn) {
 		getTopParent().setObjectRequestingFocus(this, typeIn);
 	}
@@ -430,22 +1014,45 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//--------------
 	
 	/** Specifies a region that this object will adhere to for mouse checks. */
-	public void setBoundaryEnforcer(EDimension dimIn);
-	/** Returns an EDimension object containing the boundary this object is bounded by */
-	public EDimension getBoundaryEnforcer();
-	/** Returns true if this object can be clicked on. */
-	public boolean isClickable();
-	/** Specifies if this object can be clicked on. */
-	public void setClickable(boolean valIn);
+	public default void setBoundaryEnforcer(EDimension dimIn) { properties().boundaryDimension = dimIn; }
+	/** Returns the boundary for which this object is bounded by. */
+	public default EDimension getBoundaryEnforcer() { return properties().boundaryDimension; }
 	
 	/** Returns true if the mouse is on the edge of an object. */
 	public default boolean isMouseOnEdge(int mX, int mY) {
 		return willBeDrawn() && getEdgeSideMouseIsOn() != ScreenLocation.OUT;
 	}
 	
-	/** Returns the edge type that the mouse is currently hovering over, if any. */
+	/**
+	 * Returns the edge that the mouse is currently hovering over, if any.
+	 */
 	public default ScreenLocation getEdgeSideMouseIsOn() {
-		return StaticWindowObject.getEdgeAreaMouseIsOn(this, Mouse.getMx(), Mouse.getMy());
+		EDimension d = getDimensions();
+		boolean left = false, right = false, top = false, bottom = false;
+		double rStartY = hasHeader() ? getHeader().startY : d.startY;
+		int mX = Mouse.getMx();
+		int mY = Mouse.getMy();
+		
+		if (mX >= d.startX - 5 && mX <= d.endX + 5 && mY >= rStartY - 5 && mY <= d.endY + 4) {
+			if (mX >= d.startX - 5 && mX <= d.startX) left = true;
+			if (mX >= d.endX - 4 && mX <= d.endX + 5) right = true;
+			if (mY >= rStartY - 6 && mY <= rStartY) top = true;
+			if (mY >= d.endY - 4 && mY <= d.endY + 4) bottom = true;
+			if (left) {
+				if (top) return ScreenLocation.TOP_LEFT;
+				else if (bottom) return ScreenLocation.BOT_LEFT;
+				else return ScreenLocation.LEFT;
+			}
+			else if (right) {
+				if (top) return ScreenLocation.TOP_RIGHT;
+				else if (bottom) return ScreenLocation.BOT_RIGHT;
+				else return ScreenLocation.RIGHT;
+			} 
+			else if (top) return ScreenLocation.TOP;
+			else if (bottom) return ScreenLocation.BOT;
+		}
+		
+		return ScreenLocation.OUT;
 	}
 	
 	/** Event fired upon the mouse entering this object. */
@@ -458,43 +1065,103 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		postEvent(new EventMouse(this, mX, mY, -1, MouseType.EXITED));
 	}
 	
-	/** Returns true if the mouse is currently inside this object regardless of z-level. If a boundary enforcer is set, this method will return true if the mouse is inside of the the specified boundary. */
+	/**
+	 * Returns true if the mouse is currently inside this object
+	 * regardless of z-level. If a boundary enforcer is set, this method
+	 * will return true if the mouse is inside of the the specified
+	 * boundary.
+	 */
 	public default boolean isMouseInside() {
-		return StaticWindowObject.isMouseInside(this, Mouse.getMx(), Mouse.getMy());
+		//if the top renderer is being drawn and this object is not a child of the top renderer -- ignore
+		if (QoT.getTopRenderer().hasFocus() && !isChildOf(QoT.getTopRenderer())) return false;
+		
+		EDimension d = getDimensions();
+		int mX = Mouse.getMx();
+		int mY = Mouse.getMy();
+		
+		// check if there is a boundary enforcer limiting the overall area
+		if (isBoundaryEnforced()) {
+			EDimension b = getBoundaryEnforcer();
+			return mX >= d.startX && mX >= b.startX &&
+				   mX <= d.endX && mX <= b.endX &&
+				   mY >= d.startY && mY >= b.startY &&
+				   mY <= d.endY && mY <= b.endY;
+		}
+		
+		// otherwise just check if the mouse is within the object's boundaries
+		return mX >= d.startX && mX <= d.endX && mY >= d.startY && mY <= d.endY;
 	}
 	
-	/** Returns true if the mouse is currently inside this object and that this is the top most object inside of the parent. */
+	/**
+	 * Returns true if the mouse is currently inside this object and that
+	 * this is the top most object inside of the parent.
+	 */
 	public default boolean isMouseOver() {
 		return isMouseInside() && this.equals(getTopParent().getHighestZObjectUnderMouse());
 	}
 	
-	/** Sets this object and every child to be clickable or not. */
+	/** Sets this object and every child to be click-able or not. */
 	public default void setEntiretyClickable(boolean val) {
-		StaticWindowObject.setEntiretyClickable(this, val);
+		getAllChildren().forEach(o -> o.setClickable(val));
+		setClickable(val);
 	}
 	
 	//--------------
 	// Basic Inputs
 	//--------------
 	
-	/** Event fired when the mouse has left clicked on this
-	 *  object at least 2 times in quick succession. */
-	public void onDoubleClick();
+	/**
+	 * Event fired when the mouse has left clicked on this object at least
+	 * 2 times in quick succession.
+	 */
+	public default void onDoubleClick() {}
 	
 	//--------
 	// Events
 	//--------
 	
 	/** Used to send some kind of message to this object. */
-	public void sendArgs(Object... args);
+	public default void sendArgs(Object... args) {
+		if (args.length != 1) return;
+		if (args[0] instanceof String msg) {
+			if (!msg.toLowerCase().equals("reload")) return;
+			
+			boolean any = false;
+			for (var o : getAllChildren()) {
+				if (o.hasFocus()) {
+					any = true;
+					break;
+				}
+			}
+			
+			reInitChildren();
+			if (any) requestFocus();
+		}
+	}
+	
 	/** Gets the EventHandler. */
-	public ObjectEventHandler getEventHandler();
+	public default ObjectEventHandler getEventHandler() {
+		return properties().eventHandler;
+	}
+	
 	/** Register an object that listens to this object's events. */
-	public void registerListener(IWindowObject<?> objIn);
+	public default void registerListener(IWindowObject<?> objIn) {
+		var handler = properties().eventHandler;
+		if (handler != null) handler.registerObject(objIn);
+	}
+	
 	/** Unregister a listener Object. */
-	public void unregisterListener(IWindowObject<?> objIn);
+	public default void unregisterListener(IWindowObject<?> objIn) {
+		var handler = properties().eventHandler;
+		if (handler != null) handler.unregisterObject(objIn);
+	}
+	
 	/** Broadcasts an ObjectEvent on this object. */
-	public void postEvent(ObjectEvent e);
+	public default void postEvent(ObjectEvent e) {
+		var handler = properties().eventHandler;
+		if (handler != null) handler.processEvent(e);
+	}
+	
 	/** Called on ObjectEvents. */
 	public default void onEvent(ObjectEvent e) {}
 	
@@ -503,70 +1170,106 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//--------
 	
 	/** Event called whenever a child IActionObject's action is triggered. */
-	public void actionPerformed(IActionObject<?> object, Object... args);
+	public default void actionPerformed(IActionObject<?> object, Object... args) {
+		postEvent(new EventAction(this, object, args));
+	}
 	
 	//--------------
 	// Close Object
 	//--------------
 	
-	/** Returns whether this object can be closed or not. */
-	public boolean isCloseable();
-	/** Returns true is this object has been closed. */
-	public boolean isClosed();
-	/** Sets whether this object can be closed or not. */
-	public void setCloseable(boolean val);
-	/** Removes this object and all of it's children from the immeadiate a parent. Removes any present focus locks on this object and returns focus back to the top parent. */
-	public default void close() { close(true); }
-	/** Removes this object and all of it's children from the immeadiate a parent. Removes any present focus locks on this object and returns focus back to the top parent. */
-	public void close(boolean recursive);
 	/** Returns true if this object will close when the hud closes. */
-	public boolean closesWithHud();
+	public default boolean closesWithHud() { return properties().closesWithHud; }
 	/** Sets this object to close when the hud closes. */
-	public void setClosesWithHud(boolean val);
-	/** Event fired when object is closed. */
-	public default void onClosed() {}
+	public default void setClosesWithHud(boolean val) { properties().closesWithHud = true; }
 	/** Upon closing, this object will attempt to transfer it's focus to the specified object if possible. */
-	public void setFocusedObjectOnClose(IWindowObject<?> objIn);
-	/** Internal method used to indicate that this object will be removed soon. */
-	public void setBeingRemoved();
-	/** Returns true if this object is currently scheduled to be removed on the next draw cycle. */
-	public boolean isBeingRemoved();
+	public default void setFocusedObjectOnClose(IWindowObject<?> objIn) { properties().focusObjectOnClose = objIn; }
+	
+	/**
+	 * Removes this object and all of it's children from the immediate a
+	 * parent. Removes any present focus locks on this object and returns
+	 * focus back to the top parent.
+	 */
+	public default void close() {
+		close(true);
+	}
+	
+	/**
+	 * Removes this object and all of it's children from the immediate a
+	 * parent. Removes any present focus locks on this object and returns
+	 * focus back to the top parent.
+	 */
+	public default void close(boolean recursive) {
+		//ignore if not actually closable
+		if (!isClosable()) return;
+		
+		postEvent(new EventObjects(this, this, ObjectEventType.CLOSE));
+		properties().isClosing = true;
+		
+		if (recursive) {
+			for (var o : getAllChildren()) o.close(false);
+		}
+		
+		var p = getTopParent();
+		if (p.doesFocusLockExist() && p.getFocusLockObject().equals(this)) p.clearFocusLockObject();
+		if (properties().focusObjectOnClose != null) properties().focusObjectOnClose.requestFocus();
+		
+		properties().parent.removeChild(this);
+		properties().isClosing = false;
+		onClosed();
+	}
 	
 	//------------------
 	// Parameter Object
 	//------------------
 	
+	/** Returns the object or argument currently stored. */
+	public default E getGenericObject() { return properties().genericObject; }
 	/** Stores some object or argument to be preserved for future use. */
-	public IWindowObject<E> setGenericObject(E objIn);
-	/** Returns the object or arguemnt currently stored. */
-	public E getGenericObject();
+	public default void setGenericObject(E objIn) { properties().genericObject = objIn; }
 	
 	//-----------------
 	// Default setters
 	//-----------------
 	
-	public default void setMoveable(boolean val, IWindowObject... objs) { setVal(o -> o.setMoveable(val), objs); }
-	public default void setResizeable(boolean val, IWindowObject... objs) { setVal(o -> o.setResizeable(val), objs); }
-	public default void setCloseable(boolean val, IWindowObject... objs) { setVal(o -> o.setCloseable(val), objs); }
-	public default void setClickable(boolean val, IWindowObject... objs) { setVal(o -> o.setClickable(val), objs); }
-	public default void setHidden(boolean val, IWindowObject... objs) { setVal(o -> o.setHidden(val), objs); }
-	public default void setEnabled(boolean val, IWindowObject... objs) { setVal(o -> o.setEnabled(val), objs); }
-	public default void setVisible(boolean val, IWindowObject... objs) { setVal(o -> o.setVisible(val), objs); }
-	public default void setPersistent(boolean val, IWindowObject... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
-	public default void setHoverText(String text, IWindowObject... objs) { setVal(o -> o.setHoverText(text), objs); }
+	public default void setMoveable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setMoveable(val), objs); }
+	public default void setResizeable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setResizeable(val), objs); }
+	public default void setCloseable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setCloseable(val), objs); }
+	public default void setClickable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setClickable(val), objs); }
+	public default void setHidden(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setHidden(val), objs); }
+	public default void setEnabled(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setEnabled(val), objs); }
+	public default void setVisible(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setVisible(val), objs); }
+	public default void setPersistent(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
+	public default void setHoverText(String text, IWindowObject<?>... objs) { setVal(o -> o.setHoverText(text), objs); }
 	
-	public static void setMoveableS(boolean val, IWindowObject... objs) { setVal(o -> o.setMoveable(val), objs); }
-	public static void setResizeableS(boolean val, IWindowObject... objs) { setVal(o -> o.setResizeable(val), objs); }
-	public static void setCloseableS(boolean val, IWindowObject... objs) { setVal(o -> o.setCloseable(val), objs); }
-	public static void setClickableS(boolean val, IWindowObject... objs) { setVal(o -> o.setClickable(val), objs); }
-	public static void setHiddenS(boolean val, IWindowObject... objs) { setVal(o -> o.setHidden(val), objs); }
-	public static void setEnabledS(boolean val, IWindowObject... objs) { setVal(o -> o.setEnabled(val), objs); }
-	public static void setVisibleS(boolean val, IWindowObject... objs) { setVal(o -> o.setVisible(val), objs); }
-	public static void setPersistentS(boolean val, IWindowObject... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
-	public static void setHoverTextS(String text, IWindowObject... objs) { setVal(o -> o.setHoverText(text), objs); }
+	//----------------
+	// Static Methods
+	//----------------
 	
-	public static void setVal(Consumer<? super IWindowObject> action, IWindowObject... objs) {
+	public static void setMoveableS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setMoveable(val), objs); }
+	public static void setResizeableS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setResizeable(val), objs); }
+	public static void setCloseableS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setCloseable(val), objs); }
+	public static void setClickableS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setClickable(val), objs); }
+	public static void setHiddenS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setHidden(val), objs); }
+	public static void setEnabledS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setEnabled(val), objs); }
+	public static void setVisibleS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setVisible(val), objs); }
+	public static void setPersistentS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
+	public static void setHoverTextS(String text, IWindowObject<?>... objs) { setVal(o -> o.setHoverText(text), objs); }
+	
+	public static void setVal(Consumer<? super IWindowObject<?>> action, IWindowObject<?>... objs) {
 		EUtil.filterNullForEachA(action, objs);
+	}
+	
+	/**
+	 * Returns true if the object is moving in regards to its top parent.
+	 * 
+	 * @param obj The object to check for movement on
+	 * @return True if moving
+	 */
+	public static boolean isObjectMoving(IWindowObject<?> obj) {
+		if (obj == null) return false;
+		var top = obj.getTopParent();
+		return top.getModifyingObject() == obj && top.getModifyType() == ObjectModifyType.MOVE;
 	}
 	
 }

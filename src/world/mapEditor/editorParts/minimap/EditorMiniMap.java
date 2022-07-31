@@ -3,10 +3,10 @@ package world.mapEditor.editorParts.minimap;
 import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.worldTiles.WorldTile;
 import world.GameWorld;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.editorParts.sidePanel.EditorSidePanel;
+import world.worldTiles.WorldTile;
 
 public class EditorMiniMap extends WindowObject {
 	
@@ -27,7 +27,7 @@ public class EditorMiniMap extends WindowObject {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		
 	}
 	

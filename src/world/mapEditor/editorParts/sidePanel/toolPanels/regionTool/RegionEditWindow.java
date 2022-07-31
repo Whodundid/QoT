@@ -38,7 +38,7 @@ public class RegionEditWindow extends WindowParent {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		//setMessage("Enter a new name for the region");
@@ -50,8 +50,11 @@ public class RegionEditWindow extends WindowParent {
 		entryBox = new WindowTextField(this, midX - w / 2, midY - 3, w, 28);
 		ownColor = new ColorButton(this, endX - 100, startY + 6, 20, 20);
 		
-		confirm = new WindowButton(this, midX - g - bw, endY - 50, bw, 28, "Confirm").setStringColor(EColors.white);
-		cancel = new WindowButton(this, midX + g, endY - 50, bw, 28, "Cancel").setStringColor(EColors.white);
+		confirm = new WindowButton(this, midX - g - bw, endY - 50, bw, 28, "Confirm");
+		cancel = new WindowButton(this, midX + g, endY - 50, bw, 28, "Cancel");
+		
+		confirm.setStringColor(EColors.white);
+		cancel.setStringColor(EColors.white);
 		
 		//assign values
 		entryBox.setText(editName);
@@ -61,9 +64,9 @@ public class RegionEditWindow extends WindowParent {
 		ownColor.setColor(editColor);
 		
 		
-		addObject(entryBox);
-		addObject(ownColor);
-		addObject(confirm, cancel);
+		addChild(entryBox);
+		addChild(ownColor);
+		addChild(confirm, cancel);
 	}
 	
 	@Override

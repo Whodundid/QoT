@@ -13,6 +13,10 @@ import eutil.misc.ScreenLocation;
 
 public class WindowScrollBar<E> extends ActionObject<E> {
 	
+	//--------
+	// Fields
+	//--------
+	
 	public boolean vertical = false;
 	public double scrollBarThickness = 3;
 	public double thumbSize = 50;
@@ -26,26 +30,26 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	protected double thumbEndX = 0, thumbEndY = 0;
 	public boolean isScrolling = false;
 	public boolean renderThumb = true;
-	protected IWindowParent window;
-	private Box2<Integer, Integer> mousePos = new Box2(0, 0);
+	protected IWindowParent<?> window;
+	private Box2<Integer, Integer> mousePos = new Box2<>(0, 0);
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn) {
+	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn) {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, ScreenLocation.RIGHT, 3); 
 	}
 	
-	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn) {
+	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn) {
 		this(parentIn, visibleAmountIn, highValIn, widthIn, heightIn, ScreenLocation.RIGHT, 3);
 	}
 	
-	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn) {
+	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn) {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, sideIn, 3);
 	}
 	
-	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn, int thicknessIn) {
+	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn, int thicknessIn) {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, sideIn, thicknessIn);
 	}
 	
@@ -53,13 +57,13 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, sideIn, 3);
 	}
 	
-	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn, ScreenLocation sideIn, double thicknessIn) {
+	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn, ScreenLocation sideIn, double thicknessIn) {
 		EDimension dim = parentIn.getDimensions();
 		
 		scrollBarThickness = thicknessIn;
 		
-		if (sideIn == ScreenLocation.TOP || sideIn == ScreenLocation.BOT) { vertical = false; }
-		else { vertical = true; }
+		if (sideIn == ScreenLocation.TOP || sideIn == ScreenLocation.BOT) vertical = false;
+		else vertical = true;
 		
 		double sWidth = vertical ? (widthIn < 0 ? scrollBarThickness : widthIn) : (widthIn < 0 ? dim.width - 2 : widthIn);
 		double sHeight = vertical ? (heightIn < 0 ? dim.height - 2 : heightIn) : (heightIn < 0 ? scrollBarThickness : heightIn);
@@ -78,60 +82,14 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		window = getWindowParent();
 	}
 	
-	//-------------------------------------------------------------------------
-	
-	private void setThumb() {
-		if (vertical) {
-			thumbStartX = endX - scrollBarThickness;
-			thumbStartY = startY;
-			thumbEndX = endX;
-			thumbEndY = startY + thumbSize;
-		}
-		else {
-			thumbStartX = startX;
-			thumbStartY = startY;
-			thumbEndX = startX + thumbSize;
-			thumbEndY = startY + scrollBarThickness;
-		}
-	}
-	
-	//-------------------------------------------------------------------------
-	
-	public void onResizeUpdate(double val, double xIn, double yIn, ScreenLocation areaIn) {
-		double hResizeVal = 0;
-		double vResizeVal = 0;
-		
-		switch (areaIn) {
-		case TOP: vResizeVal = -yIn; hResizeVal = 0; break;
-		case BOT: vResizeVal = yIn; hResizeVal = 0; break;
-		case LEFT: vResizeVal = 0; hResizeVal = -xIn; break;
-		case RIGHT: vResizeVal = 0; hResizeVal = xIn; break;
-		case BOT_LEFT: vResizeVal = yIn; hResizeVal = -xIn; break;
-		case BOT_RIGHT: vResizeVal = yIn; hResizeVal = xIn; break;
-		case TOP_LEFT: vResizeVal = -yIn; hResizeVal = -xIn; break;
-		case TOP_RIGHT: vResizeVal = -yIn; hResizeVal = xIn; break;
-		default: break;
-		}
-		
-		if (window != null) {
-
-			//IWindowParent p = window;
-			//EDimension d = p.getDimensions();
-			
-			// unsure why this was commented out ~
-			
-			//if (p.getMinHeight() <= d.height || p.getMaxHeight() >= d.height) { vResizeVal = 0; }
-			//if (p.getMinWidth() <= d.width || p.getMaxWidth() >= d.width) { hResizeVal = 0; }
-		}
-		
-		setScrollPos((int) (val + (vertical ? vResizeVal : hResizeVal)));
-	}
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
-	public WindowScrollBar resetPosition() {
+	public void resetPosition() {
 		super.resetPosition();
 		setScrollPos(scrollPos);
-		return this;
 	}
 	
 	@Override
@@ -152,8 +110,8 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	@Override
 	public void drawObject(int mX, int mY) {
 		if (isScrolling && mousePos != null && mousePos.getA() != null && mousePos.getB() != null) {
-			if (vertical && mY - mousePos.getB() != 0) { moveThumb(0, mY - mousePos.getB()); }
-			else if (mX - mousePos.getA() != 0) { moveThumb(mX - mousePos.getA(), 0); }
+			if (vertical && mY - mousePos.getB() != 0) moveThumb(0, mY - mousePos.getB());
+			else if (mX - mousePos.getA() != 0) moveThumb(mX - mousePos.getA(), 0);
 			mousePos.set(mX, mY);
 		}
 		
@@ -188,6 +146,65 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	@Override
 	public void onFocusLost(EventFocus eventIn) {
 		isScrolling = false;
+	}
+	
+	//---------
+	// Methods
+	//---------
+	
+	public void reset() { setScrollPos(0); }
+	
+	public boolean isMouseInThumb(double mX, double mY) {
+		return (mX >= thumbStartX && mX <= thumbEndX && mY >= thumbStartY && mY <= thumbEndY);
+	}
+	
+	public void onResizeUpdate(double val, double xIn, double yIn, ScreenLocation areaIn) {
+		double hResizeVal = 0;
+		double vResizeVal = 0;
+		
+		switch (areaIn) {
+		case TOP: vResizeVal = -yIn; hResizeVal = 0; break;
+		case BOT: vResizeVal = yIn; hResizeVal = 0; break;
+		case LEFT: vResizeVal = 0; hResizeVal = -xIn; break;
+		case RIGHT: vResizeVal = 0; hResizeVal = xIn; break;
+		case BOT_LEFT: vResizeVal = yIn; hResizeVal = -xIn; break;
+		case BOT_RIGHT: vResizeVal = yIn; hResizeVal = xIn; break;
+		case TOP_LEFT: vResizeVal = -yIn; hResizeVal = -xIn; break;
+		case TOP_RIGHT: vResizeVal = -yIn; hResizeVal = xIn; break;
+		default: break;
+		}
+		
+		if (window != null) {
+
+			//IWindowParent p = window;
+			//EDimension d = p.getDimensions();
+			
+			// unsure why this was commented out ~
+			
+			//if (p.getMinHeight() <= d.height || p.getMaxHeight() >= d.height) { vResizeVal = 0; }
+			//if (p.getMinWidth() <= d.width || p.getMaxWidth() >= d.width) { hResizeVal = 0; }
+		}
+		
+		setScrollPos((int) (val + (vertical ? vResizeVal : hResizeVal)));
+	}
+	
+	//------------------
+	// Internal Methods
+	//------------------
+	
+	private void setThumb() {
+		if (vertical) {
+			thumbStartX = endX - scrollBarThickness;
+			thumbStartY = startY;
+			thumbEndX = endX;
+			thumbEndY = startY + thumbSize;
+		}
+		else {
+			thumbStartX = startX;
+			thumbStartY = startY;
+			thumbEndX = startX + thumbSize;
+			thumbEndY = startY + scrollBarThickness;
+		}
 	}
 	
 	private void moveThumb(double newX, double newY) {
@@ -228,32 +245,6 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		getActionReceiver().actionPerformed(this);
 	}
 	
-	public boolean isMouseInThumb(double mX, double mY) {
-		return (mX >= thumbStartX && mX <= thumbEndX && mY >= thumbStartY && mY <= thumbEndY);
-	}
-	
-	public WindowScrollBar setScrollPos(double pos) {
-		//lastScrollChange = scrollPos + -;
-		pos = pos < visibleAmount ? visibleAmount : pos;
-		pos = pos > highVal ? highVal : pos;
-		//System.out.println("pos pos: " + pos);
-		scrollPos = pos;
-		if (vertical) {
-			thumbStartX = startX;
-			thumbStartY = (int) (startY + (scrollPos - visibleAmount) * interval);
-			thumbEndX = endX;
-			thumbEndY = thumbStartY + thumbSize;
-		}
-		else {
-			thumbStartX = (int) (startX + (scrollPos - visibleAmount) * interval);
-			thumbStartY = startY;
-			thumbEndX = thumbStartX + thumbSize;
-			thumbEndY = endY;
-		}
-		getActionReceiver().actionPerformed(this);
-		return this;
-	}
-	
 	private void calculateScrollPos() {
 		double relativeThumbPos = 0;
 		if (vertical) {
@@ -288,19 +279,47 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		setScrollPos(scrollPos);
 	}
 	
-	public WindowScrollBar reset() { setScrollPos(0); return this; }
-	public WindowScrollBar setRenderThumb(boolean val) { renderThumb = val; return this; }
-	public WindowScrollBar setVisibleAmount(int sizeIn) { visibleAmount = sizeIn; setScrollBarValues(visibleAmount, highVal, (vertical ? height : width)); return this; }
-	public WindowScrollBar setHighVal(double valIn) { setScrollBarValues(visibleAmount, valIn, (drawVertical() ? height : width)); return this; }
-	public WindowScrollBar setLowVal(double valIn) { setScrollBarValues(valIn, highVal, (drawVertical() ? height : width)); return this; }
+	//---------
+	// Getters
+	//---------
 	
-	public boolean drawVertical() { return vertical; }
-	public boolean isThumbRendered() { return renderThumb; }
+	public boolean getDrawVertical() { return vertical; }
+	public boolean getIsThumbRendered() { return renderThumb; }
 	public double getLastScrollChange() { return lastScrollChange; }
 	public double getScrollBarThickness() { return scrollBarThickness; }
 	public double getThumbSize() { return thumbSize; }
 	public double getScrollPos() { return scrollPos; }
 	public double getVisibleAmount() { return visibleAmount; }
 	public double getHighVal() { return highVal; }
+	
+	//---------
+	// Setters
+	//---------
+	
+	public void setScrollPos(double pos) {
+		//lastScrollChange = scrollPos + -;
+		pos = pos < visibleAmount ? visibleAmount : pos;
+		pos = pos > highVal ? highVal : pos;
+		//System.out.println("pos pos: " + pos);
+		scrollPos = pos;
+		if (vertical) {
+			thumbStartX = startX;
+			thumbStartY = (int) (startY + (scrollPos - visibleAmount) * interval);
+			thumbEndX = endX;
+			thumbEndY = thumbStartY + thumbSize;
+		}
+		else {
+			thumbStartX = (int) (startX + (scrollPos - visibleAmount) * interval);
+			thumbStartY = startY;
+			thumbEndX = thumbStartX + thumbSize;
+			thumbEndY = endY;
+		}
+		performAction(this);
+	}
+	
+	public void setRenderThumb(boolean val) { renderThumb = val; }
+	public void setVisibleAmount(int sizeIn) { visibleAmount = sizeIn; setScrollBarValues(visibleAmount, highVal, (vertical ? height : width)); }
+	public void setHighVal(double valIn) { setScrollBarValues(visibleAmount, valIn, (getDrawVertical() ? height : width)); }
+	public void setLowVal(double valIn) { setScrollBarValues(valIn, highVal, (getDrawVertical() ? height : width)); }
 	
 }

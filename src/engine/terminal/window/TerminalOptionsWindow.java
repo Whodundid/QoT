@@ -27,7 +27,7 @@ public class TerminalOptionsWindow extends WindowParent {
 	}
 	
 	@Override
-	public void initObjects() {
+	public void initChildren() {
 		defaultHeader(this);
 		
 		settings = new WindowScrollList(this, startX + 2, startY + 2, width - 4, height - 4);
@@ -69,7 +69,7 @@ public class TerminalOptionsWindow extends WindowParent {
 		
 		settings.fitItemsInList();
 		
-		addObject(settings);
+		addChild(settings);
 	}
 	
 	@Override
