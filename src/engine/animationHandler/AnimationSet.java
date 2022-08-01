@@ -1,4 +1,4 @@
-package engine.renderEngine;
+package engine.animationHandler;
 
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.EArrayList;

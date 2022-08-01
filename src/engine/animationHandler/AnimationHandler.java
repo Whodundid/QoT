@@ -1,4 +1,4 @@
-package engine.renderEngine;
+package engine.animationHandler;
 
 import java.util.HashMap;
 
