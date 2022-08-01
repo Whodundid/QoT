@@ -34,6 +34,8 @@ public class AnimationHandler {
 	
 	/** The entity for which this animation pertains to. */
 	private final Entity theEntity;
+	/** The original Entity's game texture. */
+	private final GameTexture origTex;
 	/** The set of all keyframes on this animation. */
 	private final HashMap<String, AnimationSet> animationSets = new HashMap<>();
 	/** The current game tick continuously counting up. */
@@ -47,6 +49,8 @@ public class AnimationHandler {
 	private AnimationSet currentAnimation;
 	/** The current animation frame. */
 	private int frameIndex = -1;
+	/** Indicates that the current animation will be unloaded after it finishes playing. */
+	private boolean stopAtEnd;
 	
 	//-------------------------------------
 	
@@ -56,6 +60,7 @@ public class AnimationHandler {
 	
 	public AnimationHandler(Entity entIn) {
 		theEntity = entIn;
+		origTex = theEntity.getTexture();
 	}
 	
 	//---------
@@ -66,9 +71,14 @@ public class AnimationHandler {
 	 * Returns the current keyframe aligning with the current animation
 	 * set's update interval.
 	 */
-	public GameTexture onRenderTick() {
+	public void onRenderTick() {
+		var t = update();
+		theEntity.setTexture(t);
+	}
+	
+	private GameTexture update() {
 		//If there is no animation to play, just return the entity's base texture
-		if (currentAnimation == null) return theEntity.getTexture();
+		if (currentAnimation == null) return origTex;
 		
 		//if the animation is actively playing, continue to update animation frames
 		if (playing) {
@@ -82,12 +92,17 @@ public class AnimationHandler {
 		return getNextTexture();
 	}
 	
+	public AnimationSet createAnimationSet(String animationName) {
+		if (animationSets.containsKey(animationName)) return null;
+		return getSetInternal(animationName);
+	}
+	
 	/**
 	 * Resumes the current animation.
 	 * 
 	 * @return True if successful
 	 */
-	public boolean resume() {
+	public boolean play() {
 		if (currentAnimation == null || currentAnimation.isEmpty()) return false;
 		playing = true;
 		return true;
@@ -102,6 +117,40 @@ public class AnimationHandler {
 		if (currentAnimation == null || currentAnimation.isEmpty()) return false;
 		playing = false;
 		return true;
+	}
+	
+	public boolean stop() {
+		if (currentAnimation == null || currentAnimation.isEmpty()) return false;
+		theEntity.setTexture(origTex);
+		playing = false;
+		return true;
+	}
+	
+	public void stopOnceAnimationEnds() {
+		if (currentAnimation == null || currentAnimation.isEmpty()) return;
+	}
+	
+	public void playOnceIfNotAlreadyPlaying(String setName) {
+		if (currentAnimation != null && currentAnimation.getSetName().equals(setName)) return;
+		if (loadAnimation(setName)) {
+			stopAtEnd = true;
+			play();
+		}
+	}
+	
+	public boolean playIfNotAlreadyPlaying(String setName) {
+		if (currentAnimation == null) loadAnimation(setName);
+		if (currentAnimation == null || currentAnimation.isEmpty()) return false;
+		play();
+		return true;
+	}
+	
+	public boolean loadAnimation(String setName) {
+		return setCurrentAnimation(setName);
+	}
+	
+	public boolean unloadAnimation() {
+		return setCurrentAnimation(null);
 	}
 	
 	//---------
@@ -121,7 +170,7 @@ public class AnimationHandler {
 	 * Returns the base texture of the entity.
 	 */
 	public GameTexture getEntitysBaseTexture() {
-		return theEntity.getTexture();
+		return origTex;
 	}
 	
 	/**
@@ -135,20 +184,6 @@ public class AnimationHandler {
 	 */
 	public long getCurrentUpdateInterval() {
 		return (currentAnimation != null) ? currentAnimation.getUpdateInterval() : -1;
-	}
-	
-	/**
-	 * Retrieves the game tick update interval for the specified
-	 * animation.
-	 * <p>
-	 * Returns -1 if no set under the given name was found.
-	 * 
-	 * @param setName The name of the animation
-	 * @return The animation set's game tick update interval
-	 */
-	public long getSetUpdateInterval(String setName) {
-		var set = getSetInternal(setName);
-		return (set != null) ? set.getUpdateInterval() : -1;
 	}
 	
 	/**
@@ -260,6 +295,20 @@ public class AnimationHandler {
 		frameIndex = index;
 	}
 	
+	/**
+	 * Retrieves the game tick update interval for the specified
+	 * animation.
+	 * <p>
+	 * Returns -1 if no set under the given name was found.
+	 * 
+	 * @param setName The name of the animation
+	 * @return The animation set's game tick update interval
+	 */
+	public long getSetUpdateInterval(String setName) {
+		var set = getSetInternal(setName);
+		return (set != null) ? set.getUpdateInterval() : -1;
+	}
+	
 	//------------------
 	// Internal Methods
 	//------------------
@@ -270,6 +319,7 @@ public class AnimationHandler {
 	}
 	
 	private void unloadCurrentWorkingSet() {
+		theEntity.setTexture(origTex);
 		currentAnimation = null;
 		frameIndex = -1;
 	}
@@ -290,7 +340,13 @@ public class AnimationHandler {
 			return;
 		}
 		//otherwise attempt to either wrap around back to 0 or increment
-		if (frameIndex >= currentAnimation.length() - 1) frameIndex = 0;
+		if (frameIndex >= currentAnimation.length() - 1) {
+			if (stopAtEnd) {
+				unloadAnimation();
+				stopAtEnd = false;
+			}
+			else frameIndex = 0;
+		}
 		else frameIndex++;
 	}
 	
@@ -305,8 +361,8 @@ public class AnimationHandler {
 	}
 	
 	private GameTexture getNextTexture() {
-		if (currentAnimation == null) return theEntity.getTexture();
-		return (currentAnimation.isEmpty()) ? currentAnimation.getFrameAtIndex(0) : null;
+		if (currentAnimation == null) return origTex;
+		return (currentAnimation.isNotEmpty()) ? currentAnimation.getFrameAtIndex(frameIndex) : null;
 	}
 	
 }

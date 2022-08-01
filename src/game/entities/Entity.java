@@ -1,5 +1,6 @@
 package game.entities;
 
+import engine.animationHandler.AnimationHandler;
 import eutil.debug.Broken;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
@@ -57,6 +58,9 @@ public abstract class Entity extends GameObject {
 	/** The ID of this entity within the world. -1 by default. */
 	private int entityID = -1;
 	
+	/** The animation handler of this entity. */
+	protected AnimationHandler animationHandler;
+	
 	//--------------
 	// Constructors
 	//--------------
@@ -89,6 +93,13 @@ public abstract class Entity extends GameObject {
 	
 	/** Called from the world whenever an entity collides with another entity. */
 	public void onEntityCollide(Entity collidingEntity) {}
+	
+	/** Called from the world whenever this entity is removed from it. */
+	public void onRemovedFromWorld() {
+		if (animationHandler != null) {
+			animationHandler.unloadAnimation();
+		}
+	}
 	
 	//---------
 	// Methods
