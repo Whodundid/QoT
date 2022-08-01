@@ -138,8 +138,8 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleRece
 		addChild(inputField, history);
 		
 		if (!init) {
-			//history.addTextLine("EMC Terminal initialized..", 0xffff00);
-			//history.addTextLine();
+			history.addTextLine("QoT Terminal initialized..", 0xffff00);
+			history.addTextLine();
 			init = true;
 		}
 		
