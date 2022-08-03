@@ -4,6 +4,7 @@ import engine.renderEngine.GLObject;
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.misc.Rotation;
 import game.entities.Entity;
 import world.GameWorld;
 
@@ -99,6 +100,9 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	protected EArrayList<Entity> entitiesAdding = new EArrayList(10);
 	protected EArrayList<Entity> entitiesRemoving = new EArrayList(10);
 	
+	/** This tile's rotation. */
+	protected Rotation rotation;
+	
 	//--------------
 	// Constructors
 	//--------------
@@ -171,7 +175,7 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 			//if so - don't draw wall side
 			if (wh >= 0) {
 				//draw main texture slightly above main location
-				drawTexture(tex, x, y - wh, w, h, false, tileBrightness);
+				drawTexture(tex, x, y - wh, w, h, false, rotation, tileBrightness);
 				
 				GameTexture side = (sideTex != null) ? sideTex : tex;
 				
@@ -183,7 +187,7 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 				
 				//draw bottom of map edge or if right above a tile with no texture/void
 				if ((tb == null || !tb.hasTexture())) {
-					drawTexture(tex, x, y + h, w, h / 2, false, EColors.changeBrightness(brightness, 145));
+					drawTexture(tex, x, y + h, w, h / 2, false, rotation, EColors.changeBrightness(brightness, 145));
 				}
 			}
 			else {
@@ -191,7 +195,7 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 				double yPos = y + wh;
 				
 				//draw main texture slightly below main location
-				drawTexture(tex, x, yPos, w, h, false, tileBrightness);
+				drawTexture(tex, x, yPos, w, h, false, rotation, tileBrightness);
 				
 				//I don't want to draw if ta is null
 				//but
@@ -215,12 +219,12 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 					//}
 					
 					//draw wall side slightly above
-					drawTexture(side, x, sideWallY, w, wh, false, wallBrightness);
+					drawTexture(side, x, sideWallY, w, wh, false, rotation, wallBrightness);
 				}
 				
 				//draw bottom of map edge or if right above a tile with no texture/void
 				if (tb == null || !tb.hasTexture()) {
-					drawTexture(tex, x, yPos + h, w, (h / 2) - wh, false, EColors.changeBrightness(brightness, 145));
+					drawTexture(tex, x, yPos + h, w, (h / 2) - wh, false, rotation, EColors.changeBrightness(brightness, 145));
 				}
 			}
 		}

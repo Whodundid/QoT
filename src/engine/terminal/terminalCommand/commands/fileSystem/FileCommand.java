@@ -47,8 +47,7 @@ public abstract class FileCommand extends TerminalCommand {
 				termIn.buildTabCompletions(options);
 				if (!termIn.getTab1()) termIn.setTextTabBeing("");
 			}
-			else
-				if (!termIn.getTab1()) {
+			else if (!termIn.getTab1()) {
 				EArrayList<String> options = new EArrayList();
 				
 				File home = new File(System.getProperty("user.dir"));

@@ -2,11 +2,11 @@ package world.worldTiles.categories;
 
 import world.worldTiles.TileCategory;
 import world.worldTiles.WorldTile;
+import world.worldTiles.categories.farm.FarmPlot;
 import world.worldTiles.categories.nature.Bush0;
 import world.worldTiles.categories.nature.CrackedDirt;
 import world.worldTiles.categories.nature.DarkGrass;
 import world.worldTiles.categories.nature.Dirt;
-import world.worldTiles.categories.nature.FarmPlot;
 import world.worldTiles.categories.nature.Grass;
 import world.worldTiles.categories.nature.Mud;
 import world.worldTiles.categories.nature.RedSand;

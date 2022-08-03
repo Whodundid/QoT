@@ -1,4 +1,4 @@
-package world.worldTiles.categories.nature;
+package world.worldTiles.categories.farm;
 
 import assets.textures.WorldTextures;
 import engine.renderEngine.textureSystem.GameTexture;
@@ -37,7 +37,7 @@ public class FarmPlot extends WorldTile {
 	@Override
 	public void onWorldTick() {
 		if (growState == 0) return; //ignore if nothing is planted
-		if (growState >= 4) return; //don't grow past fully grown
+		if (growState >= 3) return; //don't grow past fully grown
 		
 		curGrowAmount++;
 		if (curGrowAmount >= nextGrowStage) {

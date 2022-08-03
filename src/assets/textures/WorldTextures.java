@@ -42,6 +42,7 @@ public class WorldTextures {
 	public static final GameTexture red_sand = new GameTexture("Red Sand", world, "red_sand.png");
 	public static final GameTexture dark_grass = new GameTexture("Dark Grass", world, "dark_grass.png");
 	public static final GameTexture wood_siding = new GameTexture("Wood Siding", world, "wood_siding.png");
+	public static final GameTexture stone_wall = new GameTexture("Stone Wall", world, "stone_wall_0.png");
 	
 	public static void registerTextures(TextureSystem systemIn) {
 		systemIn.registerTexture(grass);
@@ -67,6 +68,7 @@ public class WorldTextures {
 		systemIn.reg(red_sand);
 		systemIn.reg(dark_grass);
 		systemIn.reg(wood_siding);
+		systemIn.reg(stone_wall);
 		
 		textures.add(grass);
 		textures.add(dirt);
@@ -87,6 +89,7 @@ public class WorldTextures {
 		textures.add(red_sand);
 		textures.add(dark_grass);
 		textures.add(wood_siding);
+		textures.add(stone_wall);
 	}
 	
 	public static GameTexture getTextureFromName(String nameIn) {

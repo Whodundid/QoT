@@ -1,7 +1,6 @@
 package world;
 
 import java.util.Comparator;
-
 import engine.inputHandlers.Keyboard;
 import engine.topOverlay.GameTopRenderer;
 import engine.windowLib.windowUtil.EGui;
@@ -129,7 +128,7 @@ public class WorldRenderer extends EGui {
 		double offsetY = (p.startY % h);
 		
 		//only update values if needed
-		if (p.worldX != oldWorldX || p.worldY != oldWorldY) {
+		//if (p.worldX != oldWorldX || p.worldY != oldWorldY) {
 			//restrict drawing to the dimensions of the world
 			left = NumberUtil.clamp(p.worldX - distX, 0, world.getWidth() - 1);
 			top = NumberUtil.clamp(p.worldY - distY, 0, world.getHeight() - 1);
@@ -137,7 +136,7 @@ public class WorldRenderer extends EGui {
 			bot = NumberUtil.clamp(p.worldY + distY, top, world.getHeight() - 1);
 			dw = right - left; //draw width
 			dh = bot - top; //draw height
-		}
+		//}
 		
 		int worldTileWidth = -world.getTileWidth();
 		int worldTileHeight = -world.getTileHeight();
@@ -149,8 +148,6 @@ public class WorldRenderer extends EGui {
 			for (int j = top, jy = 0; j <= bot; j++, jy++) {
 				WorldTile t = world.getWorldData()[i][j];
 				if (t == null || !t.hasTexture()) continue;
-				//if (t.isWall()) continue;
-				//GameTexture tex = t.getTexture();
 				
 				double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
 				double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);
