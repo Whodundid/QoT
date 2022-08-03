@@ -50,7 +50,7 @@ public class Launcher extends JFrame {
 	private static final Logger logger = Logger.getLogger("Launcher");
 	
 	private static final String INSTALL_PATH_SETTING = "INSTALL_PATH: ";
-	private static final String LAUNCHER_LOG_LEVEL = "LAUNCHER_LOG_LEVEL [all, only_errors]: ";
+	private static final String LAUNCHER_LOG_LEVEL = "LAUNCHER_LOG_LEVEL [ALL, ONLY_ERRORS]: ";
 	private static final String RUN_LAUNCHER_SETTING = "RUN_LAUNCHER: ";
 	
 	private static Launcher launcher;

@@ -27,6 +27,7 @@ public class WhodundidsBrother extends Enemy {
 		
 		animationHandler = new AnimationHandler(this);
 		var att1 = animationHandler.createAnimationSet(AnimationHandler.ATTACK_1);
+		att1.setUpdateInterval(30);
 		att1.addFrame(EntityTextures.whodundidsbrother);
 		att1.addFrame(EntityTextures.whodundidsbrother2);
 		att1.addFrame(EntityTextures.whodundidsbrother3);
@@ -75,22 +76,25 @@ public class WhodundidsBrother extends Enemy {
 			pDims = new EDimension(cSX, cSY, cEX, cEY);
 		}
 		
+		double distToPlayer = world.getDistance(this, QoT.thePlayer);
+		if (distToPlayer <= 50) {
+			animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.ATTACK_1);
+		}
+		
 		if (testDim.contains(pDims)) {
 			if (hit) {
 				//System.out.println(System.currentTimeMillis() - timeSinceLastHit);
-				if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
+				if ((System.currentTimeMillis() - timeSinceLastHit) >= 600) {
 					hit = false;
 				}
 			}
 			else {
 				hit = true;
-				animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.ATTACK_1);
 				timeSinceLastHit = System.currentTimeMillis();
 				QoT.thePlayer.drainHealth(getBaseMeleeDamage());
 			}
 		}
 		
-		double distToPlayer = world.getDistance(this, QoT.thePlayer);
 		if (distToPlayer <= 300) {
 			headText = "" + health;
 			
