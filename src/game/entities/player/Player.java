@@ -1,6 +1,6 @@
 package game.entities.player;
 
-import assets.textures.EntityTextures;
+import assets.textures.entity.EntityTextures;
 import game.entities.Entity;
 
 public class Player extends Entity {

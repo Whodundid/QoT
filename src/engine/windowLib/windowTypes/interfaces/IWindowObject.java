@@ -2,7 +2,7 @@ package engine.windowLib.windowTypes.interfaces;
 
 import java.util.function.Consumer;
 
-import assets.textures.CursorTextures;
+import assets.textures.cursor.CursorTextures;
 import engine.inputHandlers.CursorHelper;
 import engine.inputHandlers.Mouse;
 import engine.renderEngine.GLObject;

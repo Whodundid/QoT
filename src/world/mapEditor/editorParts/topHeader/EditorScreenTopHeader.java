@@ -1,6 +1,6 @@
 package world.mapEditor.editorParts.topHeader;
 
-import assets.textures.WindowTextures;
+import assets.textures.window.WindowTextures;
 import engine.screenEngine.ScreenLevel;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowObject;

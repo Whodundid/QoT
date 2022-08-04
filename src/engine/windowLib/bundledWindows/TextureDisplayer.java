@@ -14,8 +14,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import assets.textures.TaskBarTextures;
-import assets.textures.WindowTextures;
+import assets.textures.taskbar.TaskBarTextures;
+import assets.textures.window.WindowTextures;
 
 public class TextureDisplayer extends WindowParent {
 	

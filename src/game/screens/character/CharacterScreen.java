@@ -1,6 +1,6 @@
 package game.screens.character;
 
-import assets.textures.WindowTextures;
+import assets.textures.window.WindowTextures;
 import engine.inputHandlers.Keyboard;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.screenEngine.GameScreen;

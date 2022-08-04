@@ -1,6 +1,6 @@
 package world.worldTiles.categories.test_tiles;
 
-import assets.textures.WorldTextures;
+import assets.textures.world.nature.grass.GrassTextures;
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.random.RandomUtil;
@@ -27,10 +27,10 @@ public class TestGrass extends WorldTile {
 		}
 		
 		if (id < 0) {
-			setTexture(WorldTextures.grass.getRandVariant());
+			setTexture(GrassTextures.grass.getRandVariant());
 		}
 		else {
-			setTexture(WorldTextures.grass.getChild(id));
+			setTexture(GrassTextures.grass.getChild(id));
 		}
 		
 		blocksMovement = false;

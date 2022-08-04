@@ -1,6 +1,6 @@
 package engine.windowLib.bundledWindows;
 
-import assets.textures.TaskBarTextures;
+import assets.textures.taskbar.TaskBarTextures;
 import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowTypes.WindowParent;
 import eutil.colors.EColors;

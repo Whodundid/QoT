@@ -43,7 +43,7 @@ public abstract class EditorTool {
 	protected void addObjectToWorld(GameObject obj) {
 		if (obj instanceof Entity ent) {
 			ent.worldX = wx - (ent.width / editor.getWorld().getTileWidth()) / 2;
-			ent.worldY = wy - (ent.height / editor.getWorld().getTileHeight()) / 2 - 2;
+			ent.worldY = wy - (ent.height / editor.getWorld().getTileHeight()) / 2;
 			System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
 			editor.getWorld().addEntity(ent);
 			editor.getWorld().addEntitySpawn(ent);

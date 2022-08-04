@@ -1,6 +1,6 @@
 package world.mapEditor.windows;
 
-import assets.textures.WindowTextures;
+import assets.textures.window.WindowTextures;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowTypes.WindowParent;

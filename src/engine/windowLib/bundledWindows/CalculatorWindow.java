@@ -1,6 +1,6 @@
 package engine.windowLib.bundledWindows;
 
-import assets.textures.TaskBarTextures;
+import assets.textures.taskbar.TaskBarTextures;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.actionObjects.WindowTextField;
 import engine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;

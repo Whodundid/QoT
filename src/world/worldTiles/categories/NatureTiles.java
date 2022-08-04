@@ -2,12 +2,14 @@ package world.worldTiles.categories;
 
 import world.worldTiles.TileCategory;
 import world.worldTiles.WorldTile;
-import world.worldTiles.categories.farm.FarmPlot;
 import world.worldTiles.categories.nature.Bush0;
 import world.worldTiles.categories.nature.CrackedDirt;
 import world.worldTiles.categories.nature.DarkGrass;
 import world.worldTiles.categories.nature.Dirt;
+import world.worldTiles.categories.nature.DryGrass;
 import world.worldTiles.categories.nature.Grass;
+import world.worldTiles.categories.nature.LeafyGrass;
+import world.worldTiles.categories.nature.LightGrass;
 import world.worldTiles.categories.nature.Mud;
 import world.worldTiles.categories.nature.RedSand;
 import world.worldTiles.categories.nature.RockyStone;
@@ -15,6 +17,7 @@ import world.worldTiles.categories.nature.Sand;
 import world.worldTiles.categories.nature.Stone;
 import world.worldTiles.categories.nature.Water;
 import world.worldTiles.categories.nature.Wood;
+import world.worldTiles.categories.nature.WoodSlats;
 
 public class NatureTiles implements TileCategory {
 	
@@ -32,6 +35,9 @@ public class NatureTiles implements TileCategory {
 	public static final WorldTile water = new Water();
 	public static final WorldTile wood = new Wood();
 	public static final WorldTile bush = new Bush0();
-	public static final WorldTile farmPlot = new FarmPlot();
+	public static final WorldTile woodSlats = new WoodSlats();
+	public static final WorldTile dryGrass = new DryGrass();
+	public static final WorldTile leafyGrass = new LeafyGrass();
+	public static final WorldTile lightGrass = new LightGrass();
 	
 }

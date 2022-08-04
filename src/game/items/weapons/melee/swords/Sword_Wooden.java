@@ -1,6 +1,6 @@
 package game.items.weapons.melee.swords;
 
-import assets.textures.ItemTextures;
+import assets.textures.item.ItemTextures;
 import game.entities.Entity;
 import game.items.ItemList;
 import game.items.weapons.Weapon;

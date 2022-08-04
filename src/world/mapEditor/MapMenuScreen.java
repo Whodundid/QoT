@@ -13,7 +13,7 @@ import main.settings.QoTSettings;
 
 import java.io.File;
 
-import assets.textures.EditorTextures;
+import assets.textures.editor.EditorTextures;
 
 public class MapMenuScreen extends GameScreen {
 	

@@ -1,6 +1,6 @@
 package world.worldTiles.categories.dungeon;
 
-import assets.textures.WorldTextures;
+import assets.textures.world.walls.dungeon.DungeonWallTextures;
 import world.worldTiles.TileIDs;
 import world.worldTiles.WorldTile;
 
@@ -10,7 +10,7 @@ public class DungWallA extends WorldTile {
 		super(TileIDs.DUNG_WALL_A);
 		setBlocksMovement(true);
 		setWall(true);
-		setTexture(WorldTextures.dungWallA);
+		setTexture(DungeonWallTextures.dung_wall_a);
 	}
 	
 }

@@ -1,6 +1,6 @@
 package world.worldTiles.categories.nature;
 
-import assets.textures.WorldTextures;
+import assets.textures.world.nature.rock.RockTextures;
 import eutil.misc.Rotation;
 import eutil.random.RandomUtil;
 import world.worldTiles.TileIDs;
@@ -10,7 +10,7 @@ public class RockyStone extends WorldTile {
 	
 	public RockyStone() {
 		super(TileIDs.ROCKY_STONE);
-		setTexture(WorldTextures.rocky_stone);
+		setTexture(RockTextures.rocky_stone);
 		setBlocksMovement(true);
 		setWall(true);
 		wallHeight = RandomUtil.getRoll(0.25, 0.75);

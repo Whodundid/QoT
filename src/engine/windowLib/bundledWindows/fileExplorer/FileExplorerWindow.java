@@ -17,7 +17,7 @@ import eutil.sys.FileOpener;
 
 import java.io.File;
 
-import assets.textures.WindowTextures;
+import assets.textures.window.WindowTextures;
 
 public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	

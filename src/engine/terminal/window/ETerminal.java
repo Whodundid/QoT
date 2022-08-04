@@ -2,7 +2,7 @@ package engine.terminal.window;
 
 import java.io.File;
 
-import assets.textures.TaskBarTextures;
+import assets.textures.taskbar.TaskBarTextures;
 import engine.terminal.TerminalHandler;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.termParts.TerminalTextField;

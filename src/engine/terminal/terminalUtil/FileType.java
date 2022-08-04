@@ -4,7 +4,7 @@ import engine.renderEngine.textureSystem.GameTexture;
 
 import java.io.File;
 
-import assets.textures.WindowTextures;
+import assets.textures.window.WindowTextures;
 
 public enum FileType {
 	FILE,

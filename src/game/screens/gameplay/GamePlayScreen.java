@@ -1,7 +1,7 @@
 package game.screens.gameplay;
 
 import assets.sounds.Songs;
-import assets.textures.ItemTextures;
+import assets.textures.item.ItemTextures;
 import engine.inputHandlers.Keyboard;
 import engine.screenEngine.GameScreen;
 import engine.soundEngine.SoundEngine;

@@ -1,7 +1,7 @@
 package engine.topOverlay.desktopOverlay;
 
-import assets.textures.TaskBarTextures;
-import assets.textures.WindowTextures;
+import assets.textures.taskbar.TaskBarTextures;
+import assets.textures.window.WindowTextures;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.utilityObjects.RightClickMenu;

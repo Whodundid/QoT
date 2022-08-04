@@ -1,7 +1,7 @@
 package game.screens.main;
 
 import assets.sounds.Songs;
-import assets.textures.GeneralTextures;
+import assets.textures.general.GeneralTextures;
 import engine.screenEngine.GameScreen;
 import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;

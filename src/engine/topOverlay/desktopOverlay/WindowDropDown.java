@@ -1,6 +1,6 @@
 package engine.topOverlay.desktopOverlay;
 
-import assets.textures.WindowTextures;
+import assets.textures.window.WindowTextures;
 import engine.windowLib.windowObjects.advancedObjects.dropDownList.DropDownListEntry;
 import engine.windowLib.windowObjects.advancedObjects.dropDownList.WindowDropDownList;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;

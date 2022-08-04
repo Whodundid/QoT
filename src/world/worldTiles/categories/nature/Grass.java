@@ -1,6 +1,6 @@
 package world.worldTiles.categories.nature;
 
-import assets.textures.WorldTextures;
+import assets.textures.world.nature.grass.GrassTextures;
 import world.worldTiles.TileIDs;
 import world.worldTiles.WorldTile;
 
@@ -10,16 +10,14 @@ public class Grass extends WorldTile {
 	public Grass(int id) {
 		super(TileIDs.GRASS);
 		
-		numVariants = 4;
+		numVariants = 3;
 		
 		if (id < 0) {
-			setTexture(WorldTextures.grass.getRandVariant());
+			setTexture(GrassTextures.grass.getRandVariant());
 		}
 		else {
-			setTexture(WorldTextures.grass.getChild(id));
+			setTexture(GrassTextures.grass.getChild(id));
 		}
-		
-		blocksMovement = false;
 	}
 	
 }

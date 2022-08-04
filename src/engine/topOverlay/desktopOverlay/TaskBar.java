@@ -2,7 +2,7 @@ package engine.topOverlay.desktopOverlay;
 
 import java.util.Collections;
 
-import assets.textures.WindowTextures;
+import assets.textures.window.WindowTextures;
 import engine.windowLib.windowObjects.utilityObjects.RightClickMenu;
 import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.WindowParent;

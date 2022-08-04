@@ -12,15 +12,16 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
-import assets.textures.CursorTextures;
-import assets.textures.DoodadTextures;
-import assets.textures.EditorTextures;
-import assets.textures.EntityTextures;
-import assets.textures.GeneralTextures;
-import assets.textures.ItemTextures;
-import assets.textures.TaskBarTextures;
-import assets.textures.WindowTextures;
-import assets.textures.WorldTextures;
+import assets.textures.GameTextures;
+import assets.textures.cursor.CursorTextures;
+import assets.textures.doodads.DoodadTextures;
+import assets.textures.editor.EditorTextures;
+import assets.textures.entity.EntityTextures;
+import assets.textures.general.GeneralTextures;
+import assets.textures.item.ItemTextures;
+import assets.textures.taskbar.TaskBarTextures;
+import assets.textures.window.WindowTextures;
+import assets.textures.world.WorldTextures;
 import engine.inputHandlers.Keyboard;
 import engine.inputHandlers.Mouse;
 import engine.inputHandlers.WindowResizeListener;
@@ -198,20 +199,9 @@ public class QoT {
 		terminalHandler = TerminalHandler.getInstance();
 		//tickManager = new TickManager();
 		
-		WorldTextures.registerTextures(textureSystem);
-		EntityTextures.registerTextures(textureSystem);
-		EditorTextures.registerTextures(textureSystem);
-		WindowTextures.registerTextures(textureSystem);
-		CursorTextures.registerTextures(textureSystem);
-		GeneralTextures.registerTextures(textureSystem);
-		DoodadTextures.registerTextures(textureSystem);
-		ItemTextures.registerTextures(textureSystem);
-		TaskBarTextures.registerTextures(textureSystem);
+		GameTextures.instance().onRegister(textureSystem);
 		
 		terminalHandler.initCommands();
-		
-		Items.lesserHealing.setTexture(EntityTextures.thyrah);
-		Items.woodSword.setTexture(WorldTextures.stone);
 	}
 	
 	//-------------------

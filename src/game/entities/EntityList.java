@@ -6,8 +6,16 @@ import game.entities.enemies.Goblin;
 import game.entities.enemies.Thyrah;
 import game.entities.enemies.TrollBoar;
 import game.entities.enemies.Whodundid;
+import game.entities.house.Barrel;
+import game.entities.house.Chair;
+import game.entities.house.Crate;
+import game.entities.house.Stool;
 import game.entities.neutral.WhodundidsBrother;
 import game.entities.player.Player;
+import world.worldTiles.categories.house.Counter;
+import world.worldTiles.categories.house.Counter_Food;
+import world.worldTiles.categories.house.Oven;
+import world.worldTiles.categories.house.Sink;
 
 public enum EntityList {
 	PLAYER(0),
@@ -17,6 +25,11 @@ public enum EntityList {
 	THYRAH(4),
 	PINE_TREE(5),
 	WHODUNDIDS_BROTHER(6),
+	
+	BARREL(7),
+	CHAIR(8),
+	CRATE(9),
+	STOOL(10),
 	;
 	
 	public final int ID;
@@ -43,6 +56,12 @@ public enum EntityList {
 		case THYRAH: return new Thyrah();
 		case PINE_TREE: return new PineTree();
 		case WHODUNDIDS_BROTHER: return new WhodundidsBrother();
+		
+		case BARREL: return new Barrel();
+		case CHAIR: return new Chair();
+		case CRATE: return new Crate();
+		case STOOL: return new Stool();
+			
 		default: return null;
 		}
 	}

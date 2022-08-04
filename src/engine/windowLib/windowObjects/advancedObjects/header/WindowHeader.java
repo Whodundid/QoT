@@ -1,6 +1,6 @@
 package engine.windowLib.windowObjects.advancedObjects.header;
 
-import assets.textures.WindowTextures;
+import assets.textures.window.WindowTextures;
 import engine.debug.DebugFunctions;
 import engine.inputHandlers.Mouse;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;

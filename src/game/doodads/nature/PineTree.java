@@ -1,6 +1,6 @@
 package game.doodads.nature;
 
-import assets.textures.DoodadTextures;
+import assets.textures.doodads.trees.TreeTextures;
 import game.entities.Entity;
 
 public class PineTree extends Entity {
@@ -9,7 +9,7 @@ public class PineTree extends Entity {
 	public PineTree(int posX, int posY) {
 		super("pine");
 		init(posX, posY, 256, 256);
-		sprite = DoodadTextures.pine_tree;
+		sprite = TreeTextures.tree_pine_0;
 		setCollisionBox(startX + 26, endY - 25, endX - 26, endY);
 	}
 	

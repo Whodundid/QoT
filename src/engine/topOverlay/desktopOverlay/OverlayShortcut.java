@@ -2,7 +2,7 @@ package engine.topOverlay.desktopOverlay;
 
 import java.io.File;
 
-import assets.textures.TaskBarTextures;
+import assets.textures.taskbar.TaskBarTextures;
 import engine.inputHandlers.Keyboard;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.renderEngine.textureSystem.GameTexture;

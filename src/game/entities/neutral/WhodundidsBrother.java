@@ -1,6 +1,6 @@
 package game.entities.neutral;
 
-import assets.textures.EntityTextures;
+import assets.textures.entity.EntityTextures;
 import engine.animationHandler.AnimationHandler;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
@@ -19,7 +19,7 @@ public class WhodundidsBrother extends Enemy {
 		super("Whodundid's Brother");
 		init(posX, posY, 64, 64);
 		
-		setTexture(EntityTextures.whodundidsbrother);
+		setTexture(EntityTextures.whobro);
 		setBaseMeleeDamage(2);
 		setMaxHealth(10);
 		setHealth(10);
@@ -28,12 +28,12 @@ public class WhodundidsBrother extends Enemy {
 		animationHandler = new AnimationHandler(this);
 		var att1 = animationHandler.createAnimationSet(AnimationHandler.ATTACK_1);
 		att1.setUpdateInterval(30);
-		att1.addFrame(EntityTextures.whodundidsbrother);
-		att1.addFrame(EntityTextures.whodundidsbrother2);
-		att1.addFrame(EntityTextures.whodundidsbrother3);
-		att1.addFrame(EntityTextures.whodundidsbrother4);
-		att1.addFrame(EntityTextures.whodundidsbrother3);
-		att1.addFrame(EntityTextures.whodundidsbrother2);
+		att1.addFrame(EntityTextures.whobro);
+		att1.addFrame(EntityTextures.whobro1);
+		att1.addFrame(EntityTextures.whobro2);
+		att1.addFrame(EntityTextures.whobro3);
+		att1.addFrame(EntityTextures.whobro2);
+		att1.addFrame(EntityTextures.whobro1);
 		randShort = 1500;
 		randLong = 3000;
 	}

@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 
-import assets.textures.TaskBarTextures;
-import assets.textures.WindowTextures;
+import assets.textures.taskbar.TaskBarTextures;
+import assets.textures.window.WindowTextures;
 import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;

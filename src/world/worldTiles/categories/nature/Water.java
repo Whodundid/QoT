@@ -1,6 +1,6 @@
 package world.worldTiles.categories.nature;
 
-import assets.textures.WorldTextures;
+import assets.textures.world.nature.water.WaterTextures;
 import world.GameWorld;
 import world.worldTiles.TileIDs;
 import world.worldTiles.WorldTile;
@@ -10,7 +10,7 @@ public class Water extends WorldTile {
 	public Water() {
 		super(TileIDs.WATER);
 		setBlocksMovement(true);
-		setTexture(WorldTextures.water);
+		setTexture(WaterTextures.water);
 		setWall(true);
 		wallHeight = -0.05;
 	}

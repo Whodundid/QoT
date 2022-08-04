@@ -23,7 +23,20 @@ public enum TileIDs {
 	DUNG_FLOOR(14, "Dung Floor"),
 	DUNG_FLOOR_Aa(15, "Dung Old Wall A"),
 	DUNG_FLOOR_Bb(16, "Dung Old Wall B"),
-	FARM_PLOT(17, "Farm Plot");
+	FARM_PLOT(17, "Farm Plot"),
+	
+	COUNTER_FOOD(18, "Counter With Food"),
+	COUNTER(19, "Counter"),
+	OVEN(20, "Oven"),
+	SINK(21, "Sink"),
+	
+	LEAFY_GRASS(22, "Leafy Grass"),
+	DRY_GRASS(23, "Dry Grass"),
+	LIGHT_GRASS(24, "Light Grass"),
+	
+	CLAY_PAD(25, "Clay Pad"),
+	STONE_PAD(26, "Stone Pad"),
+	WOOD_SLATS(27, "Wood Slats"),
 	;
 	
 	public final int id;

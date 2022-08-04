@@ -43,7 +43,7 @@ public abstract class Entity extends GameObject {
 	 *  on the character themselves. */
 	protected int gold;
 	
-	protected boolean invulnerable = false;
+	protected boolean invincible = false;
 	
 	protected int strengthLevel = 0;
 	protected int hitpointsLevel = 0;

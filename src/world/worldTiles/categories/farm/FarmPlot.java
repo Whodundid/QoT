@@ -1,6 +1,7 @@
 package world.worldTiles.categories.farm;
 
-import assets.textures.WorldTextures;
+import assets.textures.world.farmland.FarmTextures;
+import assets.textures.world.floors.wood.WoodFloorTextures;
 import engine.renderEngine.textureSystem.GameTexture;
 import world.GameWorld;
 import world.worldTiles.TileIDs;
@@ -21,8 +22,8 @@ public class FarmPlot extends WorldTile {
 		blocksMovement = true;
 		setWall(true);
 		wallHeight = 0.20;
-		setTexture(WorldTextures.farm0);
-		setSideTexture(WorldTextures.wood_siding);
+		setTexture(FarmTextures.farm_0);
+		setSideTexture(WoodFloorTextures.wood_siding);
 	}
 	
 	//-----------
@@ -56,10 +57,10 @@ public class FarmPlot extends WorldTile {
 		growState++;
 		
 		GameTexture tex = switch (growState) {
-		case 0 -> WorldTextures.farm0;
-		case 1 -> WorldTextures.farm1;
-		case 2 -> WorldTextures.farm2;
-		case 3 -> WorldTextures.farm3;
+		case 0 -> FarmTextures.farm_0;
+		case 1 -> FarmTextures.farm_1;
+		case 2 -> FarmTextures.farm_2;
+		case 3 -> FarmTextures.farm_3;
 		default -> null;
 		};
 		

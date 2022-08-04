@@ -3,17 +3,19 @@ package engine.renderEngine.textureSystem;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.random.RandomUtil;
+import main.settings.QoTSettings;
 
 import org.lwjgl.opengl.GL11;
 
 public class GameTexture {
 	
+	public static final String rDir = QoTSettings.getResourcesDir().toString();
+	public static final String tDir = rDir + "\\textures\\";
+	
 	/** If this texture is a child variant, this is the parent for which it relates. If this value is null, there is no parent and this is not a child texture. */
 	private GameTexture parentTexture;
 	/** A collection of this texture's child variants. */
 	protected BoxList<GameTexture, Integer> children = new BoxList<GameTexture, Integer>();
-	/** The internal name of this texture. */
-	private String name;
 	/** When calling for a random child ID, this percent will indicate the likely hood this specific child will be selected. */
 	private int percent = -1;
 	/** The internal use ID for this texture object. -1 indicates an unregistered texture ID. -- Assigned dynamically through texture registration. */
@@ -33,13 +35,11 @@ public class GameTexture {
 	// Constructors
 	//--------------
 	
-	public GameTexture(String filePathIn) { this(null, "noname", "", filePathIn); }
-	public GameTexture(String nameIn, String filePathIn) { this(null, nameIn, "", filePathIn); }
-	public GameTexture(String nameIn, String basePath, String filePathIn) { this(null, nameIn, basePath, filePathIn); }
-	public GameTexture(GameTexture parent, String nameIn, String filePathIn) { this(parent, "noname", "", filePathIn); }
-	public GameTexture(GameTexture parent, String nameIn, String basePath, String filePathIn) {
+	public GameTexture(String filePathIn) { this(null, "", filePathIn); }
+	public GameTexture(String basePath, String filePathIn) { this(null, basePath, filePathIn); }
+	public GameTexture(GameTexture parent, String filePathIn) { this(parent, "", filePathIn); }
+	public GameTexture(GameTexture parent, String basePath, String filePathIn) {
 		parentTexture = parent;
-		name = nameIn;
 		filePath = basePath + filePathIn;
 	}
 	
@@ -47,20 +47,27 @@ public class GameTexture {
 	// Protected Methods
 	//-------------------
 	
-	protected void registerChildTextures(TextureSystem systemIn) {}
+	protected void registerChildTextures(TextureSystem systemIn) {
+		for (GameTexture t : children.getAVals()) {
+			systemIn.registerTexture(t);
+		}
+	}
 	
 	//----------------
 	// Public Methods
 	//----------------
 	
 	public GameTexture setChildID(int id) { childID = id; return this; }
+	public GameTexture addChild(String path) { return addChild(new GameTexture(path)); }
+	public GameTexture addChild(String base, String path) { return addChild(new GameTexture(base, path)); }
 	public GameTexture addChild(final GameTexture in) { return addChild(in, -1); }
 	public GameTexture addChild(final GameTexture in, final int percentage) {
 		if (in != null) {
 			in.parentTexture = this;
 			children.add(in, percentage);
+			in.setChildID(children.size());
 		}
-		return this;
+		return in;
 	}
 	
 	public boolean destroy() {
@@ -83,7 +90,6 @@ public class GameTexture {
 	
 	public GameTexture getParent() { return parentTexture; }
 	public EArrayList<GameTexture> getChildren() { return children.getAVals(); }
-	public String getName() { return name; }
 	public int getTextureID() { return textureID; }
 	public int getChildID() { return childID; }
 	public String getFilePath() { return filePath; }
@@ -97,7 +103,10 @@ public class GameTexture {
 		EArrayList<GameTexture> withChildren = new EArrayList();
 		EArrayList<GameTexture> workList = new EArrayList();
 		
-		children.getAVals().forEach(c -> { found.add(c); if (c.children.isNotEmpty()) withChildren.add(c); });
+		children.getAVals().forEach(c -> {
+			found.add(c);
+			if (c.children.isNotEmpty()) withChildren.add(c);
+		});
 		workList.addAll(withChildren);
 		
 		while (workList.isNotEmpty()) {

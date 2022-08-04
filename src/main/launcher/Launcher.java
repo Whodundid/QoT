@@ -334,7 +334,7 @@ public class Launcher extends JFrame {
 		logoLabel.setBounds(236, 56, 211, 154);
 		contentPane.add(logoLabel);
 		
-		selectionsBackground = ImageIO.read(Launcher.class.getResource("/textures/world/dungeon/dungenFloorA.png"));
+		selectionsBackground = ImageIO.read(Launcher.class.getResource("/textures/launcher/options_back.png"));
 		mainSelectionPanel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -409,7 +409,7 @@ public class Launcher extends JFrame {
 		
 		installDirMenuLabel = new JLabel();
 		installDirMenuLabel.setBounds(20, 15, 233, 29);
-		installDirMenuLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/install_dir.png")));
+		installDirMenuLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/install_dir_text.png")));
 		installDirMenuLabel.setVisible(false);
 		mainSelectionPanel.add(installDirMenuLabel);
 		
@@ -431,7 +431,7 @@ public class Launcher extends JFrame {
 						case SUCCESS:
 							JOptionPane.showMessageDialog(Launcher.this, "Installation complete!");
 							installed = true;
-							runLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/run.png")));
+							runLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/run_text.png")));
 							break;
 						case FAILED:
 							JOptionPane.showMessageDialog(Launcher.this, "Failed to create game local directory!");
@@ -449,14 +449,14 @@ public class Launcher extends JFrame {
 				}
 			}
 		});
-		runOrInstall.setIcon(new ImageIcon(Launcher.class.getResource("/textures/window/play.png")));
-		runOrInstall.setPressedIcon(new ImageIcon(Launcher.class.getResource("/textures/window/play_sel.png")));
+		runOrInstall.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/play.png")));
+		runOrInstall.setPressedIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/play_sel.png")));
 		mainSelectionPanel.add(runOrInstall);
 		
 		runLabel = new JLabel("");
 		runLabel.setBounds(100, 61, 129, 40);
-		if (installed) runLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/run.png")));
-		else runLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/install.png")));
+		if (installed) runLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/run_text.png")));
+		else runLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/install_text.png")));
 		runLabel.setForeground(Color.gray.brighter());
 		mainSelectionPanel.add(runLabel);
 		
@@ -471,13 +471,13 @@ public class Launcher extends JFrame {
 		settings.setFocusPainted(false);
 		settings.setContentAreaFilled(false);
 		settings.setBorderPainted(false);
-		settings.setIcon(new ImageIcon(Launcher.class.getResource("/textures/window/settings.png")));
-		settings.setPressedIcon(new ImageIcon(Launcher.class.getResource("/textures/window/settings_sel.png")));
+		settings.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/settings.png")));
+		settings.setPressedIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/settings_sel.png")));
 		mainSelectionPanel.add(settings);
 		
 		lblSettings = new JLabel();
 		lblSettings.setBounds(100, 124, 129, 40);
-		lblSettings.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/settings.png")));
+		lblSettings.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/settings_text.png")));
 		lblSettings.setForeground(Color.gray.brighter());
 		mainSelectionPanel.add(lblSettings);
 		
@@ -500,19 +500,19 @@ public class Launcher extends JFrame {
 		settings_back.setContentAreaFilled(false);
 		settings_back.setBorderPainted(false);
 		settings_back.setBounds(50, 124, 40, 40);
-		settings_back.setIcon(new ImageIcon(Launcher.class.getResource("/textures/window/back.png")));
-		settings_back.setPressedIcon(new ImageIcon(Launcher.class.getResource("/textures/window/back_sel.png")));
+		settings_back.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/back.png")));
+		settings_back.setPressedIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/back_sel.png")));
 		settings_back.setVisible(false);
 		mainSelectionPanel.add(settings_back);
 		
 		backLabel = new JLabel();
 		backLabel.setForeground(new Color(182, 182, 182));
-		backLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/back.png")));
+		backLabel.setIcon(new ImageIcon(Launcher.class.getResource("/textures/launcher/back_text.png")));
 		backLabel.setBounds(100, 124, 129, 40);
 		backLabel.setVisible(false);
 		mainSelectionPanel.add(backLabel);
 		
-		background = ImageIO.read(Launcher.class.getResource("/textures/world/dungeon/dungWall.png"));
+		background = ImageIO.read(Launcher.class.getResource("/textures/launcher/background.png"));
 		backgroundPanel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {

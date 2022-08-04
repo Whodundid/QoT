@@ -6,7 +6,10 @@ import static eutil.reflection.EModifier.*;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
 import world.worldTiles.categories.DungeonTiles;
+import world.worldTiles.categories.FarmTiles;
+import world.worldTiles.categories.HouseTiles;
 import world.worldTiles.categories.NatureTiles;
+import world.worldTiles.categories.StoneFloorTiles;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -30,6 +33,9 @@ public class GlobalTileList {
 	static {
 		registerCategory(NatureTiles.class);
 		registerCategory(DungeonTiles.class);
+		registerCategory(FarmTiles.class);
+		registerCategory(HouseTiles.class);
+		registerCategory(StoneFloorTiles.class);
 	}
 	
 	//-------------------------------------------

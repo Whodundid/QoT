@@ -159,6 +159,8 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 		WorldTile tb = null; // tb == 'tileBelow'
 		WorldTile ta = null; // ta == 'tileAbove'
 		
+		Rotation rot = (rotation != null) ? rotation : Rotation.UP;
+		
 		if ((worldY + 1) < world.getHeight()) tb = world.getWorldData()[worldX][worldY + 1];
 		if ((worldY - 1) >= 0) ta = world.getWorldData()[worldX][worldY - 1];
 		
@@ -169,13 +171,11 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 			
 			if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
 			
-
-			
 			//check if the tile directly above is a wall
 			//if so - don't draw wall side
 			if (wh >= 0) {
 				//draw main texture slightly above main location
-				drawTexture(tex, x, y - wh, w, h, false, rotation, tileBrightness);
+				drawTexture(tex, x, y - wh, w, h, false, rot, tileBrightness);
 				
 				GameTexture side = (sideTex != null) ? sideTex : tex;
 				
@@ -183,11 +183,11 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 				wallBrightness = EColors.changeBrightness(brightness, 145);
 				
 				//draw wall side slightly below
-				drawTexture(side, x, yPos, w, wh, false, wallBrightness);
+				drawTexture(side, x, yPos, w, wh, false, rot, wallBrightness);
 				
 				//draw bottom of map edge or if right above a tile with no texture/void
 				if ((tb == null || !tb.hasTexture())) {
-					drawTexture(tex, x, y + h, w, h / 2, false, rotation, EColors.changeBrightness(brightness, 145));
+					drawTexture(tex, x, y + h, w, h / 2, false, rot, EColors.changeBrightness(brightness, 145));
 				}
 			}
 			else {
@@ -195,7 +195,7 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 				double yPos = y + wh;
 				
 				//draw main texture slightly below main location
-				drawTexture(tex, x, yPos, w, h, false, rotation, tileBrightness);
+				drawTexture(tex, x, yPos, w, h, false, rot, tileBrightness);
 				
 				//I don't want to draw if ta is null
 				//but
@@ -219,21 +219,21 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 					//}
 					
 					//draw wall side slightly above
-					drawTexture(side, x, sideWallY, w, wh, false, rotation, wallBrightness);
+					drawTexture(side, x, sideWallY, w, wh, false, rot, wallBrightness);
 				}
 				
 				//draw bottom of map edge or if right above a tile with no texture/void
 				if (tb == null || !tb.hasTexture()) {
-					drawTexture(tex, x, yPos + h, w, (h / 2) - wh, false, rotation, EColors.changeBrightness(brightness, 145));
+					drawTexture(tex, x, yPos + h, w, (h / 2) - wh, false, rot, EColors.changeBrightness(brightness, 145));
 				}
 			}
 		}
 		else {
-			drawTexture(tex, x, y, w, h, false, brightness);
+			drawTexture(tex, x, y, w, h, false, rot, brightness);
 			
 			//draw bottom of map edge or if right above a tile with no texture/void
 			if ((tb == null || !tb.hasTexture())) {
-				drawTexture(tex, x, y + h, w, h / 2, false, EColors.changeBrightness(brightness, 145));
+				drawTexture(tex, x, y + h, w, h / 2, false, rot, EColors.changeBrightness(brightness, 145));
 			}
 		}
 	}
