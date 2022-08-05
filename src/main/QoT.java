@@ -51,7 +51,7 @@ public class QoT {
 	/**
 	 * Does not run QoT, instead runs an OpenGL testing environment instead.
 	 */
-	public static final boolean RUN_OPEN_GL_TESTING_ENVIRONMENT = true;
+	public static final boolean RUN_OPEN_GL_TESTING_ENVIRONMENT = false;
 	
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------
