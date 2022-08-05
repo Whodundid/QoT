@@ -13,15 +13,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
 import assets.textures.GameTextures;
-import assets.textures.cursor.CursorTextures;
-import assets.textures.doodads.DoodadTextures;
-import assets.textures.editor.EditorTextures;
-import assets.textures.entity.EntityTextures;
 import assets.textures.general.GeneralTextures;
-import assets.textures.item.ItemTextures;
-import assets.textures.taskbar.TaskBarTextures;
-import assets.textures.window.WindowTextures;
-import assets.textures.world.WorldTextures;
 import engine.inputHandlers.Keyboard;
 import engine.inputHandlers.Mouse;
 import engine.inputHandlers.WindowResizeListener;
@@ -39,18 +31,31 @@ import engine.windowLib.WindowSize;
 import engine.windowLib.windowTypes.TopWindowParent;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import engine.windowLib.windowUtil.ObjectPosition;
-import envision.Envision;
+import envision_lang.EnvisionLang;
 import eutil.math.EDimension;
 import game.entities.player.Player;
-import game.items.Items;
 import game.screens.main.MainMenuScreen;
 import main.launcher.LauncherSettings;
 import main.settings.QoTSettings;
+import opengl.OpenGLTestingEnvironment;
 import world.GameWorld;
 
 public class QoT {
 	
 	public static final String version = "July 31, 2022";
+	
+	//-----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
+	
+	/**
+	 * Does not run QoT, instead runs an OpenGL testing environment instead.
+	 */
+	public static final boolean RUN_OPEN_GL_TESTING_ENVIRONMENT = true;
+	
+	//-----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
 	
 	/** The primary logging instance for QoT. */
 	public static final Logger QoTLogger = Logger.getLogger("QoT");
@@ -61,7 +66,7 @@ public class QoT {
 	/** The active game settings for this QoT instance. */
 	public static final QoTSettings settings = new QoTSettings();
 	/** The Envision Scripting Language instance. */
-	public static final Envision envision = new Envision().addBuildPackage(new Envision_QoT_Package());
+	public static final EnvisionLang envision = new EnvisionLang().addBuildPackage(new Envision_QoT_Package());
 	
 	private static Keyboard keyboard;
 	private static Mouse mouse;
@@ -118,8 +123,8 @@ public class QoT {
 	public static void startGame(LauncherSettings settings) {
 		QoTSettings.init(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
 		setupGLFW();
-		setupQoT();
-		getGame().runGameLoop();
+		if (RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.runTestingEnvironment(handle);
+		else getGame().runGameLoop();
 	}
 	
 	public static void stopGame() {
@@ -209,16 +214,23 @@ public class QoT {
 	//-------------------
 	
 	private void runGameLoop() {
+		//ignore if already running
 		if (running) return;
+		
 		running = true;
 		
+		//initialize QoT back-end before continuing
+		setupQoT();
+		
+		//set fps/ups targets
 		setTargetFPS(QoTSettings.targetFPS.get());
 		setTargetUPS(QoTSettings.targetUPS.get());
 		
-		startTime = System.currentTimeMillis();
-		
+		//load main menu
 		displayScreen(new MainMenuScreen());
 		
+		//prepare timers
+		startTime = System.currentTimeMillis();
 		long initialTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
 		
@@ -275,10 +287,10 @@ public class QoT {
 	private void runGameTick() {
 		curNumTicks++;
 		
-		if (currentScreen != null) { currentScreen.onGameTick(curNumTicks); }
+		if (currentScreen != null) currentScreen.onGameTick(curNumTicks);
 		
 		//only update if world actually exists, is loaded, and is not paused
-		if (theWorld != null && theWorld.isLoaded() && !pause) { theWorld.updateEntities(); }
+		if (theWorld != null && theWorld.isLoaded() && !pause) theWorld.updateEntities();
 	}
 	
 	/**
@@ -287,7 +299,7 @@ public class QoT {
 	private void onRenderTick(long partialTicks) {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
-		if (theWorld != null && theWorld.isLoaded() && renderWorld) { theWorld.getWorldRenderer().onRenderTick(); }
+		if (theWorld != null && theWorld.isLoaded() && renderWorld) theWorld.getWorldRenderer().onRenderTick();
 		
 		if (currentScreen != null) {
 			currentScreen.drawObject(Mouse.getMx(), Mouse.getMy());
@@ -599,7 +611,7 @@ public class QoT {
 	/** Returns this game's active world. */
 	public static GameWorld getWorld() { return theWorld; }
 	
-	public static Envision getEnvision() { return envision; }
+	public static EnvisionLang getEnvision() { return envision; }
 	
 	//----------------
 	// Static Setters

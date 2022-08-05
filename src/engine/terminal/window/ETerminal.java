@@ -17,7 +17,7 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
 import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import engine.windowLib.windowUtil.windowEvents.events.EventMouse;
-import envision._launch.EnvisionConsoleReceiver;
+import envision_lang._launch.EnvisionLangConsoleReceiver;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
@@ -29,7 +29,7 @@ import main.QoT;
 
 //Author: Hunter Bragg
 
-public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleReceiver {
+public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsoleReceiver {
 	
 	TerminalTextField inputField;
 	WindowTextArea history;

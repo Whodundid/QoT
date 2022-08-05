@@ -11,6 +11,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 import main.QoT;
+import opengl.OpenGLTestingEnvironment;
 
 /**
  * A static helper class for all keyboard related operations and functions.
@@ -100,7 +101,12 @@ public class Keyboard extends GLFWKeyCallback {
 	 * @param keyCode
 	 */
 	private void distribute(int action, char typedChar, int keyCode) {
-		QoT.keyboardEvent(action, typedChar, keyCode);
+		if (QoT.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
+			OpenGLTestingEnvironment.onKeyboardEvent(action, typedChar, keyCode);
+		}
+		else {
+			QoT.keyboardEvent(action, typedChar, keyCode);
+		}
 	}
 
 	//----------------

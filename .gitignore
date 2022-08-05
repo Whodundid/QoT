@@ -4,3 +4,4 @@
 .settings
 /hs_err_pid*.log
 /*.log
+/target/

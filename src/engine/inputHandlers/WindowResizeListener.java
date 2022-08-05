@@ -3,6 +3,7 @@ package engine.inputHandlers;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 import main.QoT;
+import opengl.OpenGLTestingEnvironment;
 
 public class WindowResizeListener extends GLFWWindowSizeCallback {
 
@@ -23,7 +24,8 @@ public class WindowResizeListener extends GLFWWindowSizeCallback {
 		width = widthIn;
 		height = heightIn;
 		
-		QoT.getGame().onWindowResize();
+		if (QoT.RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.onWindowResized();
+		else QoT.getGame().onWindowResize();
 	}
 
 	public static int getWidth() { return width; }

@@ -2,10 +2,10 @@ package engine.scriptingEngine.envisionMappings.qot_package.methods;
 
 import engine.terminal.TerminalHandler;
 import engine.terminal.window.ETerminal;
-import envision.interpreter.EnvisionInterpreter;
-import envision.lang.EnvisionObject;
-import envision.lang.internal.EnvisionFunction;
-import envision.lang.natives.Primitives;
+import envision_lang.interpreter.EnvisionInterpreter;
+import envision_lang.lang.EnvisionObject;
+import envision_lang.lang.internal.EnvisionFunction;
+import envision_lang.lang.natives.Primitives;
 import eutil.strings.StringUtil;
 import main.QoT;
 

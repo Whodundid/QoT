@@ -2,6 +2,7 @@ package engine.inputHandlers;
 
 import eutil.datatypes.Box2;
 import main.QoT;
+import opengl.OpenGLTestingEnvironment;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -9,6 +10,10 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
 public class Mouse extends GLFWMouseButtonCallback {
+	
+	//--------
+	// Fields
+	//--------
 	
 	private GLFWCursorPosCallback cursorCallback;
 	private GLFWScrollCallback scrollCallback;
@@ -19,13 +24,17 @@ public class Mouse extends GLFWMouseButtonCallback {
 	private static int mX = 0, mY = 0;
 	private static Mouse instance;
 	
-	//-----------------
-	//Mouse Constructor
-	//-----------------
+	//--------------------
+	// Singleton Instance
+	//--------------------
 	
 	public static Mouse getInstance() {
 		return instance = (instance != null) ? instance : new Mouse();
 	}
+	
+	//--------------
+	// Constructors
+	//--------------
 	
 	private Mouse() {
 		super();
@@ -47,9 +56,9 @@ public class Mouse extends GLFWMouseButtonCallback {
 		};
 	}
 	
-	//----------------------------------
-	//GLFWMouseButtonCallbackI Overrides
-	//----------------------------------	
+	//--------------------------------------
+	// Overrides : GLFWMouseButtonCallbackI 
+	//--------------------------------------
 	
 	@Override
 	public void invoke(long window, int button, int action, int mods) {
@@ -58,12 +67,17 @@ public class Mouse extends GLFWMouseButtonCallback {
 		lastAction = action;
 	}
 	
-	//---------------
-	//Mouse Functions
-	//---------------
+	//-----------
+	// Functions
+	//-----------
 	
 	private void distribute(int action, int mXIn, int mYIn, int button, int change) {
-		QoT.mouseEvent(action, mXIn, mYIn, button, change);
+		if (QoT.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
+			OpenGLTestingEnvironment.onMouseEvent(action, mXIn, mYIn, button, change);
+		}
+		else {
+			QoT.mouseEvent(action, mXIn, mYIn, button, change);
+		}
 	}
 	
 	//------------------

@@ -1,14 +1,14 @@
 package engine.scriptingEngine.envisionMappings;
 
 import engine.terminal.window.ETerminal;
-import envision._launch.EnvisionErrorCallBack;
-import envision.exceptions.EnvisionError;
+import envision_lang._launch.EnvisionLangErrorCallBack;
+import envision_lang.exceptions.EnvisionLangError;
 import main.QoT;
 
-public class Envision_QoT_ErrorCallback implements EnvisionErrorCallBack {
+public class Envision_QoT_ErrorCallback implements EnvisionLangErrorCallBack {
 
 	@Override
-	public void handleError(EnvisionError e) {
+	public void handleError(EnvisionLangError e) {
 		handleException(e);
 	}
 

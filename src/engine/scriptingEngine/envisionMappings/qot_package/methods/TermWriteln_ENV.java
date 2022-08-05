@@ -1,11 +1,11 @@
 package engine.scriptingEngine.envisionMappings.qot_package.methods;
 
 import engine.terminal.window.ETerminal;
-import envision.interpreter.EnvisionInterpreter;
-import envision.interpreter.util.EnvisionStringFormatter;
-import envision.lang.EnvisionObject;
-import envision.lang.internal.EnvisionFunction;
-import envision.lang.natives.Primitives;
+import envision_lang.interpreter.EnvisionInterpreter;
+import envision_lang.interpreter.util.EnvisionStringFormatter;
+import envision_lang.lang.EnvisionObject;
+import envision_lang.lang.internal.EnvisionFunction;
+import envision_lang.lang.natives.Primitives;
 import main.QoT;
 
 /** Creates a mapping between Envision and the QoT terminal. */

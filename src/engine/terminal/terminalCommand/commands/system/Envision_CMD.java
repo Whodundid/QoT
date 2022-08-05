@@ -3,7 +3,7 @@ package engine.terminal.terminalCommand.commands.system;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
-import envision.Envision;
+import envision_lang.EnvisionLang;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import main.QoT;
@@ -28,7 +28,7 @@ public class Envision_CMD extends TerminalCommand {
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
-			termIn.writeln(Envision.getVersionString(), EColors.seafoam);
+			termIn.writeln(EnvisionLang.getVersionString(), EColors.seafoam);
 			termIn.info("To run an Envision script, add the file name to the end of this command.");
 			termIn.info(getUsage());
 		}

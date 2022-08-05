@@ -1,12 +1,12 @@
 package engine.scriptingEngine.envisionMappings.qot_package.objects;
 
-import envision.interpreter.EnvisionInterpreter;
-import envision.interpreter.util.creationUtil.ObjectCreator;
-import envision.interpreter.util.scope.Scope;
-import envision.lang.EnvisionObject;
-import envision.lang.classes.ClassInstance;
-import envision.lang.classes.EnvisionClass;
-import envision.lang.datatypes.EnvisionStringClass;
+import envision_lang.interpreter.EnvisionInterpreter;
+import envision_lang.interpreter.util.creationUtil.ObjectCreator;
+import envision_lang.interpreter.util.scope.Scope;
+import envision_lang.lang.EnvisionObject;
+import envision_lang.lang.classes.ClassInstance;
+import envision_lang.lang.classes.EnvisionClass;
+import envision_lang.lang.datatypes.EnvisionStringClass;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import world.GameWorld;
