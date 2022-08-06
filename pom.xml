@@ -41,7 +41,7 @@
 		</dependency>
 		<dependency>
 			<groupId>valakan</groupId>
-			<artifactId>EnvisionLang</artifactId>
+			<artifactId>Envision-Lang</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
