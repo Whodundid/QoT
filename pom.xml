@@ -8,6 +8,8 @@
 	<properties>
 		<lwjgl.version>3.3.1</lwjgl.version>
 		<lwjgl.natives>natives-windows</lwjgl.natives>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<build>
@@ -33,12 +35,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>whodundid.libraries</groupId>
+			<groupId>whodundid</groupId>
 			<artifactId>EUtil</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>whodundid.libraries</groupId>
+			<groupId>whodundid</groupId>
 			<artifactId>Envision_Java</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

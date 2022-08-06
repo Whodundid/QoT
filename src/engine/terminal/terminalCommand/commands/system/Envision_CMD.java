@@ -1,5 +1,7 @@
 package engine.terminal.terminalCommand.commands.system;
 
+import java.io.File;
+
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
@@ -7,8 +9,6 @@ import envision_lang.EnvisionLang;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import main.QoT;
-
-import java.io.File;
 
 public class Envision_CMD extends TerminalCommand {
 	
