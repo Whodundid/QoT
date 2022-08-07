@@ -1,8 +1,8 @@
 package main;
 
 import eutil.sys.TracingPrintStream;
-import main.launcher.Installer;
-import main.launcher.Launcher;
+import main.launcher.QoTInstaller;
+import main.launcher.QoTLauncher;
 import main.launcher.LauncherSettings;
 
 public class Main {
@@ -47,18 +47,18 @@ public class Main {
 		
 		//if opting to use the launcher
 		if (RUN_LAUNCHER) {
-			Launcher.runLauncher();
+			QoTLauncher.runLauncher();
 		}
 		//otherwise if opting to run directly from a dev environment
 		else {
 			try {
 				//create fake launcher settings to bind resource paths
 				var settings = new LauncherSettings();
-				settings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
+				settings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
 				
 				//creates the base install directory for settings/resources/worlds/etc.
-				if (!Installer.verifyActuallyInstalled(settings.INSTALL_DIR)) {
-					Installer.createInstallDir(settings.INSTALL_DIR, EXTRACT_RESOURCES);
+				if (!QoTInstaller.verifyActuallyInstalled(settings.INSTALL_DIR)) {
+					QoTInstaller.createInstallDir(settings.INSTALL_DIR, EXTRACT_RESOURCES);
 				}
 				
 				settings.USE_INTERNAL_RESOURCES_PATH = USE_INTERNAL_RESOURCES;

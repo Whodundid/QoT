@@ -14,9 +14,8 @@ import java.util.jar.JarFile;
 import engine.terminal.terminalUtil.ESystemInfo;
 import eutil.sys.OSType;
 import main.Main;
-import main.launcher.Launcher.LauncherLogLevel;
 
-public class Installer {
+public class QoTInstaller {
 
 	public static final String DEFAULT_WINDOWS_INSTALL_DIR = "\\AppData\\Roaming";
 	
@@ -30,7 +29,7 @@ public class Installer {
 	// Constructors
 	//--------------
 	
-	private Installer() {}
+	private QoTInstaller() {}
 	
 	//----------------
 	// Static Methods
@@ -68,7 +67,7 @@ public class Installer {
 			}
 			catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
-				Launcher.log(LauncherLogLevel.ERROR, e);
+				LauncherLogger.log(LauncherLogLevel.ERROR, e);
 			}
 		}
 		
@@ -82,7 +81,7 @@ public class Installer {
 	 * @return The file path to the default QoT installation location
 	 */
 	public static File getDefaultQoTInstallDir() {
-		return new File(Installer.getDefaultInstallDir() + "\\QoT");
+		return new File(QoTInstaller.getDefaultInstallDir() + "\\QoT");
 	}
 	
 	/**
@@ -163,7 +162,7 @@ public class Installer {
 		//wrap path as file
 		File dir = new File(path);
 		
-		Launcher.log("Starting install at target: '" + dir + "'");
+		LauncherLogger.log("Starting install at target: '" + dir + "'");
 		
 		//setup local game directory
 		if (!dir.exists() && !dir.mkdir()) {
@@ -243,16 +242,17 @@ public class Installer {
 			
 			String orig = path;
 			path = URLDecoder.decode(path, "UTF-8");
-			Launcher.log("Modifying path from: '" + orig + "' to '" + path + "'!");
+			LauncherLogger.log("Modifying path from: '" + orig + "' to '" + path + "'!");
 			
 			//wrap as file and begin the attempt to extract data from jar file
 			File jarPath = new File(path);
-			extractDataFromJarDir(jarPath, fromPath, toDir);
+			extractDataFromJarDir(jarPath, QoTLauncher.resourcePath + fromPath, toDir);
 			return;
 		}
 		else {
 			//attempt to get path as resource from classpath
-			var url = Main.class.getResource("/" + fromPath); //append '/' to stop relative path
+			var das_path = QoTLauncher.resourcePath + fromPath;
+			var url = Main.class.getResource(das_path); //append '/' to stop relative path
 			File dir = null;
 			
 			//try to convert resource url to file
@@ -265,7 +265,7 @@ public class Installer {
 				}
 				catch (Exception ee) {
 					e.printStackTrace();
-					Launcher.logError(ee);
+					LauncherLogger.logError(ee);
 				}
 			}
 			
@@ -321,7 +321,7 @@ public class Installer {
 					
 					//because this is extracting from a jar, the resource must be extracted byte-by-byte
 					byte[] bytes = Main.class.getClassLoader().getResourceAsStream(name).readAllBytes();
-					Launcher.log("Extracting '" + bytes.length + "' bytes to '" + newFile + "'!");
+					LauncherLogger.log("Extracting '" + bytes.length + "' bytes to '" + newFile + "'!");
 					
 					//copy file to installation path
 					try (var fos = new FileOutputStream(newFile)) {
@@ -329,7 +329,7 @@ public class Installer {
 					}
 					catch (Exception foserr) {
 						foserr.printStackTrace();
-						Launcher.logError(foserr);
+						LauncherLogger.logError(foserr);
 						throw foserr;
 					}
 				}
@@ -370,7 +370,7 @@ public class Installer {
 			else {
 				Path internalPath = f.toPath();
 				Path copyPath = Paths.get(toDir.getAbsolutePath() + "\\" + f.getName());
-				Launcher.log("Extracting file from '" + internalPath + " to '" + copyPath + "'!");
+				LauncherLogger.log("Extracting file from '" + internalPath + " to '" + copyPath + "'!");
 				Files.copy(internalPath, copyPath, StandardCopyOption.REPLACE_EXISTING);
 			}
 		}
@@ -407,11 +407,11 @@ public class Installer {
 			
 			//wrap as file and begin the attempt to extract data from jar file
 			File jarPath = new File(path);
-			return verifyJarDir(jarPath, fromPath, toDir);
+			return verifyJarDir(jarPath, QoTLauncher.resourcePath + fromPath, toDir);
 		}
 		else {
 			//attempt to get path as resource from classpath
-			var url = Main.class.getResource("/" + fromPath); //append '/' to stop relative path
+			var url = Main.class.getResource(QoTLauncher.resourcePath + fromPath); //append '/' to stop relative path
 			File dir = null;
 			
 			//try to convert resource url to file
@@ -424,7 +424,7 @@ public class Installer {
 				}
 				catch (Exception ee) {
 					ee.printStackTrace();
-					Launcher.logError(ee);
+					LauncherLogger.logError(ee);
 				}
 			}
 			
@@ -470,14 +470,14 @@ public class Installer {
 					}
 					
 					File filePath = new File(toDir, name);
-					Launcher.log("Verifying file '" + name + "'");
+					LauncherLogger.log("Verifying file '" + name + "'");
 					
 					//if the file path to the current resource being verified doesn't exist, then
 					//the install directory is not completely complete and should be reinstalled to be
 					//properly verified
 					if (!filePath.exists()) {
-						Launcher.log(toDir + " : " + filePath + " : " + lastDir + " : " + name);
-						Launcher.log("File '" + filePath + "' not found! cannot fully verify install dir!");
+						LauncherLogger.log(toDir + " : " + filePath + " : " + lastDir + " : " + name);
+						LauncherLogger.log("File '" + filePath + "' not found! cannot fully verify install dir!");
 						return false;
 					}
 				}
@@ -518,7 +518,7 @@ public class Installer {
 				
 				//if the sub directory does not exist, the install directory cannot be fully verified
 				if (!sub.exists()) {
-					Launcher.log("Dir '" + sub + "' not found! cannot fully verify install dir!");
+					LauncherLogger.log("Dir '" + sub + "' not found! cannot fully verify install dir!");
 					return false;
 				}
 				
@@ -527,10 +527,10 @@ public class Installer {
 			}
 			else {
 				File checkPath = new File(toDir.getAbsolutePath() + "\\" + f.getName());
-				Launcher.log("Verifying file '" + f.getName() + "'");
+				LauncherLogger.log("Verifying file '" + f.getName() + "'");
 				
 				if (!checkPath.exists()) {
-					Launcher.log("File '" + f.getName() + "' not found! cannot fully verify install dir!");
+					LauncherLogger.log("File '" + f.getName() + "' not found! cannot fully verify install dir!");
 					return false;
 				}
 			}
@@ -546,7 +546,7 @@ public class Installer {
 	 */
 	public static boolean doesInstallDirExist(File dir) {
 		if (dir == null) {
-			Launcher.log("No current QoT dir exists");
+			LauncherLogger.log("No current QoT dir exists");
 			return false;
 		}
 		return doesInstallDirExist(dir.getAbsolutePath());
@@ -572,7 +572,7 @@ public class Installer {
 	 */
 	public static boolean verifyActuallyInstalled(String dir) {
 		if (dir == null) {
-			Launcher.log("QoT dir null -- nothing to verify");
+			LauncherLogger.log("QoT dir null -- nothing to verify");
 			return false;
 		}
 		return verifyActuallyInstalled(new File(dir));
@@ -588,20 +588,20 @@ public class Installer {
 	public static boolean verifyActuallyInstalled(File dir) {
 		//if dir is null, then QoT is not installed!
 		if (dir == null) {
-			Launcher.log("QoT dir null -- nothing to verify");
+			LauncherLogger.log("QoT dir null -- nothing to verify");
 			return false;
 		}
 		
 		//if dir doesn't exist, then QoT is not installed!
 		if (!dir.exists()) {
-			Launcher.log("QoT dir does not actually exist -- nothing to verify");
+			LauncherLogger.log("QoT dir does not actually exist -- nothing to verify");
 			return false;
 		}
 		
 		//create output directory for resources within install dir
 		File resourcesDir = new File(dir, "resources");
 		if (!resourcesDir.exists()) {
-			Launcher.log("QoT resources dir does not actually exist -- cannot verify!");
+			LauncherLogger.log("QoT resources dir does not actually exist -- cannot verify!");
 			return false;
 		}
 		
@@ -623,7 +623,7 @@ public class Installer {
 			catch (Exception e) { e.printStackTrace(); throw e; }
 		}
 		catch (Exception e) {
-			Launcher.logErrorWithDialogBox(e, "Error reading install dir!", "Setup Error!");
+			LauncherLogger.logErrorWithDialogBox(e, "Error reading install dir!", "Setup Error!");
 		}
 		
 		//return verification status

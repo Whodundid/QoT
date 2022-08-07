@@ -1,0 +1,9 @@
+#--------------------------
+# QoT Version: Aug 6, 2022
+#--------------------------
+
+# The directory QoT is or will be installed to
+INSTALL_PATH: C:\Users\Hunter\AppData\Roaming\QoT
+
+# Sets the level for logging -- if 'ONLY_ERRORS' then no debug outputs will be logged
+LAUNCHER_LOG_LEVEL [ALL, ONLY_ERRORS]: ONLY_ERRORS
