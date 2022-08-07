@@ -9,6 +9,7 @@ public class DryGrass extends WorldTile {
 	public DryGrass() { this(-1); }
 	public DryGrass(int id) {
 		super(TileIDs.DRY_GRASS);
+		setSideTexture(GrassTextures.dry_grass);
 		numVariants = GrassTextures.dry_grass.getChildren().size();
 		
 		if (id < 0) {

@@ -9,7 +9,7 @@ import world.worldTiles.categories.DungeonTiles;
 import world.worldTiles.categories.FarmTiles;
 import world.worldTiles.categories.HouseTiles;
 import world.worldTiles.categories.NatureTiles;
-import world.worldTiles.categories.StoneFloorTiles;
+import world.worldTiles.categories.StoneTiles;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class GlobalTileList {
 		registerCategory(DungeonTiles.class);
 		registerCategory(FarmTiles.class);
 		registerCategory(HouseTiles.class);
-		registerCategory(StoneFloorTiles.class);
+		registerCategory(StoneTiles.class);
 	}
 	
 	//-------------------------------------------

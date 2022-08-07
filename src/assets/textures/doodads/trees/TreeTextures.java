@@ -26,7 +26,9 @@ public class TreeTextures extends TextureLoader {
 	
 	public static final GameTexture
 	
-	tree_pine_0 = new GameTexture(textureDir, "tree_pine_0.png");
+	tree_pine_0 = new GameTexture(textureDir, "tree_pine_0.png"),
+	tree_pine_1 = new GameTexture(textureDir, "tree_pine_1.png"),
+	birch_0 = new GameTexture(textureDir, "birch_0.png");
 	
 	//-----------
 	// Overrides
@@ -35,6 +37,8 @@ public class TreeTextures extends TextureLoader {
 	@Override
 	public void onRegister(TextureSystem sys) {
 		reg(sys, tree_pine_0);
+		reg(sys, tree_pine_1);
+		reg(sys, birch_0);
 	}
 	
 }

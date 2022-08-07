@@ -21,8 +21,11 @@ public class MapEditorSettings {
 	public boolean drawMapBorders = false;
 	public boolean drawEntities = true;
 	public boolean drawRegions = true;
+	public boolean drawEntityHitBoxes = false;
 	
 	public EditorToolType currentTool;
+
+
 	
 	//--------------
 	// Constructors

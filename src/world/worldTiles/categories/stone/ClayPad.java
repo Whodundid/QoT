@@ -1,6 +1,7 @@
 package world.worldTiles.categories.stone;
 
 import assets.textures.world.floors.stone.StoneFloorTextures;
+import eutil.random.RandomUtil;
 import world.worldTiles.TileIDs;
 import world.worldTiles.WorldTile;
 
@@ -10,7 +11,9 @@ public class ClayPad extends WorldTile {
 	public ClayPad(int id) {
 		super(TileIDs.CLAY_PAD);
 		setWall(true);
-		this.wallHeight = 0.1;
+		wallHeight = 0.1;
+		//rotation = Rotation.random();
+		drawFlipped = RandomUtil.randomBool();
 		numVariants = StoneFloorTextures.clay_pad.getChildren().size();
 		
 		if (id < 0) {

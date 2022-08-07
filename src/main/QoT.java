@@ -42,7 +42,7 @@ import world.GameWorld;
 
 public class QoT {
 	
-	public static final String version = "July 31, 2022";
+	public static final String version = "Aug 6, 2022";
 	
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------
@@ -172,21 +172,10 @@ public class QoT {
 			GLFW.glfwSetWindowPos(handle, xPos[0], yPos[0]);
 		}
 		
-		GLFW.glfwMakeContextCurrent(handle);
-		
-		int interval = (QoTSettings.vsync.get()) ? 1 : 0;
-		GL.createCapabilities();
-		GLFW.glfwSwapInterval(interval);
-		
-		//initialize shaders
-		Shaders.init();
-		
 		//initialize other things
 		keyboard = Keyboard.getInstance();
 		mouse = Mouse.getInstance();
 		resizeListener = WindowResizeListener.getInstance();
-		textureSystem = TextureSystem.getInstance();
-		fontRenderer = FontRenderer.getInstance();
 		
 		GLFW.glfwSetKeyCallback(handle, keyboard);
 		GLFW.glfwSetMouseButtonCallback(handle, mouse);
@@ -195,6 +184,20 @@ public class QoT {
 		GLFW.glfwSetWindowSizeCallback(handle, resizeListener);
 		
 		GLFW.glfwShowWindow(handle);
+	}
+	
+	private static void setupOpenGL() {
+		GLFW.glfwMakeContextCurrent(handle);
+		GL.createCapabilities();
+		
+		int interval = (QoTSettings.vsync.get()) ? 1 : 0;
+		GLFW.glfwSwapInterval(interval);
+		
+		//initialize shaders
+		Shaders.init();
+		
+		textureSystem = TextureSystem.getInstance();
+		fontRenderer = FontRenderer.getInstance();
 	}
 	
 	private static void setupQoT() {
@@ -216,8 +219,10 @@ public class QoT {
 	private void runGameLoop() {
 		//ignore if already running
 		if (running) return;
-		
 		running = true;
+		
+		//initialize OpenGL back-end before continuing
+		setupOpenGL();
 		
 		//initialize QoT back-end before continuing
 		setupQoT();

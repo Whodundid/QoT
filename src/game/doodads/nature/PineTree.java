@@ -1,6 +1,8 @@
 package game.doodads.nature;
 
 import assets.textures.doodads.trees.TreeTextures;
+import eutil.misc.Rotation;
+import eutil.random.RandomUtil;
 import game.entities.Entity;
 
 public class PineTree extends Entity {
@@ -10,6 +12,7 @@ public class PineTree extends Entity {
 		super("pine");
 		init(posX, posY, 256, 256);
 		sprite = TreeTextures.tree_pine_0;
+		this.facing = (RandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		setCollisionBox(startX + 26, endY - 25, endX - 26, endY);
 	}
 	

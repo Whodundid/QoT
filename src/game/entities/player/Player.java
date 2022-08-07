@@ -14,13 +14,13 @@ public class Player extends Entity {
 		
 		stats = new PlayerStats(this);
 		
-		init(posX, posY, 64, 64);
+		init(posX, posY, 48, 48);
 		
 		setMaxHealth(100);
 		setHealth(100);
 		setBaseMeleeDamage(5);
 		
-		setCollisionBox(startX + 22, endY - 10, endX - 22, endY);
+		setCollisionBox(midX - 8, endY - 10, midX + 8, endY);
 		sprite = EntityTextures.player;
 	}
 	

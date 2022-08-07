@@ -1,7 +1,9 @@
 package world.mapEditor.windows;
 
 import assets.textures.window.WindowTextures;
+import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
+import engine.windowLib.windowObjects.actionObjects.WindowCheckBox;
 import engine.windowLib.windowObjects.basicObjects.WindowLabel;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
@@ -18,8 +20,8 @@ public class EditorSettingsWindow extends WindowParent {
 	WindowLabel distX, distY;
 	WindowButton incDistX, decDistX;
 	WindowButton incDistY, decDistY;
-	WindowButton drawMapBorders, drawCenterPosition, drawEntities, drawRegions;
-	WindowButton drawEntityHitBoxes;
+	WindowCheckBox drawMapBorders, drawCenterPosition, drawEntities, drawRegions;
+	WindowCheckBox drawEntityHitBoxes;
 	
 	public EditorSettingsWindow(MapEditorScreen editorIn) {
 		super(editorIn);
@@ -42,6 +44,8 @@ public class EditorSettingsWindow extends WindowParent {
 		
 		close = new WindowButton(this, startX + 3, endY - 38, 150, 35, "Close");
 		
+		addChild(close);
+		
 		distX = new WindowLabel(this, startX + 10, startY + 10, "Draw Dist X: " + editor.drawDistX);
 		incDistX = new WindowButton(this, distX.startX, distX.startY + 30, 50, 50);
 		decDistX = new WindowButton(this, incDistX.endX + 6, distX.startY + 30, 50, 50);
@@ -59,7 +63,32 @@ public class EditorSettingsWindow extends WindowParent {
 		addChild(distX, incDistX, decDistX);
 		addChild(distY, incDistY, decDistY);
 		
-		addChild(close);
+		{
+			var checkX = decDistX.endX + 175;
+			var gap = 5;
+			
+			drawMapBorders = new WindowCheckBox(this, checkX, startY + 10, 50, 50);
+			drawCenterPosition = new WindowCheckBox(this, checkX, drawMapBorders.endY + gap, 50, 50);
+			drawEntities = new WindowCheckBox(this, checkX, drawCenterPosition.endY + gap, 50, 50);
+			drawRegions = new WindowCheckBox(this, checkX, drawEntities.endY + gap, 50, 50);
+			drawEntityHitBoxes = new WindowCheckBox(this, checkX, drawRegions.endY + gap, 50, 50);
+			
+			var drawMapBordersLbl = new WindowLabel(this, drawMapBorders.endX + 20, drawMapBorders.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Map Borders");
+			var drawCenterPositionLbl = new WindowLabel(this, drawCenterPosition.endX + 20, drawCenterPosition.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Screen Mid");
+			var drawEntitiesLbl = new WindowLabel(this, drawEntities.endX + 20, drawEntities.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Entities");
+			var drawRegionsLbl = new WindowLabel(this, drawRegions.endX + 20, drawRegions.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Regions");
+			var drawEntityHitBoxesLbl = new WindowLabel(this, drawEntityHitBoxes.endX + 20, drawEntityHitBoxes.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Entity Outlines");
+			
+			drawMapBorders.setIsChecked(editor.getSettings().drawMapBorders);
+			drawCenterPosition.setIsChecked(editor.getSettings().drawCenterPositionBox);
+			drawEntities.setIsChecked(editor.getSettings().drawEntities);
+			drawRegions.setIsChecked(editor.getSettings().drawRegions);
+			drawEntityHitBoxes.setIsChecked(editor.getSettings().drawEntityHitBoxes);
+			
+			addChild(drawMapBorders, drawCenterPosition, drawEntities, drawRegions, drawEntityHitBoxes);
+			addChild(drawMapBordersLbl, drawCenterPositionLbl, drawEntitiesLbl, drawRegionsLbl, drawEntityHitBoxesLbl);
+		}
+
 	}
 	
 	@Override
@@ -80,6 +109,24 @@ public class EditorSettingsWindow extends WindowParent {
 		if (object == incDistY) editor.drawDistY++;
 		if (object == decDistX) editor.drawDistX--;
 		if (object == decDistY) editor.drawDistY--;
+		
+		//this is garbage and you know it..
+		updateCheckBoxes(object);
+	}
+	
+	// this can be made ***sooooooo*** much better...
+	private void updateCheckBoxes(IActionObject object) {
+		if (object == drawMapBorders) editor.getSettings().drawMapBorders = !editor.getSettings().drawMapBorders;
+		if (object == drawCenterPosition) editor.getSettings().drawCenterPositionBox = !editor.getSettings().drawCenterPositionBox;
+		if (object == drawEntities) editor.getSettings().drawEntities = !editor.getSettings().drawEntities;
+		if (object == drawRegions) editor.getSettings().drawRegions = !editor.getSettings().drawRegions;
+		if (object == drawEntityHitBoxes) editor.getSettings().drawEntityHitBoxes = !editor.getSettings().drawEntityHitBoxes;
+		
+		drawMapBorders.setIsChecked(editor.getSettings().drawMapBorders);
+		drawCenterPosition.setIsChecked(editor.getSettings().drawCenterPositionBox);
+		drawEntities.setIsChecked(editor.getSettings().drawEntities);
+		drawRegions.setIsChecked(editor.getSettings().drawRegions);
+		drawEntityHitBoxes.setIsChecked(editor.getSettings().drawEntityHitBoxes);
 	}
 	
 }

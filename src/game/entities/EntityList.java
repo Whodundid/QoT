@@ -1,6 +1,7 @@
 package game.entities;
 
 import eutil.random.RandomUtil;
+import game.doodads.nature.BirchTree;
 import game.doodads.nature.PineTree;
 import game.entities.enemies.Goblin;
 import game.entities.enemies.Thyrah;
@@ -12,10 +13,6 @@ import game.entities.house.Crate;
 import game.entities.house.Stool;
 import game.entities.neutral.WhodundidsBrother;
 import game.entities.player.Player;
-import world.worldTiles.categories.house.Counter;
-import world.worldTiles.categories.house.Counter_Food;
-import world.worldTiles.categories.house.Oven;
-import world.worldTiles.categories.house.Sink;
 
 public enum EntityList {
 	PLAYER(0),
@@ -30,6 +27,8 @@ public enum EntityList {
 	CHAIR(8),
 	CRATE(9),
 	STOOL(10),
+	
+	BIRCH(11),
 	;
 	
 	public final int ID;
@@ -61,7 +60,8 @@ public enum EntityList {
 		case CHAIR: return new Chair();
 		case CRATE: return new Crate();
 		case STOOL: return new Stool();
-			
+		
+		case BIRCH: return new BirchTree();
 		default: return null;
 		}
 	}

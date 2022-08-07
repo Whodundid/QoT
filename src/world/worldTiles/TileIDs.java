@@ -37,6 +37,7 @@ public enum TileIDs {
 	CLAY_PAD(25, "Clay Pad"),
 	STONE_PAD(26, "Stone Pad"),
 	WOOD_SLATS(27, "Wood Slats"),
+	STONE_WALL(28, "Stone Wall"),
 	;
 	
 	public final int id;

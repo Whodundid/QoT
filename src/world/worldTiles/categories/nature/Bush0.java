@@ -9,6 +9,7 @@ public class Bush0 extends WorldTile {
 	public Bush0() {
 		super(TileIDs.BUSH0);
 		setTexture(GrassTextures.bush_0);
+		setSideTexture(GrassTextures.grass.getRandVariant());
 	}
 	
 }
