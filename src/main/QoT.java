@@ -44,7 +44,7 @@ import world.GameWorld;
 
 public class QoT {
 	
-	public static final String version = "Aug 6, 2022";
+	public static final String version = "Aug 7, 2022";
 	
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------
