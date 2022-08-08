@@ -35,7 +35,7 @@ public class QoTLauncher extends JFrame {
 	
 	private static QoTLauncher launcher;
 	
-	public static boolean inJar = false;
+	static boolean inJar = false;
 	static String resourcePath = "";
 	
 	//---------------
@@ -137,6 +137,7 @@ public class QoTLauncher extends JFrame {
 		//create launcher settings and grab the install dir from launcher settings
 		launcherSettings = new LauncherSettings();
 		launcherSettings.INSTALL_DIR = LauncherDir.getInstallDir();
+		launcherSettings.IN_JAR = inJar;
 		LauncherLogger.log("Parsed install dir of: '" + launcherSettings.INSTALL_DIR + "'");
 		
 		loadLauncherResources();
@@ -560,7 +561,7 @@ public class QoTLauncher extends JFrame {
 	 */
 	public static void closeLauncher() {
 		if (launcher == null) return;
-		LauncherLogger.log("Closing launcher! Have a nice day :)");
+		LauncherLogger.log("Closing launcher! Have a nice day :)\n\n");
 		launcher.dispatchEvent(new WindowEvent(launcher, WindowEvent.WINDOW_CLOSING));
 		launcher.dispose();
 		launcher = null;

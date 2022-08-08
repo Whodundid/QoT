@@ -213,8 +213,8 @@ public class QoTInstaller {
 			catch (Exception e) { e.printStackTrace(); throw e; }
 			try { extractDataToDir("textures", resourcesDir); }
 			catch (Exception e) { e.printStackTrace(); throw e; }
-			try { extractDataToDir("shaders", resourcesDir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
+			//try { extractDataToDir("shaders", resourcesDir); }
+			//catch (Exception e) { e.printStackTrace(); throw e; }
 			
 			//copy bundled maps into install map dir
 			try { extractDataToDir("editorWorlds", dir); }
@@ -259,7 +259,7 @@ public class QoTInstaller {
 		else {
 			//attempt to get path as resource from classpath
 			var das_path = QoTLauncher.resourcePath + fromPath;
-			var url = Main.class.getResource(das_path); //append '/' to stop relative path
+			var url = Main.class.getResource("/" + das_path); //append '/' to stop relative path
 			File dir = null;
 			
 			//try to convert resource url to file
@@ -424,7 +424,7 @@ public class QoTInstaller {
 		}
 		else {
 			//attempt to get path as resource from classpath
-			var url = Main.class.getResource(QoTLauncher.resourcePath + fromPath); //append '/' to stop relative path
+			var url = Main.class.getResource("/" + QoTLauncher.resourcePath + fromPath); //append '/' to stop relative path
 			File dir = null;
 			
 			//try to convert resource url to file
@@ -631,8 +631,8 @@ public class QoTInstaller {
 			catch (Exception e) { e.printStackTrace(); throw e; }
 			try { verified &= verifyDir("textures", resourcesDir); }
 			catch (Exception e) { e.printStackTrace(); throw e; }
-			try { verified &= verifyDir("shaders", resourcesDir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
+			//try { verified &= verifyDir("shaders", resourcesDir); }
+			//catch (Exception e) { e.printStackTrace(); throw e; }
 			//copy bundled maps into install map dir
 			try { verified &= verifyDir("editorWorlds", dir); }
 			catch (Exception e) { e.printStackTrace(); throw e; }

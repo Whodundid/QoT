@@ -3,7 +3,6 @@ package main.launcher;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
@@ -38,7 +37,7 @@ public class LauncherLogger {
 		if (level == LauncherLogLevel.DEBUG &&
 			LauncherDir.logLevel == LogOutputLevel.ONLY_ERRORS) return;
 		
-		logger.log(Level.SEVERE, "[LAUNCHER]: " + String.valueOf(obj));
+		//logger.log(Level.SEVERE, "[LAUNCHER]: " + String.valueOf(obj));
 		
 		//prepare to log to file
 		File log = createLogFile();
@@ -58,7 +57,7 @@ public class LauncherLogger {
 		if (level == LauncherLogLevel.DEBUG &&
 			LauncherDir.logLevel == LogOutputLevel.ONLY_ERRORS) return;
 		
-		logger.log(Level.SEVERE, "[LAUNCHER]: " + String.valueOf(e));
+		//logger.log(Level.SEVERE, "[LAUNCHER]: " + String.valueOf(e));
 		
 		//prepare to log to file
 		File log = createLogFile();

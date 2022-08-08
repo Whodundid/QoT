@@ -124,6 +124,7 @@ public class QoT {
 	
 	public static void startGame(LauncherSettings settings) {
 		try {
+			LauncherLogger.log("Running game with settings: " + settings);
 			QoTSettings.init(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
 			setupGLFW();
 			if (RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.runTestingEnvironment(handle);

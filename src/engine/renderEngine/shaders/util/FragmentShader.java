@@ -2,6 +2,7 @@ package engine.renderEngine.shaders.util;
 
 import java.io.File;
 import java.util.Scanner;
+
 import org.lwjgl.opengl.GL46;
 
 public class FragmentShader {
