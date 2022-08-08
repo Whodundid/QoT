@@ -138,8 +138,8 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		addChild(inputField, history);
 		
 		if (!init) {
-			history.addTextLine("QoT Terminal initialized..", 0xffff00);
-			history.addTextLine();
+			writeln("QoT Terminal initialized..", EColors.seafoam);
+			writeln();
 			init = true;
 		}
 		
