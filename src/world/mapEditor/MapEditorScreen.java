@@ -16,6 +16,7 @@ import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.entities.Entity;
 import main.QoT;
+import world.EntitySpawn;
 import world.GameWorld;
 import world.Region;
 import world.mapEditor.editorParts.sidePanel.EditorSidePanel;
@@ -426,7 +427,9 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	private void renderEntities(double x, double y, double w, double h) {
-		EArrayList<Entity> entities = world.getEntitiesInWorld();
+		EArrayList<EntitySpawn> spawns = world.getEntitySpawns();
+		EArrayList<Entity> entities = new EArrayList<>();
+		for (var s : spawns) entities.add(s.getEntity(world));
 		entities.sort(Comparator.comparingInt(e -> e.endY));
 		
 		for (int i = 0; i < entities.size(); i++) {

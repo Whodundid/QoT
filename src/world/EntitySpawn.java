@@ -43,14 +43,19 @@ public class EntitySpawn {
 	}
 	
 	public void spawnEntity(GameWorld world) {
-		Entity ent = EntityList.getEntity(type);
-		ent.world = world;
+		Entity ent = getEntity(world);
 		
 		if (initHealth != -1) ent.setHealth(initHealth);
 		if (initMana != -1) ent.setMana(initMana);
-		ent.setWorldPos(x, y);
 		
 		world.addEntity(ent);
+	}
+	
+	public Entity getEntity(GameWorld world) {
+		var ent = EntityList.getEntity(type);
+		ent.world = world;
+		ent.setWorldPos(x, y);
+		return ent;
 	}
 	
 	@Override
