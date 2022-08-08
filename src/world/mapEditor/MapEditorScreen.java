@@ -228,17 +228,27 @@ public class MapEditorScreen extends GameScreen {
 	
 	@Override
 	public void mouseScrolled(int change) {
+		double c = Math.signum(change);
+		double z = 1.0;
+		
 		if (Keyboard.isCtrlDown()) {
-			world.setZoom(world.getZoom() + NumberUtil.round(Math.signum(change) * 0.25, 2));
-			world.setZoom(NumberUtil.clamp(world.getZoom(), 0.25, 5));
+			if (c > 0 && world.getZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
+			else if (world.getZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
+			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
+			else if (world.getZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
+			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
+			
+			z = NumberUtil.round(world.getZoom() + z, 2);
+			world.setZoom(z);
+			
 			updateDrawDist();
 		}
 		else if (Keyboard.isShiftDown()) {
-			midDrawX -= Math.signum(change) * 2;
+			midDrawX -= c * 2;
 			midDrawX = (midDrawX < 0) ? 0 : (midDrawX > (world.getWidth() - 1)) ? world.getWidth() - 1 : midDrawX;
 		}
 		else if (Keyboard.isAltDown()) {
-			midDrawY -= Math.signum(change) * 2;
+			midDrawY -= c * 2;
 			midDrawY = (midDrawY < 0) ? 0 : (midDrawY > (world.getHeight()) - 1) ? world.getHeight() - 1 : midDrawY;
 		}
 	}
