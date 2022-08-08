@@ -59,6 +59,21 @@ public class LauncherDir {
 	 * @return
 	 */
 	static boolean setupLauncherDir() {
+		try {
+			String dir = QoTInstaller.getDefaultInstallDir();
+			launcherDir = new File(dir + "\\QoT Launcher");
+			
+			//check if launcher directory already exists
+			if (!launcherDir.exists() && !launcherDir.mkdirs()) {
+				LauncherLogger.logErrorWithDialogBox("Cannot create the QoT Launcher directory!", "Setup Error!");
+				return false;
+			}
+		}
+		catch (Exception e) {
+			LauncherLogger.logErrorWithDialogBox(e, "Cannot create the QoT Launcher directory!", "Setup Error!");
+			return false;
+		}
+		
 		//check if launcher settings file exists and create default if not
 		try {
 			launcherSettingsFile = new File(launcherDir, "settings.txt");
@@ -81,21 +96,6 @@ public class LauncherDir {
 			runLauncher = getConfigSetting(RUN_LAUNCHER_SETTING, Boolean.class, true);
 			//assume that the log level will only log errors
 			logLevel = getConfigSetting(LAUNCHER_LOG_LEVEL, LogOutputLevel.class, LogOutputLevel.ONLY_ERRORS);
-		}
-		
-		try {
-			String dir = QoTInstaller.getDefaultInstallDir();
-			launcherDir = new File(dir + "\\QoT Launcher");
-			
-			//check if launcher directory already exists
-			if (!launcherDir.exists() && !launcherDir.mkdirs()) {
-				LauncherLogger.logErrorWithDialogBox("Cannot create the QoT Launcher directory!", "Setup Error!");
-				return false;
-			}
-		}
-		catch (Exception e) {
-			LauncherLogger.logErrorWithDialogBox(e, "Cannot create the QoT Launcher directory!", "Setup Error!");
-			return false;
 		}
 		
 		return true;

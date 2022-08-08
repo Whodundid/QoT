@@ -36,7 +36,7 @@ public class QoTLauncher extends JFrame {
 	private static QoTLauncher launcher;
 	
 	public static boolean inJar = false;
-	static String resourcePath = "/";
+	static String resourcePath = "";
 	
 	//---------------
 	// Static Runner
@@ -51,11 +51,14 @@ public class QoTLauncher extends JFrame {
 		//if path does not start with a '/' then it's very likely a jar file!
 		if (!path.startsWith("/")) {
 			inJar = true;
-			resourcePath = "/resources/";
+			resourcePath = "resources/";
 		}
 		
 		//attempt to create launcher directory
 		if (!LauncherDir.setupLauncherDir()) return;
+		
+		LauncherLogger.log("Starting QoT Launcher!");
+		LauncherLogger.log("runLauncher=" + LauncherDir.runLauncher);
 		
 		if (LauncherDir.runLauncher) {
 			launcher = new QoTLauncher();
@@ -134,6 +137,7 @@ public class QoTLauncher extends JFrame {
 		//create launcher settings and grab the install dir from launcher settings
 		launcherSettings = new LauncherSettings();
 		launcherSettings.INSTALL_DIR = LauncherDir.getInstallDir();
+		LauncherLogger.log("Parsed install dir of: '" + launcherSettings.INSTALL_DIR + "'");
 		
 		loadLauncherResources();
 		
@@ -154,7 +158,8 @@ public class QoTLauncher extends JFrame {
 	
 	private void loadLauncherResources() {
 		try {
-			var dir = resourcePath + "textures/launcher/";
+			LauncherLogger.log("Loading launcher resources...");
+			var dir = "/" + resourcePath + "textures/launcher/";
 			
 			programIcon = loadResource(dir, "whodundid_base.png");
 			logo = loadResource(dir, "qot_logo.png");
@@ -200,6 +205,8 @@ public class QoTLauncher extends JFrame {
 	//--------------
 	
 	private void init() {
+		LauncherLogger.log("Initializing launcher...");
+		
 		//populate with default path if null
 		if (launcherSettings.INSTALL_DIR == null) {
 			launcherSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
@@ -367,45 +374,9 @@ public class QoTLauncher extends JFrame {
 		updateForceReinstallVisibility();
 	}
 	
-	private void tryRunOrInstall() {
-		if (forceReinstall != null && forceReinstall.isSelected()) {
-			tryInstall(true);
-		}
-		else if (!checkInstalled()) tryInstall(false);
-		else {
-			closeLauncher();
-			QoT.startGame(launcherSettings);
-		}
-	}
-	
-	private void tryInstall(boolean runAfter) {
-		try {
-			switch (QoTInstaller.createInstallDir(launcherSettings.INSTALL_DIR)) {
-			case SUCCESS:
-				LauncherLogger.logWithDialogBox("Installation success", "Installation complete!");
-				installed = true;
-				runLabel.setIcon(new ImageIcon(runText));
-				if (runAfter) {
-					closeLauncher();
-					QoT.startGame(launcherSettings);
-				}
-				break;
-			case FAILED:
-				LauncherLogger.logErrorWithDialogBox("Failed to create game local directory!", "Installation Error");
-				break;
-			default:
-				break;
-			}
-		}
-		catch (Exception ee) {
-			LauncherLogger.logErrorWithDialogBox(ee,
-								  "Something went wrong!",
-								  "Installation Error",
-								  "Check the error log at: '" + LauncherDir.getLauncherDir() + "'");
-		}
-		
-		updateForceReinstallVisibility();
-	}
+	//-------------------------
+	// Internal Window Methods
+	//-------------------------
 	
 	/**
 	 * Garbage way of 'changing' the current """screen""". Smile :)
@@ -426,42 +397,15 @@ public class QoTLauncher extends JFrame {
 		backLabel.setVisible(val);
 	}
 	
-	/**
-	 * Makes several checks against the mapped installation directory to confirm
-	 * that the chosen directory is actually valid and ends with 'QoT'.
-	 */
-	private void ensureInstallDirEndsWithQoT() {
-		//if any of the following checks regarding the current installation directory
-		//fail, then the install directory will be reset to the default one
-		
-		//grab the current directory
-		File dir = launcherSettings.INSTALL_DIR;
-		
-		//ensure the directory actually exists
-		if (dir == null) launcherSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
-		
-		//ensure that the directory is not actually empty
-		String path = dir.getAbsolutePath();
-		if (path.isBlank() || path.isEmpty()) {
-			launcherSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
+	private void updateForceReinstallVisibility() {
+		if (installed) {
+			settings_back.setBounds(50, 150, 40, 40);
+			backLabel.setBounds(100, 150, 129, 40);
 		}
-		
-		/*
-		//verify that the given directory even exists
-		if (!dir.exists()) {
-			launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
+		else {
+			settings_back.setBounds(50, 124, 40, 40);
+			backLabel.setBounds(100, 124, 129, 40);
 		}
-		
-		//ensure that the directory is actually a directory
-		if (!dir.isDirectory()) {
-			launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
-		}
-		
-		//ensure that the directory is actually named 'QoT'
-		if (!dir.getName().equals("QoT")) {
-			launcherSettings.INSTALL_DIR = Installer.getDefaultQoTInstallDir();
-		}
-		*/
 	}
 	
 	private void openDirSelection() {
@@ -516,14 +460,79 @@ public class QoTLauncher extends JFrame {
 		}
 	}
 	
-	private void updateForceReinstallVisibility() {
-		if (installed) {
-			settings_back.setBounds(50, 150, 40, 40);
-			backLabel.setBounds(100, 150, 129, 40);
+	//------------------
+	// Internal Methods
+	//------------------
+	
+	private void tryRunOrInstall() {
+		if (forceReinstall != null && forceReinstall.isSelected()) {
+			LauncherLogger.log("Attempting to reinstall and launch after...");
+			tryInstall(true);
+		}
+		else if (!checkInstalled()) {
+			LauncherLogger.log("Attempting to install...");
+			tryInstall(false);
 		}
 		else {
-			settings_back.setBounds(50, 124, 40, 40);
-			backLabel.setBounds(100, 124, 129, 40);
+			LauncherLogger.log("Attempting to launch game...");
+			closeLauncher();
+			QoT.startGame(launcherSettings);
+		}
+	}
+	
+	private void tryInstall(boolean runAfter) {
+		try {
+			switch (QoTInstaller.createInstallDir(launcherSettings.INSTALL_DIR)) {
+			case SUCCESS:
+				if (checkInstalled()) {
+					LauncherLogger.logWithDialogBox("Installation success", "Installation complete!");
+					installed = true;
+					runLabel.setIcon(new ImageIcon(runText));
+					
+					if (runAfter) {
+						closeLauncher();
+						QoT.startGame(launcherSettings);
+					}
+				}
+				else {
+					LauncherLogger.logWithDialogBox("Something went wrong!", "Verify Error", "Was not actually able to verify install!");
+				}
+				break;
+			case FAILED:
+				LauncherLogger.logErrorWithDialogBox("Failed to create game local directory!", "Installation Error");
+				break;
+			default:
+				break;
+			}
+		}
+		catch (Exception ee) {
+			LauncherLogger.logErrorWithDialogBox(ee,
+								  "Something went wrong!",
+								  "Installation Error",
+								  "Check the error log at: '" + LauncherDir.getLauncherDir() + "'");
+		}
+		
+		updateForceReinstallVisibility();
+	}
+	
+	/**
+	 * Makes several checks against the mapped installation directory to confirm
+	 * that the chosen directory is actually valid and ends with 'QoT'.
+	 */
+	private void ensureInstallDirEndsWithQoT() {
+		//if any of the following checks regarding the current installation directory
+		//fail, then the install directory will be reset to the default one
+		
+		//grab the current directory
+		File dir = launcherSettings.INSTALL_DIR;
+		
+		//ensure the directory actually exists
+		if (dir == null) launcherSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
+		
+		//ensure that the directory is not actually empty
+		String path = dir.getAbsolutePath();
+		if (path.isBlank() || path.isEmpty()) {
+			launcherSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
 		}
 	}
 	
@@ -542,6 +551,10 @@ public class QoTLauncher extends JFrame {
 		return false;
 	}
 	
+	//----------------
+	// Static Methods
+	//----------------
+	
 	/**
 	 * Closes the launcher.
 	 */
@@ -552,4 +565,5 @@ public class QoTLauncher extends JFrame {
 		launcher.dispose();
 		launcher = null;
 	}
+	
 }

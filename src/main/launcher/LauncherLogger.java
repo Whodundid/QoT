@@ -13,7 +13,7 @@ import eutil.strings.StringUtil;
 
 public class LauncherLogger {
 	
-	static final Logger logger = Logger.getLogger("Launcher");
+	private static final Logger logger = Logger.getLogger("Launcher");
 	
 	private static File logFile = null;
 

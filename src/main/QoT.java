@@ -33,8 +33,10 @@ import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import engine.windowLib.windowUtil.ObjectPosition;
 import envision_lang.EnvisionLang;
 import eutil.math.EDimension;
+import eutil.sys.FileOpener;
 import game.entities.player.Player;
 import game.screens.main.MainMenuScreen;
+import main.launcher.LauncherLogger;
 import main.launcher.LauncherSettings;
 import main.settings.QoTSettings;
 import opengl.OpenGLTestingEnvironment;
@@ -121,10 +123,16 @@ public class QoT {
 	public static QoT getGame() { return (instance != null) ? instance : (instance = new QoT()); }
 	
 	public static void startGame(LauncherSettings settings) {
-		QoTSettings.init(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
-		setupGLFW();
-		if (RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.runTestingEnvironment(handle);
-		else getGame().runGameLoop();
+		try {
+			QoTSettings.init(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
+			setupGLFW();
+			if (RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.runTestingEnvironment(handle);
+			else getGame().runGameLoop();
+		}
+		catch (Exception e) {
+			LauncherLogger.logError(e);
+			FileOpener.openFile(LauncherLogger.getLogFile());
+		}
 	}
 	
 	public static void stopGame() {

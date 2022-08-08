@@ -130,8 +130,8 @@ public class QoTInstaller {
 	 * @return The resulting status of the creation attempt
 	 */
 	public static InstallerStatus createInstallDir(File customDir, boolean extractResources) throws Exception {
-		if (customDir == null) return createInstallDir((String) null);
-		return createInstallDir(customDir.getAbsolutePath());
+		if (customDir == null) return createInstallDir((String) null, extractResources);
+		return createInstallDir(customDir.getAbsolutePath(), extractResources);
 	}
 	
 	/**
@@ -155,22 +155,26 @@ public class QoTInstaller {
 		}
 		else {
 			var defaultPath = getDefaultInstallDir();
-			if (defaultPath == null) return InstallerStatus.FAILED;
+			if (defaultPath == null) {
+				LauncherLogger.logError("Error: Default install dir is somehow null!");
+				return InstallerStatus.FAILED;
+			}
 			path = defaultPath + "\\QoT";
 		}
 		
 		//wrap path as file
 		File dir = new File(path);
-		
 		LauncherLogger.log("Starting install at target: '" + dir + "'");
 		
 		//setup local game directory
 		if (!dir.exists() && !dir.mkdir()) {
+			LauncherLogger.logError("Error: Failed to create install target dir!");
 			return InstallerStatus.FAILED;
 		}
 		
 		//don't allow a non-empty directory to be installed to
 		if (!dir.isDirectory()) {
+			LauncherLogger.logError("Error: target install dir is not a directory!");
 			return InstallerStatus.FAILED;
 		}
 		
@@ -196,6 +200,7 @@ public class QoTInstaller {
 		File worldsDir = new File(dir, "editorWorlds");
 		
 		//create each dir if they don't already exist
+		LauncherLogger.log("Creating extraction points in install dir!");
 		if (!resourcesDir.exists()) resourcesDir.mkdirs();
 		if (!profilesDir.exists()) profilesDir.mkdirs();
 		if (!worldsDir.exists()) worldsDir.mkdirs();
@@ -230,6 +235,8 @@ public class QoTInstaller {
 	 * @throws Exception Thrown if any error occurs during extraction
 	 */
 	private static void extractDataToDir(String fromPath, File toDir) throws Exception {
+		LauncherLogger.log("Attempting to extract data from '" + fromPath + "' -> '" + toDir + "'");
+		
 		//this line is used to specifically grab the class system's file structure to determine
 		//what kind of environment the game is being executed from (an IDE or a Jar)
 		String path = Main.class.getResource(Main.class.getSimpleName() + ".class").getFile();
@@ -240,9 +247,9 @@ public class QoTInstaller {
 			path = path.substring(path.indexOf(':') + 1);
 			path = path.substring(0, path.lastIndexOf('!'));
 			
-			String orig = path;
+			//String orig = path;
 			path = URLDecoder.decode(path, "UTF-8");
-			LauncherLogger.log("Modifying path from: '" + orig + "' to '" + path + "'!");
+			//LauncherLogger.log("Modifying path from: '" + orig + "' to '" + path + "'!");
 			
 			//wrap as file and begin the attempt to extract data from jar file
 			File jarPath = new File(path);
@@ -289,6 +296,7 @@ public class QoTInstaller {
 	 */
 	private static void extractDataFromJarDir(File jarPath, String pathToFind, File toDir) throws Exception {
 		JarFile jarFile = null;
+		LauncherLogger.log("Starting extraction of '" + pathToFind + "' -> '" + toDir + "' from jar file '" + jarPath + "'");
 		
 		try {
 			//construct jar file and extract jar entries
@@ -302,6 +310,7 @@ public class QoTInstaller {
 			while (it.hasNext()) {
 				var entry = it.next();
 				var name = entry.getName();
+				//LauncherLogger.log("\t" + name + " : " + pathToFind + " : " + pathToFind.startsWith(name));
 				
 				//ignore the entry if it does not start with the path being searched for
 				if (name.startsWith(pathToFind)) {
@@ -315,7 +324,8 @@ public class QoTInstaller {
 					}
 					
 					//create base level directory(ies)
-					File newFile = new File(toDir, name);
+					String destName = (name.startsWith("resources/")) ? name.substring("resources/".length()) : name;
+					File newFile = new File(toDir, destName);
 					Path newFilePath = newFile.toPath();
 					if (!Files.exists(newFilePath)) Files.createDirectories(newFilePath.getParent());
 					
@@ -405,6 +415,9 @@ public class QoTInstaller {
 			path = path.substring(path.indexOf(':') + 1);
 			path = path.substring(0, path.lastIndexOf('!'));
 			
+			//String orig = path;
+			path = URLDecoder.decode(path, "UTF-8");
+			
 			//wrap as file and begin the attempt to extract data from jar file
 			File jarPath = new File(path);
 			return verifyJarDir(jarPath, QoTLauncher.resourcePath + fromPath, toDir);
@@ -444,6 +457,7 @@ public class QoTInstaller {
 	 */
 	private static boolean verifyJarDir(File jarPath, String pathToFind, File toDir) throws IOException {
 		JarFile jarFile = null;
+		LauncherLogger.log("Verifying dir '" + pathToFind + "' in '" + toDir + "' from jar file '" + jarPath + "'");
 		
 		try {
 			//construct jar file and extract jar entries
@@ -469,14 +483,15 @@ public class QoTInstaller {
 						continue;
 					}
 					
-					File filePath = new File(toDir, name);
-					LauncherLogger.log("Verifying file '" + name + "'");
+					String destName = (name.startsWith("resources/")) ? name.substring("resources/".length()) : name;
+					File filePath = new File(toDir, destName);
+					LauncherLogger.log("Verifying file '" + destName + "'");
 					
 					//if the file path to the current resource being verified doesn't exist, then
 					//the install directory is not completely complete and should be reinstalled to be
 					//properly verified
 					if (!filePath.exists()) {
-						LauncherLogger.log(toDir + " : " + filePath + " : " + lastDir + " : " + name);
+						LauncherLogger.log(toDir + " : " + filePath + " : " + lastDir + " : " + destName);
 						LauncherLogger.log("File '" + filePath + "' not found! cannot fully verify install dir!");
 						return false;
 					}
