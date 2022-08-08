@@ -1,51 +1,79 @@
 package game.screens.main;
 
-import assets.textures.window.WindowTextures;
+import engine.screenEngine.GameScreen;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
+import engine.windowLib.windowUtil.FutureTaskEventType;
+import eutil.colors.EColors;
+import game.screens.gameplay.GamePlayScreen;
 import main.QoT;
 
 public class ConfirmationWindow extends WindowParent {
-	private WindowButton<?> confirm, deny;
 	
-	public ConfirmationWindow(int x, int y) {
-		init(QoT.getCurrentScreen(), x, y, 300, 200);
+	private GameScreen parent;
+	
+	private WindowButton<?> quit, resume;
+	private WindowButton<?> options;
+	
+	public ConfirmationWindow(GameScreen parentScreen, int x, int y) {
+		init(parentScreen, x, y, 300, 200);
 		setMaxDims(400, 200);
 		setMinDims(200, 100);
 		setMinimizable(false);
 		setResizeable(true);
+		setMoveable(false);
+		
+		parent = parentScreen;
 	}
 	
 	@Override
 	public void initChildren() {
-		defaultHeader();
+		QoT.pause();
 		
-		confirm = new WindowButton(this, startX + 0, startY + 0, 50, 50);
-		deny = new WindowButton(this, startX + 100, startY + 50, 50, 50);
+		//defaultHeader();
 		
-		confirm.setTextures(WindowTextures.file_up, WindowTextures.file_up_sel);
-		deny.setTextures(WindowTextures.file_pic, WindowTextures.file_txt);
+		var w = width - 60;
+		var sX = midX - w / 2;
+		var gap = 5;
+		
+		resume = new WindowButton(this, sX, startY + 20, w, 50, "Resume Game");
+		options = new WindowButton(this, sX, resume.endY + gap, w, 50, "Options");
+		quit = new WindowButton(this, sX, options.endY + gap, w, 50, "Quit");
 		
 		// Makes it so confirm and deny send an action to this confirmation window
-		IActionObject.setActionReceiver(this, confirm, deny);
+		IActionObject.setActionReceiver(this, quit, options, resume);
 		
-		addChild(confirm, deny);
+		addChild(quit, options, resume);
 	}
 	
 	@Override
 	public void drawObject(int xPos, int yPos) {
-		this.drawDefaultBackground();
+		drawRect(0, 0, QoT.getWidth(), QoT.getHeight(), EColors.vdgray.opacity(150));
+		drawDefaultBackground();
 		super.drawObject(xPos, yPos);
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == confirm) {
+		if (object == quit) {
 			QoT.loadWorld(null); // Unload current world
 			QoT.displayScreen(new MainMenuScreen()); // Display main menu
 		}
 		
-		if (object == deny) close();
+		if (object == options) {
+			var opScreen = QoT.displayScreen(new OptionsScreen(), parent);
+			if (parent instanceof GamePlayScreen g) {
+				opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, () -> g.openPauseWindow());
+			}
+		}
+		
+		if (object == resume) close();
 	}
+	
+	@Override
+	public void onClosed() {
+		QoT.unpause();
+	}
+	
 }

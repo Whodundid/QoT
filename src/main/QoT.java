@@ -305,7 +305,10 @@ public class QoT {
 		if (currentScreen != null) currentScreen.onGameTick(curNumTicks);
 		
 		//only update if world actually exists, is loaded, and is not paused
-		if (theWorld != null && theWorld.isLoaded() && !pause) theWorld.updateEntities();
+		if (theWorld != null && theWorld.isLoaded() && !pause) {
+			theWorld.onUpdate();
+			theWorld.updateEntities();
+		}
 	}
 	
 	/**
@@ -314,7 +317,9 @@ public class QoT {
 	private void onRenderTick(long partialTicks) {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
-		if (theWorld != null && theWorld.isLoaded() && renderWorld) theWorld.getWorldRenderer().onRenderTick();
+		if (theWorld != null && theWorld.isLoaded() && renderWorld) {
+			theWorld.getWorldRenderer().onRenderTick();
+		}
 		
 		if (currentScreen != null) {
 			currentScreen.drawObject(Mouse.getMx(), Mouse.getMy());

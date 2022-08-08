@@ -9,7 +9,6 @@ public class Deb7 extends DebugCommand {
 
 	@Override
 	public void run(ETerminal termIn, Object... args) {
-		QoT.getCurrentScreen().displayWindow(new ConfirmationWindow(300, 300));
 		
 	}
 

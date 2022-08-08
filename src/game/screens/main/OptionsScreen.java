@@ -63,8 +63,6 @@ public class OptionsScreen extends GameScreen {
 		//addChild(resolution);
 	}
 	
-	@Override public void onScreenClosed() {}
-	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.dsteel);

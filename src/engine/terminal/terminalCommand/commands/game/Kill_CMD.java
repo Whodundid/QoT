@@ -40,7 +40,9 @@ public class Kill_CMD extends TerminalCommand {
 		int id = Integer.parseInt(args.get(0));
 		for (var e : entities) {
 			if (e.getEntityID() == id) {
-				QoT.theWorld.getEntitiesInWorld().remove(e);
+				QoT.theWorld.removeEntity(e);
+				termIn.writeln("Killed entity! " + id, EColors.lgreen);
+				break;
 			}
 		}
 	}

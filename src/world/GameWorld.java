@@ -1,5 +1,10 @@
 package world;
 
+import java.awt.Point;
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
@@ -9,11 +14,6 @@ import main.QoT;
 import main.settings.QoTSettings;
 import world.mapEditor.editorUtil.PlayerSpawnPosition;
 import world.worldTiles.WorldTile;
-
-import java.awt.Point;
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.Scanner;
 
 public class GameWorld {
 	
@@ -44,6 +44,9 @@ public class GameWorld {
 	
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
+	
+	private EArrayList<Entity> toDelete = new EArrayList<>();
+	private EArrayList<Entity> toAdd = new EArrayList<>();
 	
 	//--------------
 	// Constructors
@@ -92,6 +95,18 @@ public class GameWorld {
 	// Methods
 	//---------
 	
+	public void onUpdate() {
+		if (toAdd.isNotEmpty()) {
+			toAdd.forEach(e -> addEntityInternal(e));
+			toAdd.clear();
+		}
+		
+		if (toDelete.isNotEmpty()) {
+			entityData.removeAll(toDelete);
+			toDelete.clear();
+		}
+	}
+	
 	public void setPlayerSpawnPosition(int x, int y) {
 		playerSpawn.setPos(x, y);
 	}
@@ -138,7 +153,11 @@ public class GameWorld {
 		}
 	}
 	
-	public Entity addEntity(Entity ent) {
+	public Entity addEntity(Entity ent) { return toAdd.addR(ent); }
+	public void addEntity(Entity... ents) { toAdd.add(ents); }
+	public void removeEntity(Entity... ents) { toDelete.add(ents); }
+	
+	private Entity addEntityInternal(Entity ent) {
 		//assign world and add
 		ent.world = this;
 		entityData.add(ent);
