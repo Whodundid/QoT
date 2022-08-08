@@ -17,7 +17,7 @@ public class ListEntities_CMD extends TerminalCommand {
 
 	@Override public String getName() { return "listentities"; }
 	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("le"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("le", "entities"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays all Entities in the World"; }
 	@Override public String getUsage() { return "ex: le"; }
 	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
@@ -30,10 +30,11 @@ public class ListEntities_CMD extends TerminalCommand {
 		}
 		
 		var entities = QoT.theWorld.getEntitiesInWorld();
-		
 		entities.sort((a, b) -> Integer.compare(a.getEntityID(), b.getEntityID()));
+		
+		termIn.writeln("Listing all Entities in world", EColors.orange);
 		for (var e : entities) {
-			termIn.writeln("  " + e.getName() + " : " + e.getEntityID(), EColors.lime);
+			termIn.writeln("  " + EColors.lgreen + e.getName() + EColors.white + " : " + EColors.lgray + e.getEntityID());
 		}
 	}
 	

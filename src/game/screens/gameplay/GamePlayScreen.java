@@ -38,10 +38,19 @@ public class GamePlayScreen extends GameScreen {
 	private boolean attacking = false;
 	private long attackDrawStart;
 	
-	public GamePlayScreen() {
+	private ConfirmationWindow pauseWindow;
+	private boolean openPause = false;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
+	public GamePlayScreen() { this(false); }
+	public GamePlayScreen(boolean openPauseOnStart) {
 		super();
 		screenHistory.push(new MainMenuScreen());
 		world = QoT.getWorld();
+		openPause = openPauseOnStart;
 	}
 	
 	@Override
@@ -71,6 +80,9 @@ public class GamePlayScreen extends GameScreen {
 		addChild(mana);
 		
 		character = new WindowButton(this, mana.endX + 5, 5, 125, 30, "Stats");
+		
+		if (openPause) openPauseWindow();
+		
 		//addObject(character);
 	}
 	
@@ -110,7 +122,7 @@ public class GamePlayScreen extends GameScreen {
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
-		if (keyCode == Keyboard.KEY_ESC) displayWindow(new ConfirmationWindow(30, 30));
+		if (keyCode == Keyboard.KEY_ESC) openPauseWindow();
 		
 		//super.keyPressed(typedChar, keyCode);
 	}
@@ -160,6 +172,16 @@ public class GamePlayScreen extends GameScreen {
 	
 	private void openCharScreen() {
 		QoT.displayScreen(new CharacterScreen(QoT.thePlayer), this);
+	}
+	
+	public void openPauseWindow() {
+		if (getChildren().notContains(pauseWindow) || pauseWindow == null) {
+			displayWindow(pauseWindow = new ConfirmationWindow(this, 30, 30));
+		}
+		else {
+			pauseWindow.close();
+			pauseWindow = null;
+		}
 	}
 	
 }
