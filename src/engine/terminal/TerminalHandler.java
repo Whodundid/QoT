@@ -23,6 +23,8 @@ import engine.terminal.terminalCommand.commands.fileSystem.RmDir;
 import engine.terminal.terminalCommand.commands.fileSystem.Tail;
 import engine.terminal.terminalCommand.commands.game.CreateDungeon_CMD;
 import engine.terminal.terminalCommand.commands.game.FPS_CMD;
+import engine.terminal.terminalCommand.commands.game.Kill_CMD;
+import engine.terminal.terminalCommand.commands.game.ListEntities_CMD;
 import engine.terminal.terminalCommand.commands.game.LoadWorld_CMD;
 import engine.terminal.terminalCommand.commands.game.NoClip_CMD;
 import engine.terminal.terminalCommand.commands.game.PauseGame_CMD;
@@ -157,6 +159,8 @@ public class TerminalHandler {
 		registerCommand(new UnPauseGame_CMD(), termIn, runVisually);
 		registerCommand(new World_CMD(), termIn, runVisually);
 		registerCommand(new WorldsDir_CMD(), termIn, runVisually);
+		registerCommand(new ListEntities_CMD(), termIn, runVisually);
+		registerCommand(new Kill_CMD(), termIn, runVisually);
 		
 		//system
 		registerCommand(new CalcCommand(), termIn, runVisually);

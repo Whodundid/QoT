@@ -16,6 +16,7 @@ import game.entities.Entity;
 import game.entities.player.Player;
 import game.screens.character.CharacterScreen;
 import game.screens.gameplay.combat.DeathScreen;
+import game.screens.main.ConfirmationWindow;
 import game.screens.main.MainMenuScreen;
 import main.QoT;
 import world.GameWorld;
@@ -109,8 +110,9 @@ public class GamePlayScreen extends GameScreen {
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
+		if (keyCode == Keyboard.KEY_ESC) displayWindow(new ConfirmationWindow(30, 30));
 		
-		super.keyPressed(typedChar, keyCode);
+		//super.keyPressed(typedChar, keyCode);
 	}
 	
 	@Override
