@@ -24,7 +24,7 @@ public class CommentConfigBlock extends ConfigBlock {
 	}
 	
 	public CommentConfigBlock addLine(String commentIn) {
-		blockContents.add("**", new EArrayList<String>(commentIn));
+		blockContents.add("#", new EArrayList<String>(commentIn));
 		return this;
 	}
 	

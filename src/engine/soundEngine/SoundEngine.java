@@ -152,9 +152,10 @@ public class SoundEngine {
 	public static void setMusicVolume(Number amount) { setMusicVolume(amount.intValue()); }
 	public static void setMusicVolume(int amount) {
 		int val = NumberUtil.clamp(amount, 0, 100);
+		int old = QoTSettings.musicVolume.get();
 		QoTSettings.musicVolume.set(val);
 		//only update config if the volume actually changed
-		if (QoTSettings.musicVolume.get() != val) QoTSettings.saveConfig();
+		if (QoTSettings.musicVolume.get() != old) QoTSettings.saveConfig();
 	}
 	
 	public static int getMusicVolume() {

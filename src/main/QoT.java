@@ -124,6 +124,7 @@ public class QoT {
 	
 	public static void startGame(LauncherSettings settings) {
 		try {
+			LauncherLogger.log("---------------------------\n");
 			LauncherLogger.log("Running game with settings: " + settings);
 			QoTSettings.init(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
 			setupGLFW();

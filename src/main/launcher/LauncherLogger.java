@@ -18,11 +18,26 @@ public class LauncherLogger {
 
 	private static File createLogFile() {
 		if (logFile != null) return logFile;
-		return logFile = new File(LauncherDir.getLauncherDir(), "LOG_" + EDateTime.getDate() +
-															 "_" + EDateTime.getTime() + ".log");
+		logFile = new File(LauncherDir.getLauncherDir(), "LOG_" + EDateTime.getDate() + "_" + EDateTime.getTime() + ".log");
+		
+		try (var fos = new FileOutputStream(logFile, true);
+			 var str = new PrintStream(fos))
+		{
+			str.println("----------------");
+			str.println(" QoT Output Log");
+			str.println("----------------");
+		}
+		catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		return logFile;
 	}
 	
-	public static File getLogFile() { return logFile; }
+	public static File getLogFile() {
+		if (logFile == null) createLogFile();
+		return logFile;
+	}
 	
 	//----------------------------------------------------------------
 	// Log handlers for when not running in a development environment
@@ -40,7 +55,7 @@ public class LauncherLogger {
 		//logger.log(Level.SEVERE, "[LAUNCHER]: " + String.valueOf(obj));
 		
 		//prepare to log to file
-		File log = createLogFile();
+		File log = getLogFile();
 		try (var fos = new FileOutputStream(log, true);
 			 var str = new PrintStream(fos))
 		{
@@ -60,7 +75,7 @@ public class LauncherLogger {
 		//logger.log(Level.SEVERE, "[LAUNCHER]: " + String.valueOf(e));
 		
 		//prepare to log to file
-		File log = createLogFile();
+		File log = getLogFile();
 		try (var fos = new FileOutputStream(log, true);
 		     var str = new PrintStream(fos))
 		{

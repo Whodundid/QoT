@@ -164,7 +164,7 @@ public class QoTInstaller {
 		
 		//wrap path as file
 		File dir = new File(path);
-		LauncherLogger.log("Starting install at target: '" + dir + "'");
+		LauncherLogger.log("\nStarting install at target: '" + dir + "'");
 		
 		//setup local game directory
 		if (!dir.exists() && !dir.mkdir()) {
@@ -623,6 +623,7 @@ public class QoTInstaller {
 		//assuming true
 		boolean verified = true;
 		
+		LauncherLogger.log("\nVerifying install dir resources...");
 		try {
 			//verify that data from each internal dir exists within the installation dir
 			try { verified &= verifyDir("font", resourcesDir); }

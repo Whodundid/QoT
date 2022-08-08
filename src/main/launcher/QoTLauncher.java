@@ -467,15 +467,15 @@ public class QoTLauncher extends JFrame {
 	
 	private void tryRunOrInstall() {
 		if (forceReinstall != null && forceReinstall.isSelected()) {
-			LauncherLogger.log("Attempting to reinstall and launch after...");
+			LauncherLogger.log("\nAttempting to reinstall and launch after...");
 			tryInstall(true);
 		}
 		else if (!checkInstalled()) {
-			LauncherLogger.log("Attempting to install...");
+			LauncherLogger.log("\nAttempting to install...");
 			tryInstall(false);
 		}
 		else {
-			LauncherLogger.log("Attempting to launch game...");
+			LauncherLogger.log("\nAttempting to launch game...");
 			closeLauncher();
 			QoT.startGame(launcherSettings);
 		}
@@ -561,7 +561,7 @@ public class QoTLauncher extends JFrame {
 	 */
 	public static void closeLauncher() {
 		if (launcher == null) return;
-		LauncherLogger.log("Closing launcher! Have a nice day :)\n\n");
+		LauncherLogger.log("Closing launcher! Have a nice day :)\n");
 		launcher.dispatchEvent(new WindowEvent(launcher, WindowEvent.WINDOW_CLOSING));
 		launcher.dispose();
 		launcher = null;
