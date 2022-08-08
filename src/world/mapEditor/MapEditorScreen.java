@@ -166,7 +166,7 @@ public class MapEditorScreen extends GameScreen {
 					double tH = primary.getGameObject().height;
 					double tDrawW = tW * world.getZoom();
 					double tDrawH = tH * world.getZoom();
-					drawTexture(tex, Mouse.getMx() - tW / 2, Mouse.getMy() - tH, tDrawW, tDrawH);
+					drawTexture(tex, Mouse.getMx() - tW / 2, Mouse.getMy() - tH, tDrawW, tDrawH, 0x99ffffff);
 					//drawTexture(tex, mX, mY, tDrawW, tDrawH);
 					drawHoveredTileBox((int) x, (int) y, (int) w, (int) h);
 					break;
