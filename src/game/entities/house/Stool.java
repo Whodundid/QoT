@@ -12,6 +12,9 @@ public class Stool extends Entity {
 		init(x, y, 32, 32);
 		setTexture(HouseTextures.stool);
 		invincible = true;
+		
+		setMaxHealth(10);
+		setHealth(10);
 	}
 	
 	@Override

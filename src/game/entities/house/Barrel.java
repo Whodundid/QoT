@@ -11,7 +11,8 @@ public class Barrel extends Entity {
 		super("Barrel");
 		init(x, y, 32, 32);
 		setTexture(HouseTextures.barrel);
-		invincible = true;
+		setMaxHealth(5);
+		setHealth(5);
 	}
 	
 	@Override

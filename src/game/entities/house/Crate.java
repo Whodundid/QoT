@@ -11,7 +11,9 @@ public class Crate extends Entity {
 		super("Crate");
 		init(x, y, 32, 32);
 		setTexture(HouseTextures.crate);
-		invincible = true;
+		
+		setMaxHealth(5);
+		setHealth(5);
 	}
 	
 	@Override

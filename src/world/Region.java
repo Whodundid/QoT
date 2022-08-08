@@ -96,6 +96,8 @@ public class Region {
 		return null;
 	}
 	
-	public String toSaveString() { return "r " + getName() + " " + getColor() + " " + startX + " " + startY + " " + endX + " " + endY; }
+	public String toSaveString() {
+		return "r " + getName() + " " + getColor() + " " + startX + " " + startY + " " + endX + " " + endY;
+	}
 	
 }
