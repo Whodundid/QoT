@@ -78,8 +78,6 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 		else {
 			QoT.displayScreen(new MainMenuScreen());
 		}
-		
-		onClosed();
 	}
 	
 	public EArrayList<String> getAliases() {
