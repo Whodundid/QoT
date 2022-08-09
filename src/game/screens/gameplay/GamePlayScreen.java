@@ -16,7 +16,6 @@ import game.entities.Entity;
 import game.entities.player.Player;
 import game.screens.character.CharacterScreen;
 import game.screens.gameplay.combat.DeathScreen;
-import game.screens.main.ConfirmationWindow;
 import game.screens.main.MainMenuScreen;
 import main.QoT;
 import world.GameWorld;
@@ -38,7 +37,7 @@ public class GamePlayScreen extends GameScreen {
 	private boolean attacking = false;
 	private long attackDrawStart;
 	
-	private ConfirmationWindow pauseWindow;
+	private GamePauseWindow pauseWindow;
 	private boolean openPause = false;
 	
 	//--------------
@@ -176,7 +175,7 @@ public class GamePlayScreen extends GameScreen {
 	
 	public void openPauseWindow() {
 		if (getChildren().notContains(pauseWindow) || pauseWindow == null) {
-			displayWindow(pauseWindow = new ConfirmationWindow(this, 30, 30));
+			displayWindow(pauseWindow = new GamePauseWindow(this, 30, 30));
 		}
 		else {
 			pauseWindow.close();

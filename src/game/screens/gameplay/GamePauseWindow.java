@@ -1,4 +1,4 @@
-package game.screens.main;
+package game.screens.gameplay;
 
 import engine.screenEngine.GameScreen;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
@@ -6,17 +6,18 @@ import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowUtil.FutureTaskEventType;
 import eutil.colors.EColors;
-import game.screens.gameplay.GamePlayScreen;
+import game.screens.main.MainMenuScreen;
+import game.screens.main.OptionsScreen;
 import main.QoT;
 
-public class ConfirmationWindow extends WindowParent {
+public class GamePauseWindow extends WindowParent {
 	
 	private GameScreen parent;
 	
 	private WindowButton<?> quit, resume;
 	private WindowButton<?> options;
 	
-	public ConfirmationWindow(GameScreen parentScreen, int x, int y) {
+	public GamePauseWindow(GameScreen parentScreen, int x, int y) {
 		init(parentScreen, x, y, 300, 200);
 		setMaxDims(400, 200);
 		setMinDims(200, 100);
