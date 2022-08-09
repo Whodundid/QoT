@@ -2,6 +2,7 @@ package engine.windowLib.windowUtil;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.EArrayList;
 
 /**
@@ -24,9 +25,14 @@ public class FutureTaskManager {
 	//--------
 	// Fields
 	//--------
-	
+
+	private final IWindowObject<?> theObject;
 	private final ConcurrentHashMap<FutureTaskEventType, EArrayList<Runnable>> futureTasks = new ConcurrentHashMap<>();
 
+	public FutureTaskManager(IWindowObject<?> objectIn) {
+		theObject = objectIn;
+	}
+	
 	//---------
 	// Methods
 	//---------
@@ -40,7 +46,10 @@ public class FutureTaskManager {
 	 */
 	public void addFutureTask(FutureTaskEventType type, Runnable task) {
 		var tasks = futureTasks.get(type);
-		if (tasks == null) tasks = new EArrayList<Runnable>();
+		if (tasks == null) {
+			tasks = new EArrayList<Runnable>();
+			futureTasks.put(type, tasks);
+		}
 		tasks.put(task);
 	}
 	

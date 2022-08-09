@@ -132,7 +132,7 @@ public class WindowObjectProperties<E> {
 		objectId = getNextPID();
 		
 		eventHandler = new ObjectEventHandler(instanceIn);
-		futureTaskManager = new FutureTaskManager();
+		futureTaskManager = new FutureTaskManager(instanceIn);
 	}
 	
 	//----------------

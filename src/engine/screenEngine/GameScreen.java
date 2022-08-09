@@ -70,17 +70,16 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	 */
 	public void closeScreen(boolean hist) {
 		if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
-			
-			//System.out.println("pre: " + screenHistory);
-			GameScreen<?> screen = screenHistory.pop();
+			var screen = screenHistory.pop();
 			screen.setScreenHistory(screenHistory);
-			//System.out.println("post: " + screenHistory);
 			
 			QoT.displayScreen(screen, (hist) ? this : new MainMenuScreen());
 		}
 		else {
 			QoT.displayScreen(new MainMenuScreen());
 		}
+		
+		onClosed();
 	}
 	
 	public EArrayList<String> getAliases() {

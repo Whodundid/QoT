@@ -138,21 +138,21 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Tracked state of whether or not this object has had its children initialized. */
 	public default boolean isChildInit() { return properties().isChildInit; }
 	/** Tracked state of whether or not this object has been drawn at least once. */
-	public default boolean hasFirstDraw() { return properties().isInit; }
+	public default boolean hasFirstDraw() { return properties().hasFirstDraw; }
 	/** Tracked state of whether or not this object has received focus at least once. */
-	public default boolean hasReceivedFocus() { return properties().isInit; }
+	public default boolean hasReceivedFocus() { return properties().hasReceivedFocus; }
 	/** Tracked state of whether or not this object is currently being added to some parent object. */
 	public default boolean isBeingAdded() { return properties().isBeingAdded; }
 	/** Tracked state of whether or not this object has been fully added to its parent. */
-	public default boolean isAdded() { return properties().isInit; }
+	public default boolean isAdded() { return properties().isAdded; }
 	/** Tracked state of whether or not this object is currently being removed from its current parent object. */
 	public default boolean isBeingRemoved() { return properties().isBeingRemoved; }
 	/** Tracked state of whether or not this object has been fully removed from its most recent parent object. */
-	public default boolean isRemoved() { return properties().isInit; }
+	public default boolean isRemoved() { return properties().isRemoved; }
 	/** Tracked state of whether or not this object is in the process of being closed. */
 	public default boolean isClosing() { return properties().isClosing; }
 	/** Tracked state of whether or not this object has been closed. */
-	public default boolean isClosed() { return properties().isInit; }
+	public default boolean isClosed() { return properties().isClosed; }
 	
 	//---------------
 	// Future Events
