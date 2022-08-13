@@ -6,7 +6,7 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.sys.FileOpener;
+import eutil.file.FileOpener;
 import main.settings.QoTSettings;
 
 import java.io.File;

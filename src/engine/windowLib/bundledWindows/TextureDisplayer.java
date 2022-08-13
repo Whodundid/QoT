@@ -6,8 +6,8 @@ import engine.windowLib.windowObjects.basicObjects.WindowImageBox;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.datatypes.EArrayList;
+import eutil.file.FileOpener;
 import eutil.math.NumberUtil;
-import eutil.sys.FileOpener;
 import main.QoT;
 
 import java.io.File;

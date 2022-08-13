@@ -11,7 +11,7 @@ import eutil.EUtil;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.sys.LineReader;
+import eutil.file.LineReader;
 
 public class QotConfigFile {
 	

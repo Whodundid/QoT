@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.Charset;
 
+import eutil.file.LineReader;
 import eutil.strings.StringUtil;
-import eutil.sys.LineReader;
 import main.QoT;
 
 /**

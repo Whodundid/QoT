@@ -6,8 +6,8 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.file.LineReader;
 import eutil.strings.StringUtil;
-import eutil.sys.LineReader;
 
 public class Cat extends FileCommand {
 	
