@@ -64,6 +64,8 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		GLSettings.clearDepth();
 		
 		if (isVisible()) {
+			if (!hasFirstDraw()) onFirstDraw();
+			
 			//draw debug stuff
 			if (QoT.isDebugMode()) drawDebugInfo();
 			

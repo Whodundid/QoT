@@ -401,17 +401,18 @@ public class QoT {
 	// Public Static Engine Functions
 	//--------------------------------
 	
-	public static GameScreen displayScreen(GameScreen screenIn) { return displayScreen(screenIn, null, true); }
-	public static GameScreen displayScreen(GameScreen screenIn, boolean init) { return displayScreen(screenIn, true); }
-	public static GameScreen displayScreen(GameScreen screenIn, GameScreen previous) { return displayScreen(screenIn, previous, true); }
+	public static GameScreen displayScreen(GameScreen screenIn) { return displayScreen(screenIn, null, true, true); }
+	public static GameScreen displayScreen(GameScreen screenIn, boolean init) { return displayScreen(screenIn, null, init, true); }
+	public static GameScreen displayScreen(GameScreen screenIn, GameScreen previous) { return displayScreen(screenIn, previous, true, true); }
 	/** Attempts to display a new GameScreen in game. */
-	public static GameScreen displayScreen(GameScreen screenIn, GameScreen previous, boolean init) {
+	public static GameScreen displayScreen(GameScreen screenIn, GameScreen previous, boolean init, boolean fade) {
 		instance.deltaF = 0;
 		instance.deltaU = 0;
 		
 		if (screenIn != null) {
 			GameScreen old = currentScreen;
 			currentScreen = screenIn;
+			if (fade) currentScreen.fadeIn();
 			
 			if (old != null) {
 				old.close();

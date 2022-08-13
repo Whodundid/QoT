@@ -173,6 +173,12 @@ public class GamePlayScreen extends GameScreen {
 		QoT.displayScreen(new CharacterScreen(QoT.thePlayer), this);
 	}
 	
+	public void openPauseWindowIfNotOpen() {
+		//System.out.println(this.properties.childrenToBeRemoved);
+		if (pauseWindow != null && getChildren().contains(pauseWindow)) return;
+		displayWindow(pauseWindow = new GamePauseWindow(this, 30, 30));
+	}
+	
 	public void openPauseWindow() {
 		if (getChildren().notContains(pauseWindow) || pauseWindow == null) {
 			displayWindow(pauseWindow = new GamePauseWindow(this, 30, 30));

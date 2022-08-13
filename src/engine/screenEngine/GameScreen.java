@@ -14,18 +14,55 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	protected Stack<GameScreen<?>> screenHistory = new Stack();
 	protected EArrayList<String> aliases = new EArrayList();
 	
+	/** The point at which the screen will start fading. */
+	protected long screenFadeStart;
+	/** The amount of time it takes for the screen to fade in/out. (measured in milliseconds) */
+	protected long screenFadeDuration = 1500;
+	/** True if the screen is actively fading. */
+	protected boolean isFading = false;
+	/** True if fading in. */
+	protected boolean isFadingIn = false;
+	/** True if screen fading should happen on load/close. */
+	protected boolean performFade = true;
+	
+	//--------------
+	// Constructors
+	//--------------
+	
 	public GameScreen() {
 		setDefaultDims();
 	}
 	
-	protected void setDefaultDims() {
-		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
-	}
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawScreen(mXIn, mYIn);
 		super.drawObject(mXIn, mYIn);
+		
+
+	}
+	
+	@Override
+	public void keyPressed(char typedChar, int keyCode) {
+		if (keyCode == Keyboard.KEY_ESC && !screenHistory.isEmpty()) closeScreen();
+		super.keyPressed(typedChar, keyCode);
+	}
+	
+	@Override
+	public void onFirstDraw() {
+		super.onFirstDraw();
+		//fadeIn();
+	}
+	
+	//---------
+	// Methods
+	//---------
+	
+	protected void setDefaultDims() {
+		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
 	}
 	
 	/** Initializer method that is called before a screen is built. */
@@ -37,10 +74,8 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	/** Called whenever this screen is about to be closed. */
 	public void onScreenClosed() {}
 	
-	@Override
-	public void keyPressed(char typedChar, int keyCode) {
-		if (keyCode == Keyboard.KEY_ESC && !screenHistory.isEmpty()) closeScreen(false);
-		super.keyPressed(typedChar, keyCode);
+	public void enableScreenFade(boolean val) {
+		performFade = val;
 	}
 	
 	public void onWindowResized() {
@@ -91,6 +126,24 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	public GameScreen<E> setWindowSize() {
 		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
 		return this;
+	}
+	
+	//---------------------
+	// Screen Fade Methods
+	//---------------------
+	
+	public void fadeIn() {
+		if (!performFade) return;
+		screenFadeStart = System.currentTimeMillis();
+		isFading = true;
+		isFadingIn = true;
+	}
+	
+	public void fadeOutAndClose() {
+		if (!performFade) return;
+		screenFadeStart = System.currentTimeMillis();
+		isFading = true;
+		isFadingIn = false;
 	}
 	
 }

@@ -65,7 +65,7 @@ public class GamePauseWindow extends WindowParent {
 		if (object == options) {
 			var opScreen = QoT.displayScreen(new OptionsScreen(), parent);
 			if (parent instanceof GamePlayScreen g) {
-				opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, () -> g.openPauseWindow());
+				opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, () -> g.openPauseWindowIfNotOpen());
 			}
 		}
 		

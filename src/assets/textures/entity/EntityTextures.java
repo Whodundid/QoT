@@ -36,7 +36,11 @@ public class EntityTextures extends TextureLoader {
 	whobro = new GameTexture(textureDir + "whodundidsbrother\\", "whodundidsbrother_base.png"),
 	whobro1 = new GameTexture(textureDir + "whodundidsbrother\\", "whodundidsbrother_base2.png"),
 	whobro2 = new GameTexture(textureDir + "whodundidsbrother\\", "whodundidsbrother_base3.png"),
-	whobro3 = new GameTexture(textureDir + "whodundidsbrother\\", "whodundidsbrother_base4.png");
+	whobro3 = new GameTexture(textureDir + "whodundidsbrother\\", "whodundidsbrother_base4.png"),
+	
+	whobro_blink0 = new GameTexture(textureDir + "whodundidsbrother\\", "whobro_blink0.png"),
+	whobro_blink1 = new GameTexture(textureDir + "whodundidsbrother\\", "whobro_blink1.png"),
+	whobro_blink2 = new GameTexture(textureDir + "whodundidsbrother\\", "whobro_blink2.png");
 	
 	//-----------
 	// Overrides
@@ -54,6 +58,10 @@ public class EntityTextures extends TextureLoader {
 		reg(sys, whobro1);
 		reg(sys, whobro2);
 		reg(sys, whobro3);
+		
+		reg(sys, whobro_blink0);
+		reg(sys, whobro_blink1);
+		reg(sys, whobro_blink2);
 	}
 	
 }

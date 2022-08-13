@@ -13,6 +13,8 @@ public class WhodundidsBrother extends Enemy {
 
 	private boolean hit = false;
 	private long timeSinceLastHit;
+	private long timeSinceLastBlink;
+	private long delayTillNextBlink;
 	
 	public WhodundidsBrother() { this(0, 0); }
 	public WhodundidsBrother(int posX, int posY) {
@@ -25,6 +27,11 @@ public class WhodundidsBrother extends Enemy {
 		setHealth(10);
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 		
+		randShort = 1500;
+		randLong = 3000;
+		
+		delayTillNextBlink = RandomUtil.getRoll(5000, 9000);
+		
 		animationHandler = new AnimationHandler(this);
 		var att1 = animationHandler.createAnimationSet(AnimationHandler.ATTACK_1);
 		att1.setUpdateInterval(30);
@@ -34,8 +41,16 @@ public class WhodundidsBrother extends Enemy {
 		att1.addFrame(EntityTextures.whobro3);
 		att1.addFrame(EntityTextures.whobro2);
 		att1.addFrame(EntityTextures.whobro1);
-		randShort = 1500;
-		randLong = 3000;
+
+		
+		var idle1 = animationHandler.createAnimationSet(AnimationHandler.IDLE_ANIMATION_1);
+		idle1.setUpdateInterval(22);
+		idle1.addFrame(EntityTextures.whobro);
+		idle1.addFrame(EntityTextures.whobro_blink0);
+		idle1.addFrame(EntityTextures.whobro_blink1);
+		idle1.addFrame(EntityTextures.whobro_blink2);
+		idle1.addFrame(EntityTextures.whobro_blink1);
+		idle1.addFrame(EntityTextures.whobro_blink0);
 	}
 
 	@Override
@@ -79,6 +94,13 @@ public class WhodundidsBrother extends Enemy {
 		double distToPlayer = world.getDistance(this, QoT.thePlayer);
 		if (distToPlayer <= 50) {
 			animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.ATTACK_1);
+		}
+		else if (!animationHandler.isAnimationLoaded()) {
+			if (System.currentTimeMillis() - timeSinceLastBlink >= delayTillNextBlink) {
+				timeSinceLastBlink = System.currentTimeMillis();
+				delayTillNextBlink = RandomUtil.getRoll(5000, 9000);
+				animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.IDLE_ANIMATION_1);
+			}
 		}
 		
 		if (testDim.contains(pDims)) {

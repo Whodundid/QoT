@@ -3,6 +3,7 @@ package world.worldTiles.categories;
 import world.worldTiles.TileCategory;
 import world.worldTiles.WorldTile;
 import world.worldTiles.categories.nature.Bush0;
+import world.worldTiles.categories.nature.CoarseSand;
 import world.worldTiles.categories.nature.CrackedDirt;
 import world.worldTiles.categories.nature.DarkGrass;
 import world.worldTiles.categories.nature.Dirt;
@@ -31,6 +32,7 @@ public class NatureTiles implements TileCategory {
 	public static final WorldTile redSand = new RedSand();
 	public static final WorldTile rockyStone = new RockyStone();
 	public static final WorldTile sand = new Sand();
+	public static final WorldTile coarseSand = new CoarseSand();
 	public static final WorldTile stone = new Stone();
 	public static final WorldTile water = new Water();
 	public static final WorldTile wood = new Wood();
