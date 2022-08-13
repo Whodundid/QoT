@@ -16,8 +16,8 @@ public class Player extends Entity {
 		
 		init(posX, posY, 48, 48);
 		
-		setMaxHealth(100);
-		setHealth(100);
+		setMaxHealth(10);
+		setHealth(10);
 		setBaseMeleeDamage(2);
 		
 		setCollisionBox(midX - 8, endY - 10, midX + 8, endY);

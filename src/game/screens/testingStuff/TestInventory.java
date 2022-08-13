@@ -1,5 +1,7 @@
 package game.screens.testingStuff;
 
+import org.lwjgl.opengl.GL11;
+
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.WindowParent;
@@ -40,62 +42,27 @@ public class TestInventory<E> extends WindowParent<E> {
 		close = new WindowButton(this, startX + 10, startY + 10, 50, 50);
 		close.setActionReceiver(this);
 		
-		WindowParent innerWindow = new WindowParent(this, (int) (startX + 60), (int) (startY + 60), 160, 100) {
-			private WindowButton sayHi;
-			private boolean drawHi = false;
-			private long timeOut = 2000;
-			private long startTime;
-			
-			@Override
-			public void initWindow() {
-				setCloseable(false);
-				setMinimizable(false);
-			}
-			
-			@Override
-			public void initChildren() {
-				defaultHeader(this);
-				header.height = 10;
-				
-				sayHi = new WindowButton(this, startX + 5, startY + 5, 100, 30, "Say Hi");
-				sayHi.setActionReceiver(this);
-				
-				addChild(sayHi);
-			}
-			
-			@Override
-			public void drawObject(int mXIn, int mYIn) {
-				drawDefaultBackground();
-				
-				if (drawHi) {
-					drawString("HI", sayHi.startX, sayHi.endY + FontRenderer.FONT_HEIGHT, EColors.rainbow());
-					
-					if ((System.currentTimeMillis() - startTime) >= timeOut) {
-						drawHi = false;
-					}
-				}
-				
-				super.drawObject(mXIn, mYIn);
-			}
-			
-			@Override
-			public void actionPerformed(IActionObject object, Object... args) {
-				if (object == sayHi) {
-					drawHi = true;
-					startTime = System.currentTimeMillis();
-				}
-			}
-		};
-		
-		innerWindow.setMoveWithParent(true);
-		
 		addChild(close);
-		addChild(innerWindow);
 	}
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawDefaultBackground();
+		
+		var scale = 0.5;
+		var fw = FontRenderer.getStringWidth("HELLO");
+		var fh = FontRenderer.FONT_HEIGHT;
+		var scaleX = (fw * scale) / fw;
+		var scaleY = (fh * scale) / fh;
+		var sourceCenterX = midX;
+		var sourceCenterY = midY;
+		
+		GL11.glPushMatrix();
+			GL11.glTranslated(0.03, 0, 0);
+			GL11.glScaled(scaleX, scaleY, 0);
+			//GL11.glTranslated(-sourceCenterX, -sourceCenterY, mYIn);
+			drawStringC("HELLO", midX, midY);
+		GL11.glPopMatrix();
 		
 		//AT THE END -- IN ORDER TO DRAW CHILD OBJECTS
 		super.drawObject(mXIn, mYIn);

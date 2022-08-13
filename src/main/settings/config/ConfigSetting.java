@@ -1,10 +1,10 @@
 package main.settings.config;
 
-import static eutil.datatypes.util.DataTypeUtil.*;
+import static eutil.datatypes.util.EDataType.*;
 
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.DataTypeUtil;
+import eutil.datatypes.util.EDataType;
 
 import java.util.Collection;
 
@@ -17,7 +17,7 @@ public class ConfigSetting<T> {
 	private boolean requiresDev = false;
 	private T val = null;
 	private T defaultVal = null;
-	private DataTypeUtil type;
+	private EDataType type;
 	private EArrayList additionalArgs = new EArrayList();
 	private final Class<T> cType;
 	private boolean ignoreConfigRead = false;
@@ -59,7 +59,7 @@ public class ConfigSetting<T> {
 	public String getDescription() { return description; }
 	public String asString() { return val != null ? val.toString() : "null"; }
 	public String defAsString() { return defaultVal != null ? defaultVal.toString() : "null"; }
-	public DataTypeUtil getType() { return type; }
+	public EDataType getType() { return type; }
 	public Class<T> getClassType() { return cType; }
 	public T get() { return val; }
 	public boolean getRequiresDev() { return requiresDev; }
