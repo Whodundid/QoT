@@ -1,6 +1,7 @@
 package game.entities.player;
 
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import game.quests.Quest;
 
 public class PlayerStats {
@@ -8,8 +9,8 @@ public class PlayerStats {
 	private Player player;
 	private int enemiesKilled;
 	private int friendshipPoints; // what is ??
-	private EArrayList<Quest> completedQuests = new EArrayList();
-	private EArrayList<Quest> incompletedQuests = new EArrayList();
+	private EList<Quest> completedQuests = new EArrayList<>();
+	private EList<Quest> incompletedQuests = new EArrayList<>();
 	
 	//-------------
 	// Constructor
@@ -38,7 +39,7 @@ public class PlayerStats {
 	public PlayerStats completeQuest(Quest questIn) { completedQuests.addIfNotContains(questIn); return this; }
 	public PlayerStats startQuest(Quest questIn) { incompletedQuests.addIfNotContains(questIn); return this; }
 	
-	public boolean hasStartedQuest(Quest questIn) { return EArrayList.combineLists(completedQuests, incompletedQuests).contains(questIn); }
+	public boolean hasStartedQuest(Quest questIn) { return EList.combineLists(completedQuests, incompletedQuests).contains(questIn); }
 	public boolean hasCompletedQuest(Quest questIn) { return completedQuests.contains(questIn); }
 	
 	//---------
@@ -51,8 +52,8 @@ public class PlayerStats {
 	public int getFriendshipPoints() { return friendshipPoints; }
 	public int getNumQuestsCompleted() { return completedQuests.size(); }
 	
-	public EArrayList<Quest> getCompletedQuests() { return completedQuests; }
-	public EArrayList<Quest> getIncompletedQuests() { return incompletedQuests; }
+	public EList<Quest> getCompletedQuests() { return completedQuests; }
+	public EList<Quest> getIncompletedQuests() { return incompletedQuests; }
 	
 	//---------
 	// Setters

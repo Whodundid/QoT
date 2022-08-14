@@ -1,5 +1,8 @@
 package engine.windowLib.windowObjects.advancedObjects.textArea;
 
+import java.util.Iterator;
+import java.util.List;
+
 import engine.inputHandlers.Mouse;
 import engine.renderEngine.GLSettings;
 import engine.windowLib.windowObjects.advancedObjects.WindowScrollList;
@@ -10,9 +13,8 @@ import engine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
-
-import java.util.Iterator;
 
 //Author: Hunter Bragg
 
@@ -22,7 +24,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	// Fields
 	//--------
 	
-	private EArrayList<TextAreaLine<E>> textDocument;
+	private EList<TextAreaLine<E>> textDocument;
 	private TextAreaLine<E> currentLine, longestLine;
 	protected boolean editable = true;
 	protected boolean drawLineNumbers = false;
@@ -284,7 +286,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 			String text = theLine.getText().substring(theLine.getCursorPosition());
 			TextAreaLine<E> newLine = new TextAreaLine<>(this, text, theLine.textColor, theLine.getGenericObject(), theLine.getLineNumber() + 1);
 			
-			EArrayList<TextAreaLine<E>> linesAfter = new EArrayList<>();
+			EList<TextAreaLine<E>> linesAfter = new EArrayList<>();
 			try {
 				for (int i = theLine.getLineNumber() + 1; i < textDocument.size() + 1; i++) {
 					var l = getTextLine(i);
@@ -314,7 +316,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 			var prev = getTextLine(theLine.getLineNumber() - 1);
 			
 			if (prev != null) {
-				EArrayList<TextAreaLine<E>> linesAfter = new EArrayList<>();
+				EList<TextAreaLine<E>> linesAfter = new EArrayList<>();
 				try {
 					for (int i = theLine.getLineNumber() + 1; i < textDocument.size() + 1; i++) {
 						linesAfter.add(getTextLine(i));
@@ -410,7 +412,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	public boolean getDrawLineHighlight() { return drawLineHighlight; }
 	public boolean isEditable() { return editable; }
 	public TextAreaLine<E> getCurrentLine() { return currentLine; }
-	public EArrayList<TextAreaLine<E>> getTextDocument() { return textDocument; }
+	public EList<TextAreaLine<E>> getTextDocument() { return textDocument; }
 	
 	public TextAreaLine<E> getLineMouseIsOver() {
 		double mPosY = Mouse.getMy() - startY - 1;
@@ -496,7 +498,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	public void setLineNumberSeparatorColor(EColors colorIn) { setLineNumberSeparatorColor(colorIn.intVal); }
 	public void setLineNumberSeparatorColor(int colorIn) { lineNumberSeparatorColor = colorIn; }
 	
-	public void setTextDocument(EArrayList<TextAreaLine<E>> docIn) {
+	public void setTextDocument(List<TextAreaLine<E>> docIn) {
 		clear();
 		docIn.forEach(l -> addTextLine(l));
 	}

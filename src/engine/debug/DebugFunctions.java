@@ -14,6 +14,7 @@ import engine.debug.debugCommands.DebugCommand;
 import engine.terminal.window.ETerminal;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 //Author: Hunter Bragg
 
@@ -22,7 +23,7 @@ import eutil.datatypes.EArrayList;
 /** A basic utility that allows the execution of dev defined test java code within game. */
 public class DebugFunctions {
 
-	private static EArrayList<DebugCommand> commands = new EArrayList();
+	private static EList<DebugCommand> commands = new EArrayList<>();
 	
 	static {
 		commands.add(new Deb0());

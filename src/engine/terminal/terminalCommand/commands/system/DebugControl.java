@@ -6,6 +6,7 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import main.QoT;
 
 //Author: Hunter Bragg
@@ -20,13 +21,12 @@ public class DebugControl extends TerminalCommand {
 
 	@Override public String getName() { return "debug"; }
 	@Override public boolean showInHelp() { return false; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("deb", "dev"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("deb", "dev"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Toggles debug mode for EMC."; }
 	@Override public String getUsage() { return "ex: deb init"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() >= 1) {
 			try {
 				String arg = args.get(0).toLowerCase();

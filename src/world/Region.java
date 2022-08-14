@@ -1,7 +1,7 @@
 package world;
 
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.EDimensionI;
 import game.entities.Entity;
 
@@ -56,7 +56,7 @@ public class Region {
 		setDimensions(startX, startY, endX, endY);
 	}
 	
-	public EArrayList<Entity> getEntitiesInside() {
+	public EList<Entity> getEntitiesInside() {
 		return null;
 	}
 	

@@ -6,7 +6,7 @@ import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.ActionWindowParent;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 
 //Author: Hunter Bragg
@@ -25,7 +25,7 @@ public class WindowDialogBox extends ActionWindowParent {
 	
 	public int messageColor = 0xffffffff, titleColor = 0xffffffff;
 	public String message = "", title = "";
-	protected EArrayList<String> wordWrappedLines;
+	protected EList<String> wordWrappedLines;
 	protected IWindowObject<?> defaultObject;
 	protected WindowButton yes, no, okButton;
 	protected DialogBoxTypes type;

@@ -4,6 +4,7 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 import eutil.strings.StringUtil;
 import main.QoT;
@@ -19,14 +20,11 @@ public class ForLoop extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "for"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Runs a command n number of times in given range replacing any '#' arguments with current value."; }
-	@Override public String getUsage() { return "ex: for 0-9-1 server ping 192.168.0.#"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
+	@Override public String getUsage() { return "ex: for 0-9-1 'cmd'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() < 2) {
 			termIn.error("Not enought arguments for loop!");
 			termIn.info(getUsage());
@@ -34,7 +32,7 @@ public class ForLoop extends TerminalCommand {
 		else if (args.size() >= 2) {
 			String vals = args.get(0);
 			
-			EArrayList<String> otherArgs = new EArrayList(args.subList(1, args.size()));
+			EList<String> otherArgs = new EArrayList<>(args.subList(1, args.size()));
 			
 			//String cmd = "";
 			//for (String s : otherArgs) { cmd += (s + " "); }
@@ -136,13 +134,13 @@ public class ForLoop extends TerminalCommand {
 		return null;
 	}
 	
-	private void runLoop(ETerminal termIn, Object curVal, EArrayList<String> argsIn) {
+	private void runLoop(ETerminal termIn, Object curVal, EList<String> argsIn) {
 		String cmd = replaceValsInArgs(argsIn, curVal);
 		termIn.writeln("> " + cmd);
 		QoT.getTerminalHandler().executeCommand(termIn, cmd, false);
 	}
 	
-	private String replaceValsInArgs(EArrayList<String> argsIn, Object curVal) {
+	private String replaceValsInArgs(EList<String> argsIn, Object curVal) {
 		String cmd = "";
 		for (String s : argsIn) {
 			s = s.replaceAll("\\#", "" + curVal);

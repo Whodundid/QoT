@@ -6,7 +6,7 @@ import engine.terminal.window.ETerminal;
 public class Deb8 extends DebugCommand {
 
 	@Override
-	public void run(ETerminal termIn, Object... args) {
+	public void run(ETerminal<?> termIn, Object... args) {
 		
 	}
 

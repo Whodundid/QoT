@@ -2,11 +2,12 @@ package main.settings.config;
 
 import static eutil.datatypes.util.EDataType.*;
 
+import java.util.Collection;
+
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.datatypes.util.EDataType;
-
-import java.util.Collection;
 
 //Author: Hunter Bragg
 
@@ -18,7 +19,7 @@ public class ConfigSetting<T> {
 	private T val = null;
 	private T defaultVal = null;
 	private EDataType type;
-	private EArrayList additionalArgs = new EArrayList();
+	private EList additionalArgs = new EArrayList<>();
 	private final Class<T> cType;
 	private boolean ignoreConfigRead = false;
 	private boolean ignoreConfigWrite = false;
@@ -63,7 +64,7 @@ public class ConfigSetting<T> {
 	public Class<T> getClassType() { return cType; }
 	public T get() { return val; }
 	public boolean getRequiresDev() { return requiresDev; }
-	public EArrayList getArgs() { return additionalArgs; }
+	public EList<?> getArgs() { return additionalArgs; }
 	public T getDefault() { return defaultVal; }
 	public boolean getIgnoreConfigRead() { return ignoreConfigRead; }
 	public boolean getIgnoreConfigWrite() { return ignoreConfigWrite; }

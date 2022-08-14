@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 
 import engine.renderEngine.shaders.types.basic.BasicShader;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 /** Stores references to all available shaders. */
 public final class Shaders {
@@ -18,7 +19,7 @@ public final class Shaders {
 	/** Value indicating whether or not each shader has been initialized. */
 	private static boolean init = false;
 	/** List containing each shader. */
-	private static EArrayList<ShaderProgram> shaders = new EArrayList();
+	private static EList<ShaderProgram> shaders = new EArrayList<>();
 	
 	//---------
 	// Shaders

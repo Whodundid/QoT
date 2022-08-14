@@ -44,7 +44,7 @@ public class Keyboard extends GLFWKeyCallback {
 	public static boolean repeatEvents = true;
 	
 	/** Stores String->Keycode mappings for select known keyboard characters. */
-	private static final HashMap<String, Integer> keyMapings = new HashMap();
+	private static final HashMap<String, Integer> keyMapings = new HashMap<>();
 	
 	//--------------
 	// Constructors

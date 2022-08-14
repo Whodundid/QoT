@@ -20,6 +20,7 @@ import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.misc.ScreenLocation;
 import main.QoT;
 
@@ -267,7 +268,7 @@ public class StaticTopParent extends EGui {
 	/** Removes all windows from the topParent that are not pinned. */
 	public static void removeUnpinnedObjects(ITopParent<?> objIn) {
 		//check in both the current objects and the objects that will be added
-		EArrayList<IWindowParent<?>> windows = new EArrayList<>();
+		EList<IWindowParent<?>> windows = new EArrayList<>();
 		
 		for (var o : objIn.getCombinedChildren()) {
 			//only windows can be pinned
@@ -428,7 +429,7 @@ public class StaticTopParent extends EGui {
 	/** Returns the object that has the highest z level under the cursor. */
 	public static IWindowObject<?> getHighestZObjectUnderMouse(ITopParent<?> objIn) {
 		try {
-			BoxList<IWindowObject<?>, EArrayList<IWindowObject<?>>> sortedByParent = new BoxList<>();
+			BoxList<IWindowObject<?>, EList<IWindowObject<?>>> sortedByParent = new BoxList<>();
 			var underMouse = objIn.getAllObjectsUnderMouse();
 			
 			//first setup the sorted list
@@ -458,9 +459,9 @@ public class StaticTopParent extends EGui {
 	}
 	
 	/** Returns a list of all objects that currently under the cursor. */
-	public static EArrayList<IWindowObject<?>> getAllObjectsUnderMouse(ITopParent<?> objIn) {
-		EArrayList<IWindowObject<?>> underMouse = new EArrayList<>();
-		EArrayList<IWindowObject<?>> children = objIn.getAllChildren();
+	public static EList<IWindowObject<?>> getAllObjectsUnderMouse(ITopParent<?> objIn) {
+		EList<IWindowObject<?>> underMouse = new EArrayList<>();
+		EList<IWindowObject<?>> children = objIn.getAllChildren();
 		
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();

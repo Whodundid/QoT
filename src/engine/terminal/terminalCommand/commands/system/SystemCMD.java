@@ -1,13 +1,14 @@
 package engine.terminal.terminalCommand.commands.system;
 
+import java.io.File;
+
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.terminalUtil.ESystemInfo;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-
-import java.io.File;
+import eutil.datatypes.EList;
 
 public class SystemCMD extends TerminalCommand {
 	
@@ -18,15 +19,13 @@ public class SystemCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "system"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("sys"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("sys"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays information on the system"; }
 	@Override public String getUsage() { return "ex: sys"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) { termIn.error("This command does not take any arguments"); }
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+		if (args.isNotEmpty()) termIn.error("This command does not take any arguments");
 		else {
 			
 			//os

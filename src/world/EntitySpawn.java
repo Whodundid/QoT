@@ -1,6 +1,7 @@
 package world;
 
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.misc.Rotation;
 import game.entities.Entity;
 import game.entities.EntityList;
@@ -10,7 +11,7 @@ public class EntitySpawn {
 	
 	private int x, y;
 	private int type;
-	private EArrayList<Item> spawnItems = new EArrayList();
+	private EList<Item> spawnItems = new EArrayList<>();
 	private int initHealth = -1;
 	private int initMana = -1;
 	private Rotation initFacing = Rotation.LEFT;
@@ -66,7 +67,7 @@ public class EntitySpawn {
 	public int getX() { return x; }
 	public int getY() { return y; }
 	public int getType() { return type; }
-	public EArrayList<Item> getItems() { return spawnItems; }
+	public EList<Item> getItems() { return spawnItems; }
 	public int getHealth() { return initHealth; }
 	public int getMana() { return initMana; }
 	public Rotation getFacing() { return initFacing; }

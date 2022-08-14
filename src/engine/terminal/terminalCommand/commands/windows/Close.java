@@ -4,9 +4,10 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import engine.windowLib.windowTypes.WindowParent;
+import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.strings.StringUtil;
 
 public class Close extends TerminalCommand {
@@ -18,19 +19,16 @@ public class Close extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "close"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Attempts to close a specific window"; }
 	@Override public String getUsage() { return "ex: close 23 (where 23 is the window pid)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) termIn.close();
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
-				EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+				EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 				
 				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getObjectID() == pid);
 				if (EUtil.nullDo(theWindow, w -> w.close())) {
@@ -42,10 +40,10 @@ public class Close extends TerminalCommand {
 			catch (Exception e) {
 				try {
 					String name = StringUtil.combineAll(args, " ").toLowerCase().trim();
-					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+					EList<IWindowParent<?>> windows = termIn.getTopParent().getAllActiveWindows();
 					
 					if (name.equals("all") ) {
-						for (WindowParent p : windows) {
+						for (var p : windows) {
 							if (p != termIn) {
 								p.close();
 								termIn.writeln("Window: '" + p.getObjectName() + " ; " + p.getObjectID() + "' closed", EColors.green);
@@ -53,14 +51,14 @@ public class Close extends TerminalCommand {
 						}
 					}
 					else if (name.equals("all+")) {
-						for (WindowParent p : windows) {
+						for (var p : windows) {
 							p.close();
 						}
 						termIn.getTopParent().displayWindow(null);
 					}
 					else {
-						WindowParent theWindow = null;
-						for (WindowParent p : windows) {
+						IWindowParent<?> theWindow = null;
+						for (var p : windows) {
 							if (p.getObjectName().toLowerCase().equals(name)) {
 								theWindow = p;
 								break;

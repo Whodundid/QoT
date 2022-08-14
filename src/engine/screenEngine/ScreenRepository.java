@@ -1,12 +1,13 @@
 package engine.screenEngine;
 
+import java.lang.reflect.Constructor;
+
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import game.screens.main.MainMenuScreen;
 import game.screens.main.OptionsScreen;
 import game.screens.main.WorldSelectScreen;
 import world.mapEditor.MapMenuScreen;
-
-import java.lang.reflect.Constructor;
 
 /**
  * A static collection of GameScreens intended for up-front use in one
@@ -24,7 +25,7 @@ public class ScreenRepository {
 	
 	//------------------------------------
 	
-	private static final EArrayList<GameScreen<?>> screens = new EArrayList();
+	private static final EList<GameScreen<?>> screens = new EArrayList<>();
 	
 	//------------------------------------
 
@@ -110,7 +111,7 @@ public class ScreenRepository {
 	/**
 	 * @return A copy of the registered screens list
 	 */
-	public static EArrayList<GameScreen> getRegisteredScreens() {
+	public static EList<GameScreen> getRegisteredScreens() {
 		return new EArrayList(screens);
 	}
 	

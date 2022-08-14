@@ -8,6 +8,7 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.file.FileUtil;
 import main.QoT;
 
@@ -27,7 +28,7 @@ public class DynamicWindow extends WindowParent {
 	private Box2<Double, Double> parsedDims = new Box2<>();
 	private ObjectPosition parsedCenterType = null;
 	
-	private EArrayList<IWindowObject<?>> parsedObjects = new EArrayList<>();
+	private EList<IWindowObject<?>> parsedObjects = new EArrayList<>();
 	
 	//--------------
 	// Constructors

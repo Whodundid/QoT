@@ -22,7 +22,7 @@ public class PlayerSpawnPosition extends GameObject {
 	}
 	
 	public GameWorld getWorld() { return theWorld; }
-	public Box2<Integer, Integer> getPos() { return new Box2(xPos, yPos); }
+	public Box2<Integer, Integer> getPos() { return new Box2<>(xPos, yPos); }
 	public int getX() { return xPos; }
 	public int getY() { return yPos; }
 	

@@ -4,6 +4,7 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 //Author: Hunter Bragg
 
@@ -16,14 +17,12 @@ public class ClearTerminal extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "clear"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("clr", "cls"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("clr", "cls"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Clears the terminal"; }
 	@Override public String getUsage() { return "ex: clr"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		termIn.clear();
 	}
 	

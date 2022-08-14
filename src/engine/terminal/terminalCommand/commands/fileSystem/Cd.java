@@ -1,12 +1,13 @@
 package engine.terminal.terminalCommand.commands.fileSystem;
 
+import java.io.File;
+import java.io.IOException;
+
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.strings.StringUtil;
-import java.io.File;
-import java.io.IOException;
 
 public class Cd extends FileCommand {
 	
@@ -16,14 +17,12 @@ public class Cd extends FileCommand {
 	}
 	
 	@Override public String getName() { return "cd"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Sets the current working directory."; }
 	@Override public String getUsage() { return "ex: cd 'dir'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
+	@Override public void handleTabComplete(ETerminal termIn, EList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		if (args.size() >= 1) {
 			try {
@@ -58,8 +57,8 @@ public class Cd extends FileCommand {
 		}
 	}
 	
-	private void setDir(ETerminal termIn, EArrayList<String> args, boolean runVisually, File dir) {
-		if (dir == null) { dir = termIn.getDir(); }
+	private void setDir(ETerminal termIn, EList<String> args, boolean runVisually, File dir) {
+		if (dir == null) dir = termIn.getDir();
 		
 		if (dir.exists()) {
 			if (dir.isDirectory()) {

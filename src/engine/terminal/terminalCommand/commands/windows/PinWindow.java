@@ -3,10 +3,10 @@ package engine.terminal.terminalCommand.commands.windows;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
-import engine.windowLib.windowTypes.WindowParent;
+import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.strings.StringUtil;
 
 public class PinWindow extends TerminalCommand {
@@ -18,14 +18,11 @@ public class PinWindow extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "pin"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Pins or unpins a specified window to or from the hud."; }
 	@Override public String getUsage() { return "ex: pin 4 (where 4 is the window pid)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			boolean val = termIn.isPinned();
 			termIn.setPinned(!val);
@@ -42,9 +39,9 @@ public class PinWindow extends TerminalCommand {
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
-				EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+				EList<IWindowParent<?>> windows = termIn.getTopParent().getAllActiveWindows();
 				
-				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getObjectID() == pid);
+				IWindowParent<?> theWindow = EUtil.getFirst(windows, w -> w.getObjectID() == pid);
 				if (theWindow != null) {
 					boolean val = theWindow.isPinned();
 					theWindow.setPinned(!val);
@@ -65,10 +62,10 @@ public class PinWindow extends TerminalCommand {
 				try {
 					String name = StringUtil.combineAll(args, " ").trim();
 					
-					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
-					WindowParent theWindow = null;
+					EList<IWindowParent<?>> windows = termIn.getTopParent().getAllActiveWindows();
+					IWindowParent<?> theWindow = null;
 					
-					for (WindowParent p : windows) {
+					for (var p : windows) {
 						if (p.getObjectName().toLowerCase().equals(name)) {
 							theWindow = p;
 							break;

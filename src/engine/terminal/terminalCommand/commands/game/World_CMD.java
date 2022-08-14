@@ -4,7 +4,7 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import main.QoT;
 import world.GameWorld;
 
@@ -17,15 +17,12 @@ public class World_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "world"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>(); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays current world info"; }
 	@Override public String getUsage() { return "ex: world"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) termIn.error("This command takes no arguments!");
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+		if (args.isNotEmpty()) termIn.error(ERROR_NO_ARGS);
 		
 		GameWorld world = QoT.theWorld;
 		

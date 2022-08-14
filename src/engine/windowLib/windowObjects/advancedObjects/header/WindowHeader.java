@@ -13,7 +13,7 @@ import engine.windowLib.windowUtil.EObjectGroup;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import eutil.misc.ScreenLocation;
@@ -35,7 +35,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	// Static Fields
 	//---------------
 	
-	/** Deafult header height in pixels. */
+	/** Default header height in pixels. */
 	public static int defaultHeight = 35;
 	/** Default header button width in pixels. (also button height) */
 	public static int buttonWidth = 32;
@@ -96,7 +96,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	/** Used to denote whether or not this header has tabs or not. */
 	private boolean isTabHeader = false;
 	/** Used to keep track of all tabs on this header. */
-	private EArrayList<HeaderTab<?>> tabList;
+	private EList<HeaderTab<?>> tabList;
 	/** The currently selected header tab. */
 	private HeaderTab<?> currentTab;
 	

@@ -2,6 +2,7 @@ package engine.animationHandler;
 
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 /**
  * An AnimationSet comprises a single set of keyframes that pertain to
@@ -21,7 +22,7 @@ public class AnimationSet {
 	/** The name of this animation set -- can be modified. */
 	private String setName = "My New Animation";
 	/** The set of frames for this animation. */
-	private final EArrayList<GameTexture> frames = new EArrayList<>();
+	private final EList<GameTexture> frames = new EArrayList<>();
 	/** 40 game ticks by default -- can be modified. */
 	private long updateInterval = 40;
 	
@@ -33,12 +34,12 @@ public class AnimationSet {
 		setName = setNameIn;
 	}
 	
-	public AnimationSet(String setNameIn, EArrayList<GameTexture> framesIn) {
+	public AnimationSet(String setNameIn, EList<GameTexture> framesIn) {
 		setName = setNameIn;
 		frames.addAll(framesIn);
 	}
 	
-	public AnimationSet(String setNameIn, EArrayList<GameTexture> framesIn, long updateIntervalIn) {
+	public AnimationSet(String setNameIn, EList<GameTexture> framesIn, long updateIntervalIn) {
 		setName = setNameIn;
 		frames.addAll(framesIn);
 		updateInterval = updateIntervalIn;
@@ -70,7 +71,7 @@ public class AnimationSet {
 	
 	public String getSetName() { return setName; }
 	public long getUpdateInterval() { return updateInterval; }
-	public EArrayList<GameTexture> getFrames() { return frames; }
+	public EList<GameTexture> getFrames() { return frames; }
 	public GameTexture getFrameAtIndex(int index) { return frames.get(index); }
 	
 	//---------

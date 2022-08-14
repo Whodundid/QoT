@@ -35,6 +35,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
 import main.QoT;
@@ -240,7 +241,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * @param type The type of future tasks to be executed
 	 * @return A list of all tasks that will be run for the given type
 	 */
-	public default EArrayList<Runnable> getFutureTasks(FutureTaskEventType type) {
+	public default EList<Runnable> getFutureTasks(FutureTaskEventType type) {
 		var ftm = getFutureTaskManager();
 		if (ftm != null) return ftm.getFutureTasks(type);
 		return new EArrayList<>();
@@ -681,17 +682,17 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//----------
 
 	/** Returns a list of all objects that are directly children of this object. */
-	public default EArrayList<IWindowObject<?>> getChildren() { return properties().children; }
+	public default EList<IWindowObject<?>> getChildren() { return properties().children; }
 	/** Returns a list of all objects that are going to be added on the next draw cycle */
-	public default EArrayList<IWindowObject<?>> getAddingChildren() { return properties().childrenToBeAdded; }
+	public default EList<IWindowObject<?>> getAddingChildren() { return properties().childrenToBeAdded; }
 	/** Returns a list of all objects that are going to be removed on the next draw cycle */
-	public default EArrayList<IWindowObject<?>> getRemovingChildren() { return properties().childrenToBeRemoved; }
+	public default EList<IWindowObject<?>> getRemovingChildren() { return properties().childrenToBeRemoved; }
 
 	/** Returns a list of all children that descend from this parent. */
-	public default EArrayList<IWindowObject<?>> getAllChildren() {
-		EArrayList<IWindowObject<?>> foundObjs = new EArrayList<>();
-		EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList<>();
-		EArrayList<IWindowObject<?>> workList = new EArrayList<>();
+	public default EList<IWindowObject<?>> getAllChildren() {
+		EList<IWindowObject<?>> foundObjs = new EArrayList<>();
+		EList<IWindowObject<?>> objsWithChildren = new EArrayList<>();
+		EList<IWindowObject<?>> workList = new EArrayList<>();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
 		getChildren().forEach(o -> {
@@ -723,7 +724,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns a list of all children from 'getAllChildren()' that are
 	 * currently under the mouse.
 	 */
-	public default EArrayList<IWindowObject<?>> getAllChildrenUnderMouse() {
+	public default EList<IWindowObject<?>> getAllChildrenUnderMouse() {
 		//only add objects if they are visible and if the cursor is over them.
 		return getAllChildren().filterNull(o -> o.willBeDrawn() && o.isMouseInside());
 	}
@@ -828,8 +829,8 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns a list combining the objects currently within within this
 	 * object as well as the ones being added.
 	 */
-	public default EArrayList<IWindowObject<?>> getCombinedChildren() {
-		return EArrayList.combineLists(getChildren(), getAddingChildren());
+	public default EList<IWindowObject<?>> getCombinedChildren() {
+		return EList.combineLists(getChildren(), getAddingChildren());
 	}
 	
 	//---------
@@ -979,7 +980,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 */
 	public default void drawFocusLockBorder() {
 		if (willBeDrawn() && getChildren().containsNoInstanceOf(FocusLockBorder.class)) {
-			WindowHeader h = getHeader();
+			WindowHeader<?> h = getHeader();
 			EDimension dims = getDimensions();
 			FocusLockBorder flb;
 			

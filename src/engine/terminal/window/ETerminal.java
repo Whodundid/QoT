@@ -22,6 +22,7 @@ import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.StringUtil;
@@ -43,19 +44,19 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	public int tabPos = -1;
 	public int startArgPos = -1;
 	public String tabBase = "";
-	public EArrayList<String> tabData = new EArrayList();
-	EArrayList<TextAreaLine> tabDisplayLines = new EArrayList();
+	public EList<String> tabData = new EArrayList<>();
+	EList<TextAreaLine> tabDisplayLines = new EArrayList<>();
 	boolean isCommand = false;
 	protected boolean isChat = false;
 	
 	private String text = "";
 	private int textPos = 0;
 	double vPos = 0, hPos = 0;
-	EArrayList<TextAreaLine> lines;
+	EList<TextAreaLine> lines;
 	
 	public boolean requireConfirmation = false;
 	public String confirmationMessage = "";
-	public EArrayList<String> previousArgs = null;
+	public EList<String> previousArgs = null;
 	public boolean prevRunVisually = false;
 	public TerminalCommand confirmationCommand = null;
 	
@@ -228,7 +229,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 				double vPos = history.getVScrollBar().getScrollPos();
 				double hPos = history.getHScrollBar().getScrollPos();
 				
-				EArrayList<TextAreaLine> lines = new EArrayList();
+				EList<TextAreaLine> lines = new EArrayList<>();
 				for (TextAreaLine l : new EArrayList<TextAreaLine>(history.getTextDocument())) {
 					if (tabDisplayLines.notContains(l)) { lines.add(l); }
 				}
@@ -355,7 +356,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 			double vPos = history.getVScrollBar().getScrollPos();
 			double hPos = history.getHScrollBar().getScrollPos();
 			
-			EArrayList<TextAreaLine> lines = new EArrayList();
+			EList<TextAreaLine> lines = new EArrayList<>();
 			for (TextAreaLine l : new EArrayList<TextAreaLine>(history.getTextDocument())) {
 				if (tabDisplayLines.notContains(l)) { lines.add(l); }
 			}
@@ -384,7 +385,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		double vPos = history.getVScrollBar().getScrollPos();
 		//double hPos = history.getHScrollBar().getScrollPos();
 		
-		EArrayList<TextAreaLine> lines = new EArrayList();
+		EList<TextAreaLine> lines = new EArrayList<>();
 		for (TextAreaLine l : new EArrayList<TextAreaLine>(history.getTextDocument())) {
 			if (tabDisplayLines.notContains(l)) { lines.add(l); }
 		}
@@ -410,9 +411,9 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		super.close();
 	}
 	
-	//-----------------
-	//ETerminal Methods
-	//-----------------
+	//---------
+	// Methods
+	//---------
 	
 	/*
 	public void onChat(TimedChatLine lineIn) {
@@ -460,10 +461,10 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 					if (!isCommand) {
 						isCommand = true;
 						try {
-							EArrayList<String> options = new EArrayList();
+							EList<String> options = new EArrayList<>();
 							
 							for (String s : TerminalHandler.getSortedCommandNames()) {
-								if (s.startsWith(input)) { options.add(s); }
+								if (s.startsWith(input)) options.add(s);
 							}
 						
 							buildTabCompletions(options);
@@ -511,7 +512,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 			}
 			else {
 				if (!tab1) {
-					EArrayList<String> cnames = TerminalHandler.getSortedCommandNames();
+					EList<String> cnames = TerminalHandler.getSortedCommandNames();
 					for (String s : cnames) { s = s.toLowerCase(); }
 					
 					buildTabCompletions(cnames);
@@ -528,11 +529,13 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 				}
 			}
 		}
-		catch (Exception e) { e.printStackTrace(); }
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public ETerminal buildTabCompletions(String... dataIn) { return buildTabCompletions(new EArrayList().addA(dataIn)); }
-	public ETerminal buildTabCompletions(EArrayList<String> dataIn) {
+	public ETerminal buildTabCompletions(EList<String> dataIn) {
 		clearTabCompletions();
 		
 		if (dataIn.isNotEmpty()) {
@@ -660,6 +663,12 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		return this;
 	}
 	
+	public ETerminal errorUsage(String errorIn, String usageIn) {
+		error(errorIn);
+		info(usageIn);
+		return this;
+	}
+	
 	public ETerminal info(String msgIn) { parseText(msgIn, 0xffffff00); return this; }
 	public ETerminal warn(String msgIn) { parseText("Warning: " + msgIn, EColors.orange.intVal); return this; }
 	public ETerminal error(String msgIn) { parseText(msgIn, 0xffff5555); return this; }
@@ -702,7 +711,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	public WindowTextArea getTextArea() { return history; }
 	public TerminalTextField getInputField() { return inputField; }
 	public File getDir() { return dir; }
-	public EArrayList<TextAreaLine> getInfoLines() { return tabDisplayLines; }
+	public EList<TextAreaLine> getInfoLines() { return tabDisplayLines; }
 	public int getTabPos() { return tabPos; }
 	public boolean getTab1() { return tab1; }
 	public String getTextTabBegin() { return textTabBegin; }
@@ -713,7 +722,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	//ETerminal Setters
 	//-----------------
 	
-	public ETerminal setRequiresCommandConfirmation(TerminalCommand commandIn, String message, EArrayList<String> args, boolean runVisually) {
+	public ETerminal setRequiresCommandConfirmation(TerminalCommand commandIn, String message, EList<String> args, boolean runVisually) {
 		if (commandIn != null) {
 			requireConfirmation = true;
 			confirmationCommand = commandIn;

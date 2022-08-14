@@ -6,13 +6,14 @@ import engine.inputHandlers.Keyboard;
 import engine.windowLib.windowTypes.TopWindowParent;
 import engine.windowLib.windowTypes.interfaces.ITopParent;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import game.screens.main.MainMenuScreen;
 import main.QoT;
 
 public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopParent<E> {
 	
 	protected Stack<GameScreen<?>> screenHistory = new Stack();
-	protected EArrayList<String> aliases = new EArrayList();
+	protected EList<String> aliases = new EArrayList<>();
 	
 	/** The point at which the screen will start fading. */
 	protected long screenFadeStart;
@@ -41,8 +42,6 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 	public void drawObject(int mXIn, int mYIn) {
 		drawScreen(mXIn, mYIn);
 		super.drawObject(mXIn, mYIn);
-		
-
 	}
 	
 	@Override
@@ -115,7 +114,7 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 		}
 	}
 	
-	public EArrayList<String> getAliases() {
+	public EList<String> getAliases() {
 		return aliases;
 	}
 	

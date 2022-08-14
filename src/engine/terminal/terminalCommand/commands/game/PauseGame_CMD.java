@@ -4,7 +4,7 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import main.QoT;
 
 public class PauseGame_CMD extends TerminalCommand {
@@ -16,17 +16,21 @@ public class PauseGame_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "pause"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>(); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Pauses the game"; }
+	@Override public String getHelpInfo(boolean runVisually) { return "Pauses or unpauses the game"; }
 	@Override public String getUsage() { return "ex: pause"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) termIn.error("This command takes no arguments!");
-		QoT.pause();
-		termIn.writeln("Game Paused", EColors.yellow);
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+		if (args.isNotEmpty()) termIn.error(ERROR_NO_ARGS);
+		
+		if (QoT.isPaused()) {
+			QoT.unpause();
+			termIn.writeln("Game resumed", EColors.yellow);
+		}
+		else {
+			QoT.pause();
+			termIn.writeln("Game Paused", EColors.yellow);
+		}
 	}
 	
 }

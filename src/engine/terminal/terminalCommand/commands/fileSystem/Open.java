@@ -1,20 +1,21 @@
 package engine.terminal.terminalCommand.commands.fileSystem;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.IIOException;
+import javax.imageio.ImageIO;
+
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import engine.windowLib.bundledWindows.TextEditorWindow;
 import engine.windowLib.bundledWindows.TextureDisplayer;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.file.FileOpener;
 import eutil.strings.StringUtil;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.IIOException;
-import javax.imageio.ImageIO;
 
 public class Open extends FileCommand {
 	
@@ -25,16 +26,14 @@ public class Open extends FileCommand {
 	}
 	
 	@Override public String getName() { return "open"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to open or run a file or application. Add -a to end to always open on computer."; }
 	@Override public String getUsage() { return "ex: open 'file'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	@Override public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		fileTabComplete(termIn, args);
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.error("Not enough arguments!");
 			termIn.info(getUsage());

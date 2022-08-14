@@ -3,13 +3,14 @@ package main.settings.controls;
 import engine.windowLib.windowUtil.input.KeyboardInputAcceptor;
 import engine.windowLib.windowUtil.input.MouseInputAcceptor;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 public class PlayerControlProfile implements MouseInputAcceptor, KeyboardInputAcceptor {
 	
 	public static final String defaultName = "Unnamed Profile";
 	
 	private String profileName = "";
-	private EArrayList<KeyBinding> keyBindings = new EArrayList();
+	private EList<KeyBinding> keyBindings = new EArrayList<>();
 	
 	//public KeyBinding moveUp = new KeyBinding();
 	//public KeyBinding moveRight = new KeyBinding();
@@ -34,7 +35,7 @@ public class PlayerControlProfile implements MouseInputAcceptor, KeyboardInputAc
 		//keyBindings.add(openTerminal);
 	}
 	
-	public EArrayList<KeyBinding> getKeyBindings() { return keyBindings; }
+	public EList<KeyBinding> getKeyBindings() { return keyBindings; }
 	
 	@Override
 	public void handleMouseInput(int action, int mXIn, int mYIn, int button, int change) {

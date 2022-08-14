@@ -1,11 +1,12 @@
 package world.mapEditor.editorParts.sidePanel.toolPanels.assetTool;
 
-import static world.mapEditor.editorTools.EditorToolType.MOVE;
+import static world.mapEditor.editorTools.EditorToolType.*;
 
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import game.GameObject;
 import game.GlobalAssetList;
 import world.mapEditor.MapEditorScreen;
@@ -20,7 +21,7 @@ import world.mapEditor.editorTools.EditorToolType;
 public class AssetSidePanel extends PaletteSidePanel {
 
 	public static final ToolCategory assetTools = ToolCategory.from("Assets", MOVE);
-	private EArrayList<WindowButton<EditorItem>> buttons = new EArrayList();
+	private EList<WindowButton<EditorItem>> buttons = new EArrayList<>();
 	
 	public AssetSidePanel(EditorSidePanel panelIn, MapEditorScreen in) {
 		super(panelIn, in, SidePanelType.ASSET);

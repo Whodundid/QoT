@@ -9,7 +9,7 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import world.GameWorld;
@@ -26,7 +26,7 @@ public class RegionSidePanel extends SidePanel {
 	WindowButton edit, delete;
 	WindowTextArea<Region> regionList;
 	
-	Box2<Integer, Integer> clickPos = new Box2(-1, -1);
+	Box2<Integer, Integer> clickPos = new Box2<>(-1, -1);
 	
 	public RegionSidePanel(EditorSidePanel panelIn, MapEditorScreen editorIn) {
 		super(panelIn, editorIn, SidePanelType.REGION);
@@ -57,7 +57,7 @@ public class RegionSidePanel extends SidePanel {
 		regionList.clear();
 		
 		GameWorld world = editor.getWorld();
-		EArrayList<Region> regions = world.getRegionData();
+		EList<Region> regions = world.getRegionData();
 		for (Region r : regions) {
 			TextAreaLine<Region> line = new TextAreaLine(regionList, r.getName()) {
 				@Override

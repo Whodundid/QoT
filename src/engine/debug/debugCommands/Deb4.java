@@ -18,7 +18,7 @@ import java.util.List;
 public class Deb4 extends DebugCommand {
 	
 	@Override
-	public void run(ETerminal termIn, Object... args) {
+	public void run(ETerminal<?> termIn, Object... args) {
 	}
 	
 }

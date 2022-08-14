@@ -2,16 +2,17 @@ package game.screens.gameplay.combat;
 
 import engine.screenEngine.GameScreen;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
-import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
+import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import game.entities.Entity;
 import main.QoT;
 
 public class CombatScreen extends GameScreen {
 	
-	EArrayList<WindowObject> createdObjects = new EArrayList();
+	EList<IWindowObject<?>> createdObjects = new EArrayList<>();
 	Entity a, b;
 	
 	WindowButton run;

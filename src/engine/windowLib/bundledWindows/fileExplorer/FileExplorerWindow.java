@@ -1,5 +1,8 @@
 package engine.windowLib.bundledWindows.fileExplorer;
 
+import java.io.File;
+
+import assets.textures.window.WindowTextures;
 import engine.inputHandlers.Keyboard;
 import engine.windowLib.bundledWindows.TextEditorWindow;
 import engine.windowLib.bundledWindows.TextureDisplayer;
@@ -12,12 +15,9 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.file.FileOpener;
 import eutil.strings.StringUtil;
-
-import java.io.File;
-
-import assets.textures.window.WindowTextures;
 
 public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	
@@ -34,16 +34,16 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	private WindowButton cancelBtn, selectBtn;
 	private WindowScrollList fileArea;
 	
-	private EArrayList<FilePreview> order = new EArrayList();
-	private EArrayList<FilePreview> highlighted = new EArrayList();
+	private EList<FilePreview> order = new EArrayList<>();
+	private EList<FilePreview> highlighted = new EArrayList<>();
 	
 	private boolean selectMode = false;
 	
 	private String text;
 	private double vPos = 0;
-	private EArrayList<Integer> prevHighlight;
+	private EList<Integer> prevHighlight;
 	
-	private EArrayList<Double> scrollBarPositionHistory = new EArrayList<>();
+	private EList<Double> scrollBarPositionHistory = new EArrayList<>();
 	
 	//--------------
 	// Constructors
@@ -230,8 +230,8 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		File[] dir = curDir.listFiles();
 		
 		if (dir == null) return;
-		EArrayList<File> folders = new EArrayList();
-		EArrayList<File> files = new EArrayList();
+		EList<File> folders = new EArrayList<>();
+		EList<File> files = new EArrayList<>();
 		
 		for (File f : dir) {
 			if (f.isDirectory()) folders.add(f);

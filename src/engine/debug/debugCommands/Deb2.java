@@ -14,7 +14,7 @@ import main.QoT;
 public class Deb2 extends DebugCommand {
 
 	@Override
-	public void run(ETerminal termIn, Object... args) {
+	public void run(ETerminal<?> termIn, Object... args) {
 		Party A = new Party();
 		Party B = new Party();
 		

@@ -16,6 +16,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import eutil.misc.ScreenLocation;
@@ -28,15 +29,15 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	// Fields
 	//--------
 	
-	protected EArrayList<IWindowObject<?>> listContents = new EArrayList();
-	protected EArrayList<IWindowObject<?>> drawnListObjects = new EArrayList();
+	protected EList<IWindowObject<?>> listContents = new EArrayList<>();
+	protected EList<IWindowObject<?>> drawnListObjects = new EArrayList<>();
 	protected WindowScrollBar<?> vScroll, hScroll;
 	protected WindowButton reset;
 	protected double scrollableHeight = 0;
 	protected double scrollableWidth = 0;
-	protected EArrayList<IWindowObject<?>> listObjsToBeRemoved = new EArrayList();
-	protected EArrayList<IWindowObject<?>> listObjsToBeAdded = new EArrayList();
-	protected EArrayList<IWindowObject<?>> ignoreList = new EArrayList();
+	protected EList<IWindowObject<?>> listObjsToBeRemoved = new EArrayList<>();
+	protected EList<IWindowObject<?>> listObjsToBeAdded = new EArrayList<>();
+	protected EList<IWindowObject<?>> ignoreList = new EArrayList<>();
 	protected int backgroundColor = 0xff4D4D4D;
 	protected int borderColor = 0xff000000;
 	protected double heightToBeSet = 0, widthToBeSet = 0;
@@ -142,7 +143,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		postEvent(new EventModify(this, this, ObjectModifyType.MOVE));
 		
 		if (isMoveable()) {
-			EArrayList<IWindowObject<?>> objs = new EArrayList(getChildren());
+			EList<IWindowObject<?>> objs = new EArrayList<>(getChildren());
 			objs.addAll(getAddingChildren());
 			objs.addAll(listContents);
 			objs.addAll(listObjsToBeAdded);
@@ -229,7 +230,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 			double vScrollPos = vScroll.getScrollPos() - vScroll.getVisibleAmount();
 			double hScrollPos = hScroll.getScrollPos() - hScroll.getVisibleAmount();
 			
-			for (var o : EArrayList.combineLists(listContents, listObjsToBeAdded)) {
+			for (var o : EList.combineLists(listContents, listObjsToBeAdded)) {
 				o.setPosition(o.getInitialPosition().getA() - hScrollPos, o.getInitialPosition().getB() - vScrollPos);
 			}
 			
@@ -259,7 +260,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public EArrayList<IWindowObject<?>> getCombinedChildren() {
+	public EList<IWindowObject<?>> getCombinedChildren() {
 		var r = new EArrayList<>(getChildren());
 		r.addAll(getAddingChildren());
 		r.addAll(listContents);
@@ -268,10 +269,10 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public EArrayList<IWindowObject<?>> getAllChildren() {
-		EArrayList<IWindowObject<?>> foundObjs = new EArrayList<>();
-		EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList<>();
-		EArrayList<IWindowObject<?>> workList = new EArrayList<>();
+	public EList<IWindowObject<?>> getAllChildren() {
+		EList<IWindowObject<?>> foundObjs = new EArrayList<>();
+		EList<IWindowObject<?>> objsWithChildren = new EArrayList<>();
+		EList<IWindowObject<?>> workList = new EArrayList<>();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
 		getChildren().forEach(o -> {
@@ -337,9 +338,9 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		double down = 0;
 		
 		//get both the current list objects and those being added
-		var objs = EArrayList.combineLists(listContents, listObjsToBeAdded);
+		var objs = EList.combineLists(listContents, listObjsToBeAdded);
 		var ignored = new EArrayList<>(ignoreList);
-		EArrayList<IWindowObject<?>> aObjs = new EArrayList<>();
+		EList<IWindowObject<?>> aObjs = new EArrayList<>();
 		
 		
 		for (var o : objs) {
@@ -556,9 +557,9 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	public boolean isResetDrawn() { return resetVis && (isVScrollDrawn() || isHScrollDrawn()); }
 	public WindowScrollBar<?> getVScrollBar() { return vScroll; }
 	public WindowScrollBar<?> getHScrollBar() { return hScroll; }
-	public EArrayList<IWindowObject<?>> getDrawnObjects() { return drawnListObjects; }
-	public EArrayList<IWindowObject<?>> getListObjects() { return listContents; }
-	public EArrayList<IWindowObject<?>> getAddingListObjects() { return listObjsToBeAdded; }
+	public EList<IWindowObject<?>> getDrawnObjects() { return drawnListObjects; }
+	public EList<IWindowObject<?>> getListObjects() { return listContents; }
+	public EList<IWindowObject<?>> getAddingListObjects() { return listObjsToBeAdded; }
 	
 	//---------
 	// Setters

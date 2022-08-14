@@ -1,10 +1,10 @@
 package engine.terminal.terminalCommand;
 
 import engine.terminal.window.ETerminal;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 public interface IListableCommand {
 	
-	public void list(ETerminal termIn, EArrayList<String> args, boolean runVisually);
+	public void list(ETerminal termIn, EList<String> args, boolean runVisually);
 
 }

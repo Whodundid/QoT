@@ -12,6 +12,7 @@ import engine.soundEngine.SoundEngine;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.entities.Entity;
@@ -427,8 +428,8 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	private void renderEntities(double x, double y, double w, double h) {
-		EArrayList<EntitySpawn> spawns = world.getEntitySpawns();
-		EArrayList<Entity> entities = new EArrayList<>();
+		EList<EntitySpawn> spawns = world.getEntitySpawns();
+		EList<Entity> entities = new EArrayList<>();
 		for (var s : spawns) entities.add(s.getEntity(world));
 		entities.sort(Comparator.comparingInt(e -> e.endY));
 		

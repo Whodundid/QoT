@@ -2,6 +2,7 @@ package engine.windowLib.windowUtil.windowEvents;
 
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 //Author: Hunter Bragg
 
@@ -12,9 +13,9 @@ public class ObjectEventHandler {
 	//--------
 	
 	private final IWindowObject<?> parent;
-	private final EArrayList<IWindowObject<?>> listeners = new EArrayList<>();
-	private final EArrayList<IWindowObject<?>> toBeAdded = new EArrayList<>();
-	private final EArrayList<IWindowObject<?>> toBeRemoved = new EArrayList<>();
+	private final EList<IWindowObject<?>> listeners = new EArrayList<>();
+	private final EList<IWindowObject<?>> toBeAdded = new EArrayList<>();
+	private final EList<IWindowObject<?>> toBeRemoved = new EArrayList<>();
 	private boolean iterating = false;
 	
 	//--------------
@@ -82,6 +83,6 @@ public class ObjectEventHandler {
 	// Getters
 	//---------
 	
-	public EArrayList<IWindowObject<?>> getListenerObjects() { return listeners; }
+	public EList<IWindowObject<?>> getListenerObjects() { return listeners; }
 	
 }

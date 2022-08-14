@@ -11,7 +11,7 @@ public enum ConditionType {
 	IS_EMPTY,
 	IS_NOT_EMPTY,
 	
-	//entity specifc
+	//entity specific
 	IS_ALIVE,
 	IS_DEAD,
 	IS_BEING_SPAWNED,

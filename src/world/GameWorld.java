@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 import eutil.misc.Direction;
 import game.entities.Entity;
@@ -34,10 +35,10 @@ public class GameWorld {
 	protected int tileWidth, tileHeight;
 	protected double zoom = 1;
 	protected WorldTile[][] worldData = new WorldTile[0][0];
-	protected EArrayList<Entity> entityData = new EArrayList();
-	protected EArrayList<EntitySpawn> entitySpawns = new EArrayList();
-	protected EArrayList<Region> regionData = new EArrayList();
-	protected EArrayList<Region> highlightedRegions = new EArrayList();
+	protected EList<Entity> entityData = new EArrayList<>();
+	protected EList<EntitySpawn> entitySpawns = new EArrayList<>();
+	protected EList<Region> regionData = new EArrayList<>();
+	protected EList<Region> highlightedRegions = new EArrayList<>();
 	protected PlayerSpawnPosition playerSpawn = new PlayerSpawnPosition(this);
 	protected WorldRenderer worldRenderer;
 	protected boolean underground = false;
@@ -45,8 +46,8 @@ public class GameWorld {
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
 	
-	private EArrayList<Entity> toDelete = new EArrayList<>();
-	private EArrayList<Entity> toAdd = new EArrayList<>();
+	private EList<Entity> toDelete = new EArrayList<>();
+	private EList<Entity> toAdd = new EArrayList<>();
 	
 	//--------------
 	// Constructors
@@ -245,8 +246,8 @@ public class GameWorld {
 		if (worldFile != null && worldFile.exists()) {
 			try (Scanner reader = new Scanner(worldFile)) {
 				
-				EArrayList<EntitySpawn> entitySpawnsIn = new EArrayList();
-				EArrayList<Region> regions = new EArrayList();
+				EList<EntitySpawn> entitySpawnsIn = new EArrayList<>();
+				EList<Region> regions = new EArrayList<>();
 				
 				String mapName = reader.nextLine();
 				int mapWidth = reader.nextInt();
@@ -380,8 +381,8 @@ public class GameWorld {
 	// Getters
 	//---------
 	
-	public EArrayList<Region> getHighlightedRegions() { return highlightedRegions; }
-	public EArrayList<Region> getRegionData() { return regionData; }
+	public EList<Region> getHighlightedRegions() { return highlightedRegions; }
+	public EList<Region> getRegionData() { return regionData; }
 	public boolean isFileLoaded() { return fileLoaded; }
 	public boolean isLoaded() { return loaded; }
 	public String getName() { return name; }
@@ -402,8 +403,8 @@ public class GameWorld {
 		return worldData[xIn][yIn];
 	}
 	
-	public EArrayList<Entity> getEntitiesInWorld() { return entityData; }
-	public EArrayList<EntitySpawn> getEntitySpawns() { return entitySpawns; }
+	public EList<Entity> getEntitiesInWorld() { return entityData; }
+	public EList<EntitySpawn> getEntitySpawns() { return entitySpawns; }
 	
 	/** Returns this world's rendering system. */
 	public WorldRenderer getWorldRenderer() { return worldRenderer; }

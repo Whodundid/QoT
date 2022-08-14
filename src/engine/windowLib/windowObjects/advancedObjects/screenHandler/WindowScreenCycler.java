@@ -4,6 +4,7 @@ import engine.windowLib.windowTypes.ActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 
 public class WindowScreenCycler<E> extends ActionObject<E> {
@@ -13,7 +14,7 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	//--------
 	
 	private IWindowObject<?> parent;
-	private EArrayList<WindowScreen<E>> screens = new EArrayList();
+	private EList<WindowScreen<E>> screens = new EArrayList<>();
 	private int currentScreen = 0;
 	private boolean atBeginning = false;
 	private boolean atEnd = false;
@@ -111,7 +112,7 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	public WindowScreen<E> getCurrentScreen() { return screens.get(currentScreen); }
 	public int getCurrentScreenNum() { return currentScreen; }
 	public int getCurrentStage() { return (screens.isNotEmpty()) ? screens.get(currentScreen).getCurrentStage() : -1; }
-	public EArrayList<WindowScreen<E>> getScreens() { return screens; }
+	public EList<WindowScreen<E>> getScreens() { return screens; }
 	public IWindowObject<?> getParent() { return parent; }
 	
 	public boolean atBeginning() { return atBeginning; }

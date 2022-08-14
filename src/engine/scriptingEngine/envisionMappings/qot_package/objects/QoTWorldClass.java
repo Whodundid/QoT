@@ -71,7 +71,7 @@ public class QoTWorldClass extends EnvisionClass {
 	//-----------------------------------------
 	
 	private void createFields(Scope scope, GameWorld w) {
-		BoxList<String, Object> ifields = new BoxList();
+		BoxList<String, Object> ifields = new BoxList<>();
 		
 		ifields.add("name", w.getName());
 		ifields.add("width", w.getWidth());
@@ -89,7 +89,7 @@ public class QoTWorldClass extends EnvisionClass {
 	}
 	
 	private void createMethods(Scope scope, ClassInstance inst) {
-		//EArrayList<WorldMeth> imethods = new EArrayList();
+		//EList<WorldMeth> imethods = new EArrayList<>();
 		
 		//imethods.add(new GetWorldName());
 		//imethods.add(new GetWidth());

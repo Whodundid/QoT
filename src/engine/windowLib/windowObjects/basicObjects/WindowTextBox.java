@@ -9,6 +9,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 public class WindowTextBox<E> extends WindowObject<E> {
 	
@@ -106,10 +107,10 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	// Internal Methods
 	//------------------
 	
-	private EArrayList<Box2<String, Integer>> parseLine(String lineIn, int colorIn) {
+	private EList<Box2<String, Integer>> parseLine(String lineIn, int colorIn) {
 		if (lineIn != null) {
 			
-			EArrayList<String> newLineCheck = new EArrayList<>();
+			EList<String> newLineCheck = new EArrayList<>();
 			
 			//check for new line characters
 			int pos = 0;
@@ -121,13 +122,13 @@ public class WindowTextBox<E> extends WindowObject<E> {
 				}
 			}
 			
-			EArrayList<String> widthAdjusted = new EArrayList<>();
+			EList<String> widthAdjusted = new EArrayList<>();
 			
 			for (String s : newLineCheck) {
 				widthAdjusted.addAll(EStringBuilder.createWordWrapString(s, (int) maxWidth));
 			}
 			
-			EArrayList<Box2<String, Integer>> createdLines = new EArrayList<>();
+			EList<Box2<String, Integer>> createdLines = new EArrayList<>();
 			
 			for (String s : widthAdjusted) {
 				createdLines.add(new Box2<String, Integer>(s, colorIn));

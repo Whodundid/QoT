@@ -5,6 +5,7 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import main.QoT;
 
 public class SaveWorld_CMD extends TerminalCommand {
@@ -16,14 +17,12 @@ public class SaveWorld_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "saveworld"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("sw"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("sw"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Saves the current world (if any)"; }
 	@Override public String getUsage() { return "ex: sw"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (QoT.theWorld != null) {
 			termIn.writeln("Saving '" + QoT.theWorld.getName() + "'", EColors.green);
 			QoT.theWorld.saveWorldToFile();

@@ -1,7 +1,5 @@
 package engine.terminal.terminalUtil;
 
-import eutil.datatypes.EArrayList;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -9,12 +7,15 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
+
 public class ClassFinder {
 	
-	public static <E> EArrayList<Class<E>> findClassesOfType(String packageName, Class<E> type) {
+	public static <E> EList<Class<E>> findClassesOfType(String packageName, Class<E> type) {
 		if (type != null) {
 			Class[] classes = getClasses(packageName);
-			EArrayList<Class<E>> casted = new EArrayList();
+			EList<Class<E>> casted = new EArrayList<>();
 			
 			for (Class<?> c : classes) {
 				if (type.isAssignableFrom(c)) {
@@ -42,14 +43,14 @@ public class ClassFinder {
 		try {
 			String path = packageName.replace('.', '/');
 			Enumeration<URL> resources = classLoader.getResources(path);
-			List<File> dirs = new ArrayList<File>();
+			List<File> dirs = new ArrayList<>();
 			
 			while (resources.hasMoreElements()) {
 				URL resource = resources.nextElement();
 				dirs.add(new File(resource.getFile()));
 			}
 			
-			ArrayList<Class> classes = new ArrayList<Class>();
+			List<Class> classes = new ArrayList<>();
 			
 			for (File directory : dirs) {
 				classes.addAll(findClasses(directory, packageName));

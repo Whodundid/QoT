@@ -2,6 +2,7 @@ package engine.renderEngine.fontRenderer;
 
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.debug.Broken;
 
 /** Used to concatenate EColors and EnumChatFormating objects within Strings. */
@@ -9,7 +10,6 @@ public class EStringBuilder {
 	
 	public static double drawString(String s, double x, double y, EColors colorIn, boolean centered, boolean shadow) { return drawString(s, x, y, colorIn.intVal, centered, shadow); }
 	public static double drawString(String s, double x, double y, int colorIn, boolean centered, boolean shadow) {
-		
 		if (s != null) {
 			double lastX = (centered) ? x - (getStringWidth(s) / 2) : x;
 			int i = 0;
@@ -20,7 +20,7 @@ public class EStringBuilder {
 			while (i < s.length()) {
 				char c = s.charAt(i);
 				
-				if (c == 8750 && i + 2 < s.length()) { //the 'countour integral' character
+				if (c == 8750 && i + 2 < s.length()) { //the 'contour integral' character
 					
 					if (hasCode) {
 						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor);
@@ -86,8 +86,8 @@ public class EStringBuilder {
 	
 	/** Breaks a String into a list of smaller strings based on a set maximum line width. */
 	@Broken("June 5, 2022")
-	public static EArrayList<String> createWordWrapString(String stringIn, double widthMax) {
-		EArrayList<String> lines = new EArrayList();
+	public static EList<String> createWordWrapString(String stringIn, double widthMax) {
+		EList<String> lines = new EArrayList<>();
 		try {
 			
 			//CURRENTLY STUCK IN INFINITE LOOP HERE!

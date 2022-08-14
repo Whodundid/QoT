@@ -5,6 +5,7 @@ import java.util.List;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import engine.windowLib.windowUtil.windowEvents.ObjectEvent;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 
 //Author: Hunter Bragg
 
@@ -14,7 +15,7 @@ public class EObjectGroup {
 	// Fields
 	//--------
 	
-	private EArrayList<IWindowObject<?>> objects = new EArrayList();
+	private EList<IWindowObject<?>> objects = new EArrayList<>();
 	private IWindowObject<?> groupParent;
 	
 	//--------------
@@ -87,7 +88,7 @@ public class EObjectGroup {
 	// Getters
 	//---------
 	
-	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
+	public EList<IWindowObject<?>> getObjects() { return objects; }
 	public IWindowObject<?> getGroupParent() { return groupParent; }
 	
 	//---------

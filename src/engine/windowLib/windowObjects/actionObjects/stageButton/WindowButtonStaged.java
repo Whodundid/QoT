@@ -4,6 +4,7 @@ import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 
 //Author: Hunter Bragg
@@ -20,7 +21,7 @@ public class WindowButtonStaged<E> extends WindowButton<E> {
 	// Fields
 	//--------
 	
-	protected EArrayList<ButtonStage> stages = new EArrayList();
+	protected EList<ButtonStage> stages = new EArrayList<>();
 	protected int curStage = 0;
 	
 	//--------------

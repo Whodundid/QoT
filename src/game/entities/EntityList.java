@@ -15,6 +15,7 @@ import game.entities.neutral.WhodundidsBrother;
 import game.entities.player.Player;
 
 public enum EntityList {
+	
 	PLAYER(0),
 	GOBLIN(1),
 	WHODUNDID(2),

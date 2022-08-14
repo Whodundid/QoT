@@ -1,11 +1,13 @@
 package world;
 
 import java.util.Comparator;
+
 import engine.inputHandlers.Keyboard;
 import engine.topOverlay.GameTopRenderer;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 import eutil.misc.Rotation;
 import game.entities.Entity;
@@ -35,7 +37,7 @@ public class WorldRenderer extends EGui {
 	boolean drawEntityHitboxes = false;
 	boolean drawEntityOutlines = false;
 	
-	private EArrayList<WorldTile> entityOrder = new EArrayList();
+	private EList<WorldTile> entityOrder = new EArrayList<>();
 	
 	//---------------------
 	int left;
@@ -166,7 +168,7 @@ public class WorldRenderer extends EGui {
 	}
 	
 	private void renderEntities() {
-		EArrayList<Entity> entities = world.getEntitiesInWorld();
+		EList<Entity> entities = world.getEntitiesInWorld();
 		entities.sort(Comparator.comparingInt(e -> e.endY));
 		
 		for (int i = 0; i < entities.size(); i++) {

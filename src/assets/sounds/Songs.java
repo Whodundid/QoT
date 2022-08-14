@@ -2,12 +2,14 @@ package assets.sounds;
 
 import engine.soundEngine.Audio;
 import engine.soundEngine.SoundEngine;
+import eutil.datatypes.EArrayList;
 import main.settings.QoTSettings;
 
 /** This contains every song in the game! */
 public class Songs {
 	
 	private static final String soundsDir = QoTSettings.getResourcesDir().toString() + "\\sounds\\";
+	public static final EArrayList<Audio> songs = new EArrayList<>();
 	
 	public static Audio darkCave = new Audio("dark_cave", soundsDir, "Dark Cave.wav");
 	public static Audio field = new Audio("field", soundsDir, "Fields of Flowers.wav");
@@ -22,17 +24,17 @@ public class Songs {
 	public static Audio zarus = new Audio("zarus", soundsDir, "Zarus.wav");
 	
 	static {
-		SoundEngine.register(darkCave);
-		SoundEngine.register(field);
-		SoundEngine.register(larkens);
-		SoundEngine.register(nightfall);
-		SoundEngine.register(lithinburg);
-		SoundEngine.register(theme);
-		SoundEngine.register(rejuvination);
-		SoundEngine.register(bossTheme);
-		SoundEngine.register(battleTheme);
-		SoundEngine.register(varthums);
-		SoundEngine.register(zarus);
+		SoundEngine.register(songs.addR(darkCave));
+		SoundEngine.register(songs.addR(field));
+		SoundEngine.register(songs.addR(larkens));
+		SoundEngine.register(songs.addR(nightfall));
+		SoundEngine.register(songs.addR(lithinburg));
+		SoundEngine.register(songs.addR(theme));
+		SoundEngine.register(songs.addR(rejuvination));
+		SoundEngine.register(songs.addR(bossTheme));
+		SoundEngine.register(songs.addR(battleTheme));
+		SoundEngine.register(songs.addR(varthums));
+		SoundEngine.register(songs.addR(zarus));
 	}
 	
 }

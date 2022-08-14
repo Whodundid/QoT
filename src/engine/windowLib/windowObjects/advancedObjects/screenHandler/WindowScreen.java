@@ -3,6 +3,7 @@ package engine.windowLib.windowObjects.advancedObjects.screenHandler;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 
 public class WindowScreen<E> {
@@ -11,7 +12,7 @@ public class WindowScreen<E> {
 	// Fields
 	//--------
 	
-	private EArrayList<IWindowObject<?>> objects = new EArrayList<>();
+	private EList<IWindowObject<?>> objects = new EArrayList<>();
 	private int curStage = 0;
 	private int numStages = 1;
 	
@@ -42,7 +43,7 @@ public class WindowScreen<E> {
 	// Getters
 	//---------
 	
-	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
+	public EList<IWindowObject<?>> getObjects() { return objects; }
 	public int getNumStages() { return numStages; }
 	public int getCurrentStage() { return curStage; }
 	

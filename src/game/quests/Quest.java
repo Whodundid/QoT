@@ -1,6 +1,7 @@
 package game.quests;
 
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 
 public class Quest {
@@ -12,7 +13,7 @@ public class Quest {
 	private boolean ignoreGoals = false;
 	private boolean canBeCompleted = false;
 	private boolean failed = false;
-	private EArrayList<QuestGoal> goals = new EArrayList();
+	private EList<QuestGoal> goals = new EArrayList<>();
 	
 	//--------------
 	// Constructors
@@ -63,7 +64,7 @@ public class Quest {
 	public boolean isFailed() { return failed; }
 	
 	public boolean ignoresGoals() { return ignoreGoals; }
-	public EArrayList<QuestGoal> getGoals() { return goals; }
+	public EList<QuestGoal> getGoals() { return goals; }
 	public QuestGoal getGoal(int num) { return (goals.isNotEmpty()) ? goals.get(NumberUtil.clamp(num, 0, goals.size() - 1)) : null; }
 	
 	//---------

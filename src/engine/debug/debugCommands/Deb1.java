@@ -10,7 +10,7 @@ import main.QoT;
 public class Deb1 extends DebugCommand {
 
 	@Override
-	public void run(ETerminal termIn, Object... args) {
+	public void run(ETerminal<?> termIn, Object... args) {
 		Player p = new Player();
 		System.out.println(p.getTexture().getWidth());
 		CharacterScreen charScreen = new CharacterScreen(p);

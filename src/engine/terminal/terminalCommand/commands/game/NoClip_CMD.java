@@ -4,6 +4,7 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import main.QoT;
 
 public class NoClip_CMD extends TerminalCommand {
@@ -15,14 +16,12 @@ public class NoClip_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "noclip"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("nc"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("nc"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Allows player no-clipping"; }
 	@Override public String getUsage() { return "ex: nc"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (QoT.thePlayer != null) {
 			QoT.thePlayer.setNoClipAllowed(!QoT.thePlayer.isNoClipping());
 			termIn.writeln(((QoT.thePlayer.isNoClipping()) ? "Enabled" : "Disabled") + " no clipping");

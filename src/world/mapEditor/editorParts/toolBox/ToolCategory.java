@@ -1,17 +1,17 @@
 package world.mapEditor.editorParts.toolBox;
 
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-
 import java.util.List;
 
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+import eutil.datatypes.EList;
 import world.mapEditor.editorTools.EditorToolType;
 
 public class ToolCategory {
 	
 	public String name;
-	public EArrayList<EditorToolType> tools = new EArrayList();
+	public EList<EditorToolType> tools = new EArrayList<>();
 	
 	public ToolCategory(String nameIn) {
 		name = nameIn;
@@ -28,10 +28,10 @@ public class ToolCategory {
 	}
 	
 	public String getName() { return name; }
-	public EArrayList<EditorToolType> getTypes() { return tools; }
+	public EList<EditorToolType> getTypes() { return tools; }
 	
-	public EArrayList<WindowButton<EditorToolType>> buildButtons(EditorToolBox parentIn) {
-		EArrayList<WindowButton<EditorToolType>> buttons = new EArrayList();
+	public EList<WindowButton<EditorToolType>> buildButtons(EditorToolBox parentIn) {
+		EList<WindowButton<EditorToolType>> buttons = new EArrayList<>();
 		
 		for (EditorToolType t : tools) {
 			WindowButton<EditorToolType> b = new WindowButton(parentIn) {
