@@ -18,7 +18,6 @@ import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowUtil.windowEvents.ObjectEvent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 import main.QoT;
 
@@ -39,8 +38,8 @@ public class TextEditorWindow extends WindowParent {
 	
 	private volatile boolean loading = false;
 	private volatile boolean loaded = false;
-	private volatile EList<String> lines;
-	private volatile EList<TextAreaLine<?>> parsed;
+	private volatile EArrayList<String> lines;
+	private volatile EArrayList<TextAreaLine<?>> parsed;
 	private boolean restored = false;
 	
 	//--------------
@@ -202,7 +201,7 @@ public class TextEditorWindow extends WindowParent {
 		if (!path.exists()) newFile = true;
 		
 		//all parsed lines
-		lines = new EArrayList<>();
+		lines = new EArrayList();
 		
 		if (path.exists())
 		try (BufferedReader r = new BufferedReader(new FileReader(path))) {

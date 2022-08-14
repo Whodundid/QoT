@@ -1,12 +1,19 @@
 package world.mapEditor.editorParts.sidePanel.toolPanels.terrainTool;
 
-import static world.mapEditor.editorTools.EditorToolType.*;
+import static world.mapEditor.editorTools.EditorToolType.BRUSH;
+import static world.mapEditor.editorTools.EditorToolType.ERASER;
+import static world.mapEditor.editorTools.EditorToolType.EYEDROPPER;
+import static world.mapEditor.editorTools.EditorToolType.LINE;
+import static world.mapEditor.editorTools.EditorToolType.MAGICWAND;
+import static world.mapEditor.editorTools.EditorToolType.MOVE;
+import static world.mapEditor.editorTools.EditorToolType.PAINTBUCKET;
+import static world.mapEditor.editorTools.EditorToolType.PENCIL;
+import static world.mapEditor.editorTools.EditorToolType.SHAPE;
 
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.MapEditorSettings;
 import world.mapEditor.editorParts.sidePanel.EditorSidePanel;
@@ -23,7 +30,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
 	public static final ToolCategory terrainTools = ToolCategory.from("Terrain", MOVE, MAGICWAND,
 			  														  PAINTBUCKET, BRUSH, PENCIL,
 			  														  EYEDROPPER, ERASER, LINE, SHAPE);
-	private EList<WindowButton<WorldTile>> buttons = new EArrayList<>();
+	private EArrayList<WindowButton<WorldTile>> buttons = new EArrayList();
 	
 	public TerrainSidePanel(EditorSidePanel panelIn, MapEditorScreen in) {
 		super(panelIn, in, SidePanelType.TERRAIN);

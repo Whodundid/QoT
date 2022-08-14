@@ -5,8 +5,6 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
-import eutil.math.NumberUtil;
 import main.QoT;
 
 public class FPS_CMD extends TerminalCommand {
@@ -18,28 +16,17 @@ public class FPS_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "fps"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("frames"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Displays or sets the current framerate."; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("frames"); }
+	@Override public String getHelpInfo(boolean runVisually) { return "Displays the current game framerate."; }
 	@Override public String getUsage() { return "ex: fps"; }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
-		if (args.size() > 1) {
-			termIn.error(ERROR_TOO_MANY);
-			return;
-		}
-		if (args.hasOne()) {
-			String arg = args.get(0);
-			try {
-				int val = Integer.parseInt(arg);
-				val = NumberUtil.clamp(val, 1, Integer.MAX_VALUE);
-				QoT.setTargetFPS(val);
-				termIn.writeln("Set game framerate to " + val + " frames per second!", EColors.lime);
-			}
-			catch (Exception e) {
-				error(termIn, e);
-				termIn.error("Expected a valid integer value!");
-			}
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+		if (args.isNotEmpty()) {
+			termIn.error("This command does not take arguments!");
+			termIn.info(getUsage());
 		}
 		else {
 			termIn.writeln("FPS: " + QoT.getFPS(), EColors.lime);

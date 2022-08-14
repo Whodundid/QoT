@@ -1,5 +1,11 @@
 package main;
 
+import java.lang.reflect.Field;
+
+import eutil.datatypes.BoxList;
+import eutil.reflection.EModifier;
+import sun.misc.Unsafe;
+
 public class Thing {
 	
 	public static void start() throws Exception {

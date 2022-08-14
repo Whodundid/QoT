@@ -10,7 +10,6 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -23,7 +22,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	
 	protected WindowButton select, cancel;
 	protected WindowTextArea list;
-	protected EList<Box3<String, Integer, Object>> toAdd = new EArrayList<>();
+	protected EArrayList<Box3<String, Integer, Object>> toAdd = new EArrayList<>();
 	protected IWindowObject<?> actionReciever;
 	
 	private double vPos, hPos;

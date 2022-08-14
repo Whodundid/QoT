@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
@@ -30,10 +29,13 @@ import engine.terminal.terminalCommand.commands.game.LoadWorld_CMD;
 import engine.terminal.terminalCommand.commands.game.NoClip_CMD;
 import engine.terminal.terminalCommand.commands.game.PauseGame_CMD;
 import engine.terminal.terminalCommand.commands.game.SaveWorld_CMD;
+import engine.terminal.terminalCommand.commands.game.SetFPS_CMD;
+import engine.terminal.terminalCommand.commands.game.SetTPS_CMD;
 import engine.terminal.terminalCommand.commands.game.SetWorldUnderground_CMD;
 import engine.terminal.terminalCommand.commands.game.Song_CMD;
 import engine.terminal.terminalCommand.commands.game.SpawnEntity_CMD;
 import engine.terminal.terminalCommand.commands.game.TPS_CMD;
+import engine.terminal.terminalCommand.commands.game.UnPauseGame_CMD;
 import engine.terminal.terminalCommand.commands.game.UnloadWorld_CMD;
 import engine.terminal.terminalCommand.commands.game.World_CMD;
 import engine.terminal.terminalCommand.commands.game.WorldsDir_CMD;
@@ -65,11 +67,9 @@ import engine.terminal.terminalCommand.commands.windows.ShowWindow;
 import engine.terminal.terminalCommand.commands.windows.ToFrontWindow;
 import engine.terminal.terminalUtil.ClassFinder;
 import engine.terminal.window.ETerminal;
-import eutil.EUtil;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.reflection.EModifier;
 import main.QoT;
 
@@ -79,23 +79,20 @@ public class TerminalHandler {
 
 	public static final String version = "1.0";
 	private static TerminalHandler instance;
-	protected ConcurrentHashMap<String, TerminalCommand> commands;
-	protected EList<TerminalCommand> commandList;
-	protected EList<TerminalCommand> customCommandList;
+	protected BoxList<String, TerminalCommand> commands;
+	protected EArrayList<TerminalCommand> commandList;
+	protected EArrayList<TerminalCommand> customCommandList;
 	public static boolean drawSpace = true;
-	public static EList<String> cmdHistory = new EArrayList<>();
-	
-	/** The set of registered commands that can be listed using the 'ListCMD'. */
-	private final EList<TerminalCommand> listableCommands = new EArrayList<>();
+	public static EArrayList<String> cmdHistory = new EArrayList();
 	
 	public static TerminalHandler getInstance() {
 		return instance == null ? instance = new TerminalHandler() : instance;
 	}
 	
 	private TerminalHandler() {
-		commands = new ConcurrentHashMap<>();
-		commandList = new EArrayList<>();
-		customCommandList = new EArrayList<>();
+		commands = new BoxList();
+		commandList = new EArrayList();
+		customCommandList = new EArrayList();
 	}
 	
 	public void initCommands() {
@@ -106,11 +103,11 @@ public class TerminalHandler {
 	 * 
 	 *  NOTE: THIS ONLY WORKS WHEN RUNNING OUT OF ECLIPSE!!!
 	 */
-	private EList<TerminalCommand> findCommands() {
+	private EArrayList<TerminalCommand> findCommands() {
 		String commandDir = "engine.terminal.terminalCommand";
 		
-		EList<Class<TerminalCommand>> getCommands = ClassFinder.findClassesOfType(commandDir, TerminalCommand.class);
-		EList<TerminalCommand> commands = new EArrayList();
+		EArrayList<Class<TerminalCommand>> getCommands = ClassFinder.findClassesOfType(commandDir, TerminalCommand.class);
+		EArrayList<TerminalCommand> commands = new EArrayList();
 		
 		for (Class<TerminalCommand> c : getCommands) {
 			EModifier mods = EModifier.of(c.getModifiers());
@@ -152,11 +149,14 @@ public class TerminalHandler {
 		registerCommand(new NoClip_CMD(), termIn, runVisually);
 		registerCommand(new PauseGame_CMD(), termIn, runVisually);
 		registerCommand(new SaveWorld_CMD(), termIn, runVisually);
+		registerCommand(new SetFPS_CMD(), termIn, runVisually);
+		registerCommand(new SetTPS_CMD(), termIn, runVisually);
 		registerCommand(new SetWorldUnderground_CMD(), termIn, runVisually);
 		registerCommand(new Song_CMD(), termIn, runVisually);
 		registerCommand(new SpawnEntity_CMD(), termIn, runVisually);
 		registerCommand(new TPS_CMD(), termIn, runVisually);
 		registerCommand(new UnloadWorld_CMD(), termIn, runVisually);
+		registerCommand(new UnPauseGame_CMD(), termIn, runVisually);
 		registerCommand(new World_CMD(), termIn, runVisually);
 		registerCommand(new WorldsDir_CMD(), termIn, runVisually);
 		registerCommand(new ListEntities_CMD(), termIn, runVisually);
@@ -217,7 +217,7 @@ public class TerminalHandler {
 		
 		cmd = cmd.trim();
 		String[] commandParts = cmd.split(" ");
-		EList<String> commandArguments = new EArrayList<>();
+		EArrayList<String> commandArguments = new EArrayList();
 		String baseCommand = "";
 		
 		if (commandParts.length > 0) {
@@ -227,8 +227,8 @@ public class TerminalHandler {
 			}
 			if (emptyEnd) commandArguments.add("");
 			
-			if (commands.get(baseCommand) != null) {
-				TerminalCommand command = commands.get(baseCommand);
+			if (commands.getBoxWithA(baseCommand) != null) {
+				TerminalCommand command = commands.getBoxWithA(baseCommand).getB();
 				
 				if (command == null) {
 					termIn.error("Unrecognized command.");
@@ -274,13 +274,11 @@ public class TerminalHandler {
 			a.remove();
 		}
 		
-		var cmds = commands.entrySet().iterator();
-		while (cmds.hasNext()) {
-			String commandName = cmds.next().getKey();
-			if (termIn != null && runVisually) {
-				termIn.writeln("Unregistering command alias: " + commandName, 0xffb2b2b2);
-			}
-			cmds.remove();
+		Iterator<Box2<String, TerminalCommand>> b = commands.iterator();
+		while (b.hasNext()) {
+			String commandName = b.next().getA();
+			if (termIn != null && runVisually) { termIn.writeln("Unregistering command alias: " + commandName, 0xffb2b2b2); }
+			b.remove();
 		}
 		
 		registerBaseCommands(termIn, runVisually);
@@ -289,17 +287,21 @@ public class TerminalHandler {
 	}
 	
 	public TerminalCommand getCommand(String commandName) {
-		return commands.getOrDefault(commandName, null);
+		Box2<String, TerminalCommand> box = commands.getBoxWithA(commandName);
+		if (box != null) {
+			return commands.getBoxWithA(commandName).getB();
+		}
+		return null;
 	}
 	
-	public static EList<String> getSortedCommandNames() {
-		EList<String> cmds = new EArrayList();
-		BoxList<CommandType, BoxList<String, EList<TerminalCommand>>> sortedAll = getSortedCommands();
+	public static EArrayList<String> getSortedCommandNames() {
+		EArrayList<String> cmds = new EArrayList();
+		BoxList<CommandType, BoxList<String, EArrayList<TerminalCommand>>> sortedAll = getSortedCommands();
 		
-		for (var box : sortedAll) {
-			var catCommands = box.getB();
-			for (var byCat : catCommands) {
-				for (var command : byCat.getB()) {
+		for (Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> box : sortedAll) {
+			BoxList<String, EArrayList<TerminalCommand>> catCommands = box.getB();
+			for (Box2<String, EArrayList<TerminalCommand>> byCat : catCommands) {
+				for (TerminalCommand command : byCat.getB()) {
 					if (command.showInHelp()) {
 						cmds.add(command.getName());
 					}
@@ -310,70 +312,71 @@ public class TerminalHandler {
 		return cmds;
 	}
 	
-	public static BoxList<CommandType, BoxList<String, EList<TerminalCommand>>> getSortedCommands() {
-		BoxList<CommandType, BoxList<String, EList<TerminalCommand>>> sortedCommands = new BoxList<>();
-		var unsorted = TerminalHandler.getInstance().getCommandList();
+	public static BoxList<CommandType, BoxList<String, EArrayList<TerminalCommand>>> getSortedCommands() {
+		BoxList<CommandType, BoxList<String, EArrayList<TerminalCommand>>> sortedCommands = new BoxList();
+		EArrayList<TerminalCommand> unsorted = TerminalHandler.getInstance().getCommandList();
 		
 		//filter out commands that should not be shown in help
-		unsorted = unsorted.filter(c -> c.showInHelp());
+		unsorted = unsorted.stream().filter(c -> c.showInHelp()).collect(EArrayList.toEArrayList());
 		
 		//get command categories
-		EList<String> categories = new EArrayList<>();
-		for (var c : unsorted) {
+		EArrayList<String> categories = new EArrayList();
+		for (TerminalCommand c : unsorted) {
 			if (c != null) categories.addIfNotContains(c.getCategory());
 		}
 		Collections.sort(categories);
 		
 		//collect for each category
-		BoxList<String, EList<TerminalCommand>> commandsByCategory = new BoxList<>();
+		BoxList<String, EArrayList<TerminalCommand>> commandsByCategory = new BoxList();
 		categories.forEach(c -> commandsByCategory.add(c, null));
-		var toProcess = new EArrayList<>(unsorted);
+		EArrayList<TerminalCommand> toProcess = new EArrayList(unsorted);
 		
 		for (String category : categories) {
-			EList<TerminalCommand> byCat = new EArrayList<>();
+			EArrayList<TerminalCommand> byCat = new EArrayList();
 			
-			var it = toProcess.iterator();
+			Iterator<TerminalCommand> it = toProcess.iterator();
 			while (it.hasNext()) {
-				var c = it.next();
+				TerminalCommand c = it.next();
 				if (c.getCategory().equals(category)) {
 					byCat.add(c);
 					it.remove();
 				}
 			}
 			
-			Collections.sort(byCat, CommandSorter);
+			Collections.sort(byCat, new Sorter());
 			commandsByCategory.getBoxWithA(category).setB(byCat);
 		}
 		
 		//get command types
-		EList<CommandType> types = new EArrayList<>();
-		EList<TerminalCommand> typeToProcess = new EArrayList<>();
+		EArrayList<CommandType> types = new EArrayList();
 		unsorted.forEach(c -> types.addIfNotContains(c.getType()));
+		
+		EArrayList<TerminalCommand> typeToProcess = new EArrayList();
 		
 		//isolate the 'none' category
 		if (!commandsByCategory.removeBoxesContainingA("none").isEmpty()) {
-			var noneCat = commandsByCategory.removeBoxesContainingA("none").get(0);
+			Box2<String, EArrayList<TerminalCommand>> noneCat = commandsByCategory.removeBoxesContainingA("none").get(0);
 			typeToProcess.addAll(noneCat.getB());
 			
 			//filter out commands that have a category but are not normal
-			for (var byCat : commandsByCategory) {
-				var it = byCat.getB().iterator();
+			for (Box2<String, EArrayList<TerminalCommand>> byCat : commandsByCategory) {
+				Iterator<TerminalCommand> it = byCat.getB().iterator();
 				while (it.hasNext()) {
-					var c = it.next();
+					TerminalCommand c = it.next();
 					if (c.getType() != CommandType.NORMAL) {
-						var box = sortedCommands.getBoxWithA(c.getType());
+						Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> box = sortedCommands.getBoxWithA(c.getType());
 						if (box != null) {
-							var cats = box.getB();
-							var catBox = cats.getBoxWithA(c.getCategory());
+							BoxList<String, EArrayList<TerminalCommand>> cats = box.getB();
+							Box2<String, EArrayList<TerminalCommand>> catBox = cats.getBoxWithA(c.getCategory());
 							if (catBox != null) {
 								catBox.getB().add(c);
 							}
 							else {
-								cats.add(new Box2(c.getCategory(), new EArrayList<>(c)));
+								cats.add(new Box2(c.getCategory(), new EArrayList(c)));
 							}
 						}
 						else {
-							sortedCommands.add(c.getType(), new BoxList<>(c.getCategory(), new EArrayList<>(c)));
+							sortedCommands.add(c.getType(), new BoxList(c.getCategory(), new EArrayList(c)));
 						}
 						it.remove();
 					}
@@ -388,7 +391,7 @@ public class TerminalHandler {
 		//parse 'none' category for different command types
 		for (CommandType type : types) {
 			if (type == CommandType.NORMAL) { continue; }
-			EList<TerminalCommand> byType = new EArrayList();
+			EArrayList<TerminalCommand> byType = new EArrayList();
 			
 			Iterator<TerminalCommand> it = typeToProcess.iterator();
 			while (it.hasNext()) {
@@ -408,25 +411,41 @@ public class TerminalHandler {
 		sortedCommands.getBoxWithA(CommandType.NORMAL).getB().add(new Box2("No Category", typeToProcess));
 		
 		//ensure correct command type order
-		EList<Box2<CommandType, BoxList<String, EList<TerminalCommand>>>> commands = sortedCommands.getBoxes();
+		EArrayList<Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>>> commands = sortedCommands.getBoxes();
 		sortedCommands.clear();
-		Collections.sort(commands, new Comparator<Box2<CommandType, BoxList<String, EList<TerminalCommand>>>>() {
+		Collections.sort(commands, new Comparator<Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>>>() {
+
 			@Override
-			public int compare(Box2<CommandType, BoxList<String, EList<TerminalCommand>>> o1, Box2<CommandType, BoxList<String, EList<TerminalCommand>>> o2) {
+			public int compare(Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> o1, Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> o2) {
 				return o1.getA().compareTo(o2.getA());
 			}
+			
 		});
 		sortedCommands.addAll(commands);
 		
 		return sortedCommands;
 	}
 	
-	private static final Comparator<TerminalCommand> CommandSorter = (a, b) -> a.getName().compareToIgnoreCase(b.getName());
+	private static class Sorter implements Comparator {
+
+		@Override
+		public int compare(Object a, Object b) {
+			
+			if (a instanceof TerminalCommand && b instanceof TerminalCommand) {
+				String name1 = ((TerminalCommand) a).getName();
+				String name2 = ((TerminalCommand) b).getName();
+				
+				return name1.compareToIgnoreCase(name2);
+			}
+			
+			return 0;
+		}
+		
+	}
 	
-	public List<String> getCommandNames() { return EUtil.mapList(commands, e -> e.getKey()); }
-	public EList<TerminalCommand> getListableCommands() { return listableCommands; }
-	public EList<TerminalCommand> getCommandList() { return commandList; }
-	public EList<String> getHistory() { return cmdHistory; }
+	public EArrayList<TerminalCommand> getCommandList() { return commandList; }
+	public List<String> getCommandNames() { return commands.getAVals(); }
+	public EArrayList<String> getHistory() { return cmdHistory; }
 	public TerminalHandler clearHistory() { cmdHistory.clear(); return this; }
 	
 	/**

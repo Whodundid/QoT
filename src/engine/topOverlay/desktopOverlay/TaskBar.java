@@ -13,7 +13,6 @@ import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 import eutil.misc.ScreenLocation;
 import main.QoT;
@@ -30,9 +29,9 @@ public class TaskBar<E> extends WindowObject<E> {
 	// Fields
 	//--------
 	
-	public static EList<TaskBarButton<?>> buttons = new EArrayList<>();
-	protected static EList<IWindowParent<?>> toAdd = new EArrayList<>();
-	protected static EList<IWindowParent<?>> toRemove = new EArrayList<>();
+	public static EArrayList<TaskBarButton<?>> buttons = new EArrayList();
+	protected static EArrayList<IWindowParent<?>> toAdd = new EArrayList();
+	protected static EArrayList<IWindowParent<?>> toRemove = new EArrayList();
 	ScreenLocation drawSide = ScreenLocation.TOP;
 	
 	//--------------
@@ -220,7 +219,7 @@ public class TaskBar<E> extends WindowObject<E> {
 	
 	private void updateLists() {
 		try {
-			EList<IWindowObject<?>> removeGhosts = new EArrayList<>();
+			EArrayList<IWindowObject<?>> removeGhosts = new EArrayList<>();
 			for (var o : getChildren()) {
 				if (o instanceof TaskBarButton<?> tb) {
 					if (!QoT.getTopRenderer().isWindowOpen(tb.getWindowType().getClass()))
@@ -244,7 +243,7 @@ public class TaskBar<E> extends WindowObject<E> {
 			
 			//process objects to be removed
 			if (toRemove.isNotEmpty()) {
-				EList<TaskBarButton<?>> removing = new EArrayList<>();
+				EArrayList<TaskBarButton<?>> removing = new EArrayList<>();
 				
 				for (var p : toRemove) {
 					for (var b : buttons) {
@@ -337,8 +336,8 @@ public class TaskBar<E> extends WindowObject<E> {
 		toRemove.clear();
 		
 		var windows = QoT.getTopRenderer().getAllActiveWindows();
-		EList<IWindowParent<?>> filtered = new EArrayList<>();
-		EList<TaskBarButton<?>> toBuild = new EArrayList<>();
+		EArrayList<IWindowParent<?>> filtered = new EArrayList<>();
+		EArrayList<TaskBarButton<?>> toBuild = new EArrayList<>();
 		
 		for (var w : windows) {
 			boolean contains = false;

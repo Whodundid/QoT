@@ -1,13 +1,12 @@
 package engine.terminal.terminalCommand.commands.fileSystem;
 
-import java.io.File;
-
-import org.apache.commons.io.FileUtils;
-
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
+
+import java.io.File;
+import org.apache.commons.io.FileUtils;
 
 public class Cp extends FileCommand {
 	
@@ -17,12 +16,14 @@ public class Cp extends FileCommand {
 	}
 	
 	@Override public String getName() { return "cp"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Copies a file from one place and pastes in another."; }
 	@Override public String getUsage() { return "ex: cp 'src' 'dest'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EList<String> args) { fileTabComplete(termIn, args); }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.size() < 2) { termIn.error("Not enough arguments!"); }
 		else if (args.size() == 2) {
 			try {

@@ -5,7 +5,6 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import game.screens.main.MainMenuScreen;
 import main.QoT;
 
@@ -18,12 +17,14 @@ public class UnloadWorld_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "unloadworld"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("uw"); }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("uw"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Unloads the current world (if any)"; }
 	@Override public String getUsage() { return "ex: uw"; }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (QoT.theWorld != null) {
 			termIn.writeln("Unloading world '" + QoT.theWorld.getName() + "'", EColors.green);
 			QoT.loadWorld(null);

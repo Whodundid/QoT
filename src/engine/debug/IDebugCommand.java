@@ -4,7 +4,6 @@ package engine.debug;
 
 /** An enum pertaining to a list of available debug functions. */
 public enum IDebugCommand {
-	
 	DEBUG_0(0),
 	DEBUG_1(1),
 	DEBUG_2(2),

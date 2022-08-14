@@ -1,14 +1,13 @@
 package game.screens.gameplay.combat;
 
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import game.entities.Entity;
 
 /** Keeps track of fighting entities of two teams over the course of a fight. */
 public class CombatManager {
 	
 	// Team A is the player's team. Team B is what they're fighting
-	private EList<Entity> teamA, teamB;
+	private EArrayList<Entity> teamA, teamB;
 	
 	// Boolean to keep track of which team's turn it is
 	private boolean isATurn = true;
@@ -28,8 +27,8 @@ public class CombatManager {
 	// Constructors
 	//--------------
 	
-	public CombatManager(Entity aIn, Entity bIn) { this(new EArrayList<>(aIn), new EArrayList<>(bIn)); }
-	public CombatManager(EList<Entity> aIn, EList<Entity> bIn) {
+	public CombatManager(Entity aIn, Entity bIn) { this(new EArrayList<Entity>(aIn), new EArrayList<Entity>(bIn)); }
+	public CombatManager(EArrayList<Entity> aIn, EArrayList<Entity> bIn) {
 		teamA = aIn;
 		teamB = bIn;
 	}

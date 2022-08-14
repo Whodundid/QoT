@@ -1,7 +1,7 @@
 package engine.terminal.terminalCommand;
 
 import engine.terminal.window.ETerminal;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 
 public abstract class ConfirmationCommand extends TerminalCommand {
 
@@ -22,18 +22,18 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 		}
 	}
 	
-	public boolean checkConfirm(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public boolean checkConfirm(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (responseReceived) {
-			if (confirmed) runAction(termIn, args, runVisually);
-			else termIn.info("User requested cancellation, command aborted!\n");
+			if (confirmed) { runAction(termIn, args, runVisually); }
+			else { termIn.info("User requested cancellation, command aborted!\n"); }
 			responseReceived = false;
 			confirmed = false;
 		}
-		else termIn.setRequiresCommandConfirmation(this, confirmString + " (" + yes + ", " + no + ")", args, runVisually);
+		else { termIn.setRequiresCommandConfirmation(this, confirmString + " (" + yes + ", " + no + ")", args, runVisually); }
 		return false;
 	}
 	
-	public abstract void runAction(ETerminal termIn, EList<String> args, boolean runVisually);
+	public abstract void runAction(ETerminal termIn, EArrayList<String> args, boolean runVisually);
 
 	public void setConfirmationString(String in) { setConfirmationString(in, "y", "n"); }
 	public void setConfirmationString(String in, String yesMessage, String noMessage) {

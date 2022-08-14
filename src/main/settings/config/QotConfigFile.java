@@ -11,7 +11,6 @@ import eutil.EUtil;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.file.LineReader;
 
 public class QotConfigFile {
@@ -19,17 +18,17 @@ public class QotConfigFile {
 	protected File configPath;
 	protected String configName = "";
 	protected String configTitleLine = null;
-	protected BoxList<String, EList<String>> configValues;
+	protected BoxList<String, EArrayList<String>> configValues;
 	
 	/** temp list used for saving */
-	private EList<ConfigBlock> config = new EArrayList();
+	private EArrayList<ConfigBlock> config = new EArrayList();
 	
 	public QotConfigFile(File path, String name) { this(path, name, null); }
 	public QotConfigFile(File path, String name, String configTitleIn) {
 		configPath = path;
 		configName = name;
 		configTitleLine = configTitleIn;
-		configValues = new BoxList<String, EList<String>>();
+		configValues = new BoxList<String, EArrayList<String>>();
 	}
 	
 	public boolean saveConfig() { return trySave(); }
@@ -39,7 +38,7 @@ public class QotConfigFile {
 	/** Attempts to parse through a potentially existing config file and match identifier-value pairs.
 	 *  Returns false if the file cannot be found. */
 	public BoxList getConfigContents() {
-		if (configValues == null) { configValues = new BoxList<String, EList<String>>(); }
+		if (configValues == null) { configValues = new BoxList<String, EArrayList<String>>(); }
 		configValues.clear();
 		parseFile();
 		return configValues;
@@ -54,7 +53,7 @@ public class QotConfigFile {
 	 *  default value to fall back on in case the parsing fails. */
 	protected <Val extends Object> Val getConfigVal(String keyWord, Class<Val> asType, Val defaultVal) throws Exception {
 		BoxList holder = configValues;
-		Box2<String, EList<String>> box = holder.getBoxWithA(keyWord);
+		Box2<String, EArrayList<String>> box = holder.getBoxWithA(keyWord);
 		if (box != null) {
 			String sVal = box.getB().get(0);
 			Val returnVal = null;
@@ -182,10 +181,10 @@ public class QotConfigFile {
 		return false;
 	}
 	
-	protected boolean createConfig(EList<ConfigBlock> configContentsIn) {
+	protected boolean createConfig(EArrayList<ConfigBlock> configContentsIn) {
 		try (var saver = new PrintWriter(configPath, "UTF-8")) {
 			//check for any special config blocks
-			EList<CreateIfExistsConfigBlock> special = new EArrayList(configContentsIn.stream().filter(b -> b instanceof CreateIfExistsConfigBlock).collect(Collectors.toList()));
+			EArrayList<CreateIfExistsConfigBlock> special = new EArrayList(configContentsIn.stream().filter(b -> b instanceof CreateIfExistsConfigBlock).collect(Collectors.toList()));
 			special.stream().filter(b -> !doesFileContainIdentifier(b.getStringToCheckFor())).forEach(b -> configContentsIn.remove(b));
 			
 			/*
@@ -290,7 +289,7 @@ public class QotConfigFile {
 	}
 	
 	public boolean trySave() { return trySave(null); }
-	public boolean trySave(EList<ConfigSetting> settings) {
+	public boolean trySave(EArrayList<ConfigSetting> settings) {
 		addLine(configTitleLine != null ? configTitleLine : configName + " Config").nl();
 		if (settings != null) {
 			EUtil.filterForEach(settings, s -> !s.getIgnoreConfigWrite(), s -> addLine(s));
@@ -299,7 +298,7 @@ public class QotConfigFile {
 	}
 	
 	public boolean tryLoad() { return tryLoad(null); }
-	public boolean tryLoad(EList<ConfigSetting> settings) {
+	public boolean tryLoad(EArrayList<ConfigSetting> settings) {
 		try {
 			if (load()) {
 				if (settings != null) {
@@ -315,7 +314,7 @@ public class QotConfigFile {
 	}
 	
 	public boolean tryReset() { return tryReset(null); }
-	public boolean tryReset(EList<ConfigSetting> settings) {
+	public boolean tryReset(EArrayList<ConfigSetting> settings) {
 		addLine(configTitleLine != null ? configTitleLine : configName + " Config").nl();
 		if (settings != null) {
 			settings.forEach(c -> addLine(c, true));

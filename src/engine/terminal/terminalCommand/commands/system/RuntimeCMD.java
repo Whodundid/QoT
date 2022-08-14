@@ -5,7 +5,6 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 
 public class RuntimeCMD extends TerminalCommand {
 	
@@ -16,12 +15,14 @@ public class RuntimeCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "runtime"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("rt"); }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("rt"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Gets info on the current system run time"; }
 	@Override public String getUsage() { return "ex: runtime"; }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) termIn.error("This command does not take any arguments");
 		else {
 			Runtime rt = Runtime.getRuntime();

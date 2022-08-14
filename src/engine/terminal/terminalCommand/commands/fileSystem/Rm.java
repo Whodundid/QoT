@@ -1,12 +1,11 @@
 package engine.terminal.terminalCommand.commands.fileSystem;
 
-import java.io.File;
-
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 import eutil.strings.StringUtil;
+import java.io.File;
 
 public class Rm extends FileCommand {
 	
@@ -17,12 +16,14 @@ public class Rm extends FileCommand {
 	}
 	
 	@Override public String getName() { return "rm"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Deletes a file from the file system."; }
 	@Override public String getUsage() { return "ex: rm 'dir'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EList<String> args) { fileTabComplete(termIn, args); }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		if (args.size() == 1) {
 			try {

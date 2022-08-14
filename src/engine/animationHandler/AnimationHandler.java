@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import game.entities.Entity;
 
 /**
@@ -252,8 +251,8 @@ public class AnimationHandler {
 	 * Returns a list containing every animation set stored within this
 	 * handler.
 	 */
-	public EList<AnimationSet> getAllAnimations() {
-		EList<AnimationSet> r = new EArrayList<>();
+	public EArrayList<AnimationSet> getAllAnimations() {
+		EArrayList<AnimationSet> r = new EArrayList<>();
 		for (var s : animationSets.keySet())
 			r.add(animationSets.get(s));
 		return r;

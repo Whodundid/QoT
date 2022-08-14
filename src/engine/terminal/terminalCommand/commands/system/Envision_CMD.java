@@ -7,7 +7,7 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import envision_lang.EnvisionLang;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 import main.QoT;
 
 public class Envision_CMD extends TerminalCommand {
@@ -19,11 +19,14 @@ public class Envision_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "envision"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Mappings to the Envision Scripting Language"; }
 	@Override public String getUsage() { return "ex: envision 'file'"; }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.writeln(EnvisionLang.getVersionString(), EColors.seafoam);
 			termIn.info("To run an Envision script, add the file name to the end of this command.");

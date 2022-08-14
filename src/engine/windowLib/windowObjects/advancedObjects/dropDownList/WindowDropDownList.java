@@ -8,7 +8,6 @@ import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 
 //Author: Hunter Bragg
 
@@ -18,7 +17,7 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	// Fields
 	//--------
 	
-	private EList<DropDownListEntry<E>> listContents = new EArrayList<>();
+	private EArrayList<DropDownListEntry<E>> listContents = new EArrayList();
 	private DropDownListEntry<E> selectedEntry;
 	private double entryHeight = 17;
 	private boolean listOpen = false;
@@ -238,7 +237,7 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 		return null;
 	}
 	
-	public EList<DropDownListEntry<E>> getEntries() { return listContents; }
+	public EArrayList<DropDownListEntry<E>> getEntries() { return listContents; }
 	public DropDownListEntry<E> getSelectedEntry() { return selectedEntry; }
 	public DropDownListEntry<E> getEntryFromObject(E objIn) {
 		for (var e : listContents) {

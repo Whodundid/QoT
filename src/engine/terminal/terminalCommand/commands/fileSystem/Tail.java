@@ -1,16 +1,13 @@
 package engine.terminal.terminalCommand.commands.fileSystem;
 
-import java.io.File;
-import java.nio.charset.Charset;
-
-import org.apache.commons.io.input.ReversedLinesFileReader;
-
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.strings.StringUtil;
+import java.io.File;
+import java.nio.charset.Charset;
+import org.apache.commons.io.input.ReversedLinesFileReader;
 
 public class Tail extends FileCommand {
 	
@@ -20,16 +17,15 @@ public class Tail extends FileCommand {
 	}
 	
 	@Override public String getName() { return "tail"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays the last few specified lines of a file. By default it displays 10 lines."; }
 	@Override public String getUsage() { return "ex: tail 'file path' 10"; }
 	
-	@Override
-	public void handleTabComplete(ETerminal termIn, EList<String> args) {
-		fileTabComplete(termIn, args);
-	}
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); termIn.info(getUsage()); }
 		else if (args.size() == 1) { tryFind(termIn, args, 10); }
 		else if (args.size() == 2) {
@@ -48,7 +44,7 @@ public class Tail extends FileCommand {
 		else { termIn.error("Too many arguments!"); termIn.info(getUsage()); }
 	}
 	
-	private void tryFind(ETerminal termIn, EList<String> args, int len) {
+	private void tryFind(ETerminal termIn, EArrayList<String> args, int len) {
 		String all = StringUtil.combineAll(args, " ");
 		File f = new File(all);
 		

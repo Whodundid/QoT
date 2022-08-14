@@ -6,11 +6,10 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.IListableCommand;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
+import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
-import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.strings.StringUtil;
 import main.QoT;
 
@@ -25,18 +24,19 @@ public class ListCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "list"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("l"); }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("l"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to list various things. (mods, players, etc.)"; }
 	@Override public String getUsage() { return "ex: list screens"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
 		String[] types = {"objects, windows, screens, commands"};
 		super.basicTabComplete(termIn, args, new EArrayList().addA(types));
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			if (runVisually) termIn.writeln("objects, windows, screens, commands", EColors.green);
 			else termIn.info(getUsage());
@@ -85,18 +85,18 @@ public class ListCMD extends TerminalCommand {
 		}
 	}
 	
-	private void listObjects(ETerminal<?> termIn, EList<String> args, boolean runVisually) {
+	private void listObjects(ETerminal<?> termIn, EArrayList<String> args, boolean runVisually) {
 		termIn.writeln("Listing all current objects in this top renderer\n", EColors.lgreen);
 		if (runVisually) {
 			int grandTotal = 0; //this isn't completely right tree wise, but whatever
-			for (var obj : termIn.getTopParent().getChildren()) {
+			for (IWindowObject<?> obj : termIn.getTopParent().getChildren()) {
 				termIn.writeln(obj.toString(), EColors.green);
 				
 				//int depth = 3;
 				
-				EArrayList<IWindowObject<?>> foundObjs = new EArrayList<>();
-				EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList<>();
-				EArrayList<IWindowObject<?>> workList = new EArrayList<>();
+				EArrayList<IWindowObject<?>> foundObjs = new EArrayList();
+				EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList();
+				EArrayList<IWindowObject<?>> workList = new EArrayList();
 				
 				//grab all immediate children and add them to foundObjs, then check if any have children of their own
 				obj.getChildren().forEach(o -> {
@@ -106,7 +106,7 @@ public class ListCMD extends TerminalCommand {
 				//load the workList with every child found on each object
 				objsWithChildren.forEach(c -> workList.addAll(c.getChildren()));
 				
-				for (var o : EList.combineLists(objsWithChildren, workList)) {
+				for (IWindowObject o : EArrayList.combineLists(objsWithChildren, workList)) {
 					String s = "   ";
 					//for (int i = 0; i < depth; i++) { s += " "; }
 					termIn.writeln(s + o.toString(), EColors.lgray);
@@ -126,7 +126,7 @@ public class ListCMD extends TerminalCommand {
 					workList.clear();
 					objsWithChildren.forEach(c -> workList.addAll(c.getChildren()));
 					
-					for (IWindowObject o : EList.combineLists(objsWithChildren, workList)) {
+					for (IWindowObject o : EArrayList.combineLists(objsWithChildren, workList)) {
 						String s = "   ";
 						//for (int i = 0; i < depth; i++) { s += " "; }
 						termIn.writeln(s + o.toString(), EColors.lgray);
@@ -149,8 +149,8 @@ public class ListCMD extends TerminalCommand {
 		}
 	}
 	
-	private void listWindows(ETerminal termIn, EList<String> args, boolean runVisually) {
-		EList<IWindowParent<?>> windows = termIn.getTopParent().getAllActiveWindows();
+	private void listWindows(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+		EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 		
 		String plural = windows.size() > 1 ? "s" : "";
 		
@@ -160,7 +160,7 @@ public class ListCMD extends TerminalCommand {
 		termIn.writeln(title, EColors.lime);
 		termIn.writeln(StringUtil.repeatString("-", title.length()), EColors.lime);
 		
-		for (var p : windows) {
+		for (WindowParent p : windows) {
 			String out = p.getObjectName() + " | " + p.getObjectID() + " | " + p.getClass().getSimpleName()
 						 + (p.isPinned() ? " | " + EColors.mc_lightpurple + "pinned" : ""
 						 + (p.isMinimized() ? " | " + EColors.mc_lightpurple + "minimized" : ""));
@@ -168,7 +168,7 @@ public class ListCMD extends TerminalCommand {
 		}
 	}
 	
-	private void listScreens(ETerminal termIn, EList<String> args, boolean runVisually) {
+	private void listScreens(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		/**
 		String dir = (args.size() >= 2) ? args.get(1) : "engine.screens";
 		

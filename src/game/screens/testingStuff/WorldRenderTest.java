@@ -1,10 +1,5 @@
 package game.screens.testingStuff;
 
-import java.io.File;
-import java.util.Stack;
-
-import org.lwjgl.glfw.GLFW;
-
 import engine.inputHandlers.Keyboard;
 import engine.inputHandlers.Mouse;
 import engine.renderEngine.fontRenderer.FontRenderer;
@@ -12,7 +7,7 @@ import engine.screenEngine.GameScreen;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.entities.Entity;
@@ -21,6 +16,11 @@ import main.QoT;
 import world.GameWorld;
 import world.mapEditor.NewMapCreatorScreen;
 import world.worldTiles.WorldTile;
+
+import java.io.File;
+import java.util.Stack;
+
+import org.lwjgl.glfw.GLFW;
 
 public class WorldRenderTest extends GameScreen {
 
@@ -299,7 +299,7 @@ public class WorldRenderTest extends GameScreen {
 	}
 	
 	private void drawEntities(int x, int y, int w, int h) {
-		EList<Entity> entities = world.getEntitiesInWorld();
+		EArrayList<Entity> entities = world.getEntitiesInWorld();
 		
 		for (Entity e : entities) {
 			if (e.getTexture() != null) {

@@ -1,7 +1,6 @@
 package world.dungeonBuilder;
 
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.misc.Direction;
 import eutil.random.RandomUtil;
 import world.EntitySpawn;
@@ -10,9 +9,9 @@ import world.worldTiles.WorldTile;
 public abstract class DungeonPiece {
 	
 	protected WorldTile[][] tiles;
-	protected EList<EntitySpawn> entitySpawns = new EArrayList<>();
+	protected EArrayList<EntitySpawn> entitySpawns = new EArrayList();
 	protected int w, h;
-	protected EList<Direction> open = new EArrayList<>();
+	protected EArrayList<Direction> open = new EArrayList();
 	protected boolean isSpawn;
 	
 	protected DungeonPiece(int w, int h, boolean spawn) {
@@ -24,7 +23,7 @@ public abstract class DungeonPiece {
 	
 	public WorldTile[][] getTiles() { return tiles; }
 	public WorldTile getTileAt(int x, int y) { return tiles[y][x]; }
-	public EList<EntitySpawn> getEntities() { return entitySpawns; }
+	public EArrayList<EntitySpawn> getEntities() { return entitySpawns; }
 	public void setTileAt(int x, int y, WorldTile t) { tiles[y][x] = t; }
 	public void addOpen(Direction d) { open.addIfNotContains(d); }
 	public void addEntity(EntitySpawn s) { entitySpawns.addIfNotNull(s); }

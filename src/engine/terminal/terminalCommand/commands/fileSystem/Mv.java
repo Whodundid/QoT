@@ -1,14 +1,14 @@
 package engine.terminal.terminalCommand.commands.fileSystem;
 
+import engine.terminal.terminalCommand.CommandType;
+import engine.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
-import engine.terminal.terminalCommand.CommandType;
-import engine.terminal.window.ETerminal;
-import eutil.colors.EColors;
-import eutil.datatypes.EList;
 
 public class Mv extends FileCommand {
 	
@@ -18,15 +18,18 @@ public class Mv extends FileCommand {
 	}
 	
 	@Override public String getName() { return "mv"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Moves the contents of one file to another."; }
 	@Override public String getUsage() { return "ex: mv 'src' 'dest'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EList<String> args) { fileTabComplete(termIn, args); }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.size() < 2) { termIn.error("Not enough arguments!"); }
 		else if (args.size() == 2) {
 			try {
+				
 				File f = new File(termIn.getDir(), args.get(0));
 				
 				//if the source file exists
@@ -35,6 +38,7 @@ public class Mv extends FileCommand {
 					move(termIn, f, dest);
 				}
 				else { termIn.error("Error: Cannot find the object specified!"); }
+				
 			}
 			catch (Exception e) {
 				error(termIn, e);

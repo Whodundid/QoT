@@ -1,25 +1,24 @@
 package world.worldTiles;
 
-import static eutil.reflection.EModifier.*;
 import static eutil.reflection.ReflectionHelper.*;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Comparator;
+import static eutil.reflection.EModifier.*;
 
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import world.worldTiles.categories.DungeonTiles;
 import world.worldTiles.categories.FarmTiles;
 import world.worldTiles.categories.HouseTiles;
 import world.worldTiles.categories.NatureTiles;
 import world.worldTiles.categories.StoneTiles;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Comparator;
+
 /** Keeps track of all world tiles in the game. */
 public class GlobalTileList {
 	
-	private static EList<WorldTile> tiles = new EArrayList<>();
+	private static EArrayList<WorldTile> tiles = new EArrayList<WorldTile>();
 	
 	//--------------
 	// Constructors
@@ -87,6 +86,6 @@ public class GlobalTileList {
 		return null;
 	}
 	
-	public static EList<WorldTile> getTiles() { return new EArrayList<>(tiles); }
+	public static EArrayList<WorldTile> getTiles() { return new EArrayList(tiles); }
 	
 }

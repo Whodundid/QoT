@@ -4,7 +4,7 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 import main.QoT;
 
 public class CurScreen extends TerminalCommand {
@@ -16,11 +16,14 @@ public class CurScreen extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "screen"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "returns the current screen"; }
 	@Override public String getUsage() { return "ex: screen"; }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		termIn.writeln(QoT.getCurrentScreen(), EColors.lgreen);
 	}
 	

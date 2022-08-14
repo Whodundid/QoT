@@ -15,8 +15,8 @@ public abstract class EditorTool {
 	protected MapEditorScreen editor;
 	protected MapEditorSettings settings;
 	protected boolean isSelected = false;
-	protected Box2<Integer, Integer> pressPoint = new Box2<>(-1, -1);
-	protected Box2<Integer, Integer> oldPoint = new Box2<>(-1, -1);
+	protected Box2<Integer, Integer> pressPoint = new Box2(-1, -1);
+	protected Box2<Integer, Integer> oldPoint = new Box2(-1, -1);
 	protected int button = -1;
 	protected boolean pressed = false;
 	protected int wx, wy;

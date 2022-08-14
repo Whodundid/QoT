@@ -1,12 +1,11 @@
 package engine.renderEngine.textureSystem;
 
-import org.lwjgl.opengl.GL11;
-
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.random.RandomUtil;
 import main.settings.QoTSettings;
+
+import org.lwjgl.opengl.GL11;
 
 public class GameTexture {
 	
@@ -16,7 +15,7 @@ public class GameTexture {
 	/** If this texture is a child variant, this is the parent for which it relates. If this value is null, there is no parent and this is not a child texture. */
 	private GameTexture parentTexture;
 	/** A collection of this texture's child variants. */
-	protected BoxList<GameTexture, Integer> children = new BoxList<>();
+	protected BoxList<GameTexture, Integer> children = new BoxList<GameTexture, Integer>();
 	/** When calling for a random child ID, this percent will indicate the likely hood this specific child will be selected. */
 	private int percent = -1;
 	/** The internal use ID for this texture object. -1 indicates an unregistered texture ID. -- Assigned dynamically through texture registration. */
@@ -90,7 +89,7 @@ public class GameTexture {
 	//---------
 	
 	public GameTexture getParent() { return parentTexture; }
-	public EList<GameTexture> getChildren() { return children.getAVals(); }
+	public EArrayList<GameTexture> getChildren() { return children.getAVals(); }
 	public int getTextureID() { return textureID; }
 	public int getChildID() { return childID; }
 	public String getFilePath() { return filePath; }
@@ -99,10 +98,10 @@ public class GameTexture {
 	public boolean hasBeenDestroyed() { return destroyed; }
 	public boolean hasParent() { return parentTexture != null; }
 	
-	public EList<GameTexture> getAllChildren() {
-		EList<GameTexture> found = new EArrayList<>();
-		EList<GameTexture> withChildren = new EArrayList<>();
-		EList<GameTexture> workList = new EArrayList<>();
+	public EArrayList<GameTexture> getAllChildren() {
+		EArrayList<GameTexture> found = new EArrayList();
+		EArrayList<GameTexture> withChildren = new EArrayList();
+		EArrayList<GameTexture> workList = new EArrayList();
 		
 		children.getAVals().forEach(c -> {
 			found.add(c);
@@ -129,7 +128,7 @@ public class GameTexture {
 	}
 	
 	public void initVariantPercents() {
-		BoxList<GameTexture, Integer> total = new BoxList<>(children);
+		BoxList<GameTexture, Integer> total = new BoxList(children);
 		total.add(this, percent);
 		//for (Box2<GameTexture, Integer> t : total) {
 			//int amount = t.getB();

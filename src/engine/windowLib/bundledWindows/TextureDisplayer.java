@@ -1,21 +1,21 @@
 package engine.windowLib.bundledWindows;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import assets.textures.taskbar.TaskBarTextures;
-import assets.textures.window.WindowTextures;
 import engine.renderEngine.textureSystem.GameTexture;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.basicObjects.WindowImageBox;
 import engine.windowLib.windowTypes.WindowParent;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.file.FileOpener;
 import eutil.math.NumberUtil;
 import main.QoT;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import assets.textures.taskbar.TaskBarTextures;
+import assets.textures.window.WindowTextures;
 
 public class TextureDisplayer extends WindowParent {
 	
@@ -27,8 +27,8 @@ public class TextureDisplayer extends WindowParent {
 	private WindowImageBox<?> imageBox;
 	private Path path;
 	private File file;
-	private EList<Path> paths;
-	private EList<File> files;
+	private EArrayList<Path> paths;
+	private EArrayList<File> files;
 	private int curPath = 0;
 	private int curFile = 0;
 	private boolean stretched = false;
@@ -129,7 +129,7 @@ public class TextureDisplayer extends WindowParent {
 				}
 				
 				if (path.getParent() != null) {
-					EList<Path> unprocessed = Files.list(path.getParent()).collect(EArrayList.toEArrayList());
+					EArrayList<Path> unprocessed = Files.list(path.getParent()).collect(EArrayList.toEArrayList());
 					paths = unprocessed.stream().filter(p -> isImage(p.toString())).collect(EArrayList.toEArrayList());
 					
 					if (paths.size() > 1) {

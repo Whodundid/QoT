@@ -9,7 +9,7 @@ import engine.windowLib.windowTypes.interfaces.IActionObject;
 import engine.windowLib.windowTypes.interfaces.IWindowParent;
 import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
 import main.QoT;
 
@@ -243,8 +243,8 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 	 * Returns a list of all current window instances of the same type
 	 * that this button represents.
 	 */
-	public EList<IWindowParent<?>> getWindows() {
-		return (EList<IWindowParent<?>>) QoT.getTopRenderer().getAllWindowInstances(base.getClass());
+	public EArrayList<IWindowParent<?>> getWindows() {
+		return (EArrayList<IWindowParent<?>>) QoT.getTopRenderer().getAllWindowInstances(base.getClass());
 	}
 	
 	/** Returns the total number of window instances that this button represents. */

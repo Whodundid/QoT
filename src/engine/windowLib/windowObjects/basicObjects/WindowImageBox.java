@@ -7,7 +7,6 @@ import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 
 //Author: Hunter Bragg
@@ -18,7 +17,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	// Fields
 	//--------
 	
-	private EList<GameTexture> images = new EArrayList<>();
+	private EArrayList<GameTexture> images = new EArrayList();
 	private int borderColor = EColors.black.c();
 	private int backgroundColor = EColors.vdgray.c();
 	private boolean drawImage = true;
@@ -141,7 +140,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	// Getters
 	//---------
 	
-	public EList<GameTexture> getImages() { return images; }
+	public EArrayList<GameTexture> getImages() { return images; }
 	public int getBorderColor() { return borderColor; }
 	public int getBackgroundColor() { return backgroundColor; }
 	public long getUpdateInterval() { return updateInterval; }

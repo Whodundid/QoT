@@ -4,7 +4,6 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import main.QoT;
 
 public class SpawnEntity_CMD extends TerminalCommand {
@@ -16,17 +15,14 @@ public class SpawnEntity_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "spawn_entity"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("spawn"); }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("spawn"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Spawns in an entity near the player"; }
 	@Override public String getUsage() { return "ex: spawn goblin"; }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EList<String> args) {
-		
-	}
-	
-	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.error("Entity type must be specified!");
 			termIn.info(getUsage());

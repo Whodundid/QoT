@@ -23,7 +23,7 @@ public abstract class Entity extends GameObject {
 	protected boolean allowNoClip = false;
 	protected Rotation facing = Rotation.RIGHT;
 	
-	/** This entity's current level. */;
+	/** This entity's current level. */
 	protected int level;
 	/** This entity's total amount of experience earned. */
 	protected long experience;

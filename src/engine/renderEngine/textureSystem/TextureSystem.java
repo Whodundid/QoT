@@ -11,13 +11,12 @@ import org.lwjgl.opengl.GL46;
 import org.lwjgl.stb.STBImage;
 
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.reflection.ReflectionHelper;
 import main.QoT;
 
 public class TextureSystem {
 
-	private EList<GameTexture> registeredTextures = new EArrayList<>();
+	private EArrayList<GameTexture> registeredTextures = new EArrayList();
 	private GameTexture current = null;
 	
 	private static TextureSystem instance;

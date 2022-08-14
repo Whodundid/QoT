@@ -11,7 +11,6 @@ import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import world.mapEditor.MapEditorScreen;
 import world.mapEditor.editorTools.EditorToolType;
 
@@ -21,7 +20,7 @@ public class EditorToolBox extends WindowObject {
 	
 	MapEditorScreen editor;
 	//EArrayList<ToolCategory> tools = new EArrayList();
-	EList<WindowButton<EditorToolType>> toolButtons = new EArrayList<>();
+	EArrayList<WindowButton<EditorToolType>> toolButtons = new EArrayList();
 	
 	/** The physical square size of each tool button. */
 	int toolSize = 40;
@@ -46,7 +45,7 @@ public class EditorToolBox extends WindowObject {
 		drawRect(EColors.black);
 		drawRect(EColors.dgray, 1);
 		
-		IWindowObject<?> obj = getTopParent().getFocusedObject();
+		IWindowObject obj = getTopParent().getFocusedObject();
 		if (obj != null) {
 			if (obj == this || obj.isChildOf(this)) {
 				obj.transferFocus(getTopParent());
@@ -99,7 +98,7 @@ public class EditorToolBox extends WindowObject {
 			if (cat == null) { continue; }
 			int rows = (int) (Math.ceil((double) cat.getTypes().size() / (double) rowWidth));
 			
-			EList<WindowButton<EditorToolType>> buttons = cat.buildButtons(this);
+			EArrayList<WindowButton<EditorToolType>> buttons = cat.buildButtons(this);
 			
 			for (int i = 0; i < buttons.size(); i++) {
 				WindowButton<EditorToolType> button = buttons.get(i);

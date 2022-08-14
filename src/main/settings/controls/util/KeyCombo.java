@@ -1,7 +1,6 @@
 package main.settings.controls.util;
 
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 
 /*
  * Holds a variable amount of lwjgl.Keyboard keyCodes used to trigger an event.
@@ -9,7 +8,7 @@ import eutil.datatypes.EList;
  */
 public class KeyCombo {
 	
-	public EList<Integer> hotKeyCodes = new EArrayList<>();
+	public EArrayList<Integer> hotKeyCodes = new EArrayList();
 	
 	/**
 	 * Takes in a variable amount of lwjgl.Keyboard keyCodes used to trigger an event.
@@ -19,7 +18,7 @@ public class KeyCombo {
 		setKeys(codeIn);
 	}
 	
-	public void setKeys(EList<Integer> codeIn) {
+	public void setKeys(EArrayList<Integer> codeIn) {
 		if (codeIn != null) {
 			hotKeyCodes.clear();
 			codeIn.forEach(i -> hotKeyCodes.add(i));
@@ -35,7 +34,7 @@ public class KeyCombo {
 	
 	public boolean checkKeys(int[] keys) { return checkKeys(new EArrayList(keys)); }
 	
-	public boolean checkKeys(EList<Integer> checkKeys) {
+	public boolean checkKeys(EArrayList<Integer> checkKeys) {
 		if (hotKeyCodes.size() == checkKeys.size()) {
 			boolean pass = true;
 			for (int i : hotKeyCodes) {
@@ -46,6 +45,6 @@ public class KeyCombo {
 		return false;
 	}
 	
-	public EList<Integer> getKeys() { return hotKeyCodes; }
+	public EArrayList<Integer> getKeys() { return hotKeyCodes; }
 	
 }

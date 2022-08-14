@@ -4,7 +4,6 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import world.GameWorld;
 import world.dungeonBuilder.DungeonBuilder;
 import world.dungeonBuilder.DungeonBuilderSettings;
@@ -19,17 +18,14 @@ public class CreateDungeon_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "createdung"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("crdung"); }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("crdung"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Creates a new random dungeon map"; }
 	@Override public String getUsage() { return "ex: crdung small 'name'"; }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EList<String> args) {
-		
-	}
-	
-	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		DungeonBuilder builder = new DungeonBuilder();
 		
 		if (args.isEmpty()) {

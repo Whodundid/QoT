@@ -4,7 +4,6 @@ import engine.renderEngine.GLObject;
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.misc.Rotation;
 import game.entities.Entity;
 import world.GameWorld;
@@ -97,9 +96,9 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	protected boolean hasSideBrightness = false;
 	protected int sideBrightness = 255;
 	
-	protected EList<Entity> entitiesOnTile = new EArrayList<>(10);
-	protected EList<Entity> entitiesAdding = new EArrayList<>(10);
-	protected EList<Entity> entitiesRemoving = new EArrayList<>(10);
+	protected EArrayList<Entity> entitiesOnTile = new EArrayList(10);
+	protected EArrayList<Entity> entitiesAdding = new EArrayList(10);
+	protected EArrayList<Entity> entitiesRemoving = new EArrayList(10);
 	
 	/** This tile's rotation. */
 	protected Rotation rotation;

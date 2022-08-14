@@ -2,7 +2,7 @@ package main.settings;
 
 import java.io.File;
 
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 import main.settings.config.ConfigSetting;
 import main.settings.config.QotConfigFile;
 
@@ -16,7 +16,7 @@ public class MainConfigFile extends QotConfigFile {
 	public boolean tryLoad() {
 		boolean good = true;
 		
-		EList<ConfigSetting> settings = QoTSettings.getSettings();
+		EArrayList<ConfigSetting> settings = QoTSettings.getSettings();
 		
 		if (!exists()) trySave(settings);
 		

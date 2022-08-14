@@ -1,7 +1,6 @@
 package engine.soundEngine;
 
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 import main.QoT;
 import main.settings.QoTSettings;
@@ -15,9 +14,9 @@ import main.settings.QoTSettings;
 public class SoundEngine {
 	
 	/** A list containing all audio tracks currently being played. */
-	private static EList<Audio> currentlyPlaying = new EArrayList<>();
+	private static EArrayList<Audio> currentlyPlaying = new EArrayList();
 	/** A collection of every single known audio track in one location. */
-	private static final EList<Audio> allSongs = new EArrayList<>();
+	private static final EArrayList<Audio> allSongs = new EArrayList();
 	
 	//private to prevent instance instantiation
 	private SoundEngine() {}
@@ -47,8 +46,8 @@ public class SoundEngine {
 	 * 
 	 * @return List of currently played audio tracks
 	 */
-	public static EList<Audio> getAllPlaying() {
-		return new EArrayList<>(currentlyPlaying);
+	public static EArrayList<Audio> getAllPlaying() {
+		return new EArrayList(currentlyPlaying);
 	}
 	
 	/**
@@ -142,7 +141,7 @@ public class SoundEngine {
 	}
 	
 	/** Returns the list of all currently registered audio tracks. */
-	public static EList<Audio> getTrackList() { return allSongs; }
+	public static EArrayList<Audio> getTrackList() { return allSongs; }
 	
 	/** Returns a registered audio track that matches the given name. */
 	public static Audio getTrackByName(String name) {

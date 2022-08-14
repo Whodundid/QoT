@@ -4,7 +4,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 
 /**
  * Keeps track of a series of tasks that will be executed once the
@@ -28,7 +27,7 @@ public class FutureTaskManager {
 	//--------
 
 	private final IWindowObject<?> theObject;
-	private final ConcurrentHashMap<FutureTaskEventType, EList<Runnable>> futureTasks = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<FutureTaskEventType, EArrayList<Runnable>> futureTasks = new ConcurrentHashMap<>();
 
 	public FutureTaskManager(IWindowObject<?> objectIn) {
 		theObject = objectIn;
@@ -94,7 +93,7 @@ public class FutureTaskManager {
 	 * @param type The type of future tasks to be executed
 	 * @return A list of all tasks that will be run for the given type
 	 */
-	public EList<Runnable> getFutureTasks(FutureTaskEventType type) {
+	public EArrayList<Runnable> getFutureTasks(FutureTaskEventType type) {
 		return futureTasks.getOrDefault(type, new EArrayList<>());
 	}
 	

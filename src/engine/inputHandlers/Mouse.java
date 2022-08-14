@@ -100,7 +100,7 @@ public class Mouse extends GLFWMouseButtonCallback {
 	public static int getMx() { return (int) mX; }
 	public static int getMy() { return (int) mY; }
 	public static int getButton() { return lastButton; }
-	public static Box2<Integer, Integer> getPos() { return new Box2<>(mX, mY); }
+	public static Box2<Integer, Integer> getPos() { return new Box2(mX, mY); }
 	
 	//------------------
 	// Callback Getters

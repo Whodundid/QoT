@@ -1,13 +1,13 @@
 package game.shops;
 
-import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import game.items.Item;
 import game.items.potions.healing.Healing_Lesser;
 
+import java.util.ArrayList;
+
 public class Shop {
 	
-	EList<Item> shopInventory = new EArrayList<>();
+	ArrayList<Item> shopInventory = new ArrayList();
 	Item lesserHealingPotion = new Healing_Lesser();
 	
 	public Shop() {
@@ -60,7 +60,7 @@ public class Shop {
 		return theItem;
 	}
 	
-	public EList<Item> getItems() {
+	public ArrayList<Item> getItems() {
 		return shopInventory;
 	}
 }

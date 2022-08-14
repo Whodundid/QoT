@@ -3,7 +3,6 @@ package main.settings;
 import java.io.File;
 
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import main.QoT;
 import main.settings.config.ConfigSetting;
 
@@ -18,7 +17,7 @@ public class QoTSettings {
 	private static MainConfigFile mainConfig;
 	
 	// holder
-	private static final EList<ConfigSetting> settings = new EArrayList<>();
+	private static final EArrayList<ConfigSetting> settings = new EArrayList();
 	
 	//-----------------------
 	//       settings
@@ -47,7 +46,7 @@ public class QoTSettings {
 		settings.add(vsync);
 	}
 	
-	public static EList<ConfigSetting> getSettings() { return settings; }
+	public static EArrayList<ConfigSetting> getSettings() { return settings; }
 	
 	//--------------
 	// initializers

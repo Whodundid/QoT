@@ -4,7 +4,6 @@ import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.terminalCommand.ConfirmationCommand;
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import main.QoT;
 
 public class Shutdown extends ConfirmationCommand {
@@ -17,21 +16,23 @@ public class Shutdown extends ConfirmationCommand {
 	}
 	
 	@Override public String getName() { return "shutdown"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<String>(); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Closes Minecraft"; }
 	@Override public String getUsage() { return "ex: shutdown"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EList<String> args) {
-		basicTabComplete(termIn, args, new EArrayList<>("true", "false"));
+	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+		basicTabComplete(termIn, args, new EArrayList<String>("true", "false"));
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) checkConfirm(termIn, args, runVisually);
 	}
 
 	@Override
-	public void runAction(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runAction(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		QoT.stopGame();
 	}
 	

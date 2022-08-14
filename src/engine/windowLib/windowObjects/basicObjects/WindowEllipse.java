@@ -35,6 +35,7 @@ public class WindowEllipse<E> extends WindowShape<E> {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
+		
 		if (filled) drawFilledEllipse(startX + width / 2, startY + height / 2, width, height, 50, color);
 		else drawEllipse(startX + width / 2, startY + height / 2, width, height, 50, color);
 		

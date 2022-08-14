@@ -1,11 +1,12 @@
 package engine.windowLib.windowTypes.interfaces;
 
+import eutil.datatypes.EArrayList;
+import eutil.math.EDimension;
+import eutil.misc.ScreenLocation;
+
 import java.util.Stack;
 
 import engine.renderEngine.textureSystem.GameTexture;
-import eutil.datatypes.EList;
-import eutil.math.EDimension;
-import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
@@ -121,7 +122,7 @@ public interface IWindowParent<E> extends IWindowObject<E> {
 	//----------------
 	
 	/** Returns a list of Strings this window can be referenced as within the EMC Terminal. */
-	public EList<String> getAliases();
+	public EArrayList<String> getAliases();
 	
 	//--------------
 	// Window Debug

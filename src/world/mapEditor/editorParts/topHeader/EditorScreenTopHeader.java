@@ -7,7 +7,6 @@ import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import main.QoT;
 import world.GameWorld;
 import world.mapEditor.MapEditorScreen;
@@ -21,7 +20,7 @@ public class EditorScreenTopHeader extends WindowObject {
 	MapEditorScreen editor;
 	WindowButton settings;
 	WindowButton<SidePanelType> terrain, assets, regions, scripts;
-	private final EList<WindowButton> toolButtons = new EArrayList<>();
+	private final EArrayList<WindowButton> toolButtons = new EArrayList();
 	
 	public EditorScreenTopHeader(MapEditorScreen editorIn) {
 		editor = editorIn;

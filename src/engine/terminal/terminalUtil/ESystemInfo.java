@@ -153,7 +153,7 @@ public final class ESystemInfo {
 	
 	/** Returns a StorageBoxList containing each drive along with their current storage capacities (total, free). */
 	public static BoxList<File, Box2<Long, Long>> getDriveSizes() {
-		BoxList<File, Box2<Long, Long>> holder = new BoxList<>();
+		BoxList<File, Box2<Long, Long>> holder = new BoxList();
 		
 		EUtil.forEach(getDrives(), o -> holder.add(o, new Box2(o.getTotalSpace(), o.getFreeSpace())));
 		

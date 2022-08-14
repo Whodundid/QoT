@@ -6,7 +6,7 @@ import engine.windowLib.windowTypes.WindowObject;
 import engine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 
 //Author: Hunter Bragg
 
@@ -18,7 +18,7 @@ public class WindowLabel<E> extends WindowObject<E> {
 	
 	public String displayString = "";
 	public int displayStringColor = 0xffffffff;
-	protected EList<String> wordWrappedLines;
+	protected EArrayList<String> wordWrappedLines;
 	protected double widthMax = 0;
 	protected boolean wordWrap = false;
 	protected boolean centered = false;

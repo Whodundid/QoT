@@ -8,7 +8,7 @@ import main.QoT;
 public class Deb5 extends DebugCommand {
 
 	@Override
-	public void run(ETerminal<?> termIn, Object... args) {
+	public void run(ETerminal termIn, Object... args) {
 		if (args.length > 0) {
 			if (args[0] instanceof String s) {
 				if (s.equals("8")) FontRenderer.setCurrentFont(FontRenderer.font8);

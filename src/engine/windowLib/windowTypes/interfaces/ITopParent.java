@@ -10,7 +10,6 @@ import engine.windowLib.windowUtil.ObjectPosition;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import engine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
 import main.QoT;
@@ -144,7 +143,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	/** Returns the objects with this highest z level under the mouse. */
 	public default IWindowObject<?> getHighestZObjectUnderMouse() { return StaticTopParent.getHighestZObjectUnderMouse(this); }
 	/** Returns a list of all objects underneath the mouse. */
-	public default EList<IWindowObject<?>> getAllObjectsUnderMouse() { return StaticTopParent.getAllObjectsUnderMouse(this); }
+	public default EArrayList<IWindowObject<?>> getAllObjectsUnderMouse() { return StaticTopParent.getAllObjectsUnderMouse(this); }
 	
 	//-------
 	// Close
@@ -173,8 +172,8 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Returns a list of all actively drawn window parents. */
-	public default EList<IWindowParent<?>> getAllActiveWindows() {
-		EList<IWindowParent<?>> windows = new EArrayList<>();
+	public default EArrayList<IWindowParent<?>> getAllActiveWindows() {
+		EArrayList<IWindowParent<?>> windows = new EArrayList<>();
 		try {
 			getCombinedChildren().filterForEach(o -> IWindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((IWindowParent) w));
 		}
@@ -194,7 +193,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Returns a list of all actively drawn window parents of a given type. */
-	public default <T extends IWindowParent<?>> EList<T> getAllWindowInstances(Class<T> windowIn) {
+	public default <T extends IWindowParent<?>> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
 		var windows = new EArrayList<T>();
 		try {
 			getCombinedChildren().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));
@@ -320,7 +319,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 			}
 			break;
 		case EXISTING_OBJECT_INDENT:
-			EList<WindowParent<?>> windows = new EArrayList<>();
+			EArrayList<WindowParent<?>> windows = new EArrayList<>();
 			getAllChildren().stream().filter(o -> windowIn.getClass().isInstance(o)).filter(o -> !o.isBeingRemoved()).forEach(w -> windows.add((WindowParent) w));
 			
 			if (windows.isNotEmpty()) {

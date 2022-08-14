@@ -6,7 +6,6 @@ import java.util.Scanner;
 import engine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 
 //can only be instantiated after the textureSystem
 public class GameFont {
@@ -14,7 +13,7 @@ public class GameFont {
 	private String mapingPath;
 	private String fontPath;
 	private GameTexture fontImage;
-	private EList<Character> mapping;
+	private EArrayList<Character> mapping;
 	private int width, height;
 	private double scaleW, scaleH;
 	private double scaleSpace;
@@ -25,9 +24,9 @@ public class GameFont {
 	//---------------------
 	
 	private GameFont(String mapingPathIn, String fontPathIn) {
-		if (mapingPathIn == null || fontPathIn == null) throw new RuntimeException("Invalid font maping path! " + mapingPathIn);
+		if (mapingPathIn == null || fontPathIn == null) { throw new RuntimeException("Invalid font maping path! " + mapingPathIn); }
 		
-		mapping = new EArrayList<>();
+		mapping = new EArrayList();
 		mapingPath = mapingPathIn;
 		fontPath = fontPathIn;
 		
@@ -67,7 +66,7 @@ public class GameFont {
 	}
 	
 	public GameTexture getFontTexture() { return fontImage; }
-	public EList<Character> getMaping() { return mapping; }
+	public EArrayList<Character> getMaping() { return mapping; }
 	public boolean created() { return !failed; }
 	
 	public String getMapingFile() { return mapingPath; }

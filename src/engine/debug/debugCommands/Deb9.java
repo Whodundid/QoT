@@ -9,7 +9,7 @@ import main.QoT;
 public class Deb9 extends DebugCommand {
 
 	@Override
-	public void run(ETerminal<?> termIn, Object... args) {
+	public void run(ETerminal termIn, Object... args) {
 		QoT.displayScreen(new TestScreen());
 	}
 

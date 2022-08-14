@@ -1,7 +1,6 @@
 package game;
 
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import game.doodads.nature.BirchTree;
 import game.doodads.nature.PineTree;
 import game.entities.enemies.Goblin;
@@ -18,7 +17,7 @@ import world.mapEditor.editorUtil.PlayerSpawnPosition;
 
 public class GlobalAssetList {
 
-	private static final EList<GameObject> assets = new EArrayList<>();
+	private static final EArrayList<GameObject> assets = new EArrayList();
 	
 	static {
 		assets.add(new Goblin());
@@ -38,8 +37,8 @@ public class GlobalAssetList {
 		assets.add(new BirchTree());
 	}
 	
-	public static EList<GameObject> getAssets() {
-		return new EArrayList<>(assets);
+	public static EArrayList<GameObject> getAssets() {
+		return new EArrayList(assets);
 	}
 	
 }

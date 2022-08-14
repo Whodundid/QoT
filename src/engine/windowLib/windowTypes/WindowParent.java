@@ -1,7 +1,5 @@
 package engine.windowLib.windowTypes;
 
-import java.util.Stack;
-
 import engine.debug.DebugFunctions;
 import engine.renderEngine.fontRenderer.FontRenderer;
 import engine.renderEngine.textureSystem.GameTexture;
@@ -13,10 +11,11 @@ import engine.windowLib.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
 import main.QoT;
+
+import java.util.Stack;
 
 //Author: Hunter Bragg
 
@@ -41,7 +40,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected boolean drawMinimized = false;
 	protected boolean drawDefaultBackground = false;
 	protected Stack<IWindowParent<?>> WindowHistory = new Stack();
-	protected EList<String> aliases = new EArrayList<>();
+	protected EArrayList<String> aliases = new EArrayList();
 	protected GameTexture windowIcon = null;
 	protected EDimension preMaxFull = new EDimension();
 	protected EDimension preMaxSide = new EDimension();
@@ -288,7 +287,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		drawHRect(startX - 1, sY - 1, endX + 1, endY + 1, 1, EColors.red);
 	}
 	
-	@Override public EList<String> getAliases() { return aliases; }
+	@Override public EArrayList<String> getAliases() { return aliases; }
 	@Override public GameTexture getWindowIcon() { return windowIcon; }
 	@Override public boolean showInTaskBar() { return showInTaskBar; }
 	

@@ -2,7 +2,6 @@ package engine.terminal.terminalCommand;
 
 import engine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import eutil.math.NumberUtil;
 
 /**
@@ -12,14 +11,10 @@ import eutil.math.NumberUtil;
  */
 public abstract class TerminalCommand {
 	
-	public static final String ERROR_NO_ARGS = "This command takes no arguments!";
-	public static final String ERROR_TOO_MANY = "Too many arguments!";
-	public static final String ERROR_NOT_ENOUGH = "Not enough arguments!";
-	
 	private CommandType type = CommandType.NORMAL;
 	private String category = "none";
-	protected EList<String> acceptedModifiers = new EArrayList<>();
-	protected EList<String> modifiers = new EArrayList<>();
+	protected EArrayList<String> acceptedModifiers = new EArrayList();
+	protected EArrayList<String> modifiers = new EArrayList();
 	protected int numArgs = 0;
 	protected boolean shouldRegister = true;
 	
@@ -36,18 +31,18 @@ public abstract class TerminalCommand {
 	//------------------
 	
 	public abstract String getName();
-	public boolean showInHelp() { return true; }
-	public EList<String> getAliases() { return new EArrayList<>(); }
+	public abstract boolean showInHelp();
+	public abstract EArrayList<String> getAliases();
 	public abstract String getHelpInfo(boolean runVisually);
-	public String getUsage() { return "[no default usage]"; }
-	public void handleTabComplete(ETerminal conIn, EList<String> args) {}
-	public abstract void runCommand(ETerminal termIn, EList<String> args, boolean runVisually);
+	public abstract String getUsage();
+	public abstract void handleTabComplete(ETerminal conIn, EArrayList<String> args);
+	public abstract void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually);
 	
 	//---------
 	// Methods
 	//---------
 	
-	public void preRun(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void preRun(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		//extract '-[x]' args
 		var it = args.iterator();
 		while (it.hasNext()) {
@@ -66,7 +61,7 @@ public abstract class TerminalCommand {
 	//---------
 	
 	public CommandType getType() { return type; }
-	public EList<String> getModifiers() { return modifiers; }
+	public EArrayList<String> getModifiers() { return modifiers; }
 	public String getCategory() { return category; }
 	public int getNumArgs() { return numArgs; }
 	/** Returns true if this command should actually be allowed to register within a TerminalHandler. */
@@ -96,7 +91,7 @@ public abstract class TerminalCommand {
 		return in != null && in.length() >= 1 && modifiers.contains(in);
 	}
 	
-	protected void basicTabComplete(ETerminal termIn, EList<String> args, EList<String> completionsIn) {
+	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, EArrayList<String> completionsIn) {
 		int limit = numArgs == -1 ? args.size() : NumberUtil.clamp(args.size(), 0, numArgs);
 		
 		if (args.isEmpty()) {
@@ -108,7 +103,7 @@ public abstract class TerminalCommand {
 				try {
 					String input = args.get(arg);
 				
-					EList<String> options = new EArrayList();
+					EArrayList<String> options = new EArrayList();
 				
 					for (String s : completionsIn) {
 						if (s.startsWith(input)) { options.add(s); }

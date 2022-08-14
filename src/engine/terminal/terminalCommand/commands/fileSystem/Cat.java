@@ -5,7 +5,7 @@ import java.io.File;
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
 import eutil.file.LineReader;
 import eutil.strings.StringUtil;
 
@@ -17,12 +17,14 @@ public class Cat extends FileCommand {
 	}
 	
 	@Override public String getName() { return "cat"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays the content of a file."; }
 	@Override public String getUsage() { return "ex: cat '.txt'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EList<String> args) { fileTabComplete(termIn, args); }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		try {
 			if (args.size() == 0) termIn.error("Not enough arguments!");
 			else if (args.size() >= 1) {

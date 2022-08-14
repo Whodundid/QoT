@@ -12,7 +12,6 @@ import engine.windowLib.windowObjects.basicObjects.WindowStatusBar;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.EList;
 import game.entities.Entity;
 import game.entities.player.Player;
 import game.screens.character.CharacterScreen;
@@ -135,7 +134,7 @@ public class GamePlayScreen extends GameScreen {
 			attacking = true;
 			attackDrawStart = System.currentTimeMillis();
 			
-			EList<Entity> inRange = new EArrayList<>();
+			EArrayList<Entity> inRange = new EArrayList();
 			for (var e : QoT.theWorld.getEntitiesInWorld()) {
 				if (e == player) continue;
 				if (QoT.theWorld.getDistance(e, player) < 50) inRange.add(e);

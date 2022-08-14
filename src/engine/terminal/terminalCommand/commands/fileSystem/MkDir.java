@@ -1,11 +1,11 @@
 package engine.terminal.terminalCommand.commands.fileSystem;
 
-import java.io.File;
-
 import engine.terminal.terminalCommand.CommandType;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EList;
+import eutil.datatypes.EArrayList;
+
+import java.io.File;
 
 public class MkDir extends FileCommand {
 	
@@ -15,12 +15,14 @@ public class MkDir extends FileCommand {
 	}
 	
 	@Override public String getName() { return "mkdir"; }
+	@Override public boolean showInHelp() { return true; }
+	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Attempts to create a directory."; }
 	@Override public String getUsage() { return "ex: mkdir 'name'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EList<String> args) { fileTabComplete(termIn, args); }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		if (args.size() == 1) {
 			try {
