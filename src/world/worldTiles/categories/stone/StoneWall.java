@@ -10,7 +10,7 @@ public class StoneWall extends WorldTile {
 	public StoneWall(int id) {
 		super(TileIDs.STONE_WALL);
 		setWall(true);
-		wallHeight = 1;
+		wallHeight = 0.75;
 		blocksMovement = true;
 		//rotation = Rotation.random();
 		//drawFlipped = RandomUtil.randomBool();
