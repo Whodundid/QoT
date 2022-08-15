@@ -16,11 +16,8 @@ public class Cd extends FileCommand {
 	}
 	
 	@Override public String getName() { return "cd"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Sets the current working directory."; }
 	@Override public String getUsage() { return "ex: cd 'dir'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

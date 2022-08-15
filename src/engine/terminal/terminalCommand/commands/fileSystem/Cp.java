@@ -16,11 +16,8 @@ public class Cp extends FileCommand {
 	}
 	
 	@Override public String getName() { return "cp"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Copies a file from one place and pastes in another."; }
 	@Override public String getUsage() { return "ex: cp 'src' 'dest'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

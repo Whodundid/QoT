@@ -16,11 +16,9 @@ public class CalcCommand extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "calculator"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("calc"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("calc"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Clears the terminal"; }
 	@Override public String getUsage() { return "ex: calc"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

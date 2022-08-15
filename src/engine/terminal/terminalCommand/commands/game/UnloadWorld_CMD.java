@@ -17,11 +17,9 @@ public class UnloadWorld_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "unloadworld"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("uw"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("uw"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Unloads the current world (if any)"; }
 	@Override public String getUsage() { return "ex: uw"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

@@ -17,12 +17,8 @@ public class Tail extends FileCommand {
 	}
 	
 	@Override public String getName() { return "tail"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays the last few specified lines of a file. By default it displays 10 lines."; }
 	@Override public String getUsage() { return "ex: tail 'file path' 10"; }
-	
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

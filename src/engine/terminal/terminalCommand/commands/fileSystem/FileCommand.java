@@ -15,6 +15,11 @@ public abstract class FileCommand extends TerminalCommand {
 		setCategory("File System");
 	}
 	
+	@Override
+	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+		fileTabComplete(termIn, args);
+	}
+	
 	protected void fileTabComplete(ETerminal termIn, EArrayList<String> args) {
 		try {
 			fileTabComplete(termIn, termIn.getDir().getCanonicalPath(), args);
@@ -48,12 +53,13 @@ public abstract class FileCommand extends TerminalCommand {
 				if (!termIn.getTab1()) termIn.setTextTabBeing("");
 			}
 			else if (!termIn.getTab1()) {
-				EArrayList<String> options = new EArrayList();
+				EArrayList<String> options = new EArrayList<>();
 				
 				File home = new File(System.getProperty("user.dir"));
 				File f = new File(dir);
 				String all = StringUtil.combineAll(args, " ").replace("/", "\\");
 				boolean isHome = all.startsWith("~");
+				
 				
 				if (!all.endsWith("/") && !all.endsWith("\\")) { //search for name complete
 					

@@ -16,11 +16,8 @@ public class Rm extends FileCommand {
 	}
 	
 	@Override public String getName() { return "rm"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Deletes a file from the file system."; }
 	@Override public String getUsage() { return "ex: rm 'dir'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

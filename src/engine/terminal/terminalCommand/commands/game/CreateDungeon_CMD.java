@@ -18,11 +18,9 @@ public class CreateDungeon_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "createdung"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("crdung"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("crdung"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Creates a new random dungeon map"; }
 	@Override public String getUsage() { return "ex: crdung small 'name'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

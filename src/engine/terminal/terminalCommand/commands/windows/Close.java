@@ -18,11 +18,8 @@ public class Close extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "close"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Attempts to close a specific window"; }
 	@Override public String getUsage() { return "ex: close 23 (where 23 is the window pid)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

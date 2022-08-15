@@ -16,11 +16,9 @@ public class ListEntities_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "listentities"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("le", "entities"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("le", "entities"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays all Entities in the World"; }
 	@Override public String getUsage() { return "ex: le"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

@@ -18,13 +18,13 @@ public class OpenWindow extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "openwindow"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList("ow"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("ow"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Command used for opening windows."; }
 	@Override public String getUsage() { return "ex: ow keys"; }
 	
 	@Override
 	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+		
 	}
 	
 	@Override

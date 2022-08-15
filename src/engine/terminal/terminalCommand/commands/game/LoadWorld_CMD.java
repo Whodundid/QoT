@@ -22,11 +22,12 @@ public class LoadWorld_CMD extends FileCommand {
 	}
 
 	@Override public String getName() { return "loadworld"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("lw"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("lw"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Loads the specified world"; }
 	@Override public String getUsage() { return "ex: lw (world name)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	
+	@Override
+	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
 		fileTabComplete(termIn, QoTSettings.getEditorWorldsDir(), args);
 	}
 	

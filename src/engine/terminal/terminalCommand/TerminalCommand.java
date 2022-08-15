@@ -11,6 +11,10 @@ import eutil.math.NumberUtil;
  */
 public abstract class TerminalCommand {
 	
+	public static final String ERROR_NO_ARGS = "This command does not take any arguments!";
+	public static final String ERROR_TOO_MANY = "Too many arguments!";
+	public static final String ERROR_NOT_ENOUGH = "Not enough arguments!";
+	
 	private CommandType type = CommandType.NORMAL;
 	private String category = "none";
 	protected EArrayList<String> acceptedModifiers = new EArrayList();
@@ -31,17 +35,26 @@ public abstract class TerminalCommand {
 	//------------------
 	
 	public abstract String getName();
-	public abstract boolean showInHelp();
-	public abstract EArrayList<String> getAliases();
-	public abstract String getHelpInfo(boolean runVisually);
-	public abstract String getUsage();
-	public abstract void handleTabComplete(ETerminal conIn, EArrayList<String> args);
 	public abstract void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually);
+	
+	public boolean showInHelp() { return true; }
+	public EArrayList<String> getAliases() { return new EArrayList<>(); }
+	public String getHelpInfo(boolean runVisually) { return "(No help info for '" + getName() + "'!"; }
+	public String getUsage() { return "(No usage info for '" + getName() + "'!"; }
+	public void handleTabComplete(ETerminal conIn, EArrayList<String> args) {}
 	
 	//---------
 	// Methods
 	//---------
 	
+	/**
+	 * Intended to be called by the TerminalHandler specifically to
+	 * initially parse through arguments.
+	 * 
+	 * @param termIn
+	 * @param args
+	 * @param runVisually
+	 */
 	public void preRun(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		//extract '-[x]' args
 		var it = args.iterator();
@@ -80,6 +93,10 @@ public abstract class TerminalCommand {
 	//-------------------
 	
 	public void onConfirmation(String response) {}
+	
+	protected void errorUsage(ETerminal term, String errorReason) {
+		term.errorUsage(errorReason, getUsage());
+	}
 	
 	/**
 	 * Returns true if the specified modifier was parsed at command start.

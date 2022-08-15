@@ -17,19 +17,26 @@ public class World_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "world"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>(); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays current world info"; }
 	@Override public String getUsage() { return "ex: world"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
+	
+	@Override
+	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+		
+	}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) termIn.error("This command takes no arguments!");
+		if (args.isNotEmpty()) {
+			errorUsage(termIn, ERROR_NO_ARGS);
+			return;
+		}
 		
 		GameWorld world = QoT.theWorld;
 		
-		if (world == null) termIn.writeln("No world loaded!");
+		if (world == null) {
+			termIn.error("No world loaded!");
+		}
 		else {
 			String n = world.getName();
 			int w = world.getWidth();

@@ -18,11 +18,9 @@ public class ToFrontWindow extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "tofront"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("front"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("front"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Brings a window to the front"; }
 	@Override public String getUsage() { return "ex: tofront 4 (where 4 is the window pid)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

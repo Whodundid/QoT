@@ -16,14 +16,12 @@ public class Shutdown extends ConfirmationCommand {
 	}
 	
 	@Override public String getName() { return "shutdown"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>(); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Closes Minecraft"; }
 	@Override public String getUsage() { return "ex: shutdown"; }
 	
 	@Override
 	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
-		basicTabComplete(termIn, args, new EArrayList<String>("true", "false"));
+		basicTabComplete(termIn, args, new EArrayList<>("true", "false"));
 	}
 	
 	@Override

@@ -16,11 +16,10 @@ public class Pwd extends FileCommand {
 	}
 	
 	@Override public String getName() { return "pwd"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("dir"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("dir"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Prints the current working directory."; }
 	@Override public String getUsage() { return "ex: pwd"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
+	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

@@ -15,11 +15,9 @@ public class RuntimeCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "runtime"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("rt"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("rt"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Gets info on the current system run time"; }
 	@Override public String getUsage() { return "ex: runtime"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

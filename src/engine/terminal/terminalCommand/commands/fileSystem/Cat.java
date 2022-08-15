@@ -17,11 +17,8 @@ public class Cat extends FileCommand {
 	}
 	
 	@Override public String getName() { return "cat"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays the content of a file."; }
 	@Override public String getUsage() { return "ex: cat '.txt'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

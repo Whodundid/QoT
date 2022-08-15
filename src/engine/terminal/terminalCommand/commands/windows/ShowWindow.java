@@ -18,11 +18,8 @@ public class ShowWindow extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "show"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Toggles the visibility of a window"; }
 	@Override public String getUsage() { return "ex: show 4 (where 4 is the window pid)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

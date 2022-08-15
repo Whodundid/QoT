@@ -20,10 +20,9 @@ public class DebugControl extends TerminalCommand {
 
 	@Override public String getName() { return "debug"; }
 	@Override public boolean showInHelp() { return false; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("deb", "dev"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("deb", "dev"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Toggles debug mode for EMC."; }
 	@Override public String getUsage() { return "ex: deb init"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

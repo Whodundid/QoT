@@ -18,11 +18,8 @@ public class PinWindow extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "pin"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Pins or unpins a specified window to or from the hud."; }
 	@Override public String getUsage() { return "ex: pin 4 (where 4 is the window pid)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

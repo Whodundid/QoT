@@ -14,11 +14,8 @@ public class Lsblk extends FileCommand {
 	}
 	
 	@Override public String getName() { return "lsblk"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Prints the current drives on the system."; }
 	@Override public String getUsage() { return "ex: lsblk"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

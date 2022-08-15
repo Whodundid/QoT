@@ -17,11 +17,9 @@ public class ClearObjects extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "clearobj"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("clro"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("clro"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Clears the objects from the renderer"; }
 	@Override public String getUsage() { return "ex: clro"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

@@ -15,11 +15,9 @@ public class HexToDec extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "hextodec"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("h2d", "hex"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("h2d", "hex"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "converts a hex value to a decimal value"; }
 	@Override public String getUsage() { return "ex: h2d 0xff"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

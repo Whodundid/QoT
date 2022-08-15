@@ -19,13 +19,13 @@ public class OpenScreen extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "openscreen"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList("os"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("os"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Command used for opening game screens."; }
 	@Override public String getUsage() { return "ex: os MainMenuScreen"; }
 	
 	@Override
 	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+		
 	}
 	
 	@Override

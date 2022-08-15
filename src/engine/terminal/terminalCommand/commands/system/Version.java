@@ -17,11 +17,9 @@ public class Version extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "version"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("ver", "v"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("ver", "v"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "displays the version of the provided argument."; }
-	@Override public String getUsage() { return "ex: v core"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
+	@Override public String getUsage() { return "ex: v"; }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

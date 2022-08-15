@@ -22,8 +22,7 @@ public class Help extends TerminalCommand implements IListableCommand {
 	}
 	
 	@Override public String getName() { return "help"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("h", "commands", "cmds", "cmd"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("h", "commands", "cmds", "cmd"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "List all commands with aliases and can display info on a specific command."; }
 	@Override public String getUsage() { return "ex: help deb"; }
 	

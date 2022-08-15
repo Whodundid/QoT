@@ -18,11 +18,9 @@ public class ReloadTextures extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "reloadtextures"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList("relt", "reltex"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("relt", "reltex"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Reloads every registered game texture."; }
 	@Override public String getUsage() { return "ex: relt"; }
-	@Override public void handleTabComplete(ETerminal conIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

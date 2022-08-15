@@ -18,11 +18,8 @@ public class Mv extends FileCommand {
 	}
 	
 	@Override public String getName() { return "mv"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Moves the contents of one file to another."; }
 	@Override public String getUsage() { return "ex: mv 'src' 'dest'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

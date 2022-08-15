@@ -25,13 +25,8 @@ public class Open extends FileCommand {
 	}
 	
 	@Override public String getName() { return "open"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to open or run a file or application. Add -a to end to always open on computer."; }
 	@Override public String getUsage() { return "ex: open 'file'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
-		fileTabComplete(termIn, args);
-	}
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

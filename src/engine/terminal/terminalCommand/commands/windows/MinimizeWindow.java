@@ -18,11 +18,9 @@ public class MinimizeWindow extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "minimize"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList("min"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("min"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Minimizes or unminimzes a specified window on the hud."; }
 	@Override public String getUsage() { return "ex: minimize 4 (where 4 is the window pid)"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

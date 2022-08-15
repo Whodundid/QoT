@@ -17,11 +17,8 @@ public class Ls extends FileCommand {
 	}
 	
 	@Override public String getName() { return "ls"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "List all files in a directory."; }
 	@Override public String getUsage() { return "ex: ls 'dir'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

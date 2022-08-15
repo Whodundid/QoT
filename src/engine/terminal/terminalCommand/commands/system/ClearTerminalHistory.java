@@ -17,11 +17,9 @@ public class ClearTerminalHistory extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "clearhistory"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("clearh", "clrh"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("clearh", "clrh"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Clears the typed terminal command history"; }
 	@Override public String getUsage() { return "ex: clrh"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

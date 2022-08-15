@@ -16,17 +16,26 @@ public class PauseGame_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "pause"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>(); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Pauses the game"; }
+	@Override public String getHelpInfo(boolean runVisually) { return "Pauses or resumes the game"; }
 	@Override public String getUsage() { return "ex: pause"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) termIn.error("This command takes no arguments!");
-		QoT.pause();
-		termIn.writeln("Game Paused", EColors.yellow);
+		if (args.isNotEmpty()) {
+			termIn.error("This command takes no arguments!");
+			return;
+		}
+		
+		var paused = QoT.isPaused();
+		
+		if (paused) {
+			QoT.unpause();
+			termIn.writeln("Game Resumed", EColors.yellow);
+		}
+		else {
+			QoT.pause();
+			termIn.writeln("Game Paused", EColors.yellow);
+		}
 	}
 	
 }

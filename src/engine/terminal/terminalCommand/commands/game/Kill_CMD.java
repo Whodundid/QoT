@@ -16,11 +16,9 @@ public class Kill_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "kill"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("k"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("k"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Kills an Entity Based on Entity ID"; }
 	@Override public String getUsage() { return "ex: kill 0"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

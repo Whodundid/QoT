@@ -21,15 +21,15 @@ public class WorldsDir_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "worldsdir"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("wdir"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("wdir"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "CDs to the directory where worlds are stored."; }
 	@Override public String getUsage() { return "ex: wdir"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.size() > 1) { termIn.error("This command may only take one additional argument! (-c, -o)"); }
+		if (args.size() > 1) {
+			termIn.error("This command may only take one additional argument! (-c, -o)");
+		}
 		else {
 			try {
 				boolean copy = false;

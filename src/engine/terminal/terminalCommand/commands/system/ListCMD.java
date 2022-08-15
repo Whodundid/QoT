@@ -24,8 +24,7 @@ public class ListCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "list"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("l"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("l"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to list various things. (mods, players, etc.)"; }
 	@Override public String getUsage() { return "ex: list screens"; }
 	

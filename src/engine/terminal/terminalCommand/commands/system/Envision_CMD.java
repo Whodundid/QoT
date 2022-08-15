@@ -19,11 +19,8 @@ public class Envision_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "envision"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Mappings to the Envision Scripting Language"; }
 	@Override public String getUsage() { return "ex: envision 'file'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

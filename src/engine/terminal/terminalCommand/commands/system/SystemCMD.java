@@ -18,15 +18,15 @@ public class SystemCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "system"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("sys"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("sys"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays information on the system"; }
 	@Override public String getUsage() { return "ex: sys"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) { termIn.error("This command does not take any arguments"); }
+		if (args.isNotEmpty()) {
+			termIn.error("This command does not take any arguments");
+		}
 		else {
 			
 			//os

@@ -15,11 +15,8 @@ public class MkDir extends FileCommand {
 	}
 	
 	@Override public String getName() { return "mkdir"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Attempts to create a directory."; }
 	@Override public String getUsage() { return "ex: mkdir 'name'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

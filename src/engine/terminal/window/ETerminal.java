@@ -660,6 +660,12 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		return this;
 	}
 	
+	public ETerminal errorUsage(String error, String usage) {
+		error(error);
+		info(usage);
+		return this;
+	}
+	
 	public ETerminal info(String msgIn) { parseText(msgIn, 0xffffff00); return this; }
 	public ETerminal warn(String msgIn) { parseText("Warning: " + msgIn, EColors.orange.intVal); return this; }
 	public ETerminal error(String msgIn) { parseText(msgIn, 0xffff5555); return this; }

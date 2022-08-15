@@ -5,6 +5,7 @@ import engine.terminal.terminalCommand.TerminalCommand;
 import engine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.math.NumberUtil;
 import main.QoT;
 
 public class TPS_CMD extends TerminalCommand {
@@ -16,20 +17,30 @@ public class TPS_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "tps"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<String>("ticks"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("ticks"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays the current game ticks per second."; }
 	@Override public String getUsage() { return "ex: tps"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) {
-			termIn.error("This command does not take arguments!");
-			termIn.info(getUsage());
+		if (args.isEmpty()) {
+			termIn.writeln("TPS: " + QoT.getTargetUPS(), EColors.lime);
+		}
+		else if (args.hasOne()) {
+			String arg = args.get(0);
+			try {
+				int val = Integer.parseInt(arg);
+				val = NumberUtil.clamp(val, 1, Integer.MAX_VALUE);
+				QoT.setTargetUPS(val);
+				termIn.writeln("Set game tickrate to " + val + " ticks per second!", EColors.lime);
+			}
+			catch (Exception e) {
+				error(termIn, e);
+				termIn.error("Expected a valid integer value!");
+			}
 		}
 		else {
-			termIn.writeln("TPS: " + QoT.getRunningTicks(), EColors.lime);
+			errorUsage(termIn, ERROR_TOO_MANY);
 		}
 	}
 	

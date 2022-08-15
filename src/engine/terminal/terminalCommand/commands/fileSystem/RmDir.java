@@ -15,11 +15,8 @@ public class RmDir extends FileCommand {
 	}
 	
 	@Override public String getName() { return "rmdir"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Attempts to delete a directory."; }
 	@Override public String getUsage() { return "ex: rmdir 'dir'"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { fileTabComplete(termIn, args); }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {

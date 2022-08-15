@@ -19,11 +19,8 @@ public class ForLoop extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "for"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EArrayList<String> getAliases() { return null; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Runs a command n number of times in given range replacing any '#' arguments with current value."; }
-	@Override public String getUsage() { return "ex: for 0-9-1 server ping 192.168.0.#"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) { }
+	@Override public String getUsage() { return "ex: for 0-9-1 'cmd'"; }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
