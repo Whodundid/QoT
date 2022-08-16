@@ -12,6 +12,7 @@ import engine.windowLib.windowObjects.basicObjects.WindowStatusBar;
 import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.math.NumberUtil;
 import game.entities.Entity;
 import game.entities.player.Player;
 import game.screens.character.CharacterScreen;
@@ -154,7 +155,19 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void mouseScrolled(int change) {
-		
+//		double c = Math.signum(change);
+//		double z = 1.0;
+//		
+//		if (Keyboard.isCtrlDown()) {
+//			if (c > 0 && world.getZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
+//			else if (world.getZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
+//			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
+//			else if (world.getZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
+//			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
+//			
+//			z = NumberUtil.round(world.getZoom() + z, 2);
+//			world.setZoom(z);
+//		}
 	}
 	
 	@Override

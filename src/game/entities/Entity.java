@@ -158,9 +158,9 @@ public abstract class Entity extends GameObject {
 				else if (y > 0) 	down = true;
 				
 				if (left) 		facing = Rotation.LEFT;
-				if (right) 		facing = Rotation.RIGHT;
-				if (up) 		facing = Rotation.UP;
-				if (down) 		facing = Rotation.DOWN;
+				else if (right) facing = Rotation.RIGHT;
+				else if (up)	facing = Rotation.UP;
+				else if (down) 	facing = Rotation.DOWN;
 
 				//System.out.println(collisionBox.endX);
 				

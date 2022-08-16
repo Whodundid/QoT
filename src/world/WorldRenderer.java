@@ -151,8 +151,8 @@ public class WorldRenderer extends EGui {
 				WorldTile t = world.getWorldData()[i][j];
 				if (t == null || !t.hasTexture()) continue;
 				
-				double drawPosX = x + ((p.startX < worldTileWidth) ? pStartX : -offsetX);
-				double drawPosY = y + ((p.startY < worldTileHeight) ? pStartY : -offsetY);
+				double drawPosX = x + ((p.startX <= worldTileWidth) ? pStartX : -offsetX);
+				double drawPosY = y + ((p.startY <= worldTileHeight) ? pStartY : -offsetY);
 				
 				if (p.worldX < distX) drawPosX += (distX - p.worldX) * w;
 				if (p.worldY < distY) drawPosY += (distY - p.worldY) * h;
@@ -218,7 +218,11 @@ public class WorldRenderer extends EGui {
 				drawX -= offsetX;
 				drawY -= offsetY;
 				
-				if (drawX + e.width > x && drawX < x + w + (distX * 2 * w) && drawY + e.height > y && drawY < y + h + (distY * 2 * h)) {
+				if (drawX + e.width > x &&
+					drawX < x + w + (distX * 2 * w) &&
+					drawY + e.height > y &&
+					drawY < y + h + (distY * 2 * h))
+				{
 					double dw = e.width * world.zoom;
 					double dh = e.height * world.zoom;
 					
