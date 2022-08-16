@@ -8,6 +8,8 @@ import eutil.math.EDimension;
 import eutil.misc.Rotation;
 import main.QoT;
 
+import java.util.Objects;
+
 import org.lwjgl.opengl.GL11;
 
 /** The base underlying object that all window objects are drawn from. */
@@ -349,18 +351,116 @@ public abstract class GLObject {
 			
 			begin(GLModes.QUADS);
 			
-			GL11.glTexCoord2d(xVal, yVal + hVal);
-			vertex(tdx(x), tdy(y + h));
-			GL11.glTexCoord2d(xVal + wVal, yVal + hVal);
-			vertex(tdx(x + w), tdy(y + h));
-			GL11.glTexCoord2d(xVal + wVal, yVal);
-			vertex(tdx(x + w), tdy(y));
-			GL11.glTexCoord2d(xVal, yVal);
-			vertex(tdx(x), tdy(y));
+			texCoord(x, 		y + h, 		xVal, 			yVal + hVal);
+			texCoord(x + w, 	y + h, 		xVal + wVal, 	yVal + hVal);
+			texCoord(x + w, 	y, 			xVal + wVal, 	yVal);
+			texCoord(x, 		y, 			xVal, 			yVal);
 			
 			draw();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
+	}
+	
+	public static class PolyTexture {
+		private final GameTexture tex;
+		private final double[] points = new double[8];
+		private boolean flipped = false;
+		private Rotation rotation = Rotation.UP;
+		private int color = 0xffffffff;
+		private int setNum = 0;
+		
+		public PolyTexture(GameTexture texIn) {
+			tex = texIn;
+		}
+		
+		public PolyTexture point(double x, double y) {
+			if (setNum >= 7) return this;
+			points[setNum++] = x;
+			points[setNum++] = y;
+			return this;
+		}
+		
+		public PolyTexture flipped(boolean val) { flipped = val; return this; }
+		public PolyTexture rotation(Rotation rot) { rotation = rot; return this; }
+		public PolyTexture color(EColors colorIn) { color = colorIn.intVal; return this; }
+		public PolyTexture color(int colorIn) { color = colorIn; return this; }
+		
+		public void draw() {
+			drawTexturePoly(tex, points, flipped, rotation, color);
+		}
+	}
+	
+	public static PolyTexture drawTexturePoly(GameTexture t) {
+		Objects.requireNonNull(t);
+		return new PolyTexture(t);
+	}
+	
+	public static void drawTexturePoly(GameTexture t, double[] points, boolean flipped, Rotation rot, EColors color) {
+		if (t == null || points.length != 8) return;
+		drawTexturePoly(t, points[0], points[1], points[2], points[3], points[4], points[5], points[6], points[7], flipped, rot, color.intVal);
+	}
+	
+	public static void drawTexturePoly(GameTexture t, double[] points, boolean flipped, Rotation rot, int color) {
+		if (t == null || points.length != 8) return;
+		drawTexturePoly(t, points[0], points[1], points[2], points[3], points[4], points[5], points[6], points[7], flipped, rot, color);
+	}
+	
+	public static void drawTexturePoly(GameTexture t, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+		drawTexturePoly(t, x1, y1, x2, y2, x3, y3, x4, y4, false, Rotation.UP, 0xffffffff);
+	}
+	
+	public static void drawTexturePoly(GameTexture t, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, EColors color) {
+		drawTexturePoly(t, x1, y1, x2, y2, x3, y3, x4, y4, false, Rotation.UP, color.intVal);
+	}
+	
+	public static void drawTexturePoly(GameTexture t, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, int color) {
+		drawTexturePoly(t, x1, y1, x2, y2, x3, y3, x4, y4, false, Rotation.UP, color);
+	}
+	
+	public static void drawTexturePoly(GameTexture t, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, boolean flipped, Rotation rot, EColors color) {
+		drawTexturePoly(t, x1, y1, x2, y2, x3, y3, x4, y4, flipped, rot, color.intVal);
+	}
+	
+	public static void drawTexturePoly(GameTexture t, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, boolean flipped, Rotation rot, int color) {
+		if (t == null) return;
+		
+		alphaOn();
+		blendOn();
+		setGLColor(color);
+		GLSettings.enableTexture();
+		bindTexture(t);
+		
+		begin(GLModes.QUADS);
+		
+		switch (rot) {
+		case UP:
+			texCoord(x1, y1, flipped ? 1 : 0, 1);
+			texCoord(x2, y2, flipped ? 0 : 1, 1);
+			texCoord(x3, y3, flipped ? 0 : 1, 0);
+			texCoord(x4, y4, flipped ? 1 : 0, 0);
+			break;
+		case LEFT:
+			texCoord(x1, y1, flipped ? 1 : 0, 0);
+			texCoord(x2, y2, flipped ? 1 : 0, 1);
+			texCoord(x3, y3, flipped ? 0 : 1, 1);
+			texCoord(x4, y4, flipped ? 0 : 1, 0);
+			break;
+		case RIGHT:
+			texCoord(x1, y1, flipped ? 0 : 1, 1);
+			texCoord(x2, y2, flipped ? 0 : 1, 0);
+			texCoord(x3, y3, flipped ? 1 : 0, 0);
+			texCoord(x4, y4, flipped ? 1 : 0, 1);
+			break;
+		case DOWN:
+			texCoord(x1, y1, flipped ? 1 : 0, 0);
+			texCoord(x2, y2, flipped ? 0 : 1, 0);
+			texCoord(x3, y3, flipped ? 0 : 1, 1);
+			texCoord(x4, y4, flipped ? 1 : 0, 1);
+			break;
+		}
+		
+		draw();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 	
 	/** Performs a scissoring on the specified region. IMPORTANT: ALWAYS CALL 'endScissor' OR gl11.disable(gl_scissor) AFTER THIS TO PREVENT RENDERING ERRORS!*/
@@ -454,46 +554,35 @@ public abstract class GLObject {
 	private static void tv(boolean f, Rotation r, double sx, double sy, double ex, double ey) {
 		switch (r) {
 		case UP:
-			GL11.glTexCoord2d(f ? 1 : 0, 0);
-			vertex(tdx(sx), tdy(sy));
-			GL11.glTexCoord2d(f ? 0 : 1, 0);
-			vertex(tdx(ex), tdy(sy));
-			GL11.glTexCoord2d(f ? 0 : 1, 1);
-			vertex(tdx(ex), tdy(ey));
-			GL11.glTexCoord2d(f ? 1 : 0, 1);
-			vertex(tdx(sx), tdy(ey));
+			texCoord(sx, sy, f ? 1 : 0, 0);
+			texCoord(ex, sy, f ? 0 : 1, 0);
+			texCoord(ex, ey, f ? 0 : 1, 1);
+			texCoord(sx, ey, f ? 1 : 0, 1);
 			break;
 		case LEFT:
-			GL11.glTexCoord2d(f ? 1 : 0, 1);
-			vertex(tdx(sx), tdy(sy));
-			GL11.glTexCoord2d(f ? 1 : 0, 0);
-			vertex(tdx(ex), tdy(sy));
-			GL11.glTexCoord2d(f ? 0 : 1, 0);
-			vertex(tdx(ex), tdy(ey));
-			GL11.glTexCoord2d(f ? 0 : 1, 1);
-			vertex(tdx(sx), tdy(ey));
+			texCoord(sx, sy, f ? 0 : 1, 0);
+			texCoord(ex, sy, f ? 0 : 1, 1);
+			texCoord(ex, ey, f ? 1 : 0, 1);
+			texCoord(sx, ey, f ? 1 : 0, 0);
 			break;
 		case RIGHT:
-			GL11.glTexCoord2d(f ? 0 : 1, 0);
-			vertex(tdx(sx), tdy(sy));
-			GL11.glTexCoord2d(f ? 0 : 1, 1);
-			vertex(tdx(ex), tdy(sy));
-			GL11.glTexCoord2d(f ? 1 : 0, 1);
-			vertex(tdx(ex), tdy(ey));
-			GL11.glTexCoord2d(f ? 1 : 0, 0);
-			vertex(tdx(sx), tdy(ey));
+			texCoord(sx, sy, f ? 1 : 0, 1);
+			texCoord(ex, sy, f ? 1 : 0, 0);
+			texCoord(ex, ey, f ? 0 : 1, 0);
+			texCoord(sx, ey, f ? 0 : 1, 1);
 			break;
 		case DOWN:
-			GL11.glTexCoord2d(f ? 0 : 1, 1);
-			vertex(tdx(sx), tdy(sy));
-			GL11.glTexCoord2d(f ? 1 : 0, 1);
-			vertex(tdx(ex), tdy(sy));
-			GL11.glTexCoord2d(f ? 1 : 0, 0);
-			vertex(tdx(ex), tdy(ey));
-			GL11.glTexCoord2d(f ? 0 : 1, 0);
-			vertex(tdx(sx), tdy(ey));
+			texCoord(sx, sy, f ? 0 : 1, 1);
+			texCoord(ex, sy, f ? 1 : 0, 1);
+			texCoord(ex, ey, f ? 1 : 0, 0);
+			texCoord(sx, ey, f ? 0 : 1, 0);
 			break;
 		}
+	}
+	
+	private static void texCoord(double x, double y, double tX, double tY) {
+		GL11.glTexCoord2d(tX, tY);
+		vertex(tdx(x), tdy(y));
 	}
 	
 	/** Sets the width of the a drawn line when drawing lines. */
