@@ -37,7 +37,7 @@ public class TestGrass extends WorldTile {
 	}
 	
 	@Override
-	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness) {
+	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		double wh = h * wallHeight; //wh == 'wallHeight'
 		
 		if (isWall) {
@@ -84,6 +84,16 @@ public class TestGrass extends WorldTile {
 		if ((worldY + 1) < world.getHeight()) tileBelow = world.getWorldData()[worldX][worldY + 1];
 		if ((tileBelow == null || !tileBelow.hasTexture())) {
 			drawTexture(tex, x, y + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
+		}
+		
+		if (mouseOver) {
+			if (isWall) {
+				drawHRect(x, y - wh, x + w, y - wh + h, 1, EColors.chalk);
+				drawHRect(x, y + h - wh - 1, x + w, y + h, 1, EColors.chalk);
+			}
+			else {
+				drawHRect(x, y, x + w, y + h, 1, EColors.chalk);
+			}
 		}
 	}
 	

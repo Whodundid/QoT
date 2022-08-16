@@ -1,7 +1,9 @@
 package world;
 
 import java.util.Comparator;
+
 import engine.inputHandlers.Keyboard;
+import engine.inputHandlers.Mouse;
 import engine.topOverlay.GameTopRenderer;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
@@ -159,8 +161,12 @@ public class WorldRenderer extends EGui {
 				double dY = drawPosY + (jy * h);
 				
 				int brightness = calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1);
+				boolean mouseOver = Mouse.getMx() >= dX &&
+									Mouse.getMx() < (dX + w) &&
+									Mouse.getMy() >= dY &&
+									Mouse.getMy() < (dY + h);
 				
-				t.renderTile(world, dX, dY, w, h, brightness);
+				t.renderTile(world, dX, dY, w, h, brightness, mouseOver);
 			}
 		}
 	}

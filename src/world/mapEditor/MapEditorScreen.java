@@ -211,7 +211,7 @@ public class MapEditorScreen extends GameScreen {
 		
 		//drawString("POS: " + xPos + " : " + yPos, 150, 150);
 		
-		drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.chalk);
+		if (!settings.drawWallBox) drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.chalk);
 	}
 	
 	private void updateSaveString(double drawAreaMidX, double drawAreaMidY) {
@@ -420,8 +420,13 @@ public class MapEditorScreen extends GameScreen {
 				
 				//System.out.println(dX + " : " + dY);
 				//System.out.println(drawPosX + " : " + drawPosY);
+				boolean mouseOver = false;
+				if (settings.drawWallBox) mouseOver = Mouse.getMx() >= dX &&
+													  Mouse.getMx() < (dX + w) &&
+													  Mouse.getMy() >= dY &&
+													  Mouse.getMy() < (dY + h);
 				
-				t.renderTile(world, dX, dY, w, h, 0xffffffff);
+				t.renderTile(world, dX, dY, w, h, 0xffffffff, mouseOver);
 			}
 		}
 	}

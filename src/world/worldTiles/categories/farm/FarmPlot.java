@@ -31,8 +31,8 @@ public class FarmPlot extends WorldTile {
 	//-----------
 
 	@Override
-	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness) {
-		super.renderTile(world, x, y, w, h, brightness);
+	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+		super.renderTile(world, x, y, w, h, brightness, mouseOver);
 	}
 	
 	@Override
