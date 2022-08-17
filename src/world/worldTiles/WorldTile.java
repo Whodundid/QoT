@@ -155,7 +155,14 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	 * @param h
 	 * @param brightness
 	 */
+	@SuppressWarnings("unused")
 	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+//		if (true) {
+//			if (tex != null) drawTexture(tex, x, y, w, h, brightness);
+//			
+//			return;
+//		}
+		
 		double wh = h * wallHeight; //wh == 'wallHeight'
 		
 		WorldTile tb = null; // tb == 'tileBelow'

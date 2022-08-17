@@ -456,7 +456,8 @@ public class MapEditorScreen extends GameScreen {
 			
 			//draw the entity on top of the tile it's on (elevated if it's a wall)
 			if (ent.worldX >= 0 && ent.worldX < world.getWidth() &&
-				ent.worldY >= 0 && ent.worldY < world.getHeight()) {
+				ent.worldY >= 0 && ent.worldY < world.getHeight())
+			{
 				WorldTile tileUnderEntity = world.getTileAt(ent.worldX, ent.worldY);
 				if (tileUnderEntity != null && tileUnderEntity.isWall()) {
 					var wallHeight = tileUnderEntity.getWallHeight() * h;

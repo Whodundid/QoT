@@ -105,6 +105,14 @@ public class GamePlayScreen extends GameScreen {
 				attacking = false;
 			}
 		}
+		
+		drawString("x" + world.getZoom(), QoT.getWidth() - 250, 12, EColors.dsteel);
+		drawString("[" + player.worldX + ", " + player.worldY + "]", QoT.getWidth() - 900, 12, EColors.white);
+		//drawString("[" + player.startX + ", " + player.startY + "]", QoT.getWidth() - 750, 12, EColors.white);
+		//drawString("[" + world.getPixelWidth() + ", " + world.getPixelHeight() + "]", QoT.getWidth() - 550, 12, EColors.hotpink);
+		
+		//drawRect(midX, 0, midX + 1, endY, EColors.black);
+		//drawRect(0, midY, endX, midY + 1, EColors.black);
 	}
 	
 	@Override
@@ -123,6 +131,11 @@ public class GamePlayScreen extends GameScreen {
 	public void keyPressed(char typedChar, int keyCode) {
 		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
 		if (keyCode == Keyboard.KEY_ESC) openPauseWindow();
+		
+		if (keyCode == Keyboard.KEY_LEFT) QoT.thePlayer.move(-1, 0);
+		if (keyCode == Keyboard.KEY_RIGHT) QoT.thePlayer.move(1, 0);
+		if (keyCode == Keyboard.KEY_UP) QoT.thePlayer.move(0, -1);
+		if (keyCode == Keyboard.KEY_DOWN) QoT.thePlayer.move(0, 1);
 		
 		//super.keyPressed(typedChar, keyCode);
 	}
@@ -155,19 +168,19 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void mouseScrolled(int change) {
-//		double c = Math.signum(change);
-//		double z = 1.0;
-//		
-//		if (Keyboard.isCtrlDown()) {
-//			if (c > 0 && world.getZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
-//			else if (world.getZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
-//			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
-//			else if (world.getZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
-//			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
-//			
-//			z = NumberUtil.round(world.getZoom() + z, 2);
-//			world.setZoom(z);
-//		}
+		double c = Math.signum(change);
+		double z = 1.0;
+		
+		if (Keyboard.isCtrlDown()) {
+			if (c > 0 && world.getZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
+			else if (world.getZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
+			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
+			else if (world.getZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
+			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
+			
+			z = NumberUtil.round(world.getZoom() + z, 2);
+			world.setZoom(z);
+		}
 	}
 	
 	@Override
