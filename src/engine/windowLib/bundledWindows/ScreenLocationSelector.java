@@ -53,7 +53,7 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 		center.setGenericObject(ScreenLocation.CENTER);
 		custom.setGenericObject(ScreenLocation.CUSTOM);
 		
-		addChild(bLeft, bRight, tLeft, tRight, center, custom);
+		addObject(bLeft, bRight, tLeft, tRight, center, custom);
 	}
 	
 	@Override

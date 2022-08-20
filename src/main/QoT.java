@@ -350,8 +350,8 @@ public class QoT {
 		GL11.glViewport(0, 0, width, height);
 		
 		if (theWorld != null && theWorld.isLoaded()) theWorld.getWorldRenderer().onWindowResized();
-		if (currentScreen != null) currentScreen.onWindowResized();
-		topRenderer.onWindowResized();
+		if (currentScreen != null) currentScreen.onScreenResized();
+		topRenderer.onScreenResized();
 	}
 	
 	private long getTargetFPSi() { return FPS; }
@@ -520,7 +520,7 @@ public class QoT {
 	}
 	
 	public static TopWindowParent<?> getActiveTopParent() {
-		return (currentScreen != null) ? currentScreen : topRenderer;
+		return (GameTopRenderer.isTopFocused()) ? topRenderer : currentScreen;
 	}
 	
 	//--------------

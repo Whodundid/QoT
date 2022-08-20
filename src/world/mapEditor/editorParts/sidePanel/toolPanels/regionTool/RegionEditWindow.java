@@ -64,9 +64,9 @@ public class RegionEditWindow extends WindowParent {
 		ownColor.setColor(editColor);
 		
 		
-		addChild(entryBox);
-		addChild(ownColor);
-		addChild(confirm, cancel);
+		addObject(entryBox);
+		addObject(ownColor);
+		addObject(confirm, cancel);
 	}
 	
 	@Override

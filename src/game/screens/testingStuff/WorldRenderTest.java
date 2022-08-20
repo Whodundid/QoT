@@ -78,10 +78,10 @@ public class WorldRenderTest extends GameScreen {
 		reload = new WindowButton(this, 10, 10, 140, 40, "Reload");
 		back = new WindowButton(this, 10, endY - 45, 140, 40, "Back");
 		
-		addChild(up, left, down, right);
-		addChild(distUpX, distDownX);
-		addChild(distUpY, distDownY);
-		addChild(reload, back);
+		addObject(up, left, down, right);
+		addObject(distUpX, distDownX);
+		addObject(distUpY, distDownY);
+		addObject(reload, back);
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class WorldRenderTest extends GameScreen {
 	@Override public void onScreenClosed() {}
 	
 	@Override
-	public void onWindowResized() {
+	public void onScreenResized() {
 		if (world != null) {
 			//distX = (Game.getWidth() / world.getTileWidth()) / 2 + 1;
 			//distY = (game.getHeight() / world.getTileHeight()) / 2 + 2;

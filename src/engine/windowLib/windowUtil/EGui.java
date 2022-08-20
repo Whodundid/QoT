@@ -66,12 +66,12 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public double drawString(String str, EColors color) { return drawString(str, midX, midY, color); }
 	public double drawString(Object obj, int color) { return drawString(obj, midX, midY, color); }
 	public double drawString(String str, int color) { return drawString(str, midX, midY, color); }
-	public double drawStringC(Object obj) { return drawStringC(obj, midX, midY, 0xffffffff); }
+	public double drawStringC(Object obj) { return drawStringC(obj, midX, midY - FontRenderer.FONT_HEIGHT / 2, 0xffffffff); }
 	public double drawStringC(String str) { return drawStringC(str, midX, midY - FontRenderer.FONT_HEIGHT / 2, 0xffffffff); }
-	public double drawStringC(Object obj, EColors color) { return drawStringC(obj, midX, midY, color); }
-	public double drawStringC(String str, EColors color) { return drawStringC(str, midX, midY, color); }
-	public double drawStringC(Object obj, int color) { return drawStringC(obj, midX, midY, color); }
-	public double drawStringC(String str, int color) { return drawStringC(str, midX, midY, color); }
+	public double drawStringC(Object obj, EColors color) { return drawStringC(obj, midX, midY - FontRenderer.FONT_HEIGHT / 2, color); }
+	public double drawStringC(String str, EColors color) { return drawStringC(str, midX, midY - FontRenderer.FONT_HEIGHT / 2, color); }
+	public double drawStringC(Object obj, int color) { return drawStringC(obj, midX, midY - FontRenderer.FONT_HEIGHT / 2, color); }
+	public double drawStringC(String str, int color) { return drawStringC(str, midX, midY - FontRenderer.FONT_HEIGHT / 2, color); }
 	
 	public void scissor() { scissor(startX, startY, endX, endY); }
 	public void scissor(double offset) { scissor(startX + offset, startY + offset, endX - offset, endY - offset); }

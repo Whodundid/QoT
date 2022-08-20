@@ -62,9 +62,6 @@ public class WorldRenderer extends EGui {
 				}
 			}
 			
-			this.midDrawX = QoT.thePlayer.worldX;
-			this.midDrawY = QoT.thePlayer.worldY;
-			
 			//entityOrder.addAll(world.getEntitiesInWorld());
 		}
 	}

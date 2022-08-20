@@ -72,7 +72,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		hScroll.setVisible(hScrollVis);
 		reset.setVisible(resetVis);
 
-		addChild(vScroll, hScroll, reset);
+		addObject(vScroll, hScroll, reset);
 		
 		setListHeight(heightToBeSet);
 		setListWidth(widthToBeSet);
@@ -311,7 +311,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public void removeChild(IWindowObject<?>... objs) {
+	public void removeObject(IWindowObject<?>... objs) {
 		getRemovingChildren().add(objs);
 		listObjsToBeRemoved.add(objs);
 	}

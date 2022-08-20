@@ -69,7 +69,7 @@ public class EditorToolBox extends WindowObject {
 		header.setDrawTitle(false);
 		header.setDrawParentFocus(false);
 		
-		addChild(header);
+		addObject(header);
 		return this;
 	}
 	
@@ -79,7 +79,7 @@ public class EditorToolBox extends WindowObject {
 		header.setDrawTitle(false);
 		header.setDrawParentFocus(false);
 		
-		addChild(header);
+		addObject(header);
 		return this;
 	}
 	
@@ -114,7 +114,7 @@ public class EditorToolBox extends WindowObject {
 				button.setHoverText(theTool.hoverText);
 				
 				//add to list first then dimension
-				addChild(button);
+				addObject(button);
 				button.setDimensions(bx, by, toolSize, toolSize);
 			}
 			
@@ -126,7 +126,7 @@ public class EditorToolBox extends WindowObject {
 			if (c < categories.length - 1) {
 				WindowRect r = new WindowRect(this, 0, 0, 0, 0, 0xff303030);
 				WindowRect t = new WindowRect(this, 0, 0, 0, 0, EColors.vdgray);
-				addChild(t);
+				addObject(t);
 				r.setDimensions(startX + 1, curY, w - 2, 3);
 				t.setDimensions(startX + 1, curY + 1, w - 2, 1);
 				

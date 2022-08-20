@@ -65,7 +65,7 @@ public class WindowDialogBox extends ActionWindowParent {
 				no.setStringColor(EColors.yellow);
 				yes.setStringColor(EColors.lgreen);
 				
-				addChild(yes, no);
+				addObject(yes, no);
 				
 				defaultObject = yes;
 				break;
@@ -78,7 +78,7 @@ public class WindowDialogBox extends ActionWindowParent {
 					}
 				};
 				okButton.setRunActionOnPress(true);
-				addChild(okButton);
+				addObject(okButton);
 				
 				defaultObject = okButton;
 				break;

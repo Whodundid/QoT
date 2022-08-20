@@ -41,17 +41,17 @@ public class WorldSelectScreen extends GameScreen {
 		
 		defaultWorld = new WindowButton(this, bw, midY - 200, w, 45, "Default Map");
 		loadWorld = new WindowButton(this, bw, defaultWorld.endY + 5, w, 45, "Load World");
-		lastEditor = new WindowButton(this, bw, loadWorld.endY + 100, w, 45, QoTSettings.lastEditorMap.get());
-		lastWorld = new WindowButton(this, bw, lastEditor.endY + 40, w, 45, QoTSettings.lastMap.get());
+		lastWorld = new WindowButton(this, bw, loadWorld.endY + 100, w, 45, QoTSettings.lastMap.get());
+		lastEditor = new WindowButton(this, bw, lastWorld.endY + 40, w, 45, QoTSettings.lastEditorMap.get());
 		
 		back = new WindowButton(this, 5, endY - 45, 150, 40, "Back");
 		
-		addChild(defaultWorld, loadWorld);
+		addObject(defaultWorld, loadWorld);
 		if (!lastEditor.getString().isBlank() && !lastEditor.getString().isEmpty()) {
-			addChild(lastEditor);
+			addObject(lastEditor);
 		}
-		addChild(lastWorld);
-		addChild(back);
+		addObject(lastWorld);
+		addObject(back);
 	}
 	
 	@Override
@@ -64,8 +64,8 @@ public class WorldSelectScreen extends GameScreen {
 		drawRect(midX - 250, midY - 68, midX + 250, midY - 66, EColors.black);
 		
 		drawStringC("Chose a World", midX, (midY - 250) / 2, EColors.aquamarine);
-		drawStringC("Last Editor World", midX, lastEditor.startY - FontRenderer.FONT_HEIGHT - 4, EColors.skyblue);
-		drawStringC("Last World", midX, lastWorld.startY - FontRenderer.FONT_HEIGHT - 4, EColors.skyblue);
+		drawStringC("Last World", midX, lastEditor.startY - FontRenderer.FONT_HEIGHT - 4, EColors.skyblue);
+		drawStringC("Last Editor World", midX, lastWorld.startY - FontRenderer.FONT_HEIGHT - 4, EColors.skyblue);
 		
 		if (error != null) {
 			drawStringC(error, midX, endY - 100);

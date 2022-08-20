@@ -24,8 +24,8 @@ public class TestScreen extends GameScreen {
 		
 		IActionObject.setActionReceiver(this, b1, textField);
 		
-		addChild(b1);
-		addChild(textField);
+		addObject(b1);
+		addObject(textField);
 	}
 
 	@Override

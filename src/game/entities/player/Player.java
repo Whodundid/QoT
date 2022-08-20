@@ -15,7 +15,7 @@ public class Player extends Entity {
 		stats = new PlayerStats(this);
 		
 		//init(posX, posY, 48, 48);
-		init(posX, posY, 32, 32);
+		init(posX, posY, 40, 40);
 		
 		setMaxHealth(50);
 		setHealth(50);

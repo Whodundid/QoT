@@ -78,7 +78,7 @@ public abstract class GameScreen<E> extends TopWindowParent<E> implements ITopPa
 		performFade = val;
 	}
 	
-	public void onWindowResized() {
+	public void onScreenResized() {
 		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
 		reInitChildren();
 	}

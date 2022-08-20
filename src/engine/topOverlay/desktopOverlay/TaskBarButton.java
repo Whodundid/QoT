@@ -225,7 +225,7 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 			dropDown.addEntry(i + ": " + EColors.green + p.getObjectName(), EColors.lorange, p);
 		}
 		
-		QoT.getTopRenderer().addChild(dropDown);
+		QoT.getTopRenderer().addObject(dropDown);
 		
 		listMade = true;
 	}

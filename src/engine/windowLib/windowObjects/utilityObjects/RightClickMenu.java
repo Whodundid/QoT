@@ -45,7 +45,7 @@ public class RightClickMenu extends ActionWindowParent {
 		title.setVisible(useTitle);
 		title.setDrawCentered(true);
 		title.setColor(0xffbb00);
-		addChild();
+		addObject();
 		
 		setUseTitle(true);
 		showInTaskBar = false;
@@ -81,7 +81,7 @@ public class RightClickMenu extends ActionWindowParent {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (keyCode == 1) getTopParent().removeChild();
+		if (keyCode == 1) getTopParent().removeObject();
 	}
 	
 	@Override
@@ -139,7 +139,7 @@ public class RightClickMenu extends ActionWindowParent {
 			b.setDrawTextures(false);
 			b.setRunActionOnPress(true);
 			options.add(optionName, b);
-			addChild(b);
+			addObject(b);
 			resize();
 		}
 	}
@@ -178,7 +178,7 @@ public class RightClickMenu extends ActionWindowParent {
 		b.setDrawTextures(false);
 		b.setRunActionOnPress(true);
 		options.add(posIn, optionName, b);
-		addChild(b);
+		addObject(b);
 		resize();
 	}
 	
@@ -189,7 +189,7 @@ public class RightClickMenu extends ActionWindowParent {
 				var s = l.get(0);
 				if (s != null) {
 					var b = s.getB();
-					removeChild(b);
+					removeObject(b);
 				}
 			}
 			resize();

@@ -79,7 +79,7 @@ public class LinkConfirmationWindow extends WindowDialogBox {
 		copy.setStringColor(0xffffffff);
 		no.setStringColor(0xffff5555);
 		
-		addChild(promptLabel, linkLabel, warningLabel, yes, copy, no);
+		addObject(promptLabel, linkLabel, warningLabel, yes, copy, no);
 		
 		super.initChildren();
 	}

@@ -42,7 +42,7 @@ public class TestInventory<E> extends WindowParent<E> {
 		close = new WindowButton(this, startX + 10, startY + 10, 50, 50);
 		close.setActionReceiver(this);
 		
-		addChild(close);
+		addObject(close);
 	}
 	
 	@Override

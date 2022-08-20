@@ -36,6 +36,8 @@ public abstract class GameObject extends GLObject {
 	public String getName() { return name; }
 	public GameTexture getTexture() { return sprite; }
 	
+	public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
+	
 	public GameObject setName(String nameIn) { name = nameIn; return this; }
 	public GameObject setTexture(GameTexture in) { sprite = in; return this; }
 	

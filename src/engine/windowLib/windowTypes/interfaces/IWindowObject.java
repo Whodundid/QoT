@@ -36,6 +36,7 @@ import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
+import eutil.misc.DevToolKit;
 import eutil.misc.ScreenLocation;
 import main.QoT;
 
@@ -771,7 +772,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * 
 	 * @param objs The objects to add as children
 	 */
-	public default void addChild(IWindowObject<?>... objs) {
+	public default void addObject(IWindowObject<?>... objs) {
 		for (var o : objs) {
 			//prevent null additions
 			if (o == null) continue;
@@ -819,7 +820,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * not contain the specified child, no action is performed. The object
 	 * is removed before the next draw cycle.
 	 */
-	public default void removeChild(IWindowObject<?>... objs) {
+	public default void removeObject(IWindowObject<?>... objs) {
 		EUtil.filterNullForEach(objs, o -> o.properties().isBeingRemoved = true);
 		getRemovingChildren().add(objs);
 	}
@@ -988,7 +989,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 			}
 			else flb = new FocusLockBorder(this);
 			
-			addChild(flb);
+			addObject(flb);
 		}
 	}
 	
@@ -1214,7 +1215,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		if (p.doesFocusLockExist() && p.getFocusLockObject().equals(this)) p.clearFocusLockObject();
 		if (properties().focusObjectOnClose != null) properties().focusObjectOnClose.requestFocus();
 		
-		properties().parent.removeChild(this);
+		properties().parent.removeObject(this);
 		properties().isClosing = false;
 		onClosed();
 	}
@@ -1227,6 +1228,16 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	public default E getGenericObject() { return properties().genericObject; }
 	/** Stores some object or argument to be preserved for future use. */
 	public default void setGenericObject(E objIn) { properties().genericObject = objIn; }
+	
+	//-------------
+	// Debug Stuff
+	//-------------
+	
+	public default void printf(String toPrint, Object... args) { DevToolKit.printf(toPrint, args); }
+	public default void printlnf(String toPrint, Object... args) { DevToolKit.printlnf(toPrint, args); }
+	
+	public default void print(Object... toPrint) { DevToolKit.print(toPrint); }
+	public default void println(Object... toPrint) { DevToolKit.println(toPrint); }
 	
 	//-----------------
 	// Default setters

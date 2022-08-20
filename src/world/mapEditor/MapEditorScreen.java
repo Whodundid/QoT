@@ -113,9 +113,9 @@ public class MapEditorScreen extends GameScreen {
 	
 	@Override
 	public void initChildren() {
-		addChild(topHeader = new EditorScreenTopHeader(this));
-		addChild(toolBox = new EditorToolBox(this));
-		addChild(sidePanel = new EditorSidePanel(this));
+		addObject(topHeader = new EditorScreenTopHeader(this));
+		addObject(toolBox = new EditorToolBox(this));
+		addObject(sidePanel = new EditorSidePanel(this));
 		
 		sidePanel.setCurrentPanel(SidePanelType.TERRAIN);
 		updateDrawDist();

@@ -73,11 +73,11 @@ public class GamePlayScreen extends GameScreen {
 		
 		health = new WindowStatusBar(this, 5, 5, 200, 30, 0, player.getMaxHealth(), EColors.red);
 		health.setBarValue(player.getHealth());
-		addChild(health);
+		addObject(health);
 		
 		mana = new WindowStatusBar(this, health.endX + 5, 5, 200, 30, 0, player.getMaxMana(), EColors.blue);
 		mana.setBarValue(player.getMana());
-		addChild(mana);
+		addObject(mana);
 		
 		character = new WindowButton(this, mana.endX + 5, 5, 125, 30, "Stats");
 		

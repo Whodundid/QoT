@@ -27,7 +27,7 @@ public class DamageSplash extends WindowObject {
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		if (System.currentTimeMillis() - creationTime >= timeOnScreen) {
-			getParent().removeChild();
+			getParent().removeObject();
 		}
 		
 		EColors color = (damage > 0) ? EColors.red : EColors.blue;

@@ -26,7 +26,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 	private ColorPickerButton<?> lred, red, maroon, brown, dorange, borange, orange, lorange, yellow;
 	private ColorPickerButton<?> lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine;
 	private ColorPickerButton<?> cyan, skyblue, blue, regal, grape, navy, violet, eggplant, purple, magenta, pink, hotpink;
-	private ColorPickerButton<?> white, chalk, lgray, gray, mgray, dgray, pdgray, steel, dsteel, vdgray, black;
+	private ColorPickerButton<?> white, chalk, lgray, gray, mgray, dgray, pdgray, lsteel, steel, dsteel, vdgray, black;
 	
 	//functional objects
 	private WindowTextField<?> inputField;
@@ -117,14 +117,15 @@ public class ColorPickerSimple extends ActionWindowParent {
 		
 		double y2 = navy.endY + 9;
 		
-		white = new ColorPickerButton(this, brown.startX, y2, w, h, EColors.white);
+		white = new ColorPickerButton(this, maroon.startX, y2, w, h, EColors.white);
 		chalk = new ColorPickerButton(this, white.endX + 1, y2, w, h, EColors.chalk);
 		lgray = new ColorPickerButton(this, chalk.endX + 1, y2, w, h, EColors.lgray);
 		gray = new ColorPickerButton(this, lgray.endX + 1, y2, w, h, EColors.gray);
 		mgray = new ColorPickerButton(this, gray.endX + 1, y2, w, h, EColors.mgray);
 		dgray = new ColorPickerButton(this, mgray.endX + 1, y2, w, h, EColors.dgray);
 		pdgray = new ColorPickerButton(this, dgray.endX + 1, y2, w, h, EColors.pdgray);
-		steel = new ColorPickerButton(this, pdgray.endX + 1, y2, w, h, EColors.steel);
+		lsteel = new ColorPickerButton(this, pdgray.endX + 1, y2, w, h, EColors.lsteel);
+		steel = new ColorPickerButton(this, lsteel.endX + 1, y2, w, h, EColors.steel);
 		dsteel = new ColorPickerButton(this, steel.endX + 1, y2, w, h, EColors.dsteel);
 		vdgray = new ColorPickerButton(this, dsteel.endX + 1, y2, w, h, EColors.vdgray);
 		black = new ColorPickerButton(this, vdgray.endX + 1, y2, w, h, EColors.black);
@@ -137,9 +138,9 @@ public class ColorPickerSimple extends ActionWindowParent {
 		inputContainer.setHoverText("The current color value in (RGB) hexadecimal format");
 		
 		inputLabel = new WindowLabel(this, inputContainer.startX + 16, inputContainer.startY + 37, "(ARGB) color value");
-		inputField = new WindowTextField(this, inputContainer.startX + 16, inputContainer.startY + 66, 180, 28);
+		inputField = new WindowTextField(this, inputContainer.startX + 16, inputContainer.startY + 66, 240, 28);
 		
-		inputField.setMaxStringLength(8);
+		inputField.setMaxStringLength(10);
 		//inputLabel.setHoverText("The current color value in (RGB) hexadecimal format");
 		inputLabel.setColor(EColors.seafoam);
 		
@@ -151,19 +152,19 @@ public class ColorPickerSimple extends ActionWindowParent {
 		select.setStringColor(EColors.lgreen);
 		
 		//add containers
-		addChild(inputContainer);
+		addObject(inputContainer);
 		
 		//add color buttons
-		colorContainer.addChild(lred, red, maroon, brown, dorange, borange, orange, lorange, yellow);
-		colorContainer.addChild(lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine);
-		colorContainer.addChild(cyan, skyblue, blue, regal, navy, grape, violet, eggplant, purple, magenta, pink, hotpink);
-		colorContainer.addChild(white, chalk, lgray, gray, mgray, dgray, pdgray, steel, dsteel, vdgray, black);
+		colorContainer.addObject(lred, red, maroon, brown, dorange, borange, orange, lorange, yellow);
+		colorContainer.addObject(lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine);
+		colorContainer.addObject(cyan, skyblue, blue, regal, navy, grape, violet, eggplant, purple, magenta, pink, hotpink);
+		colorContainer.addObject(white, chalk, lgray, gray, mgray, dgray, pdgray, lsteel, steel, dsteel, vdgray, black);
 		
 		//add functional objects
-		inputContainer.addChild(inputField, inputLabel);
+		inputContainer.addObject(inputField, inputLabel);
 		
-		addChild(select, back);
-		addChild(colorContainer, colorDisplay, colorLabel);
+		addObject(select, back);
+		addObject(colorContainer, colorDisplay, colorLabel);
 		
 		updateValues();
 	}
@@ -208,12 +209,14 @@ public class ColorPickerSimple extends ActionWindowParent {
 	
 	private void parseInputColor() {
 		try {
-			if (inputField.getText().length() > 6) {
-				String alpha = inputField.getText().substring(0, 2);
-				currentColor = (int) Long.parseLong(alpha + inputField.getText().substring(2), 16);
+			String text = inputField.getText();
+			if (text.length() > 6) {
+				if (text.startsWith("0x")) text = text.substring(2);
+				String alpha = text.substring(0, 2);
+				currentColor = (int) Long.parseLong(alpha + text.substring(2), 16);
 			}
 			else {
-				currentColor = 0xff000000 + Integer.parseInt(inputField.getText(), 16);
+				currentColor = 0xff000000 + Integer.parseInt(text, 16);
 			}
 			updateValues();
 		}
@@ -226,7 +229,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 			error.setMessageColor(EColors.lgray.c());
 			getTopParent().displayWindow(error, ObjectPosition.SCREEN_CENTER);
 			inputField.clear();
-			inputField.setText(inputField.text);
+			inputField.setText("0x" + inputField.text);
 		}
 	}
 	
@@ -240,14 +243,17 @@ public class ColorPickerSimple extends ActionWindowParent {
 		try {
 			String val = "";
 			if (inputField != null && inputField.getText() != null) {
-				if (inputField.getText().length() > 6) {
+				if (inputField.getText().length() < 10) {
+					
+				}
+				//if (inputField.getText().length() > 6) {
 					val = String.format("%8x", currentColor);
-				}
-				else {
-					val = String.format("%6x", currentColor).substring(2);
-				}
-				//inputField.setTextWhenEmpty(val);
-				inputField.setText(val);
+				//}
+				//else {
+					//val = String.format("%6x", currentColor);
+				//}
+				inputField.setTextWhenEmpty("0x" + val);
+				inputField.setText("0x" + val);
 			}
 		}
 		catch (Exception e) {
