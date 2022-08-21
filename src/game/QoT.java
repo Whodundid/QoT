@@ -28,7 +28,7 @@ import envision.renderEngine.shaders.Shaders;
 import envision.renderEngine.textureSystem.TextureSystem;
 import envision.terminal.TerminalHandler;
 import envision.testing.OpenGLTestingEnvironment;
-import envision.topOverlay.GameTopRenderer;
+import envision.topOverlay.GameTopScreen;
 import envision.windowLib.WindowSize;
 import envision.windowLib.windowTypes.TopWindowParent;
 import envision.windowLib.windowTypes.interfaces.IWindowParent;
@@ -79,7 +79,7 @@ public class QoT implements EnvisionGame {
 	private static TextureSystem textureSystem;
 	private static EventHandler eventSystem;
 	
-	private static GameTopRenderer<?> topRenderer;
+	private static GameTopScreen<?> topRenderer;
 	private static TerminalHandler terminalHandler;
 	
 	private static int width;
@@ -213,10 +213,11 @@ public class QoT implements EnvisionGame {
 		fontRenderer = FontRenderer.getInstance();
 	}
 	
-	private static void setupQoT() {
+	@Override
+	public void onGameSetup() {
 		envision.setErrorCallback(new Envision_QoT_ErrorCallback());
 		
-		topRenderer = GameTopRenderer.getInstance();
+		topRenderer = GameTopScreen.getInstance();
 		terminalHandler = TerminalHandler.getInstance();
 		eventSystem = EventHandler.getInstance();
 		//tickManager = new TickManager();
@@ -239,7 +240,7 @@ public class QoT implements EnvisionGame {
 		setupOpenGL();
 		
 		//initialize QoT back-end before continuing
-		setupQoT();
+		onGameSetup();
 		
 		//set fps/ups targets
 		setTargetFPS(QoTSettings.targetFPS.get());
@@ -527,7 +528,7 @@ public class QoT implements EnvisionGame {
 	}
 	
 	public static TopWindowParent<?> getActiveTopParent() {
-		return (GameTopRenderer.isTopFocused()) ? topRenderer : currentScreen;
+		return (GameTopScreen.isTopFocused()) ? topRenderer : currentScreen;
 	}
 	
 	//--------------
@@ -628,7 +629,7 @@ public class QoT implements EnvisionGame {
 	/** Returns this game's central texture handling system. */
 	public static TextureSystem getTextureSystem() { return textureSystem; }
 	/** Returns this game's central top level rendering system. */
-	public static GameTopRenderer<?> getTopRenderer() { return topRenderer; }
+	public static GameTopScreen<?> getTopRenderer() { return topRenderer; }
 	/** Returns the actively rendered screen. */
 	public static GameScreen<?> getCurrentScreen() { return currentScreen; }
 	/** Returns this game's central terminal command handler. */

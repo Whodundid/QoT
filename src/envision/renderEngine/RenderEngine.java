@@ -3,13 +3,11 @@ package envision.renderEngine;
 import org.lwjgl.glfw.GLFW;
 
 import envision.Envision;
-import envision.game.screens.GameScreen;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.renderEngine.textureSystem.TextureSystem;
 import envision.testing.renderingAPI.RendererContextType;
 import envision.testing.renderingAPI.RenderingContext;
 import envision.testing.renderingAPI.opengl.OpenGLContext;
-import envision.topOverlay.GameTopRenderer;
 
 public class RenderEngine {
 	
@@ -45,11 +43,7 @@ public class RenderEngine {
 	private static FontRenderer fontRenderer;
 	/** The engine's underlying texture system. */
 	private static TextureSystem textureSystem;
-	
-	/** The screen currently being displayed. */
-	public static GameScreen<?> currentScreen;
-	/** The top most rendered screen. */
-	private static GameTopRenderer<?> topRenderer;
+
 	
 	//--------------
 	// Init Methods
@@ -78,6 +72,21 @@ public class RenderEngine {
 		windowHandle = GLFW.glfwCreateWindow(width, height, "", 0, 0);
 	}
 	
+	public void shutdown() {
+		textureSystem.destroyAllTextures();
+		
+		GLFW.glfwDestroyWindow(windowHandle);
+		GLFW.glfwTerminate();
+	}
+	
+	//----------------
+	// Internal Ticks
+	//----------------
+	
+	public void onRenderTick() {
+		renderingContext.swapBuffers();
+	}
+	
 	//---------
 	// Getters
 	//---------
@@ -90,7 +99,10 @@ public class RenderEngine {
 	public static FontRenderer getFontRenderer() { return fontRenderer; }
 	/** Returns this game's central texture handling system. */
 	public static TextureSystem getTextureSystem() { return textureSystem; }
-	/** Returns this game's central top level rendering system. */
-	public static GameTopRenderer<?> getTopRenderer() { return topRenderer; }
+	
+	public static boolean shouldClose() {
+		if (instance == null) return false;
+		return GLFW.glfwWindowShouldClose(instance.windowHandle);
+	}
 	
 }

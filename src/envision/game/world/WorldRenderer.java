@@ -6,7 +6,7 @@ import envision.game.entity.Entity;
 import envision.game.world.worldTiles.WorldTile;
 import envision.inputHandlers.Keyboard;
 import envision.renderEngine.textureSystem.GameTexture;
-import envision.topOverlay.GameTopRenderer;
+import envision.topOverlay.GameTopScreen;
 import envision.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -72,7 +72,7 @@ public class WorldRenderer extends EGui {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (!GameTopRenderer.isTopFocused() && !(Keyboard.isCtrlDown() || Keyboard.isAltDown() || Keyboard.isShiftDown())) {
+		if (!GameTopScreen.isTopFocused() && !(Keyboard.isCtrlDown() || Keyboard.isAltDown() || Keyboard.isShiftDown())) {
 			if (typedChar == 'h') drawEntityHitboxes = !drawEntityHitboxes;
 			if (typedChar == 'p') drawPosBox = !drawPosBox;
 			if (typedChar == 'o') drawEntityOutlines = !drawEntityOutlines;

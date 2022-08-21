@@ -5,8 +5,8 @@ import envision.events.IEventListener;
 
 public interface EnvisionGame extends IEventListener {
 	
-	default void onEngineLoaded() {}
-	default void onEngineUnloaded() {}
+	default void onEngineLoad() {}
+	default void onEngineUnload() {}
 	
 	default void onRenderTick() {}
 	default void onGameTick() {}
@@ -22,5 +22,8 @@ public interface EnvisionGame extends IEventListener {
 	default void onWindowResized() {}
 	
 	default void onEvent(GameEvent e) {}
+	
+	default void onGameSetup() {}
+	default void onGameUnload() {}
 	
 }

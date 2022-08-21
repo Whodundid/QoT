@@ -16,17 +16,17 @@ import game.QoT;
 import game.settings.QoTSettings;
 
 /** The renderer that is overlaid onto every other one. (Need a better name). */
-public class GameTopRenderer<E> extends TopWindowParent<E> {
+public class GameTopScreen<E> extends TopWindowParent<E> {
 	
-	public static GameTopRenderer<?> instance;
+	public static GameTopScreen<?> instance;
 	private static boolean hasFocus = false;
 	private static TaskBar<?> taskBar;
 	
-	public static GameTopRenderer<?> getInstance() {
-		return instance = (instance != null) ? instance : new GameTopRenderer();
+	public static GameTopScreen<?> getInstance() {
+		return instance = (instance != null) ? instance : new GameTopScreen();
 	}
 	
-	private GameTopRenderer() {
+	private GameTopScreen() {
 		res = QoT.getWindowSize();
 		initChildren();
 	}

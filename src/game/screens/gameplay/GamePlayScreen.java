@@ -5,7 +5,7 @@ import envision.game.screens.GameScreen;
 import envision.game.sounds.SoundEngine;
 import envision.game.world.GameWorld;
 import envision.inputHandlers.Keyboard;
-import envision.topOverlay.GameTopRenderer;
+import envision.topOverlay.GameTopScreen;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowObjects.basicObjects.WindowRect;
 import envision.windowLib.windowObjects.basicObjects.WindowStatusBar;
@@ -117,7 +117,7 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void onGameTick(long ticks) {
-		if (!GameTopRenderer.isTopFocused()) {
+		if (!GameTopScreen.isTopFocused()) {
 			QoT_Player p = QoT.thePlayer;
 			double moveSpeed = 1;
 			if (Keyboard.isWDown()) p.move(0, -moveSpeed);

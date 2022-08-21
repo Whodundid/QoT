@@ -6,7 +6,7 @@ import java.util.Deque;
 import envision.inputHandlers.CursorHelper;
 import envision.inputHandlers.Mouse;
 import envision.renderEngine.GLSettings;
-import envision.topOverlay.GameTopRenderer;
+import envision.topOverlay.GameTopScreen;
 import envision.windowLib.StaticTopParent;
 import envision.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import envision.windowLib.windowTypes.interfaces.ITopParent;
@@ -268,9 +268,9 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		mY = mYIn;
 		
 		if (this == QoT.getTopRenderer()) {
-			if (GameTopRenderer.isTopFocused()) updateCursor();
+			if (GameTopScreen.isTopFocused()) updateCursor();
 		}
-		else if (!GameTopRenderer.isTopFocused()) updateCursor();
+		else if (!GameTopScreen.isTopFocused()) updateCursor();
 		
 		//handle mouse hover stuff
 		checkMouseHover();
