@@ -159,13 +159,13 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		
 		WindowButton.setStringColor(is2nd ? EColors.yellow.intVal : 14737632, sin, cos, tan, ln);
 		
-		addChild(outputField);
-		addChild(sin, cos, tan, backspace, clear);
-		addChild(sqrt, square, pow, pi, divide);
-		addChild(log, seven, eight, nine, multiply);
-		addChild(ln, four, five, six, subtract);
-		addChild(e2x, one, two, three, plus);
-		addChild(second, zero, decimal, negate, enter);
+		addObject(outputField);
+		addObject(sin, cos, tan, backspace, clear);
+		addObject(sqrt, square, pow, pi, divide);
+		addObject(log, seven, eight, nine, multiply);
+		addObject(ln, four, five, six, subtract);
+		addObject(e2x, one, two, three, plus);
+		addObject(second, zero, decimal, negate, enter);
 	}
 	
 	@Override

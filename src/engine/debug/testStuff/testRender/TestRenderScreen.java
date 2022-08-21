@@ -66,7 +66,7 @@ public class TestRenderScreen extends GameScreen {
 	public void initChildren() {
 		back = new WindowButton(this, 25, endY - 60, 100, 45, "Back");
 		
-		addChild(back);
+		addObject(back);
 	}
 	
 	@Override public void onScreenClosed() {

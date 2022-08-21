@@ -146,21 +146,21 @@ public abstract class Entity extends GameObject {
 			boolean stopMove = false;
 			
 			//if (this != QoT.thePlayer) return;
+			boolean left = false, right = false, up = false, down = false;
+			if (x < 0) 			left = true;
+			else if (x > 0) 	right = true;
+			if (y < 0) 			up = true;
+			else if (y > 0) 	down = true;
+			
+			if (left) 		facing = Rotation.LEFT;
+			else if (right) facing = Rotation.RIGHT;
+			else if (up)	facing = Rotation.UP;
+			else if (down) 	facing = Rotation.DOWN;
+			
 			
 			if (!allowNoClip) {
-				boolean left = false, right = false, up = false, down = false;
 				double w = world.getTileWidth();
 				double h = world.getTileHeight();
-				
-				if (x < 0) 			left = true;
-				else if (x > 0) 	right = true;
-				if (y < 0) 			up = true;
-				else if (y > 0) 	down = true;
-				
-				if (left) 		facing = Rotation.LEFT;
-				else if (right) facing = Rotation.RIGHT;
-				else if (up)	facing = Rotation.UP;
-				else if (down) 	facing = Rotation.DOWN;
 
 				//System.out.println(collisionBox.endX);
 				
@@ -312,22 +312,27 @@ public abstract class Entity extends GameObject {
 				startY += y;
 				endY += y;
 				
-				startX = (int) NumberUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
-				startY = (int) NumberUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
-				endX = (int) NumberUtil.clamp(endX, width - collisionBox.startX, world.getPixelWidth() + (width - collisionBox.endX));
-				endY = (int) NumberUtil.clamp(endY, height - collisionBox.startY, world.getPixelHeight() + (height - collisionBox.endY));
+				if (!allowNoClip) {
+					startX = (int) NumberUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
+					startY = (int) NumberUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
+					endX = (int) NumberUtil.clamp(endX, width - collisionBox.startX, world.getPixelWidth() + (width - collisionBox.endX));
+					endY = (int) NumberUtil.clamp(endY, height - collisionBox.startY, world.getPixelHeight() + (height - collisionBox.endY));
+				}
 				
 				midX = startX + (width / 2);
 				midY = startY + (height / 2);
 				
-				double valX = (startX / (world.getTileWidth() * world.getZoom()));
-				double valY = (startY / (world.getTileHeight() * world.getZoom()));
+				double valX = startX / world.getTileWidth();
+				double valY = startY / world.getTileHeight();
 				
 				worldX = (int) valX;
 				worldY = (int) valY;
 				
-				worldX = NumberUtil.clamp(worldX, 0, world.getWidth() - 1);
-				worldY = NumberUtil.clamp(worldY, 0, world.getHeight() - 1);
+				//if (!allowNoClip) {
+					//if (this == QoT.thePlayer) System.out.println(worldX + " : " + worldY);
+					//worldX = NumberUtil.clamp(worldX, 0, world.getWidth() - 1);
+					//worldY = NumberUtil.clamp(worldY, 0, world.getHeight() - 1);
+				//}
 			}
 		}
 	}

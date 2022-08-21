@@ -42,7 +42,7 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	
 	@Override
 	public void initChildren() {
-		addChild(object, label);
+		addObject(object, label);
 	}
 	
 	@Override

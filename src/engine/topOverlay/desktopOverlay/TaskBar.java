@@ -228,7 +228,7 @@ public class TaskBar<E> extends WindowObject<E> {
 			}
 			
 			for (var o : removeGhosts) {
-				removeChild(o);
+				removeObject(o);
 			}
 			
 			//check for ghost buttons
@@ -255,7 +255,7 @@ public class TaskBar<E> extends WindowObject<E> {
 				
 				//remove old ones
 				buttons.removeAll(removing);
-				removing.forEach(b -> removeChild(null, b));
+				removing.forEach(b -> removeObject(null, b));
 				
 				//update the remaining
 				buttons.forEach(b -> b.update());
@@ -287,7 +287,7 @@ public class TaskBar<E> extends WindowObject<E> {
 				
 				//add to bar
 				buttons.add(b);
-				addChild(b);
+				addObject(b);
 			}
 			else {
 				for (var b : buttons) {
@@ -356,10 +356,15 @@ public class TaskBar<E> extends WindowObject<E> {
 		
 		for (var b : toBuild) {
 			buttons.add(b);
-			addChild(b);
+			addObject(b);
 		}
 		
 		repositionButtons();
+	}
+	
+	public void onScreenResized() {
+		setDimensions(startX, startX, QoT.getWidth(), drawSize());
+		buildFromScratch();
 	}
 	
 }

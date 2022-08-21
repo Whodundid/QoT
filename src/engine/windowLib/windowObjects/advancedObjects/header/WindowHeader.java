@@ -533,7 +533,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		closeButton.setTextures(WindowTextures.close, WindowTextures.close_sel);
 		closeButton.setHoverText("Close");
 		closeButton.setObjectName("close button");
-		addChild(closeButton);
+		addObject(closeButton);
 		buttonPos += buttonWidth;
 	}
 	
@@ -547,7 +547,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 			maximizeButton.setHoverText(window.isMaximized() ? "Miniaturize" : "Maximize");
 			maximizeButton.setObjectName("maximize button");
 			
-			addChild(maximizeButton);
+			addObject(maximizeButton);
 			buttonPos += (buttonWidth + 1);
 		}
 	}
@@ -559,7 +559,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		minimizeButton.setObjectName("minimize button");
 		
 		if (window != null && window.isMinimizable()) {
-			addChild(minimizeButton);
+			addObject(minimizeButton);
 			buttonPos += (buttonWidth + 1);
 		}
 	}
@@ -580,7 +580,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 			pinButton.setBackgroundColor(0xffbb0000);
 			pinButton.setHoverText("Pin to Hud");
 			pinButton.setObjectName("pin button");
-			addChild(pinButton);
+			addObject(pinButton);
 			buttonPos += (buttonWidth + 1);
 		}
 	}
@@ -590,7 +590,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		//fileUpButton.setTextures(EMCResources.backButton, EMCResources.backButtonSel).setVisible(false);
 		fileUpButton.setHoverText("Go Back");
 		fileUpButton.setObjectName("back button");
-		addChild(fileUpButton);
+		addObject(fileUpButton);
 		//buttonPos += (buttonWidth + 1);
 	}
 	

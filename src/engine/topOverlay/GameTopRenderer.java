@@ -171,12 +171,12 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 	}
 	
 	public void addTaskBar(TaskBar b) {
-		if (taskBar == null) removeChild(taskBar);
-		addChild(taskBar = b);
+		if (taskBar == null) removeObject(taskBar);
+		addObject(taskBar = b);
 	}
 	
 	public void addTaskBar(boolean fromScratch) {
-		addChild(taskBar = new TaskBar(fromScratch));
+		addObject(taskBar = new TaskBar(fromScratch));
 	}
 	
 	public TaskBar<?> getTaskBar() {
@@ -212,6 +212,12 @@ public class GameTopRenderer<E> extends TopWindowParent<E> {
 	
 	public static boolean isTopFocused() {
 		return hasFocus;
+	}
+	
+	@Override
+	public void onScreenResized() {
+		super.onScreenResized();
+		if (taskBar != null) taskBar.onScreenResized();
 	}
 	
 }

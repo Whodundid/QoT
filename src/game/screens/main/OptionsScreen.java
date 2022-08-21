@@ -59,7 +59,7 @@ public class OptionsScreen extends GameScreen {
 		resolution = new WindowButton(this, fullscreen.startX, vSync.endY + 20, 250, 50);
 		resolution.setString("1920x1080");
 		
-		addChild(back, volumeSlider, fpsSlider, upsInput, fullscreen, vSync);
+		addObject(back, volumeSlider, fpsSlider, upsInput, fullscreen, vSync);
 		//addChild(resolution);
 	}
 	

@@ -45,7 +45,7 @@ public class GamePauseWindow extends WindowParent {
 		// Makes it so confirm and deny send an action to this confirmation window
 		IActionObject.setActionReceiver(this, quit, options, resume);
 		
-		addChild(quit, options, resume);
+		addObject(quit, options, resume);
 	}
 	
 	@Override

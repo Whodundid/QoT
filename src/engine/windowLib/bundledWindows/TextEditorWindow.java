@@ -88,8 +88,8 @@ public class TextEditorWindow extends WindowParent {
 		
 		reload.setHoverText("Reload");
 		
-		addChild(document);
-		addChild(save, cancel, reload);
+		addObject(document);
+		addObject(save, cancel, reload);
 	}
 	
 	@Override

@@ -49,8 +49,8 @@ public class EditorScreenTopHeader extends WindowObject {
 		WindowButton.setStringColor(EColors.chalk, terrain, assets, regions, scripts);
 		WindowButton.setSelectedColor(EColors.green, terrain, assets, regions, scripts);
 		
-		addChild(settings);
-		addChild(terrain, scripts, assets, regions);
+		addObject(settings);
+		addObject(terrain, scripts, assets, regions);
 	}
 	
 	@Override

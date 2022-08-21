@@ -31,7 +31,7 @@ public class DeathScreen extends GameScreen {
 		
 		IActionObject.setActionReceiver(this, mainMenu);
 		
-		addChild(mainMenu);
+		addObject(mainMenu);
 	}
 	
 	@Override

@@ -44,8 +44,8 @@ public class RegionSidePanel extends SidePanel {
 		
 		IWindowObject.setEnabledS(false, edit, delete);
 		
-		panel.addChild(regionList);
-		panel.addChild(edit, delete);
+		panel.addObject(regionList);
+		panel.addObject(edit, delete);
 		
 		loadRegions();
 		
@@ -172,7 +172,7 @@ public class RegionSidePanel extends SidePanel {
 				yes.setStringColor(EColors.lred);
 				cancel.setStringColor(EColors.green);
 				
-				addChild(cancel);
+				addObject(cancel);
 			}
 			
 			@Override

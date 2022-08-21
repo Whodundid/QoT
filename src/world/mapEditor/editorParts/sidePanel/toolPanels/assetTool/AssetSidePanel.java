@@ -70,7 +70,7 @@ public class AssetSidePanel extends PaletteSidePanel {
 			b.setHoverText(item.getName());
 			
 			//add to list first then dimension
-			panel.addChild(b);
+			panel.addObject(b);
 			b.setDimensions(bx, by, bw, bw);
 		}
 	}

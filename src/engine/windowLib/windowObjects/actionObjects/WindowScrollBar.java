@@ -317,6 +317,15 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		performAction(this);
 	}
 	
+	@Override
+	public void performAction(Object... args) {
+		if (actionReceiver != null) {
+			//IWindowParent<?> p = actionReceiver.getWindowParent();
+			//if (p != null) p.bringToFront();
+			actionReceiver.actionPerformed(this, args);
+		}
+	}
+	
 	public void setRenderThumb(boolean val) { renderThumb = val; }
 	public void setVisibleAmount(int sizeIn) { visibleAmount = sizeIn; setScrollBarValues(visibleAmount, highVal, (vertical ? height : width)); }
 	public void setHighVal(double valIn) { setScrollBarValues(visibleAmount, valIn, (getDrawVertical() ? height : width)); }

@@ -42,6 +42,7 @@ public class Main {
 		//setup print tracing
 		TracingPrintStream.enableTrace();
 		TracingPrintStream.setTracePrimitives(true);
+		TracingPrintStream.disableTrace();
 		
 		//-------------------------------------------
 		

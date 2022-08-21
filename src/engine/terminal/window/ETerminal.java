@@ -105,7 +105,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 			@Override
 			public void mousePressed(int mXIn, int mYIn, int button) {
 				super.mousePressed(mXIn, mYIn, button);
-				EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
+				//EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
 				if (button == 1) {
 					windowInstance.bringToFront();
 					windowInstance.mousePressed(mXIn, mYIn, button);
@@ -135,7 +135,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		history.setObjectGroup(objectGroup);
 		inputField.setObjectGroup(objectGroup);
 		
-		addChild(inputField, history);
+		addObject(inputField, history);
 		
 		if (!init) {
 			writeln("QoT Terminal initialized..", EColors.seafoam);

@@ -114,10 +114,10 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 		fileArea = new WindowScrollList(this, startX + 2, fileUpBtn.endY + 8, width - 4, faH);
 		fileArea.setBackgroundColor(EColors.pdgray);
 		
-		addChild(backBtn, forwardBtn, fileUpBtn);
-		addChild(cancelBtn, selectBtn);
-		addChild(dirField);
-		addChild(fileArea);
+		addObject(backBtn, forwardBtn, fileUpBtn);
+		addObject(cancelBtn, selectBtn);
+		addObject(dirField);
+		addObject(fileArea);
 		
 		buildDir();
 	}

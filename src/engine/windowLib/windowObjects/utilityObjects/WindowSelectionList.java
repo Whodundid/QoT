@@ -73,7 +73,7 @@ public class WindowSelectionList extends ActionWindowParent {
 		}
 		if (!list.getTextDocument().isEmpty()) list.setSelectedLine(list.getTextLine(0));
 		
-		addChild(select, cancel, list);
+		addObject(select, cancel, list);
 	}
 	
 	@Override

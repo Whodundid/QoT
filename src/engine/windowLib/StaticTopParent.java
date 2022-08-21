@@ -3,6 +3,7 @@ package engine.windowLib;
 import java.util.Deque;
 
 import engine.inputHandlers.Mouse;
+import engine.topOverlay.desktopOverlay.TaskBar;
 import engine.windowLib.windowObjects.actionObjects.WindowButton;
 import engine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
 import engine.windowLib.windowTypes.interfaces.ITopParent;
@@ -144,36 +145,45 @@ public class StaticTopParent extends EGui {
 	/** Debug method used to display topParent information in the top left corner of the screen. */
 	public static void drawDebugInfo(ITopParent<?> objIn) {
 		if (QoT.isDebugMode() && objIn == QoT.getTopRenderer()) {
-			double yPos = 3;
-			double xPos = 0;
+			var top = QoT.getActiveTopParent();
 			
-			//TaskBar b = EnvisionRenderer.instance.getTaskBar();
-			//if (b != null && !b.isHidden() && b.checkDraw()) {
-			//	yPos = b.endY + 4;
-			//}
+			double yPos = 40;
+			double xPos = 3;
 			
-			var ho = objIn.getHighestZObjectUnderMouse();
+			TaskBar bar = QoT.getTopRenderer().getTaskBar();
+			if (bar != null && !bar.isHidden() && bar.willBeDrawn()) {
+				yPos = bar.endY + 6;
+			}
+			
+			var modObj = (top != null) ? top.getModifyingObject() : null;
+			var modType = (top != null) ? top.getModifyType() : null;
+			var lastClickObj = (top != null) ? top.getLastClickedObject() : null;
+			var lastClickTime = (top != null) ? top.getLastClickTime() : null;
+			var focusedObj = (top != null) ? top.getFocusedObject() : null;
+			var ho = (top != null) ? top.getHighestZObjectUnderMouse() : null;
+			var focusLockObj = (top != null) ? top.getFocusLockObject() : null;
+			
 			String out = "null";
 			int zLevel = (ho instanceof IWindowParent<?> wp) ? wp.getZLevel() : -1;
 			
-			String topParent = "TopParent: " + objIn.getTopParent();
+			String topParent = "TopParent: " + top;
 			String focusedObject = "";
 			String focusLockObject = "";
 			//String objects = "objs: " + objIn.getObjects();
-			String modifyType = "ModifyingObject & type: (" + objIn.getModifyingObject() + " : " + objIn.getModifyType() + ")";
+			String modifyType = "ModifyingObject & type: (" + modObj + " : " + modType + ")";
 			String underMouse = "Object under mouse: " + (ho != null ? ho : out) + " " + zLevel;
-			String lastClicked = "Last clicked object: " + objIn.getLastClickedObject() + " : " + objIn.getLastClickTime();
+			String lastClicked = "Last clicked object: " + lastClickObj + " : " + lastClickTime;
 			String mousePos = "Mouse pos: (" + Mouse.getMx() + ", " + Mouse.getMy() + ")";
 			
 			if (objIn.getFocusedObject() instanceof WindowButton b) {
 				focusedObject = "FocuedObject: " + (b.getString().isEmpty() ? b : "EGuiButton: " + b.getString());
 			}
-			else focusedObject = "FocuedObject: " + objIn.getFocusedObject();
+			else focusedObject = "FocuedObject: " + focusedObj;
 			
 			if (objIn.getFocusLockObject() instanceof WindowButton b) {
 				focusLockObject = "FocusLockObject: " + (b.getString().isEmpty() ? b : "EGuiButton: " + b.getString());
 			}
-			else focusLockObject = "FocusLockObject: " + objIn.getFocusLockObject();
+			else focusLockObject = "FocusLockObject: " + focusLockObj;
 			
 			if (ho != null) out = ho.getClass().getName();
 			
@@ -190,34 +200,34 @@ public class StaticTopParent extends EGui {
 			longestX += 5;
 			
 			//draw background
-			drawRect(xPos, yPos - 3, longestX + 1, yPos + 141, EColors.black);
-			drawRect(xPos + 1, yPos - 2, longestX, yPos + 140, EColors.dgray);
+			//drawRect(xPos, yPos - 3, longestX + 1, yPos + 141, EColors.black.opacity(100));
+			drawRect(xPos + 1, yPos - 2, longestX, yPos + 140, EColors.dgray.opacity(150));
 			
 			//--------------------------------------------------------------------------------
 			
 			//draw what the topParent is
-			drawString(topParent, xPos + 3, yPos, EColors.pink);
+			drawString(topParent, xPos + 3, yPos, EColors.pink.opacity(190));
 			
 			//draw the currently focused object - if it's a button, show that too
-			drawString(focusedObject, xPos + 3, yPos + 20, EColors.cyan);
+			drawString(focusedObject, xPos + 3, yPos + 20, EColors.cyan.opacity(190));
 			
 			//draw the current focusLockObject - if it's a button, show that too
-			drawString(focusLockObject, xPos + 3, yPos + 40, EColors.yellow);
+			drawString(focusLockObject, xPos + 3, yPos + 40, EColors.yellow.opacity(190));
 			
 			//draw the topParent's current immediate children
 			//drawStringWithShadow(objects, 2, yPos + 30, 0x70f3ff);
 			
 			//draw the topParent's current modifying object and type
-			drawString(modifyType, xPos + 3, yPos + 60, EColors.lime);
+			drawString(modifyType, xPos + 3, yPos + 60, EColors.lime.opacity(190));
 			
 			//draw the highest object currently under the mouse
-			drawString(underMouse, xPos + 3, yPos + 80, 0xffffbb00);
+			drawString(underMouse, xPos + 3, yPos + 80, EColors.changeOpacity(0xffffbb00, 190));
 			
 			//draw the last clicked object
-			drawString(lastClicked, xPos + 3, yPos + 100, EColors.seafoam);
+			drawString(lastClicked, xPos + 3, yPos + 100, EColors.seafoam.opacity(190));
 			
 			//draw the current mouse position
-			drawString(mousePos, xPos + 3, yPos + 120, EColors.lgray);
+			drawString(mousePos, xPos + 3, yPos + 120, EColors.lgray.opacity(190));
 			
 			//draw escape stopper
 			//drawStringWithShadow("EscapeStopper: " + objIn.getEscapeStopper(), 2, 72, 0x70f3ff);
@@ -453,7 +463,9 @@ public class StaticTopParent extends EGui {
 				return objects.getLast();
 			}
 		}
-		catch (Exception e) { e.printStackTrace(); }
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
@@ -470,7 +482,7 @@ public class StaticTopParent extends EGui {
 			
 			for (var o : children) {
 				//check if the object can even be selected
-				if (o.isVisible() && (o.isClickable() || o.getHoverText() != null)) {
+				if (o.willBeDrawn() && (o.isClickable() || o.getHoverText() != null)) {
 					if (o instanceof IWindowParent<?> wp) {
 						//then check if the mouse is in or around the object if it's resizeable
 						if (o.isMouseInside() || ((o.isResizeable() && o.isMouseOnEdge(mX, mY)) && !(wp.isMinimized() || wp.getMaximizedPosition() == ScreenLocation.TOP))) {

@@ -249,7 +249,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 			
 			//position and add the window
 			if (loc != ObjectPosition.NONE) setPos(windowIn, oldObject, loc);
-			addChild(windowIn);
+			addObject(windowIn);
 			if (this == QoT.getTopRenderer()) TaskBar.windowOpened(windowIn);
 			windowIn.bringToFront();
 			if (transferFocus) windowIn.requestFocus();

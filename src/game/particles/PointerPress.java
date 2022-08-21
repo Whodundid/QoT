@@ -31,7 +31,7 @@ public class PointerPress extends WindowObject {
 		}
 		
 		if (rad <= 0) {
-			getParent().removeChild();
+			getParent().removeObject();
 		}
 		
 		drawCircle(pressX, pressY, rad, 50, -EColors.rainbow());

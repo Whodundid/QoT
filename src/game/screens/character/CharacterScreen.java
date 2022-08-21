@@ -78,7 +78,7 @@ public class CharacterScreen extends GameScreen {
 		
 		WindowButton.setTextures(WindowTextures.plus, WindowTextures.plus_sel, upHealth, upStrength, upMana);
 		
-		addChild(upHealth, upStrength, upMana);
+		addObject(upHealth, upStrength, upMana);
 	}
 	
 	@Override
@@ -170,7 +170,7 @@ public class CharacterScreen extends GameScreen {
 	}
 	
 	@Override
-	public void onWindowResized() {
+	public void onScreenResized() {
 		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
 		updateDrawDimensions();
 		reInitChildren();

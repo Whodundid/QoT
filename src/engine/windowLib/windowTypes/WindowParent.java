@@ -83,7 +83,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		if (drawDefaultBackground) drawDefaultBackground();
 		if (QoT.isDebugMode()) {
 			if (!isMaximized()) {
-				double y = hasHeader() ? getHeader().startY - 9 : startY - 9;
+				double y = hasHeader() ? getHeader().startY - 22 : startY - 22;
 				int pos = 0;
 				int half = -1;
 				String draw = "";
@@ -387,10 +387,10 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	public void setMoveWithParent(boolean val) { moveWithParent = val; }
 	
 	public WindowParent<E> setHeader(WindowHeader<?> headerIn) {
-		if (header != null) removeChild();
+		if (header != null) removeObject();
 		header = headerIn;
 		if (header != null) header.updateButtonVisibility();
-		addChild(header);
+		addObject(header);
 		return this;
 	}
 	

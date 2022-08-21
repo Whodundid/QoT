@@ -50,8 +50,8 @@ public class MainMenuScreen extends GameScreen {
 		
 		mapTest = new WindowButton(this, 10, 10, w, h, "Map Editor");
 		
-		addChild(newGame, loadGame, options, closeGame);
-		addChild(mapTest);
+		addObject(newGame, loadGame, options, closeGame);
+		addObject(mapTest);
 	}
 	
 	@Override

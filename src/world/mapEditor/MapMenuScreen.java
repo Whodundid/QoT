@@ -50,10 +50,10 @@ public class MapMenuScreen extends GameScreen {
 		
 		nameField.setText(QoTSettings.lastEditorMap.get());
 		
-		addChild(newMap, mapDir);
-		addChild(back);
-		addChild(nameLabel, nameField);
-		addChild(loadCur);
+		addObject(newMap, mapDir);
+		addObject(back);
+		addObject(nameLabel, nameField);
+		addObject(loadCur);
 		
 		setDefaultFocusObject(nameField);
 	}

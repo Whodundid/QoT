@@ -3,7 +3,7 @@ package world;
 import java.util.Comparator;
 
 import engine.inputHandlers.Keyboard;
-import engine.inputHandlers.Mouse;
+import engine.renderEngine.textureSystem.GameTexture;
 import engine.topOverlay.GameTopRenderer;
 import engine.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
@@ -20,33 +20,28 @@ import world.worldTiles.WorldTile;
 /** Handles rendering GameWorlds. */
 public class WorldRenderer extends EGui {
 	
+	//--------
+	// Fields
+	//--------
+	
 	private GameWorld world;
-	int distX = 31;
-	int distY = 17;
-	int tileWidth, tileHeight;
-	int pixelWidth, pixelHeight;
-	int x, y, w, h;
+	private int distX = 31;
+	private int distY = 17;
+
+	/** the world coordinates at the center of the screen. */
+	public int midDrawX, midDrawY;
 	
-	double worldXPos, worldYPos;
-	int oldWorldX = Integer.MIN_VALUE, oldWorldY = Integer.MIN_VALUE;
+	private int viewDist = 18;
 	
-	int viewDist = 18;
-	
-	boolean firstPress = false;
 	boolean drawPosBox = false;
 	boolean drawEntityHitboxes = false;
 	boolean drawEntityOutlines = false;
 	
 	private EArrayList<WorldTile> entityOrder = new EArrayList();
 	
-	//---------------------
-	int left;
-	int top;
-	int right;
-	int bot;
-	int dw; //draw width
-	int dh; //draw height
-	//----------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	public WorldRenderer(GameWorld worldIn) {
 		world = worldIn;
@@ -70,6 +65,10 @@ public class WorldRenderer extends EGui {
 			//entityOrder.addAll(world.getEntitiesInWorld());
 		}
 	}
+	
+	//------------------------
+	// Overrides : GameScreen
+	//------------------------
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
@@ -103,156 +102,116 @@ public class WorldRenderer extends EGui {
 			if (!world.isUnderground()) drawRect(0xff4fbaff);
 			
 			//pixel width of each tile
-			w = (int) (world.getTileWidth() * world.getZoom());
+			double w = (int) (world.getTileWidth() * world.getZoom());
 			//pixel height of each tile
-			h = (int) (world.getTileHeight() * world.getZoom());
+			double h = (int) (world.getTileHeight() * world.getZoom());
 			
 			//the left most x coordinate for map drawing
-			x = (int) (midX - (distX * w) - (w / 2));
+			double x = (int) (midX - (distX * w) - (w / 2));
 			//the top most y coordinate for map drawing
-			y = (int) (midY - (distY * h) - (h / 2));
+			double y = (int) (midY - (distY * h) - (h / 2));
 			
-			renderMap();
-			//renderWalls();
-			renderEntities();
-			//drawViewBox();
+			renderMap(x, y, w, h);
+			renderEntities(x, y, w, h);
 			
-			if (drawPosBox) drawPosBox();
-			
-			oldWorldX = QoT.thePlayer.worldX;
-			oldWorldY = QoT.thePlayer.worldY;
+			if (drawPosBox) {
+				drawPosBox(x, y, w, h);
+			}
 		}
 	}
 	
-	private void renderMap() {
+	private void renderMap(double x, double y, double w, double h) {
 		Player p = QoT.thePlayer;
-		double offsetX = (p.startX % w);
-		double offsetY = (p.startY % h);
 		
-		//only update values if needed
-		//if (p.worldX != oldWorldX || p.worldY != oldWorldY) {
-			//restrict drawing to the dimensions of the world
-			left = NumberUtil.clamp(p.worldX - distX, 0, world.getWidth() - 1);
-			top = NumberUtil.clamp(p.worldY - distY, 0, world.getHeight() - 1);
-			right = NumberUtil.clamp(p.worldX + distX, left, world.getWidth() - 1);
-			bot = NumberUtil.clamp(p.worldY + distY, top, world.getHeight() - 1);
-			dw = right - left; //draw width
-			dh = bot - top; //draw height
-		//}
+		//keep the player at the center of the world (THIS SHOULD BE CHANGED TO 'CAMERA' AT SOME POINT!)
+		midDrawX = p.worldX;
+		midDrawY = p.worldY;
 		
-		int worldTileWidth = -world.getTileWidth();
-		int worldTileHeight = -world.getTileHeight();
-		double pStartX = Math.abs(p.startX);
-		double pStartY = Math.abs(p.startY);
+		//uses the player's (SHOULD BE A CAMERA OBJECT) pixel position as an offset to apply to rendered tiles 
+		double offsetX = (p.startX % world.getTileWidth()) * world.zoom;
+		double offsetY = (p.startY % world.getTileHeight()) * world.zoom;
 		
-		//this route should not process wall tiles
+		//calculations to determine how many tiles to draw out in each direction from the mid of the screen
+		int left = NumberUtil.clamp(midDrawX - distX, 0, world.getWidth() - 1);
+		int top = NumberUtil.clamp(midDrawY - distY, 0, world.getHeight() - 1);
+		int right = NumberUtil.clamp(midDrawX + distX, left, world.getWidth() - 1);
+		int bot = NumberUtil.clamp(midDrawY + distY, top, world.getHeight() - 1);
+		
+		//draw the tiles of the world using the calculated dimensions
 		for (int i = left, ix = 0; i <= right; i++, ix++) {
 			for (int j = top, jy = 0; j <= bot; j++, jy++) {
 				WorldTile t = world.getWorldData()[i][j];
-				if (t == null || !t.hasTexture()) continue;
 				
-				double drawPosX = x + ((p.startX <= worldTileWidth) ? pStartX : -offsetX);
-				double drawPosY = y + ((p.startY <= worldTileHeight) ? pStartY : -offsetY);
+				//ignore if either null or texture is null -- actually.. how could it be null?? :thinking:
+				if (t == null) continue;
+				if (!t.hasTexture()) continue;
 				
-				if (p.worldX < distX) drawPosX += (distX - p.worldX) * w;
-				if (p.worldY < distY) drawPosY += (distY - p.worldY) * h;
+				//start at the top-left most screen pixel and add relative offsets accordingly
+				double drawPosX = x;
+				double drawPosY = y;
 				
+				//if near the edges of the map, add offsets to keep map drawn relative to mid of screen
+				if (midDrawX < distX) drawPosX += (distX - midDrawX) * w;
+				if (midDrawY < distY) drawPosY += (distY - midDrawY) * h;
+				
+				//uses the index of the for loop to determine primary screen coordinates
 				double dX = drawPosX + (ix * w);
 				double dY = drawPosY + (jy * h);
 				
-				int brightness = calcBrightness(t.getWorldX() - 1, t.getWorldY() - 1);
-				boolean mouseOver = Mouse.getMx() >= dX &&
-									Mouse.getMx() < (dX + w) &&
-									Mouse.getMy() >= dY &&
-									Mouse.getMy() < (dY + h);
+				//apply the player's (CAMERA'S) offset to the drawn tile
+				dX -= offsetX;
+				dY -= offsetY;
 				
-				t.renderTile(world, dX, dY, w, h, brightness, mouseOver);
+				//call the tile's self rendering code with the proper screen coordinates and dimensions
+				t.renderTile(world, dX, dY, w, h, 0xffffffff, false);
 			}
 		}
 	}
 	
-	private void renderEntities() {
-		EArrayList<Entity> entities = world.getEntitiesInWorld();
+	private void renderEntities(double x, double y, double w, double h) {
+		var entities = world.getEntitiesInWorld();
 		entities.sort(Comparator.comparingInt(e -> e.endY));
 		
 		for (int i = 0; i < entities.size(); i++) {
-			Entity e = entities.get(i);
-			if (e.getTexture() == null) continue;
+			Entity ent = entities.get(i);
+			GameTexture tex = ent.getTexture();
+			if (tex == null) continue;
 			
-			double drawX = 0;
-			double drawY = 0;
-			boolean flip = e.getFacing() == Rotation.RIGHT || e.getFacing() == Rotation.DOWN;
+			boolean flip = ent.getFacing() == Rotation.RIGHT || ent.getFacing() == Rotation.DOWN;
 			
-			if (e == QoT.thePlayer) {
-				drawX = x + distX * w;
-				drawY = y + distY * h;
-				double dw = e.width * world.zoom;
-				double dh = e.height * world.zoom;
-				
-				//shadows
-				for (int s = 0; s < 6; s++) {
-					double rX = (e.width / 4) - (s * e.width / 80);
-					double rY = (e.height / 16) - (s * e.height / 64);
-					drawFilledEllipse((drawX + dw / 2), (drawY + dh), rX, rY, 16, EColors.dgray.opacity(0x16));
-				}
-				
-				//draw the entity on top of the tile it's on (elevated if it's a wall)
-//				if (e.worldX >= 0 && e.worldX < world.getWidth() &&
-//					e.worldY >= 0 && e.worldY < world.getHeight()) {
-//					WorldTile tileUnderEntity = world.getTileAt(e.worldX, e.worldY);
-//					if (tileUnderEntity != null && tileUnderEntity.isWall()) {
-//						var wallHeight = tileUnderEntity.getWallHeight() * h;
-//						drawY -= wallHeight;
-//					}
-//				}
-				
-				drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));
-				drawStringC(e.getHeadText(), drawX + dw / 2, drawY - dh / 2);
+			double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * world.zoom;
+			double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * world.zoom;
+			double entityOffsetX = (ent.startX % world.getTileWidth()) * world.zoom;
+			double entityOffsetY = (ent.startY % world.getTileWidth()) * world.zoom;
+			
+			//transform the world coordinates of the entity to screen x/y coordinates
+			double drawX = (ent.worldX * w) + x;
+			double drawY = (ent.worldY * h) + y;
+			
+			//translate to the middle drawn world tile
+			drawX += (distX - midDrawX) * w;
+			drawY += (distY - midDrawY) * h;
+			
+			if (ent != QoT.thePlayer) {
+				drawX += entityOffsetX;
+				drawY += entityOffsetY;
+				drawX -= cameraOffsetX;
+				drawY -= cameraOffsetY;
 			}
-			else {
-				drawX = x + (e.startX) + (distX - QoT.thePlayer.worldX) * w;
-				drawY = y + (e.startY) + (distY - QoT.thePlayer.worldY) * h;
-				
-				double offsetX = (QoT.thePlayer.startX % w);
-				double offsetY = (QoT.thePlayer.startY % h);
-				drawX -= offsetX;
-				drawY -= offsetY;
-				
-				if (drawX + e.width > x &&
-					drawX < x + w + (distX * 2 * w) &&
-					drawY + e.height > y &&
-					drawY < y + h + (distY * 2 * h))
-				{
-					double dw = e.width * world.zoom;
-					double dh = e.height * world.zoom;
-					
-					//shadows
-					for (int s = 0; s < 12; s++) {
-						double rX = (e.width / 3) - (s * e.width / 80);
-						double rY = (e.height / 8) - (s * e.height / 64);
-						drawFilledEllipse((drawX + dw / 2), (drawY + dh - dh / 32), rX, rY, 16, EColors.vdgray.opacity(0x16));
-					}
-					
-					//draw the entity on top of the tile it's on (elevated if it's a wall)
-//					if (e.worldX >= 0 && e.worldX < world.getWidth() &&
-//						e.worldY >= 0 && e.worldY < world.getHeight()) {
-//						WorldTile tileUnderEntity = world.getTileAt(e.worldX, e.worldY);
-//						if (tileUnderEntity != null && tileUnderEntity.isWall()) {
-//							var wallHeight = tileUnderEntity.getWallHeight() * h;
-//							drawY -= wallHeight;
-//						}
-//					}
-					
-					drawTexture(e.getTexture(), drawX, drawY, dw, dh, flip, calcBrightness(e.worldX, e.worldY));
-					drawStringC(e.getHeadText(), drawX + e.width / 2, drawY - e.height / 2);
-				}
-			}
+			
+			//drawY -= world.getTileHeight() * world.zoom;
+			
+			//calculate the entity's draw width and height based off of actual dims and zoom
+			double drawW = ent.width * world.getZoom();
+			double drawH = ent.height * world.getZoom();
+			
+			drawTexture(tex, drawX, drawY, drawW, drawH, flip);
 			
 			if (drawEntityHitboxes) {
-				double colSX = drawX + (e.getCollision().startX * world.zoom);
-				double colSY = drawY + (e.getCollision().startY * world.zoom);
-				double colEX = colSX + (e.getCollision().width * world.zoom);
-				double colEY = colSY + (e.getCollision().height * world.zoom);
+				double colSX = drawX + (ent.getCollision().startX * world.zoom);
+				double colSY = drawY + (ent.getCollision().startY * world.zoom);
+				double colEX = colSX + (ent.getCollision().width * world.zoom);
+				double colEY = colSY + (ent.getCollision().height * world.zoom);
 				
 				drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
 			}
@@ -260,12 +219,39 @@ public class WorldRenderer extends EGui {
 			if (drawEntityOutlines) {
 				double colSX = drawX;
 				double colSY = drawY;
-				double colEX = colSX + e.width;
-				double colEY = colSY + e.height;
+				double colEX = colSX + ent.width * world.zoom;
+				double colEY = colSY + ent.height * world.zoom;
 				
 				drawHRect(colSX, colSY, colEX, colEY, 1, EColors.blue);
 			}
 		}
+	}
+	
+	private void drawPosBox(double x, double y, double w, double h) {
+		Player p = QoT.thePlayer;
+		
+		double drawX = x + w * distX;
+		double drawY = y + h * distY;
+		
+		double offsetX = (p.startX % world.getTileWidth());
+		double offsetY = (p.startY % world.getTileHeight());
+		
+		drawX -= offsetX * world.zoom;
+		drawY -= offsetY * world.zoom;
+		
+		double sX = drawX;
+		double sY = drawY;
+		double eX = sX + w;
+		double eY = sY + h;
+		drawHRect(sX, sY, eX, eY, 2, EColors.red);
+	}
+	
+	private void drawViewBox(double x, double y, double w, double h, int distX, int distY) {
+		int dsX = (int) (x);
+		int dsY = (int) (y);
+		int deX = (int) (x + w + (distX * 2 * w));
+		int deY = (int) (y + h + (distY * 2 * h));
+		drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
 	}
 	
 	private int calcBrightness(int x, int y) {
@@ -277,33 +263,6 @@ public class WorldRenderer extends EGui {
 			return EColors.changeBrightness(0xffffffff, ratio);
 		}
 		return 0xffffffff;
-	}
-	
-	private void drawPosBox() {
-		Player p = QoT.thePlayer;
-		
-		double drawX = x + w * distX;
-		double drawY = y + h * distY;
-		
-		double offsetX = (p.startX % w);
-		double offsetY = (p.startY % h);
-		
-		drawX -= offsetX;
-		drawY -= offsetY;
-		
-		double sX = drawX;
-		double sY = drawY;
-		double eX = sX + w;
-		double eY = sY + h;
-		drawHRect(sX, sY, eX, eY, 2, EColors.red);
-	}
-	
-	private void drawViewBox() {
-		int dsX = x;
-		int dsY = y;
-		int deX = x + w + (distX * 2 * w);
-		int deY = y + h + (distY * 2 * h);
-		drawHRect(dsX, dsY, deX, deY, 2, EColors.red);
 	}
 	
 	public void onWindowResized() {
@@ -325,8 +284,17 @@ public class WorldRenderer extends EGui {
 		
 	}
 	
+	//---------
+	// Getters
+	//---------
+	
 	public int getDistX() { return distX; }
 	public int getDistY() { return distY; }
+	
+	//---------
+	// Setters
+	//---------
+	
 	public void setDistX(int in) { distX = in; }
 	public void setDistY(int in) { distY = in; }
 	

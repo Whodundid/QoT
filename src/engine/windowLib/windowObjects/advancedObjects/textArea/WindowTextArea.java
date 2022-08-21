@@ -168,7 +168,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	
 	public void listClick(int mXIn, int mYIn, int button) {
 		if (button == 0) {
-			EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
+			//EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
 			
 			if (isEditable() && textDocument.isEmpty()) {
 				var l = addTextLine();

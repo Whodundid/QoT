@@ -79,12 +79,12 @@ public class NewMapCreatorScreen extends GameScreen {
 		widthField.setText(width + "");
 		heightField.setText(height + "");
 		
-		addChild(back);
-		addChild(nameLabel, nameField);
-		addChild(widthHeightLabel, widthField, heightField);
-		addChild(emptyLabel, emptyMap);
-		addChild(fillWithLabel, tileSelection);
-		addChild(create);
+		addObject(back);
+		addObject(nameLabel, nameField);
+		addObject(widthHeightLabel, widthField, heightField);
+		addObject(emptyLabel, emptyMap);
+		addObject(fillWithLabel, tileSelection);
+		addObject(create);
 	}
 
 	@Override

@@ -428,7 +428,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		}
 	}
 	
-	public void onWindowResized() {
+	public void onScreenResized() {
 		//handle windows
 		int oldW = res.getWidth();
 		int oldH = res.getHeight();
