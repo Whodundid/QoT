@@ -1,13 +1,13 @@
 package game.entities.neutral;
 
-import assets.textures.entity.EntityTextures;
-import engine.animationHandler.AnimationHandler;
+import envision.game.animations.AnimationHandler;
+import envision.game.entity.Enemy;
+import envision.game.entity.Entity;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
 import eutil.random.RandomUtil;
-import game.entities.Entity;
-import game.entities.enemies.Enemy;
-import main.QoT;
+import game.QoT;
+import game.assets.textures.entity.EntityTextures;
 
 public class WhodundidsBrother extends Enemy {
 

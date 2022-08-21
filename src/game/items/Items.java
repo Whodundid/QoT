@@ -1,8 +1,8 @@
 package game.items;
 
-import game.items.potions.Potion;
+import envision.game.items.Potion;
+import envision.game.items.Weapon;
 import game.items.potions.healing.Healing_Lesser;
-import game.items.weapons.Weapon;
 import game.items.weapons.melee.swords.Sword_Wooden;
 
 public class Items {

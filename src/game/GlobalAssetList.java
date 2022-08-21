@@ -1,8 +1,11 @@
 package game;
 
+import envision.game.GameObject;
+import envision.game.world.mapEditor.editorUtil.PlayerSpawnPosition;
 import eutil.datatypes.EArrayList;
-import game.doodads.nature.BirchTree;
-import game.doodads.nature.PineTree;
+import game.doodads.BirchTree;
+import game.doodads.Bush0;
+import game.doodads.PineTree;
 import game.entities.enemies.Goblin;
 import game.entities.enemies.Thyrah;
 import game.entities.enemies.TrollBoar;
@@ -12,8 +15,7 @@ import game.entities.house.Chair;
 import game.entities.house.Crate;
 import game.entities.house.Stool;
 import game.entities.neutral.WhodundidsBrother;
-import game.entities.player.Player;
-import world.mapEditor.editorUtil.PlayerSpawnPosition;
+import game.entities.player.QoT_Player;
 
 public class GlobalAssetList {
 
@@ -21,7 +23,7 @@ public class GlobalAssetList {
 	
 	static {
 		assets.add(new Goblin());
-		assets.add(new Player());
+		assets.add(new QoT_Player());
 		assets.add(new Thyrah());
 		assets.add(new TrollBoar());
 		assets.add(new Whodundid());
@@ -35,6 +37,7 @@ public class GlobalAssetList {
 		assets.add(new Stool());
 		
 		assets.add(new BirchTree());
+		assets.add(new Bush0());
 	}
 	
 	public static EArrayList<GameObject> getAssets() {

@@ -1,6 +1,6 @@
 package game.screens.gameplay.combat;
 
-import game.entities.Entity;
+import envision.game.entity.Entity;
 
 /**
  * Used to keep track of all entities on one team.

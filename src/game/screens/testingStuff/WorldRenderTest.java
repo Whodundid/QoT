@@ -1,26 +1,27 @@
 package game.screens.testingStuff;
 
-import engine.inputHandlers.Keyboard;
-import engine.inputHandlers.Mouse;
-import engine.renderEngine.fontRenderer.FontRenderer;
-import engine.screenEngine.GameScreen;
-import engine.windowLib.windowObjects.actionObjects.WindowButton;
-import engine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
-import game.entities.Entity;
-import game.entities.player.Player;
-import main.QoT;
-import world.GameWorld;
-import world.mapEditor.NewMapCreatorScreen;
-import world.worldTiles.WorldTile;
+import game.QoT;
+import game.entities.player.QoT_Player;
 
 import java.io.File;
 import java.util.Stack;
 
 import org.lwjgl.glfw.GLFW;
+
+import envision.game.entity.Entity;
+import envision.game.screens.GameScreen;
+import envision.game.world.GameWorld;
+import envision.game.world.mapEditor.NewMapCreatorScreen;
+import envision.game.world.worldTiles.WorldTile;
+import envision.inputHandlers.Keyboard;
+import envision.inputHandlers.Mouse;
+import envision.renderEngine.fontRenderer.FontRenderer;
+import envision.windowLib.windowObjects.actionObjects.WindowButton;
+import envision.windowLib.windowTypes.interfaces.IActionObject;
 
 public class WorldRenderTest extends GameScreen {
 
@@ -124,7 +125,7 @@ public class WorldRenderTest extends GameScreen {
 			drawString("Dims: " + world.getWidth() + " " + world.getHeight(), reload.startX + 10, reload.endY + 60);
 		}
 		
-		Player p = QoT.thePlayer;
+		QoT_Player p = QoT.thePlayer;
 		
 		drawString("Dist: " + distX + " " + distY, reload.startX + 10, reload.endY + 20);
 		//drawString("Zoom: " + NumberUtil.roundD2(world.getZoom()), reload.startX + 10, reload.endY + 60);
@@ -156,7 +157,7 @@ public class WorldRenderTest extends GameScreen {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		Player p = QoT.thePlayer;
+		QoT_Player p = QoT.thePlayer;
 		
 		if (object == up) { p.move(0, -1); }
 		if (object == left) { p.move(-1, 0); }
@@ -199,7 +200,7 @@ public class WorldRenderTest extends GameScreen {
 	private void loadWorld() {
 		if (mapFile != null) {
 			world = new GameWorld(mapFile);
-			QoT.setPlayer(new Player("Test Player"));
+			QoT.setPlayer(new QoT_Player("Test Player"));
 			
 			/*
 			for (int i = 0; i < NumberUtil.getRoll(5, 10); i++) {
@@ -234,7 +235,7 @@ public class WorldRenderTest extends GameScreen {
 		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_S) || Keyboard.isKeyDown(GLFW.GLFW_KEY_DOWN)) { down.setForceDrawHover(true); }
 		if (Keyboard.isKeyDown(GLFW.GLFW_KEY_D) || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT)) { right.setForceDrawHover(true); }
 		
-		Player p = QoT.thePlayer;
+		QoT_Player p = QoT.thePlayer;
 		
 		if (Keyboard.isWDown()) { p.move(0, -1.5); }
 		if (Keyboard.isADown()) { p.move(-1.5, 0); }
@@ -243,7 +244,7 @@ public class WorldRenderTest extends GameScreen {
 	}
 	
 	private void drawMap(int x, int y, int w, int h) {
-		Player p = QoT.thePlayer;
+		QoT_Player p = QoT.thePlayer;
 		double offsetX = (p.startX % w);
 		double offsetY = (p.startY % h);
 		
@@ -272,7 +273,7 @@ public class WorldRenderTest extends GameScreen {
 	}
 	
 	private void drawPosBox(int x, int y, int w, int h) {
-		Player p = QoT.thePlayer;
+		QoT_Player p = QoT.thePlayer;
 		
 		double drawX = x + w * distX;
 		double drawY = y + h * distY;

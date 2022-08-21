@@ -1,10 +1,10 @@
 package game.particles;
 
-import engine.windowLib.windowTypes.WindowObject;
+import envision.game.particles.Particle;
 import eutil.colors.EColors;
-import main.QoT;
+import game.QoT;
 
-public class DamageSplash extends WindowObject {
+public class DamageSplash extends Particle {
 	
 	double posX, posY;
 	double damage;

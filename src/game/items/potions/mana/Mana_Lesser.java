@@ -1,8 +1,8 @@
 package game.items.potions.mana;
 
-import game.entities.Entity;
+import envision.game.entity.Entity;
+import envision.game.items.Potion;
 import game.items.ItemList;
-import game.items.potions.Potion;
 
 public class Mana_Lesser extends Potion {
 	
