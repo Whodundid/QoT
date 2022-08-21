@@ -21,7 +21,6 @@ public abstract class Entity extends GameObject {
 	protected String headText = "";
 	protected boolean passable = false;
 	protected boolean allowNoClip = false;
-	protected Rotation facing = Rotation.RIGHT;
 	
 	/** This entity's current level. */
 	protected int level;
@@ -373,7 +372,6 @@ public abstract class Entity extends GameObject {
 	public EDimension getCollision() { return collisionBox; }
 	public boolean isPassable() { return passable; }
 	public boolean isNoClipping() { return allowNoClip; }
-	public Rotation getFacing() { return facing; }
 	public String getHeadText() { return headText; }
 
 	public int getLevel() { return level; }
@@ -402,7 +400,6 @@ public abstract class Entity extends GameObject {
 	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }
 	public Entity setCollisionBox(double sX, double sY, double eX, double eY) { collisionBox = new EDimension(sX, sY, eX, eY); return this; }
-	public Entity setFacing(Rotation dir) { facing = dir; return this; }
 	public Entity setHeadText(String textIn) { headText = textIn; return this; }
 	
 	/** Instantaneously moves this entity to the target world coordinates.

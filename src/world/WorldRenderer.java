@@ -49,7 +49,7 @@ public class WorldRenderer extends EGui {
 		
 		if (world != null) {
 			//load entities
-			world.getEntitySpawns().forEach(e -> e.spawnEntity(world));
+			world.spawnEntities();
 			
 			//add all walls to a separate list
 			int w = world.getWidth();
@@ -177,8 +177,6 @@ public class WorldRenderer extends EGui {
 			GameTexture tex = ent.getTexture();
 			if (tex == null) continue;
 			
-			boolean flip = ent.getFacing() == Rotation.RIGHT || ent.getFacing() == Rotation.DOWN;
-			
 			double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * world.zoom;
 			double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * world.zoom;
 			double entityOffsetX = (ent.startX % world.getTileWidth()) * world.zoom;
@@ -199,13 +197,12 @@ public class WorldRenderer extends EGui {
 				drawY -= cameraOffsetY;
 			}
 			
-			//drawY -= world.getTileHeight() * world.zoom;
-			
 			//calculate the entity's draw width and height based off of actual dims and zoom
 			double drawW = ent.width * world.getZoom();
 			double drawH = ent.height * world.getZoom();
 			
-			drawTexture(tex, drawX, drawY, drawW, drawH, flip);
+			//render the entity
+			ent.renderObject(drawX, drawY, drawW, drawH);
 			
 			if (drawEntityHitboxes) {
 				double colSX = drawX + (ent.getCollision().startX * world.zoom);

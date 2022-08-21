@@ -181,6 +181,10 @@ public class GameWorld {
 		entitySpawns.add(spawnIn);
 	}
 	
+	public void spawnEntities() {
+		entitySpawns.forEach(e -> e.spawnEntity(this));
+	}
+	
 	//----------------------------------
 	// Map Entity Distance Calculations
 	//----------------------------------
