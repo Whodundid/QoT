@@ -7,7 +7,7 @@ public class WorldLoadedEvent extends WorldEvent {
 
 	private final GameWorld world;
 	
-	protected WorldLoadedEvent(GameWorld worldIn) {
+	public WorldLoadedEvent(GameWorld worldIn) {
 		super(EventType.WORLD_LOADED, true);
 		world = worldIn;
 	}

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import envision.events.types.world.WorldAddedEntityEvent;
 import envision.game.entity.Entity;
 import envision.game.world.mapEditor.editorUtil.PlayerSpawnPosition;
 import envision.game.world.worldTiles.WorldTile;
@@ -164,6 +165,7 @@ public class GameWorld {
 		
 		//assign entity ID
 		ent.setEntityID(getNextEntityID());
+		QoT.getEventHandler().postEvent(new WorldAddedEntityEvent(this, ent));
 		
 		//check if player
 		if (ent == QoT.thePlayer) {

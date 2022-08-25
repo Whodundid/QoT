@@ -54,6 +54,8 @@ public class EventHandler {
 		
 		//grab subscriber list for the current event
 		EArrayList<IEventListener> subscribers = subscriberMap.get(type);
+		if (subscribers == null) return;
+		
 		//distribute event to subscribers
 		if (subscribers.isNotEmpty()) {
 			for (var s : subscribers) {

@@ -77,10 +77,10 @@ public class QoT implements EnvisionGame {
 	private static WindowResizeListener resizeListener;
 	private static FontRenderer fontRenderer;
 	private static TextureSystem textureSystem;
-	private static EventHandler eventSystem;
 	
 	private static GameTopScreen<?> topRenderer;
 	private static TerminalHandler terminalHandler;
+	private static EventHandler eventHandler;
 	
 	private static int width;
 	private static int height;
@@ -137,6 +137,7 @@ public class QoT implements EnvisionGame {
 		catch (Exception e) {
 			LauncherLogger.logError(e);
 			FileOpener.openFile(LauncherLogger.getLogFile());
+			throw e;
 		}
 	}
 	
@@ -219,7 +220,7 @@ public class QoT implements EnvisionGame {
 		
 		topRenderer = GameTopScreen.getInstance();
 		terminalHandler = TerminalHandler.getInstance();
-		eventSystem = EventHandler.getInstance();
+		eventHandler = EventHandler.getInstance();
 		//tickManager = new TickManager();
 		
 		GameTextures.instance().onRegister(textureSystem);
@@ -308,7 +309,7 @@ public class QoT implements EnvisionGame {
 		curNumTicks++;
 		
 		//process game events
-		eventSystem.onGameTick();
+		eventHandler.onGameTick();
 		
 		if (currentScreen != null) currentScreen.onGameTick(curNumTicks);
 		
@@ -634,6 +635,8 @@ public class QoT implements EnvisionGame {
 	public static GameScreen<?> getCurrentScreen() { return currentScreen; }
 	/** Returns this game's central terminal command handler. */
 	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
+	
+	public static EventHandler getEventHandler() { return eventHandler; }
 	
 	/** Returns this game's constant player object. */
 	public static QoT_Player getPlayer() { return thePlayer; }

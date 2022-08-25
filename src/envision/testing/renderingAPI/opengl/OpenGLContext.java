@@ -1,13 +1,15 @@
 package envision.testing.renderingAPI.opengl;
 
+import java.util.Objects;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
+import envision.inputHandlers.WindowResizeListener;
 import envision.testing.renderingAPI.RendererContextType;
 import envision.testing.renderingAPI.RenderingContext;
-import envision.windowLib.WindowSize;
-import game.QoT;
+import game.launcher.LauncherLogger;
 
 public class OpenGLContext extends RenderingContext {
 	
@@ -23,6 +25,7 @@ public class OpenGLContext extends RenderingContext {
 	public void init() {
 		GLFW.glfwMakeContextCurrent(windowHandle);
 		GL.createCapabilities();
+		GL_ErrorReporter.setup();
 		isInit = true;
 	}
 	
@@ -33,14 +36,40 @@ public class OpenGLContext extends RenderingContext {
 	
 	@Override
 	public void onWindowResized() {
-		WindowSize size = QoT.getWindowSize();
-		GL11.glViewport(0, 0, size.getWidth(), size.getHeight());
+		int width = WindowResizeListener.getWidth();
+		int height = WindowResizeListener.getHeight();
+		GL11.glViewport(0, 0, width, height);
 	}
 
 	@Override
 	public void swapBuffers() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GLFW.glfwSwapBuffers(windowHandle);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+	}
+
+	@Override
+	public void clearErrors() {
+		while (GL11.glGetError() != GL11.GL_NO_ERROR);
+	}
+
+	@Override
+	public boolean checkErrors() {
+		int error = -1;
+		while ((error = GL11.glGetError()) != GL11.GL_NO_ERROR) {
+			String errorString = "[OpenGL Error] (0x" + Integer.toHexString(error) + ")";
+			System.err.println(errorString);
+			LauncherLogger.logError(errorString);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void call(Runnable r) {
+		Objects.requireNonNull(r);
+		clearErrors();
+		r.run();
+		if (checkErrors()) throw new RuntimeException();
 	}
 	
 }

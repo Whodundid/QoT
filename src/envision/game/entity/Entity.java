@@ -100,6 +100,19 @@ public abstract class Entity extends GameObject {
 		}
 	}
 	
+	//-----------
+	// Overrides
+	//-----------
+	
+	@Override
+	public void renderObject(double x, double y, double w, double h) {
+		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
+		
+		drawTexture(sprite, x, y, w, h, flip);
+		
+		drawStringC(headText, x + w/2, y - h/4);
+	}
+	
 	//---------
 	// Methods
 	//---------

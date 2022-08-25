@@ -111,6 +111,8 @@ public abstract class GameScreen<E>
 	 * @param hist
 	 */
 	public void closeScreen(boolean hist) {
+		QoT.getEventHandler().unsubscribeFromAll(this);
+		
 		if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
 			var screen = screenHistory.pop();
 			screen.setScreenHistory(screenHistory);

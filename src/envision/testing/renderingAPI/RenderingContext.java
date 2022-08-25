@@ -13,7 +13,11 @@ public abstract class RenderingContext {
 	public abstract void onWindowResized();
 	public abstract void swapBuffers();
 	
-	public RendererContextType getContextType() { return contextType; }
+	public abstract void clearErrors();
+	public abstract boolean checkErrors();
 	
+	public abstract void call(Runnable r);
+	
+	public RendererContextType getContextType() { return contextType; }
 	
 }

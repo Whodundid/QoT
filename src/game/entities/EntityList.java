@@ -3,7 +3,9 @@ package game.entities;
 import envision.game.entity.Entity;
 import eutil.random.RandomUtil;
 import game.doodads.BirchTree;
+import game.doodads.Bush0;
 import game.doodads.PineTree;
+import game.doodads.StoneGroundClutter;
 import game.entities.enemies.Goblin;
 import game.entities.enemies.Thyrah;
 import game.entities.enemies.TrollBoar;
@@ -31,6 +33,7 @@ public enum EntityList {
 	
 	BIRCH(11),
 	BUSH0(12),
+	STONE_GROUND_CLUTTER(13),
 	;
 	
 	public final int ID;
@@ -64,6 +67,8 @@ public enum EntityList {
 		case STOOL: return new Stool();
 		
 		case BIRCH: return new BirchTree();
+		case BUSH0: return new Bush0();
+		case STONE_GROUND_CLUTTER: return new StoneGroundClutter();
 		default: return null;
 		}
 	}

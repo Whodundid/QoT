@@ -3,9 +3,11 @@ package envision.game.world.mapEditor;
 import java.io.File;
 import java.util.Comparator;
 
+import envision.events.GameEvent;
 import envision.game.entity.Entity;
 import envision.game.screens.GameScreen;
 import envision.game.sounds.SoundEngine;
+import envision.game.world.EntitySpawn;
 import envision.game.world.GameWorld;
 import envision.game.world.Region;
 import envision.game.world.mapEditor.editorParts.sidePanel.EditorSidePanel;
@@ -22,6 +24,7 @@ import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.QoT;
@@ -325,6 +328,11 @@ public class MapEditorScreen extends GameScreen {
 		}
 	}
 	
+	@Override
+	public void onEvent(GameEvent e) {
+		System.out.println("GAME EVENT: " + e);
+	}
+	
 	//------------------------
 	// Private Editor Methods
 	//------------------------
@@ -350,14 +358,12 @@ public class MapEditorScreen extends GameScreen {
 			double oldZoom = 1;
 			if (world != null) oldZoom = world.getZoom();
 			world = new GameWorld(mapFile);
-			world.spawnEntities();
 			world.setZoom(oldZoom);
 		}
 		else if (world != null) {
 			double oldZoom = world.getZoom();
 			world.getHighlightedRegions().clear();
 			mapFile = world.getWorldFile();
-			world.spawnEntities();
 			world.setZoom(oldZoom);
 		}
 		
@@ -432,7 +438,9 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	private void renderEntities(double x, double y, double w, double h) {
-		var entities = world.getEntitiesInWorld();
+		EArrayList<EntitySpawn> spawns = world.getEntitySpawns();
+		EArrayList<Entity> entities = new EArrayList<>();
+		for (var s : spawns) entities.add(s.getEntity(world));
 		entities.sort(Comparator.comparingInt(e -> e.endY));
 		
 		for (int i = 0; i < entities.size(); i++) {
@@ -464,7 +472,8 @@ public class MapEditorScreen extends GameScreen {
 			}
 			
 			//render the entity
-			ent.renderObject(drawX, drawY, drawW, drawH);
+			//ent.renderObject(drawX, drawY, drawW, drawH);
+			drawTexture(tex, drawX, drawY, drawW, drawH);
 			
 			if (settings.drawEntityHitBoxes) {
 				drawHRect(drawX, drawY, drawX + drawW, drawY + drawH, 1, EColors.blue);

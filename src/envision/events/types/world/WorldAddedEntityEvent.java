@@ -9,7 +9,7 @@ public class WorldAddedEntityEvent extends WorldEvent {
 	private final GameWorld world;
 	private final Entity ent;
 	
-	protected WorldAddedEntityEvent(GameWorld worldIn, Entity entIn) {
+	public WorldAddedEntityEvent(GameWorld worldIn, Entity entIn) {
 		super(EventType.WORLD_ADDED_ENTITY, true);
 		world = worldIn;
 		ent = entIn;

@@ -19,7 +19,7 @@ public class Main {
 	public static final boolean RUN_LAUNCHER = true;
 	
 	/** Uses the internal jar resources instead of the install dir's. */
-	public static final boolean USE_INTERNAL_RESOURCES = true;
+	public static final boolean USE_INTERNAL_RESOURCES = false;
 	
 	/**
 	 * Instructs the launcher/installer on whether or not the game's internal

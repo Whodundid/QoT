@@ -34,7 +34,9 @@ public final class Shaders {
 	//-----------------------
 	
 	public static void bind(ShaderProgram program) {
-		if (init && program != null && program.isBuilt()) { program.bind(); }
+		if (init && program != null && program.isBuilt()) {
+			program.bind();
+		}
 	}
 	
 	//---------------------

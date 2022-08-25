@@ -26,7 +26,7 @@ public class BushTextures extends TextureLoader {
 	
 	public static final GameTexture
 	
-	bush_0 = new GameTexture(textureDir, "stone_0.png");
+	bush_0 = new GameTexture(textureDir, "bush_0.png");
 	
 	//-----------
 	// Overrides

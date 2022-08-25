@@ -15,11 +15,15 @@ import envision.inputHandlers.WindowResizeListener;
 import envision.layers.LayerHandler;
 import envision.renderEngine.RenderEngine;
 import envision.terminal.TerminalHandler;
+import envision.testing.renderingAPI.error.ErrorReportingLevel;
+import envision.testing.renderingAPI.error.IRendererErrorReceiver;
+import envision.testing.renderingAPI.error.RendererErrorReporter;
 import envision.topOverlay.GameTopScreen;
 import envision_lang.EnvisionLang;
+import game.launcher.LauncherLogger;
 import game.settings.QoTSettings;
 
-public final class Envision {
+public final class Envision implements IRendererErrorReceiver {
 	
 	//--------
 	// Logger
@@ -90,9 +94,23 @@ public final class Envision {
 	private int frames = 0;
 	private int curFrameRate = 0;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//-----------
+	// Overrides
+	//-----------
+	
+	public void onRenderErrorReporterMessage(String msg, ErrorReportingLevel reportingLevel) {
+		if (reportingLevel == ErrorReportingLevel.HIGH) {
+			LauncherLogger.logError(msg);
+			System.out.println(msg);
+		}
+		else {
+			LauncherLogger.log(msg);
+		}
+	}
+	
+	//-------------------
+	// Instance Creation
+	//-------------------
 	
 	public static void createGame(EnvisionGame gameObject) { createGame(gameObject, "Envision Game Engine"); }
 	public static void createGame(EnvisionGame gameObject, String gameName) { createInstance(gameObject, gameName); }
@@ -116,6 +134,9 @@ public final class Envision {
 		gameCreated = true;
 		gameObject = gameClassIn;
 		gameName = gameNameIn;
+		
+		//set error reporter for renderer
+		RendererErrorReporter.setReceiver(this);
 		
 		//init engine
 		renderEngine = RenderEngine.getInstance();
@@ -143,7 +164,8 @@ public final class Envision {
 	//----------
 	
 	public static void shutdown() {
-		if (instance == null) throw new IllegalStateException("No Envision Engine instance exists -- cannot shutdown!");
+		if (instance == null)
+			throw new IllegalStateException("No Envision Engine instance exists -- cannot shutdown!");
 		instance.shutdownEngine();
 	}
 	

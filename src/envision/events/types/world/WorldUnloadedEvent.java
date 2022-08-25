@@ -7,7 +7,7 @@ public class WorldUnloadedEvent extends WorldEvent {
 
 	private final GameWorld world;
 	
-	protected WorldUnloadedEvent(GameWorld worldIn) {
+	public WorldUnloadedEvent(GameWorld worldIn) {
 		super(EventType.WORLD_UNLOADED, true);
 		world = worldIn;
 	}
