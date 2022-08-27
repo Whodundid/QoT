@@ -85,7 +85,7 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	private void loadDefault() {
-		File f = new File(QoTSettings.getEditorWorldsDir(), "test.twld");
+		File f = new File(QoTSettings.getEditorWorldsDir(), "new.twld");
 		if (f.exists()) {
 			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
 			GameWorld w = QoT.loadWorld(new GameWorld(f));
