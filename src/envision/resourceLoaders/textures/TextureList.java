@@ -8,6 +8,7 @@ import envision.renderEngine.textureSystem.GameTexture;
 import envision.resourceLoaders.IResourceManager;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
+import eutil.file.FileUtil;
 import game.QoT;
 
 /**
@@ -110,14 +111,20 @@ public class TextureList implements IResourceManager {
 		
 	}
 	
+	private void loadFile() {
+		if (!FileUtil.fileExists(textureFile)) return;
+		
+		
+	}
+	
 	@Override
 	public boolean isLoaded() {
-		return false;
+		return isLoaded;
 	}
 	
 	@Override
 	public File getResourceFile() {
-		return null;
+		return textureFile;
 	}
 	
 }

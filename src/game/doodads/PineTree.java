@@ -12,8 +12,12 @@ public class PineTree extends Entity {
 		super("pine");
 		init(posX, posY, 256, 256);
 		sprite = TreeTextures.tree_pine_0;
-		this.facing = (RandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
-		setCollisionBox(startX + 26, endY - 25, endX - 26, endY);
+		facing = (RandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
+		
+		double sx = (facing == Rotation.RIGHT) ? 15 : 5;
+		double ex = (facing == Rotation.RIGHT) ? 5 : 15;
+		
+		setCollisionBox(midX - sx, endY - 15, midX + ex, endY);
 	}
 	
 	@Override

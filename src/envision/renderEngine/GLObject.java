@@ -309,7 +309,10 @@ public abstract class GLObject {
 			bindTexture(tex);
 			
 			begin(GLModes.QUADS);
-			tv(flip, rotation, x, y, x + w, y + h);
+			//as far as I am concerned, this value might as well have come from the ether..
+			//However, it's necessary in order to prevent weird texture artifacts at the bottom
+			final double adjustment = 0.0019836425781818436357012429;
+			tv(flip, rotation, x, y, x + w, y + h + adjustment);
 			
 			draw();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -502,13 +505,13 @@ public abstract class GLObject {
 	
 	/** 'to double for x' converts a given value into a corresponding double value between -1.0f and 1.0f based on window x size. */
 	public static float tdx(Number valIn) {
-		float midX = (float) QoT.getWidth() / 2;
+		float midX = (float) QoT.getWidth() / 2.0f;
 		return (float) (((valIn.floatValue() * QoT.getGameScale()) - midX) / midX);
 	}
 	
 	/** 'to double for y' converts a given value into a corresponding double value between -1.0f and 1.0f based on window y size. */
 	public static float tdy(Number valIn) {
-		float midY = (float) QoT.getHeight() / 2;
+		float midY = (float) QoT.getHeight() / 2.0f;
 		return (float) ((midY - (valIn.floatValue() * QoT.getGameScale())) / midY);
 	}
 	

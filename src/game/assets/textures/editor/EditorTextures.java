@@ -38,6 +38,7 @@ public class EditorTextures extends TextureLoader {
 	line = new GameTexture(textureDir, "line.png"),
 	select = new GameTexture(textureDir, "select.png"),
 	shape = new GameTexture(textureDir, "shape.png"),
+	place = new GameTexture(textureDir, "place.png"),
 	
 	play = new GameTexture(textureDir, "play.png"),
 	stop = new GameTexture(textureDir, "stop.png");
@@ -59,6 +60,7 @@ public class EditorTextures extends TextureLoader {
 		reg(sys, line);
 		reg(sys, select);
 		reg(sys, shape);
+		reg(sys, place);
 		reg(sys, play);
 		reg(sys, stop);
 	}

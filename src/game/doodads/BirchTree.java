@@ -14,7 +14,11 @@ public class BirchTree extends Entity {
 		init(posX, posY, 160, 160);
 		sprite = TreeTextures.birch_0;
 		facing = (RandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
-		setCollisionBox(startX + 26, endY - 25, endX - 26, endY);
+		
+		double sx = (facing == Rotation.RIGHT) ? 15 : 5;
+		double ex = (facing == Rotation.RIGHT) ? 5 : 15;
+		
+		setCollisionBox(midX - sx, endY - 15, midX + ex, endY);
 	}
 	
 	@Override

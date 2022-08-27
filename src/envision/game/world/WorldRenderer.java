@@ -1,12 +1,11 @@
 package envision.game.world;
 
-import java.util.Comparator;
-
 import envision.game.entity.Entity;
 import envision.game.world.worldTiles.WorldTile;
 import envision.inputHandlers.Keyboard;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.topOverlay.GameTopScreen;
+import envision.util.InsertionSort;
 import envision.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -170,7 +169,8 @@ public class WorldRenderer extends EGui {
 	
 	private void renderEntities(double x, double y, double w, double h) {
 		var entities = world.getEntitiesInWorld();
-		entities.sort(Comparator.comparingInt(e -> e.endY));
+		InsertionSort.sort(entities);
+		//entities.sort(Comparator.comparingInt(e -> e.endY));
 		
 		for (int i = 0; i < entities.size(); i++) {
 			Entity ent = entities.get(i);

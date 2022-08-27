@@ -144,7 +144,7 @@ public class GamePlayScreen extends GameScreen {
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
 		
-		if (!attacking) {
+		if (button == 0 && !attacking) {
 			attacking = true;
 			attackDrawStart = System.currentTimeMillis();
 			

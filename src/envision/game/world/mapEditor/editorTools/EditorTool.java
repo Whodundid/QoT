@@ -42,9 +42,20 @@ public abstract class EditorTool {
 	
 	protected void addObjectToWorld(GameObject obj) {
 		if (obj instanceof Entity ent) {
-			ent.worldX = wx;
-			ent.worldY = wy;
-			System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
+			double pw = ent.width; //pixel width
+			double ph = ent.height; //pixel height
+			double cmx = ent.collisionBox.midX; //collision mid x
+			double cmy = ent.collisionBox.midY; //collision mid y
+			double tw = editor.getWorld().getTileWidth(); //tile width
+			double th = editor.getWorld().getTileHeight(); //tile height
+			
+			//need to -, - using difference of world coords of middle of collision box
+			int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
+			int mwcy = (int) Math.floor(cmy / th); //mid world coords y
+			
+			ent.worldX = wx - mwcx;
+			ent.worldY = wy - mwcy;
+			//System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
 			editor.getWorld().addEntity(ent);
 			editor.getWorld().addEntitySpawn(ent);
 		}

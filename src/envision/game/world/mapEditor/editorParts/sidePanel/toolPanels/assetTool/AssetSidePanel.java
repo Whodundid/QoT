@@ -19,7 +19,7 @@ import game.GlobalAssetList;
 
 public class AssetSidePanel extends PaletteSidePanel {
 
-	public static final ToolCategory assetTools = ToolCategory.from("Assets", MOVE);
+	public static final ToolCategory assetTools = ToolCategory.from("Assets", PLACE, MOVE);
 	private EArrayList<WindowButton<EditorItem>> buttons = new EArrayList();
 	
 	public AssetSidePanel(EditorSidePanel panelIn, MapEditorScreen in) {
@@ -33,7 +33,7 @@ public class AssetSidePanel extends PaletteSidePanel {
 		if (buttons.size() >= 1) editor.getSettings().setPrimaryPalette(buttons.get(0).getGenericObject());
 		if (buttons.size() >= 2) editor.getSettings().setSecondaryPalette(buttons.get(1).getGenericObject());
 		
-		editor.getSettings().setCurrentTool(EditorToolType.SELECTOR);
+		editor.getSettings().setCurrentTool(EditorToolType.PLACE);
 	}
 	
 	private void buildPanel() {

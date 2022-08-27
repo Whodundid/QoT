@@ -10,6 +10,7 @@ import envision.game.world.mapEditor.editorTools.tools.Tool_MagicWand;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Move;
 import envision.game.world.mapEditor.editorTools.tools.Tool_PaintBucket;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Pencil;
+import envision.game.world.mapEditor.editorTools.tools.Tool_Place;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Region;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Selector;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Shape;
@@ -39,6 +40,7 @@ public class ToolHandler {
 	private final Tool_Region regionTool;
 	private final Tool_Selector selectorTool;
 	private final Tool_Shape shapeTool;
+	private final Tool_Place placeTool;
 	
 	//--------------
 	// Constructors
@@ -58,6 +60,7 @@ public class ToolHandler {
 		regionTool = new Tool_Region(editor);
 		selectorTool = new Tool_Selector(editor);
 		shapeTool = new Tool_Shape(editor);
+		placeTool = new Tool_Place(editor);
 	}
 	
 	//---------------
@@ -101,6 +104,7 @@ public class ToolHandler {
 		case PENCIL: pencilTool.distributeEvent(event, button); break;
 		case RECTSELECT: break;
 		case SHAPE: break;
+		case PLACE: placeTool.distributeEvent(event, button); break;
 		default: break;
 		}
 	}

@@ -2,10 +2,11 @@ package envision.game;
 
 import envision.renderEngine.GLObject;
 import envision.renderEngine.textureSystem.GameTexture;
+import envision.util.IDrawable;
 import eutil.math.EDimension;
 import eutil.misc.Rotation;
 
-public abstract class GameObject extends GLObject {
+public abstract class GameObject extends GLObject implements IDrawable {
 	
 	protected GameTexture sprite;
 	public int startX, startY, endX, endY;
@@ -50,5 +51,10 @@ public abstract class GameObject extends GLObject {
 	public GameObject setName(String nameIn) { name = nameIn; return this; }
 	public GameObject setTexture(GameTexture in) { sprite = in; return this; }
 	public GameObject setFacing(Rotation dir) { facing = dir; return this; }
+	
+	@Override
+	public double getSortPoint() {
+		return startY + collisionBox.endY;
+	}
 	
 }

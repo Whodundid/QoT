@@ -160,6 +160,8 @@ public class MapEditorScreen extends GameScreen {
 				switch (sidePanel.getCurrentPanelType()) {
 				case ASSET:
 				{
+					if (getCurrentTool() != EditorToolType.PLACE) break;
+					
 					//COMPLETELY HASHED TOGETHER :)
 					EditorItem primary = settings.getPrimaryPalette();
 					if (primary == null) break;
@@ -168,13 +170,18 @@ public class MapEditorScreen extends GameScreen {
 					double tH = primary.getGameObject().height;
 					double tDrawW = tW * world.getZoom();
 					double tDrawH = tH * world.getZoom();
-					drawTexture(tex, Mouse.getMx() - tW / 2, Mouse.getMy() - tH, tDrawW, tDrawH, 0x99ffffff);
+					double tmx = primary.getGameObject().collisionBox.midX * world.getZoom();
+					double tmy = primary.getGameObject().collisionBox.midY * world.getZoom();
+					
+					drawTexture(tex, mX - tmx, mY - tmy, tDrawW, tDrawH, 0x99ffffff);
+					//drawTexture(tex, mX, mY, tDrawW, tDrawH, 0x99ffffff);
+					//drawHRect(mX, mY, mX + tDrawW, mY + tDrawH, 1, EColors.blue);
 					//drawTexture(tex, mX, mY, tDrawW, tDrawH);
 					drawHoveredTileBox((int) x, (int) y, (int) w, (int) h);
 					break;
 				}
 				default:
-					drawHoveredTileBox((int) x, (int) y, (int) w, (int) h);
+					drawHoveredTileBox(x, y, w, h);
 				}
 				if (firstPress && getTopParent().getModifyingObject() == null) {
 					//toolHandler.handleToolUpdate(getCurTileTool());
@@ -203,14 +210,12 @@ public class MapEditorScreen extends GameScreen {
 	 * @param w
 	 * @param h
 	 */
-	private void drawHoveredTileBox(int x, int y, int w, int h) {
+	private void drawHoveredTileBox(double x, double y, double w, double h) {
 		worldXPos = NumberUtil.clamp(worldXPos, 0, world.getWidth() - 1);
 		worldYPos = NumberUtil.clamp(worldYPos, 0, world.getHeight() - 1);
 		
-		double xPos = (x + ((Mouse.getMx() - x) / w) * w) - 1; //not sure why need to sub 1 here..
-		double yPos = (y + ((Mouse.getMy() - y) / h) * h);
-		
-		//drawString("POS: " + xPos + " : " + yPos, 150, 150);
+		double xPos = x + w * (worldXPos + drawDistX - midDrawX);
+		double yPos = y + h * (worldYPos + drawDistY - midDrawY);
 		
 		if (!settings.drawWallBox) drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.chalk);
 	}
@@ -263,7 +268,9 @@ public class MapEditorScreen extends GameScreen {
 			double dw = ((QoT.getWidth() - sidePanel.width) / w) / 2.0;
 			double dh = ((QoT.getHeight() - topHeader.height) / h) / 2.0;
 			
-			drawDistX = (int) Math.ceil(dw);
+			//System.out.println(dw + " : " + dh);
+			
+			drawDistX = (int) Math.round(dw);
 			drawDistY = (int) Math.ceil(dh);
 			
 			updateMap = true;
@@ -449,12 +456,9 @@ public class MapEditorScreen extends GameScreen {
 			if (tex == null) continue;
 			
 			//transform the world coordinates of the entity to screen x/y coordinates
-			double drawX = (ent.worldX * w) + x;
-			double drawY = (ent.worldY * h) + y;
-			
-			//translate to the middle drawn world tile
-			drawX += (drawDistX - midDrawX) * w;
-			drawY += (drawDistY - midDrawY) * h;
+			//then translate to the middle drawn world tile
+			double drawX = x + w * (ent.worldX + drawDistX - midDrawX);
+			double drawY = y + h * (ent.worldY + drawDistY - midDrawY);
 			
 			//calculate the entity's draw width and height based off of actual dims and zoom
 			double drawW = ent.width * world.getZoom();
@@ -537,6 +541,14 @@ public class MapEditorScreen extends GameScreen {
 		return false;
 	}
 	
+	public EDimension getMapDrawDims() {
+		double sx = 0.0;
+		double sy = this.topHeader.endY;
+		double ex = this.sidePanel.startX;
+		double ey = endY;
+		return new EDimension(sx, sy, ex, ey);
+	}
+	
 	//---------------------------------
 	//         Public Getters
 	//---------------------------------
@@ -582,6 +594,7 @@ public class MapEditorScreen extends GameScreen {
 	public EditorScreenTopHeader getTopHeader() { return topHeader; }
 	public EditorToolBox getToolBox() { return toolBox; }
 	public EditorSidePanel getSidePanel() { return sidePanel; }
+	public EditorToolType getCurrentTool() { return settings.getCurrentTool(); }
 	
 	//---------------------------------
 	//         Public Setters

@@ -14,7 +14,7 @@ public class Bush0 extends Entity {
 		init(posX, posY, 32, 32);
 		sprite = BushTextures.bush_0;
 		facing = (RandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
-		setCollisionBox(midX - 10, midY - 5, midX + 10, midY + 5);
+		setCollisionBox(midX - 10, midY - 5, midX + 10, midY + 10);
 	}
 	
 	@Override
