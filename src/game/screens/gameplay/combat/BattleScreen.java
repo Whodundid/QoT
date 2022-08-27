@@ -1,11 +1,11 @@
 package game.screens.gameplay.combat;
 
-import engine.screenEngine.GameScreen;
-import engine.windowLib.windowObjects.actionObjects.WindowButton;
-import engine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.game.entity.Entity;
+import envision.game.screens.GameScreen;
+import envision.windowLib.windowObjects.actionObjects.WindowButton;
+import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
-import game.entities.Entity;
 
 public class BattleScreen extends GameScreen {
 	

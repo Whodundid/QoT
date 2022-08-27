@@ -1,7 +1,7 @@
 package game.entities.house;
 
-import assets.textures.doodads.house.HouseTextures;
-import game.entities.Entity;
+import envision.game.entity.Entity;
+import game.assets.textures.doodads.house.HouseTextures;
 import game.entities.EntityList;
 
 public class Crate extends Entity {
@@ -14,6 +14,8 @@ public class Crate extends Entity {
 		
 		setMaxHealth(5);
 		setHealth(5);
+		
+		this.setCollisionBox(startX + 2, startY + 14, endX - 2, endY - 1);
 	}
 	
 	@Override

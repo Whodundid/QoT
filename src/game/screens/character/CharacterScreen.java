@@ -1,14 +1,14 @@
 package game.screens.character;
 
-import assets.textures.window.WindowTextures;
-import engine.inputHandlers.Keyboard;
-import engine.renderEngine.textureSystem.GameTexture;
-import engine.screenEngine.GameScreen;
-import engine.windowLib.windowObjects.actionObjects.WindowButton;
-import engine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.game.entity.Entity;
+import envision.game.screens.GameScreen;
+import envision.inputHandlers.Keyboard;
+import envision.renderEngine.textureSystem.GameTexture;
+import envision.windowLib.windowObjects.actionObjects.WindowButton;
+import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.entities.Entity;
-import main.QoT;
+import game.QoT;
+import game.assets.textures.window.WindowTextures;
 
 public class CharacterScreen extends GameScreen {
 	

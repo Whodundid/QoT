@@ -1,16 +1,16 @@
 package game.screens.main;
 
-import assets.sounds.Songs;
-import assets.textures.general.GeneralTextures;
-import engine.screenEngine.GameScreen;
-import engine.soundEngine.SoundEngine;
-import engine.windowLib.windowObjects.actionObjects.WindowButton;
-import engine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.game.screens.GameScreen;
+import envision.game.sounds.SoundEngine;
+import envision.game.world.mapEditor.MapMenuScreen;
+import envision.game.world.worldTiles.categories.DungeonTiles;
+import envision.windowLib.windowObjects.actionObjects.WindowButton;
+import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.NumberUtil;
-import main.QoT;
-import world.mapEditor.MapMenuScreen;
-import world.worldTiles.categories.DungeonTiles;
+import game.QoT;
+import game.assets.sounds.Songs;
+import game.assets.textures.general.GeneralTextures;
 
 public class MainMenuScreen extends GameScreen {
 	

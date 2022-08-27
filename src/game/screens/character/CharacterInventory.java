@@ -1,9 +1,9 @@
 package game.screens.character;
 
-import engine.windowLib.windowObjects.advancedObjects.WindowScrollList;
-import engine.windowLib.windowTypes.WindowObject;
-import engine.windowLib.windowTypes.interfaces.IActionObject;
-import game.entities.Entity;
+import envision.game.entity.Entity;
+import envision.windowLib.windowObjects.advancedObjects.WindowScrollList;
+import envision.windowLib.windowTypes.WindowObject;
+import envision.windowLib.windowTypes.interfaces.IActionObject;
 
 public class CharacterInventory extends WindowObject {
 	

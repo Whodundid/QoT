@@ -1,31 +1,31 @@
 package game.screens.gameplay;
 
-import assets.sounds.Songs;
-import assets.textures.item.ItemTextures;
-import engine.inputHandlers.Keyboard;
-import engine.screenEngine.GameScreen;
-import engine.soundEngine.SoundEngine;
-import engine.topOverlay.GameTopRenderer;
-import engine.windowLib.windowObjects.actionObjects.WindowButton;
-import engine.windowLib.windowObjects.basicObjects.WindowRect;
-import engine.windowLib.windowObjects.basicObjects.WindowStatusBar;
-import engine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.game.entity.Entity;
+import envision.game.screens.GameScreen;
+import envision.game.sounds.SoundEngine;
+import envision.game.world.GameWorld;
+import envision.inputHandlers.Keyboard;
+import envision.topOverlay.GameTopScreen;
+import envision.windowLib.windowObjects.actionObjects.WindowButton;
+import envision.windowLib.windowObjects.basicObjects.WindowRect;
+import envision.windowLib.windowObjects.basicObjects.WindowStatusBar;
+import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.NumberUtil;
-import game.entities.Entity;
-import game.entities.player.Player;
+import game.QoT;
+import game.assets.sounds.Songs;
+import game.assets.textures.item.ItemTextures;
+import game.entities.player.QoT_Player;
 import game.screens.character.CharacterScreen;
 import game.screens.gameplay.combat.DeathScreen;
 import game.screens.main.MainMenuScreen;
-import main.QoT;
-import world.GameWorld;
 
 //rabbit fish
 
 public class GamePlayScreen extends GameScreen {
 	
-	Player player;
+	QoT_Player player;
 	GameWorld world;
 	WindowRect topHud;
 	WindowRect botHud; //don't know if actually want this one
@@ -117,8 +117,8 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void onGameTick(long ticks) {
-		if (!GameTopRenderer.isTopFocused()) {
-			Player p = QoT.thePlayer;
+		if (!GameTopScreen.isTopFocused()) {
+			QoT_Player p = QoT.thePlayer;
 			double moveSpeed = 1;
 			if (Keyboard.isWDown()) p.move(0, -moveSpeed);
 			if (Keyboard.isSDown()) p.move(0, moveSpeed);
@@ -144,7 +144,7 @@ public class GamePlayScreen extends GameScreen {
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
 		
-		if (!attacking) {
+		if (button == 0 && !attacking) {
 			attacking = true;
 			attackDrawStart = System.currentTimeMillis();
 			

@@ -1,9 +1,9 @@
 package game.items.weapons.melee.swords;
 
-import assets.textures.item.ItemTextures;
-import game.entities.Entity;
+import envision.game.entity.Entity;
+import envision.game.items.Weapon;
+import game.assets.textures.item.ItemTextures;
 import game.items.ItemList;
-import game.items.weapons.Weapon;
 
 public class Sword_Wooden extends Weapon {
 	// Wooden Sword

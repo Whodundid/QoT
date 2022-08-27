@@ -1,7 +1,8 @@
 package game.entities.enemies;
 
-import assets.textures.entity.EntityTextures;
+import envision.game.entity.Enemy;
 import eutil.random.RandomUtil;
+import game.assets.textures.entity.EntityTextures;
 
 public class Thyrah extends Enemy {
 	

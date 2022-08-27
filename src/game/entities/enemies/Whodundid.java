@@ -1,11 +1,12 @@
 package game.entities.enemies;
 
-import assets.textures.entity.EntityTextures;
+import envision.game.entity.Enemy;
+import envision.game.entity.Entity;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
 import eutil.random.RandomUtil;
-import game.entities.Entity;
-import main.QoT;
+import game.QoT;
+import game.assets.textures.entity.EntityTextures;
 
 public class Whodundid extends Enemy {
 	

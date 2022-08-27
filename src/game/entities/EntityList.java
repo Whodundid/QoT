@@ -1,8 +1,11 @@
 package game.entities;
 
+import envision.game.entity.Entity;
 import eutil.random.RandomUtil;
-import game.doodads.nature.BirchTree;
-import game.doodads.nature.PineTree;
+import game.doodads.BirchTree;
+import game.doodads.Bush0;
+import game.doodads.PineTree;
+import game.doodads.StoneGroundClutter;
 import game.entities.enemies.Goblin;
 import game.entities.enemies.Thyrah;
 import game.entities.enemies.TrollBoar;
@@ -12,7 +15,7 @@ import game.entities.house.Chair;
 import game.entities.house.Crate;
 import game.entities.house.Stool;
 import game.entities.neutral.WhodundidsBrother;
-import game.entities.player.Player;
+import game.entities.player.QoT_Player;
 
 public enum EntityList {
 	PLAYER(0),
@@ -29,6 +32,8 @@ public enum EntityList {
 	STOOL(10),
 	
 	BIRCH(11),
+	BUSH0(12),
+	STONE_GROUND_CLUTTER(13),
 	;
 	
 	public final int ID;
@@ -48,7 +53,7 @@ public enum EntityList {
 	public static Entity getEntity(int idIn) { return getEntity(getType(idIn)); }
 	public static Entity getEntity(EntityList typeIn) {
 		switch (typeIn) {
-		case PLAYER: return new Player();
+		case PLAYER: return new QoT_Player();
 		case GOBLIN: return new Goblin();
 		case WHODUNDID: return new Whodundid();
 		case TROLLBOAR: return new TrollBoar();
@@ -62,6 +67,8 @@ public enum EntityList {
 		case STOOL: return new Stool();
 		
 		case BIRCH: return new BirchTree();
+		case BUSH0: return new Bush0();
+		case STONE_GROUND_CLUTTER: return new StoneGroundClutter();
 		default: return null;
 		}
 	}

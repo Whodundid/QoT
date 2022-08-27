@@ -1,7 +1,7 @@
 package game.screens.gameplay.combat;
 
+import envision.game.entity.Entity;
 import eutil.datatypes.EArrayList;
-import game.entities.Entity;
 
 /** Keeps track of fighting entities of two teams over the course of a fight. */
 public class CombatManager {
