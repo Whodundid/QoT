@@ -13,4 +13,9 @@ public class DungWallA extends WorldTile {
 		setTexture(DungeonWallTextures.dung_wall_a);
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new DungWallA());
+	}
+	
 }

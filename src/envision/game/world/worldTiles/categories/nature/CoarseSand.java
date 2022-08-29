@@ -19,4 +19,9 @@ public class CoarseSand extends WorldTile {
 		}
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new CoarseSand());
+	}
+	
 }

@@ -355,4 +355,33 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 		return in;
 	}
 	
+	public abstract WorldTile copy();
+	protected WorldTile copyFields(WorldTile from, WorldTile to) {
+		to.id = from.id;
+		to.name = from.name;
+		to.tex = from.tex;
+		to.sideTex = from.sideTex;
+		to.numVariants = from.numVariants;
+		to.blocksMovement = from.blocksMovement;
+		to.wildCardTexture = from.wildCardTexture;
+		to.isWall = from.isWall;
+		to.wallHeight = from.wallHeight;
+		to.material = from.material;
+		to.worldX = from.worldX;
+		to.worldY = from.worldY;
+		to.hasSideBrightness = from.hasSideBrightness;
+		to.sideBrightness = from.sideBrightness;
+		to.entitiesOnTile = from.entitiesOnTile;
+		to.entitiesAdding = from.entitiesAdding;
+		to.entitiesRemoving = from.entitiesRemoving;
+		to.rotation = from.rotation;
+		to.drawFlipped = from.drawFlipped;
+		
+		return to;
+	}
+	
+	public static WorldTile copy(WorldTile tile) {
+		return tile.copy();
+	}
+	
 }

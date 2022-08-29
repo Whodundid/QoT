@@ -13,4 +13,9 @@ public class DungOldWallA extends WorldTile {
 		this.wallHeight = 0.05;
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new DungOldWallA());
+	}
+	
 }

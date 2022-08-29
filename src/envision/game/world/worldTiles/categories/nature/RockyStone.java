@@ -18,4 +18,9 @@ public class RockyStone extends WorldTile {
 		rotation = Rotation.random();
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new RockyStone());
+	}
+	
 }

@@ -97,4 +97,9 @@ public class TestGrass extends WorldTile {
 		}
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new TestGrass());
+	}
+	
 }

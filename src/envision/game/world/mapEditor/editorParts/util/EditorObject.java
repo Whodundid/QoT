@@ -9,19 +9,27 @@ import envision.renderEngine.textureSystem.GameTexture;
  * reference any of the game's assets without needing to individually specify
  * a different type for each.
  */
-public class EditorItem {
+public class EditorObject {
 	
-	WorldTile tile;
-	GameObject object;
+	//--------
+	// Fields
+	//--------
 	
-	EditorItemCategory type;
+	private WorldTile tile;
+	private GameObject object;
+	private EditorItemCategory type;
+	private boolean isSelected = false;
 	
-	public EditorItem(WorldTile tileIn) {
+	//--------------
+	// Constructors
+	//--------------
+	
+	public EditorObject(WorldTile tileIn) {
 		tile = tileIn;
 		type = EditorItemCategory.TILE;
 	}
 	
-	public EditorItem(GameObject objectIn) {
+	public EditorObject(GameObject objectIn) {
 		object = objectIn;
 		type = EditorItemCategory.GAME_OBJECT;
 	}
@@ -32,6 +40,10 @@ public class EditorItem {
 	public EditorItemCategory getType() { return type; }
 	public WorldTile getTile() { return tile; }
 	public GameObject getGameObject() { return object; }
+	
+	public <TYPE> TYPE get() {
+		return (TYPE) ((isTile()) ? tile : object);
+	}
 	
 	public String getName() {
 		return switch (type) {
@@ -49,7 +61,10 @@ public class EditorItem {
 		};
 	}
 	
-	public static EditorItem of(WorldTile tileIn) { return new EditorItem(tileIn); }
-	public static EditorItem of(GameObject entityIn) { return new EditorItem(entityIn); }
+	public boolean isSelected() { return isSelected; }
+	public void setSelected(boolean val) { isSelected = val; }
+	
+	public static EditorObject of(WorldTile tileIn) { return new EditorObject(tileIn); }
+	public static EditorObject of(GameObject entityIn) { return new EditorObject(entityIn); }
 	
 }

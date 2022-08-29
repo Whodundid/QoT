@@ -4,7 +4,7 @@ import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.world.mapEditor.MapEditorScreen;
 import envision.game.world.mapEditor.MapEditorSettings;
-import envision.game.world.mapEditor.editorParts.util.EditorItem;
+import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import envision.game.world.mapEditor.editorTools.ToolHandler.ToolEvent;
 import envision.game.world.worldTiles.WorldTile;
 import envision.inputHandlers.Mouse;
@@ -42,8 +42,6 @@ public abstract class EditorTool {
 	
 	protected void addObjectToWorld(GameObject obj) {
 		if (obj instanceof Entity ent) {
-			double pw = ent.width; //pixel width
-			double ph = ent.height; //pixel height
 			double cmx = ent.collisionBox.midX; //collision mid x
 			double cmy = ent.collisionBox.midY; //collision mid y
 			double tw = editor.getWorld().getTileWidth(); //tile width
@@ -55,24 +53,25 @@ public abstract class EditorTool {
 			
 			ent.worldX = wx - mwcx;
 			ent.worldY = wy - mwcy;
+			
 			//System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
 			editor.getWorld().addEntity(ent);
 			editor.getWorld().addEntitySpawn(ent);
 		}
 	}
 	
-	protected void setTile(WorldTile t) { editor.getWorld().setTileAt(wx, wy, t); }
-	protected void setTile(int x, int y, WorldTile t) { editor.getWorld().setTileAt(x, y, t); }
+	protected void setTile(WorldTile t) { editor.setTileAt(wx, wy, t); }
+	protected void setTile(int x, int y, WorldTile t) { editor.setTileAt(x, y, t); }
 	
-	protected EditorItem getPrimary() { return editor.getSettings().getPrimaryPalette(); }
-	protected EditorItem getSecondary() { return editor.getSettings().getSecondaryPalette(); }
-	protected void setPrimary(EditorItem i) { editor.getSettings().setPrimaryPalette(i); }
+	protected EditorObject getPrimary() { return editor.getSettings().getPrimaryPalette(); }
+	protected EditorObject getSecondary() { return editor.getSettings().getSecondaryPalette(); }
+	protected void setPrimary(EditorObject i) { editor.getSettings().setPrimaryPalette(i); }
 	
-	protected void setPrimary(WorldTile t) { editor.getSettings().setPrimaryPalette(EditorItem.of(t)); }
-	protected void setPrimary(Entity t) { editor.getSettings().setPrimaryPalette(EditorItem.of(t)); }
-	protected void setSecondary(EditorItem i) { editor.getSettings().setSecondaryPalette(i); }
-	protected void setSecondary(WorldTile t) { editor.getSettings().setSecondaryPalette(EditorItem.of(t)); }
-	protected void setSecondary(Entity t) { editor.getSettings().setSecondaryPalette(EditorItem.of(t)); }
+	protected void setPrimary(WorldTile t) { editor.getSettings().setPrimaryPalette(EditorObject.of(t)); }
+	protected void setPrimary(Entity t) { editor.getSettings().setPrimaryPalette(EditorObject.of(t)); }
+	protected void setSecondary(EditorObject i) { editor.getSettings().setSecondaryPalette(i); }
+	protected void setSecondary(WorldTile t) { editor.getSettings().setSecondaryPalette(EditorObject.of(t)); }
+	protected void setSecondary(Entity t) { editor.getSettings().setSecondaryPalette(EditorObject.of(t)); }
 	
 	//------------------
 	// Abstract Methods

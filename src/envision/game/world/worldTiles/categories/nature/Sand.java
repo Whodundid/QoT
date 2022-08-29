@@ -15,4 +15,9 @@ public class Sand extends WorldTile {
 		setTexture(SandTextures.sand);
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new Sand());
+	}
+	
 }

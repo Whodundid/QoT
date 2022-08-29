@@ -16,4 +16,9 @@ public class StonePad extends WorldTile {
 		rotation = Rotation.random();
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new StonePad());
+	}
+	
 }

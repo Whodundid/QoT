@@ -19,4 +19,9 @@ public class WoodSlats extends WorldTile {
 		}
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new WoodSlats());
+	}
+	
 }

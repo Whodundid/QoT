@@ -1,7 +1,7 @@
 package envision.game.world.mapEditor.editorParts.sidePanel;
 
 import envision.game.world.mapEditor.MapEditorScreen;
-import envision.game.world.mapEditor.editorParts.util.EditorItem;
+import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import eutil.colors.EColors;
 
 public abstract class PaletteSidePanel extends SidePanel {
@@ -33,8 +33,8 @@ public abstract class PaletteSidePanel extends SidePanel {
 		drawHRect(EColors.black, 2, 0);
 		drawRect(startX + 2, startY + 2, endX - 2, pey + 8, EColors.dgray);
 		
-		EditorItem primary = editor.getSettings().getPrimaryPalette();
-		EditorItem secondary = editor.getSettings().getSecondaryPalette();
+		EditorObject primary = editor.getSettings().getPrimaryPalette();
+		EditorObject secondary = editor.getSettings().getSecondaryPalette();
 		
 		if (primary != null) { drawTexture(primary.getTexture(), psx, psy, pw, ph); }
 		else drawRect(psx, psy, pex, pey, EColors.mgray);

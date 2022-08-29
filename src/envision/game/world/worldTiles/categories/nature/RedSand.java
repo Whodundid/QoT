@@ -13,4 +13,9 @@ public class RedSand extends WorldTile {
 		wallHeight = 0.05;
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new RedSand());
+	}
+	
 }

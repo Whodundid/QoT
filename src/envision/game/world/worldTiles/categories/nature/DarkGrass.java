@@ -11,4 +11,9 @@ public class DarkGrass extends WorldTile {
 		setTexture(GrassTextures.dark_grass);
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new DarkGrass());
+	}
+	
 }

@@ -1,13 +1,13 @@
 package envision.game.world.mapEditor.editorTools.tools;
 
 import envision.game.world.mapEditor.MapEditorScreen;
-import envision.game.world.mapEditor.editorParts.util.EditorItem;
+import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import envision.game.world.mapEditor.editorTools.EditorTool;
 import envision.game.world.worldTiles.WorldTile;
 
 public class Tool_Pencil extends EditorTool {
 
-	private EditorItem item;
+	private EditorObject item;
 	
 	public Tool_Pencil(MapEditorScreen in) {
 		super(in);

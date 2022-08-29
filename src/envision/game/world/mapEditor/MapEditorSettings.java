@@ -3,7 +3,7 @@ package envision.game.world.mapEditor;
 import java.io.File;
 
 import envision.game.world.GameWorld;
-import envision.game.world.mapEditor.editorParts.util.EditorItem;
+import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import envision.game.world.mapEditor.editorTools.EditorToolType;
 
 /** A holder that keeps track of active map editor properties. */
@@ -15,7 +15,7 @@ public class MapEditorSettings {
 	
 	protected final MapEditorScreen editor;
 	
-	protected EditorItem primaryPalette, secondaryPalette;
+	protected EditorObject primaryPalette, secondaryPalette;
 	
 	public boolean drawCenterPositionBox = false;
 	public boolean drawMapBorders = false;
@@ -41,10 +41,10 @@ public class MapEditorSettings {
 	//---------
 	
 	public File getMapFile() { return editor.mapFile; }
-	public GameWorld getGameWorld() { return editor.world; }
+	public GameWorld getGameWorld() { return editor.actualWorld; }
 	
-	public EditorItem getPrimaryPalette() { return primaryPalette; }
-	public EditorItem getSecondaryPalette() { return secondaryPalette; }
+	public EditorObject getPrimaryPalette() { return primaryPalette; }
+	public EditorObject getSecondaryPalette() { return secondaryPalette; }
 	
 	public EditorToolType getCurrentTool() { return currentTool; }
 	
@@ -53,8 +53,8 @@ public class MapEditorSettings {
 	// Setters
 	//---------
 	
-	public void setPrimaryPalette(EditorItem itemIn) { primaryPalette = itemIn; }
-	public void setSecondaryPalette(EditorItem itemIn) { secondaryPalette = itemIn; }
+	public void setPrimaryPalette(EditorObject itemIn) { primaryPalette = itemIn; }
+	public void setSecondaryPalette(EditorObject itemIn) { secondaryPalette = itemIn; }
 	
 	public void setCurrentTool(EditorToolType tIn) { currentTool = tIn; }
 	

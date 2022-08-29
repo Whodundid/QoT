@@ -24,4 +24,9 @@ public class StoneWall extends WorldTile {
 		}
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new StoneWall());
+	}
+	
 }

@@ -12,4 +12,9 @@ public class Sink extends WorldTile {
 		blocksMovement = true;
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new Sink());
+	}
+	
 }

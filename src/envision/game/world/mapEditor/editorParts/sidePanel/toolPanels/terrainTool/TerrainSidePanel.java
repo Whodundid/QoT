@@ -8,7 +8,7 @@ import envision.game.world.mapEditor.editorParts.sidePanel.EditorSidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.PaletteSidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.mapEditor.editorParts.toolBox.ToolCategory;
-import envision.game.world.mapEditor.editorParts.util.EditorItem;
+import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import envision.game.world.mapEditor.editorTools.EditorToolType;
 import envision.game.world.worldTiles.GlobalTileList;
 import envision.game.world.worldTiles.WorldTile;
@@ -32,8 +32,8 @@ public class TerrainSidePanel extends PaletteSidePanel {
 	public void loadTool() {
 		editor.getToolBox().setToolsWithSelector(terrainTools);
 		buildTiles();
-		if (buttons.size() >= 1) editor.getSettings().setPrimaryPalette(EditorItem.of(buttons.get(0).getGenericObject()));
-		if (buttons.size() >= 2) editor.getSettings().setSecondaryPalette(EditorItem.of(buttons.get(1).getGenericObject()));
+		if (buttons.size() >= 1) editor.getSettings().setPrimaryPalette(EditorObject.of(buttons.get(0).getGenericObject()));
+		if (buttons.size() >= 2) editor.getSettings().setSecondaryPalette(EditorObject.of(buttons.get(1).getGenericObject()));
 		
 		editor.getSettings().setCurrentTool(EditorToolType.PENCIL);
 	}
@@ -91,7 +91,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
 			int button = b.getPressedButton();
 			
 			MapEditorSettings s = editor.getSettings();
-			EditorItem item = EditorItem.of(tile);
+			EditorObject item = EditorObject.of(tile);
 			
 			//Switch the tool back to a pencil if it's currently an eraser
 			// -This is a convenience setting

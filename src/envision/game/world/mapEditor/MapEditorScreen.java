@@ -1,9 +1,11 @@
 package envision.game.world.mapEditor;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Comparator;
 
 import envision.events.GameEvent;
+import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.screens.GameScreen;
 import envision.game.sounds.SoundEngine;
@@ -14,7 +16,7 @@ import envision.game.world.mapEditor.editorParts.sidePanel.EditorSidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.mapEditor.editorParts.toolBox.EditorToolBox;
 import envision.game.world.mapEditor.editorParts.topHeader.EditorScreenTopHeader;
-import envision.game.world.mapEditor.editorParts.util.EditorItem;
+import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import envision.game.world.mapEditor.editorTools.EditorToolType;
 import envision.game.world.mapEditor.editorTools.ToolHandler;
 import envision.game.world.worldTiles.WorldTile;
@@ -25,14 +27,28 @@ import envision.renderEngine.textureSystem.GameTexture;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.Grid;
 import eutil.math.EDimension;
 import eutil.math.NumberUtil;
 import game.QoT;
 
 public class MapEditorScreen extends GameScreen {
 
+	//----------------
+	// Fields : World
+	//----------------
+	
 	protected File mapFile;
-	protected GameWorld world;
+	
+	/** The actual game world (used to load from and save data to) */
+	protected GameWorld actualWorld;
+	
+	/** The world as it exists in the map editor */
+	private GameWorld editorWorld;
+	
+	//-----------------
+	// Fields : Editor
+	//-----------------
 	
 	MapEditorSettings settings;
 	ToolHandler toolHandler;
@@ -63,6 +79,8 @@ public class MapEditorScreen extends GameScreen {
 	private boolean hasBeenModified = false;
 	private boolean hasSaved = false;
 	
+	private final EArrayList<EditorObject> selectedObjects = new EArrayList<>();
+	
 	//---------------------
 	int left;
 	int top;
@@ -88,15 +106,23 @@ public class MapEditorScreen extends GameScreen {
 	
 	public long timeSinceKey = 0l;
 	
+	//--------------
+	// Constructors
+	//--------------
+	
 	public MapEditorScreen(File mapFileIn) {
 		mapFile = mapFileIn;
 		setDefaultDims();
 	}
 	
 	public MapEditorScreen(GameWorld worldIn) {
-		world = worldIn;
+		actualWorld = worldIn;
 		setDefaultDims();
 	}
+	
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void initScreen() {
@@ -132,10 +158,10 @@ public class MapEditorScreen extends GameScreen {
 			return;
 		}
 		
-		if (world == null || !world.isFileLoaded()) drawStringC("Failed to load!", midX, midY);
+		if (actualWorld == null || !actualWorld.isFileLoaded()) drawStringC("Failed to load!", midX, midY);
 		else {
-			tileDrawWidth = (world.getTileWidth() * world.getZoom()); //pixel width of each tile
-			tileDrawHeight = (world.getTileHeight() * world.getZoom()); //pixel height of each tile
+			tileDrawWidth = (actualWorld.getTileWidth() * actualWorld.getZoom()); //pixel width of each tile
+			tileDrawHeight = (actualWorld.getTileHeight() * actualWorld.getZoom()); //pixel height of each tile
 			drawAreaMidX = (QoT.getWidth() - sidePanel.width) / 2; //the middle x of the map draw area
 			drawAreaMidY = topHeader.endY + (QoT.getHeight() - topHeader.height) / 2; //the middle y of the map draw area
 			mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2)); //the left most x coordinate for map drawing
@@ -163,15 +189,15 @@ public class MapEditorScreen extends GameScreen {
 					if (getCurrentTool() != EditorToolType.PLACE) break;
 					
 					//COMPLETELY HASHED TOGETHER :)
-					EditorItem primary = settings.getPrimaryPalette();
+					EditorObject primary = settings.getPrimaryPalette();
 					if (primary == null) break;
 					GameTexture tex = primary.getTexture();
 					double tW = primary.getGameObject().width;
 					double tH = primary.getGameObject().height;
-					double tDrawW = tW * world.getZoom();
-					double tDrawH = tH * world.getZoom();
-					double tmx = primary.getGameObject().collisionBox.midX * world.getZoom();
-					double tmy = primary.getGameObject().collisionBox.midY * world.getZoom();
+					double tDrawW = tW * actualWorld.getZoom();
+					double tDrawH = tH * actualWorld.getZoom();
+					double tmx = primary.getGameObject().collisionBox.midX * actualWorld.getZoom();
+					double tmy = primary.getGameObject().collisionBox.midY * actualWorld.getZoom();
 					
 					drawTexture(tex, mX - tmx, mY - tmy, tDrawW, tDrawH, 0x99ffffff);
 					//drawTexture(tex, mX, mY, tDrawW, tDrawH, 0x99ffffff);
@@ -202,78 +228,30 @@ public class MapEditorScreen extends GameScreen {
 		}
 	}
 	
-	/**
-	 * Draws a box around the currently hovered tile.
-	 * 
-	 * @param x
-	 * @param y
-	 * @param w
-	 * @param h
-	 */
-	private void drawHoveredTileBox(double x, double y, double w, double h) {
-		worldXPos = NumberUtil.clamp(worldXPos, 0, world.getWidth() - 1);
-		worldYPos = NumberUtil.clamp(worldYPos, 0, world.getHeight() - 1);
-		
-		double xPos = x + w * (worldXPos + drawDistX - midDrawX);
-		double yPos = y + h * (worldYPos + drawDistY - midDrawY);
-		
-		if (!settings.drawWallBox) drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.chalk);
-	}
-	
-	private void updateSaveString(double drawAreaMidX, double drawAreaMidY) {
-		double sw = FontRenderer.getStringWidth(saveString);
-		double hsw = (sw / 2);
-		double sbsx = drawAreaMidX - hsw - 12.5;
-		double sbsy = drawAreaMidY - (FontRenderer.FONT_HEIGHT / 2) - 12.5;
-		double sbex = drawAreaMidX + hsw + 12.5;
-		double sbey = drawAreaMidY + (FontRenderer.FONT_HEIGHT / 2) + 12.5;
-		drawRect(sbsx, sbsy, sbex, sbey,  EColors.black);
-		drawRect(sbsx + 2, sbsy + 2, sbex - 2, sbey - 2,  EColors.dgray);
-		drawStringC(saveString, drawAreaMidX, drawAreaMidY - (FontRenderer.FONT_HEIGHT / 2), saveStringColor);
-		if (System.currentTimeMillis() - saveStringTimeout > 600) recentlySaved = false;
-	}
-	
 	@Override
 	public void mouseScrolled(int change) {
 		double c = Math.signum(change);
 		double z = 1.0;
 		
 		if (Keyboard.isCtrlDown()) {
-			if (c > 0 && world.getZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
-			else if (world.getZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
+			if (c > 0 && actualWorld.getZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
+			else if (actualWorld.getZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
 			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
-			else if (world.getZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
+			else if (actualWorld.getZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
 			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
 			
-			z = NumberUtil.round(world.getZoom() + z, 2);
-			world.setZoom(z);
+			z = NumberUtil.round(actualWorld.getZoom() + z, 2);
+			actualWorld.setZoom(z);
 			
 			updateDrawDist();
 		}
 		else if (Keyboard.isShiftDown()) {
 			midDrawX -= c * 2;
-			midDrawX = (midDrawX < 0) ? 0 : (midDrawX > (world.getWidth() - 1)) ? world.getWidth() - 1 : midDrawX;
+			midDrawX = (midDrawX < 0) ? 0 : (midDrawX > (actualWorld.getWidth() - 1)) ? actualWorld.getWidth() - 1 : midDrawX;
 		}
 		else if (Keyboard.isAltDown()) {
 			midDrawY -= c * 2;
-			midDrawY = (midDrawY < 0) ? 0 : (midDrawY > (world.getHeight()) - 1) ? world.getHeight() - 1 : midDrawY;
-		}
-	}
-	
-	private void updateDrawDist() {
-		if (world != null) {
-			double w = world.getTileWidth() * world.getZoom();
-			double h = world.getTileHeight() * world.getZoom();
-			
-			double dw = ((QoT.getWidth() - sidePanel.width) / w) / 2.0;
-			double dh = ((QoT.getHeight() - topHeader.height) / h) / 2.0;
-			
-			//System.out.println(dw + " : " + dh);
-			
-			drawDistX = (int) Math.round(dw);
-			drawDistY = (int) Math.ceil(dh);
-			
-			updateMap = true;
+			midDrawY = (midDrawY < 0) ? 0 : (midDrawY > (actualWorld.getHeight()) - 1) ? actualWorld.getHeight() - 1 : midDrawY;
 		}
 	}
 	
@@ -317,15 +295,7 @@ public class MapEditorScreen extends GameScreen {
 		}
 	}
 	
-	@Override
-	public void actionPerformed(IActionObject object, Object... args) {
-		
-	}
-	
-	@Override
-	public void onScreenClosed() {
-		SoundEngine.stopAll();
-	}
+	@Override public void actionPerformed(IActionObject object, Object... args) {}
 	
 	@Override
 	public void onGameTick(long ticks) {
@@ -340,6 +310,11 @@ public class MapEditorScreen extends GameScreen {
 		System.out.println("GAME EVENT: " + e);
 	}
 	
+	@Override
+	public void onScreenClosed() {
+		SoundEngine.stopAll();
+	}
+	
 	//------------------------
 	// Private Editor Methods
 	//------------------------
@@ -351,55 +326,10 @@ public class MapEditorScreen extends GameScreen {
 		if (!Keyboard.isCtrlDown()) {
 			if (Keyboard.isWDown() || Keyboard.isKeyDown(Keyboard.KEY_UP)) { midDrawY--; midDrawY = (midDrawY < 0) ? 0 : midDrawY; }
 			if (Keyboard.isADown() || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) { midDrawX--; midDrawX = (midDrawX < 0) ? 0 : midDrawX; }
-			if (Keyboard.isSDown() || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) { midDrawY++; midDrawY = (midDrawY > (world.getHeight() - 1)) ? world.getHeight() - 1 : midDrawY; }
-			if (Keyboard.isDDown() || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) { midDrawX++; midDrawX = (midDrawX > (world.getWidth() - 1)) ? world.getWidth() - 1 : midDrawX; }
+			if (Keyboard.isSDown() || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) { midDrawY++; midDrawY = (midDrawY > (actualWorld.getHeight() - 1)) ? actualWorld.getHeight() - 1 : midDrawY; }
+			if (Keyboard.isDDown() || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) { midDrawX++; midDrawX = (midDrawX > (actualWorld.getWidth() - 1)) ? actualWorld.getWidth() - 1 : midDrawX; }
 			
 			timeSinceKey = System.currentTimeMillis();
-		}
-	}
-	
-	public void loadWorld() {
-		boolean center = world == null || !firstPress;
-		
-		if (mapFile != null) {
-			double oldZoom = 1;
-			if (world != null) oldZoom = world.getZoom();
-			world = new GameWorld(mapFile);
-			world.setZoom(oldZoom);
-		}
-		else if (world != null) {
-			double oldZoom = world.getZoom();
-			world.getHighlightedRegions().clear();
-			mapFile = world.getWorldFile();
-			world.setZoom(oldZoom);
-		}
-		
-		if (center) {
-			midDrawX = world.getWidth() / 2;
-			midDrawY = world.getHeight() / 2;
-			drawDistX = (int) (world.getWidth() / getZoom());
-			drawDistY = (int) (world.getHeight() / getZoom());
-		}
-		
-		loading = false;
-	}
-	
-	public void saveWorld() {
-		if (world != null) {
-			if (world.saveWorldToFile()) {
-				saveString = "Saved!";
-				saveStringColor = EColors.lgreen;
-				recentlySaved = true;
-				hasSaved = true;
-				hasBeenModified = false;
-				saveStringTimeout = System.currentTimeMillis();
-			}
-			else {
-				saveString = "Failed to Save!";
-				saveStringColor = EColors.lred;
-				recentlySaved = true;
-				saveStringTimeout = System.currentTimeMillis();
-			}
 		}
 	}
 	
@@ -407,10 +337,10 @@ public class MapEditorScreen extends GameScreen {
 	private void drawMap(double x, double y, double w, double h) {
 		//only update values if needed
 		//if (updateMap || midDrawX != oldWorldX || midDrawY != oldWorldY) {
-			left = NumberUtil.clamp(midDrawX - drawDistX, 0, world.getWidth() - 1);
-			top = NumberUtil.clamp(midDrawY - drawDistY, 0, world.getHeight() - 1);
-			right = NumberUtil.clamp(midDrawX + drawDistX, left, world.getWidth() - 1);
-			bot = NumberUtil.clamp(midDrawY + drawDistY, top, world.getHeight() - 1);
+			left = NumberUtil.clamp(midDrawX - drawDistX, 0, actualWorld.getWidth() - 1);
+			top = NumberUtil.clamp(midDrawY - drawDistY, 0, actualWorld.getHeight() - 1);
+			right = NumberUtil.clamp(midDrawX + drawDistX, left, actualWorld.getWidth() - 1);
+			bot = NumberUtil.clamp(midDrawY + drawDistY, top, actualWorld.getHeight() - 1);
 			dw = right - left; //draw width
 			dh = bot - top; //draw height
 			updateMap = false;
@@ -418,7 +348,8 @@ public class MapEditorScreen extends GameScreen {
 		
 		for (int i = left, ix = 0; i <= right; i++, ix++) {
 			for (int j = top, jy = 0; j <= bot; j++, jy++) {
-				WorldTile t = world.getWorldData()[i][j];
+				//WorldTile t = world.getWorldData()[i][j];
+				WorldTile t = editorWorld.get(i, j).getTile();
 				if (t == null) continue;
 				if (!t.hasTexture()) continue;
 				
@@ -439,15 +370,15 @@ public class MapEditorScreen extends GameScreen {
 													  Mouse.getMy() >= dY &&
 													  Mouse.getMy() < (dY + h);
 				
-				t.renderTile(world, dX, dY, w, h, 0xffffffff, mouseOver);
+				t.renderTile(actualWorld, dX, dY, w, h, 0xffffffff, mouseOver);
 			}
 		}
 	}
 	
 	private void renderEntities(double x, double y, double w, double h) {
-		EArrayList<EntitySpawn> spawns = world.getEntitySpawns();
+		EArrayList<EntitySpawn> spawns = actualWorld.getEntitySpawns();
 		EArrayList<Entity> entities = new EArrayList<>();
-		for (var s : spawns) entities.add(s.getEntity(world));
+		for (var s : spawns) entities.add(s.getEntity(actualWorld));
 		entities.sort(Comparator.comparingInt(e -> e.endY));
 		
 		for (int i = 0; i < entities.size(); i++) {
@@ -461,14 +392,14 @@ public class MapEditorScreen extends GameScreen {
 			double drawY = y + h * (ent.worldY + drawDistY - midDrawY);
 			
 			//calculate the entity's draw width and height based off of actual dims and zoom
-			double drawW = ent.width * world.getZoom();
-			double drawH = ent.height * world.getZoom();
+			double drawW = ent.width * actualWorld.getZoom();
+			double drawH = ent.height * actualWorld.getZoom();
 			
 			//draw the entity on top of the tile it's on (elevated if it's a wall)
-			if (ent.worldX >= 0 && ent.worldX < world.getWidth() &&
-				ent.worldY >= 0 && ent.worldY < world.getHeight())
+			if (ent.worldX >= 0 && ent.worldX < actualWorld.getWidth() &&
+				ent.worldY >= 0 && ent.worldY < actualWorld.getHeight())
 			{
-				WorldTile tileUnderEntity = world.getTileAt(ent.worldX, ent.worldY);
+				WorldTile tileUnderEntity = actualWorld.getTileAt(ent.worldX, ent.worldY);
 				if (tileUnderEntity != null && tileUnderEntity.isWall()) {
 					var wallHeight = tileUnderEntity.getWallHeight() * h;
 					drawY -= wallHeight;
@@ -481,6 +412,94 @@ public class MapEditorScreen extends GameScreen {
 			
 			if (settings.drawEntityHitBoxes) {
 				drawHRect(drawX, drawY, drawX + drawW, drawY + drawH, 1, EColors.blue);
+			}
+		}
+	}
+	
+	//------------
+	// Load World
+	//------------
+	
+	public void loadWorld() {
+		boolean center = actualWorld == null || !firstPress;
+		
+		if (mapFile != null) {
+			double oldZoom = 1;
+			if (actualWorld != null) oldZoom = actualWorld.getZoom();
+			actualWorld = new GameWorld(mapFile);
+			actualWorld.setZoom(oldZoom);
+		}
+		else if (actualWorld != null) {
+			double oldZoom = actualWorld.getZoom();
+			mapFile = actualWorld.getWorldFile();
+			actualWorld.setZoom(oldZoom);
+		}
+		
+		//create editor world
+		editorWorld = new GameWorld(actualWorld);
+		
+		//wrap world into editor objects
+		for (int i = 0; i < actualWorld.getHeight(); i++) {
+			for (int j = 0; j < actualWorld.getWidth(); j++) {
+ 				EditorObject obj = EditorObject.of(actualWorld.getTileAt(i, j));
+ 				editorWorld.setTileAt(i, j, obj);
+ 			}
+		}
+		
+		//wrap entities in world into editor objects
+		entitiesInWorld = new EArrayList<>(actualWorld.getEntitySpawns().size());
+		for (var spawn : actualWorld.getEntitySpawns()) {
+			var ent = spawn.getEntity(actualWorld);
+			EditorObject obj = EditorObject.of(ent);
+			entitiesInWorld.add(obj);
+		}
+		
+		if (center) {
+			midDrawX = actualWorld.getWidth() / 2;
+			midDrawY = actualWorld.getHeight() / 2;
+			drawDistX = (int) (actualWorld.getWidth() / getZoom());
+			drawDistY = (int) (actualWorld.getHeight() / getZoom());
+		}
+		
+		loading = false;
+	}
+	
+	//------------
+	// Save World
+	//------------
+	
+	public void saveWorld() {
+		if (actualWorld != null) {
+			
+			//copy editor world data to world
+			for (int i = 0; i < actualWorld.getHeight(); i++) {
+				for (int j = 0; j < actualWorld.getWidth(); j++) {
+					actualWorld.setTileAt(i, j, editorWorld.get(i, j).getTile());
+				}
+			}
+			
+			//copy editor entity data to world
+			actualWorld.getEntitySpawns().clear();
+			for (EditorObject entity : entitiesInWorld) {
+				GameObject obj = entity.getGameObject();
+				if (obj instanceof Entity e) {
+					actualWorld.addEntitySpawn(e);
+				}
+			}
+			
+			if (actualWorld.saveWorldToFile()) {
+				saveString = "Saved!";
+				saveStringColor = EColors.lgreen;
+				recentlySaved = true;
+				hasSaved = true;
+				hasBeenModified = false;
+				saveStringTimeout = System.currentTimeMillis();
+			}
+			else {
+				saveString = "Failed to Save!";
+				saveStringColor = EColors.lred;
+				recentlySaved = true;
+				saveStringTimeout = System.currentTimeMillis();
 			}
 		}
 	}
@@ -498,8 +517,8 @@ public class MapEditorScreen extends GameScreen {
 	private void drawMapBorders(double x, double y, double w, double h) {
 		double drawPosX = x; //left most x coord of map
 		double drawPosY = y; //top most y coord of map
-		double drawPosEndX = x + (drawDistX - midDrawX + world.getWidth()) * w;
-		double drawPosEndY = y + (drawDistY - midDrawY + world.getHeight()) * h;
+		double drawPosEndX = x + (drawDistX - midDrawX + actualWorld.getWidth()) * w;
+		double drawPosEndY = y + (drawDistY - midDrawY + actualWorld.getHeight()) * h;
 		
 		//shift over in terms of midDrawX/Y offset in relation to map render distance
 		if (midDrawX < drawDistX) drawPosX += (drawDistX - midDrawX) * w;
@@ -509,12 +528,11 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	private void drawRegions(double x, double y, double w, double h) {
-		world.getHighlightedRegions().forEach(r -> drawRegion(r, x, y, w, h));
-		world.getRegionData().forEach(r -> drawRegion(r, x, y, w, h));
+		actualWorld.getRegionData().forEach(r -> drawRegion(r, x, y, w, h));
 	}
 	
 	private void drawRegion(Region r, double x, double y, double w, double h) {
-		double z = world.getZoom();
+		double z = actualWorld.getZoom();
 		double sX = (r.startX * z);
 		double sY = (r.startY * z);
 		double rw = (r.width * z);
@@ -534,12 +552,64 @@ public class MapEditorScreen extends GameScreen {
 		if (xCheck >= 0 && yCheck >= 0) {
 			worldXPos = (int) (xCheck / w);
 			worldYPos = (int) (yCheck / h);
-			boolean inMap = worldXPos >= 0 && worldXPos < world.getWidth() && worldYPos >= 0 && worldYPos < world.getHeight();
+			boolean inMap = worldXPos >= 0 && worldXPos < actualWorld.getWidth() && worldYPos >= 0 && worldYPos < actualWorld.getHeight();
 			
 			return mouseOver && inMap && EDimension.of(x, y, x + w + (drawDistX * 2 * w), y + h + (drawDistY * 2 * h)).contains(mXIn, mYIn);
 		}
 		return false;
 	}
+	
+	/**
+	 * Draws a box around the currently hovered tile.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 */
+	private void drawHoveredTileBox(double x, double y, double w, double h) {
+		worldXPos = NumberUtil.clamp(worldXPos, 0, actualWorld.getWidth() - 1);
+		worldYPos = NumberUtil.clamp(worldYPos, 0, actualWorld.getHeight() - 1);
+		
+		double xPos = x + w * (worldXPos + drawDistX - midDrawX);
+		double yPos = y + h * (worldYPos + drawDistY - midDrawY);
+		
+		if (!settings.drawWallBox) drawHRect(xPos, yPos, xPos + w, yPos + h, 1, EColors.chalk);
+	}
+	
+	private void updateSaveString(double drawAreaMidX, double drawAreaMidY) {
+		double sw = FontRenderer.getStringWidth(saveString);
+		double hsw = (sw / 2);
+		double sbsx = drawAreaMidX - hsw - 12.5;
+		double sbsy = drawAreaMidY - (FontRenderer.FONT_HEIGHT / 2) - 12.5;
+		double sbex = drawAreaMidX + hsw + 12.5;
+		double sbey = drawAreaMidY + (FontRenderer.FONT_HEIGHT / 2) + 12.5;
+		drawRect(sbsx, sbsy, sbex, sbey,  EColors.black);
+		drawRect(sbsx + 2, sbsy + 2, sbex - 2, sbey - 2,  EColors.dgray);
+		drawStringC(saveString, drawAreaMidX, drawAreaMidY - (FontRenderer.FONT_HEIGHT / 2), saveStringColor);
+		if (System.currentTimeMillis() - saveStringTimeout > 600) recentlySaved = false;
+	}
+	
+	private void updateDrawDist() {
+		if (actualWorld != null) {
+			double w = actualWorld.getTileWidth() * actualWorld.getZoom();
+			double h = actualWorld.getTileHeight() * actualWorld.getZoom();
+			
+			double dw = ((QoT.getWidth() - sidePanel.width) / w) / 2.0;
+			double dh = ((QoT.getHeight() - topHeader.height) / h) / 2.0;
+			
+			//System.out.println(dw + " : " + dh);
+			
+			drawDistX = (int) Math.round(dw);
+			drawDistY = (int) Math.ceil(dh);
+			
+			updateMap = true;
+		}
+	}
+	
+	//---------------------------------
+	//         Public Getters
+	//---------------------------------
 	
 	public EDimension getMapDrawDims() {
 		double sx = 0.0;
@@ -549,10 +619,6 @@ public class MapEditorScreen extends GameScreen {
 		return new EDimension(sx, sy, ex, ey);
 	}
 	
-	//---------------------------------
-	//         Public Getters
-	//---------------------------------
-	
 	public int getXPos() { return midDrawX; }
 	public int getYPos() { return midDrawY; }
 	public int getViewX() { return drawDistX; }
@@ -560,13 +626,14 @@ public class MapEditorScreen extends GameScreen {
 	public int getWorldMX() { return worldXPos; }
 	public int getWorldMY() { return worldYPos; }
 	
-	public double getZoom() { return (world != null) ? world.getZoom() : 1; }
+	public double getZoom() { return (actualWorld != null) ? actualWorld.getZoom() : 1; }
 	
-	public GameWorld getWorld() { return world; }
+	public GameWorld getWorld() { return actualWorld; }
 	public boolean isMouseInMap() { return mouseInMap; }
 	
 	public WorldTile setTileAt(int x, int y, WorldTile in) {
-		world.setTileAt(x, y, in);
+		editorWorld.set(EditorObject.of(in), x, y);
+		//world.setTileAt(x, y, in);
 		hasBeenModified = true;
 		hasSaved = false;
 		return in;
@@ -574,7 +641,8 @@ public class MapEditorScreen extends GameScreen {
 	
 	public WorldTile setTileAtMouse(WorldTile in) {
 		if (mouseInMap) {
-			world.setTileAt(worldXPos, worldYPos, in);
+			editorWorld.set(EditorObject.of(in), worldXPos, worldYPos);
+			//world.setTileAt(worldXPos, worldYPos, in);
 			hasBeenModified = true;
 			hasSaved = false;
 		}
@@ -582,8 +650,8 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	public WorldTile getTileHoveringOver() {
-		if (world != null) {
-			return world.getTileAt(worldXPos, worldYPos);
+		if (actualWorld != null) {
+			return editorWorld.get(worldXPos, worldYPos).getTile();
 		}
 		return null;
 	}
@@ -595,6 +663,8 @@ public class MapEditorScreen extends GameScreen {
 	public EditorToolBox getToolBox() { return toolBox; }
 	public EditorSidePanel getSidePanel() { return sidePanel; }
 	public EditorToolType getCurrentTool() { return settings.getCurrentTool(); }
+	public SidePanelType getCurrentSidePanel() { return sidePanel.getCurrentPanelType(); }
+	
 	
 	//---------------------------------
 	//         Public Setters
@@ -605,5 +675,68 @@ public class MapEditorScreen extends GameScreen {
 	
 	public MapEditorScreen setViewX(int dist) { drawDistX = NumberUtil.clamp(dist, 0, dist); return this; }
 	public MapEditorScreen setViewY(int dist) { drawDistY = NumberUtil.clamp(dist, 0, dist); return this; }
+	
+	
+	//------------------
+	// Selected Objects
+	//------------------
+	
+	public void clearSelected() {
+		var it = selectedObjects.iterator();
+		while (it.hasNext()) {
+			var o = it.next();
+			o.setSelected(false);
+			it.remove();
+		}
+	}
+	
+	public EArrayList<EditorObject> getSelectedObjects() { return selectedObjects; }
+	
+	public void addToSelected(EditorObject... objs) { addAllToSelected(objs); }
+	public void addToSelected(Collection<EditorObject> objs) { addAllToSelected(objs); }
+	public void removeFromSelected(EditorObject... objs) { removeAllFromSelected(objs); }
+	public void removeFromSelected(Collection<EditorObject> objs) { removeAllFromSelected(objs); }
+	
+	public void setSelectedObjects(EditorObject... objs) {
+		clearSelected();
+		addAllToSelected(objs);
+	}
+	
+	public void setSelectedObjects(Collection<EditorObject> objs) {
+		clearSelected();
+		addAllToSelected(objs);
+	}
+	
+	private void addAllToSelected(EditorObject... objs) {
+		for (var o : objs) {
+			if (o == null) continue;
+			o.setSelected(true);
+			selectedObjects.add(o);
+		}
+	}
+	
+	private void addAllToSelected(Collection<EditorObject> objs) {
+		for (var o : objs) {
+			if (o == null) continue;
+			o.setSelected(true);
+			selectedObjects.add(o);
+		}
+	}
+	
+	private void removeAllFromSelected(EditorObject... objs) {
+		for (var o : objs) {
+			if (o == null) continue;
+			o.setSelected(false);
+			selectedObjects.remove(o);
+		}
+	}
+	
+	private void removeAllFromSelected(Collection<EditorObject> objs) {
+		for (var o : objs) {
+			if (o == null) continue;
+			o.setSelected(false);
+			selectedObjects.remove(o);
+		}
+	}
 	
 }

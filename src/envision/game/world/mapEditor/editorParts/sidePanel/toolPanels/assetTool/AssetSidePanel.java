@@ -9,7 +9,7 @@ import envision.game.world.mapEditor.editorParts.sidePanel.EditorSidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.PaletteSidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.mapEditor.editorParts.toolBox.ToolCategory;
-import envision.game.world.mapEditor.editorParts.util.EditorItem;
+import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import envision.game.world.mapEditor.editorTools.EditorToolType;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
@@ -20,7 +20,7 @@ import game.GlobalAssetList;
 public class AssetSidePanel extends PaletteSidePanel {
 
 	public static final ToolCategory assetTools = ToolCategory.from("Assets", PLACE, MOVE);
-	private EArrayList<WindowButton<EditorItem>> buttons = new EArrayList();
+	private EArrayList<WindowButton<EditorObject>> buttons = new EArrayList();
 	
 	public AssetSidePanel(EditorSidePanel panelIn, MapEditorScreen in) {
 		super(panelIn, in, SidePanelType.ASSET);
@@ -43,21 +43,21 @@ public class AssetSidePanel extends PaletteSidePanel {
 		int rowWidth = ((int) width - 10) / bw;
 		
 		for (GameObject t : GlobalAssetList.getAssets()) {
-			WindowButton<EditorItem> b = new WindowButton(panel) {
+			WindowButton<EditorObject> b = new WindowButton(panel) {
 				@Override
 				public void drawObject(int mXIn, int mYIn) {
 					super.drawObject(mXIn, mYIn);
 					drawHRect(EColors.black);
 				}
 			};
-			b.setGenericObject(EditorItem.of(t));
+			b.setGenericObject(EditorObject.of(t));
 			b.setAcceptRightClicks(true);
 			buttons.add(b);
 		}
 		
 		for (int i = 0; i < buttons.size(); i++) {
-			WindowButton<EditorItem> b = buttons.get(i);
-			EditorItem item = b.getGenericObject();
+			WindowButton<EditorObject> b = buttons.get(i);
+			EditorObject item = b.getGenericObject();
 			
 			int xPos = i % rowWidth;
 			int yPos = i / rowWidth;
@@ -82,7 +82,7 @@ public class AssetSidePanel extends PaletteSidePanel {
 
 	@Override
 	public void onAction(IActionObject object, Object... args) {
-		if (object instanceof WindowButton b && b.getGenericObject() instanceof EditorItem item) {
+		if (object instanceof WindowButton b && b.getGenericObject() instanceof EditorObject item) {
 			int button = b.getPressedButton();
 			
 			MapEditorSettings s = editor.getSettings();

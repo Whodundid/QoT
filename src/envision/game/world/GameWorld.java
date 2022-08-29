@@ -35,14 +35,14 @@ public class GameWorld {
 	protected int tileWidth, tileHeight;
 	protected double zoom = 1;
 	protected WorldTile[][] worldData = new WorldTile[0][0];
-	protected EArrayList<Entity> entityData = new EArrayList();
-	protected EArrayList<EntitySpawn> entitySpawns = new EArrayList();
-	protected EArrayList<Region> regionData = new EArrayList();
-	protected EArrayList<Region> highlightedRegions = new EArrayList();
+	protected EArrayList<Entity> entityData = new EArrayList<>();
+	protected EArrayList<EntitySpawn> entitySpawns = new EArrayList<>();
+	protected EArrayList<Region> regionData = new EArrayList<>();
 	protected PlayerSpawnPosition playerSpawn = new PlayerSpawnPosition(this);
 	protected WorldRenderer worldRenderer;
 	protected boolean underground = false;
 	
+	/** IDK WHAT THIS ONE IS!!! */
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
 	
@@ -80,6 +80,42 @@ public class GameWorld {
 		worldRenderer = new WorldRenderer(this);
 	}
 	
+	/**
+	 * Copies the existing world.
+	 * 
+	 * @param worldIn
+	 */
+	public GameWorld(GameWorld worldIn) {
+		name = worldIn.name;
+		width = worldIn.width;
+		height = worldIn.height;
+		tileWidth = worldIn.tileWidth;
+		tileHeight = worldIn.tileHeight;
+		underground = worldIn.underground;
+		playerSpawn = worldIn.playerSpawn;
+		worldData = new WorldTile[width][height];
+		entityData = new EArrayList<>();
+		
+		//copy tile data
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				var tile = worldIn.getTileAt(i, j);
+				if (tile == null) continue;
+				worldData[i][j] = WorldTile.copy(worldIn.getTileAt(i, j));
+			}
+		}
+		
+		//copy entity data
+		for (EntitySpawn spawn : worldIn.entitySpawns) entitySpawns.add(new EntitySpawn(spawn));
+		for (Entity ent : worldIn.entityData) entityData.add(ent);
+		
+		//copy region data
+		for (Region r : worldIn.regionData) regionData.add(r);
+		
+		worldRenderer = new WorldRenderer(this);
+		fileLoaded = true;
+	}
+	
 	public void setDefaultValues() {
 		//name = "Unnamed";
 		width = 0;
@@ -115,10 +151,6 @@ public class GameWorld {
 	//---------
 	// Regions
 	//---------
-	
-	public void highlightRegion(Region regionIn) {
-		highlightedRegions.add(regionIn);
-	}
 	
 	public void addRegion(Region regionIn) {
 		regionData.add(regionIn);
@@ -251,8 +283,8 @@ public class GameWorld {
 		if (worldFile != null && worldFile.exists()) {
 			try (Scanner reader = new Scanner(worldFile)) {
 				
-				EArrayList<EntitySpawn> entitySpawnsIn = new EArrayList();
-				EArrayList<Region> regions = new EArrayList();
+				EArrayList<EntitySpawn> entitySpawnsIn = new EArrayList<>();
+				EArrayList<Region> regions = new EArrayList<>();
 				
 				String mapName = reader.nextLine();
 				int mapWidth = reader.nextInt();
@@ -386,7 +418,6 @@ public class GameWorld {
 	// Getters
 	//---------
 	
-	public EArrayList<Region> getHighlightedRegions() { return highlightedRegions; }
 	public EArrayList<Region> getRegionData() { return regionData; }
 	public boolean isFileLoaded() { return fileLoaded; }
 	public boolean isLoaded() { return loaded; }
@@ -403,6 +434,7 @@ public class GameWorld {
 	public boolean exists() { return getWorldFile().exists(); }
 	public double getZoom() { return zoom; }
 	public boolean isUnderground() { return underground; }
+	public PlayerSpawnPosition getPlayerSpawn() { return playerSpawn; }
 	
 	public WorldTile getTileAt(int xIn, int yIn) {
 		return worldData[xIn][yIn];

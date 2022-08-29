@@ -11,4 +11,9 @@ public class Dirt extends WorldTile {
 		setTexture(NatureTextures.dirt);
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new Dirt());
+	}
+	
 }

@@ -8,6 +8,10 @@ import game.entities.EntityList;
 
 public class EntitySpawn {
 	
+	//--------
+	// Fields
+	//--------
+	
 	private int x, y;
 	private int type;
 	private EArrayList<Item> spawnItems = new EArrayList();
@@ -15,12 +19,23 @@ public class EntitySpawn {
 	private int initMana = -1;
 	private Rotation initFacing = Rotation.LEFT;
 	
+	//--------------
+	// Constructors
+	//--------------
+	
 	private EntitySpawn() {}
 	public EntitySpawn(int xIn, int yIn, Entity entIn) { this(xIn, yIn, entIn.getObjectID()); }
 	public EntitySpawn(int xIn, int yIn, int typeIn) {
 		x = xIn;
 		y = yIn;
 		type = typeIn;
+	}
+	
+	public EntitySpawn(EntitySpawn spawnIn) {
+		x = spawnIn.x;
+		y = spawnIn.y;
+		type = spawnIn.type;
+		//others not really supported (or used) yet
 	}
 	
 	public static EntitySpawn parse(String in) {

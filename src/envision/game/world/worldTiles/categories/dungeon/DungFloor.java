@@ -11,4 +11,9 @@ public class DungFloor extends WorldTile {
 		setTexture(StoneFloorTextures.dung_floor);
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new DungFloor());
+	}
+	
 }

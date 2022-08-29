@@ -20,4 +20,9 @@ public class Water extends WorldTile {
 		super.renderTile(world, x, y, w, h, brightness, mouseOver);
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new Water());
+	}
+	
 }

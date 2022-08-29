@@ -11,4 +11,9 @@ public class CrackedDirt extends WorldTile {
 		setTexture(NatureTextures.cracked_dirt);
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new CrackedDirt());
+	}
+	
 }

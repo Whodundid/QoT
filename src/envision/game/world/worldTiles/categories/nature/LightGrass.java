@@ -19,4 +19,9 @@ public class LightGrass extends WorldTile {
 		}
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new LightGrass());
+	}
+	
 }

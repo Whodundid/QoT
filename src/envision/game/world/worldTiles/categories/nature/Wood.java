@@ -11,4 +11,9 @@ public class Wood extends WorldTile {
 		setTexture(WoodFloorTextures.wood_floor);
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new Wood());
+	}
+	
 }

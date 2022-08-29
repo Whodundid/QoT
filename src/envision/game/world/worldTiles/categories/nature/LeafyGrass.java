@@ -19,4 +19,9 @@ public class LeafyGrass extends WorldTile {
 		}
 	}
 	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new LeafyGrass());
+	}
+	
 }

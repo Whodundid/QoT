@@ -47,7 +47,10 @@ public class FarmPlot extends WorldTile {
 		}
 	}
 	
-	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new FarmPlot());
+	}
 	
 	//------------------
 	// Internal Methods
