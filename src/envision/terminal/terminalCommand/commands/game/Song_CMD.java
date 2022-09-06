@@ -2,7 +2,6 @@ package envision.terminal.terminalCommand.commands.game;
 
 import envision.game.sounds.Audio;
 import envision.game.sounds.SoundEngine;
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.EUtil;
@@ -15,7 +14,6 @@ import game.settings.QoTSettings;
 public class Song_CMD extends TerminalCommand {
 	
 	public Song_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("Game");
 		numArgs = 1;
 	}

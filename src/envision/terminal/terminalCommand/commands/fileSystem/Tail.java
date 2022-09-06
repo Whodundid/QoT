@@ -1,19 +1,18 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
+import java.io.File;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.input.ReversedLinesFileReader;
+
+import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.strings.EStringUtil;
-import java.io.File;
-import java.nio.charset.Charset;
-import org.apache.commons.io.input.ReversedLinesFileReader;
-
-import envision.terminal.terminalCommand.CommandType;
-import envision.terminal.window.ETerminal;
 
 public class Tail extends FileCommand {
 	
 	public Tail() {
-		super(CommandType.NORMAL);
 		numArgs = 1;
 	}
 	

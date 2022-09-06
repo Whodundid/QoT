@@ -1,18 +1,16 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
-import eutil.datatypes.EArrayList;
-import eutil.strings.EStringUtil;
 import java.io.File;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.window.ETerminal;
 import envision.windowLib.bundledWindows.TextEditorWindow;
 import envision.windowLib.windowUtil.ObjectPosition;
+import eutil.datatypes.EArrayList;
+import eutil.strings.EStringUtil;
 
 public class Edit extends FileCommand {
 	
 	public Edit() {
-		super(CommandType.NORMAL);
 		numArgs = 1;
 	}
 	

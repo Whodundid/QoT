@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
@@ -13,7 +12,6 @@ import game.QoT;
 public class ForLoop extends TerminalCommand {
 	
 	public ForLoop() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 2;
 	}

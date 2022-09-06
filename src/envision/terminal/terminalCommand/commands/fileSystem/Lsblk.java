@@ -1,16 +1,14 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
-import eutil.datatypes.EArrayList;
-import eutil.strings.EStringUtil;
 import java.io.File;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.window.ETerminal;
+import eutil.datatypes.EArrayList;
+import eutil.strings.EStringUtil;
 
 public class Lsblk extends FileCommand {
 	
 	public Lsblk() {
-		super(CommandType.NORMAL);
 		numArgs = 0;
 	}
 	

@@ -3,7 +3,6 @@ package envision.terminal.terminalCommand.commands.game;
 import java.io.File;
 
 import envision.game.world.gameWorld.GameWorld;
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.commands.fileSystem.FileCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
@@ -16,7 +15,6 @@ import game.settings.QoTSettings;
 public class LoadWorld_CMD extends FileCommand {
 	
 	public LoadWorld_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("Game");
 		numArgs = 0;
 	}

@@ -1,21 +1,18 @@
 package envision.terminal.terminalCommand.commands.game;
 
+import java.io.File;
+
+import envision.inputHandlers.Keyboard;
+import envision.terminal.terminalCommand.TerminalCommand;
+import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.file.FileOpener;
 import game.settings.QoTSettings;
 
-import java.io.File;
-
-import envision.inputHandlers.Keyboard;
-import envision.terminal.terminalCommand.CommandType;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
-
 public class WorldsDir_CMD extends TerminalCommand {
 	
 	public WorldsDir_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("Game");
 		setAcceptedModifiers("-c", "-o");
 		numArgs = 0;

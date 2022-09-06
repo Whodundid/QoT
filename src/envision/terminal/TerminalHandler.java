@@ -28,6 +28,7 @@ import envision.terminal.terminalCommand.commands.game.ListEntities_CMD;
 import envision.terminal.terminalCommand.commands.game.LoadWorld_CMD;
 import envision.terminal.terminalCommand.commands.game.NoClip_CMD;
 import envision.terminal.terminalCommand.commands.game.PauseGame_CMD;
+import envision.terminal.terminalCommand.commands.game.ReloadWorld_CMD;
 import envision.terminal.terminalCommand.commands.game.SaveWorld_CMD;
 import envision.terminal.terminalCommand.commands.game.SetWorldUnderground_CMD;
 import envision.terminal.terminalCommand.commands.game.Song_CMD;
@@ -157,6 +158,7 @@ public class TerminalHandler {
 		registerCommand(new WorldsDir_CMD(), termIn, runVisually);
 		registerCommand(new ListEntities_CMD(), termIn, runVisually);
 		registerCommand(new Kill_CMD(), termIn, runVisually);
+		registerCommand(new ReloadWorld_CMD(), termIn, runVisually);
 		
 		//system
 		registerCommand(new CalcCommand(), termIn, runVisually);

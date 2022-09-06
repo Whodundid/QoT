@@ -1,19 +1,16 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-
 import java.io.File;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.terminalUtil.ESystemInfo;
 import envision.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
 
 public class SystemCMD extends TerminalCommand {
 	
 	public SystemCMD() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 0;
 	}

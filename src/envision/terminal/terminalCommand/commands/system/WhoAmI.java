@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
@@ -10,7 +9,6 @@ import eutil.datatypes.EArrayList;
 public class WhoAmI extends TerminalCommand {
 	
 	public WhoAmI() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 0;
 	}

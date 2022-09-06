@@ -11,6 +11,10 @@ import envision.terminal.window.ETerminal;
 
 public abstract class FileCommand extends TerminalCommand {
 	
+	public FileCommand() {
+		setCategory("File System");
+	}
+	
 	public FileCommand(CommandType typeIn) {
 		super(typeIn);
 		setCategory("File System");

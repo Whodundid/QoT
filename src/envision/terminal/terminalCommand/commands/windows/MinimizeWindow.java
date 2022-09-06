@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.windows;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import envision.windowLib.windowTypes.WindowParent;
@@ -12,7 +11,6 @@ import eutil.strings.EStringUtil;
 public class MinimizeWindow extends TerminalCommand {
 	
 	public MinimizeWindow() {
-		super(CommandType.NORMAL);
 		setCategory("Windows");
 		numArgs = 1;
 	}

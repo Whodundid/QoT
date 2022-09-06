@@ -26,6 +26,10 @@ public abstract class TerminalCommand {
 	// Constructors
 	//--------------
 	
+	public TerminalCommand() {
+		type = CommandType.NORMAL;
+	}
+	
 	public TerminalCommand(CommandType typeIn) {
 		type = typeIn;
 	}

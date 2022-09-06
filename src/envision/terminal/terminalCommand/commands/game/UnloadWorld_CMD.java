@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
@@ -11,7 +10,6 @@ import game.screens.main.MainMenuScreen;
 public class UnloadWorld_CMD extends TerminalCommand {
 	
 	public UnloadWorld_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("Game");
 		numArgs = 0;
 	}

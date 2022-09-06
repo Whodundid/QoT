@@ -473,7 +473,7 @@ public class QoT implements EnvisionGame {
 	 */
 	public static GameWorld loadWorld(GameWorld worldIn) {
 		//unload the last world (if there was one)
-		if (theWorld != null) { theWorld.setLoaded(false); }
+		if (theWorld != null) theWorld.setLoaded(false);
 		
 		theWorld = worldIn;
 		
@@ -487,7 +487,7 @@ public class QoT implements EnvisionGame {
 			renderWorld = true;
 			
 			//check if loaded
-			if (!theWorld.isLoaded()) { warn("Failed to load world: "); }
+			if (!theWorld.isLoaded()) warn("Failed to load world: ");
 		}
 		
 		return worldIn;

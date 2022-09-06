@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
@@ -10,7 +9,6 @@ import game.QoT;
 public class CurScreen extends TerminalCommand {
 	
 	public CurScreen() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 0;
 	}

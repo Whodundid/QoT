@@ -2,7 +2,6 @@ package envision.terminal.terminalCommand.commands.system;
 
 import java.io.File;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import envision_lang.EnvisionLang;
@@ -13,7 +12,6 @@ import game.QoT;
 public class Envision_CMD extends TerminalCommand {
 	
 	public Envision_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 0;
 	}

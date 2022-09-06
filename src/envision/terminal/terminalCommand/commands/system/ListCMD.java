@@ -2,7 +2,6 @@ package envision.terminal.terminalCommand.commands.system;
 
 import envision.game.screens.GameScreen;
 import envision.game.screens.ScreenRepository;
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.IListableCommand;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
@@ -19,7 +18,6 @@ import game.QoT;
 public class ListCMD extends TerminalCommand {
 	
 	public ListCMD() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 1;
 	}

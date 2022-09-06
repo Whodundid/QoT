@@ -10,6 +10,7 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 	protected String confirmString = "Do you want to continue? (Y, N)";
 	protected String yes = "y", no = "n";
 	
+	protected ConfirmationCommand() {}
 	protected ConfirmationCommand(CommandType typeIn) {
 		super(typeIn);
 	}

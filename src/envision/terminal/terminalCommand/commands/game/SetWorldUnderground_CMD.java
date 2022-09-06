@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
@@ -9,7 +8,6 @@ import game.QoT;
 public class SetWorldUnderground_CMD extends TerminalCommand {
 	
 	public SetWorldUnderground_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("Game");
 		numArgs = 1;
 	}

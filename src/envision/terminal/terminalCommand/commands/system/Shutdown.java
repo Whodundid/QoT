@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.ConfirmationCommand;
 import envision.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
@@ -9,7 +8,6 @@ import game.QoT;
 public class Shutdown extends ConfirmationCommand {
 	
 	public Shutdown() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		setConfirmationString("Warning: You are about to shut down the game engine! Do you wish to continue?");
 		numArgs = 0;

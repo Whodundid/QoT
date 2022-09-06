@@ -1,18 +1,16 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-
 import java.io.File;
+
 import org.apache.commons.io.FileUtils;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
 
 public class Cp extends FileCommand {
 	
 	public Cp() {
-		super(CommandType.NORMAL);
 		numArgs = 2;
 	}
 	

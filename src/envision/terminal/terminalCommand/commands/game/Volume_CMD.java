@@ -1,7 +1,6 @@
 package envision.terminal.terminalCommand.commands.game;
 
 import envision.game.sounds.SoundEngine;
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
@@ -12,7 +11,6 @@ import game.settings.QoTSettings;
 public class Volume_CMD extends TerminalCommand {
 	
 	public Volume_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("Game");
 		numArgs = 0;
 	}

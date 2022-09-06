@@ -1,7 +1,6 @@
 package envision.terminal.terminalCommand.commands.system;
 
 import envision.debug.DebugFunctions;
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
@@ -13,7 +12,6 @@ import game.QoT;
 public class DebugControl extends TerminalCommand {
 	
 	public DebugControl() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 1;
 	}

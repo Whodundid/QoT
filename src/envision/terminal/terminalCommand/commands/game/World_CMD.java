@@ -1,7 +1,6 @@
 package envision.terminal.terminalCommand.commands.game;
 
 import envision.game.world.gameWorld.GameWorld;
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
@@ -11,7 +10,6 @@ import game.QoT;
 public class World_CMD extends TerminalCommand {
 	
 	public World_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("Game");
 		numArgs = 0;
 	}

@@ -310,7 +310,8 @@ public abstract class GLObject {
 			
 			begin(GLModes.QUADS);
 			//as far as I am concerned, this value might as well have come from the ether..
-			//However, it's necessary in order to prevent weird texture artifacts at the bottom
+			//However, it's necessary in order to prevent weird texture artifacts from being
+			//drawn at the bottom of the texture itself
 			final double adjustment = 0.0019836425781818436357012429;
 			tv(flip, rotation, x, y, x + w, y + h + adjustment);
 			

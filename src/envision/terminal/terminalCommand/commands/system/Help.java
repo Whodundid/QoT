@@ -16,7 +16,6 @@ import game.QoT;
 public class Help extends TerminalCommand implements IListableCommand {
 	
 	public Help() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 1;
 	}

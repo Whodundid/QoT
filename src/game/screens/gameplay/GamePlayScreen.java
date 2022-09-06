@@ -95,6 +95,8 @@ public class GamePlayScreen extends GameScreen {
 		
 		if (world == null) {
 			drawStringC("Null World!", midX, midY, EColors.lred);
+			//keep trying to grab world instance
+			world = QoT.theWorld;
 			return;
 		}
 		

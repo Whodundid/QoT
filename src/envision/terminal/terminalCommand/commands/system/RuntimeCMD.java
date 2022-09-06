@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
@@ -9,7 +8,6 @@ import eutil.datatypes.EArrayList;
 public class RuntimeCMD extends TerminalCommand {
 	
 	public RuntimeCMD() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = 0;
 	}

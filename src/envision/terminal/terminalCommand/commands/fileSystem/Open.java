@@ -1,26 +1,24 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.IIOException;
+import javax.imageio.ImageIO;
+
+import envision.terminal.window.ETerminal;
+import envision.windowLib.bundledWindows.TextEditorWindow;
+import envision.windowLib.bundledWindows.TextureDisplayer;
+import envision.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.file.FileOpener;
 import eutil.strings.EStringUtil;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.IIOException;
-import javax.imageio.ImageIO;
-
-import envision.terminal.terminalCommand.CommandType;
-import envision.terminal.window.ETerminal;
-import envision.windowLib.bundledWindows.TextEditorWindow;
-import envision.windowLib.bundledWindows.TextureDisplayer;
-import envision.windowLib.windowUtil.ObjectPosition;
-
 public class Open extends FileCommand {
 	
 	public Open() {
-		super(CommandType.NORMAL);
 		numArgs = 1;
 		setAcceptedModifiers("-a");
 	}

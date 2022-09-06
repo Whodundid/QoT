@@ -2,7 +2,6 @@ package envision.terminal.terminalCommand.commands.system;
 
 import envision.game.screens.GameScreen;
 import envision.game.screens.ScreenRepository;
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
@@ -13,7 +12,6 @@ import game.QoT;
 public class OpenScreen extends TerminalCommand {
 	
 	public OpenScreen() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = -1;
 	}

@@ -62,7 +62,7 @@ public class GameWorld implements IGameWorld {
 		tileWidth = tileWidthIn;
 		tileHeight = tileHeightIn;
 		worldData = new WorldTile[width][height];
-		entityData = new EArrayList();
+		entityData = new EArrayList<>();
 		fileLoaded = true;
 		worldFileSystem = new WorldFileSystem(this);
 		worldRenderer = new WorldRenderer(this);

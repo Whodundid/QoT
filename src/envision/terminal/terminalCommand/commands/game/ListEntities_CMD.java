@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
@@ -10,7 +9,6 @@ import game.QoT;
 public class ListEntities_CMD extends TerminalCommand {
 	
 	public ListEntities_CMD() {
-		super(CommandType.NORMAL);
 		setCategory("Game");
 		numArgs = 0;
 	}

@@ -1,18 +1,16 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import eutil.strings.EStringUtil;
 import java.io.File;
 import java.util.Scanner;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+import eutil.strings.EStringUtil;
 
 public class Head extends FileCommand {
 	
 	public Head() {
-		super(CommandType.NORMAL);
 		numArgs = 1;
 	}
 	

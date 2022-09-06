@@ -1,6 +1,5 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import envision.windowLib.bundledWindows.GLKeyChecker;
@@ -12,7 +11,6 @@ import eutil.datatypes.EArrayList;
 public class OpenWindow extends TerminalCommand {
 	
 	public OpenWindow() {
-		super(CommandType.NORMAL);
 		setCategory("System");
 		numArgs = -1;
 	}

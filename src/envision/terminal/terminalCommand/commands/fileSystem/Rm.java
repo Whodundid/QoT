@@ -1,17 +1,15 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
+import java.io.File;
+
+import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.strings.EStringUtil;
-import java.io.File;
-
-import envision.terminal.terminalCommand.CommandType;
-import envision.terminal.window.ETerminal;
 
 public class Rm extends FileCommand {
 	
 	public Rm() {
-		super(CommandType.NORMAL);
 		numArgs = 1;
 		setAcceptedModifiers("-r");
 	}

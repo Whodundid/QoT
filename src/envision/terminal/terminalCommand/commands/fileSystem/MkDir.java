@@ -1,17 +1,14 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-
 import java.io.File;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.window.ETerminal;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
 
 public class MkDir extends FileCommand {
 	
 	public MkDir() {
-		super(CommandType.NORMAL);
 		numArgs = 1;
 	}
 	
