@@ -2,7 +2,7 @@ package envision.events.types.entity;
 
 import envision.events.EventType;
 import envision.game.entity.Entity;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 
 public class EntitySpawnedEvent extends EntityEvent {
 	

@@ -7,7 +7,7 @@ import envision.windowLib.windowTypes.WindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 
 public class ToFrontWindow extends TerminalCommand {
 	
@@ -43,7 +43,7 @@ public class ToFrontWindow extends TerminalCommand {
 			}
 			catch (Exception e) {
 				try {
-					String name = StringUtil.combineAll(args, " ").trim();
+					String name = EStringUtil.combineAll(args, " ").trim();
 					
 					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					WindowParent theWindow = null;

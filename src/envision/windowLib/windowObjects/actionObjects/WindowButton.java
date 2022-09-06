@@ -59,6 +59,10 @@ public class WindowButton<E> extends ActionObject<E> {
 		custom = true;
 	}
 	
+	public WindowButton(IWindowObject<?> parentIn, String displayStringIn) {
+		this(parentIn, 0, 0, 0, 0, displayStringIn);
+	}
+	
 	public WindowButton(IWindowObject<?> parentIn, double posX, double posY, double width, double height) {
 		this(parentIn, posX, posY, width, height, "");
 	}
@@ -152,7 +156,7 @@ public class WindowButton<E> extends ActionObject<E> {
 			scissor(startX + 1, startY + 1, endX - 1, endY - 1);
 			
 			if (drawCentered) drawStringC(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor);
-			else drawString(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor);
+			else drawString(displayString, startX + textOffset, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor);
 			
 			endScissor();
 		}
@@ -290,18 +294,10 @@ public class WindowButton<E> extends ActionObject<E> {
 	
 	public void setDrawTextures(boolean val) {
 		drawTextures = val;
-		if (!custom) {
-			if (drawBackground && !drawTextures) { setMaxDims(Integer.MAX_VALUE, Integer.MAX_VALUE); }
-			else { setMaxDims(200, 20); }
-		}
 	}
 	
 	public void setDrawBackground(boolean val) {
 		drawBackground = val;
-		if (!custom) {
-			if (drawBackground && !drawTextures) setMaxDims(Integer.MAX_VALUE, Integer.MAX_VALUE);
-			else setMaxDims(200, 20);
-		}
 	}
 	
 	//----------------

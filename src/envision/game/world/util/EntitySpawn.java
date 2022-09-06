@@ -1,7 +1,8 @@
-package envision.game.world;
+package envision.game.world.util;
 
 import envision.game.entity.Entity;
 import envision.game.items.Item;
+import envision.game.world.gameWorld.GameWorld;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
 import game.entities.EntityList;
@@ -24,7 +25,7 @@ public class EntitySpawn {
 	//--------------
 	
 	private EntitySpawn() {}
-	public EntitySpawn(int xIn, int yIn, Entity entIn) { this(xIn, yIn, entIn.getObjectID()); }
+	public EntitySpawn(int xIn, int yIn, Entity entIn) { this(xIn, yIn, entIn.getInternalSaveID()); }
 	public EntitySpawn(int xIn, int yIn, int typeIn) {
 		x = xIn;
 		y = yIn;

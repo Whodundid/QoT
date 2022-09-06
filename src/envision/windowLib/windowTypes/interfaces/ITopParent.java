@@ -175,7 +175,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	public default EArrayList<IWindowParent<?>> getAllActiveWindows() {
 		EArrayList<IWindowParent<?>> windows = new EArrayList<>();
 		try {
-			getCombinedChildren().filterForEach(o -> IWindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((IWindowParent) w));
+			getCombinedChildren().filterForEach(o -> IWindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((IWindowParent<?>) w));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -193,7 +193,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Returns a list of all actively drawn window parents of a given type. */
-	public default <T extends IWindowParent<?>> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
+	public default <T extends IWindowParent> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
 		var windows = new EArrayList<T>();
 		try {
 			getCombinedChildren().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));

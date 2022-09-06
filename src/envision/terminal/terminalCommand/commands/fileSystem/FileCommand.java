@@ -1,7 +1,7 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import java.io.File;
 import java.io.IOException;
 
@@ -58,7 +58,7 @@ public abstract class FileCommand extends TerminalCommand {
 				
 				File home = new File(System.getProperty("user.dir"));
 				File f = new File(dir);
-				String all = StringUtil.combineAll(args, " ").replace("/", "\\");
+				String all = EStringUtil.combineAll(args, " ").replace("/", "\\");
 				boolean isHome = all.startsWith("~");
 				
 				
@@ -72,10 +72,10 @@ public abstract class FileCommand extends TerminalCommand {
 						termIn.setTextTabBeing(args.get(0));
 					}
 					else {
-						int pos = StringUtil.findStartingIndex(all, "\\", true);
+						int pos = EStringUtil.findStartingIndex(all, "\\", true);
 						if (pos >= 0) {
 							String path = all.substring(isHome ? 1 : 0, pos + 1);
-							termIn.setTabBase(StringUtil.subStringToSpace(path, 0, true));
+							termIn.setTabBase(EStringUtil.subStringToSpace(path, 0, true));
 							f = new File(path);
 							if (!f.exists()) { f = new File(termIn.getDir(), path); }
 							termIn.setTextTabBeing(path);
@@ -83,7 +83,7 @@ public abstract class FileCommand extends TerminalCommand {
 						}
 					}
 					
-					search = !termIn.getTab1() ? StringUtil.subStringToString(all, 0, "\\", true) : termIn.getTextTabBegin();
+					search = !termIn.getTab1() ? EStringUtil.subStringToString(all, 0, "\\", true) : termIn.getTextTabBegin();
 					
 					if (f != null && f.listFiles() != null) {
 						for (File file : f.listFiles()) {
@@ -108,7 +108,7 @@ public abstract class FileCommand extends TerminalCommand {
 					else { f = new File(all); }
 					
 					if (!f.exists()) { f = new File(termIn.getDir(), all); }
-					termIn.setTabBase(StringUtil.subStringToSpace(all, 0, true) + (isDrive ? "" : "\\"));
+					termIn.setTabBase(EStringUtil.subStringToSpace(all, 0, true) + (isDrive ? "" : "\\"));
 					
 					if (f != null && f.listFiles() != null) {
 						for (File file : f.listFiles()) {
@@ -140,7 +140,7 @@ public abstract class FileCommand extends TerminalCommand {
 		File homeFile = new File(System.getProperty("user.dir"));
 		String homePath = homeFile.getAbsolutePath();
 		
-		String all = StringUtil.combineAll(args, " ");
+		String all = EStringUtil.combineAll(args, " ");
 		boolean found = false;
 		boolean moreThan = false;
 		

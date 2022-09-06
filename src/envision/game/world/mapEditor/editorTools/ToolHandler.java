@@ -1,6 +1,6 @@
 package envision.game.world.mapEditor.editorTools;
 
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.game.world.mapEditor.MapEditorScreen;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Brush;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Eraser;
@@ -129,7 +129,7 @@ public class ToolHandler {
 			WorldTile t = w.getTileAt(x, y);
 			
 			if (testTile(toReplace, t)) {
-				w.setTileAt(x, y, WorldTile.randVariant(toSet));
+				w.setTileAt(WorldTile.randVariant(toSet), x, y);
 				
 				floodFill(w, x + 1, y, toReplace, toSet);
 				floodFill(w, x - 1, y, toReplace, toSet);

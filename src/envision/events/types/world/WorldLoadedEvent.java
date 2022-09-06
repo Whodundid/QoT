@@ -1,7 +1,7 @@
 package envision.events.types.world;
 
 import envision.events.EventType;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 
 public class WorldLoadedEvent extends WorldEvent {
 

@@ -2,7 +2,7 @@ package envision.renderEngine.textureSystem;
 
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.settings.QoTSettings;
 
 import org.lwjgl.opengl.GL11;
@@ -123,7 +123,7 @@ public class GameTexture {
 	}
 	
 	private GameTexture getRandChild() {
-		int pos = RandomUtil.getRoll(0, children.size() - 1);
+		int pos = ERandomUtil.getRoll(0, children.size() - 1);
 		return children.getA(pos);
 	}
 	
@@ -136,7 +136,7 @@ public class GameTexture {
 	}
 	
 	public GameTexture getRandVariant() {
-		return (children.isNotEmpty() && RandomUtil.roll(0, 0, 1)) ? getRandChild() : this;
+		return (children.isNotEmpty() && ERandomUtil.roll(0, 0, 1)) ? getRandChild() : this;
 	}
 	
 	public GameTexture getChild(int id) {

@@ -1,13 +1,13 @@
 package envision.game.world.mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import envision.game.world.GameWorld;
-import envision.game.world.Region;
+import envision.game.world.gameWorld.GameWorld;
 import envision.game.world.mapEditor.MapEditorScreen;
 import envision.game.world.mapEditor.editorParts.sidePanel.EditorSidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.SidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.mapEditor.editorParts.toolBox.ToolCategory;
 import envision.game.world.mapEditor.editorTools.EditorToolType;
+import envision.game.world.util.Region;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envision.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
@@ -19,7 +19,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 public class RegionSidePanel extends SidePanel {
 	
@@ -56,7 +56,7 @@ public class RegionSidePanel extends SidePanel {
 	public void loadRegions() {
 		regionList.clear();
 		
-		GameWorld world = editor.getWorld();
+		GameWorld world = editor.getActualWorld();
 		EArrayList<Region> regions = world.getRegionData();
 		for (Region r : regions) {
 			TextAreaLine<Region> line = new TextAreaLine(regionList, r.getName()) {
@@ -131,7 +131,7 @@ public class RegionSidePanel extends SidePanel {
 	private void onDelete(TextAreaLine lineIn) {
 		Region r = (Region) lineIn.getGenericObject();
 		
-		GameWorld world = editor.getWorld();
+		GameWorld world = editor.getActualWorld();
 		world.getRegionData().remove(r);
 		
 		regionList.deleteLine(lineIn);
@@ -163,7 +163,7 @@ public class RegionSidePanel extends SidePanel {
 				
 				setMessage(EColors.orange + "Are you sure? " + EColors.lgray + "(" + lineIn.getGenericObject().getName() + ")");
 				
-				double bw = NumberUtil.clamp((width - 10) / 3, 100, 200);
+				double bw = ENumUtil.clamp((width - 10) / 3, 100, 200);
 				double g = width / 30;
 				
 				yes = new WindowButton(this, midX - g - bw, endY - 50, bw, 28, "Delete");

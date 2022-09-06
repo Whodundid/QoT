@@ -1,7 +1,7 @@
 package envision.windowLib.windowObjects.actionObjects;
 
 import eutil.datatypes.Box2;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 import java.text.DecimalFormat;
 
@@ -206,12 +206,12 @@ public class WindowSlider<E> extends ActionObject<E> {
 	private void calculateSliderPos(boolean calc) {
 		if (calc) {
 			if (vertical) {
-				pos = NumberUtil.clamp((float)(Mouse.getMy() - startY - thumbSize / 2) / (height - thumbSize - 1), 0f, 1f);
+				pos = ENumUtil.clamp((float)(Mouse.getMy() - startY - thumbSize / 2) / (height - thumbSize - 1), 0f, 1f);
 				sliderValue = lowVal + (highVal - lowVal) * (1 + -pos);
 				if (useInts) { sliderValue = (int) sliderValue; }
 			}
 			else {
-				pos = NumberUtil.clamp((float)(Mouse.getMx() - startX - thumbSize / 2) / (width - thumbSize), 0f, 1f);
+				pos = ENumUtil.clamp((float)(Mouse.getMx() - startX - thumbSize / 2) / (width - thumbSize), 0f, 1f);
 				sliderValue = lowVal + (highVal - lowVal) * pos;
 				if (useInts) { sliderValue = (int) sliderValue; }
 			}
@@ -278,7 +278,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 	
 	public void setSliderValue(double valIn) {
 		sliderValue = valIn;
-		pos = NumberUtil.clamp((valIn - lowVal) / (highVal - lowVal), 0.0f, 1.0f);
+		pos = ENumUtil.clamp((valIn - lowVal) / (highVal - lowVal), 0.0f, 1.0f);
 		if (defaultDisplayString) {
 			if (useInts) { displayValue = "" + (int) sliderValue; }
 			else { displayValue = new DecimalFormat("0.00").format(sliderValue); }

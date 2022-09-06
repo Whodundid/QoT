@@ -21,7 +21,7 @@ public class Tool_Selector extends EditorTool {
 			double mX = Mouse.getMx();
 			double mY = Mouse.getMy();
 			
-			for (var spawn : editor.getWorld().getEntitySpawns()) {
+			for (var spawn : editor.getActualWorld().getEntitySpawns()) {
 				
 			}
 			

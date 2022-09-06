@@ -4,7 +4,7 @@ import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.windowTypes.WindowObject;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 public class WindowStatusBar extends WindowObject {
 	
@@ -96,7 +96,7 @@ public class WindowStatusBar extends WindowObject {
 	//---------
 	
 	public void setBarValue(double val) {
-		current = NumberUtil.clamp(val, min, max);
+		current = ENumUtil.clamp(val, min, max);
 		updateDrawing();
 	}
 	

@@ -4,7 +4,7 @@ import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
@@ -54,7 +54,7 @@ public class WindowButtonStaged<E> extends WindowButton<E> {
 	//---------
 	
 	public void loadStage(int stageNum) {
-		curStage = NumberUtil.clamp(stageNum, 0, stages.size() - 1);
+		curStage = ENumUtil.clamp(stageNum, 0, stages.size() - 1);
 		
 		// If there aren't any stages, apply default values
 		if (stages.isEmpty()) {

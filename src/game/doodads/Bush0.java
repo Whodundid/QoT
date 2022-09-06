@@ -2,7 +2,7 @@ package game.doodads;
 
 import envision.game.entity.Entity;
 import eutil.misc.Rotation;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.assets.textures.doodads.bushes.BushTextures;
 import game.entities.EntityList;
 
@@ -13,12 +13,12 @@ public class Bush0 extends Entity {
 		super("bush0");
 		init(posX, posY, 32, 32);
 		sprite = BushTextures.bush_0;
-		facing = (RandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
+		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		setCollisionBox(midX - 10, midY - 5, midX + 10, midY + 10);
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return EntityList.BUSH0.ID;
 	}
 	

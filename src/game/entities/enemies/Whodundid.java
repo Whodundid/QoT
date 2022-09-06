@@ -2,9 +2,10 @@ package game.entities.enemies;
 
 import envision.game.entity.Enemy;
 import envision.game.entity.Entity;
+import envision.game.world.gameWorld.GameWorld;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.QoT;
 import game.assets.textures.entity.EntityTextures;
 
@@ -18,7 +19,7 @@ public class Whodundid extends Enemy {
 		super("Whodundid");
 		init(posX, posY, 64, 64);
 		sprite = EntityTextures.whodundid;
-		lastDir = RandomUtil.randomDir();
+		lastDir = ERandomUtil.randomDir();
 		
 		setBaseMeleeDamage(3);
 		setMaxHealth(20);
@@ -33,11 +34,11 @@ public class Whodundid extends Enemy {
 	@Override
 	public void onLivingUpdate() {
 		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-			waitTime = RandomUtil.getRoll(randShort, randLong);
-			moveTime = RandomUtil.getRoll(randShort, randLong);
-			waitDelay = RandomUtil.getRoll(randShort, randLong);
+			waitTime = ERandomUtil.getRoll(randShort, randLong);
+			moveTime = ERandomUtil.getRoll(randShort, randLong);
+			waitDelay = ERandomUtil.getRoll(randShort, randLong);
 			lastMove = System.currentTimeMillis();
-			lastDir = RandomUtil.randomDir();
+			lastDir = ERandomUtil.randomDir();
 		}
 		
 		if (System.currentTimeMillis() - lastMove >= moveTime) {
@@ -80,11 +81,11 @@ public class Whodundid extends Enemy {
 			}
 		}
 		
-		double distToPlayer = world.getDistance(this, QoT.thePlayer);
+		double distToPlayer = ((GameWorld) world).getDistance(this, QoT.thePlayer);
 		if (distToPlayer <= 300) {
 			headText = "" + health;
 			
-			Direction dirToPlayer = world.getDirectionTo(this, QoT.thePlayer);
+			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, QoT.thePlayer);
 			move(dirToPlayer);
 		}
 		else {
@@ -93,7 +94,7 @@ public class Whodundid extends Enemy {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return 2;
 	}
 	

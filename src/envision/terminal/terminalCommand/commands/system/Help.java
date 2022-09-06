@@ -63,9 +63,10 @@ public class Help extends TerminalCommand implements IListableCommand {
 			boolean norm = false;
 			BoxList<String, EArrayList<TerminalCommand>> catHolder = box.getB();
 			
-			if (box.getA() == CommandType.NORMAL) { termIn.writeln("Built-In", EColors.cyan); norm = true; }
-			if (box.getA() == CommandType.APP) { termIn.writeln("\n" + "EMC App Config Settings:", EColors.cyan); }
-			if (box.getA() == CommandType.APP_COMMAND) { termIn.writeln("\n" + "EMC App Terminal Commands:", EColors.cyan); norm = true; }
+			if (box.getA() == CommandType.NORMAL) {
+				termIn.writeln("Built-In", EColors.cyan);
+				norm = true;
+			}
 			
 			for (Box2<String, EArrayList<TerminalCommand>> catCommands : catHolder) {
 				EArrayList<TerminalCommand> commands = catCommands.getB();

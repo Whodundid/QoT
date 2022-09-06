@@ -3,7 +3,7 @@ package envision.windowLib.windowObjects.advancedObjects.textArea;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 import java.util.Iterator;
 
@@ -332,7 +332,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				for (var l : linesAfter) addTextLine(l);
 				
 				setSelectedLine(prev);
-				int pos = NumberUtil.clamp(prev.getText().length() - text.length(), 0, prev.getText().length());
+				int pos = ENumUtil.clamp(prev.getText().length() - text.length(), 0, prev.getText().length());
 				prev.setCursorPos(pos);
 				
 				return prev;

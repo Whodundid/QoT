@@ -1,7 +1,7 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import java.io.File;
 
 import envision.terminal.terminalCommand.CommandType;
@@ -26,7 +26,7 @@ public class Lsblk extends FileCommand {
 				if (drives != null && drives.length > 0) {
 					String title = String.format("%-10s%-22s%-30s", "Drive", "Total size (gb)", "Free Space (gb)");
 					termIn.writeln(title, 0xff2265f0);
-					termIn.writeln(StringUtil.repeatString("-", title.length() - 22), 0xff2265f0);
+					termIn.writeln(EStringUtil.repeatString("-", title.length() - 22), 0xff2265f0);
 					
 				    for (File f : drives) {
 				    	double total = (double) ((double) f.getTotalSpace() / 1024d / 1024d / 1024d);

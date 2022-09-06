@@ -10,7 +10,8 @@ import envision.windowLib.windowTypes.WindowParent;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringBuilder;
+import eutil.strings.EStringUtil;
 import game.QoT;
 
 //Author: Hunter Bragg
@@ -88,14 +89,14 @@ public class ListCMD extends TerminalCommand {
 		termIn.writeln("Listing all current objects in this top renderer\n", EColors.lgreen);
 		if (runVisually) {
 			int grandTotal = 0; //this isn't completely right tree wise, but whatever
-			for (IWindowObject<?> obj : termIn.getTopParent().getChildren()) {
-				termIn.writeln(obj.toString(), EColors.green);
+			for (var obj : termIn.getTopParent().getChildren()) {
+				termIn.writeln(String.format("%3d : %s", obj.getObjectID(), obj.toString()), EColors.green);
 				
 				//int depth = 3;
 				
-				EArrayList<IWindowObject<?>> foundObjs = new EArrayList();
-				EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList();
-				EArrayList<IWindowObject<?>> workList = new EArrayList();
+				var foundObjs = new EArrayList<IWindowObject<?>>();
+				var objsWithChildren = new EArrayList<IWindowObject<?>>();
+				var workList = new EArrayList<IWindowObject<?>>();
 				
 				//grab all immediate children and add them to foundObjs, then check if any have children of their own
 				obj.getChildren().forEach(o -> {
@@ -105,10 +106,10 @@ public class ListCMD extends TerminalCommand {
 				//load the workList with every child found on each object
 				objsWithChildren.forEach(c -> workList.addAll(c.getChildren()));
 				
-				for (IWindowObject o : EArrayList.combineLists(objsWithChildren, workList)) {
-					String s = "   ";
+				for (var o : EArrayList.combineLists(objsWithChildren, workList)) {
+					String s = String.format("   %3d : %s", o.getObjectID(), o.toString());
 					//for (int i = 0; i < depth; i++) { s += " "; }
-					termIn.writeln(s + o.toString(), EColors.lgray);
+					termIn.writeln(s, EColors.lgray);
 				}
 				//depth += 3;
 				
@@ -125,10 +126,10 @@ public class ListCMD extends TerminalCommand {
 					workList.clear();
 					objsWithChildren.forEach(c -> workList.addAll(c.getChildren()));
 					
-					for (IWindowObject o : EArrayList.combineLists(objsWithChildren, workList)) {
-						String s = "   ";
+					for (var o : EArrayList.combineLists(objsWithChildren, workList)) {
+						String s = String.format("   %3d : %s", o.getObjectID(), o.toString());
 						//for (int i = 0; i < depth; i++) { s += " "; }
-						termIn.writeln(s + o.toString(), EColors.lgray);
+						termIn.writeln(s, EColors.lgray);
 					}
 					//depth += 3;
 				}
@@ -141,7 +142,7 @@ public class ListCMD extends TerminalCommand {
 			termIn.writeln("Grand total: " + grandTotal, EColors.orange);
 		}
 		else {
-			for (IWindowObject obj : termIn.getTopParent().getChildren()) {
+			for (var obj : termIn.getTopParent().getChildren()) {
 				termIn.writeln(obj.toString(), EColors.green);
 			}
 			termIn.writeln("Total objects: " + termIn.getTopParent().getChildren().size(), 0xffffff00);
@@ -149,7 +150,7 @@ public class ListCMD extends TerminalCommand {
 	}
 	
 	private void listWindows(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+		EArrayList<WindowParent<?>> windows = termIn.getTopParent().getAllActiveWindows();
 		
 		String plural = windows.size() > 1 ? "s" : "";
 		
@@ -157,9 +158,9 @@ public class ListCMD extends TerminalCommand {
 		
 		String title = "(Name | PID | Type)";
 		termIn.writeln(title, EColors.lime);
-		termIn.writeln(StringUtil.repeatString("-", title.length()), EColors.lime);
+		termIn.writeln(EStringUtil.repeatString("-", title.length()), EColors.lime);
 		
-		for (WindowParent p : windows) {
+		for (var p : windows) {
 			String out = p.getObjectName() + " | " + p.getObjectID() + " | " + p.getClass().getSimpleName()
 						 + (p.isPinned() ? " | " + EColors.mc_lightpurple + "pinned" : ""
 						 + (p.isMinimized() ? " | " + EColors.mc_lightpurple + "minimized" : ""));
@@ -200,14 +201,14 @@ public class ListCMD extends TerminalCommand {
 				termIn.writeln("  " + s.getClass().getSimpleName(), 0xffb2b2b2);
 			}
 			else {
-				String a = EColors.mc_green + "";
+				var sb = EStringBuilder.of(EColors.mc_green);
 				for (int i = 0; i < s.getAliases().size(); i++) {
 					String commandAlias = s.getAliases().get(i);
-					if (i == s.getAliases().size() - 1) a += commandAlias;
-					else a += (commandAlias + ", ");
+					if (i == s.getAliases().size() - 1) sb.a(commandAlias);
+					else sb.a(commandAlias, ", ");
 				}
 				
-				termIn.writeln("  " + s.getClass().getSimpleName() + ": " + a, 0xffb2b2b2);
+				termIn.writeln(EColors.lgray, "  ", s.getClass().getSimpleName(), ": ", sb);
 			}
 		}
 	}

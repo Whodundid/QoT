@@ -23,7 +23,7 @@ public class Stool extends Entity {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return EntityList.STOOL.ID;
 	}
 	

@@ -1,7 +1,7 @@
 package envision.game.world.dungeonBuilder;
 
 import eutil.misc.Direction;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 
 class BuilderBot implements Runnable {
 
@@ -43,10 +43,10 @@ class BuilderBot implements Runnable {
 			map.setSpot(x, y, id, p);
 			
 			if (map.anyRemaining()) {
-				if (RandomUtil.roll(2, 0, 2)) branch(x + 1, y);
-				if (RandomUtil.roll(2, 0, 2)) branch(x - 1, y);
-				if (RandomUtil.roll(2, 0, 2)) branch(x, y + 1);
-				if (RandomUtil.roll(2, 0, 2)) branch(x, y - 1);
+				if (ERandomUtil.roll(2, 0, 2)) branch(x + 1, y);
+				if (ERandomUtil.roll(2, 0, 2)) branch(x - 1, y);
+				if (ERandomUtil.roll(2, 0, 2)) branch(x, y + 1);
+				if (ERandomUtil.roll(2, 0, 2)) branch(x, y - 1);
 			}
 		}
 	}

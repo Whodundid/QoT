@@ -1,7 +1,7 @@
 package game.entities.enemies;
 
 import envision.game.entity.Enemy;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.assets.textures.entity.EntityTextures;
 
 public class Thyrah extends Enemy {
@@ -22,11 +22,11 @@ public class Thyrah extends Enemy {
 	@Override
 	public void onLivingUpdate() {
 		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-			waitTime = RandomUtil.getRoll(randShort, randLong);
+			waitTime = ERandomUtil.getRoll(randShort, randLong);
 			//moveTime = RandomUtil.getRoll(randShort, 800l);
 			//waitDelay = RandomUtil.getRoll(randShort, randLong);
 			lastMove = System.currentTimeMillis();
-			lastDir = RandomUtil.randomDir(true);
+			lastDir = ERandomUtil.randomDir(true);
 		}
 		
 		if (System.currentTimeMillis() - lastMove >= moveTime) {
@@ -35,7 +35,7 @@ public class Thyrah extends Enemy {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return 4;
 	}
 	

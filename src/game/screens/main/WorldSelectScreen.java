@@ -3,14 +3,14 @@ package game.screens.main;
 import java.io.File;
 
 import envision.game.screens.GameScreen;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import envision.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 import game.entities.player.QoT_Player;
 import game.screens.gameplay.GamePlayScreen;
@@ -36,7 +36,7 @@ public class WorldSelectScreen extends GameScreen {
 	
 	@Override
 	public void initChildren() {
-		int w = NumberUtil.clamp(QoT.getWidth() / 4, 150, 350);
+		int w = ENumUtil.clamp(QoT.getWidth() / 4, 150, 350);
 		double bw = midX - w / 2;
 		
 		defaultWorld = new WindowButton(this, bw, midY - 200, w, 45, "Default Map");

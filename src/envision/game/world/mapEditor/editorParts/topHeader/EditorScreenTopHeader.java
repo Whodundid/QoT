@@ -1,7 +1,7 @@
 package envision.game.world.mapEditor.editorParts.topHeader;
 
 import envision.game.screens.ScreenLevel;
-import envision.game.world.GameWorld;
+import envision.game.world.mapEditor.EditorWorld;
 import envision.game.world.mapEditor.MapEditorScreen;
 import envision.game.world.mapEditor.editorParts.sidePanel.EditorSidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.SidePanel;
@@ -63,11 +63,11 @@ public class EditorScreenTopHeader extends WindowObject {
 		drawRect(div, startY, div + 2, endY, EColors.black); //divider
 		drawRect(div + 2, startY, endX, endY - 1, EColors.pdgray); //map stuff
 		
-		GameWorld world = editor.getWorld();
+		EditorWorld world = editor.getEditorWorld();
 		
 		if (world != null) {
-			double endName = drawString("Map: " + world.getName(), scripts.endX + 25, startY + 7, EColors.lime);
-			double endSize = drawString("Size: (" + world.getTileWidth() + ", " + world.getTileHeight() + ")", endName + 30, startY + 7, EColors.aquamarine);
+			double endName = drawString("Map: " + world.getWorldName(), scripts.endX + 25, startY + 7, EColors.lime);
+			double endSize = drawString("Size: (" + world.getWidth() + ", " + world.getHeight() + ")", endName + 30, startY + 7, EColors.aquamarine);
 			double endMouse = drawString("Mouse: (" + (editor.getWorldMX() + 1) + ", " + (editor.getWorldMY() + 1) + ")", endSize + 30, startY + 7, EColors.lorange);
 			/*double endZoom = */drawString("Zoom: x" + editor.getZoom(), endMouse + 30, startY + 7);
 		}
@@ -77,11 +77,11 @@ public class EditorScreenTopHeader extends WindowObject {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == settings) { QoT.displayWindow(ScreenLevel.SCREEN, new EditorSettingsWindow(editor)); }
-		if (object == terrain) { terrain(); }
-		if (object == assets) { assets(); }
-		if (object == regions) { regions(); }
-		if (object == scripts) { scripts(); }
+		if (object == settings) QoT.displayWindow(ScreenLevel.SCREEN, new EditorSettingsWindow(editor));
+		if (object == terrain) terrain();
+		if (object == assets) assets();
+		if (object == regions) regions();
+		if (object == scripts) scripts();
 	}
 	
 	public void updateTool() {

@@ -28,11 +28,11 @@ public class ListEntities_CMD extends TerminalCommand {
 		}
 		
 		var entities = QoT.theWorld.getEntitiesInWorld();
-		entities.sort((a, b) -> Integer.compare(a.getEntityID(), b.getEntityID()));
+		entities.sort((a, b) -> Integer.compare(a.getObjectID(), b.getObjectID()));
 		
 		termIn.writeln("Listing all Entities in world", EColors.orange);
 		for (var e : entities) {
-			termIn.writeln("  " + EColors.lgreen + e.getName() + EColors.white + " : " + EColors.lgray + e.getEntityID());
+			termIn.writeln("  " + EColors.lgreen + e.getName() + EColors.white + " : " + EColors.lgray + e.getObjectID());
 		}
 	}
 	

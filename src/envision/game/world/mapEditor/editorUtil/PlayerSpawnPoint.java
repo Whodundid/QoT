@@ -1,20 +1,20 @@
 package envision.game.world.mapEditor.editorUtil;
 
 import envision.game.GameObject;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import eutil.datatypes.Box2;
 
 /** A point in the world where the player will be positioned when being loaded.
  *  The coordinates for positioning are based off of the top left corner of the player's collision box. */
-public class PlayerSpawnPosition extends GameObject {
+public class PlayerSpawnPoint extends GameObject {
 	
 	/** The world for which this point is corresponding to. */
 	GameWorld theWorld;
 	int xPos = 0, yPos = 0;
 	
-	public PlayerSpawnPosition() { this(null, -1, -1); }
-	public PlayerSpawnPosition(GameWorld worldIn) { this(worldIn, 0, 0); }
-	public PlayerSpawnPosition(GameWorld worldIn, int xIn, int yIn) {
+	public PlayerSpawnPoint() { this(null, -1, -1); }
+	public PlayerSpawnPoint(GameWorld worldIn) { this(worldIn, 0, 0); }
+	public PlayerSpawnPoint(GameWorld worldIn, int xIn, int yIn) {
 		super("Spawn");
 		theWorld = worldIn;
 		xPos = xIn;
@@ -26,12 +26,12 @@ public class PlayerSpawnPosition extends GameObject {
 	public int getX() { return xPos; }
 	public int getY() { return yPos; }
 	
-	public PlayerSpawnPosition setPos(int xIn, int yIn ) { xPos = xIn; yPos = yIn; return this; }
-	public PlayerSpawnPosition setX(int xIn) { xPos = xIn; return this; }
-	public PlayerSpawnPosition setY(int yIn) { yPos = yIn; return this; }
+	public PlayerSpawnPoint setPos(int xIn, int yIn ) { xPos = xIn; yPos = yIn; return this; }
+	public PlayerSpawnPoint setX(int xIn) { xPos = xIn; return this; }
+	public PlayerSpawnPoint setY(int yIn) { yPos = yIn; return this; }
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return 6;
 	}
 	

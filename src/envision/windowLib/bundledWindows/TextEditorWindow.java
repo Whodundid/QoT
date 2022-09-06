@@ -16,7 +16,7 @@ import envision.windowLib.windowTypes.interfaces.IActionObject;
 import envision.windowLib.windowUtil.windowEvents.ObjectEvent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 import game.assets.textures.taskbar.TaskBarTextures;
 import game.assets.textures.window.WindowTextures;
@@ -78,7 +78,7 @@ public class TextEditorWindow extends WindowParent {
 		document.registerListener(this);
 		
 		if (!failed) document.setDrawLineNumbers(true);
-		double w = NumberUtil.clamp((width - 30 - 24) / 2, 45, 200);
+		double w = ENumUtil.clamp((width - 30 - 24) / 2, 45, 200);
 		double h = document.endY + (endY - document.endY) / 2 - 20;
 		
 		cancel = new WindowButton(this, midX - 25 - w, h, w, 40, "Cancel");

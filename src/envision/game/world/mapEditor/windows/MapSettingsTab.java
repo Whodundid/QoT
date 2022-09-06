@@ -8,6 +8,7 @@ import envision.windowLib.windowObjects.basicObjects.WindowLabel;
 import envision.windowLib.windowObjects.basicObjects.WindowTextBox;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
+import eutil.misc.Direction;
 import game.assets.textures.window.WindowTextures;
 
 public class MapSettingsTab extends ContainerTab {
@@ -46,14 +47,14 @@ public class MapSettingsTab extends ContainerTab {
 		list = new WindowScrollList(this, dims.startX, dims.startY, dims.width, dims.height);
 		list.setBackgroundColor(EColors.pdgray);
 		
-		mapWidth = new WindowLabel(list, 20, 20, "Map Width: " + editor.drawDistX);
+		mapWidth = new WindowLabel(list, 20, 20, "Map Width: " + editor.getEditorWorld().getWidth());
 		incWidth = new WindowButton(list, mapWidth.startX, mapWidth.startY + 30, 50, 50);
 		decWidth = new WindowButton(list, incWidth.endX + 6, mapWidth.startY + 30, 50, 50);
 		
 		incWidth.setTextures(WindowTextures.plus, WindowTextures.plus_sel);
 		decWidth.setTextures(WindowTextures.minimize, WindowTextures.minimize_sel);
 		
-		mapHeight = new WindowLabel(list, 20, incWidth.endY + 20, "Map Height: " + editor.drawDistY);
+		mapHeight = new WindowLabel(list, 20, incWidth.endY + 20, "Map Height: " + editor.getEditorWorld().getHeight());
 		incHeight = new WindowButton(list, mapHeight.startX, mapHeight.startY + 30, 50, 50);
 		decHeight = new WindowButton(list, incHeight.endX + 6, mapHeight.startY + 30, 50, 50);
 		
@@ -86,12 +87,17 @@ public class MapSettingsTab extends ContainerTab {
 	}
 	
 	private void adjustMapSize(int w, int h) {
-		var world = editor.getWorld();
-		changeMapSize(world.getWidth() + w, world.getHeight() + h);
+		editor.getEditorWorld().expandWorld(Direction.E, w);
+		editor.getEditorWorld().expandWorld(Direction.S, h);
+		
+		mapWidth.setString("Map Width: " + editor.getEditorWorld().getWidth());
+		mapHeight.setString("Map Height: " + editor.getEditorWorld().getHeight());
+		//var world = editor.getActualWorld();
+		//changeMapSize(world.getWidth() + w, world.getHeight() + h);
 	}
 	
 	private void changeMapSize(int w, int h) {
-		
+		//System.out.println(w + " : " + h);
 	}
 	
 }

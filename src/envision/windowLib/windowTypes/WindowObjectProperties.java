@@ -129,7 +129,7 @@ public class WindowObjectProperties<E> {
 	
 	WindowObjectProperties(WindowObject<E> instanceIn) {
 		instance = instanceIn;
-		objectId = getNextPID();
+		objectId = getNextObjectPID();
 		
 		eventHandler = new ObjectEventHandler(instanceIn);
 		futureTaskManager = new FutureTaskManager(instanceIn);
@@ -142,6 +142,6 @@ public class WindowObjectProperties<E> {
 	private static volatile int curObjectID = 0;
 	
 	/** Returns the next available id that will be assigned to a requesting object. */
-	public static synchronized int getNextPID() { return curObjectID++; }
+	public static synchronized int getNextObjectPID() { return curObjectID++; }
 	
 }

@@ -6,7 +6,7 @@ import envision.windowLib.windowTypes.interfaces.IWindowParent;
 import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
 import eutil.datatypes.Box2;
 import eutil.math.EDimension;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -248,10 +248,10 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	private void calculateScrollPos() {
 		double relativeThumbPos = 0;
 		if (vertical) {
-			relativeThumbPos = NumberUtil.clamp((double)(thumbStartY - startY) / (height - thumbSize), 0f, 1f);
+			relativeThumbPos = ENumUtil.clamp((double)(thumbStartY - startY) / (height - thumbSize), 0f, 1f);
 		}
 		else {
-			relativeThumbPos = NumberUtil.clamp((double)(thumbStartX - startX) / (width - thumbSize), 0f, 1f);
+			relativeThumbPos = ENumUtil.clamp((double)(thumbStartX - startX) / (width - thumbSize), 0f, 1f);
 		}
 		double val = visibleAmount + (highVal - visibleAmount) * relativeThumbPos;
 		scrollPos = (int) val;

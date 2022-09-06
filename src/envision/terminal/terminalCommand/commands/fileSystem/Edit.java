@@ -1,7 +1,7 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import java.io.File;
 
 import envision.terminal.terminalCommand.CommandType;
@@ -28,8 +28,8 @@ public class Edit extends FileCommand {
 				boolean openA = args.getLast().equals("-a");
 				String all = "";
 				
-				if (openA) { all = StringUtil.combineAll(args.subList(0, args.size() - 1), " "); }
-				else { all = StringUtil.combineAll(args, " "); }
+				if (openA) { all = EStringUtil.combineAll(args.subList(0, args.size() - 1), " "); }
+				else { all = EStringUtil.combineAll(args, " "); }
 				
 				File f = new File(termIn.getDir(), all);
 				

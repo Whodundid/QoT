@@ -1,6 +1,6 @@
 package envision.windowLib.windowObjects.basicObjects;
 
-import envision.renderEngine.fontRenderer.EStringBuilder;
+import envision.renderEngine.fontRenderer.EStringOutputFormatter;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.windowTypes.WindowObject;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
@@ -116,7 +116,7 @@ public class WindowLabel<E> extends WindowObject<E> {
 	public void setString(String stringIn) {
 		displayString = stringIn;
 		if (wordWrap) {
-			wordWrappedLines = EStringBuilder.createWordWrapString(displayString, widthMax);
+			wordWrappedLines = EStringOutputFormatter.createWordWrapString(displayString, widthMax);
 			
 			int longest = 0;
 			for (String s : wordWrappedLines) {

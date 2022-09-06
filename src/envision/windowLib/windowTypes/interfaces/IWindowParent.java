@@ -29,6 +29,10 @@ public interface IWindowParent<E> extends IWindowObject<E> {
 	public default void renderTaskBarPreview(double xPos, double yPos) {}
 	/** Event fired when this window should draw a border around it when it is highlighted. */
 	public void drawHighlightBorder();
+	/** Specifies whether or not this window's border should draw highlighted. */
+	public void setHighlighted(boolean val);
+	/** Returns true if this window's border will draw highlighted. */
+	public boolean isHighlighted();
 	/** Returns the icon that will be drawn to represent this window on the taskbar. */
 	public default GameTexture getWindowIcon() { return null; }
 	/** Specifies whether or not this window be displayed in the taskbar or not. */

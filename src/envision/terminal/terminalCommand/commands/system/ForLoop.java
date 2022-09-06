@@ -4,8 +4,8 @@ import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
-import eutil.strings.StringUtil;
+import eutil.math.ENumUtil;
+import eutil.strings.EStringUtil;
 import game.QoT;
 
 //Author: Hunter Bragg
@@ -39,15 +39,15 @@ public class ForLoop extends TerminalCommand {
 			
 			if (vals.length() < 3) { termIn.error("Not enough arguments for loop!"); }
 			else if (vals.length() >= 3 && vals.contains("-")) {
-				int pos = StringUtil.findStartingIndex(vals, "-");
+				int pos = EStringUtil.findStartingIndex(vals, "-");
 				String firstArg = vals.substring(0, pos);
 				String secondParse = vals.substring(pos + 1);
 				
-				String secondArg = StringUtil.subStringToString(secondParse, 0, "-");
+				String secondArg = EStringUtil.subStringToString(secondParse, 0, "-");
 				System.out.println(secondArg);
 				
 				
-				String thirdArg = StringUtil.subStringToString(secondParse, 0, "-", true);
+				String thirdArg = EStringUtil.subStringToString(secondParse, 0, "-", true);
 				
 				System.out.println(thirdArg);
 				
@@ -118,9 +118,9 @@ public class ForLoop extends TerminalCommand {
 			Class second = String.class;
 			Class third = String.class;
 			
-			if (NumberUtil.isInteger(firstArg, 10)) { first = Integer.class; }
-			if (NumberUtil.isInteger(secondArg, 10)) { second = Integer.class; }
-			if (NumberUtil.isInteger(thirdArg, 10)) { third = Integer.class; }
+			if (ENumUtil.isInteger(firstArg, 10)) { first = Integer.class; }
+			if (ENumUtil.isInteger(secondArg, 10)) { second = Integer.class; }
+			if (ENumUtil.isInteger(thirdArg, 10)) { third = Integer.class; }
 			
 			if (!first.equals(second) || !first.equals(third)) { return Exception.class; } //error and return if the parsed range types are not the same
 			else if (first == Integer.class) { return Integer.class; } //try for integer range

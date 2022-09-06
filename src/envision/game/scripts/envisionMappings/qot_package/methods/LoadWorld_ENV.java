@@ -2,7 +2,7 @@ package envision.game.scripts.envisionMappings.qot_package.methods;
 
 import java.io.File;
 
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision_lang.exceptions.EnvisionLangError;
 import envision_lang.exceptions.errors.ArgLengthError;
 import envision_lang.exceptions.errors.InvalidArgumentError;

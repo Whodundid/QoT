@@ -17,7 +17,7 @@ import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -359,8 +359,8 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		}
 		
 		//prevent negative values
-		double w = NumberUtil.clamp((right - startX) + overShootX, 0, Integer.MAX_VALUE);
-		double h = NumberUtil.clamp((down - startY) + overShootY, 0, Integer.MAX_VALUE);
+		double w = ENumUtil.clamp((right - startX) + overShootX, 0, Integer.MAX_VALUE);
+		double h = ENumUtil.clamp((down - startY) + overShootY, 0, Integer.MAX_VALUE);
 		
 		setListSize(w, h);
 	}

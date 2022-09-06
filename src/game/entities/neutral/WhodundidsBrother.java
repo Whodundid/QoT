@@ -3,9 +3,10 @@ package game.entities.neutral;
 import envision.game.animations.AnimationHandler;
 import envision.game.entity.Enemy;
 import envision.game.entity.Entity;
+import envision.game.world.gameWorld.GameWorld;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.QoT;
 import game.assets.textures.entity.EntityTextures;
 
@@ -30,11 +31,11 @@ public class WhodundidsBrother extends Enemy {
 		randShort = 1500;
 		randLong = 3000;
 		
-		delayTillNextBlink = RandomUtil.getRoll(5000, 9000);
+		delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
 		
 		animationHandler = new AnimationHandler(this);
 		var att1 = animationHandler.createAnimationSet(AnimationHandler.ATTACK_1);
-		att1.setUpdateInterval(30);
+		att1.setUpdateInterval(15);
 		att1.addFrame(EntityTextures.whobro);
 		att1.addFrame(EntityTextures.whobro1);
 		att1.addFrame(EntityTextures.whobro2);
@@ -44,7 +45,7 @@ public class WhodundidsBrother extends Enemy {
 
 		
 		var idle1 = animationHandler.createAnimationSet(AnimationHandler.IDLE_ANIMATION_1);
-		idle1.setUpdateInterval(22);
+		idle1.setUpdateInterval(10);
 		idle1.addFrame(EntityTextures.whobro);
 		idle1.addFrame(EntityTextures.whobro_blink0);
 		idle1.addFrame(EntityTextures.whobro_blink1);
@@ -58,11 +59,11 @@ public class WhodundidsBrother extends Enemy {
 		animationHandler.onRenderTick();
 		
 		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-			waitTime = RandomUtil.getRoll(randShort, randLong);
-			moveTime = RandomUtil.getRoll(randShort, randLong);
-			waitDelay = RandomUtil.getRoll(randShort, randLong);
+			waitTime = ERandomUtil.getRoll(randShort, randLong);
+			moveTime = ERandomUtil.getRoll(randShort, randLong);
+			waitDelay = ERandomUtil.getRoll(randShort, randLong);
 			lastMove = System.currentTimeMillis();
-			lastDir = RandomUtil.randomDir();
+			lastDir = ERandomUtil.randomDir();
 		}
 		
 		if (System.currentTimeMillis() - lastMove >= moveTime) {
@@ -91,14 +92,14 @@ public class WhodundidsBrother extends Enemy {
 			pDims = new EDimension(cSX, cSY, cEX, cEY);
 		}
 		
-		double distToPlayer = world.getDistance(this, QoT.thePlayer);
+		double distToPlayer = ((GameWorld) world).getDistance(this, QoT.thePlayer);
 		if (distToPlayer <= 50) {
 			animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.ATTACK_1);
 		}
 		else if (!animationHandler.isAnimationLoaded()) {
 			if (System.currentTimeMillis() - timeSinceLastBlink >= delayTillNextBlink) {
 				timeSinceLastBlink = System.currentTimeMillis();
-				delayTillNextBlink = RandomUtil.getRoll(5000, 9000);
+				delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
 				animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.IDLE_ANIMATION_1);
 			}
 		}
@@ -120,7 +121,7 @@ public class WhodundidsBrother extends Enemy {
 		if (distToPlayer <= 300) {
 			headText = "" + health;
 			
-			Direction dirToPlayer = world.getDirectionTo(this, QoT.thePlayer);
+			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, QoT.thePlayer);
 			move(dirToPlayer);
 		}
 		else {
@@ -129,7 +130,7 @@ public class WhodundidsBrother extends Enemy {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return 6;
 	}
 	

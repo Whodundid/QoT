@@ -1,6 +1,6 @@
 package envision.windowLib.windowObjects.basicObjects;
 
-import envision.renderEngine.fontRenderer.EStringBuilder;
+import envision.renderEngine.fontRenderer.EStringOutputFormatter;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.windowTypes.WindowObject;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
@@ -124,7 +124,7 @@ public class WindowTextBox<E> extends WindowObject<E> {
 			EArrayList<String> widthAdjusted = new EArrayList<>();
 			
 			for (String s : newLineCheck) {
-				widthAdjusted.addAll(EStringBuilder.createWordWrapString(s, (int) maxWidth));
+				widthAdjusted.addAll(EStringOutputFormatter.createWordWrapString(s, (int) maxWidth));
 			}
 			
 			EArrayList<Box2<String, Integer>> createdLines = new EArrayList<>();

@@ -18,7 +18,7 @@ import envision.game.screens.GameScreen;
 import envision.game.screens.ScreenLevel;
 import envision.game.scripts.envisionMappings.Envision_QoT_ErrorCallback;
 import envision.game.scripts.envisionMappings.qot_package.Envision_QoT_Package;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.inputHandlers.Keyboard;
 import envision.inputHandlers.Mouse;
 import envision.inputHandlers.WindowResizeListener;
@@ -479,7 +479,7 @@ public class QoT implements EnvisionGame {
 		
 		if (theWorld != null) {
 			//assign as last world loaded
-			QoTSettings.lastMap.set(theWorld.getName());
+			QoTSettings.lastMap.set(theWorld.getWorldName());
 			
 			//load the world
 			theWorld.setLoaded(true);

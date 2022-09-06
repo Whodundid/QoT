@@ -8,7 +8,7 @@ import envision.windowLib.windowTypes.interfaces.IWindowParent;
 import envision.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 import game.assets.textures.taskbar.TaskBarTextures;
 import game.assets.textures.window.WindowTextures;
@@ -65,7 +65,10 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 		//draw a highlight overlay if the mouse is over the button
 		if (isMouseOver()) {
 			drawRect(0xaa505050);
-			getWindows().forEach(w -> w.drawHighlightBorder());
+			getWindows().forEach(w -> w.setHighlighted(true));
+		}
+		else {
+			getWindows().forEach(w -> w.setHighlighted(false));
 		}
 		
 		//draw highlight if the currently focused window is of the same type as this button's base
@@ -92,8 +95,8 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 		
 		iW = icon.getWidth();
 		iH = icon.getHeight();
-		w = NumberUtil.clamp(iW, 0, width - 3);
-		h = NumberUtil.clamp(iH, 0, height - 3);
+		w = ENumUtil.clamp(iW, 0, width - 3);
+		h = ENumUtil.clamp(iH, 0, height - 3);
 		smaller = (w < h) ? w : h;
 		sX = startX + (width - smaller) / 2.0;
 		sY = startY + 0.5 + (height - smaller) / 2.0;

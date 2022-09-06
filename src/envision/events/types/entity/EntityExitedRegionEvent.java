@@ -2,8 +2,8 @@ package envision.events.types.entity;
 
 import envision.events.EventType;
 import envision.game.entity.Entity;
-import envision.game.world.GameWorld;
-import envision.game.world.Region;
+import envision.game.world.gameWorld.GameWorld;
+import envision.game.world.util.Region;
 
 public class EntityExitedRegionEvent extends EntityEvent {
 	

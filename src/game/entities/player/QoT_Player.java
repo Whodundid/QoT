@@ -35,7 +35,7 @@ public class QoT_Player extends Player {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return 0;
 	}
 	

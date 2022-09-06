@@ -7,19 +7,19 @@ import envision.windowLib.windowTypes.WindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 
-public class ShowWindow extends TerminalCommand {
+public class DisplayWindow extends TerminalCommand {
 	
-	public ShowWindow() {
+	public DisplayWindow() {
 		super(CommandType.NORMAL);
 		setCategory("Windows");
 		numArgs = 1;
 	}
 
-	@Override public String getName() { return "show"; }
+	@Override public String getName() { return "display"; }
 	@Override public String getHelpInfo(boolean runVisually) { return "Toggles the visibility of a window"; }
-	@Override public String getUsage() { return "ex: show 4 (where 4 is the window pid)"; }
+	@Override public String getUsage() { return "ex: display 4 (where 4 is the window id)"; }
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
@@ -34,14 +34,14 @@ public class ShowWindow extends TerminalCommand {
 					boolean val = theWindow.isHidden();
 					theWindow.setHidden(!val);
 					if (!val) theWindow.bringToFront();
-					termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] made " + (!val ? "in" : "") + "visible.", EColors.green);
+					termIn.writeln(EColors.green, "Window: [", theWindow.getObjectName(), " | ", theWindow.getObjectID(), "] made ", (!val ? "in" : ""), "visible.");
 				}
-				else termIn.error("No window with that pid currently exists!");
+				else termIn.error("No window with that id currently exists!");
 				
 			}
 			catch (Exception e) {
 				try {
-					String name = StringUtil.combineAll(args, " ").trim();
+					String name = EStringUtil.combineAll(args, " ").trim();
 					
 					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					WindowParent theWindow = null;
@@ -57,7 +57,7 @@ public class ShowWindow extends TerminalCommand {
 						boolean val = theWindow.isHidden();
 						theWindow.setHidden(!val);
 						if (!val) theWindow.bringToFront();
-						termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] made " + (!val ? "in" : "") + "visible.", EColors.green);
+						termIn.writeln(EColors.green, "Window: [", theWindow.getObjectName(), " | ", theWindow.getObjectID(), "] made ", (!val ? "in" : ""), "visible.");
 					}
 					else termIn.error("No window with that name currently exists!");
 				}

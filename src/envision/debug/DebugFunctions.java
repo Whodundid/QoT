@@ -75,6 +75,12 @@ public class DebugFunctions {
 		return false;
 	}
 	
+	public static DebugCommand getDebugFunction(IDebugCommand id) { return getDebugFunction(id.getDebugCommandID()); }
+	public static DebugCommand getDebugFunction(int functionID) {
+		if (functionID < 0 || functionID >= commands.size()) return null;
+		return commands.get(functionID);
+	}
+	
 	/** Returns the total number of debug functions available. */
 	public static int getTotal() { return IDebugCommand.values().length; }
 	

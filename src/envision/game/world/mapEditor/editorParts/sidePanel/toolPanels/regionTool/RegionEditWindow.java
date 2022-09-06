@@ -1,6 +1,6 @@
 package envision.game.world.mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import envision.game.world.Region;
+import envision.game.world.util.Region;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowObjects.actionObjects.WindowTextField;
 import envision.windowLib.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;
@@ -9,7 +9,7 @@ import envision.windowLib.windowObjects.utilityObjects.ColorButton;
 import envision.windowLib.windowTypes.WindowParent;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 public class RegionEditWindow extends WindowParent {
 	
@@ -43,7 +43,7 @@ public class RegionEditWindow extends WindowParent {
 		
 		//setMessage("Enter a new name for the region");
 		
-		double bw = NumberUtil.clamp((width - 10) / 3, 100, 200);
+		double bw = ENumUtil.clamp((width - 10) / 3, 100, 200);
 		double g = width / 30;
 		
 		double w = width / 1.5;

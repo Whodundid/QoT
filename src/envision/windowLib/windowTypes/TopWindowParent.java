@@ -19,6 +19,7 @@ import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
 import envision.windowLib.windowUtil.windowEvents.events.EventObjects;
 import envision.windowLib.windowUtil.windowEvents.events.EventRedraw;
 import eutil.datatypes.Box2;
+import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
 import game.QoT;
@@ -49,6 +50,8 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	protected long lastClickTime = 0l;
 	protected long doubleClickThreshold = 500l;
 	
+	private final EArrayList<IWindowParent> highlightedWindows = new EArrayList<>();
+	
 	//---------------------------
 	// Overrides : IWindowObject
 	//---------------------------
@@ -69,14 +72,17 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 			//draw debug stuff
 			if (QoT.isDebugMode()) drawDebugInfo();
 			
+			//reset highlighted
+			highlightedWindows.clear();
+			
 			//draw all child objects
 			for (var o : getChildren()) {
 				if (o.willBeDrawn() && !o.isHidden()) {
 					boolean draw = true;
 					
-					if (o instanceof WindowParent<?> wp) {
-						if (!wp.isMinimized() || wp.drawsWhileMinimized()) draw = true;
-						else draw = false;
+					if (o instanceof IWindowParent<?> wp) {
+						draw = (!wp.isMinimized() || wp.drawsWhileMinimized());
+						if (wp.isHighlighted()) highlightedWindows.add(wp);
 					}
 					
 					if (draw) {
@@ -96,6 +102,12 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 						}
 					}
 				}
+			}
+			
+			//draw highlighted window borders
+			for (IWindowParent<?> p : highlightedWindows) {
+				if (p == null) continue;
+				p.drawHighlightBorder();
 			}
 			
 			//notify hover object

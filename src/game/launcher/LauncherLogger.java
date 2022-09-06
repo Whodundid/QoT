@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 import eutil.date.EDateTime;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 
 public class LauncherLogger {
 	
@@ -90,7 +90,7 @@ public class LauncherLogger {
 	static void logWithDialogBox(Object e, String boxTitle, Object... args) { logWithDialogBox(LauncherLogLevel.DEBUG, e, boxTitle, args); }
 	static void logWithDialogBox(LauncherLogLevel level, Object e, String boxTitle, Object... args) {
 		String msg = String.valueOf(e);
-		String additionalArgs = StringUtil.toString(args, "\n");
+		String additionalArgs = EStringUtil.toString(args, "\n");
 		String outMsg = msg + "\n\n" + additionalArgs;
 		
 		JOptionPane.showMessageDialog(null, outMsg, boxTitle, JOptionPane.INFORMATION_MESSAGE);
@@ -100,7 +100,7 @@ public class LauncherLogger {
 	static void logWithDialogBox(Exception e, String message, String boxTitle, Object... args) { logWithDialogBox(LauncherLogLevel.DEBUG, e, message, boxTitle, args); }
 	static void logWithDialogBox(LauncherLogLevel level, Exception e, String message, String boxTitle, Object... args) {
 		String msg = String.valueOf(message);
-		String additionalArgs = StringUtil.toString(args);
+		String additionalArgs = EStringUtil.toString(args);
 		String outMsg = msg + "\n\n" + additionalArgs;
 		
 		JOptionPane.showMessageDialog(null, outMsg, boxTitle, JOptionPane.INFORMATION_MESSAGE);
@@ -109,7 +109,7 @@ public class LauncherLogger {
 	
 	static void logErrorWithDialogBox(Object e, String boxTitle, Object... args) {
 		String err = String.valueOf(e);
-		String additionalArgs = StringUtil.toString(args, "\n");
+		String additionalArgs = EStringUtil.toString(args, "\n");
 		
 		JOptionPane.showMessageDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.ERROR_MESSAGE);
 		logError(err);
@@ -117,7 +117,7 @@ public class LauncherLogger {
 	
 	static void logErrorWithDialogBox(Exception e, String message, String boxTitle, Object... args) {
 		String err = String.valueOf(message);
-		String additionalArgs = StringUtil.toString(args);
+		String additionalArgs = EStringUtil.toString(args);
 		
 		JOptionPane.showMessageDialog(null, err + "\n\n" + additionalArgs, boxTitle, JOptionPane.ERROR_MESSAGE);
 		logError(e);

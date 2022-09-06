@@ -1,6 +1,6 @@
 package envision.game.world.worldTiles.categories.farm;
 
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.IGameWorld;
 import envision.game.world.worldTiles.TileIDs;
 import envision.game.world.worldTiles.WorldTile;
 import envision.renderEngine.textureSystem.GameTexture;
@@ -31,7 +31,7 @@ public class FarmPlot extends WorldTile {
 	//-----------
 
 	@Override
-	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void renderTile(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		super.renderTile(world, x, y, w, h, brightness, mouseOver);
 	}
 	

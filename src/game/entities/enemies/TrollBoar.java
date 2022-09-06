@@ -1,7 +1,7 @@
 package game.entities.enemies;
 
 import envision.game.entity.Enemy;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.assets.textures.entity.EntityTextures;
 
 public class TrollBoar extends Enemy {
@@ -15,11 +15,11 @@ public class TrollBoar extends Enemy {
 	
 	@Override
 	public void onLivingUpdate() {
-		move(RandomUtil.randomDir());
+		move(ERandomUtil.randomDir());
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return 3;
 	}
 	

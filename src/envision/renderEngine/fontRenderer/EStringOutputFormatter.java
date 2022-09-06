@@ -5,7 +5,7 @@ import eutil.datatypes.EArrayList;
 import eutil.debug.Broken;
 
 /** Used to concatenate EColors and EnumChatFormating objects within Strings. */
-public class EStringBuilder {
+public class EStringOutputFormatter {
 	
 	public static double drawString(String s, double x, double y, EColors colorIn, boolean centered, boolean shadow) { return drawString(s, x, y, colorIn.intVal, centered, shadow); }
 	public static double drawString(String s, double x, double y, int colorIn, boolean centered, boolean shadow) {

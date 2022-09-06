@@ -1,7 +1,7 @@
 package envision.game.world.mapEditor;
 
 import envision.game.screens.GameScreen;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.game.world.worldTiles.WorldTile;
 import envision.game.world.worldTiles.categories.NatureTiles;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
@@ -39,7 +39,7 @@ public class NewMapCreatorScreen extends GameScreen {
 	public NewMapCreatorScreen(GameWorld worldIn) {
 		super();
 		if (worldIn != null) {
-			name = worldIn.getName();
+			name = worldIn.getWorldName();
 			width = worldIn.getWidth();
 			height = worldIn.getHeight();
 		}

@@ -1,7 +1,7 @@
 package game.entities;
 
 import envision.game.entity.Entity;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.doodads.BirchTree;
 import game.doodads.Bush0;
 import game.doodads.PineTree;
@@ -43,11 +43,11 @@ public enum EntityList {
 	}
 	
 	public static EntityList randomType() {
-		return values()[RandomUtil.getRoll(1, values().length - 1)];
+		return values()[ERandomUtil.getRoll(1, values().length - 1)];
 	}
 	
 	public static Entity randomEntity() {
-		return getEntity(values()[RandomUtil.getRoll(1, values().length - 1)]);
+		return getEntity(values()[ERandomUtil.getRoll(1, values().length - 1)]);
 	}
 	
 	public static Entity getEntity(int idIn) { return getEntity(getType(idIn)); }

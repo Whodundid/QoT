@@ -1,9 +1,16 @@
 package envision.game.world.mapEditor.editorParts.minimap;
 
-import envision.game.world.GameWorld;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+
+import javax.imageio.ImageIO;
+
+import envision.game.world.mapEditor.EditorWorld;
 import envision.game.world.mapEditor.MapEditorScreen;
 import envision.game.world.mapEditor.editorParts.sidePanel.EditorSidePanel;
-import envision.game.world.worldTiles.WorldTile;
+import envision.renderEngine.textureSystem.GameTexture;
+import envision.testing.TextureLoader;
 import envision.windowLib.windowTypes.WindowObject;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
@@ -12,7 +19,10 @@ public class EditorMiniMap extends WindowObject {
 	
 	EditorSidePanel panel;
 	MapEditorScreen editor;
-	GameWorld world;
+	EditorWorld world;
+	
+	private BufferedImage mapImage;
+	private GameTexture mapTexture;
 	
 	/** Detail relates to the draw ratio.
 	 *  A detail level of 1 is equivalent to a 1:1 draw ratio, as in the minimap will draw each pixel of the map.
@@ -22,7 +32,7 @@ public class EditorMiniMap extends WindowObject {
 	public EditorMiniMap(EditorSidePanel panelIn) {
 		panel = panelIn;
 		editor = panel.getEditor();
-		world = editor.getWorld();
+		world = editor.getEditorWorld();
 		init(panel);
 	}
 	
@@ -57,28 +67,40 @@ public class EditorMiniMap extends WindowObject {
 	}
 	
 	private void drawMap() {
+
+	}
+	
+	private void createMapImage() throws Throwable {
 		int w = world.getWidth();
 		int h = world.getHeight();
 		
+		//maybe detail someday..
 		detail = 1;
 		
-		int sX = (int) startX + 4; //startX
-		int sY = (int) startY + 4; //startY
-		int dw = 4; //draw width
-		int dh = 4; //draw height
+		int imgWidth = w;
+		int imgHeight = h;
 		
-		//iterating horizontally
-		for (int i = 0, ii = 0; i < h; i += detail, ii++) {
-			for (int j = 0, jj = 0; j < w; j += detail, jj++) {
-				WorldTile tile = world.getTileAt(j, i);
-				int color = (tile != null) ? tile.getMapColor() : 0xff000000;
+		//make the map image always square
+		//furthermore, use the larger dimension of the two
+		if (imgWidth != imgHeight) {
+			if (imgWidth > imgHeight) imgHeight = imgWidth;
+			else imgWidth = imgHeight;
+		}
+		
+		mapImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
+		
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; j++) {
+				var tile = world.getTileAt(i, j);
+				if (tile == null) continue;
 				
-				int drawPosX = sX + (jj * dw);
-				int drawPosY = sY + (ii * dh);
-				
-				drawRect(drawPosX, drawPosY, drawPosX + dw, drawPosY + dh, color);
+				mapImage.setRGB(j, i, tile.getMapColor());
 			}
 		}
+		
+		File minimapFile = new File(editor.getActualWorld().getWorldFile(), "minimap.png");
+		ImageIO.write(mapImage, "png", new FileOutputStream(minimapFile));
+		TextureLoader.loadTexture(null);
 	}
 	
 	private void drawCameraPos() {

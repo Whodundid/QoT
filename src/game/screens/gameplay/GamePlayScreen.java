@@ -3,7 +3,7 @@ package game.screens.gameplay;
 import envision.game.entity.Entity;
 import envision.game.screens.GameScreen;
 import envision.game.sounds.SoundEngine;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.inputHandlers.Keyboard;
 import envision.topOverlay.GameTopScreen;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
@@ -12,7 +12,7 @@ import envision.windowLib.windowObjects.basicObjects.WindowStatusBar;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 import game.assets.sounds.Songs;
 import game.assets.textures.item.ItemTextures;
@@ -93,6 +93,11 @@ public class GamePlayScreen extends GameScreen {
 		drawRect(0, 39, QoT.getWidth(), 41, EColors.gray);
 		//mouse pos
 		
+		if (world == null) {
+			drawStringC("Null World!", midX, midY, EColors.lred);
+			return;
+		}
+		
 		health.setBarValue(QoT.thePlayer.getHealth());
 		if (QoT.thePlayer != null && QoT.thePlayer.isDead()) {
 			QoT.displayScreen(new DeathScreen());
@@ -151,7 +156,7 @@ public class GamePlayScreen extends GameScreen {
 			EArrayList<Entity> inRange = new EArrayList();
 			for (var e : QoT.theWorld.getEntitiesInWorld()) {
 				if (e == player) continue;
-				if (QoT.theWorld.getDistance(e, player) < 50) inRange.add(e);
+				if (QoT.theWorld.getDistance(e, player) < 50) inRange.add((Entity) e);
 			}
 			
 			for (var e : inRange) {
@@ -178,7 +183,7 @@ public class GamePlayScreen extends GameScreen {
 			else if (world.getZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
 			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
 			
-			z = NumberUtil.round(world.getZoom() + z, 2);
+			z = ENumUtil.round(world.getZoom() + z, 2);
 			world.setZoom(z);
 		}
 	}

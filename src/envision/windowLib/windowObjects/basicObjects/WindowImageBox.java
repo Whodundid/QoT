@@ -7,7 +7,7 @@ import envision.windowLib.windowTypes.WindowObject;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
@@ -80,11 +80,11 @@ public class WindowImageBox<E> extends WindowObject<E> {
 					//image ratio equations
 					
 					if (w <= h) {
-						h = NumberUtil.clamp((w / imgW) * imgH, 0, (height - 4));
+						h = ENumUtil.clamp((w / imgW) * imgH, 0, (height - 4));
 						w = (h / imgH) * imgW;
 					}
 					else {
-						w = NumberUtil.clamp((h / imgH) * imgW, 0, (width - 4));
+						w = ENumUtil.clamp((h / imgH) * imgW, 0, (width - 4));
 						h = (w / imgW) * imgH;
 					}
 					
@@ -128,7 +128,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	public void mouseScrolled(int change) {
 		super.mouseScrolled(change);
 		zoom += (change * 5);
-		zoom = NumberUtil.clamp(zoom, 0, Double.MAX_VALUE);
+		zoom = ENumUtil.clamp(zoom, 0, Double.MAX_VALUE);
 	}
 	
 	@Override
@@ -157,7 +157,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	public void setNullText(String textIn) { nullText = textIn; }
 	public void setNullTextColor(EColors colorIn) { setNullTextColor(colorIn.intVal); }
 	public void setNullTextColor(int colorIn) { nullTextColor = colorIn; }
-	public void setUpdateInterval(long time) { updateInterval = (long) NumberUtil.clamp(time, 0, Long.MAX_VALUE); }
+	public void setUpdateInterval(long time) { updateInterval = (long) ENumUtil.clamp(time, 0, Long.MAX_VALUE); }
 	public void setDrawImage(boolean val) { drawImage = val; }
 	public void setDrawBorder(boolean val) { drawBorder = val; }
 	public void setDrawBackground(boolean val) { drawBackground = val; }

@@ -5,7 +5,7 @@ import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 
 public class FPS_CMD extends TerminalCommand {
@@ -30,7 +30,7 @@ public class FPS_CMD extends TerminalCommand {
 			String arg = args.get(0);
 			try {
 				int val = Integer.parseInt(arg);
-				val = NumberUtil.clamp(val, 1, Integer.MAX_VALUE);
+				val = ENumUtil.clamp(val, 1, Integer.MAX_VALUE);
 				QoT.setTargetFPS(val);
 				termIn.writeln("Set game framerate to " + val + " frames per second!", EColors.lime);
 			}

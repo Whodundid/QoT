@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import org.lwjgl.opengl.GL11;
 
-import envision.renderEngine.fontRenderer.EStringBuilder;
+import envision.renderEngine.fontRenderer.EStringOutputFormatter;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.renderEngine.textureSystem.TextureSystem;
 
@@ -35,13 +35,13 @@ public abstract class GLObject {
 	
 	
 	/** Draws the toString representation of an object at the specified position. */
-	public static double drawString(Object o, double x, double y, int color) { return EStringBuilder.drawString(toStr(o), x, y, color, false, false); }
+	public static double drawString(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, color, false, false); }
 	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredString(Object o, double x, double y, int color) { return EStringBuilder.drawString(toStr(o), x, y, color, true, false); }
+	public static double drawCenteredString(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, color, true, false); }
 	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringWithShadow(Object o, double x, double y, int color) { return EStringBuilder.drawString(toStr(o), x, y, color, false, true); }
+	public static double drawStringWithShadow(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, color, false, true); }
 	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredStringWithShadow(Object o, double x, double y, int color) { return EStringBuilder.drawString(toStr(o), x, y, color, true, true); }
+	public static double drawCenteredStringWithShadow(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, color, true, true); }
 	
 	
 	/** Draws a String at the specified position. */
@@ -57,13 +57,13 @@ public abstract class GLObject {
 	
 	
 	/** Draws a String at the specified position. */
-	public static double drawString(String text, double x, double y, int color) { return EStringBuilder.drawString(text, x, y, color, false, false); }
+	public static double drawString(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, color, false, false); }
 	/** Draws a String at the specified position. */
-	public static double drawCenteredString(String text, double x, double y, int color) { return EStringBuilder.drawString(text, x, y, color, true, false); }
+	public static double drawCenteredString(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, color, true, false); }
 	/** Draws a String at the specified position. */
-	public static double drawStringWithShadow(String text, double x, double y, int color) { return EStringBuilder.drawString(text, x, y, color, false, true); }
+	public static double drawStringWithShadow(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, color, false, true); }
 	/** Draws a String at the specified position. */
-	public static double drawCenteredStringWithShadow(String text, double x, double y, int color) { return EStringBuilder.drawString(text, x, y, color, true, true); }
+	public static double drawCenteredStringWithShadow(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, color, true, true); }
 	
 	
 	/** Draws the toString representation of an object at the specified position. */
@@ -96,7 +96,7 @@ public abstract class GLObject {
 	public static double drawStringCS(String text, double x, double y, int color) { return drawCenteredStringWithShadow(text, x, y, color); }
 	
 	/** Wrapper for EStringBuilder's getStringWidth. */
-	public static int getStringWidth(String text) { return EStringBuilder.getStringWidth(text); }
+	public static int getStringWidth(String text) { return EStringOutputFormatter.getStringWidth(text); }
 	
 	/** Returns a 'toString' representation of the given object. Accounts for null objets as well. */
 	private static String toStr(Object in) { return (in != null) ? in.toString() : "null"; }
@@ -505,13 +505,13 @@ public abstract class GLObject {
 	
 	/** 'to double for x' converts a given value into a corresponding double value between -1.0f and 1.0f based on window x size. */
 	public static float tdx(Number valIn) {
-		float midX = (float) QoT.getWidth() / 2.0f;
+		float midX = ((float) QoT.getWidth()) / 2.0f;
 		return (float) (((valIn.floatValue() * QoT.getGameScale()) - midX) / midX);
 	}
 	
 	/** 'to double for y' converts a given value into a corresponding double value between -1.0f and 1.0f based on window y size. */
 	public static float tdy(Number valIn) {
-		float midY = (float) QoT.getHeight() / 2.0f;
+		float midY = ((float) QoT.getHeight()) / 2.0f;
 		return (float) ((midY - (valIn.floatValue() * QoT.getGameScale())) / midY);
 	}
 	

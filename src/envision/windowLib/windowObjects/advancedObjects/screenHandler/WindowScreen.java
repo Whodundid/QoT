@@ -3,7 +3,7 @@ package envision.windowLib.windowObjects.advancedObjects.screenHandler;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 public class WindowScreen<E> {
 	
@@ -31,9 +31,9 @@ public class WindowScreen<E> {
 	public void onUnloaded() {}
 	public void onStageChanged() {}
 	
-	public void setCurrentStage(int num) { curStage = NumberUtil.clamp(num, 0, numStages); }
-	public void nextStage() { curStage = NumberUtil.clamp(curStage + 1, 0, numStages); }
-	public void prevStage() { curStage = NumberUtil.clamp(curStage - 1, 0, numStages); }
+	public void setCurrentStage(int num) { curStage = ENumUtil.clamp(num, 0, numStages); }
+	public void nextStage() { curStage = ENumUtil.clamp(curStage + 1, 0, numStages); }
+	public void prevStage() { curStage = ENumUtil.clamp(curStage - 1, 0, numStages); }
 	
 	public void showScreen() { objects.forEach(o -> EUtil.nullDo(o, i -> i.setVisible(true))); }
 	public void hideScreen() { objects.forEach(o -> EUtil.nullDo(o, i -> i.setVisible(false))); }

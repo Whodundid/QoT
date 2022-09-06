@@ -157,7 +157,7 @@ public class CalculatorWindow<E> extends WindowParent<E> {
 		tan.setString(is2nd ? "ATAN" : "TAN");
 		ln.setString(is2nd ? "e" : "LN");
 		
-		WindowButton.setStringColor(is2nd ? EColors.yellow.intVal : 14737632, sin, cos, tan, ln);
+		WindowButton.setStringColor(is2nd ? EColors.yellow.intVal : EColors.white.intVal, sin, cos, tan, ln);
 		
 		addObject(outputField);
 		addObject(sin, cos, tan, backspace, clear);

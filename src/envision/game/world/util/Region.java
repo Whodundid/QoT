@@ -1,6 +1,7 @@
-package envision.game.world;
+package envision.game.world.util;
 
 import envision.game.entity.Entity;
+import envision.game.world.gameWorld.GameWorld;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimensionI;

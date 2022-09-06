@@ -1,6 +1,6 @@
 package envision.game.scripts.envisionMappings.qot_package.objects;
 
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision_lang.interpreter.EnvisionInterpreter;
 import envision_lang.interpreter.util.creationUtil.ObjectCreator;
 import envision_lang.interpreter.util.scope.Scope;
@@ -73,7 +73,7 @@ public class QoTWorldClass extends EnvisionClass {
 	private void createFields(Scope scope, GameWorld w) {
 		BoxList<String, Object> ifields = new BoxList();
 		
-		ifields.add("name", w.getName());
+		ifields.add("name", w.getWorldName());
 		ifields.add("width", w.getWidth());
 		ifields.add("height", w.getHeight());
 		ifields.add("tileWidth", w.getTileWidth());

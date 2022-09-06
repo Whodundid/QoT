@@ -1,11 +1,11 @@
 package envision.game.world.worldTiles.categories.test_tiles;
 
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.IGameWorld;
 import envision.game.world.worldTiles.TileIDs;
 import envision.game.world.worldTiles.WorldTile;
 import envision.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.assets.textures.world.nature.grass.GrassTextures;
 
 public class TestGrass extends WorldTile {
@@ -18,8 +18,8 @@ public class TestGrass extends WorldTile {
 		super(TileIDs.GRASS);
 		
 		numVariants = 4;
-		level = RandomUtil.getRoll(232, 255);
-		int chooseColor = RandomUtil.getRoll(0, 1);
+		level = ERandomUtil.getRoll(232, 255);
+		int chooseColor = ERandomUtil.getRoll(0, 1);
 		switch (chooseColor) {
 		case 0: color = EColors.lgreen; break;
 		case 1: color = EColors.green; break;
@@ -37,7 +37,7 @@ public class TestGrass extends WorldTile {
 	}
 	
 	@Override
-	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void renderTile(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		double wh = h * wallHeight; //wh == 'wallHeight'
 		
 		if (isWall) {
@@ -53,7 +53,7 @@ public class TestGrass extends WorldTile {
 			//check if the tile directly above is a wall
 			//if so - don't draw wall side
 			WorldTile tb = null; // tb == 'tileBelow'
-			if ((worldY + 1) < world.getHeight()) tb = world.getWorldData()[worldX][worldY + 1];
+			if ((worldY + 1) < world.getHeight()) tb = world.getTileAt(worldX, worldY + 1);
 			if ((tb == null ||
 				!tb.hasTexture() ||
 				 tb.getWallHeight() < wh) ||
@@ -81,7 +81,7 @@ public class TestGrass extends WorldTile {
 		
 		//draw bottom of map edge or if right above a tile with no texture/void
 		WorldTile tileBelow = null;
-		if ((worldY + 1) < world.getHeight()) tileBelow = world.getWorldData()[worldX][worldY + 1];
+		if ((worldY + 1) < world.getHeight()) tileBelow = world.getTileAt(worldX, worldY + 1);
 		if ((tileBelow == null || !tileBelow.hasTexture())) {
 			drawTexture(tex, x, y + h, w, h / 2, false, EColors.changeBrightness(brightness, 125));
 		}

@@ -34,6 +34,7 @@ import envision.terminal.terminalCommand.commands.game.Song_CMD;
 import envision.terminal.terminalCommand.commands.game.SpawnEntity_CMD;
 import envision.terminal.terminalCommand.commands.game.TPS_CMD;
 import envision.terminal.terminalCommand.commands.game.UnloadWorld_CMD;
+import envision.terminal.terminalCommand.commands.game.Volume_CMD;
 import envision.terminal.terminalCommand.commands.game.World_CMD;
 import envision.terminal.terminalCommand.commands.game.WorldsDir_CMD;
 import envision.terminal.terminalCommand.commands.system.CalcCommand;
@@ -58,9 +59,9 @@ import envision.terminal.terminalCommand.commands.system.SystemCMD;
 import envision.terminal.terminalCommand.commands.system.Version;
 import envision.terminal.terminalCommand.commands.system.WhoAmI;
 import envision.terminal.terminalCommand.commands.windows.Close;
+import envision.terminal.terminalCommand.commands.windows.DisplayWindow;
 import envision.terminal.terminalCommand.commands.windows.MinimizeWindow;
 import envision.terminal.terminalCommand.commands.windows.PinWindow;
-import envision.terminal.terminalCommand.commands.windows.ShowWindow;
 import envision.terminal.terminalCommand.commands.windows.ToFrontWindow;
 import envision.terminal.terminalUtil.ClassFinder;
 import envision.terminal.window.ETerminal;
@@ -151,6 +152,7 @@ public class TerminalHandler {
 		registerCommand(new SpawnEntity_CMD(), termIn, runVisually);
 		registerCommand(new TPS_CMD(), termIn, runVisually);
 		registerCommand(new UnloadWorld_CMD(), termIn, runVisually);
+		registerCommand(new Volume_CMD(), termIn, runVisually);
 		registerCommand(new World_CMD(), termIn, runVisually);
 		registerCommand(new WorldsDir_CMD(), termIn, runVisually);
 		registerCommand(new ListEntities_CMD(), termIn, runVisually);
@@ -183,7 +185,7 @@ public class TerminalHandler {
 		registerCommand(new Close(), termIn, runVisually);
 		registerCommand(new MinimizeWindow(), termIn, runVisually);
 		registerCommand(new PinWindow(), termIn, runVisually);
-		registerCommand(new ShowWindow(), termIn, runVisually);
+		registerCommand(new DisplayWindow(), termIn, runVisually);
 		registerCommand(new ToFrontWindow(), termIn, runVisually);
 	}
 	

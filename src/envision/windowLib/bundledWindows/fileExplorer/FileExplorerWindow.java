@@ -3,7 +3,7 @@ package envision.windowLib.bundledWindows.fileExplorer;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.file.FileOpener;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import game.assets.textures.window.WindowTextures;
 
 import java.io.File;
@@ -351,7 +351,7 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	private void forward() {}
 	
 	private void fileUp() {
-		int index = StringUtil.findStartingIndex(curDir.toString(), "\\", true);
+		int index = EStringUtil.findStartingIndex(curDir.toString(), "\\", true);
 		if (scrollBarPositionHistory.isNotEmpty()) {
 			double pos = scrollBarPositionHistory.pop();
 			System.out.println(pos);

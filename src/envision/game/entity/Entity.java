@@ -1,12 +1,10 @@
 package envision.game.entity;
 
 import envision.game.GameObject;
-import envision.game.animations.AnimationHandler;
-import envision.game.world.GameWorld;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.debug.Broken;
 import eutil.math.EDimension;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import eutil.misc.Direction;
 import eutil.misc.Rotation;
 import game.QoT;
@@ -17,7 +15,6 @@ public abstract class Entity extends GameObject {
 	// Fields
 	//--------
 	
-	public GameWorld world;
 	protected String headText = "";
 	protected boolean passable = false;
 	protected boolean allowNoClip = false;
@@ -54,11 +51,9 @@ public abstract class Entity extends GameObject {
 	 */
 	protected int baseMeleeDamage;
 	
-	/** The ID of this entity within the world. -1 by default. */
-	private int entityID = -1;
+
 	
-	/** The animation handler of this entity. */
-	protected AnimationHandler animationHandler;
+
 	
 	//--------------
 	// Constructors
@@ -87,28 +82,19 @@ public abstract class Entity extends GameObject {
 		collisionBox = new EDimension(startX, startY, endX, endY);
 	}
 	
-	/** Can be overridden in child classes to denote specific entity behavior. */
-	public void onLivingUpdate() {}
 	
 	/** Called from the world whenever an entity collides with another entity. */
 	public void onEntityCollide(Entity collidingEntity) {}
-	
-	/** Called from the world whenever this entity is removed from it. */
-	public void onRemovedFromWorld() {
-		if (animationHandler != null) {
-			animationHandler.unloadAnimation();
-		}
-	}
 	
 	//-----------
 	// Overrides
 	//-----------
 	
 	@Override
-	public void renderObject(double x, double y, double w, double h) {
+	public void renderObject(double x, double y, double w, double h, int brightness) {
 		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
 		
-		drawTexture(sprite, x, y, w, h, flip);
+		drawTexture(sprite, x, y, w, h, flip, brightness);
 		
 		drawStringC(headText, x + w/2, y - h/4);
 	}
@@ -119,15 +105,15 @@ public abstract class Entity extends GameObject {
 	
 	/** Reduces health by amount. If result is less than or equal to 0, the entity dies. */
 	public void drainHealth(int amount) {
-		health = NumberUtil.clamp(health - amount, 0, health);
+		health = ENumUtil.clamp(health - amount, 0, health);
 	}
 	
 	/** Reduces mana by amount. */
-	public void drainMana(int amount) { mana = NumberUtil.clamp(mana - amount, 0, Integer.MAX_VALUE); }
+	public void drainMana(int amount) { mana = ENumUtil.clamp(mana - amount, 0, Integer.MAX_VALUE); }
 	/** Heals the entity by the given amount. Note: does not exceed max health. */
-	public void replenishHealth(int amount) { health = NumberUtil.clamp(health + amount, 0, maxHealth); }
+	public void replenishHealth(int amount) { health = ENumUtil.clamp(health + amount, 0, maxHealth); }
 	/** Restores mana points by the given amount. Note: does not exceed max mana. */
-	public void replenishMana(int amount) { mana = NumberUtil.clamp(mana + amount, Integer.MIN_VALUE, maxMana); }
+	public void replenishMana(int amount) { mana = ENumUtil.clamp(mana + amount, Integer.MIN_VALUE, maxMana); }
 	/** Completely restores all hitpoints back to max health. Note: if max health = 0, the entity will still be dead! */
 	public void fullHeal() { health = maxHealth; }
 	/** Completely restores all mana points back to max mana. */
@@ -199,10 +185,10 @@ public abstract class Entity extends GameObject {
 				//col.endY += 1;
 				//col = col.contract(1);
 
-				movingToSX = NumberUtil.clamp(movingToSX, 0, world.getWidth() - 1);
-				movingToSY = NumberUtil.clamp(movingToSY, 0, world.getHeight() - 1);
-				movingToEX = NumberUtil.clamp(movingToEX, 0, world.getWidth() - 1);
-				movingToEY = NumberUtil.clamp(movingToEY, 0, world.getHeight() - 1);
+				movingToSX = ENumUtil.clamp(movingToSX, 0, world.getWidth() - 1);
+				movingToSY = ENumUtil.clamp(movingToSY, 0, world.getHeight() - 1);
+				movingToEX = ENumUtil.clamp(movingToEX, 0, world.getWidth() - 1);
+				movingToEY = ENumUtil.clamp(movingToEY, 0, world.getHeight() - 1);
 				
 				WorldTile tl = world.getTileAt(movingToSX, movingToSY);
 				WorldTile tr = world.getTileAt(movingToEX, movingToSY);
@@ -325,10 +311,10 @@ public abstract class Entity extends GameObject {
 				endY += y;
 				
 				if (!allowNoClip) {
-					startX = (int) NumberUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
-					startY = (int) NumberUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
-					endX = (int) NumberUtil.clamp(endX, width - collisionBox.startX, world.getPixelWidth() + (width - collisionBox.endX));
-					endY = (int) NumberUtil.clamp(endY, height - collisionBox.startY, world.getPixelHeight() + (height - collisionBox.endY));
+					startX = (int) ENumUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
+					startY = (int) ENumUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
+					endX = (int) ENumUtil.clamp(endX, width - collisionBox.startX, world.getPixelWidth() + (width - collisionBox.endX));
+					endY = (int) ENumUtil.clamp(endY, height - collisionBox.startY, world.getPixelHeight() + (height - collisionBox.endY));
 				}
 				
 				midX = startX + (width / 2);
@@ -380,9 +366,6 @@ public abstract class Entity extends GameObject {
 	// Getters
 	//---------
 	
-	public int getEntityID() { return entityID; }
-	
-	public EDimension getCollision() { return collisionBox; }
 	public boolean isPassable() { return passable; }
 	public boolean isNoClipping() { return allowNoClip; }
 	public String getHeadText() { return headText; }
@@ -407,8 +390,6 @@ public abstract class Entity extends GameObject {
 	//---------
 	// Setters
 	//---------
-	
-	public void setEntityID(int idIn) { entityID = idIn; }
 	
 	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }
@@ -440,7 +421,7 @@ public abstract class Entity extends GameObject {
 	public void setHitpointsLevel(int levelIn) {
 		hitpointsLevel = levelIn;
 		maxHealth = EntityLevel.calculateMaxHealth(hitpointsLevel);
-		health = NumberUtil.clamp(health, 0, maxHealth);
+		health = ENumUtil.clamp(health, 0, maxHealth);
 	}
 	
 	public Entity setMaxMana(int maxManaIn) { maxMana = maxManaIn; return this; }
@@ -448,7 +429,7 @@ public abstract class Entity extends GameObject {
 	public void setMagicLevel(int levelIn) {
 		magicLevel = levelIn;
 		maxMana = EntityLevel.calculateMaxMana(magicLevel);
-		mana = NumberUtil.clamp(mana, 0, maxMana);
+		mana = ENumUtil.clamp(mana, 0, maxMana);
 	}
 	
 	/**

@@ -1,20 +1,14 @@
 package game.screens.testingStuff;
 
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import eutil.math.EDimension;
-import eutil.math.NumberUtil;
-import game.QoT;
-import game.entities.player.QoT_Player;
-
 import java.io.File;
 import java.util.Stack;
 
 import org.lwjgl.glfw.GLFW;
 
+import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.screens.GameScreen;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.game.world.mapEditor.NewMapCreatorScreen;
 import envision.game.world.worldTiles.WorldTile;
 import envision.inputHandlers.Keyboard;
@@ -22,6 +16,12 @@ import envision.inputHandlers.Mouse;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+import eutil.math.EDimension;
+import eutil.math.ENumUtil;
+import game.QoT;
+import game.entities.player.QoT_Player;
 
 public class WorldRenderTest extends GameScreen {
 
@@ -117,10 +117,10 @@ public class WorldRenderTest extends GameScreen {
 		}
 		
 		if (world != null) {
-			int tW = (int) (FontRenderer.getStringWidth(world.getName()) / 2);
+			int tW = (int) (FontRenderer.getStringWidth(world.getWorldName()) / 2);
 			drawRect(midX - tW - 8, 7, midX + tW + 8, 43, EColors.black);
 			drawRect(midX - tW - 7, 8, midX + tW + 7, 42, EColors.dgray);
-			drawStringC(world.getName(), midX, 15);
+			drawStringC(world.getWorldName(), midX, 15);
 			
 			drawString("Dims: " + world.getWidth() + " " + world.getHeight(), reload.startX + 10, reload.endY + 60);
 		}
@@ -221,7 +221,7 @@ public class WorldRenderTest extends GameScreen {
 			distX = (QoT.getWidth() / world.getTileWidth()) / 2 + 1;
 			distY = (QoT.getHeight() / world.getTileHeight()) / 2 + 2;
 			
-			Entity e = world.addEntity(QoT.getPlayer());
+			Entity e = (Entity) world.addEntity(QoT.getPlayer());
 			e.setWorldPos(0, 0);
 		}
 		else if (world != null) {
@@ -300,9 +300,9 @@ public class WorldRenderTest extends GameScreen {
 	}
 	
 	private void drawEntities(int x, int y, int w, int h) {
-		EArrayList<Entity> entities = world.getEntitiesInWorld();
+		EArrayList<GameObject> entities = world.getEntitiesInWorld();
 		
-		for (Entity e : entities) {
+		for (GameObject e : entities) {
 			if (e.getTexture() != null) {
 				double drawX = 0;
 				double drawY = 0;
@@ -362,8 +362,8 @@ public class WorldRenderTest extends GameScreen {
 	private void drawMouseCoords(int x, int y, int w, int h) {
 		worldXPos = (int) worldXPos;
 		worldYPos = (int) worldYPos;
-		worldXPos = NumberUtil.clamp(worldXPos, 0, world.getWidth() - 1);
-		worldYPos = NumberUtil.clamp(worldYPos, 0, world.getHeight() - 1);
+		worldXPos = ENumUtil.clamp(worldXPos, 0, world.getWidth() - 1);
+		worldYPos = ENumUtil.clamp(worldYPos, 0, world.getHeight() - 1);
 		
 		WorldTile t = world.getTileAt((int) worldXPos, (int) worldYPos);
 		String name = (t != null) ? " : " + t.getName() : "";

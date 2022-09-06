@@ -2,7 +2,7 @@ package envision.game.world.mapEditor;
 
 import java.io.File;
 
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import envision.game.world.mapEditor.editorTools.EditorToolType;
 

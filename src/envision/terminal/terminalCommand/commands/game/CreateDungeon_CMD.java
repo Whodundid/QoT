@@ -1,9 +1,9 @@
 package envision.terminal.terminalCommand.commands.game;
 
-import envision.game.world.GameWorld;
 import envision.game.world.dungeonBuilder.DungeonBuilder;
 import envision.game.world.dungeonBuilder.DungeonBuilderSettings;
 import envision.game.world.dungeonBuilder.DungeonSize;
+import envision.game.world.gameWorld.GameWorld;
 import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;

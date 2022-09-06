@@ -1,10 +1,10 @@
 package envision.game.world.dungeonBuilder;
 
-import envision.game.world.EntitySpawn;
+import envision.game.world.util.EntitySpawn;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Direction;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 
 public abstract class DungeonPiece {
 	
@@ -32,6 +32,6 @@ public abstract class DungeonPiece {
 	public int getWidth() { return w; }
 	public int getHeight() { return h; }
 	
-	protected static int randInt(int low, int high) { return RandomUtil.getRoll(low, high); }
+	protected static int randInt(int low, int high) { return ERandomUtil.getRoll(low, high); }
 	
 }

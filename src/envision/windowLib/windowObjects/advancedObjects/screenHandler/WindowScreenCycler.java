@@ -4,7 +4,7 @@ import envision.windowLib.windowTypes.ActionObject;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 public class WindowScreenCycler<E> extends ActionObject<E> {
 	
@@ -127,14 +127,14 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	}
 	
 	public void setCurrentScreen(int num) {
-		currentScreen = NumberUtil.clamp(num, 0, screens.size() - 1);
+		currentScreen = ENumUtil.clamp(num, 0, screens.size() - 1);
 		checkScreen();
 	}
 	
 	public void setCurrentStage(int num) {
 		WindowScreen<E> screen = screens.get(currentScreen);
 		if (screen != null) {
-			num = NumberUtil.clamp(num, 0, screen.getNumStages());
+			num = ENumUtil.clamp(num, 0, screen.getNumStages());
 			screen.setCurrentStage(num);
 		}
 	}

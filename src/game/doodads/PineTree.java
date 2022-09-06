@@ -2,7 +2,7 @@ package game.doodads;
 
 import envision.game.entity.Entity;
 import eutil.misc.Rotation;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.assets.textures.doodads.trees.TreeTextures;
 
 public class PineTree extends Entity {
@@ -12,7 +12,7 @@ public class PineTree extends Entity {
 		super("pine");
 		init(posX, posY, 256, 256);
 		sprite = TreeTextures.tree_pine_0;
-		facing = (RandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
+		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		double sx = (facing == Rotation.RIGHT) ? 15 : 5;
 		double ex = (facing == Rotation.RIGHT) ? 5 : 15;
@@ -21,7 +21,7 @@ public class PineTree extends Entity {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return 5;
 	}
 	

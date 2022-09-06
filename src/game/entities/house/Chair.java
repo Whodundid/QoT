@@ -20,7 +20,7 @@ public class Chair extends Entity {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return EntityList.CHAIR.ID;
 	}
 	

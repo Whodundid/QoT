@@ -8,7 +8,7 @@ import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.terminal.window.ETerminal;
 import envision.topOverlay.desktopOverlay.TaskBar;
 import envision.windowLib.windowTypes.TopWindowParent;
-import envision.windowLib.windowTypes.WindowParent;
+import envision.windowLib.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
@@ -21,6 +21,7 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 	public static GameTopScreen<?> instance;
 	private static boolean hasFocus = false;
 	private static TaskBar<?> taskBar;
+	private final EArrayList<IWindowParent> highlightedWindows = new EArrayList<>();
 	
 	public static GameTopScreen<?> getInstance() {
 		return instance = (instance != null) ? instance : new GameTopScreen();
@@ -64,8 +65,13 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 		}
 		
 		if (isVisible()) {
+			if (!hasFirstDraw()) onFirstDraw();
+			
 			//draw debug stuff
 			if (QoT.isDebugMode()) drawDebugInfo();
+			
+			//reset highlighted
+			highlightedWindows.clear();
 			
 			//draw all child objects
 			for (var o : getChildren()) {
@@ -73,8 +79,9 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 				if (!o.willBeDrawn() || o.isHidden()) continue;
 				boolean draw = true;
 				
-				if (o instanceof WindowParent<?> wp) {
+				if (o instanceof IWindowParent<?> wp) {
 					draw = (wp.drawsWhileMinimized() || !wp.isMinimized());
+					if (wp.isHighlighted()) highlightedWindows.add(wp);
 				}
 				
 				if (!draw) continue;
@@ -96,6 +103,12 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 						GLObject.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 					}
 				}
+			}
+			
+			//draw highlighted window borders
+			for (IWindowParent<?> p : highlightedWindows) {
+				if (p == null) continue;
+				p.drawHighlightBorder();
 			}
 			
 			//notify hover object

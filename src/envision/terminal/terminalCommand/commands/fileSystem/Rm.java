@@ -2,7 +2,7 @@ package envision.terminal.terminalCommand.commands.fileSystem;
 
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import java.io.File;
 
 import envision.terminal.terminalCommand.CommandType;
@@ -72,7 +72,7 @@ public class Rm extends FileCommand {
 			}
 		}
 		else {
-			String all = StringUtil.combineAll(args.subList(1, args.size() - 1), " ");
+			String all = EStringUtil.combineAll(args.subList(1, args.size() - 1), " ");
 			File f = new File(all);
 			
 			if (f.exists()) {

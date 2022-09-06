@@ -2,7 +2,7 @@ package game.doodads;
 
 import envision.game.entity.Entity;
 import eutil.misc.Rotation;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.assets.textures.doodads.ground_clutter.GroundClutterTextures;
 import game.entities.EntityList;
 
@@ -13,13 +13,13 @@ public class StoneGroundClutter extends Entity {
 		super("stone_ground_clutter");
 		init(posX, posY, 32, 32);
 		sprite = GroundClutterTextures.stones.getRandVariant();
-		facing = (RandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
+		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		setCollisionBox(0, 0, 0, 0);
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return EntityList.STONE_GROUND_CLUTTER.ID;
 	}
 	

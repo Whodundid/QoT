@@ -10,7 +10,7 @@ import envision.windowLib.windowObjects.actionObjects.WindowSlider;
 import envision.windowLib.windowObjects.actionObjects.WindowTextField;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 import game.settings.QoTSettings;
 
@@ -33,7 +33,7 @@ public class OptionsScreen extends GameScreen {
 	
 	@Override
 	public void initChildren() {
-		double w = NumberUtil.clamp(QoT.getWidth() / 4, 150, 390);
+		double w = ENumUtil.clamp(QoT.getWidth() / 4, 150, 390);
 		double x = midX - w / 2;
 		
 		back = new WindowButton(this, x, endY - 100, w, 40, "Back");
@@ -128,7 +128,7 @@ public class OptionsScreen extends GameScreen {
 		
 		try {
 			int ups = Integer.parseInt(input);
-			ups = NumberUtil.clamp(ups, 30, 300);
+			ups = ENumUtil.clamp(ups, 30, 300);
 			upsInput.setText(ups);
 			
 			QoTSettings.targetUPS.set((int) ups);

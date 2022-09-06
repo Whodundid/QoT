@@ -24,7 +24,7 @@ public class Crate extends Entity {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return EntityList.CRATE.ID;
 	}
 	

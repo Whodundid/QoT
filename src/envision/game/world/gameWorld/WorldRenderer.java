@@ -1,6 +1,6 @@
-package envision.game.world;
+package envision.game.world.gameWorld;
 
-import envision.game.entity.Entity;
+import envision.game.GameObject;
 import envision.game.world.worldTiles.WorldTile;
 import envision.inputHandlers.Keyboard;
 import envision.renderEngine.textureSystem.GameTexture;
@@ -9,7 +9,7 @@ import envision.util.InsertionSort;
 import envision.windowLib.windowUtil.EGui;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 import game.entities.player.QoT_Player;
 
@@ -131,10 +131,10 @@ public class WorldRenderer extends EGui {
 		double offsetY = (p.startY % world.getTileHeight()) * world.zoom;
 		
 		//calculations to determine how many tiles to draw out in each direction from the mid of the screen
-		int left = NumberUtil.clamp(midDrawX - distX, 0, world.getWidth() - 1);
-		int top = NumberUtil.clamp(midDrawY - distY, 0, world.getHeight() - 1);
-		int right = NumberUtil.clamp(midDrawX + distX, left, world.getWidth() - 1);
-		int bot = NumberUtil.clamp(midDrawY + distY, top, world.getHeight() - 1);
+		int left = ENumUtil.clamp(midDrawX - distX, 0, world.getWidth() - 1);
+		int top = ENumUtil.clamp(midDrawY - distY, 0, world.getHeight() - 1);
+		int right = ENumUtil.clamp(midDrawX + distX, left, world.getWidth() - 1);
+		int bot = ENumUtil.clamp(midDrawY + distY, top, world.getHeight() - 1);
 		
 		//draw the tiles of the world using the calculated dimensions
 		for (int i = left, ix = 0; i <= right; i++, ix++) {
@@ -162,7 +162,7 @@ public class WorldRenderer extends EGui {
 				dY -= offsetY;
 				
 				//call the tile's self rendering code with the proper screen coordinates and dimensions
-				t.renderTile(world, dX, dY, w, h, 0xffffffff, false);
+				t.renderTile(world, dX, dY, w, h, calcBrightness(i - 1, j - 1), false);
 			}
 		}
 	}
@@ -173,7 +173,7 @@ public class WorldRenderer extends EGui {
 		//entities.sort(Comparator.comparingInt(e -> e.endY));
 		
 		for (int i = 0; i < entities.size(); i++) {
-			Entity ent = entities.get(i);
+			GameObject ent = entities.get(i);
 			GameTexture tex = ent.getTexture();
 			if (tex == null) continue;
 			
@@ -201,8 +201,21 @@ public class WorldRenderer extends EGui {
 			double drawW = ent.width * world.getZoom();
 			double drawH = ent.height * world.getZoom();
 			
+			double cmx = ent.collisionBox.midX; //collision mid x
+			double cmy = ent.collisionBox.midY; //collision mid y
+			double tw = world.getTileWidth(); //tile width
+			double th = world.getTileHeight(); //tile height
+			
+			//offset world coordinates to middle of collision box
+			int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
+			int mwcy = (int) Math.floor(cmy / th); //mid world coords y
+			
+			//light render position
+			int lightx = ent.worldX + mwcx;
+			int lighty = ent.worldY + mwcy;
+			
 			//render the entity
-			ent.renderObject(drawX, drawY, drawW, drawH);
+			ent.renderObject(drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty));
 			
 			if (drawEntityHitboxes) {
 				double colSX = drawX + (ent.getCollision().startX * world.zoom);
@@ -254,12 +267,16 @@ public class WorldRenderer extends EGui {
 	private int calcBrightness(int x, int y) {
 		if (world.underground) {
 			QoT_Player p = QoT.thePlayer;
-			int distToPlayer = viewDist - (int) (NumberUtil.distance(x, y, p.worldX, p.worldY));
-			distToPlayer = NumberUtil.clamp(distToPlayer, 0, distToPlayer);
+			int distToPlayer = viewDist - (int) (ENumUtil.distance(x, y, p.worldX, p.worldY));
+			distToPlayer = ENumUtil.clamp(distToPlayer, 0, distToPlayer);
 			int ratio = (distToPlayer * 255) / viewDist;
 			return EColors.changeBrightness(0xffffffff, ratio);
 		}
 		return 0xffffffff;
+	}
+	
+	private void calcWorldBrightness() {
+		
 	}
 	
 	public void onWindowResized() {

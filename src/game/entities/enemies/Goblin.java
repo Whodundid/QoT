@@ -2,9 +2,10 @@ package game.entities.enemies;
 
 import envision.game.entity.Enemy;
 import envision.game.entity.Entity;
+import envision.game.world.gameWorld.GameWorld;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.QoT;
 import game.assets.textures.entity.EntityTextures;
 
@@ -30,22 +31,22 @@ public class Goblin extends Enemy {
 	@Override
 	public void onLivingUpdate() {
 		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-			waitTime = RandomUtil.getRoll(randShort, randLong);
-			moveTime = RandomUtil.getRoll(randShort, randLong);
-			waitDelay = RandomUtil.getRoll(randShort, randLong);
+			waitTime = ERandomUtil.getRoll(randShort, randLong);
+			moveTime = ERandomUtil.getRoll(randShort, randLong);
+			waitDelay = ERandomUtil.getRoll(randShort, randLong);
 			lastMove = System.currentTimeMillis();
-			lastDir = RandomUtil.randomDir();
+			lastDir = ERandomUtil.randomDir();
 		}
 		
 		if (System.currentTimeMillis() - lastMove >= moveTime) {
 			move(lastDir);
 		}
 		
-		double distToPlayer = world.getDistance(this, QoT.thePlayer);
+		double distToPlayer = ((GameWorld) world).getDistance(this, QoT.thePlayer);
 		
 		//check if distance to player is less than 200 pixels
 		if (distToPlayer <= 200) {
-			Direction dirToPlayer = world.getDirectionTo(this, QoT.thePlayer);
+			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, QoT.thePlayer);
 			//headText = (int) distToPlayer + " : " + dirToPlayer;
 			
 			EDimension testDim;
@@ -86,18 +87,18 @@ public class Goblin extends Enemy {
 			move(dirToPlayer);
 		}
 		else {
-			boolean shouldMove = RandomUtil.roll(10, 0, 10);
+			boolean shouldMove = ERandomUtil.roll(10, 0, 10);
 			headText = "";
 			
 			if (shouldMove) {
-				Direction dir = RandomUtil.randomDir();
+				Direction dir = ERandomUtil.randomDir();
 				move(dir);
 			}
 		}
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return 1;
 	}
 	

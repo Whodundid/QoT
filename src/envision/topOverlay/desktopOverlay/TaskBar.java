@@ -12,8 +12,9 @@ import envision.windowLib.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
+import eutil.strings.EStringUtil;
 import game.QoT;
 import game.assets.textures.window.WindowTextures;
 
@@ -103,8 +104,11 @@ public class TaskBar<E> extends WindowObject<E> {
 				}
 			}
 			else if (genObj instanceof WindowParent<?> w) {
-				if (genObj == "Pin" ) {
-					System.out.println("pinning: " + rcm.getGenericObject().getClass().getSimpleName());
+				if (args.length != 1 || !(args[0] instanceof String)) return;
+				String selection = (String) args[0];
+				
+				if (genObj == "Pin") {
+					System.out.println("pinning: " + genObj.getClass().getSimpleName());
 				}
 				
 				if (genObj == "New Window") {
@@ -125,7 +129,7 @@ public class TaskBar<E> extends WindowObject<E> {
 					}
 				}
 				
-				if (genObj.equals("Close") || genObj.equals("Close All")) {
+				if (EStringUtil.equalsAny(selection, "Close", "Close All")) {
 					if (w != null) {
 						var c = w.getClass();
 						var windows = QoT.getTopRenderer().getAllWindowInstances(c);
@@ -133,27 +137,26 @@ public class TaskBar<E> extends WindowObject<E> {
 					}
 				}
 				
-				if (genObj.equals("Recenter")) {
-					if (w != null) {
-						var c = w.getClass();
-						var windows = QoT.getTopRenderer().getAllWindowInstances(c);
+				if (selection.equals("Recenter") && w != null) {
+					var c = w.getClass();
+					EArrayList<? extends WindowParent> windows = QoT.getTopRenderer().getAllWindowInstances(c);
+					
+					if (windows.size() == 1) {
+						var p = windows.get(0);
+						var h = p.getHeader();
+						var b = QoT.getTopRenderer().getTaskBar();
 						
-						if (windows.size() == 1) {
-							var p = windows.get(0);
-							var h = p.getHeader();
-							var b = QoT.getTopRenderer().getTaskBar();
-							
-							double hh = (h != null) ? h.height : 0;
-							double bh = (b != null) ? b.height : 0;
-							double oH = hh + bh;
-							double maxW = NumberUtil.clamp(p.width, 0, res.getWidth() - 40);
-							double maxH = NumberUtil.clamp(p.height, 0, res.getHeight() - 40 - oH);
-							
-							p.setSize(maxW, maxH);
-							p.centerObjectWithSize(maxW, maxH);
-							p.setPosition(p.startX, p.startY + hh);
-							p.reInitChildren();
-						}
+						double hh = (h != null) ? h.height : 0;
+						double bh = (b != null) ? b.height : 0;
+						double oH = hh + bh;
+						double maxW = ENumUtil.clamp(p.width, 0, res.getWidth() - 40);
+						double maxH = ENumUtil.clamp(p.height, 0, res.getHeight() - 40 - oH);
+						
+						p.setSize(maxW, maxH);
+						p.centerObjectWithSize(maxW, maxH);
+						p.setPosition(p.startX, p.startY + hh);
+						p.reInitChildren();
+						p.bringToFront();
 					}
 				} //recenter
 			}

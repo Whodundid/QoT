@@ -8,7 +8,7 @@ import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import envision.windowLib.windowUtil.ObjectPosition;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
-import eutil.file.FileUtil;
+import eutil.file.EFileUtil;
 import game.QoT;
 
 /** A special type of WindowParent that can be directly constructed from a serialized file. */
@@ -43,7 +43,7 @@ public class DynamicWindow extends WindowParent {
 	
 	/** Attempts to construct a WindowParent object from the associated serialized file. */
 	public boolean build() {
-		return built = FileUtil.tryFileCodeR(dataFile, a -> parseFile());
+		return built = EFileUtil.tryFileCodeR(dataFile, a -> parseFile());
 	}
 	
 	//------------------

@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.nio.charset.Charset;
 
 import eutil.file.LineReader;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import game.QoT;
 
 /**
@@ -113,7 +113,7 @@ public class LauncherDir {
 		
 		try (var writer = new FileWriter(launcherSettingsFile, Charset.forName("UTF-8"))) {
 			String version = "# QoT Version: " + QoT.version;
-			String dashes = StringUtil.repeatString("-", version.length());
+			String dashes = EStringUtil.repeatString("-", version.length());
 			writer.write("#" + dashes + "\n");
 			writer.write(version);
 			writer.write("\n#" + dashes + "\n");

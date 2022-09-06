@@ -2,7 +2,7 @@ package envision.windowLib.bundledWindows;
 
 import eutil.datatypes.EArrayList;
 import eutil.file.FileOpener;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 import game.assets.textures.taskbar.TaskBarTextures;
 import game.assets.textures.window.WindowTextures;
@@ -67,7 +67,7 @@ public class TextureDisplayer extends WindowParent {
 	public void initChildren() {
 		defaultHeader(this);
 		
-		double w = NumberUtil.clamp((width - 10 - (width / 6)) / 2, 50, 100);
+		double w = ENumUtil.clamp((width - 10 - (width / 6)) / 2, 50, 100);
 		
 		imageBox = new WindowImageBox(this, startX + 5, startY + 5, width - 10, navigationDrawn ? height - 30 : height - 10);
 		previous = new WindowButton(this, midX - (width / 40) - w, imageBox.endY + 4, w, 16, "Previous");

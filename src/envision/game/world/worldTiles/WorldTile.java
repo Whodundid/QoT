@@ -1,7 +1,7 @@
 package envision.game.world.worldTiles;
 
 import envision.game.entity.Entity;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.IGameWorld;
 import envision.renderEngine.GLObject;
 import envision.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
@@ -105,6 +105,17 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	/** Whether or not the tile will draw flipped. */
 	protected boolean drawFlipped = false;
 	
+	/** 0 by default -- really dark. */
+	protected int lightLevel = 0;
+	
+	/** If true, light cannot move through. */
+	protected boolean blocksLight = true;
+	
+	/** If true, light level will primarily be based off of the time of day. */
+	protected boolean isOutside = true;
+	
+	protected int miniMapColor = 0xff000000;
+	
 	//--------------
 	// Constructors
 	//--------------
@@ -156,7 +167,7 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	 * @param brightness
 	 */
 	@SuppressWarnings("unused")
-	public void renderTile(GameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void renderTile(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		double wh = h * wallHeight; //wh == 'wallHeight'
 		
 		WorldTile tb = null; // tb == 'tileBelow'
@@ -164,8 +175,8 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 		
 		Rotation rot = (rotation != null) ? rotation : Rotation.UP;
 		
-		if ((worldY + 1) < world.getHeight()) tb = world.getWorldData()[worldX][worldY + 1];
-		if ((worldY - 1) >= 0) ta = world.getWorldData()[worldX][worldY - 1];
+		if ((worldY + 1) < world.getHeight()) tb = world.getTileAt(worldX, worldY + 1);
+		if ((worldY - 1) >= 0) ta = world.getTileAt(worldX, worldY - 1);
 		
 		if (isWall) {
 			//determine tile brightness
@@ -265,7 +276,7 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	public int getID() { return id.id; }
 	public String getName() { return name; }
 	public TileMaterial getMaterial() { return material; }
-	public int getMapColor() { return id.mapColor; }
+	public int getMapColor() { return miniMapColor; }
 	public int getNumVariants() { return numVariants; }
 	
 	public int getWorldX() { return worldX; }
@@ -283,6 +294,9 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 		return r;
 	}
 	
+	public boolean isOutside() { return isOutside; }
+	public int getLightLevel() { return lightLevel; }
+	
 	//---------
 	// Setters
 	//---------
@@ -292,6 +306,9 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	public WorldTile setBlocksMovement(boolean val) { blocksMovement = val; return this; }
 	public WorldTile setWall(boolean val) { isWall = val; return this; }
 	public WorldTile setWildCard(boolean val) { wildCardTexture = val; return this; }
+	
+	public void setMiniMapColor(EColors colorIn) { setMiniMapColor(colorIn.intVal); }
+	public void setMiniMapColor(int colorIn) { miniMapColor = colorIn; }
 	
 	public WorldTile setWorldPos(int x, int y) {
 		worldX = x;
@@ -313,6 +330,9 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 		}
 		return this;
 	}
+	
+	public void setOutside(boolean val) { isOutside = val; }
+	public void setLightLevel(int level) { lightLevel = level; }
 	
 	//----------------
 	// Static Methods

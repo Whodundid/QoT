@@ -9,7 +9,7 @@ import envision.windowLib.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.math.EDimension;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import eutil.misc.Rotation;
 import eutil.misc.ScreenLocation;
 import game.QoT;
@@ -164,8 +164,8 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public void setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
 		startX = startXIn;
 		startY = startYIn;
-		width = NumberUtil.clamp(widthIn, minWidth, maxWidth);
-		height = NumberUtil.clamp(heightIn, minHeight, maxHeight);
+		width = ENumUtil.clamp(widthIn, minWidth, maxWidth);
+		height = ENumUtil.clamp(heightIn, minHeight, maxHeight);
 		endX = startX + width;
 		endY = startY + height;
 		midX = startX + width / 2.0;

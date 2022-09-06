@@ -17,13 +17,13 @@ import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
 import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
 import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
 import envision_lang._launch.EnvisionLangConsoleReceiver;
-import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringBuilder;
+import eutil.strings.EStringUtil;
 import game.QoT;
 import game.assets.textures.taskbar.TaskBarTextures;
 
@@ -87,8 +87,8 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	@Override
 	public void initWindow() {
 		setObjectName("Terminal");
-		int w = NumberUtil.clamp(1150, 200, QoT.getWindowSize().getWidth());
-		int h = NumberUtil.clamp(600, 200, QoT.getWindowSize().getHeight());
+		int w = ENumUtil.clamp(1150, 200, QoT.getWindowSize().getWidth());
+		int h = ENumUtil.clamp(600, 200, QoT.getWindowSize().getHeight());
 		setSize(w, h);
 		setMinDims(480, 285);
 		setResizeable(true);
@@ -101,7 +101,6 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		
 		inputField = new TerminalTextField(this, startX + 1, endY - 31, width - 2, 30);
 		history = new WindowTextArea(this, startX + 1, startY + 1, width - 2, height - 1 - inputField.height) {
-			
 			@Override
 			public void mousePressed(int mXIn, int mYIn, int button) {
 				super.mousePressed(mXIn, mYIn, button);
@@ -143,7 +142,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 			init = true;
 		}
 		
-		if (getTopParent().getModifyingObject() != this) { inputField.requestFocus(); }
+		if (getTopParent().getModifyingObject() != this) inputField.requestFocus();
 	}
 	
 	@Override
@@ -153,7 +152,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		vPos = history.getVScrollBar().getScrollPos();
 		hPos = history.getHScrollBar().getScrollPos();
 		
-		lines = history.getTextDocument();
+		lines = new EArrayList<>(history.getTextDocument());
 		clearTabCompletions();
 		
 		history.clear();
@@ -558,7 +557,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 			
 			//determine the maximum number of auto complete options that can fit on one line
 			for (int i = 1; i < dataIn.size() + 1; i++) {
-				textWidth += longest + getStringWidth(StringUtil.repeatString(" ", spaceAmount));
+				textWidth += longest + getStringWidth(EStringUtil.repeatString(" ", spaceAmount));
 				if (textWidth < width) {
 					maxData = i;
 				}
@@ -566,7 +565,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 			}
 			
 			//System.out.println("maxData: " + maxData);
-			maxData = NumberUtil.clamp(maxData, 1, Integer.MAX_VALUE);
+			maxData = ENumUtil.clamp(maxData, 1, Integer.MAX_VALUE);
 			
 			//position each auto complete option on one line up to the max line width
 			int amount = dataIn.size();
@@ -583,7 +582,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 				if (cur == maxData || amount == 1) {
 					//if (amount == 0) { line += dataIn.get(i) + ", "; cur++; }
 					try {
-						String format = StringUtil.repeatString("%-" + longestLen + "s" + StringUtil.repeatString(" ", spaceAmount), cur);
+						String format = EStringUtil.repeatString("%-" + longestLen + "s" + EStringUtil.repeatString(" ", spaceAmount), cur);
 						String[] args = line.split(", ");
 						line = String.format(format, (Object[]) args);
 					}
@@ -627,7 +626,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		int arg = 0;
 		
 		if (inputField.isNotEmpty()) {
-			int spaces = StringUtil.countSpaces(inputField.getText());
+			int spaces = EStringUtil.countSpaces(inputField.getText());
 			
 			if (spaces == 0) { arg = 0; }
 			else { arg = spaces; }
@@ -657,6 +656,21 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	public ETerminal writeln(String msgIn, EColors colorIn) { return writeln(msgIn, colorIn.intVal); }
 	public ETerminal writeln(String msgIn, int colorIn) {
 		parseText(msgIn, colorIn);
+		return this;
+	}
+	
+	public ETerminal writeln(EColors color, Object... arguments) {
+		writeln(EStringBuilder.ofR(arguments), color.intVal);
+		return this;
+	}
+	
+	public ETerminal writeln(Integer color, Object... arguments) {
+		writeln(EStringBuilder.ofR(arguments), color);
+		return this;
+	}
+	
+	public ETerminal writeln(Object... arguments) {
+		writeln(EStringBuilder.ofR(arguments));
 		return this;
 	}
 	

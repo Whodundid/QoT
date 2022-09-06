@@ -1,6 +1,6 @@
 package envision.terminal.terminalCommand.commands.game;
 
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
@@ -38,7 +38,7 @@ public class World_CMD extends TerminalCommand {
 			termIn.error("No world loaded!");
 		}
 		else {
-			String n = world.getName();
+			String n = world.getWorldName();
 			int w = world.getWidth();
 			int h = world.getHeight();
 			boolean u = world.isUnderground();

@@ -23,7 +23,7 @@ public class SaveWorld_CMD extends TerminalCommand {
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (QoT.theWorld != null) {
-			termIn.writeln("Saving '" + QoT.theWorld.getName() + "'", EColors.green);
+			termIn.writeln("Saving '" + QoT.theWorld.getWorldName() + "'", EColors.green);
 			QoT.theWorld.saveWorldToFile();
 		}
 		else {

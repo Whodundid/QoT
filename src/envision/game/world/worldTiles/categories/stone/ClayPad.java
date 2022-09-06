@@ -2,7 +2,7 @@ package envision.game.world.worldTiles.categories.stone;
 
 import envision.game.world.worldTiles.TileIDs;
 import envision.game.world.worldTiles.WorldTile;
-import eutil.random.RandomUtil;
+import eutil.random.ERandomUtil;
 import game.assets.textures.world.floors.stone.StoneFloorTextures;
 
 public class ClayPad extends WorldTile {
@@ -13,7 +13,7 @@ public class ClayPad extends WorldTile {
 		setWall(true);
 		wallHeight = 0.1;
 		//rotation = Rotation.random();
-		drawFlipped = RandomUtil.randomBool();
+		drawFlipped = ERandomUtil.randomBool();
 		numVariants = StoneFloorTextures.clay_pad.getChildren().size();
 		
 		if (id < 0) {

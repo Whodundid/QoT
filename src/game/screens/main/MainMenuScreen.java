@@ -7,7 +7,7 @@ import envision.game.world.worldTiles.categories.DungeonTiles;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import game.QoT;
 import game.assets.sounds.Songs;
 import game.assets.textures.general.GeneralTextures;
@@ -37,7 +37,7 @@ public class MainMenuScreen extends GameScreen {
 	
 	@Override
 	public void initChildren() {
-		double w = NumberUtil.clamp(QoT.getWidth() / 4, 200, 320);
+		double w = ENumUtil.clamp(QoT.getWidth() / 4, 200, 320);
 		double x = midX - w / 2;
 		double y = midY - 50;
 		double h = 40;

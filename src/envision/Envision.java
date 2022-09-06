@@ -8,7 +8,7 @@ import envision.events.EventHandler;
 import envision.game.entity.Player;
 import envision.game.screens.GameScreen;
 import envision.game.sounds.SoundEngine;
-import envision.game.world.GameWorld;
+import envision.game.world.gameWorld.GameWorld;
 import envision.inputHandlers.Keyboard;
 import envision.inputHandlers.Mouse;
 import envision.inputHandlers.WindowResizeListener;
@@ -387,7 +387,7 @@ public final class Envision implements IRendererErrorReceiver {
 		
 		if (theWorld != null) {
 			//assign as last world loaded
-			QoTSettings.lastMap.set(theWorld.getName());
+			QoTSettings.lastMap.set(theWorld.getWorldName());
 			
 			//load the world
 			theWorld.setLoaded(true);

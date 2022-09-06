@@ -7,7 +7,7 @@ import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.file.LineReader;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 
 public class Cat extends FileCommand {
 	
@@ -25,7 +25,7 @@ public class Cat extends FileCommand {
 		try {
 			if (args.size() == 0) termIn.error("Not enough arguments!");
 			else if (args.size() >= 1) {
-				String all = StringUtil.combineAll(args, " ");
+				String all = EStringUtil.combineAll(args, " ");
 				File f = new File(all);
 				
 				if (all.startsWith("..")) f = new File(termIn.getDir(), args.get(0));

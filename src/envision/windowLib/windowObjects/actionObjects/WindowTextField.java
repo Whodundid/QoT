@@ -6,8 +6,8 @@ import envision.windowLib.windowTypes.ActionObject;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
-import eutil.math.NumberUtil;
-import eutil.strings.StringUtil;
+import eutil.math.ENumUtil;
+import eutil.strings.EStringUtil;
 import game.QoT;
 
 //Author: Hunter Bragg
@@ -405,7 +405,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 	public void setCursorPos(int posIn) {
 		cursorPosition = posIn;
 		int i = text.length();
-		cursorPosition = NumberUtil.clamp(cursorPosition, 0, i);
+		cursorPosition = ENumUtil.clamp(cursorPosition, 0, i);
 		setSelPos(cursorPosition);
 	}
 	
@@ -431,11 +431,11 @@ public class WindowTextField<E> extends ActionObject<E> {
 			if (posIn == lineScrollOffset) lineScrollOffset -= text.length();
 			if (posIn > k) lineScrollOffset += posIn - k;
 			else if (posIn <= lineScrollOffset) lineScrollOffset -= lineScrollOffset - posIn;
-			lineScrollOffset = NumberUtil.clamp(lineScrollOffset, 0, i);
+			lineScrollOffset = ENumUtil.clamp(lineScrollOffset, 0, i);
 		}
 	}
 
-	public void setText(Object objectIn) { setText(StringUtil.toString(objectIn)); }
+	public void setText(Object objectIn) { setText(EStringUtil.toString(objectIn)); }
 	public void setText(String textIn) {
 		if (textIn != null) {
 			if (textIn.isEmpty()) {

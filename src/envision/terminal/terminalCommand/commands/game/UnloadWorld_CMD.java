@@ -24,7 +24,7 @@ public class UnloadWorld_CMD extends TerminalCommand {
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (QoT.theWorld != null) {
-			termIn.writeln("Unloading world '" + QoT.theWorld.getName() + "'", EColors.green);
+			termIn.writeln("Unloading world '" + QoT.theWorld.getWorldName() + "'", EColors.green);
 			QoT.loadWorld(null);
 			QoT.displayScreen(new MainMenuScreen());
 		}

@@ -22,7 +22,15 @@ import envision.windowLib.windowUtil.ObjectPosition;
 
 public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>, Comparable<WindowParent<?>> {
 
+	//----------------
+	// Static Methods
+	//----------------
+	
 	public static int defaultWidth = 220, defaultHeight = 255;
+	private static volatile int curWindowID = 0;
+	
+	/** Returns the next available id that will be assigned to a requesting object. */
+	public static synchronized int getNextWindowPID() { return curWindowID++; }
 	
 	//--------
 	// Fields
@@ -40,6 +48,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected boolean maximizable = false;
 	protected boolean drawMinimized = false;
 	protected boolean drawDefaultBackground = false;
+	protected boolean highlighted = false;
 	protected Stack<IWindowParent<?>> WindowHistory = new Stack();
 	protected EArrayList<String> aliases = new EArrayList();
 	protected GameTexture windowIcon = null;
@@ -47,27 +56,51 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected EDimension preMaxSide = new EDimension();
 	protected boolean showInTaskBar = true;
 	protected long initTime = 0l;
+	protected long windowPID = -1;
 	
 	//--------------
 	// Constructors
 	//--------------
-	
+
 	/** By default, set the parent to the QoT top overlay. */
+	
 	public WindowParent() { this(QoT.getActiveTopParent(), null); }
 	public WindowParent(IWindowParent<?> oldGuiIn) { this(QoT.getActiveTopParent(), oldGuiIn); }
-	public WindowParent(int xPos, int yPos) { windowInstance = this; initTime = System.currentTimeMillis(); }
-	public WindowParent(int xPos, int yPos, IWindowParent<?> oldGuiIn) { initTime = System.currentTimeMillis(); windowInstance = this; pullHistoryFrom(oldGuiIn); }
 	public WindowParent(IWindowObject<?> parentIn) { this(parentIn, null); }
-	public WindowParent(IWindowObject<?> parentIn, IWindowParent<?> oldGuiIn) { initTime = System.currentTimeMillis(); initDefaultPos(parentIn); pullHistoryFrom(oldGuiIn); }
+	public WindowParent(IWindowObject<?> parentIn, IWindowParent<?> oldGuiIn) {
+		__INIT__();
+		initDefaultPos(parentIn);
+		pullHistoryFrom(oldGuiIn);
+	}
+	
+	public WindowParent(int xPos, int yPos) {
+		__INIT__();
+	}
+	
+	public WindowParent(int xPos, int yPos, IWindowParent<?> oldGuiIn) {
+		__INIT__();
+		pullHistoryFrom(oldGuiIn);
+	}
+	
 	public WindowParent(IWindowObject<?> parentIn, int xPos, int yPos) { this(parentIn, xPos, yPos, null); }
-	public WindowParent(IWindowObject<?> parentIn, int xPos, int yPos, IWindowParent<?> oldGuiIn) { initTime = System.currentTimeMillis(); initDefaultDims(parentIn, xPos, yPos); pullHistoryFrom(oldGuiIn); }
+	public WindowParent(IWindowObject<?> parentIn, int xPos, int yPos, IWindowParent<?> oldGuiIn) {
+		__INIT__();
+		initDefaultDims(parentIn, xPos, yPos);
+		pullHistoryFrom(oldGuiIn);
+	}
+	
 	public WindowParent(IWindowObject<?> parentIn, int xIn, int yIn, int widthIn, int heightIn) { this(parentIn, xIn, yIn, widthIn, heightIn, null); }
 	public WindowParent(IWindowObject<?> parentIn, int xIn, int yIn, int widthIn, int heightIn, IWindowParent<?> oldGuiIn) {
-		initTime = System.currentTimeMillis();
+		__INIT__();
 		init(parentIn, xIn, yIn, widthIn, heightIn);
 		pullHistoryFrom(oldGuiIn);
-		windowInstance = this;
 		preMaxFull = new EDimension(xIn, yIn, widthIn, heightIn);
+	}
+	
+	private void __INIT__() {
+		initTime = System.currentTimeMillis();
+		windowInstance = this;
+		windowPID = getNextWindowPID();
 	}
 	
 	//-----------
@@ -288,6 +321,9 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		drawHRect(startX - 1, sY - 1, endX + 1, endY + 1, 1, EColors.red);
 	}
 	
+	@Override public boolean isHighlighted() { return highlighted; }
+	@Override public void setHighlighted(boolean val) { highlighted = val; }
+	
 	@Override public EArrayList<String> getAliases() { return aliases; }
 	@Override public GameTexture getWindowIcon() { return windowIcon; }
 	@Override public boolean showInTaskBar() { return showInTaskBar; }
@@ -379,6 +415,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	//---------
 	
 	public boolean movesWithParent() { return moveWithParent; }
+	public long getWindowID() { return windowPID; }
 	
 	//---------
 	// Setters

@@ -2,7 +2,7 @@ package envision.terminal.terminalCommand.commands.fileSystem;
 
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import java.io.File;
 import java.nio.charset.Charset;
 import org.apache.commons.io.input.ReversedLinesFileReader;
@@ -42,7 +42,7 @@ public class Tail extends FileCommand {
 	}
 	
 	private void tryFind(ETerminal termIn, EArrayList<String> args, int len) {
-		String all = StringUtil.combineAll(args, " ");
+		String all = EStringUtil.combineAll(args, " ");
 		File f = new File(all);
 		
 		if (all.startsWith("..")) { f = new File(termIn.getDir(), args.get(0)); }

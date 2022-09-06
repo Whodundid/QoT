@@ -2,7 +2,7 @@ package envision.testing.renderingAPI.camera;
 
 import envision.inputHandlers.Keyboard;
 import envision.inputHandlers.Mouse;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import eutil.math.Vec3f;
 
 public class Camera {
@@ -44,7 +44,7 @@ public class Camera {
 		
 		//if (Game.getWindow().isCursorLocked()) {
 			rotation = Vec3f.add(rotation, new Vec3f(dY, dX, 0).scale(0.1f));
-			rotation = new Vec3f(NumberUtil.clamp(rotation.x, -90f, 90f), rotation.y, 0);
+			rotation = new Vec3f(ENumUtil.clamp(rotation.x, -90f, 90f), rotation.y, 0);
 		//}
 			
 		//System.out.println(position);

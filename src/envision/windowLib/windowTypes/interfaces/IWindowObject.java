@@ -79,10 +79,10 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 			if (children.contains(p.getFocusLockObject())) p.clearFocusLockObject();
 			if (children.contains(p.getModifyingObject())) p.clearModifyingObject();
 		}
-		properties().children.clear();
-		properties().childrenToBeAdded.clear();
 		
 		preReInit();
+		properties().children.clear();
+		properties().childrenToBeAdded.clear();
 		initChildren();
 		postReInit();
 		properties().isChildInit = true;

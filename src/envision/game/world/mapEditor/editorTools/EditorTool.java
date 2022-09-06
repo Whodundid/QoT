@@ -37,15 +37,15 @@ public abstract class EditorTool {
 	public void setSelected(boolean val) { isSelected = val; }
 	public boolean isSelected() { return isSelected; }
 	
-	protected WorldTile getTile() { return editor.getWorld().getTileAt(wx, wy); }
-	protected WorldTile getTile(int x, int y) { return editor.getWorld().getTileAt(x, y); }
+	protected WorldTile getTile() { return editor.getActualWorld().getTileAt(wx, wy); }
+	protected WorldTile getTile(int x, int y) { return editor.getActualWorld().getTileAt(x, y); }
 	
 	protected void addObjectToWorld(GameObject obj) {
 		if (obj instanceof Entity ent) {
 			double cmx = ent.collisionBox.midX; //collision mid x
 			double cmy = ent.collisionBox.midY; //collision mid y
-			double tw = editor.getWorld().getTileWidth(); //tile width
-			double th = editor.getWorld().getTileHeight(); //tile height
+			double tw = editor.getEditorWorld().getTileWidth(); //tile width
+			double th = editor.getEditorWorld().getTileHeight(); //tile height
 			
 			//need to -, - using difference of world coords of middle of collision box
 			int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
@@ -55,8 +55,8 @@ public abstract class EditorTool {
 			ent.worldY = wy - mwcy;
 			
 			//System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
-			editor.getWorld().addEntity(ent);
-			editor.getWorld().addEntitySpawn(ent);
+			editor.getEditorWorld().addEntity(ent);
+			editor.getEditorWorld().addEntitySpawn(ent);
 		}
 	}
 	

@@ -14,7 +14,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 import game.QoT;
 import game.assets.textures.window.WindowTextures;
@@ -157,7 +157,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		
 		//check for header grabs with maximize-able windows
 		if (pressed && window != null && window.isMaximized()) {
-			double dist = NumberUtil.distance(mX, mY, clickPos.getA(), clickPos.getB());
+			double dist = ENumUtil.distance(mX, mY, clickPos.getA(), clickPos.getB());
 			if (dist >= 5) headerGrabMaximize();
 		}
 		

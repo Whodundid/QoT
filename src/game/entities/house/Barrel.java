@@ -21,7 +21,7 @@ public class Barrel extends Entity {
 	}
 	
 	@Override
-	public int getObjectID() {
+	public int getInternalSaveID() {
 		return EntityList.BARREL.ID;
 	}
 	

@@ -2,7 +2,7 @@ package envision.terminal.terminalCommand.commands.fileSystem;
 
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class Ls extends FileCommand {
 			File theFile = null;
 			boolean hidden = hasModifier("-a");
 			
-			String all = StringUtil.combineAll(args, " ");
+			String all = EStringUtil.combineAll(args, " ");
 			EArrayList<String> allArgs = new EArrayList(args);
 			allArgs.add(all);
 			

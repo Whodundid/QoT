@@ -2,12 +2,14 @@ package game.assets.sounds;
 
 import envision.game.sounds.Audio;
 import envision.game.sounds.SoundEngine;
+import eutil.datatypes.EArrayList;
 import game.settings.QoTSettings;
 
 /** This contains every song in the game! */
 public class Songs {
 	
 	private static final String soundsDir = QoTSettings.getResourcesDir().toString() + "\\sounds\\";
+	public static final EArrayList<Audio> songList = new EArrayList<>();
 	
 	public static Audio darkCave = new Audio("dark_cave", soundsDir, "Dark Cave.wav");
 	public static Audio field = new Audio("field", soundsDir, "Fields of Flowers.wav");
@@ -33,6 +35,18 @@ public class Songs {
 		SoundEngine.register(battleTheme);
 		SoundEngine.register(varthums);
 		SoundEngine.register(zarus);
+		
+		songList.add(darkCave);
+		songList.add(field);
+		songList.add(larkens);
+		songList.add(nightfall);
+		songList.add(lithinburg);
+		songList.add(theme);
+		songList.add(rejuvination);
+		songList.add(bossTheme);
+		songList.add(battleTheme);
+		songList.add(varthums);
+		songList.add(zarus);
 	}
 	
 }

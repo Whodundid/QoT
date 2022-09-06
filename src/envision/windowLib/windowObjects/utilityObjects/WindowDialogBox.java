@@ -1,13 +1,13 @@
 package envision.windowLib.windowObjects.utilityObjects;
 
 import envision.inputHandlers.Keyboard;
-import envision.renderEngine.fontRenderer.EStringBuilder;
+import envision.renderEngine.fontRenderer.EStringOutputFormatter;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.ActionWindowParent;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
@@ -56,7 +56,7 @@ public class WindowDialogBox extends ActionWindowParent {
 		if (type != null) {
 			switch (type) {
 			case YES_NO:
-				double bw = NumberUtil.clamp((width - 10) / 3, 0, 140);
+				double bw = ENumUtil.clamp((width - 10) / 3, 0, 140);
 				double g = width / 30;
 				
 				yes = new WindowButton(this, midX - g - bw, endY - 30, bw, 20, "Yes");
@@ -143,7 +143,7 @@ public class WindowDialogBox extends ActionWindowParent {
 	
 	public void setMessage(String stringIn) {
 		message = stringIn;
-		wordWrappedLines = EStringBuilder.createWordWrapString(message, (int) width - 20);
+		wordWrappedLines = EStringOutputFormatter.createWordWrapString(message, (int) width - 20);
 	}
 	
 }

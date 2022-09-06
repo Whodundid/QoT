@@ -1,7 +1,7 @@
 package game;
 
 import envision.game.GameObject;
-import envision.game.world.mapEditor.editorUtil.PlayerSpawnPosition;
+import envision.game.world.mapEditor.editorUtil.PlayerSpawnPoint;
 import eutil.datatypes.EArrayList;
 import game.doodads.BirchTree;
 import game.doodads.Bush0;
@@ -29,7 +29,7 @@ public class GlobalAssetList {
 		assets.add(new TrollBoar());
 		assets.add(new Whodundid());
 		assets.add(new PineTree());
-		assets.add(new PlayerSpawnPosition());
+		assets.add(new PlayerSpawnPoint());
 		assets.add(new WhodundidsBrother());
 		
 		assets.add(new Barrel());

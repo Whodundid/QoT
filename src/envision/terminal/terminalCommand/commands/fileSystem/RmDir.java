@@ -2,7 +2,7 @@ package envision.terminal.terminalCommand.commands.fileSystem;
 
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import java.io.File;
 
 import envision.terminal.terminalCommand.CommandType;
@@ -27,7 +27,7 @@ public class RmDir extends FileCommand {
 				File homeFile = new File(System.getProperty("user.dir"));
 				String homePath = homeFile.getAbsolutePath();
 				
-				String all = StringUtil.combineAll(args, " ");
+				String all = EStringUtil.combineAll(args, " ");
 				boolean found = false;
 				boolean moreThan = false;
 				

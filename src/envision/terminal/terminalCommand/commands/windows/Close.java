@@ -7,7 +7,7 @@ import envision.windowLib.windowTypes.WindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 
 public class Close extends TerminalCommand {
 	
@@ -29,7 +29,7 @@ public class Close extends TerminalCommand {
 				long pid = Long.parseLong(args.get(0));
 				EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 				
-				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getObjectID() == pid);
+				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getWindowID() == pid);
 				if (EUtil.nullDo(theWindow, w -> w.close())) {
 					termIn.writeln("Window: '" + theWindow.getObjectName() + " ; " + theWindow.getObjectID() + "' closed", EColors.green);
 				}
@@ -38,7 +38,7 @@ public class Close extends TerminalCommand {
 			}
 			catch (Exception e) {
 				try {
-					String name = StringUtil.combineAll(args, " ").toLowerCase().trim();
+					String name = EStringUtil.combineAll(args, " ").toLowerCase().trim();
 					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					
 					if (name.equals("all") ) {

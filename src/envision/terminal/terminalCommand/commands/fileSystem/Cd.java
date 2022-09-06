@@ -2,7 +2,7 @@ package envision.terminal.terminalCommand.commands.fileSystem;
 
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.strings.StringUtil;
+import eutil.strings.EStringUtil;
 import java.io.File;
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ public class Cd extends FileCommand {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		if (args.size() >= 1) {
 			try {
-				String all = StringUtil.combineAll(args, " ");
+				String all = EStringUtil.combineAll(args, " ");
 				File f = parsePath(termIn, args);
 				
 				if (f.exists()) setDir(termIn, args, runVisually, f);

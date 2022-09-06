@@ -2,7 +2,7 @@ package envision.terminal.terminalCommand;
 
 import envision.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import eutil.math.NumberUtil;
+import eutil.math.ENumUtil;
 
 /**
  * The base terminal command for which all terminal commands extend from.
@@ -109,7 +109,7 @@ public abstract class TerminalCommand {
 	}
 	
 	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, EArrayList<String> completionsIn) {
-		int limit = numArgs == -1 ? args.size() : NumberUtil.clamp(args.size(), 0, numArgs);
+		int limit = numArgs == -1 ? args.size() : ENumUtil.clamp(args.size(), 0, numArgs);
 		
 		if (args.isEmpty()) {
 			termIn.buildTabCompletions(completionsIn);
