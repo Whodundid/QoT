@@ -34,6 +34,7 @@ public class EditorWorld implements IGameWorld {
 	private int width, height;
 	private int tileWidth, tileHeight;
 	private ExpandableGrid<EditorObject> worldData;
+	private final EArrayList<EditorObject> objectsInWorld = new EArrayList<>();
 	private final EArrayList<EditorObject> entitiesInWorld = new EArrayList<>();
 	private final EArrayList<EntitySpawn> entitySpawns = new EArrayList<>();
 	private final EArrayList<Region> regionData = new EArrayList<>();
@@ -175,8 +176,13 @@ public class EditorWorld implements IGameWorld {
 	}
 	
 	@Override
-	public EArrayList<GameObject> getEntitiesInWorld() {
-		return entitiesInWorld.map(obj -> (obj != null) ? obj.getGameObject() : null);
+	public EArrayList<GameObject> getObjectsInWorld() {
+		return objectsInWorld.map(obj -> obj.getGameObject());
+	}
+	
+	@Override
+	public EArrayList<Entity> getEntitiesInWorld() {
+		return entitiesInWorld.map(obj -> obj.getEntity());
 	}
 	
 	public EArrayList<EditorObject> getEditorEntities() {

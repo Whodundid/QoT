@@ -1,10 +1,15 @@
 package envision.game.world.util;
 
+import envision.events.types.entity.EntityEnteredRegionEvent;
+import envision.events.types.entity.EntityExitedRegionEvent;
+import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.world.gameWorld.GameWorld;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.math.EDimension;
 import eutil.math.EDimensionI;
+import game.QoT;
 
 public class Region {
 	
@@ -15,6 +20,7 @@ public class Region {
 	public int width, height;
 	protected int regionColor;
 	protected boolean onlyRenderInEditor = true;
+	protected EArrayList<Entity> entitiesInside = new EArrayList<>();
 	
 	public Region(GameWorld worldIn, String nameIn) { this(worldIn, nameIn, 0, 0, 0, 0, 0xff55ff55); }
 	public Region(GameWorld worldIn, String nameIn, EColors colorIn) { this(worldIn, nameIn, 0, 0, 0, 0, colorIn.intVal); }
@@ -32,7 +38,18 @@ public class Region {
 	public String toString() { return toSaveString(); }
 	
 	public void updateRegion() {
-		
+		//check to see if the entities that are said to be inside are still actually inside
+		var it = entitiesInside.iterator();
+		while (it.hasNext()) {
+			var ent = it.next();
+			if (ent == null) it.remove();
+			
+			EDimension entDims = ent.getDimensions();
+			if (!getDimensions().partiallyContains(entDims)) {
+				onEntityExited(ent, ent.startX, ent.startY);
+				it.remove();
+			}
+		}
 	}
 	
 	public void setDimensions(int widthIn, int heightIn) { setDimensions(startX, startY, startX + widthIn, startY + heightIn); }
@@ -57,16 +74,33 @@ public class Region {
 		setDimensions(startX, startY, endX, endY);
 	}
 	
-	public EArrayList<Entity> getEntitiesInside() {
-		return null;
+	public synchronized EArrayList<Entity> getEntitiesInside() {
+		return new EArrayList<>(entitiesInside);
 	}
 	
-	public void onEntityEntered(Entity in, int xPos, int yPos) {
-		//world.entityEnteredRegion(this, in, xPos, yPos);
+	protected synchronized void onEntityEntered(Entity in, int xPos, int yPos) {
+		QoT.getEventHandler().postEvent(new EntityEnteredRegionEvent(world, in, this, xPos, yPos));
+	}
+	protected synchronized void onEntityExited(Entity in, int xPos, int yPos) {
+		QoT.getEventHandler().postEvent(new EntityExitedRegionEvent(world, in, this, xPos, yPos));
 	}
 	
-	public void onEntityExited(Entity in, int xPos, int yPos) {
-		//world.entityExitedRegion(this, in, xPos, yPos);
+	public synchronized void addEntity(Entity in) {
+		if (in == null || entitiesInside.contains(in)) return;
+		
+		entitiesInside.add(in);
+		onEntityEntered(in, in.startX, in.startY);
+	}
+	
+	public synchronized void removeEntity(Entity in) {
+		if (in == null || entitiesInside.notContains(in)) return;
+		
+		entitiesInside.remove(in);
+		onEntityExited(in, in.startX, in.startY);
+	}
+	
+	public boolean containsEntity(GameObject object) {
+		return entitiesInside.contains(object);
 	}
 	
 	public String getName() { return name; }

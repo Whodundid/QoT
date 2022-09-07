@@ -14,6 +14,7 @@ import org.lwjgl.system.MemoryStack;
 
 import envision.EnvisionGame;
 import envision.events.EventHandler;
+import envision.events.GameEvent;
 import envision.game.screens.GameScreen;
 import envision.game.screens.ScreenLevel;
 import envision.game.scripts.envisionMappings.Envision_QoT_ErrorCallback;
@@ -637,6 +638,11 @@ public class QoT implements EnvisionGame {
 	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
 	
 	public static EventHandler getEventHandler() { return eventHandler; }
+	/** Posts a game event to the engine's event handler. */
+	public static EventHandler postEvent(GameEvent event) {
+		eventHandler.postEvent(event);
+		return eventHandler;
+	}
 	
 	/** Returns this game's constant player object. */
 	public static QoT_Player getPlayer() { return thePlayer; }

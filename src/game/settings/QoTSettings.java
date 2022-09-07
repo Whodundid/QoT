@@ -24,9 +24,9 @@ public class QoTSettings {
 	//       settings
 	//-----------------------
 	
-	public static final ConfigSetting<Integer> musicVolume = new ConfigSetting(Integer.class, "musicVolume", "Music Volume", 100);
-	public static final ConfigSetting<Integer> targetFPS = new ConfigSetting(Integer.class, "targetFPS", "Target FPS", 300);
-	public static final ConfigSetting<Integer> targetUPS = new ConfigSetting(Integer.class, "targetUPS", "Target UPS", 300);
+	public static final ConfigSetting<Integer> musicVolume = new ConfigSetting(Integer.class, "musicVolume", "Music Volume", 60);
+	public static final ConfigSetting<Integer> targetFPS = new ConfigSetting(Integer.class, "targetFPS", "Target FPS", 60);
+	public static final ConfigSetting<Integer> targetUPS = new ConfigSetting(Integer.class, "targetUPS", "Target UPS", 150);
 	public static final ConfigSetting<String> lastEditorMap = new ConfigSetting(String.class, "lastEditorMap", "Last Editor Map", "");
 	public static final ConfigSetting<String> lastMap = new ConfigSetting(String.class, "lastMap", "Last Map", "");
 	public static final ConfigSetting<Boolean> drawFPS = new ConfigSetting(Boolean.class, "drawFPS", "Draw FPS", false);
@@ -63,7 +63,7 @@ public class QoTSettings {
 		initDirectories(installDir, useInternalResources);
 		
 		//establish game main config
-		mainConfig = new MainConfigFile(new File(installDir, "MainConfig"));
+		mainConfig = new MainConfigFile(new File(installDir, "MainConfig.ini"));
 		mainConfig.tryLoad();
 	}
 	

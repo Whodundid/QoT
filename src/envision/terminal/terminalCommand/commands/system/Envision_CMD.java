@@ -33,7 +33,7 @@ public class Envision_CMD extends TerminalCommand {
 			File f = new File(fileName);
 			
 			try {
-				QoT.getEnvision().buildProgram(f).runProgram();
+				QoT.getEnvision().runProgram(f);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

@@ -67,7 +67,7 @@ public class Whodundid extends Enemy {
 			pDims = new EDimension(cSX, cSY, cEX, cEY);
 		}
 		
-		if (testDim.contains(pDims)) {
+		if (testDim.partiallyContains(pDims)) {
 			if (hit) {
 				//System.out.println(System.currentTimeMillis() - timeSinceLastHit);
 				if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {

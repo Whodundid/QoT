@@ -30,6 +30,7 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	// Constructors
 	//--------------
 	
+	protected GameObject() {}
 	protected GameObject(String nameIn) {
 		name = nameIn;
 	}

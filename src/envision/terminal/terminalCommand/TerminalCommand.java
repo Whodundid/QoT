@@ -112,6 +112,10 @@ public abstract class TerminalCommand {
 		return in != null && in.length() >= 1 && modifiers.contains(in);
 	}
 	
+	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, String... completionsIn) {
+		basicTabComplete(termIn, args, new EArrayList<String>(completionsIn));
+	}
+	
 	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, EArrayList<String> completionsIn) {
 		int limit = numArgs == -1 ? args.size() : ENumUtil.clamp(args.size(), 0, numArgs);
 		

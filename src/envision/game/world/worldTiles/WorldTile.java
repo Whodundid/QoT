@@ -1,14 +1,14 @@
 package envision.game.world.worldTiles;
 
+import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.world.gameWorld.IGameWorld;
-import envision.renderEngine.GLObject;
 import envision.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
 
-public abstract class WorldTile extends GLObject implements Comparable<WorldTile> {
+public abstract class WorldTile extends GameObject implements Comparable<WorldTile> {
 	
 	//--------
 	// Fields
@@ -136,7 +136,12 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	
 	@Override
 	public int compareTo(WorldTile in) {
-		return Integer.compare(id.id, in.id.id);
+		return Integer.compare(id.tileID, in.id.tileID);
+	}
+	
+	@Override
+	public int getInternalSaveID() {
+		return id.tileID;
 	}
 	
 	//---------
@@ -273,7 +278,7 @@ public abstract class WorldTile extends GLObject implements Comparable<WorldTile
 	public boolean isWall() { return isWall; }
 	public double getWallHeight() { return wallHeight; }
 	
-	public int getID() { return id.id; }
+	public int getID() { return id.tileID; }
 	public String getName() { return name; }
 	public TileMaterial getMaterial() { return material; }
 	public int getMapColor() { return miniMapColor; }

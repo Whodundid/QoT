@@ -5,7 +5,6 @@ import java.util.Stack;
 
 import org.lwjgl.glfw.GLFW;
 
-import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.screens.GameScreen;
 import envision.game.world.gameWorld.GameWorld;
@@ -300,9 +299,9 @@ public class WorldRenderTest extends GameScreen {
 	}
 	
 	private void drawEntities(int x, int y, int w, int h) {
-		EArrayList<GameObject> entities = world.getEntitiesInWorld();
+		EArrayList<Entity> entities = world.getEntitiesInWorld();
 		
-		for (GameObject e : entities) {
+		for (Entity e : entities) {
 			if (e.getTexture() != null) {
 				double drawX = 0;
 				double drawY = 0;

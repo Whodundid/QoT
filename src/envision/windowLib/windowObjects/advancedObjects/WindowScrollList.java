@@ -481,8 +481,8 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	
 	protected void updateDrawnObjects() {
 		drawnListObjects.clear();
-		drawnListObjects.addAll(listContents.filter(o -> getDimensions().contains(o.getDimensions())));
-		drawnListObjects.addAll(listObjsToBeAdded.filter(o -> getDimensions().contains(o.getDimensions())));
+		drawnListObjects.addAll(listContents.filter(o -> getDimensions().partiallyContains(o.getDimensions())));
+		drawnListObjects.addAll(listObjsToBeAdded.filter(o -> getDimensions().partiallyContains(o.getDimensions())));
 	}
 	
 	void removeListObjects() {

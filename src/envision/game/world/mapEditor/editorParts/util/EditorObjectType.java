@@ -1,6 +1,7 @@
 package envision.game.world.mapEditor.editorParts.util;
 
-public enum EditorItemCategory {
+public enum EditorObjectType {
 	TILE,
-	GAME_OBJECT;
+	GAME_OBJECT,
+	ENTITY;
 }

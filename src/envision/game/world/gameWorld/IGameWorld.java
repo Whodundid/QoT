@@ -1,6 +1,7 @@
 package envision.game.world.gameWorld;
 
 import envision.game.GameObject;
+import envision.game.entity.Entity;
 import envision.game.world.mapEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.util.EntitySpawn;
 import envision.game.world.util.Region;
@@ -23,7 +24,8 @@ public interface IGameWorld {
 	void setTileAt(WorldTile tile, int x, int y);
 	
 	EArrayList<Region> getRegionData();
-	EArrayList<GameObject> getEntitiesInWorld();
+	EArrayList<GameObject> getObjectsInWorld();
+	EArrayList<Entity> getEntitiesInWorld();
 	EArrayList<EntitySpawn> getEntitySpawns();
 	
 	PlayerSpawnPoint getPlayerSpawn();

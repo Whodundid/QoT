@@ -137,7 +137,10 @@ public class GamePlayScreen extends GameScreen {
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
-		if (keyCode == Keyboard.KEY_ESC) openPauseWindow();
+		if (keyCode == Keyboard.KEY_ESC) {
+			if (Keyboard.isAltDown()) QoT.displayScreen(new MainMenuScreen());
+			else openPauseWindow();
+		}
 		
 		if (keyCode == Keyboard.KEY_LEFT) QoT.thePlayer.move(-1, 0);
 		if (keyCode == Keyboard.KEY_RIGHT) QoT.thePlayer.move(1, 0);

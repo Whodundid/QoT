@@ -1,6 +1,7 @@
 package envision.game.world.mapEditor.editorParts.util;
 
 import envision.game.GameObject;
+import envision.game.entity.Entity;
 import envision.game.world.worldTiles.WorldTile;
 import envision.renderEngine.textureSystem.GameTexture;
 
@@ -15,50 +16,50 @@ public class EditorObject {
 	// Fields
 	//--------
 	
-	private WorldTile tile;
-	private GameObject object;
-	private EditorItemCategory type;
+	private GameObject theObject;
+	private EditorObjectType type;
 	private boolean isSelected = false;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public EditorObject(WorldTile tileIn) {
-		tile = tileIn;
-		type = EditorItemCategory.TILE;
+	public EditorObject(GameObject objectIn) { this(objectIn, EditorObjectType.GAME_OBJECT); }
+	public EditorObject(WorldTile tileIn) { this(tileIn, EditorObjectType.TILE); }
+	public EditorObject(Entity entityIn) { this(entityIn, EditorObjectType.TILE); }
+	
+	protected EditorObject(GameObject objectIn, EditorObjectType typeIn) {
+		theObject = objectIn;
+		type = typeIn;
 	}
 	
-	public EditorObject(GameObject objectIn) {
-		object = objectIn;
-		type = EditorItemCategory.GAME_OBJECT;
-	}
+	//---------
+	// Methods
+	//---------
 	
-	public boolean isTile() { return type == EditorItemCategory.TILE; }
-	public boolean isGameObject() { return type == EditorItemCategory.GAME_OBJECT; }
+	public boolean isTile() { return type == EditorObjectType.TILE; }
+	public boolean isEntity() { return type == EditorObjectType.ENTITY; }
 	
-	public EditorItemCategory getType() { return type; }
-	public WorldTile getTile() { return tile; }
-	public GameObject getGameObject() { return object; }
+	public EditorObjectType getType() { return type; }
 	
-	public <TYPE> TYPE get() {
-		return (TYPE) ((isTile()) ? tile : object);
+	public GameObject getGameObject() { return theObject; }
+	public Entity getEntity() { return (Entity) theObject; }
+	public WorldTile getTile() { return (WorldTile) theObject; }
+	
+	public <TYPE extends GameObject> TYPE get() {
+		return (TYPE) switch (type) {
+		case GAME_OBJECT -> theObject;
+		case ENTITY -> (Entity) theObject;
+		case TILE -> (WorldTile) theObject;
+		};
 	}
 	
 	public String getName() {
-		return switch (type) {
-		case TILE -> (tile != null) ? tile.getName() : "null";
-		case GAME_OBJECT -> (object != null) ? object.getName() : "null";
-		default -> null;
-		};
+		return (theObject != null) ? theObject.getName() : "null";
 	}
 	
 	public GameTexture getTexture() {
-		return switch (type) {
-		case TILE -> (tile != null) ? tile.getTexture() : null;
-		case GAME_OBJECT -> (object != null) ? object.getTexture() : null;
-		default -> null;
-		};
+		return (theObject != null) ? theObject.getTexture() : null;
 	}
 	
 	public boolean isSelected() { return isSelected; }

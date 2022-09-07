@@ -10,7 +10,10 @@ import envision.game.world.mapEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.util.EntitySpawn;
 import envision.game.world.util.Region;
 import envision.game.world.worldTiles.WorldTile;
+import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.EArrayList;
+import eutil.math.EDimension;
+import eutil.math.EDimensionI;
 import eutil.math.ENumUtil;
 import eutil.misc.Direction;
 import game.QoT;
@@ -34,10 +37,13 @@ public class GameWorld implements IGameWorld {
 	protected int tileWidth, tileHeight;
 	protected double zoom = 1;
 	protected WorldTile[][] worldData = new WorldTile[0][0];
-	protected EArrayList<GameObject> entityData = new EArrayList<>();
+	protected EArrayList<GameObject> worldObjects = new EArrayList<>();
+	protected EArrayList<Entity> entityData = new EArrayList<>();
 	protected EArrayList<EntitySpawn> entitySpawns = new EArrayList<>();
 	protected EArrayList<Region> regionData = new EArrayList<>();
 	protected PlayerSpawnPoint playerSpawn = new PlayerSpawnPoint(this);
+	/** The script to be executed when the world first gets loaded. */
+	protected EnvisionProgram worldLoadScript;
 	protected WorldRenderer worldRenderer;
 	protected boolean underground = false;
 	
@@ -62,6 +68,7 @@ public class GameWorld implements IGameWorld {
 		tileWidth = tileWidthIn;
 		tileHeight = tileHeightIn;
 		worldData = new WorldTile[width][height];
+		worldObjects = new EArrayList<>();
 		entityData = new EArrayList<>();
 		fileLoaded = true;
 		worldFileSystem = new WorldFileSystem(this);
@@ -97,6 +104,7 @@ public class GameWorld implements IGameWorld {
 		underground = worldIn.underground;
 		playerSpawn = worldIn.playerSpawn;
 		worldData = new WorldTile[width][height];
+		worldObjects = new EArrayList<>();
 		entityData = new EArrayList<>();
 		
 		//copy tile data
@@ -109,8 +117,9 @@ public class GameWorld implements IGameWorld {
 		}
 		
 		//copy entity data
+		for (GameObject obj : worldIn.worldObjects) worldObjects.add(obj);
 		for (EntitySpawn spawn : worldIn.entitySpawns) entitySpawns.add(new EntitySpawn(spawn));
-		for (GameObject ent : worldIn.entityData) entityData.add(ent);
+		for (Entity ent : worldIn.entityData) entityData.add(ent);
 		
 		//copy region data
 		for (Region r : worldIn.regionData) regionData.add(r);
@@ -128,7 +137,8 @@ public class GameWorld implements IGameWorld {
 		tileHeight = 0;
 		zoom = 1;
 		worldData = new WorldTile[0][0];
-		entityData = new EArrayList();
+		worldObjects = new EArrayList<>();
+		entityData = new EArrayList<>();
 		fileLoaded = false;
 	}
 	
@@ -137,13 +147,23 @@ public class GameWorld implements IGameWorld {
 	//---------
 	
 	public void onUpdate() {
+		//add all incoming game objects
 		if (toAdd.isNotEmpty()) {
-			toAdd.forEach(e -> addEntityInternal(e));
+			for (GameObject o : toAdd) {
+				//if entity -- add to entity data
+				if (o instanceof Entity e) addEntityInternal(e);
+				worldObjects.add(o);
+			}
 			toAdd.clear();
 		}
 		
+		//remove all outgoing objects
 		if (toDelete.isNotEmpty()) {
-			entityData.removeAll(toDelete);
+			for (GameObject o : toDelete) {
+				//if entity -- remove from entity data
+				if (o instanceof Entity e) entityData.remove(e);
+				worldObjects.remove(o);
+			}
 			toDelete.clear();
 		}
 	}
@@ -190,28 +210,56 @@ public class GameWorld implements IGameWorld {
 		}
 	}
 	
-	public GameObject addEntity(GameObject ent) { return toAdd.addR(ent); }
-	public void addEntity(GameObject... ents) { toAdd.add(ents); }
-	public void removeEntity(GameObject... ents) { toDelete.add(ents); }
+	/**
+	 * Iterates across each region and then each entity to see if an entity is
+	 * entering or exiting it.
+	 */
+	protected void updateRegions() {
+		//this is not efficient. :')
+		
+		for (Region r : regionData) {
+			EDimensionI rDims = r.getDimensions();
+			//re-evaluate current region data
+			r.updateRegion();
+			
+			//check if any entities are in a region or are entering or exiting one
+			for (GameObject obj : entityData) {
+				if (obj instanceof Entity ent) {
+					EDimension entDims = ent.getDimensions();
+					
+					if (rDims.partiallyContains(entDims)) {
+						//check if 'r' already contains the entity
+						if (r.containsEntity(ent)) continue;
+						r.addEntity(ent);
+					}
+				}
+			}
+		}
+	}
 	
-	private GameObject addEntityInternal(GameObject ent) {
+	//Any GameObject
+	public <E extends GameObject> E addObjectToWorld(E ent) { return (E) toAdd.addR(ent); }
+	public <E extends GameObject> void addObjectToWorld(E... ents) { toAdd.add(ents); }
+	public <E extends GameObject> void removeObjectFromWorld(E... ents) { toDelete.add(ents); }
+	
+	//Entity specific
+	public Entity addEntity(Entity ent) { return addObjectToWorld(ent); }
+	public void addEntity(Entity... ents) { addObjectToWorld(ents); }
+	public void removeEntity(Entity... ents) { removeObjectFromWorld(ents); }
+	
+	private void addEntityInternal(Entity ent) {
 		//assign world and add
 		ent.world = this;
 		entityData.add(ent);
 		
 		//assign entity ID
 		ent.setObjectID(getNextEntityID());
-		if (ent instanceof Entity) {
-			QoT.getEventHandler().postEvent(new WorldAddedEntityEvent(this, (Entity) ent));
-		
-		}
+		QoT.getEventHandler().postEvent(new WorldAddedEntityEvent(this, ent));
 		
 		//check if player
 		if (ent == QoT.thePlayer) {
 			QoT.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
 		}
-		
-		return ent;
 	}
 	
 	public void addEntitySpawn(Entity entIn) {
@@ -240,21 +288,21 @@ public class GameWorld implements IGameWorld {
 	 */
 	public double getDistance(GameObject ent1, GameObject ent2) {
 		if (ent1 == null || ent2 == null) return -1;
-		if (!entityData.containsEach(ent1, ent2)) return -1;
+		if (!worldObjects.containsEach(ent1, ent2)) return -1;
 		
 		return ENumUtil.distance(ent1.midX, ent1.midY, ent2.midX, ent2.midY);
 	}
 	
 	public double distanceTo(GameObject ent, Point point) {
 		if (ent == null || point == null) return -1;
-		if (!entityData.contains(ent)) return -1;
+		if (!worldObjects.contains(ent)) return -1;
 		
 		return ENumUtil.distance(ent.midX, ent.midY, point.x, point.y);
 	}
 	
 	public Direction getDirectionTo(GameObject start, GameObject dest) {
 		if (start == null || dest == null) return Direction.OUT;
-		if (!entityData.containsEach(start, dest)) return Direction.OUT;
+		if (!worldObjects.containsEach(start, dest)) return Direction.OUT;
 		
 		double dX = dest.midX - start.midX;
 		double dY = dest.midY - start.midY;
@@ -321,6 +369,7 @@ public class GameWorld implements IGameWorld {
 	public double getZoom() { return zoom; }
 	public boolean isUnderground() { return underground; }
 	@Override public PlayerSpawnPoint getPlayerSpawn() { return playerSpawn; }
+	public EnvisionProgram getStartupScript() { return worldLoadScript; }
 	
 	/** The file path to this specific map file. */
 	public String getFilePath() { return worldFileSystem.getFilePath(); }
@@ -338,7 +387,8 @@ public class GameWorld implements IGameWorld {
 		return worldData[xIn][yIn];
 	}
 	
-	@Override public EArrayList<GameObject> getEntitiesInWorld() { return entityData; }
+	@Override public EArrayList<GameObject> getObjectsInWorld() { return worldObjects; }
+	@Override public EArrayList<Entity> getEntitiesInWorld() { return entityData; }
 	public EArrayList<EntitySpawn> getEntitySpawns() { return entitySpawns; }
 	
 	/** Returns this world's rendering system. */
@@ -374,12 +424,13 @@ public class GameWorld implements IGameWorld {
 		this.tileHeight = tileHeightIn;
 	}
 	
-	public void setEntityData(EArrayList<GameObject> entsIn) { entityData = entsIn; }
+	public void setEntityData(EArrayList<Entity> entsIn) { entityData = entsIn; }
 	public void setEntitySpawns(EArrayList<EntitySpawn> spawns) { entitySpawns = spawns; }
 	public void setRegionData(EArrayList<Region> regions) { regionData = regions; }
 	public void setPlayerSpawn(PlayerSpawnPoint point) { playerSpawn = point; }
 	
 	public GameWorld setLoaded(boolean val) { loaded = val && isFileLoaded(); return this; }
+	public GameWorld setWorldLoadScript(EnvisionProgram scriptIn) { worldLoadScript = scriptIn; return this; }
 	public GameWorld setZoom(double val) { zoom = val; zoom = ENumUtil.clamp(zoom, 0.25, 5); return this; }
 	public GameWorld setUnderground(boolean val) { underground = val; return this; }
 	

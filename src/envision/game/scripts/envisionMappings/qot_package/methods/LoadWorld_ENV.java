@@ -37,7 +37,7 @@ public class LoadWorld_ENV extends EnvisionFunction {
 				QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
 				QoT.displayScreen(new GamePlayScreen());
 				QoT.loadWorld(world);
-				world.addEntity(p);
+				world.addObjectToWorld(p);
 			}
 			else throw new EnvisionLangError("The world '" + worldName + "' does not exist!");
 		}
@@ -50,7 +50,7 @@ public class LoadWorld_ENV extends EnvisionFunction {
 					QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
 					QoT.displayScreen(new GamePlayScreen());
 					QoT.loadWorld(world);
-					world.addEntity(p);
+					world.addObjectToWorld(p);
 				}
 			}
 			else throw new InvalidArgumentError("Expected a World object!");

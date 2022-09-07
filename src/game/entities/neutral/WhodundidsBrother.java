@@ -104,7 +104,7 @@ public class WhodundidsBrother extends Enemy {
 			}
 		}
 		
-		if (testDim.contains(pDims)) {
+		if (testDim.partiallyContains(pDims)) {
 			if (hit) {
 				//System.out.println(System.currentTimeMillis() - timeSinceLastHit);
 				if ((System.currentTimeMillis() - timeSinceLastHit) >= 600) {

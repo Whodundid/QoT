@@ -42,21 +42,21 @@ public enum TileIDs {
 	COARSE_SAND(29, "Coarse Sand"),
 	;
 	
-	public final int id;
+	public final int tileID;
 	public final int mapColor;
 	public final String name;
 	
 	private TileIDs(int idIn, String nameIn) { this(idIn, nameIn, 0x00000000); }
 	private TileIDs(int idIn, String nameIn, EColors mapColorIn) { this(idIn, nameIn, mapColorIn.intVal); }
 	private TileIDs(int idIn, String nameIn, int mapColorIn) {
-		id = idIn;
+		tileID = idIn;
 		mapColor = mapColorIn;
 		name = nameIn;
 	}
 	
 	@Override
 	public String toString() {
-		return id + ":" + name;
+		return tileID + ":" + name;
 	}
 	
 }

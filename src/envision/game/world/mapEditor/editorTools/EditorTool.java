@@ -41,23 +41,25 @@ public abstract class EditorTool {
 	protected WorldTile getTile(int x, int y) { return editor.getActualWorld().getTileAt(x, y); }
 	
 	protected void addObjectToWorld(GameObject obj) {
-		if (obj instanceof Entity ent) {
-			double cmx = ent.collisionBox.midX; //collision mid x
-			double cmy = ent.collisionBox.midY; //collision mid y
-			double tw = editor.getEditorWorld().getTileWidth(); //tile width
-			double th = editor.getEditorWorld().getTileHeight(); //tile height
-			
-			//need to -, - using difference of world coords of middle of collision box
-			int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
-			int mwcy = (int) Math.floor(cmy / th); //mid world coords y
-			
-			ent.worldX = wx - mwcx;
-			ent.worldY = wy - mwcy;
-			
-			//System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
-			editor.getEditorWorld().addEntity(ent);
-			editor.getEditorWorld().addEntitySpawn(ent);
-		}
+		// logic to add object to world ~
+	}
+	
+	protected void addEntityToWorld(Entity ent) {
+		double cmx = ent.collisionBox.midX; //collision mid x
+		double cmy = ent.collisionBox.midY; //collision mid y
+		double tw = editor.getEditorWorld().getTileWidth(); //tile width
+		double th = editor.getEditorWorld().getTileHeight(); //tile height
+		
+		//need to -, - using difference of world coords of middle of collision box
+		int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
+		int mwcy = (int) Math.floor(cmy / th); //mid world coords y
+		
+		ent.worldX = wx - mwcx;
+		ent.worldY = wy - mwcy;
+		
+		//System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
+		editor.getEditorWorld().addEntity(ent);
+		editor.getEditorWorld().addEntitySpawn(ent);
 	}
 	
 	protected void setTile(WorldTile t) { editor.setTileAt(wx, wy, t); }

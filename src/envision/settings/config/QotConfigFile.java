@@ -37,7 +37,7 @@ public class QotConfigFile {
 	
 	/** Attempts to parse through a potentially existing config file and match identifier-value pairs.
 	 *  Returns false if the file cannot be found. */
-	public BoxList getConfigContents() {
+	public BoxList<String, EArrayList<String>> getConfigContents() {
 		if (configValues == null) { configValues = new BoxList<String, EArrayList<String>>(); }
 		configValues.clear();
 		parseFile();
@@ -224,6 +224,7 @@ public class QotConfigFile {
 	}
 	
 	public String getConfigName() { return configName; }
+	public File getFile() { return configPath; }
 	public boolean exists() { return configPath.exists(); }
 	
 	//----------------
