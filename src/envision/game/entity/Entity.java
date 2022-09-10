@@ -64,9 +64,9 @@ public abstract class Entity extends GameObject {
 	protected long recentlyAttackedTimeout = 3000l;
 	
 	// Stuff for keeping track of when an entity was last hit
-	protected boolean recentlyHit = false;
-	protected long recentlyHitTime;
-	protected long recentlyHitTimeout = 3000l;
+	protected boolean healthChanged = false;
+	protected long healthChangedTime;
+	protected long healthChangedTimeout = 3000l;
 	
 	protected EntityHealthBar healthBar;
 	
@@ -113,7 +113,7 @@ public abstract class Entity extends GameObject {
 		healthBar.setDimensions(x, y - 7, w, 7);
 		healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
 		
-		if ((recentlyAttacked || recentlyHit || mouseOver) && !invincible && (health < maxHealth)) {
+		if ((recentlyAttacked || healthChanged || mouseOver) && !invincible && (health < maxHealth)) {
 //			EDimension draw = new EDimension(x + 20, y - 7, x + w - 20, y);
 //			
 //			var cur = health;
@@ -135,19 +135,23 @@ public abstract class Entity extends GameObject {
 	// Methods
 	//---------
 	
+	protected void healthChanged() {
+		healthChanged = true;
+		healthChangedTime = System.currentTimeMillis();
+	}
+	
 	/** Reduces health by amount. If result is less than or equal to 0, the entity dies. */
 	public void drainHealth(int amount) {
 		health = ENumUtil.clamp(health - amount, 0, health);
-		recentlyHit = true;
-		recentlyHitTime = System.currentTimeMillis();
+		healthChanged();
 	}
 	
 	@Override
 	public void onGameTick() {
 		super.onGameTick();
 		
-		if (recentlyHit && (System.currentTimeMillis() - recentlyHitTime >= recentlyHitTimeout)) {
-			recentlyHit = false;
+		if (healthChanged && (System.currentTimeMillis() - healthChangedTime >= healthChangedTimeout)) {
+			healthChanged = false;
 		}
 		
 		if (recentlyAttacked && (System.currentTimeMillis() - attackStart >= recentlyAttackedTimeout)) {
@@ -158,15 +162,15 @@ public abstract class Entity extends GameObject {
 	/** Reduces mana by amount. */
 	public void drainMana(int amount) { mana = ENumUtil.clamp(mana - amount, 0, Integer.MAX_VALUE); }
 	/** Heals the entity by the given amount. Note: does not exceed max health. */
-	public void replenishHealth(int amount) { health = ENumUtil.clamp(health + amount, 0, maxHealth); }
+	public void replenishHealth(int amount) { health = ENumUtil.clamp(health + amount, 0, maxHealth); healthChanged(); }
 	/** Restores mana points by the given amount. Note: does not exceed max mana. */
-	public void replenishMana(int amount) { mana = ENumUtil.clamp(mana + amount, Integer.MIN_VALUE, maxMana); }
+	public void replenishMana(int amount) { mana = ENumUtil.clamp(mana + amount, Integer.MIN_VALUE, maxMana); healthChanged(); }
 	/** Completely restores all hitpoints back to max health. Note: if max health = 0, the entity will still be dead! */
-	public void fullHeal() { health = maxHealth; }
+	public void fullHeal() { health = maxHealth; healthChanged(); }
 	/** Completely restores all mana points back to max mana. */
 	public void restoreMana() { mana = maxMana; }
 	/** Reduces health to 0 effectively killing the entity. */
-	public void kill() { health = 0; }
+	public void kill() { health = 0; healthChanged(); }
 	
 	public void move(Direction d) {
 		switch (d) {
@@ -466,11 +470,12 @@ public abstract class Entity extends GameObject {
 	}
 	
 	public Entity setMaxHealth(int maxHealthIn) { maxHealth = maxHealthIn; return this; }
-	public Entity setHealth(int healthIn) { health = healthIn; return this; }
+	public Entity setHealth(int healthIn) { health = healthIn; healthChanged(); return this; }
 	public void setHitpointsLevel(int levelIn) {
 		hitpointsLevel = levelIn;
 		maxHealth = EntityLevel.calculateMaxHealth(hitpointsLevel);
 		health = ENumUtil.clamp(health, 0, maxHealth);
+		healthChanged();
 	}
 	
 	public Entity setMaxMana(int maxManaIn) { maxMana = maxManaIn; return this; }

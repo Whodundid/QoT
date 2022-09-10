@@ -60,6 +60,14 @@ public class Region extends GameObject {
 				it.remove();
 			}
 		}
+		
+		if (world.getWorldName().equals("new")) {
+			if (name.equals("Secret")) {
+				if (containsEntity(QoT.thePlayer)) {
+					for (Entity e : entitiesInside) e.replenishHealth(1);
+				}
+			}
+		}
 	}
 	
 	public void setDimensions(int widthIn, int heightIn) { setDimensions(startX, startY, startX + widthIn, startY + heightIn); }
@@ -94,8 +102,10 @@ public class Region extends GameObject {
 		QoT.getEventHandler().postEvent(new EntityEnteredRegionEvent(world, in, this, xPos, yPos));
 		if (in == QoT.thePlayer) {
 			if (world.getWorldName().equals("new")) {
-				QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")));
-				QoT.theWorld.setUnderground(true);
+				if (name.equals("Cave")) {
+					QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")));
+					QoT.theWorld.setUnderground(true);
+				}
 			}
 			else if (world.getWorldName().equals("cave")) {
 				QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
