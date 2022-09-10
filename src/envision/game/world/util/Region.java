@@ -61,6 +61,7 @@ public class Region extends GameObject {
 			}
 		}
 		
+		//TODO: Remove this
 		if (world.getWorldName().equals("new")) {
 			if (name.equals("Secret")) {
 				if (containsEntity(QoT.thePlayer)) {
@@ -100,15 +101,25 @@ public class Region extends GameObject {
 	
 	protected synchronized void onEntityEntered(Entity in, int xPos, int yPos) {
 		QoT.getEventHandler().postEvent(new EntityEnteredRegionEvent(world, in, this, xPos, yPos));
+		
+		//TODO: Remove this
 		if (in == QoT.thePlayer) {
 			if (world.getWorldName().equals("new")) {
 				if (name.equals("Cave")) {
 					QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")));
 					QoT.theWorld.setUnderground(true);
 				}
+				else if (name.equals("MountainPass")) {
+					QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")));
+				}
 			}
 			else if (world.getWorldName().equals("cave")) {
 				QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+			}
+			else if (world.getWorldName().equals("mountains")) {
+				if (name.equals("Valley")) {
+					QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+				}
 			}
 		}
 	}

@@ -28,7 +28,7 @@ public class Tool_Region extends EditorTool {
 	@Override
 	public void drawTool(double x, double y, double w, double h) {
 		if (editor.getCurrentSidePanel() != SidePanelType.REGION) return;
-		if (Mouse.isAnyButtonDown()) {
+		if (Mouse.isAnyButtonDown() && EUtil.notNull(clickPointWorld, dragPointWorld)) {
 			//draw updated region box using world draw values
 			//drawHRect()
 			
