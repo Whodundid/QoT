@@ -1,7 +1,9 @@
 package envision.game.entity;
 
 import envision.game.GameObject;
+import envision.game.world.gameWorld.IGameWorld;
 import envision.game.world.worldTiles.WorldTile;
+import envision.inputHandlers.Mouse;
 import eutil.debug.Broken;
 import eutil.math.EDimension;
 import eutil.math.ENumUtil;
@@ -21,6 +23,8 @@ public abstract class Entity extends GameObject {
 	
 	/** This entity's current level. */
 	protected int level;
+	/** The amount of experience rewarded when killed. */
+	protected long experienceRewarded = 0;
 	/** This entity's total amount of experience earned. */
 	protected long experience;
 	/** The amount of experience needed for the next immediate level up. */
@@ -51,9 +55,20 @@ public abstract class Entity extends GameObject {
 	 */
 	protected int baseMeleeDamage;
 	
-
+	// Stuff for keeping track of entity attacks
+	protected boolean attacking = false;
+	protected boolean recentlyAttacked = false;
+	protected long attackDrawStart;
+	protected long attackStart;
+	protected long timeUntilNextAttack = 300;
+	protected long recentlyAttackedTimeout = 3000l;
 	
-
+	// Stuff for keeping track of when an entity was last hit
+	protected boolean recentlyHit = false;
+	protected long recentlyHitTime;
+	protected long recentlyHitTimeout = 3000l;
+	
+	protected EntityHealthBar healthBar;
 	
 	//--------------
 	// Constructors
@@ -64,6 +79,7 @@ public abstract class Entity extends GameObject {
 		
 		//determine initial next level
 		xpNeeded = EntityLevel.getXPNeededForNextLevel(level + 1);
+		healthBar = new EntityHealthBar(this);
 	}
 	
 	//------------------
@@ -82,7 +98,6 @@ public abstract class Entity extends GameObject {
 		collisionBox = new EDimension(startX, startY, endX, endY);
 	}
 	
-	
 	/** Called from the world whenever an entity collides with another entity. */
 	public void onEntityCollide(Entity collidingEntity) {}
 	
@@ -91,12 +106,29 @@ public abstract class Entity extends GameObject {
 	//-----------
 	
 	@Override
-	public void renderObject(double x, double y, double w, double h, int brightness) {
+	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
 		
 		drawTexture(sprite, x, y, w, h, flip, brightness);
+		healthBar.setDimensions(x, y - 7, w, 7);
+		healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
+		
+		if ((recentlyAttacked || recentlyHit || mouseOver) && !invincible && (health < maxHealth)) {
+//			EDimension draw = new EDimension(x + 20, y - 7, x + w - 20, y);
+//			
+//			var cur = health;
+//			var percent = (double) cur / (double) maxHealth;
+//			var pw = (draw.width * percent);
+//			
+//			drawRect(draw.add(1), EColors.black);
+//			var end = (this == QoT.thePlayer) ? 4 : 1;
+//			drawRect(draw.startX, draw.startY, draw.startX + pw, draw.endY - end, EColors.mc_darkred);
+			
+			healthBar.keepDrawing();
+		}
 		
 		drawStringC(headText, x + w/2, y - h/4);
+		//drawStringC(recentlyAttacked + ":" + recentlyHit + ":" + mouseOver, x + w/2, y - h/2, 0.5, 0.5);
 	}
 	
 	//---------
@@ -106,6 +138,21 @@ public abstract class Entity extends GameObject {
 	/** Reduces health by amount. If result is less than or equal to 0, the entity dies. */
 	public void drainHealth(int amount) {
 		health = ENumUtil.clamp(health - amount, 0, health);
+		recentlyHit = true;
+		recentlyHitTime = System.currentTimeMillis();
+	}
+	
+	@Override
+	public void onGameTick() {
+		super.onGameTick();
+		
+		if (recentlyHit && (System.currentTimeMillis() - recentlyHitTime >= recentlyHitTimeout)) {
+			recentlyHit = false;
+		}
+		
+		if (recentlyAttacked && (System.currentTimeMillis() - attackStart >= recentlyAttackedTimeout)) {
+			recentlyAttacked = false;
+		}
 	}
 	
 	/** Reduces mana by amount. */
@@ -386,6 +433,8 @@ public abstract class Entity extends GameObject {
 	public int getStrengthLevel() { return strengthLevel; }
 	
 	public int getGold() { return gold; }
+	public boolean isInvincible() { return invincible; }
+	public long getExperienceRewardedOnKill() { return experienceRewarded; }
 	
 	//---------
 	// Setters
@@ -469,6 +518,9 @@ public abstract class Entity extends GameObject {
 		else health = maxHealth; //if maxHealth is 0, the entity is still dead!
 		return this;
 	}
+	
+	public void setInvincible(boolean val) { invincible = val; }
+	public void setExperienceRewardedOnKill(long amount) { experienceRewarded = amount; }
 	
 	//------------------
 	// Internal Methods

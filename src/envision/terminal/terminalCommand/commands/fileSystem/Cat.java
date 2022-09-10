@@ -63,7 +63,7 @@ public class Cat extends FileCommand {
 		}
 		
 		try (var reader = new LineReader(fileIn)) {
-			if (reader.hasNext()) termIn.info("Displaying content:\n");
+			if (reader.hasNextLine()) termIn.info("Displaying content:\n");
 			reader.forEach(l -> termIn.writeln(l, EColors.lgray));
 		}
 		catch (Exception e) {

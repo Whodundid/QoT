@@ -80,6 +80,8 @@ public abstract class GameScreen<E>
 	public void onGameTick(long ticks) {}
 	/** Called whenever this screen is about to be closed. */
 	public void onScreenClosed() {}
+	/** Called whenever a world is loaded. */
+	public void onWorldLoaded() {}
 	
 	public void enableScreenFade(boolean val) {
 		performFade = val;

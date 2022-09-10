@@ -27,6 +27,7 @@ public class WhodundidsBrother extends Enemy {
 		setMaxHealth(10);
 		setHealth(10);
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
+		setExperienceRewardedOnKill(50);
 		
 		randShort = 1500;
 		randLong = 3000;

@@ -12,7 +12,7 @@ import envision.game.world.gameWorld.GameWorld;
 import envision.inputHandlers.Keyboard;
 import envision.inputHandlers.Mouse;
 import envision.inputHandlers.WindowResizeListener;
-import envision.layers.LayerHandler;
+import envision.layers.LayerSystem;
 import envision.renderEngine.RenderEngine;
 import envision.terminal.TerminalHandler;
 import envision.testing.renderingAPI.error.ErrorReportingLevel;
@@ -65,7 +65,7 @@ public final class Envision implements IRendererErrorReceiver {
 	
 	private static EventHandler eventHandler;
 	private static TerminalHandler terminalHandler;
-	private static LayerHandler layerHandler;
+	private static LayerSystem layerHandler;
 	private static EnvisionLang envisionLang;
 	
 	/** The top most rendered screen. */
@@ -149,7 +149,7 @@ public final class Envision implements IRendererErrorReceiver {
 		
 		eventHandler = EventHandler.getInstance();
 		terminalHandler = TerminalHandler.getInstance();
-		layerHandler = LayerHandler.getInstance();
+		layerHandler = new LayerSystem();
 		envisionLang = new EnvisionLang();
 		
 		init = true;
@@ -249,8 +249,7 @@ public final class Envision implements IRendererErrorReceiver {
 		
 		//update current world (if there is one, and it's loaded, and the engine is not paused)
 		if (theWorld != null && theWorld.isLoaded() && !pause) {
-			theWorld.onUpdate();
-			theWorld.updateEntities();
+			theWorld.onGameTick();
 		}
 	}
 	
@@ -381,13 +380,13 @@ public final class Envision implements IRendererErrorReceiver {
 	 */
 	public static GameWorld loadWorld(GameWorld worldIn) {
 		//unload the last world (if there was one)
-		if (theWorld != null) { theWorld.setLoaded(false); }
+		if (theWorld != null) theWorld.setLoaded(false);
 		
 		theWorld = worldIn;
 		
 		if (theWorld != null) {
 			//assign as last world loaded
-			QoTSettings.lastMap.set(theWorld.getWorldName());
+			QoTSettings.lastMap.set(theWorld.getWorldName().replace(".twld", ""));
 			
 			//load the world
 			theWorld.setLoaded(true);
@@ -395,7 +394,7 @@ public final class Envision implements IRendererErrorReceiver {
 			renderWorld = true;
 			
 			//check if loaded
-			if (!theWorld.isLoaded()) { warn("Failed to load world: "); }
+			if (!theWorld.isLoaded()) warn("Failed to load world: ");
 		}
 		
 		return worldIn;

@@ -26,6 +26,7 @@ public class Whodundid extends Enemy {
 		setHealth(20);
 		
 		setCollisionBox(startX + 6, endY - height / 2, endX - 6, endY);
+		setExperienceRewardedOnKill(50);
 		
 		randShort = 400l;
 		randLong = 800l;

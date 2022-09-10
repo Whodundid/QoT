@@ -77,11 +77,13 @@ public class RegionEditWindow extends WindowParent {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
+		
 		if (object == entryBox || object == rename) rename();
 		else if (object == setColor || object == ownColor) setColor();
-		else if (object instanceof ColorPickerSimple && args.length == 1 && args[0] instanceof Integer) { recolor((int) args[0]); }
-		else if (object == confirm) { confirm(); }
-		else if (object == cancel) { close(); }
+		else if (object instanceof ColorPickerSimple && args.length == 1 && args[0] instanceof Integer)
+			recolor((int) args[0]);
+		else if (object == confirm) confirm();
+		else if (object == cancel) close();
 	}
 	
 	//--------------------------------------------------
@@ -109,9 +111,10 @@ public class RegionEditWindow extends WindowParent {
 	
 	/** Called to actually apply the changes to the region. */
 	private void confirm() {
-		region.setName(editName);
+		region.setName(entryBox.getText());
 		region.setColor(editColor);
 		line.setTextColor(editColor);
+		line.setText(entryBox.getText());
 		close();
 	}
 	

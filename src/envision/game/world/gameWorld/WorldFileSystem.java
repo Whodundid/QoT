@@ -2,9 +2,10 @@ package envision.game.world.gameWorld;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Scanner;
 
 import envision.game.world.util.EntitySpawn;
 import envision.game.world.util.Region;
@@ -12,6 +13,10 @@ import envision.game.world.worldTiles.WorldTile;
 import envision.renderEngine.textureSystem.GameTexture;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
+import eutil.file.LineReader;
+import eutil.math.ENumUtil;
+import eutil.misc.EByteBuilder;
+import eutil.strings.EStringUtil;
 import game.settings.QoTSettings;
 
 public class WorldFileSystem {
@@ -46,6 +51,7 @@ public class WorldFileSystem {
 		File dir = getWorldDir();
 		File dataDir = getDataDir();
 		File scriptsDir = getScriptsDir();
+		File worldConfig = getWorldConfigFile();
 		
 		try {
 			//try to create base dir
@@ -62,12 +68,29 @@ public class WorldFileSystem {
 			if (!scriptsDir.exists() && !scriptsDir.mkdir())
 				throw new RuntimeException("Failed to create map scripts dir! " + theWorld.getWorldName());
 			
+			//try to create config file
+			if (!worldConfig.exists() && !worldConfig.createNewFile())
+				throw new RuntimeException("Failed to create map config file! " + theWorld.getWorldName());
+			
 			//creation success
 			created = true;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void updateConfigFile() throws IOException {
+		PrintWriter writer = new PrintWriter(getWorldConfigFile());
+		
+		writer.println("# " + theWorld.getWorldName() + " config");
+		writer.println("# " + EStringUtil.repeatString("-", theWorld.getWorldName().length() + " config".length()));
+		writer.println();
+		writer.println("underground=" + theWorld.isUnderground());
+		writer.println("timeOfDay=" + theWorld.getTimeOfDay());
+		writer.println("lengthOfDay=" + theWorld.getLengthOfDay());
+		
+		writer.close();
 	}
 	
 	//-------------
@@ -78,7 +101,7 @@ public class WorldFileSystem {
 		return loadWorldFromFile(getWorldFile());
 	}
 	
-	private File findExistingWorldFile(File toFind) {
+	private File findExistingWorldFile(File baseDir, File toFind) {
 		if (toFind == null) return null;
 		
 		File existing = null;
@@ -88,7 +111,7 @@ public class WorldFileSystem {
 		toFindName = toFindName.replace(".twld", "");
 		
 		//iterate across editor worlds dir to try and find a matching name
-		for (File f : QoTSettings.getEditorWorldsDir().listFiles()) {
+		for (File f : baseDir.listFiles()) {
 			String fName = f.getName();
 			fName = fName.replace(".twld", "");
 			
@@ -105,8 +128,8 @@ public class WorldFileSystem {
 		if (worldFile == null) return false;
 		
 		//check if loading direct file path -- otherwise try to parse file name and path
-		if (!worldFile.exists()) {
-			worldFile = findExistingWorldFile(worldFile);
+		if (worldFile.isDirectory()) {
+			worldFile = findExistingWorldFile(QoTSettings.getEditorWorldsDir(), worldFile);
 			if (worldFile == null) return false;
 			theWorld.name = worldFile.getName().replace(".twld", "");
 			worldFile = getWorldFile();
@@ -119,57 +142,68 @@ public class WorldFileSystem {
 		//ensure the file actually exists before trying to read from it
 		if (!worldFile.exists()) return false;
 		
-		//try to read file
-		try (Scanner reader = new Scanner(worldFile)) {
-			EArrayList<EntitySpawn> entitySpawnsIn = new EArrayList<>();
-			EArrayList<Region> regions = new EArrayList<>();
+		try {
+			//read in world file
+			EArrayList<String> world = LineReader.readAllLines(worldFile);
 			
-			String mapName = reader.nextLine();
-			int mapWidth = reader.nextInt();
-			int mapHeight = reader.nextInt();
-			int mapTileWidth = reader.nextInt();
-			int mapTileHeight = reader.nextInt();
-			int spawnX = reader.nextInt();
-			int spawnY = reader.nextInt();
+			//read name
+			String mapName = world.next();
 			
-			reader.nextLine();
+			//read map dims
+			String[] mapDims = world.next().split(" ");
+			int mapWidth = ENumUtil.parseInt(mapDims, 0, -1);
+			int mapHeight = ENumUtil.parseInt(mapDims, 1, -1);
+			int mapTileWidth = ENumUtil.parseInt(mapDims, 2, -1);
+			int mapTileHeight = ENumUtil.parseInt(mapDims, 3, -1);
 			
+			//read player spawn
+			String[] playerSpawn = world.next().split(" ");
+			int spawnX = ENumUtil.parseInt(playerSpawn, 0, -1);
+			int spawnY = ENumUtil.parseInt(playerSpawn, 1, -1);
+			
+			//get underground state
+			boolean underground = 1 == ENumUtil.parseInt(world.next(), 0);
+			
+			//create map data array using parsed dims
 			WorldTile[][] data = new WorldTile[mapHeight][mapWidth];
 			
 			for (int i = 0; i < mapHeight; i++) {
+				//grab the next line
+				String mapLine = world.next();
+				String[] lineTiles = mapLine.split(" ");
+				
 				for (int j = 0; j < mapWidth; j++) {
-					if (!reader.hasNext()) {
-						data[i][j] = null;
-						continue;
-					}
+					String tile = lineTiles[j];
 					
-					String tile = reader.next();
-					if (tile.isBlank()) continue;
-					
+					//break out into child parts (if there are any)
 					int tileID = -1;
 					int childID = 0;
 					String[] parts = tile.split(":");
 					
-					if (!("n".equals(parts[0]) || "null".equals(parts[0]))) {
+					if (!"n".equals(parts[0])) {
 						tileID = Integer.parseInt(parts[0]);
 						if (parts.length > 1) childID = Integer.parseInt(parts[1]);
 						
+						//get tile from the parsed ID, add children, and store in map data
 						WorldTile t = WorldTile.getTileFromID(tileID, childID);
 						if (t == null) System.out.println("NULL: " + tileID + " : " + childID);
 						if (t != null) {
 							if (parts.length == 1) t.setWildCard(true);
 							t.setWorldPos(j, i);
 						}
-						data[j][i] = t;
+						data[i][j] = t;
 					}
 					else {
-						data[j][i] = null;
+						data[i][j] = null;
 					}
 				}
 			}
 			
-			while (reader.hasNextLine()) {
-				String line = reader.nextLine();
+			EArrayList<EntitySpawn> entitySpawnsIn = new EArrayList<>();
+			EArrayList<Region> regions = new EArrayList<>();
+			
+			while (world.isNotEmpty()) {
+				String line = world.next();
 				if (line.startsWith("r")) {
 					Region r = Region.parseRegion(theWorld, line);
 					if (r != null) regions.add(r);
@@ -180,11 +214,6 @@ public class WorldFileSystem {
 				}
 			}
 			
-			if (reader.hasNextLine()) {
-				String nextLine = reader.nextLine();
-				if (nextLine.equals("underground")) theWorld.underground = true;
-			}
-			
 			theWorld.name = mapName;
 			theWorld.width = mapWidth;
 			theWorld.height = mapHeight;
@@ -192,12 +221,12 @@ public class WorldFileSystem {
 			theWorld.tileHeight = mapTileHeight;
 			theWorld.playerSpawn.setX(spawnX);
 			theWorld.playerSpawn.setY(spawnY);
+			theWorld.underground = underground;
 			theWorld.worldData = data;
 			theWorld.regionData = regions;
 			theWorld.entitySpawns = entitySpawnsIn;
 			
 			fileLoaded = true;
-			//System.out.println("fileLoaded: " + fileLoaded);
 			
 			return true;
 		}
@@ -231,35 +260,62 @@ public class WorldFileSystem {
 		createWorldDir();
 		
 		PrintWriter writer = new PrintWriter(fileIn, "UTF-8");
+		FileOutputStream mapWriter = new FileOutputStream(new File(getDataDir(), theWorld.name + "_data"));
 		
 		//write map name and dimensions
 		writer.println(theWorld.name);
 		writer.println(theWorld.width + " " + theWorld.height + " " + theWorld.tileWidth + " " + theWorld.tileHeight);
 		writer.println(theWorld.playerSpawn.getX() + " " + theWorld.playerSpawn.getY());
+		writer.println(theWorld.underground ? 1 : 0);
 		
 		//write map data
-		for (int i = 0; i < theWorld.width; i++) {
-			for (int j = 0; j < theWorld.height; j++) {
+		for (int i = 0; i < theWorld.height; i++) {
+			EByteBuilder sb = new EByteBuilder();
+			for (int j = 0; j < theWorld.width; j++) {
 				WorldTile t = theWorld.worldData[i][j];
+				String end = (j == (theWorld.width - 1)) ? "" : " ";
 				
-				if (t == null) writer.print("n ");
+				if (t == null) {
+					writer.print("n" + end);
+					sb.append(("n" + end).getBytes());
+				}
 				else {
 					GameTexture tex = t.getTexture();
-					if (tex == null) writer.print("n ");
-					else writer.print(t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + " ");
+					if (tex == null) {
+						writer.print("n" + end);
+						sb.append(("n" + end).getBytes());
+					}
+					else {
+						String l = t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + end;
+						writer.print(l);
+						sb.append(l.getBytes());
+					}
 				}
 			}
+			
 			writer.println();
+			try {
+				mapWriter.write(sb.toByteArray());
+				mapWriter.write('\n');
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		//write region data
 		theWorld.regionData.stream().filter(s -> s != null).forEach(writer::println);
 		//write entity spawn data
 		theWorld.entitySpawns.stream().filter(s -> s != null).forEach(writer::println);
-		//underground
-		if (theWorld.underground) writer.println("underground");
 		
 		writer.close();
+		try {
+			updateConfigFile();
+			mapWriter.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		return true;
 	}
 	
@@ -269,6 +325,8 @@ public class WorldFileSystem {
 	
 	/** The file path to this specific map file. */
 	public String getFilePath() { return getWorldFile().toString(); }
+	/** The config file for the map. */
+	public File getWorldConfigFile() { return new File(getWorldDir(), theWorld.name + "_config.ini"); }
 	/** The actual map file that directly pertains to this world. */
 	public File getWorldFile() { return new File(getWorldDir(), theWorld.name + ".twld"); }
 	/** The map directory that contains data for a specific map. */

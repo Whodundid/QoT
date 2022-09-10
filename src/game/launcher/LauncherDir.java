@@ -171,7 +171,7 @@ public class LauncherDir {
 		if (valueName == null) return null;
 		
 		try (var br = new LineReader(launcherSettingsFile)) {
-			while (br.hasNext()) {
+			while (br.hasNextLine()) {
 				String line = br.nextLine();
 				
 				//ignore comments

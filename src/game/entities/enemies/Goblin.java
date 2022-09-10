@@ -26,6 +26,7 @@ public class Goblin extends Enemy {
 		sprite = EntityTextures.goblin;
 		
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
+		setExperienceRewardedOnKill(25);
 	}
 	
 	@Override

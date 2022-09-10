@@ -55,7 +55,18 @@ public class FontRenderer {
 	
 	public static double drawString(String in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
 	public static double drawString(String in, Number xIn, Number yIn, int colorIn) {
-		return instance.createString(in, xIn, yIn, colorIn);
+		return instance.createString(in, xIn, yIn, colorIn, 1.0, 1.0);
+	}
+	
+	public static double drawString(Object in, Number xIn, Number yIn, double scaleX, double scaleY) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff, scaleX, scaleY); }
+	public static double drawString(String in, Number xIn, Number yIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, 0xffffffff, scaleX, scaleY); }
+	
+	public static double drawString(Object in, Number xIn, Number yIn, EColors colorIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
+	public static double drawString(Object in, Number xIn, Number yIn, int colorIn, double scaleX, double scaleY) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn, scaleX, scaleY); }
+	
+	public static double drawString(String in, Number xIn, Number yIn, EColors colorIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
+	public static double drawString(String in, Number xIn, Number yIn, int colorIn, double scaleX, double scaleY) {
+		return instance.createString(in, xIn, yIn, colorIn, scaleX, scaleY);
 	}
 	
 	//--------------------
@@ -85,7 +96,7 @@ public class FontRenderer {
 	//FontRenderer Internal Methods
 	//-----------------------------
 	
-	private double createString(String in, Number xIn, Number yIn, int colorIn) {
+	private double createString(String in, Number xIn, Number yIn, int colorIn, double scaleX, double scaleY) {
 		if (in != null) {
 			double sX = xIn.doubleValue();
 			for (int i = 0; i < in.length(); i++) {
@@ -97,20 +108,20 @@ public class FontRenderer {
 				int xPos = loc.getA() * w;
 				int yPos = loc.getB() * h;
 				
-				drawChar(sX, yIn.doubleValue(), xPos, yPos, colorIn);
-				sX += (w * currentFont.getScaleSpace() / QoT.getGameScale());
+				drawChar(sX, yIn.doubleValue(), xPos, yPos, colorIn, scaleX, scaleY);
+				sX += (w * currentFont.getScaleSpace() / QoT.getGameScale()) * scaleX;
 			}
 			return sX;
 		}
 		return 0;
 	}
 	
-	private void drawChar(double posX, double posY, int tX, int tY, int color) {
+	private void drawChar(double posX, double posY, int tX, int tY, int color, double scaleX, double scaleY) {
 		GL11.glPushMatrix();
-		int w = currentFont.getWidth();
-		int h = currentFont.getHeight();
-		double sw = currentFont.getScaleW();
-		double sh = currentFont.getScaleH();
+		double w = currentFont.getWidth();
+		double h = currentFont.getHeight();
+		double sw = currentFont.getScaleW() * scaleX;
+		double sh = currentFont.getScaleH() * scaleY;
 		GLObject.drawTexture(currentFont.getFontTexture(), posX, posY, w * sw, h * sh, tX, tY, w, h, color);
 		GL11.glPopMatrix();
 	}

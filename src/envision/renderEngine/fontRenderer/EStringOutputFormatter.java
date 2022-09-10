@@ -7,9 +7,11 @@ import eutil.debug.Broken;
 /** Used to concatenate EColors and EnumChatFormating objects within Strings. */
 public class EStringOutputFormatter {
 	
-	public static double drawString(String s, double x, double y, EColors colorIn, boolean centered, boolean shadow) { return drawString(s, x, y, colorIn.intVal, centered, shadow); }
-	public static double drawString(String s, double x, double y, int colorIn, boolean centered, boolean shadow) {
-		
+	public static double drawString(String s, double x, double y, double scaleX, double scaleY, EColors colorIn, boolean centered, boolean shadow) {
+		return drawString(s, x, y, scaleX, scaleY, colorIn.intVal, centered, shadow);
+	}
+	
+	public static double drawString(String s, double x, double y, double scaleX, double scaleY, int colorIn, boolean centered, boolean shadow) {
 		if (s != null) {
 			double lastX = (centered) ? x - (getStringWidth(s) / 2) : x;
 			int i = 0;
@@ -23,11 +25,11 @@ public class EStringOutputFormatter {
 				if (c == 8750 && i + 2 < s.length()) { //the 'countour integral' character
 					
 					if (hasCode) {
-						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor);
+						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
 						curString = "";
 					}
 					else {
-						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor) - 1;
+						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY) - 1;
 						curString = "";
 					}
 					hasCode = true;
@@ -50,10 +52,10 @@ public class EStringOutputFormatter {
 			}
 			
 			if (!hasCode) {
-				lastX = FontRenderer.drawString(s, lastX, y, colorIn);
+				lastX = FontRenderer.drawString(s, lastX, y, colorIn, scaleX, scaleY);
 			}
 			else {
-				lastX = FontRenderer.drawString(curString, lastX, y, curColor);
+				lastX = FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
 			}
 			
 			return lastX;

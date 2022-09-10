@@ -18,7 +18,7 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	public EDimension collisionBox = new EDimension();
 	public int worldX, worldY;
 	protected String name;
-	protected Rotation facing = Rotation.RIGHT;
+	protected Rotation facing = Rotation.LEFT;
 	
 	/** The ID of this entity within the world. -1 by default. */
 	private int objectID = -1;
@@ -51,10 +51,15 @@ public abstract class GameObject extends GLObject implements IDrawable {
 		collisionBox = new EDimension(startX, startY, endX, endY);
 	}
 	
-	public void renderObject(double x, double y, double w, double h, int brightness) {
+	@Override
+	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
 		
 		drawTexture(sprite, x, y, w, h, flip, brightness);
+	}
+	
+	public void onGameTick() {
+		onLivingUpdate();
 	}
 	
 	/** Can be overridden in child classes to denote specific entity behavior. */
@@ -84,6 +89,12 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	public GameObject setFacing(Rotation dir) { facing = dir; return this; }
 	
 	public EDimension getCollision() { return collisionBox; }
+	public EDimension getCollisionDims() {
+		return new EDimension(startX + collisionBox.startX,
+							  startY + collisionBox.startY,
+							  startX + collisionBox.startX + collisionBox.width,
+							  startY + collisionBox.startY + collisionBox.height);
+	}
 	
 	@Override
 	public double getSortPoint() {

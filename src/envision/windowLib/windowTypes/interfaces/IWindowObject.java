@@ -34,8 +34,8 @@ import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
+import eutil.debug.DebugToolKit;
 import eutil.math.EDimension;
-import eutil.misc.DevToolKit;
 import eutil.misc.ScreenLocation;
 import game.QoT;
 import game.assets.textures.cursor.CursorTextures;
@@ -1233,11 +1233,11 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	// Debug Stuff
 	//-------------
 	
-	public default void printf(String toPrint, Object... args) { DevToolKit.printf(toPrint, args); }
-	public default void printlnf(String toPrint, Object... args) { DevToolKit.printlnf(toPrint, args); }
+	public default void printf(String toPrint, Object... args) { DebugToolKit.printf(toPrint, args); }
+	public default void printlnf(String toPrint, Object... args) { DebugToolKit.printlnf(toPrint, args); }
 	
-	public default void print(Object... toPrint) { DevToolKit.print(toPrint); }
-	public default void println(Object... toPrint) { DevToolKit.println(toPrint); }
+	public default void print(Object... toPrint) { DebugToolKit.print(toPrint); }
+	public default void println(Object... toPrint) { DebugToolKit.println(toPrint); }
 	
 	//-----------------
 	// Default setters

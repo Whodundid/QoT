@@ -19,6 +19,7 @@ public class BirchTree extends Entity {
 		double ex = (facing == Rotation.RIGHT) ? 5 : 15;
 		
 		setCollisionBox(midX - sx, endY - 15, midX + ex, endY);
+		invincible = true;
 	}
 	
 	@Override

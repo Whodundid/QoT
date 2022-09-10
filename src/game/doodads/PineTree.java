@@ -10,14 +10,15 @@ public class PineTree extends Entity {
 	public PineTree() { this(0, 0); }
 	public PineTree(int posX, int posY) {
 		super("pine");
-		init(posX, posY, 256, 256);
+		init(posX, posY, 200, 200);
 		sprite = TreeTextures.tree_pine_0;
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
-		double sx = (facing == Rotation.RIGHT) ? 15 : 5;
-		double ex = (facing == Rotation.RIGHT) ? 5 : 15;
+		double sx = (facing == Rotation.RIGHT) ? 15 : 10;
+		double ex = (facing == Rotation.RIGHT) ? 10 : 15;
 		
 		setCollisionBox(midX - sx, endY - 15, midX + ex, endY);
+		invincible = true;
 	}
 	
 	@Override

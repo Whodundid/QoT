@@ -3,6 +3,7 @@ package envision.game.world.gameWorld;
 import envision.game.GameObject;
 import envision.game.world.worldTiles.WorldTile;
 import envision.inputHandlers.Keyboard;
+import envision.inputHandlers.Mouse;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.topOverlay.GameTopScreen;
 import envision.util.InsertionSort;
@@ -52,9 +53,9 @@ public class WorldRenderer extends EGui {
 			//add all walls to a separate list
 			int w = world.getWidth();
 			int h = world.getHeight();
-			for (int i = 0; i < w; i++) {
-				for (int j = 0; j < h; j++) {
-					WorldTile t = world.getTileAt(i, j);
+			for (int i = 0; i < h; i++) {
+				for (int j = 0; j < w; j++) {
+					WorldTile t = world.getTileAt(j, i);
 					if (t == null) continue;
 					if (t.isWall()) entityOrder.add(t);
 				}
@@ -137,8 +138,8 @@ public class WorldRenderer extends EGui {
 		int bot = ENumUtil.clamp(midDrawY + distY, top, world.getHeight() - 1);
 		
 		//draw the tiles of the world using the calculated dimensions
-		for (int i = left, ix = 0; i <= right; i++, ix++) {
-			for (int j = top, jy = 0; j <= bot; j++, jy++) {
+		for (int i = top, iy = 0; i <= bot; i++, iy++) {
+			for (int j = left, jx = 0; j <= right; j++, jx++) {
 				WorldTile t = world.getWorldData()[i][j];
 				
 				//ignore if either null or texture is null -- actually.. how could it be null?? :thinking:
@@ -154,15 +155,15 @@ public class WorldRenderer extends EGui {
 				if (midDrawY < distY) drawPosY += (distY - midDrawY) * h;
 				
 				//uses the index of the for loop to determine primary screen coordinates
-				double dX = drawPosX + (ix * w);
-				double dY = drawPosY + (jy * h);
+				double dX = drawPosX + (jx * w);
+				double dY = drawPosY + (iy * h);
 				
 				//apply the player's (CAMERA'S) offset to the drawn tile
 				dX -= offsetX;
 				dY -= offsetY;
 				
 				//call the tile's self rendering code with the proper screen coordinates and dimensions
-				t.renderTile(world, dX, dY, w, h, calcBrightness(i - 1, j - 1), false);
+				t.draw(world, dX, dY, w, h, calcBrightness(j, i), false);
 			}
 		}
 	}
@@ -170,7 +171,6 @@ public class WorldRenderer extends EGui {
 	private void renderEntities(double x, double y, double w, double h) {
 		var entities = world.getEntitiesInWorld();
 		InsertionSort.sort(entities);
-		//entities.sort(Comparator.comparingInt(e -> e.endY));
 		
 		for (int i = 0; i < entities.size(); i++) {
 			GameObject ent = entities.get(i);
@@ -214,8 +214,12 @@ public class WorldRenderer extends EGui {
 			int lightx = ent.worldX + mwcx;
 			int lighty = ent.worldY + mwcy;
 			
+			int mX = Mouse.getMx();
+			int mY = Mouse.getMy();
+			boolean mouseOver = (mX >= drawX && mX <= drawX + drawW && mY >= drawY && mY <= drawY + drawH);
+			
 			//render the entity
-			ent.renderObject(drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty));
+			ent.draw(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
 			
 			if (drawEntityHitboxes) {
 				double colSX = drawX + (ent.getCollision().startX * world.zoom);
@@ -267,7 +271,21 @@ public class WorldRenderer extends EGui {
 	private int calcBrightness(int x, int y) {
 		if (world.underground) {
 			QoT_Player p = QoT.thePlayer;
-			int distToPlayer = viewDist - (int) (ENumUtil.distance(x, y, p.worldX, p.worldY));
+			
+			double cmx = p.collisionBox.midX; //collision mid x
+			double cmy = p.collisionBox.midY; //collision mid y
+			double tw = world.getTileWidth(); //tile width
+			double th = world.getTileHeight(); //tile height
+			
+			//offset world coordinates to middle of collision box
+			int mwcx = (int) Math.ceil(cmx / tw); //mid world coords x
+			int mwcy = (int) Math.floor(cmy / th); //mid world coords y
+			
+			//light render position
+			int lightx = p.worldX + mwcx;
+			int lighty = p.worldY + mwcy;
+			
+			int distToPlayer = viewDist - (int) (ENumUtil.distance(x, y, lightx, lighty));
 			distToPlayer = ENumUtil.clamp(distToPlayer, 0, distToPlayer);
 			int ratio = (distToPlayer * 255) / viewDist;
 			return EColors.changeBrightness(0xffffffff, ratio);

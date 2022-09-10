@@ -16,6 +16,7 @@ public class StoneGroundClutter extends Entity {
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		setCollisionBox(0, 0, 0, 0);
+		invincible = true;
 	}
 	
 	@Override

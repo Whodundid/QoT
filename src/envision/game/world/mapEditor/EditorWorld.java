@@ -9,6 +9,7 @@ import envision.game.world.mapEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.util.EntitySpawn;
 import envision.game.world.util.Region;
 import envision.game.world.worldTiles.WorldTile;
+import envision.layers.LayerSystem;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.ExpandableGrid;
 import eutil.datatypes.util.AnchorPoint;
@@ -40,6 +41,7 @@ public class EditorWorld implements IGameWorld {
 	private final EArrayList<Region> regionData = new EArrayList<>();
 	private PlayerSpawnPoint playerSpawn;
 	private boolean underground = false;
+	protected LayerSystem layers = new LayerSystem();
 	
 	//--------------
 	// Constructors
@@ -83,6 +85,11 @@ public class EditorWorld implements IGameWorld {
 			var ent = spawn.getEntity(worldIn);
 			var obj = EditorObject.of(ent);
 			entitiesInWorld.add(obj);
+			entitySpawns.add(spawn);
+		}
+		
+		for (Region r : worldIn.getRegionData()) {
+			regionData.add(r);
 		}
 	}
 	
@@ -98,6 +105,17 @@ public class EditorWorld implements IGameWorld {
 	
 	public EditorWorld fillWith(WorldTile t) { return fillWith(t, true); }
 	public EditorWorld fillWith(WorldTile t, boolean randomize) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				var tile = WorldTile.randVariant(t).setWorldPos(j, i);
+				worldData.set(EditorObject.of(tile), j, i);
+			}
+		}
+		return this;
+	}
+	
+	public EditorWorld fillWith(int layer, WorldTile t) { return fillWith(t, true); }
+	public EditorWorld fillWith(int layer, WorldTile t, boolean randomize) {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				var tile = WorldTile.randVariant(t).setWorldPos(j, i);
@@ -154,7 +172,7 @@ public class EditorWorld implements IGameWorld {
 			for (int j = 0; j < width; j++) {
 				var obj = worldData.get(j, i);
 				WorldTile tile = (obj != null) ? obj.getTile() : null;
-				actualWorld.setTileAt(tile, i, j);
+				actualWorld.setTileAt(tile, j, i);
 			}
 		}
 		

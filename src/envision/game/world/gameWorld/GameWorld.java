@@ -10,8 +10,10 @@ import envision.game.world.mapEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.util.EntitySpawn;
 import envision.game.world.util.Region;
 import envision.game.world.worldTiles.WorldTile;
+import envision.layers.LayerSystem;
 import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.EArrayList;
+import eutil.debug.Inefficient;
 import eutil.math.EDimension;
 import eutil.math.EDimensionI;
 import eutil.math.ENumUtil;
@@ -46,6 +48,13 @@ public class GameWorld implements IGameWorld {
 	protected EnvisionProgram worldLoadScript;
 	protected WorldRenderer worldRenderer;
 	protected boolean underground = false;
+	protected LayerSystem layers = new LayerSystem();
+	
+	/** The current time of day measured in game ticks. */
+	protected long timeOfDay = 0l;
+	/** The full length of one day measured in game ticks.
+	 *  Default is 10 min based on 60 tps. */
+	protected long lengthOfDay = 36000l;
 	
 	protected final WorldFileSystem worldFileSystem;
 	
@@ -146,7 +155,26 @@ public class GameWorld implements IGameWorld {
 	// Methods
 	//---------
 	
-	public void onUpdate() {
+	public void onInitialLoad() {
+		if (worldLoadScript != null) {
+			try {
+				QoT.envision.runProgram(worldLoadScript);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (QoT.thePlayer != null) {
+			addEntity(QoT.thePlayer);
+			QoT.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
+		}
+	}
+	
+	public void onGameTick() {
+		//update time of day
+		if (timeOfDay++ >= lengthOfDay) timeOfDay = 0;
+		
 		//add all incoming game objects
 		if (toAdd.isNotEmpty()) {
 			for (GameObject o : toAdd) {
@@ -166,15 +194,14 @@ public class GameWorld implements IGameWorld {
 			}
 			toDelete.clear();
 		}
+		
+		updateEntities();
+		updateRegions();
 	}
 	
 	public void setPlayerSpawnPosition(int x, int y) {
 		playerSpawn.setPos(x, y);
 	}
-	
-	//---------
-	// Regions
-	//---------
 	
 	public void addRegion(Region regionIn) {
 		regionData.add(regionIn);
@@ -184,9 +211,10 @@ public class GameWorld implements IGameWorld {
 		for (int i = 0; i < entityData.size(); i++) {
 			GameObject e = entityData.get(i);
 			if (e != null) {
-				e.onLivingUpdate();
+				e.onGameTick();
 			}
 		}
+		
 		//remove null entities
 		int nullEntities = 0;
 		for (int i = 0; i < entityData.size(); i++) {
@@ -202,9 +230,9 @@ public class GameWorld implements IGameWorld {
 		
 		//temporary world tile update
 		
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				WorldTile t = worldData[x][y];
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				WorldTile t = worldData[y][x];
 				if (t != null) t.onWorldTick();
 			}
 		}
@@ -214,24 +242,23 @@ public class GameWorld implements IGameWorld {
 	 * Iterates across each region and then each entity to see if an entity is
 	 * entering or exiting it.
 	 */
+	@Inefficient(reason="Could impact performance if there are too many regions/entities in world")
 	protected void updateRegions() {
 		//this is not efficient. :')
 		
 		for (Region r : regionData) {
-			EDimensionI rDims = r.getDimensions();
+			EDimensionI rDims = r.getRegionDimensions();
 			//re-evaluate current region data
 			r.updateRegion();
 			
 			//check if any entities are in a region or are entering or exiting one
-			for (GameObject obj : entityData) {
-				if (obj instanceof Entity ent) {
-					EDimension entDims = ent.getDimensions();
-					
-					if (rDims.partiallyContains(entDims)) {
-						//check if 'r' already contains the entity
-						if (r.containsEntity(ent)) continue;
-						r.addEntity(ent);
-					}
+			for (Entity ent : entityData) {
+				EDimension entDims = ent.getCollisionDims();
+				
+				if (rDims.partiallyContains(entDims)) {
+					//check if 'r' already contains the entity
+					if (r.containsEntity(ent)) continue;
+					r.addEntity(ent);
 				}
 			}
 		}
@@ -282,15 +309,15 @@ public class GameWorld implements IGameWorld {
 	 * Returns the distance in pixels from one entity to another. Returns
 	 * -1 in the event that the entities aren't in the world or they are null.
 	 * 
-	 * @param ent1
-	 * @param ent2
+	 * @param a
+	 * @param b
 	 * @return
 	 */
-	public double getDistance(GameObject ent1, GameObject ent2) {
-		if (ent1 == null || ent2 == null) return -1;
-		if (!worldObjects.containsEach(ent1, ent2)) return -1;
+	public double getDistance(GameObject a, GameObject b) {
+		if (a == null || b == null) return -1;
+		if (!worldObjects.containsEach(a, b)) return -1;
 		
-		return ENumUtil.distance(ent1.midX, ent1.midY, ent2.midX, ent2.midY);
+		return ENumUtil.distance(a.midX, a.midY, b.midX, b.midY);
 	}
 	
 	public double distanceTo(GameObject ent, Point point) {
@@ -384,12 +411,15 @@ public class GameWorld implements IGameWorld {
 	
 	@Override
 	public WorldTile getTileAt(int xIn, int yIn) {
-		return worldData[xIn][yIn];
+		return worldData[yIn][xIn];
 	}
 	
 	@Override public EArrayList<GameObject> getObjectsInWorld() { return worldObjects; }
 	@Override public EArrayList<Entity> getEntitiesInWorld() { return entityData; }
 	public EArrayList<EntitySpawn> getEntitySpawns() { return entitySpawns; }
+	
+	public long getTimeOfDay() { return timeOfDay; }
+	public long getLengthOfDay() { return lengthOfDay; }
 	
 	/** Returns this world's rendering system. */
 	public WorldRenderer getWorldRenderer() { return worldRenderer; }
@@ -406,7 +436,7 @@ public class GameWorld implements IGameWorld {
 	@Override
 	public void setTileAt(WorldTile in, int xIn, int yIn) {
 		if (in != null) in.setWorldPos(xIn, yIn);
-		worldData[xIn][yIn] = in;
+		worldData[yIn][xIn] = in;
 	}
 	
 	/**
@@ -431,8 +461,17 @@ public class GameWorld implements IGameWorld {
 	
 	public GameWorld setLoaded(boolean val) { loaded = val && isFileLoaded(); return this; }
 	public GameWorld setWorldLoadScript(EnvisionProgram scriptIn) { worldLoadScript = scriptIn; return this; }
-	public GameWorld setZoom(double val) { zoom = val; zoom = ENumUtil.clamp(zoom, 0.25, 5); return this; }
+	public GameWorld setZoom(double val) { zoom = val; zoom = ENumUtil.clamp(zoom, 0.25, 10); return this; }
 	public GameWorld setUnderground(boolean val) { underground = val; return this; }
+	
+	public GameWorld setTimeOfDay(long timeInTicks) {
+		timeOfDay = ENumUtil.clamp(timeInTicks, 0, lengthOfDay);
+		return this;
+	}
+	public GameWorld setLengthOfDay(long timeInTicks) {
+		lengthOfDay = ENumUtil.clamp(timeInTicks, 0, Long.MAX_VALUE);
+		return this;
+	}
 	
 	public GameWorld fillWith(WorldTile t) { return fillWith(t, true); }
 	public GameWorld fillWith(WorldTile t, boolean randomize) {

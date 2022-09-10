@@ -15,6 +15,7 @@ import envision.game.world.mapEditor.editorTools.tools.Tool_Region;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Selector;
 import envision.game.world.mapEditor.editorTools.tools.Tool_Shape;
 import envision.game.world.worldTiles.WorldTile;
+import envision.inputHandlers.Mouse;
 import eutil.datatypes.BoxList;
 
 public class ToolHandler {
@@ -22,6 +23,7 @@ public class ToolHandler {
 	MapEditorScreen editor;
 	
 	private int button = -1;
+	private int lastMx = -1, lastMy = -1;
 	
 	public enum ToolEvent { PRESS, RELEASE, UPDATE; }
 	
@@ -67,6 +69,25 @@ public class ToolHandler {
 	// Event Methods
 	//---------------
 	
+	public void drawCurrentTool(double x, double y, double w, double h) {
+		switch (editor.getSettings().getCurrentTool()) {
+		case SELECTOR: selectorTool.drawTool(x, y, w, h); break;
+		case ADD_REGION: regionTool.drawTool(x, y, w, h); break;
+		case BRUSH: break;
+		case ERASER: break; //always press
+		case EYEDROPPER: break; //always press
+		case LINE: break;
+		case MAGICWAND: break; //always press
+		case MOVE: break;
+		case PAINTBUCKET: break;
+		case PENCIL: break;
+		case RECTSELECT: break;
+		case SHAPE: break;
+		case PLACE: placeTool.drawTool(x, y, w, h); break;
+		default: break;
+		}
+	}
+	
 	public void handleToolPress(int buttonIn) {
 		EditorToolType tool = editor.getSettings().getCurrentTool();
 		if (tool != null) {
@@ -85,15 +106,24 @@ public class ToolHandler {
 	
 	public void handleToolUpdate() {
 		EditorToolType tool = editor.getSettings().getCurrentTool();
-		if (tool != null) {
-			handleTool(tool, ToolEvent.UPDATE);
+		if (tool != null && Mouse.isAnyButtonDown()) {
+			int mX = Mouse.getMx();
+			int mY = Mouse.getMy();
+			
+			if (lastMx != mX || lastMy != mY) {
+				lastMx = mX;
+				lastMy = mY;
+				handleTool(tool, ToolEvent.UPDATE);
+			}
 		}
 	}
 	
 	private void handleTool(EditorToolType toolIn, ToolEvent event) {
+		if (button < 0) return;
+		
 		switch (toolIn) {
 		case SELECTOR: selectorTool.distributeEvent(event, button); break;
-		case REGION: break;
+		case ADD_REGION: regionTool.distributeEvent(event, button); break;
 		case BRUSH: break;
 		case ERASER: eraserTool.distributeEvent(event, button); break; //always press
 		case EYEDROPPER: eyeDropperTool.distributeEvent(event, button); break; //always press

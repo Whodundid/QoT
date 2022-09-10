@@ -4,13 +4,15 @@ import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.world.mapEditor.MapEditorScreen;
 import envision.game.world.mapEditor.MapEditorSettings;
+import envision.game.world.mapEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.mapEditor.editorParts.util.EditorObject;
 import envision.game.world.mapEditor.editorTools.ToolHandler.ToolEvent;
 import envision.game.world.worldTiles.WorldTile;
 import envision.inputHandlers.Mouse;
+import envision.renderEngine.GLObject;
 import eutil.datatypes.Box2;
 
-public abstract class EditorTool {
+public abstract class EditorTool extends GLObject {
 	
 	protected MapEditorScreen editor;
 	protected MapEditorSettings settings;
@@ -39,6 +41,8 @@ public abstract class EditorTool {
 	
 	protected WorldTile getTile() { return editor.getActualWorld().getTileAt(wx, wy); }
 	protected WorldTile getTile(int x, int y) { return editor.getActualWorld().getTileAt(x, y); }
+	protected Box2<Integer, Integer> getHoverTileCoords() { return editor.getHoverTileCoords(); }
+	protected Box2<Integer, Integer> getHoverPixelCoords() { return editor.getHoverPixelCoords(); }
 	
 	protected void addObjectToWorld(GameObject obj) {
 		// logic to add object to world ~
@@ -79,6 +83,7 @@ public abstract class EditorTool {
 	// Abstract Methods
 	//------------------
 	
+	protected void drawTool(double x, double y, double w, double h) {}
 	protected void onPress() {}
 	protected void onRelease() {}
 	protected void onUpdate() {}
@@ -115,8 +120,7 @@ public abstract class EditorTool {
 	}
 	
 	private void onUpdateI() {
-		if (pressed) {
-			if (!Mouse.isAnyButtonDown()) { pressed = false; return; }
+		if (editor.getCurrentSidePanel() == SidePanelType.TERRAIN) {
 			if (!oldPoint.compare(editor.worldXPos, editor.worldYPos)) {
 				oldPoint.set(editor.worldXPos, editor.worldYPos); //update the old point
 				if (editor.isMouseInMap()) {
@@ -125,6 +129,18 @@ public abstract class EditorTool {
 				}
 			}
 		}
+		else {
+			oldPoint.set(editor.worldXPos, editor.worldYPos); //update the old point
+			if (editor.isMouseInMap()) {
+				updateWorldPoint();
+				onUpdate();
+			}
+		}
+
+		
+//		if (pressed) {
+
+//		}
 	}
 	
 	private void updateWorldPoint() {

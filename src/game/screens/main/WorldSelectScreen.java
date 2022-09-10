@@ -41,8 +41,8 @@ public class WorldSelectScreen extends GameScreen {
 		
 		defaultWorld = new WindowButton(this, bw, midY - 200, w, 45, "Default Map");
 		loadWorld = new WindowButton(this, bw, defaultWorld.endY + 5, w, 45, "Load World");
-		lastWorld = new WindowButton(this, bw, loadWorld.endY + 100, w, 45, QoTSettings.lastMap.get());
-		lastEditor = new WindowButton(this, bw, lastWorld.endY + 40, w, 45, QoTSettings.lastEditorMap.get());
+		lastWorld = new WindowButton(this, bw, loadWorld.endY + 100, w, 45, QoTSettings.lastMap.get().replace(".twld", ""));
+		lastEditor = new WindowButton(this, bw, lastWorld.endY + 40, w, 45, QoTSettings.lastEditorMap.get().replace(".twld", ""));
 		
 		back = new WindowButton(this, 5, endY - 45, 150, 40, "Back");
 		
@@ -107,22 +107,22 @@ public class WorldSelectScreen extends GameScreen {
 		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
 		else {
 			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
-			GameWorld w = QoT.loadWorld(new GameWorld(new File(last)));
+			File worldFile = new File(QoTSettings.getEditorWorldsDir(), last);
+			GameWorld w = QoT.loadWorld(new GameWorld(worldFile));
 			w.addEntity(p);
 			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
-			//Game.displayScreen(new WorldRenderTest(new File(last)), this);
 		}
 	}
 	
 	private void loadLastWorld() {
-		String last = QoTSettings.lastMap.get();
-		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
+		String last = QoTSettings.lastMap.get().replace(".twld", "");
+		if (last.isBlank() || last.isEmpty()) error = "There is no last game map!";
 		else {
 			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
-			GameWorld w = QoT.loadWorld(new GameWorld(new File(last)));
+			File worldFile = new File(QoTSettings.getEditorWorldsDir(), last);
+			GameWorld w = QoT.loadWorld(new GameWorld(worldFile));
 			w.addEntity(p);
 			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
-			//Game.displayScreen(new WorldRenderTest(new File(last)), this);
 		}
 	}
 	
@@ -131,9 +131,9 @@ public class WorldSelectScreen extends GameScreen {
 		
 		File f = explorer.getSelectedFile();
 		
-		if (f != null && f.exists() && f.getName().endsWith(".twld")) {
+		if (f != null && f.exists()) {
 			explorer.close();
-			QoTSettings.lastMap.set(f.getName());
+			QoTSettings.lastMap.set(f.getName().replace(".twld", ""));
 			QoTSettings.saveConfig();
 			
 			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));

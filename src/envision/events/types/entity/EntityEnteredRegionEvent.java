@@ -2,7 +2,7 @@ package envision.events.types.entity;
 
 import envision.events.EventType;
 import envision.game.entity.Entity;
-import envision.game.world.gameWorld.GameWorld;
+import envision.game.world.gameWorld.IGameWorld;
 import envision.game.world.util.Region;
 
 /**
@@ -18,7 +18,7 @@ public class EntityEnteredRegionEvent extends EntityEvent {
 	//--------
 	
 	/** The world that this took place in. */
-	private final GameWorld world;
+	private final IGameWorld world;
 	/** The Entity that's entering. */
 	private final Entity ent;
 	/** The region being entered. */
@@ -30,7 +30,7 @@ public class EntityEnteredRegionEvent extends EntityEvent {
 	// Constructors
 	//--------------
 	
-	public EntityEnteredRegionEvent(GameWorld worldIn, Entity entIn, Region regionIn, int xIn, int yIn) {
+	public EntityEnteredRegionEvent(IGameWorld worldIn, Entity entIn, Region regionIn, int xIn, int yIn) {
 		super(EventType.ENTITY_ENTERED_REGION, true);
 		world = worldIn;
 		ent = entIn;
@@ -44,7 +44,7 @@ public class EntityEnteredRegionEvent extends EntityEvent {
 	//---------
 	
 	/** Returns the world that this event took place in. */
-	public GameWorld getWorld() { return world; }
+	public IGameWorld getWorld() { return world; }
 	/** Returns the entity that performed the action. */
 	public Entity getEntity() { return ent; }
 	/** Returns the region that this took place in. */

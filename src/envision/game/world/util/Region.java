@@ -1,19 +1,24 @@
 package envision.game.world.util;
 
+import java.io.File;
+import java.util.Scanner;
+
 import envision.events.types.entity.EntityEnteredRegionEvent;
 import envision.events.types.entity.EntityExitedRegionEvent;
 import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.world.gameWorld.GameWorld;
+import envision.game.world.gameWorld.IGameWorld;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.EDimensionI;
 import game.QoT;
+import game.settings.QoTSettings;
 
-public class Region {
+public class Region extends GameObject {
 	
-	protected GameWorld world;
+	protected IGameWorld world;
 	protected String name;
 	public int startX, startY, endX, endY;
 	public int midX, midY;
@@ -22,12 +27,12 @@ public class Region {
 	protected boolean onlyRenderInEditor = true;
 	protected EArrayList<Entity> entitiesInside = new EArrayList<>();
 	
-	public Region(GameWorld worldIn, String nameIn) { this(worldIn, nameIn, 0, 0, 0, 0, 0xff55ff55); }
-	public Region(GameWorld worldIn, String nameIn, EColors colorIn) { this(worldIn, nameIn, 0, 0, 0, 0, colorIn.intVal); }
-	public Region(GameWorld worldIn, String nameIn, int colorIn) { this(worldIn, nameIn, 0, 0, 0, 0, colorIn); }
-	public Region(GameWorld worldIn, String nameIn, int sX, int sY, int eX, int eY) { this(worldIn, nameIn, sX, sY, eX, eY, 0xff55ff55); }
-	public Region(GameWorld worldIn, String nameIn, int sX, int sY, int eX, int eY, EColors colorIn) { this(worldIn, nameIn, sX, sY, eX, eY, colorIn.intVal); }
-	public Region(GameWorld worldIn, String nameIn, int sX, int sY, int eX, int eY, int colorIn) {
+	public Region(IGameWorld worldIn, String nameIn) { this(worldIn, nameIn, 0, 0, 0, 0, 0xff55ff55); }
+	public Region(IGameWorld worldIn, String nameIn, EColors colorIn) { this(worldIn, nameIn, 0, 0, 0, 0, colorIn.intVal); }
+	public Region(IGameWorld worldIn, String nameIn, int colorIn) { this(worldIn, nameIn, 0, 0, 0, 0, colorIn); }
+	public Region(IGameWorld worldIn, String nameIn, int sX, int sY, int eX, int eY) { this(worldIn, nameIn, sX, sY, eX, eY, 0xff55ff55); }
+	public Region(IGameWorld worldIn, String nameIn, int sX, int sY, int eX, int eY, EColors colorIn) { this(worldIn, nameIn, sX, sY, eX, eY, colorIn.intVal); }
+	public Region(IGameWorld worldIn, String nameIn, int sX, int sY, int eX, int eY, int colorIn) {
 		world = worldIn;
 		name = nameIn;
 		setDimensions(sX, sY, eX, eY);
@@ -37,6 +42,11 @@ public class Region {
 	@Override
 	public String toString() { return toSaveString(); }
 	
+	@Override
+	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+		
+	}
+	
 	public void updateRegion() {
 		//check to see if the entities that are said to be inside are still actually inside
 		var it = entitiesInside.iterator();
@@ -44,8 +54,8 @@ public class Region {
 			var ent = it.next();
 			if (ent == null) it.remove();
 			
-			EDimension entDims = ent.getDimensions();
-			if (!getDimensions().partiallyContains(entDims)) {
+			EDimension entDims = ent.getCollisionDims();
+			if (!getRegionDimensions().partiallyContains(entDims)) {
 				onEntityExited(ent, ent.startX, ent.startY);
 				it.remove();
 			}
@@ -64,7 +74,9 @@ public class Region {
 		midY = startY + height / 2;
 	}
 	
-	public EDimensionI getDimensions() { return new EDimensionI(startX, startY, endX, endY); }
+	public EDimensionI getRegionDimensions() {
+		return new EDimensionI(startX, startY, endX, endY);
+	}
 	
 	public void moveRegion(int x, int y) {
 		startX += x;
@@ -80,6 +92,15 @@ public class Region {
 	
 	protected synchronized void onEntityEntered(Entity in, int xPos, int yPos) {
 		QoT.getEventHandler().postEvent(new EntityEnteredRegionEvent(world, in, this, xPos, yPos));
+		if (in == QoT.thePlayer) {
+			if (world.getWorldName().equals("new")) {
+				QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")));
+				QoT.theWorld.setUnderground(true);
+			}
+			else if (world.getWorldName().equals("cave")) {
+				QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+			}
+		}
 	}
 	protected synchronized void onEntityExited(Entity in, int xPos, int yPos) {
 		QoT.getEventHandler().postEvent(new EntityExitedRegionEvent(world, in, this, xPos, yPos));
@@ -104,7 +125,7 @@ public class Region {
 	}
 	
 	public String getName() { return name; }
-	public GameWorld getWorld() { return world; }
+	public IGameWorld getWorld() { return world; }
 	public int getColor() { return regionColor; }
 	public boolean onlyRenderInEditor() { return onlyRenderInEditor; }
 	public Region setOnlyRenderInEditor(boolean val) { onlyRenderInEditor = val; return this; }
@@ -115,14 +136,15 @@ public class Region {
 	
 	public static Region parseRegion(GameWorld world, String line) {
 		try {
-			String[] parts = line.split(" ");
-			int i = (parts.length == 7) ? 1 : 0;
-			String name = parts[i++];
-			int color = Integer.valueOf(parts[i++]);
-			int sX = Integer.valueOf(parts[i++]);
-			int sY = Integer.valueOf(parts[i++]);
-			int eX = Integer.valueOf(parts[i++]);
-			int eY = Integer.valueOf(parts[i++]);
+			Scanner lineReader = new Scanner(line.substring(2));
+			//int i = (parts.length == 7) ? 1 : 0;
+			int sX = Integer.valueOf(lineReader.next());
+			int sY = Integer.valueOf(lineReader.next());
+			int eX = Integer.valueOf(lineReader.next());
+			int eY = Integer.valueOf(lineReader.next());
+			int color = Integer.valueOf(lineReader.next());
+			String name = lineReader.nextLine().trim();
+			lineReader.close();
 			return new Region(world, name, sX, sY, eX, eY, color);
 		}
 		catch (Exception e) {
@@ -132,7 +154,10 @@ public class Region {
 	}
 	
 	public String toSaveString() {
-		return "r " + getName() + " " + getColor() + " " + startX + " " + startY + " " + endX + " " + endY;
+		return "r " + startX + " " + startY + " " + endX + " " + endY + " " + getColor() + " " + getName();
 	}
+	
+	/** Don't know for regions yet... */
+	@Override public int getInternalSaveID() { return 0; }
 	
 }

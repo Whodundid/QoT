@@ -1,6 +1,7 @@
 package envision.game.world.mapEditor.editorParts.sidePanel.toolPanels.regionTool;
 
 import envision.game.world.gameWorld.GameWorld;
+import envision.game.world.gameWorld.IGameWorld;
 import envision.game.world.mapEditor.MapEditorScreen;
 import envision.game.world.mapEditor.editorParts.sidePanel.EditorSidePanel;
 import envision.game.world.mapEditor.editorParts.sidePanel.SidePanel;
@@ -18,7 +19,6 @@ import envision.windowLib.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
-import eutil.math.EDimension;
 import eutil.math.ENumUtil;
 
 public class RegionSidePanel extends SidePanel {
@@ -56,7 +56,7 @@ public class RegionSidePanel extends SidePanel {
 	public void loadRegions() {
 		regionList.clear();
 		
-		GameWorld world = editor.getActualWorld();
+		IGameWorld world = editor.getEditorWorld();
 		EArrayList<Region> regions = world.getRegionData();
 		for (Region r : regions) {
 			TextAreaLine<Region> line = new TextAreaLine(regionList, r.getName()) {
@@ -83,11 +83,14 @@ public class RegionSidePanel extends SidePanel {
 	
 	@Override
 	public void onAction(IActionObject object, Object... args) {
-		if (object == edit) { edit(); }
-		if (object == delete) { delete(); }
+		if (object == edit) edit();
+		if (object == delete) delete();
 		
 		if (object instanceof WindowDialogBox b) {
-			if (args.length >= 1 && args[0] instanceof Integer code && b.getGenericObject() instanceof TextAreaLine line && line.getGenericObject() instanceof Region) {
+			if (args.length >= 1 && args[0] instanceof Integer code &&
+				b.getGenericObject() instanceof TextAreaLine line &&
+				line.getGenericObject() instanceof Region)
+			{
 				try {
 					switch (code) {
 					case 1: onDelete(line); break;
@@ -106,10 +109,10 @@ public class RegionSidePanel extends SidePanel {
 	private void edit(TextAreaLine<Region> lineIn) {
 		if (lineIn == null) {
 			TextAreaLine<Region> line = regionList.getCurrentLine();
-			if (line == null) { return; }
+			if (line == null) return;
 			
 			Region r = line.getGenericObject();
-			if (r == null) { throw new RuntimeException("Region on line: '" + line + "' is null!"); }
+			if (r == null) throw new RuntimeException("Region on line: '" + line + "' is null!");
 			
 			openEditor(line);
 		}
@@ -188,9 +191,5 @@ public class RegionSidePanel extends SidePanel {
 	}
 	
 	//-----------------------------------------------------------------------
-	
-	public void createRegion(EDimension dims) {
-		
-	}
 	
 }

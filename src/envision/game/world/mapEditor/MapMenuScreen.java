@@ -48,7 +48,7 @@ public class MapMenuScreen extends GameScreen {
 		loadCur = new WindowButton(this, nameField.endX + 10, nameLabel.endY + 19, nameField.height + 1, nameField.height + 1);
 		loadCur.setButtonTexture(EditorTextures.play);
 		
-		nameField.setText(QoTSettings.lastEditorMap.get());
+		nameField.setText(QoTSettings.lastEditorMap.get().replace(".twld", ""));
 		
 		addObject(newMap, mapDir);
 		addObject(back);
@@ -93,7 +93,7 @@ public class MapMenuScreen extends GameScreen {
 	private void loadMap() {
 		if (nameField.isNotEmpty()) {
 			String lastMap = nameField.getText();
-			lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
+			//lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
 			
 			QoTSettings.lastEditorMap.set(lastMap);
 			QoTSettings.saveConfig();
@@ -120,7 +120,7 @@ public class MapMenuScreen extends GameScreen {
 		
 		File f = explorer.getSelectedFile();
 		
-		if (f != null && f.exists() && f.getName().endsWith(".twld")) {
+		if (f != null && f.exists()) {
 			QoTSettings.lastEditorMap.set(f.getName());
 			QoTSettings.saveConfig();
 			explorer.close();

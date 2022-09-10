@@ -37,7 +37,7 @@ public class TestGrass extends WorldTile {
 	}
 	
 	@Override
-	public void renderTile(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		double wh = h * wallHeight; //wh == 'wallHeight'
 		
 		if (isWall) {

@@ -15,6 +15,7 @@ public class Bush0 extends Entity {
 		sprite = BushTextures.bush_0;
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		setCollisionBox(midX - 10, midY - 5, midX + 10, midY + 10);
+		invincible = true;
 	}
 	
 	@Override

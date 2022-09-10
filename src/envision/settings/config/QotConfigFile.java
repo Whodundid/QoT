@@ -117,7 +117,7 @@ public class QotConfigFile {
 	private void parseFile() {
 		if (configPath.exists()) {
 			try (var reader = new LineReader(configPath)) {
-				while (reader.hasNext()) {
+				while (reader.hasNextLine()) {
 					String line = reader.nextLine();
 					if (line.startsWith("#")) continue; //comment identifier
 					if (line.length() == 1) break; //ignore one character long lines
@@ -156,7 +156,7 @@ public class QotConfigFile {
 		if (configPath.exists()) {
 			
 			try (var reader = new LineReader(configPath)) {
-				while (reader.hasNext()) {
+				while (reader.hasNextLine()) {
 					String line = reader.nextLine();
 					if (line.startsWith("#")) continue; //comment identifier
 					if (line.length() == 1) break; //ignore one character long lines

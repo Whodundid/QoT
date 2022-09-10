@@ -13,6 +13,7 @@ public class Barrel extends Entity {
 		setTexture(HouseTextures.barrel);
 		setMaxHealth(5);
 		setHealth(5);
+		setExperienceRewardedOnKill(1);
 	}
 	
 	@Override

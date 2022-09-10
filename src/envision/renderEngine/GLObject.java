@@ -35,13 +35,23 @@ public abstract class GLObject {
 	
 	
 	/** Draws the toString representation of an object at the specified position. */
-	public static double drawString(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, color, false, false); }
+	public static double drawString(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, 1.0, 1.0, color, false, false); }
 	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredString(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, color, true, false); }
+	public static double drawCenteredString(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, 1.0, 1.0, color, true, false); }
 	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringWithShadow(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, color, false, true); }
+	public static double drawStringWithShadow(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, 1.0, 1.0, color, false, true); }
 	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredStringWithShadow(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, color, true, true); }
+	public static double drawCenteredStringWithShadow(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, 1.0, 1.0, color, true, true); }
+	
+	
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawString(Object o, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, scaleX, scaleY, color, false, false); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawCenteredString(Object o, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, scaleX, scaleY, color, true, false); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringWithShadow(Object o, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, scaleX, scaleY, color, false, true); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawCenteredStringWithShadow(Object o, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, scaleX, scaleY, color, true, true); }
 	
 	
 	/** Draws a String at the specified position. */
@@ -57,13 +67,35 @@ public abstract class GLObject {
 	
 	
 	/** Draws a String at the specified position. */
-	public static double drawString(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, color, false, false); }
+	public static double drawString(String text, double x, double y, double scaleX, double scaleY) { return drawString(text, x, y, scaleX, scaleY, EColors.white.intVal); }
 	/** Draws a String at the specified position. */
-	public static double drawCenteredString(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, color, true, false); }
+	public static double drawString(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawString(text, x, y, scaleX, scaleY, colorIn.intVal); }
 	/** Draws a String at the specified position. */
-	public static double drawStringWithShadow(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, color, false, true); }
+	public static double drawCenteredString(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawCenteredString(text, x, y, scaleX, scaleY, colorIn.intVal); }
 	/** Draws a String at the specified position. */
-	public static double drawCenteredStringWithShadow(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, color, true, true); }
+	public static double drawStringWithShadow(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringWithShadow(text, x, y, scaleX, scaleY, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredStringWithShadow(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawCenteredStringWithShadow(text, x, y, scaleX, scaleY, colorIn.intVal); }
+	
+	
+	/** Draws a String at the specified position. */
+	public static double drawString(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, 1.0, 1.0, color, false, false); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredString(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, 1.0, 1.0, color, true, false); }
+	/** Draws a String at the specified position. */
+	public static double drawStringWithShadow(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, 1.0, 1.0, color, false, true); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredStringWithShadow(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, 1.0, 1.0, color, true, true); }
+	
+	
+	/** Draws a String at the specified position. */
+	public static double drawString(String text, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(text, x, y, scaleX, scaleY, color, false, false); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredString(String text, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(text, x, y, scaleX, scaleY, color, true, false); }
+	/** Draws a String at the specified position. */
+	public static double drawStringWithShadow(String text, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(text, x, y, scaleX, scaleY, color, false, true); }
+	/** Draws a String at the specified position. */
+	public static double drawCenteredStringWithShadow(String text, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(text, x, y, scaleX, scaleY, color, true, true); }
 	
 	
 	/** Draws the toString representation of an object at the specified position. */
@@ -94,6 +126,38 @@ public abstract class GLObject {
 	public static double drawStringS(String text, double x, double y, int color) { return drawStringWithShadow(text, x, y, color); }
 	/** Draws a String at the specified position. */
 	public static double drawStringCS(String text, double x, double y, int color) { return drawCenteredStringWithShadow(text, x, y, color); }
+	
+	
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringC(Object o, double x, double y, double scaleX, double scaleY) { return drawStringC(toStr(o), x, y, scaleX, scaleY, EColors.white); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringC(Object o, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringC(toStr(o), x, y, scaleX, scaleY, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringS(Object o, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringS(toStr(o), x, y, scaleX, scaleY, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringCS(Object o, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringCS(toStr(o), x, y, scaleX, scaleY, colorIn.intVal); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringC(Object o, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredString(toStr(o), x, y, scaleX, scaleY, color); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringS(Object o, double x, double y, double scaleX, double scaleY, int color) { return drawStringWithShadow(toStr(o), x, y, scaleX, scaleY, color); }
+	/** Draws the toString representation of an object at the specified position. */
+	public static double drawStringCS(Object o, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredStringWithShadow(toStr(o), x, y, scaleX, scaleY, color); }
+	
+	
+	/** Draws a String at the specified position. */
+	public static double drawStringC(String text, double x, double y, double scaleX, double scaleY) { return drawStringC(text, x, y, scaleX, scaleY, EColors.white.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawStringC(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringC(text, x, y, scaleX, scaleY, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawStringS(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringS(text, x, y, scaleX, scaleY, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawStringCS(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringCS(text, x, y, scaleX, scaleY, colorIn.intVal); }
+	/** Draws a String at the specified position. */
+	public static double drawStringC(String text, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredString(text, x, y, scaleX, scaleY, color); }
+	/** Draws a String at the specified position. */
+	public static double drawStringS(String text, double x, double y, double scaleX, double scaleY, int color) { return drawStringWithShadow(text, x, y, scaleX, scaleY, color); }
+	/** Draws a String at the specified position. */
+	public static double drawStringCS(String text, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredStringWithShadow(text, x, y, scaleX, scaleY, color); }
 	
 	/** Wrapper for EStringBuilder's getStringWidth. */
 	public static int getStringWidth(String text) { return EStringOutputFormatter.getStringWidth(text); }
@@ -312,8 +376,11 @@ public abstract class GLObject {
 			//as far as I am concerned, this value might as well have come from the ether..
 			//However, it's necessary in order to prevent weird texture artifacts from being
 			//drawn at the bottom of the texture itself
-			final double adjustment = 0.0019836425781818436357012429;
-			tv(flip, rotation, x, y, x + w, y + h + adjustment);
+			//
+			//modified by adding 0.1 to original value
+			//final double adjustment = 0.1019836425781818436357012429;
+			final double adjustment = 0.5;
+			tv(flip, rotation, x, y, x + w + adjustment, y + h + adjustment);
 			
 			draw();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);

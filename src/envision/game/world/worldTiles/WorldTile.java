@@ -3,10 +3,12 @@ package envision.game.world.worldTiles;
 import envision.game.GameObject;
 import envision.game.entity.Entity;
 import envision.game.world.gameWorld.IGameWorld;
+import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
+import game.QoT;
 
 public abstract class WorldTile extends GameObject implements Comparable<WorldTile> {
 	
@@ -172,7 +174,8 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	 * @param brightness
 	 */
 	@SuppressWarnings("unused")
-	public void renderTile(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	@Override
+	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		double wh = h * wallHeight; //wh == 'wallHeight'
 		
 		WorldTile tb = null; // tb == 'tileBelow'
@@ -180,8 +183,8 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 		
 		Rotation rot = (rotation != null) ? rotation : Rotation.UP;
 		
-		if ((worldY + 1) < world.getHeight()) tb = world.getTileAt(worldX, worldY + 1);
 		if ((worldY - 1) >= 0) ta = world.getTileAt(worldX, worldY - 1);
+		if ((worldY + 1) < world.getHeight()) tb = world.getTileAt(worldX, worldY + 1);
 		
 		if (isWall) {
 			//determine tile brightness
@@ -265,6 +268,16 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 			else {
 				drawHRect(x, y, x + w, y + h, 1, EColors.chalk);
 			}
+		}
+		
+		if (QoT.isDebugMode()) {
+			String tText = "[" + worldX + "," + worldY + "] " + this;
+			String taText = (ta != null) ? "[" + ta.worldX + "," + ta.worldY + "] " + ta.getName(): "null";
+			String tbText = (tb != null) ? "[" + tb.worldX + "," + tb.worldY + "] " + tb.getName(): "null";
+			
+			drawString(tText, x, y, 0.7, 0.7, EColors.yellow);
+			drawString(taText, x, y + FontRenderer.FONT_HEIGHT, 0.7, 0.7, EColors.green);
+			drawString(tbText, x, y + FontRenderer.FONT_HEIGHT * 2, 0.7, 0.7, EColors.red);
 		}
 	}
 	

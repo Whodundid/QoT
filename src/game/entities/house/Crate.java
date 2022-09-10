@@ -15,7 +15,8 @@ public class Crate extends Entity {
 		setMaxHealth(5);
 		setHealth(5);
 		
-		this.setCollisionBox(startX + 2, startY + 14, endX - 2, endY - 1);
+		setCollisionBox(startX + 2, startY + 14, endX - 2, endY - 1);
+		setExperienceRewardedOnKill(2);
 	}
 	
 	@Override

@@ -16,8 +16,8 @@ public class Water extends WorldTile {
 	}
 	
 	@Override
-	public void renderTile(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
-		super.renderTile(world, x, y, w, h, brightness, mouseOver);
+	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+		super.draw(world, x, y, w, h, brightness, mouseOver);
 	}
 	
 	@Override

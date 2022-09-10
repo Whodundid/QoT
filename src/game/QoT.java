@@ -316,8 +316,7 @@ public class QoT implements EnvisionGame {
 		
 		//only update if world actually exists, is loaded, and is not paused
 		if (theWorld != null && theWorld.isLoaded() && !pause) {
-			theWorld.onUpdate();
-			theWorld.updateEntities();
+			theWorld.onGameTick();
 		}
 	}
 	
@@ -474,18 +473,24 @@ public class QoT implements EnvisionGame {
 	 */
 	public static GameWorld loadWorld(GameWorld worldIn) {
 		//unload the last world (if there was one)
-		if (theWorld != null) theWorld.setLoaded(false);
+		if (theWorld != null) {
+			theWorld.setLoaded(false);
+			//TODO This should be removed from worlds
+			if (worldIn != null) worldIn.setZoom(theWorld.getZoom());
+		}
 		
 		theWorld = worldIn;
 		
 		if (theWorld != null) {
 			//assign as last world loaded
-			QoTSettings.lastMap.set(theWorld.getWorldName());
+			QoTSettings.lastMap.set(theWorld.getWorldName().replace(".twld", ""));
 			
 			//load the world
 			theWorld.setLoaded(true);
+			theWorld.onInitialLoad();
 			pause = false;
 			renderWorld = true;
+			if (currentScreen != null) currentScreen.onWorldLoaded();
 			
 			//check if loaded
 			if (!theWorld.isLoaded()) warn("Failed to load world: ");

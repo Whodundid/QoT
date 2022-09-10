@@ -22,7 +22,7 @@ public class FPS_CMD extends TerminalCommand {
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
-			termIn.writeln("FPS: " + QoT.getFPS(), EColors.lime);
+			termIn.writeln("FPS: " + QoT.getTargetFPS(), EColors.lime);
 		}
 		else if (args.hasOne()) {
 			String arg = args.get(0);
