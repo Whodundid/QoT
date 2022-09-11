@@ -165,6 +165,8 @@ public class GameWorld implements IGameWorld {
 			}
 		}
 		
+		worldRenderer.onWorldLoaded();
+		
 		if (QoT.thePlayer != null) {
 			addEntity(QoT.thePlayer);
 			QoT.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());

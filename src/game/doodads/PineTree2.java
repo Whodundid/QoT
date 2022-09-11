@@ -6,29 +6,37 @@ import eutil.random.ERandomUtil;
 import game.assets.textures.doodads.trees.TreeTextures;
 import game.entities.EntityList;
 
-public class PineTree extends Entity {
+public class PineTree2 extends Entity {
 
-	public PineTree() { this(0, 0); }
-	public PineTree(int posX, int posY) {
-		super("pine");
-		init(posX, posY, 200, 200);
-		sprite = TreeTextures.tree_pine_0;
+	public PineTree2() { this(0, 0); }
+	public PineTree2(int posX, int posY) {
+		super("pine2");
+		double baseX = 128;
+		double baseY = 237;
+		double scaleFactor = ERandomUtil.getRoll(0.5, 1.0);
+		System.out.println(this + " : " + scaleFactor);
+		int scaleX = (int) (baseX * scaleFactor);
+		int scaleY = (int) (baseY * scaleFactor);
+		
+		init(posX, posY, scaleX, scaleY);
+		sprite = TreeTextures.tree_pine_2;
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
-		double sx = (facing == Rotation.RIGHT) ? 15 : 10;
-		double ex = (facing == Rotation.RIGHT) ? 10 : 15;
+		double sx = (facing == Rotation.RIGHT) ? 10 : 10;
+		double ex = (facing == Rotation.RIGHT) ? 4 : 10;
 		
-		setCollisionBox(midX - sx, endY - 15, midX + ex, endY);
+		setCollisionBox(midX - sx, endY - 10, midX + ex, endY);
 		invincible = true;
 	}
 	
 	@Override
 	public int getInternalSaveID() {
-		return EntityList.PINE_TREE.ID;
+		return EntityList.PINE_TREE_2.ID;
 	}
 	
 	@Override
 	public void onLivingUpdate() {
+		//System.out.println(facing);
 		/*
 		double distToPlayer = world.getDistance(this, QoT.thePlayer);
 		

@@ -17,8 +17,11 @@ public class BirchTree extends Entity {
 		
 		double sx = (facing == Rotation.RIGHT) ? 15 : 5;
 		double ex = (facing == Rotation.RIGHT) ? 5 : 15;
-		
 		setCollisionBox(midX - sx, endY - 15, midX + ex, endY);
+		
+		//System.out.println("DIMS: " + getDimensions());
+		//System.out.println("COLD: " + getCollisionDims());
+		
 		invincible = true;
 	}
 	

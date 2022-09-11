@@ -58,8 +58,8 @@ public abstract class EditorTool extends GLObject {
 		int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
 		int mwcy = (int) Math.floor(cmy / th); //mid world coords y
 		
-		ent.worldX = wx - mwcx;
-		ent.worldY = wy - mwcy;
+		ent.world = editor.getEditorWorld();
+		ent.setWorldPos(wx - mwcx, wy - mwcy);
 		
 		//System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
 		editor.getEditorWorld().addEntity(ent);

@@ -44,6 +44,13 @@ public class WorldRenderer extends EGui {
 	
 	public WorldRenderer(GameWorld worldIn) {
 		world = worldIn;
+	}
+	
+	/**
+	 * Called when the world has just been loaded and just before it is about
+	 * to be rendered.
+	 */
+	public void onWorldLoaded() {
 		onWindowResized();
 		
 		if (world != null) {

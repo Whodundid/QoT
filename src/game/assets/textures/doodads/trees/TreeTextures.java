@@ -28,6 +28,7 @@ public class TreeTextures extends TextureLoader {
 	
 	tree_pine_0 = new GameTexture(textureDir, "tree_pine_0.png"),
 	tree_pine_1 = new GameTexture(textureDir, "tree_pine_1.png"),
+	tree_pine_2 = new GameTexture(textureDir, "tree_pine_2.png"),
 	birch_0 = new GameTexture(textureDir, "birch_0.png");
 	
 	//-----------
@@ -38,6 +39,7 @@ public class TreeTextures extends TextureLoader {
 	public void onRegister(TextureSystem sys) {
 		reg(sys, tree_pine_0);
 		reg(sys, tree_pine_1);
+		reg(sys, tree_pine_2);
 		reg(sys, birch_0);
 	}
 	

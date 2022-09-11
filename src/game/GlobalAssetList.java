@@ -6,6 +6,7 @@ import eutil.datatypes.EArrayList;
 import game.doodads.BirchTree;
 import game.doodads.Bush0;
 import game.doodads.PineTree;
+import game.doodads.PineTree2;
 import game.doodads.StoneGroundClutter;
 import game.entities.enemies.Goblin;
 import game.entities.enemies.Thyrah;
@@ -40,6 +41,7 @@ public class GlobalAssetList {
 		assets.add(new BirchTree());
 		assets.add(new Bush0());
 		assets.add(new StoneGroundClutter());
+		assets.add(new PineTree2());
 	}
 	
 	public static EArrayList<GameObject> getAssets() {
