@@ -1,9 +1,9 @@
 package game.screens.main;
 
-import envision.game.screens.GameScreen;
-import envision.game.sounds.SoundEngine;
-import envision.game.world.mapEditor.MapMenuScreen;
-import envision.game.world.worldTiles.categories.DungeonTiles;
+import envision.gameEngine.effects.sounds.SoundEngine;
+import envision.gameEngine.gameSystems.screens.GameScreen;
+import envision.gameEngine.world.worldEditor.MapMenuScreen;
+import envision.gameEngine.world.worldTiles.categories.DungeonTiles;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;

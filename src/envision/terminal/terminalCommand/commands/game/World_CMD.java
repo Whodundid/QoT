@@ -1,6 +1,6 @@
 package envision.terminal.terminalCommand.commands.game;
 
-import envision.game.world.gameWorld.GameWorld;
+import envision.gameEngine.world.gameWorld.GameWorld;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;

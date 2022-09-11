@@ -2,8 +2,8 @@ package game.screens.main;
 
 import java.io.File;
 
-import envision.game.screens.GameScreen;
-import envision.game.world.gameWorld.GameWorld;
+import envision.gameEngine.gameSystems.screens.GameScreen;
+import envision.gameEngine.world.gameWorld.GameWorld;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;

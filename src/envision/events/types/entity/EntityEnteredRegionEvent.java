@@ -1,9 +1,9 @@
 package envision.events.types.entity;
 
 import envision.events.EventType;
-import envision.game.entity.Entity;
-import envision.game.world.gameWorld.IGameWorld;
-import envision.game.world.util.Region;
+import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.worldUtil.Region;
 
 /**
  * A type of game event that is called whenever an entity enters a region

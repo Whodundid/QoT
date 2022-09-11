@@ -1,8 +1,8 @@
 package game.entities.enemies;
 
-import envision.game.entity.Enemy;
-import envision.game.entity.Entity;
-import envision.game.world.gameWorld.GameWorld;
+import envision.gameEngine.gameObjects.entity.Enemy;
+import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.world.gameWorld.GameWorld;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;

@@ -1,7 +1,7 @@
 package game.screens.character;
 
-import envision.game.entity.Entity;
-import envision.game.screens.GameScreen;
+import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.gameSystems.screens.GameScreen;
 import envision.inputHandlers.Keyboard;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;

@@ -1,6 +1,6 @@
 package game.screens.gameplay;
 
-import envision.game.screens.GameScreen;
+import envision.gameEngine.gameSystems.screens.GameScreen;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.WindowParent;
 import envision.windowLib.windowTypes.interfaces.IActionObject;

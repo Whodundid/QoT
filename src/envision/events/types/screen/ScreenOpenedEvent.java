@@ -1,7 +1,7 @@
 package envision.events.types.screen;
 
 import envision.events.EventType;
-import envision.game.screens.GameScreen;
+import envision.gameEngine.gameSystems.screens.GameScreen;
 
 public class ScreenOpenedEvent extends ScreenEvent {
 

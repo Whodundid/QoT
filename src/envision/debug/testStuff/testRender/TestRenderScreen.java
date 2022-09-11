@@ -10,9 +10,9 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-import envision.game.screens.GameScreen;
-import envision.game.world.gameWorld.GameWorld;
-import envision.game.world.worldTiles.WorldTile;
+import envision.gameEngine.gameSystems.screens.GameScreen;
+import envision.gameEngine.world.gameWorld.GameWorld;
+import envision.gameEngine.world.worldTiles.WorldTile;
 import envision.renderEngine.GLObject;
 import envision.renderEngine.shaders.ShaderProgram;
 import envision.renderEngine.shaders.Shaders;

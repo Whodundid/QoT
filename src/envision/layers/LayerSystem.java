@@ -2,7 +2,7 @@ package envision.layers;
 
 import java.util.Iterator;
 
-import envision.game.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.gameWorld.IGameWorld;
 import eutil.datatypes.EArrayList;
 
 public class LayerSystem implements Iterable<ScreenLayer> {

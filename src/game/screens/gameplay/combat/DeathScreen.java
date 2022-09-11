@@ -1,7 +1,7 @@
 package game.screens.gameplay.combat;
 
-import envision.game.screens.GameScreen;
-import envision.game.sounds.SoundEngine;
+import envision.gameEngine.effects.sounds.SoundEngine;
+import envision.gameEngine.gameSystems.screens.GameScreen;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;

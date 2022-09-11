@@ -1,6 +1,6 @@
 package game.entities.enemies;
 
-import envision.game.entity.Enemy;
+import envision.gameEngine.gameObjects.entity.Enemy;
 import eutil.random.ERandomUtil;
 import game.assets.textures.entity.EntityTextures;
 

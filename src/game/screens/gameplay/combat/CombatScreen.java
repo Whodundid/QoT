@@ -1,7 +1,7 @@
 package game.screens.gameplay.combat;
 
-import envision.game.entity.Entity;
-import envision.game.screens.GameScreen;
+import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.gameSystems.screens.GameScreen;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.WindowObject;
 import envision.windowLib.windowTypes.interfaces.IActionObject;

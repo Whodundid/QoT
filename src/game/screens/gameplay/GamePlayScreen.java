@@ -1,8 +1,8 @@
 package game.screens.gameplay;
 
-import envision.game.screens.GameScreen;
-import envision.game.sounds.SoundEngine;
-import envision.game.world.gameWorld.GameWorld;
+import envision.gameEngine.effects.sounds.SoundEngine;
+import envision.gameEngine.gameSystems.screens.GameScreen;
+import envision.gameEngine.world.gameWorld.GameWorld;
 import envision.inputHandlers.Keyboard;
 import envision.topOverlay.GameTopScreen;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;

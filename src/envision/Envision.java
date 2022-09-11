@@ -5,10 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import envision.events.EventHandler;
-import envision.game.entity.Player;
-import envision.game.screens.GameScreen;
-import envision.game.sounds.SoundEngine;
-import envision.game.world.gameWorld.GameWorld;
+import envision.gameEngine.effects.sounds.SoundEngine;
+import envision.gameEngine.gameObjects.entity.Player;
+import envision.gameEngine.gameSystems.screens.GameScreen;
+import envision.gameEngine.world.gameWorld.GameWorld;
 import envision.inputHandlers.Keyboard;
 import envision.inputHandlers.Mouse;
 import envision.inputHandlers.WindowResizeListener;

@@ -1,6 +1,6 @@
 package game.screens.character;
 
-import envision.game.entity.Entity;
+import envision.gameEngine.gameObjects.entity.Entity;
 import envision.windowLib.windowObjects.advancedObjects.WindowScrollList;
 import envision.windowLib.windowTypes.WindowObject;
 import envision.windowLib.windowTypes.interfaces.IActionObject;

@@ -1,7 +1,7 @@
 package game.items;
 
-import envision.game.items.Potion;
-import envision.game.items.Weapon;
+import envision.gameEngine.gameObjects.items.Potion;
+import envision.gameEngine.gameObjects.items.Weapon;
 import game.items.potions.healing.Healing_Lesser;
 import game.items.weapons.melee.swords.Sword_Wooden;
 

@@ -1,6 +1,6 @@
 package envision.util;
 
-import envision.game.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.gameWorld.IGameWorld;
 
 public interface IDrawable {
 	

@@ -1,6 +1,6 @@
 package envision.terminal.terminalCommand.commands.game;
 
-import envision.game.sounds.SoundEngine;
+import envision.gameEngine.effects.sounds.SoundEngine;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;

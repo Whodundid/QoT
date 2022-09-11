@@ -1,6 +1,6 @@
 package game.screens.character;
 
-import envision.game.items.Item;
+import envision.gameEngine.gameObjects.items.Item;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.windowLib.windowTypes.WindowObject;
 

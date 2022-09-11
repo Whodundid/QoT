@@ -1,0 +1,21 @@
+package envision.gameEngine.world.worldTiles.categories.nature;
+
+import envision.gameEngine.world.worldTiles.TileIDs;
+import envision.gameEngine.world.worldTiles.WorldTile;
+import game.assets.textures.world.nature.sand.SandTextures;
+
+public class RedSand extends WorldTile {
+	
+	public RedSand() {
+		super(TileIDs.RED_SAND);
+		setTexture(SandTextures.red_sand);
+		setWall(true);
+		wallHeight = 0.05;
+	}
+	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new RedSand());
+	}
+	
+}

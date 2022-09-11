@@ -1,6 +1,6 @@
 package game.doodads;
 
-import envision.game.entity.Entity;
+import envision.gameEngine.gameObjects.entity.Entity;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
 import game.assets.textures.doodads.trees.TreeTextures;
@@ -13,12 +13,13 @@ public class PineTree2 extends Entity {
 		super("pine2");
 		double baseX = 128;
 		double baseY = 237;
-		double scaleFactor = ERandomUtil.getRoll(0.5, 1.0);
-		System.out.println(this + " : " + scaleFactor);
-		int scaleX = (int) (baseX * scaleFactor);
-		int scaleY = (int) (baseY * scaleFactor);
+		//double scaleFactor = ERandomUtil.getRoll(0.5, 1.0);
+		//System.out.println(this + " : " + scaleFactor);
+		//int scaleX = (int) (baseX * scaleFactor);
+		//int scaleY = (int) (baseY * scaleFactor);
 		
-		init(posX, posY, scaleX, scaleY);
+		
+		init(posX, posY, (int) baseX, (int) baseY);
 		sprite = TreeTextures.tree_pine_2;
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		

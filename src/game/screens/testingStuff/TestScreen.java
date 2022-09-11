@@ -1,6 +1,6 @@
 package game.screens.testingStuff;
 
-import envision.game.screens.GameScreen;
+import envision.gameEngine.gameSystems.screens.GameScreen;
 import envision.inputHandlers.Keyboard;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowObjects.actionObjects.WindowTextField;

@@ -5,11 +5,11 @@ import java.util.Stack;
 
 import org.lwjgl.glfw.GLFW;
 
-import envision.game.entity.Entity;
-import envision.game.screens.GameScreen;
-import envision.game.world.gameWorld.GameWorld;
-import envision.game.world.mapEditor.NewMapCreatorScreen;
-import envision.game.world.worldTiles.WorldTile;
+import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.gameSystems.screens.GameScreen;
+import envision.gameEngine.world.gameWorld.GameWorld;
+import envision.gameEngine.world.worldEditor.NewMapCreatorScreen;
+import envision.gameEngine.world.worldTiles.WorldTile;
 import envision.inputHandlers.Keyboard;
 import envision.inputHandlers.Mouse;
 import envision.renderEngine.fontRenderer.FontRenderer;

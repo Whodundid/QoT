@@ -1,6 +1,6 @@
 package game.entities.house;
 
-import envision.game.entity.Entity;
+import envision.gameEngine.gameObjects.entity.Entity;
 import game.assets.textures.doodads.house.HouseTextures;
 import game.entities.EntityList;
 

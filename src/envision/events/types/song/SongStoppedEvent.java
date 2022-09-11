@@ -1,7 +1,7 @@
 package envision.events.types.song;
 
 import envision.events.EventType;
-import envision.game.sounds.Audio;
+import envision.gameEngine.effects.sounds.Audio;
 
 public class SongStoppedEvent extends SongEvent {
 	

@@ -1,7 +1,7 @@
 package game.screens.main;
 
-import envision.game.screens.GameScreen;
-import envision.game.sounds.SoundEngine;
+import envision.gameEngine.effects.sounds.SoundEngine;
+import envision.gameEngine.gameSystems.screens.GameScreen;
 import envision.inputHandlers.Mouse;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;

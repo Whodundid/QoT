@@ -1,6 +1,6 @@
 package game.particles;
 
-import envision.game.particles.Particle;
+import envision.gameEngine.effects.particles.Particle;
 import eutil.colors.EColors;
 import game.QoT;
 

@@ -2,7 +2,7 @@ package envision.terminal.terminalCommand.commands.game;
 
 import java.io.File;
 
-import envision.game.world.gameWorld.GameWorld;
+import envision.gameEngine.world.gameWorld.GameWorld;
 import envision.terminal.terminalCommand.commands.fileSystem.FileCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;

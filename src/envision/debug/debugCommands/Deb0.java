@@ -1,6 +1,6 @@
 package envision.debug.debugCommands;
 
-import envision.game.screens.ScreenLevel;
+import envision.gameEngine.gameSystems.screens.ScreenLevel;
 import envision.terminal.window.ETerminal;
 import envision.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
 import game.QoT;

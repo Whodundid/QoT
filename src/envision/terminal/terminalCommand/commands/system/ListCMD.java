@@ -1,7 +1,7 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import envision.game.screens.GameScreen;
-import envision.game.screens.ScreenRepository;
+import envision.gameEngine.gameSystems.screens.GameScreen;
+import envision.gameEngine.gameSystems.screens.ScreenRepository;
 import envision.terminal.terminalCommand.IListableCommand;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;

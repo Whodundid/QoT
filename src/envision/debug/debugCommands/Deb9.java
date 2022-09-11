@@ -1,6 +1,6 @@
 package envision.debug.debugCommands;
 
-import envision.game.entity.EntityLevel;
+import envision.gameEngine.gameObjects.entity.EntityLevel;
 import envision.terminal.window.ETerminal;
 import game.QoT;
 import game.screens.testingStuff.TestScreen;

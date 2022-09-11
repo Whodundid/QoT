@@ -1,7 +1,7 @@
 package game.items.weapons.melee.swords;
 
-import envision.game.entity.Entity;
-import envision.game.items.Weapon;
+import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.gameObjects.items.Weapon;
 import game.assets.textures.item.ItemTextures;
 import game.items.ItemList;
 

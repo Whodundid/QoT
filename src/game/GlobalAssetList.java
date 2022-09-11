@@ -1,7 +1,7 @@
 package game;
 
-import envision.game.GameObject;
-import envision.game.world.mapEditor.editorUtil.PlayerSpawnPoint;
+import envision.gameEngine.GameObject;
+import envision.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import eutil.datatypes.EArrayList;
 import game.doodads.BirchTree;
 import game.doodads.Bush0;

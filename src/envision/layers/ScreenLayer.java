@@ -1,6 +1,6 @@
 package envision.layers;
 
-import envision.game.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.gameWorld.IGameWorld;
 import envision.util.IDrawable;
 import envision.util.InsertionSort;
 import eutil.datatypes.EArrayList;

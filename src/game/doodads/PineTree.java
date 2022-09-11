@@ -1,6 +1,6 @@
 package game.doodads;
 
-import envision.game.entity.Entity;
+import envision.gameEngine.gameObjects.entity.Entity;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
 import game.assets.textures.doodads.trees.TreeTextures;

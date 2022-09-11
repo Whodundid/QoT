@@ -1,9 +1,9 @@
 package game.entities.player;
 
-import envision.game.entity.Entity;
-import envision.game.entity.Player;
-import envision.game.entity.PlayerStats;
-import envision.game.world.gameWorld.IGameWorld;
+import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.gameObjects.entity.Player;
+import envision.gameEngine.gameObjects.entity.PlayerStats;
+import envision.gameEngine.world.gameWorld.IGameWorld;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;

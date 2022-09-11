@@ -1,7 +1,7 @@
 package game.items.potions.healing;
 
-import envision.game.entity.Entity;
-import envision.game.items.Potion;
+import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.gameObjects.items.Potion;
 import game.items.ItemList;
 
 public class Healing_Lesser extends Potion {
