@@ -44,6 +44,7 @@ public class WindowButton<E> extends ActionObject<E> {
 	protected boolean drawString = true;
 	protected boolean drawDisabledColor = true;
 	protected boolean drawCentered = true;
+	protected boolean drawShadowed = true;
 	protected boolean drawSelected = false;
 	protected boolean acceptRightClicks = false;
 	protected GameTexture btnTexture = null;
@@ -155,8 +156,12 @@ public class WindowButton<E> extends ActionObject<E> {
 		if (drawString) {
 			scissor(startX + 1, startY + 1, endX - 1, endY - 1);
 			
-			if (drawCentered) drawStringC(displayString, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor);
-			else drawString(displayString, startX + textOffset, midY - FontRenderer.FONT_HEIGHT / 2 + 3, stringColor);
+			if (drawCentered) {
+				if (drawShadowed) drawStringCS(displayString, midX, midY - FontRenderer.HALF_FH + 3, stringColor);
+				else drawStringC(displayString, midX, midY - FontRenderer.HALF_FH + 3, stringColor);
+			}
+			else if (drawShadowed) drawStringS(displayString, startX + textOffset, midY - FontRenderer.HALF_FH + 3, stringColor);
+			else drawString(displayString, startX + textOffset, midY - FontRenderer.HALF_FH + 3, stringColor);
 			
 			endScissor();
 		}
@@ -203,6 +208,7 @@ public class WindowButton<E> extends ActionObject<E> {
 	}
 	
 	public void setDrawStringCentered(boolean val) { drawCentered = val; }
+	public void setDrawStringShadowed(boolean val) { drawShadowed = val; }
 	public void setDisplayStringOffset(int offsetIn) { textOffset = offsetIn; }
 	
 	//------------------

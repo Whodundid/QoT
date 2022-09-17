@@ -11,7 +11,7 @@ import eutil.strings.EStringUtil;
 public class Head extends FileCommand {
 	
 	public Head() {
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 	
 	@Override public String getName() { return "head"; }

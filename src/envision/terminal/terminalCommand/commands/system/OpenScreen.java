@@ -13,7 +13,7 @@ public class OpenScreen extends TerminalCommand {
 	
 	public OpenScreen() {
 		setCategory("System");
-		numArgs = -1;
+		expectedArgLength = -1;
 	}
 	
 	@Override public String getName() { return "openscreen"; }

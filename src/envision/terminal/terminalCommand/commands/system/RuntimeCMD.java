@@ -9,7 +9,7 @@ public class RuntimeCMD extends TerminalCommand {
 	
 	public RuntimeCMD() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "runtime"; }

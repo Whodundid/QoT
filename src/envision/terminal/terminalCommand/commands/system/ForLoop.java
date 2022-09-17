@@ -13,7 +13,7 @@ public class ForLoop extends TerminalCommand {
 	
 	public ForLoop() {
 		setCategory("System");
-		numArgs = 2;
+		expectedArgLength = 2;
 	}
 
 	@Override public String getName() { return "for"; }

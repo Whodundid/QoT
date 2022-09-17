@@ -11,7 +11,7 @@ import eutil.strings.EStringUtil;
 public class Cat extends FileCommand {
 	
 	public Cat() {
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 	
 	@Override public String getName() { return "cat"; }

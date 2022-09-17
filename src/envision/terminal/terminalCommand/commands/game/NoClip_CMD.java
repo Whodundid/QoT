@@ -9,7 +9,7 @@ public class NoClip_CMD extends TerminalCommand {
 	
 	public NoClip_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "noclip"; }

@@ -9,7 +9,7 @@ public class SpawnEntity_CMD extends TerminalCommand {
 	
 	public SpawnEntity_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "spawn_entity"; }

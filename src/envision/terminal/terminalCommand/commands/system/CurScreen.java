@@ -10,7 +10,7 @@ public class CurScreen extends TerminalCommand {
 	
 	public CurScreen() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "screen"; }

@@ -11,7 +11,7 @@ public class ClearObjects extends TerminalCommand {
 	
 	public ClearObjects() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "clearobj"; }

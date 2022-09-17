@@ -10,7 +10,7 @@ public class SaveWorld_CMD extends TerminalCommand {
 	
 	public SaveWorld_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "saveworld"; }

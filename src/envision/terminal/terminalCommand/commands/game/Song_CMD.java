@@ -15,7 +15,7 @@ public class Song_CMD extends TerminalCommand {
 	
 	public Song_CMD() {
 		setCategory("Game");
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 
 	@Override public String getName() { return "song"; }

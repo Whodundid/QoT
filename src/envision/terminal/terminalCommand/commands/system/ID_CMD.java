@@ -9,7 +9,7 @@ public class ID_CMD extends TerminalCommand {
 	
 	public ID_CMD() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "id"; }

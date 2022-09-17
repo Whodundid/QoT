@@ -11,7 +11,7 @@ import eutil.datatypes.EArrayList;
 public class Cp extends FileCommand {
 	
 	public Cp() {
-		numArgs = 2;
+		expectedArgLength = 2;
 	}
 	
 	@Override public String getName() { return "cp"; }

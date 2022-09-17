@@ -9,7 +9,7 @@ import eutil.datatypes.EArrayList;
 public class MkDir extends FileCommand {
 	
 	public MkDir() {
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 	
 	@Override public String getName() { return "mkdir"; }

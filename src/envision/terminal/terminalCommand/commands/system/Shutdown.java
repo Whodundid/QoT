@@ -10,7 +10,7 @@ public class Shutdown extends ConfirmationCommand {
 	public Shutdown() {
 		setCategory("System");
 		setConfirmationString("Warning: You are about to shut down the game engine! Do you wish to continue?");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 	
 	@Override public String getName() { return "shutdown"; }

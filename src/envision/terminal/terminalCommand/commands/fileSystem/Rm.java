@@ -10,7 +10,7 @@ import eutil.strings.EStringUtil;
 public class Rm extends FileCommand {
 	
 	public Rm() {
-		numArgs = 1;
+		expectedArgLength = 1;
 		setAcceptedModifiers("-r");
 	}
 	

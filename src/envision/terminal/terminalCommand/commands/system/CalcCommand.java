@@ -10,7 +10,7 @@ public class CalcCommand extends TerminalCommand {
 	
 	public CalcCommand() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "calculator"; }

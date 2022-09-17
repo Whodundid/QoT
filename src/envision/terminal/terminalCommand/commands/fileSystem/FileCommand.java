@@ -1,29 +1,35 @@
 package envision.terminal.terminalCommand.commands.fileSystem;
 
-import eutil.datatypes.EArrayList;
-import eutil.strings.EStringUtil;
 import java.io.File;
 import java.io.IOException;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
+import eutil.datatypes.EArrayList;
+import eutil.strings.EStringUtil;
 
 public abstract class FileCommand extends TerminalCommand {
 	
-	public FileCommand() {
+	//--------------
+	// Constructors
+	//--------------
+	
+	protected FileCommand() {
 		setCategory("File System");
 	}
 	
-	public FileCommand(CommandType typeIn) {
-		super(typeIn);
-		setCategory("File System");
-	}
+	//-----------
+	// Overrides
+	//-----------
 	
 	@Override
 	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
 		fileTabComplete(termIn, args);
 	}
+	
+	//---------------------
+	// FileCommand Methods
+	//---------------------
 	
 	protected void fileTabComplete(ETerminal termIn, EArrayList<String> args) {
 		try {

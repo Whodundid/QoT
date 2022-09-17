@@ -15,7 +15,7 @@ public class WorldsDir_CMD extends TerminalCommand {
 	public WorldsDir_CMD() {
 		setCategory("Game");
 		setAcceptedModifiers("-c", "-o");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "worldsdir"; }

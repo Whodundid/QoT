@@ -81,34 +81,32 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		if (willBeDrawn()) {
-			updateBeforeNextDraw(mXIn, mYIn);
-			updateValues();
-			//boolean current = parentTextArea.getCurrentLine() == this;
-			
-			drawText();
-			
-			if (textRecentlyEntered == true) {
-				if (System.currentTimeMillis() - startTime >= 600) {
-					startTime = 0l;
-					textRecentlyEntered = false;
-				}
+		updateBeforeNextDraw(mXIn, mYIn);
+		updateValues();
+		//boolean current = parentTextArea.getCurrentLine() == this;
+		
+		drawText();
+		
+		if (textRecentlyEntered == true) {
+			if (System.currentTimeMillis() - startTime >= 600) {
+				startTime = 0l;
+				textRecentlyEntered = false;
 			}
-			
-			for (var o : getChildren()) {
-				if (o.willBeDrawn()) {
-					//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		        	o.drawObject(mXIn, mYIn);
-				}
+		}
+		
+		for (var o : getChildren()) {
+			if (o.willBeDrawn()) {
+				//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+	        	o.drawObject(mXIn, mYIn);
 			}
-			
-			if (parentTextArea.isEditable()) {
-				if (!Mouse.isButtonDown(0)) { clickStartPos = -1; }
-				if (clickStartPos != -1) {
-					//int i = (int) (mXIn - startX - parentTextArea.getLineNumberOffset() + 3);
-					//int cursorPos = mc.fontRendererObj.trimToWidth(text, i).length();
-					//setSelectionPos(cursorPos);
-				}
+		}
+		
+		if (parentTextArea.isEditable()) {
+			if (!Mouse.isButtonDown(0)) { clickStartPos = -1; }
+			if (clickStartPos != -1) {
+				//int i = (int) (mXIn - startX - parentTextArea.getLineNumberOffset() + 3);
+				//int cursorPos = mc.fontRendererObj.trimToWidth(text, i).length();
+				//setSelectionPos(cursorPos);
 			}
 		}
 	}
@@ -366,7 +364,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		parentTextArea = area;
 	}
 	
-	public void setLinkText(String textIn) {setLinkText(textIn, null, false); }
+	public void setLinkText(String textIn) { setLinkText(textIn, null, false); }
 	public void setLinkText(String textIn, Object linkObjectIn) { setLinkText(textIn, linkObjectIn, false); }
 	public void setLinkText(String textIn, boolean isWebLink) { setLinkText(textIn, null, isWebLink); }
 	public void setLinkText(String textIn, Object linkObjectIn, boolean isWebLink) {

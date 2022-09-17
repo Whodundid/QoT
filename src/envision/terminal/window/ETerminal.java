@@ -693,7 +693,6 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 			line.setFocusRequester(this);
 			line.setObjectGroup(getObjectGroup());
 			history.addTextLine(line);
-			
 		}
 		
 		scrollToBottom();

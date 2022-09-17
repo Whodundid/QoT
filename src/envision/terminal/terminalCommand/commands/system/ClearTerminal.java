@@ -10,7 +10,7 @@ public class ClearTerminal extends TerminalCommand {
 	
 	public ClearTerminal() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "clear"; }

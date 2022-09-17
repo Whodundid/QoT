@@ -9,7 +9,7 @@ import eutil.strings.EStringUtil;
 public class Lsblk extends FileCommand {
 	
 	public Lsblk() {
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 	
 	@Override public String getName() { return "lsblk"; }

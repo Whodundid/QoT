@@ -14,6 +14,9 @@ public class FontRenderer {
 	private static final String fontDir = QoTSettings.getResourcesDir().toString() + "\\font\\";
 	
 	public static final double FONT_HEIGHT = 24;
+	public static final double FH = FONT_HEIGHT;
+	public static final double HALF_FH = FONT_HEIGHT / 2;
+	
 	public static GameFont defaultFont = GameFont.createFont(fontDir + "font_map.txt", fontDir + "font.png");
 	public static GameFont newFont = GameFont.createFont(fontDir + "control_map.txt", fontDir + "font_test_fix.png");
 	public static GameFont font8 = GameFont.createFont(fontDir + "font_map_8x8.txt", fontDir + "font_8x8.png");

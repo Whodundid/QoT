@@ -1,11 +1,9 @@
 package envision.terminal;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.terminalCommand.commands.fileSystem.Cat;
 import envision.terminal.terminalCommand.commands.fileSystem.Cd;
@@ -71,6 +69,7 @@ import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.reflection.EModifier;
+import eutil.strings.EStringUtil;
 import game.QoT;
 
 //Author: Hunter Bragg
@@ -296,15 +295,13 @@ public class TerminalHandler {
 	
 	public static EArrayList<String> getSortedCommandNames() {
 		EArrayList<String> cmds = new EArrayList();
-		BoxList<CommandType, BoxList<String, EArrayList<TerminalCommand>>> sortedAll = getSortedCommands();
+		BoxList<String, EArrayList<TerminalCommand>> sortedAll = getSortedCommands();
 		
-		for (Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> box : sortedAll) {
-			BoxList<String, EArrayList<TerminalCommand>> catCommands = box.getB();
-			for (Box2<String, EArrayList<TerminalCommand>> byCat : catCommands) {
-				for (TerminalCommand command : byCat.getB()) {
-					if (command.showInHelp()) {
-						cmds.add(command.getName());
-					}
+		for (var box : sortedAll) {
+			var catCommands = box.getB();
+			for (TerminalCommand command : catCommands) {
+				if (command.showInHelp()) {
+					cmds.add(command.getName());
 				}
 			}
 		}
@@ -312,116 +309,61 @@ public class TerminalHandler {
 		return cmds;
 	}
 	
-	public static BoxList<CommandType, BoxList<String, EArrayList<TerminalCommand>>> getSortedCommands() {
-		BoxList<CommandType, BoxList<String, EArrayList<TerminalCommand>>> sortedCommands = new BoxList();
-		EArrayList<TerminalCommand> unsorted = TerminalHandler.getInstance().getCommandList();
+	public static BoxList<String, EArrayList<TerminalCommand>> getSortedCommands() {
+		//the sorted list to be returned
+		BoxList<String, EArrayList<TerminalCommand>> sortedCommands = new BoxList<>();
 		
-		//filter out commands that should not be shown in help
-		unsorted = unsorted.stream().filter(c -> c.showInHelp()).collect(EArrayList.toEArrayList());
+		//---------------------------
+		// sort commands by category
+		//---------------------------
 		
-		//get command categories
-		EArrayList<String> categories = new EArrayList();
-		for (TerminalCommand c : unsorted) {
-			if (c != null) categories.addIfNotContains(c.getCategory());
-		}
-		Collections.sort(categories);
+		//keep track of commands without a specified category
+		EArrayList<TerminalCommand> noneCat = new EArrayList<>();
 		
-		//collect for each category
-		BoxList<String, EArrayList<TerminalCommand>> commandsByCategory = new BoxList();
-		categories.forEach(c -> commandsByCategory.add(c, null));
-		EArrayList<TerminalCommand> toProcess = new EArrayList(unsorted);
-		
-		for (String category : categories) {
-			EArrayList<TerminalCommand> byCat = new EArrayList();
+		for (var command : instance.getCommandList()) {
+			//get commands declared category
+			String category = command.getCategory();
 			
-			Iterator<TerminalCommand> it = toProcess.iterator();
-			while (it.hasNext()) {
-				TerminalCommand c = it.next();
-				if (c.getCategory().equals(category)) {
-					byCat.add(c);
-					it.remove();
-				}
+			//check if the command actually has a set category, if not, use 'none' by default
+			category = (category != null) ? category : "none";
+			
+			//if category is none, track separately
+			if ("none".equals(category)) {
+				noneCat.add(command);
+				continue;
 			}
 			
-			Collections.sort(byCat, new Sorter());
-			commandsByCategory.getBoxWithA(category).setB(byCat);
-		}
-		
-		//get command types
-		EArrayList<CommandType> types = new EArrayList();
-		unsorted.forEach(c -> types.addIfNotContains(c.getType()));
-		
-		EArrayList<TerminalCommand> typeToProcess = new EArrayList();
-		
-		//isolate the 'none' category
-		if (!commandsByCategory.removeBoxesContainingA("none").isEmpty()) {
-			Box2<String, EArrayList<TerminalCommand>> noneCat = commandsByCategory.removeBoxesContainingA("none").get(0);
-			typeToProcess.addAll(noneCat.getB());
+			//get the command list for the current type
+			var typeCommands = sortedCommands.get(category);
 			
-			//filter out commands that have a category but are not normal
-			for (Box2<String, EArrayList<TerminalCommand>> byCat : commandsByCategory) {
-				Iterator<TerminalCommand> it = byCat.getB().iterator();
-				while (it.hasNext()) {
-					TerminalCommand c = it.next();
-					if (c.getType() != CommandType.NORMAL) {
-						Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> box = sortedCommands.getBoxWithA(c.getType());
-						if (box != null) {
-							BoxList<String, EArrayList<TerminalCommand>> cats = box.getB();
-							Box2<String, EArrayList<TerminalCommand>> catBox = cats.getBoxWithA(c.getCategory());
-							if (catBox != null) {
-								catBox.getB().add(c);
-							}
-							else {
-								cats.add(new Box2(c.getCategory(), new EArrayList(c)));
-							}
-						}
-						else {
-							sortedCommands.add(c.getType(), new BoxList(c.getCategory(), new EArrayList(c)));
-						}
-						it.remove();
-					}
-				}
+			//check if there is already a command list for the type
+			if (typeCommands != null) {
+				typeCommands.add(command);
+			}
+			//otherwise, create a new list, add the current command, and
+			//then add the type/list to the BoxList
+			else {
+				typeCommands = new EArrayList<>();
+				typeCommands.add(command);
+				sortedCommands.add(category, typeCommands);
 			}
 		}
 		
+		//add 'none' category to end of categories
+		if (noneCat.isNotEmpty()) sortedCommands.add("No Category", noneCat);
 		
-		//add all other command categories except for 'none'
-		sortedCommands.add(CommandType.NORMAL, commandsByCategory);
+		//--------------------------------
+		// sort categories alphabetically
+		//--------------------------------
 		
-		//parse 'none' category for different command types
-		for (CommandType type : types) {
-			if (type == CommandType.NORMAL) { continue; }
-			EArrayList<TerminalCommand> byType = new EArrayList();
-			
-			Iterator<TerminalCommand> it = typeToProcess.iterator();
-			while (it.hasNext()) {
-				TerminalCommand t = it.next();
-				if (t.getType() == type) {
-					byType.add(t);
-					it.remove();
-				}
-			}
-			
-			if (sortedCommands.getBoxWithA(type) == null) {
-				sortedCommands.add(type, new BoxList("nocat", byType));
-			}
+		//sort the intermediate BoxList by category name alphabetically
+		sortedCommands.sort((a, b) -> EStringUtil.compare(a.getA(), b.getA()));
+		
+		//alphabetically sort each category's command list 
+		for (var category : sortedCommands) {
+			var catCommands = category.getB();
+			catCommands.sort((a, b) -> EStringUtil.compare(a.getName(), b.getName()));
 		}
-		
-		//add any remaining commands in the 'none' category to the normal command type
-		sortedCommands.getBoxWithA(CommandType.NORMAL).getB().add(new Box2("No Category", typeToProcess));
-		
-		//ensure correct command type order
-		EArrayList<Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>>> commands = sortedCommands.getBoxes();
-		sortedCommands.clear();
-		Collections.sort(commands, new Comparator<Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>>>() {
-
-			@Override
-			public int compare(Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> o1, Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> o2) {
-				return o1.getA().compareTo(o2.getA());
-			}
-			
-		});
-		sortedCommands.addAll(commands);
 		
 		return sortedCommands;
 	}

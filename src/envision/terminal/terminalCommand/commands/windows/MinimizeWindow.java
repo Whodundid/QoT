@@ -12,7 +12,7 @@ public class MinimizeWindow extends TerminalCommand {
 	
 	public MinimizeWindow() {
 		setCategory("Windows");
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 
 	@Override public String getName() { return "minimize"; }

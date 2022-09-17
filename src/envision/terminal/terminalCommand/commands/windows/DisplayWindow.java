@@ -12,7 +12,7 @@ public class DisplayWindow extends TerminalCommand {
 	
 	public DisplayWindow() {
 		setCategory("Windows");
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 
 	@Override public String getName() { return "display"; }

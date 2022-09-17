@@ -14,7 +14,7 @@ public class ReloadWorld_CMD extends TerminalCommand {
 	
 	public ReloadWorld_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "reloadworld"; }

@@ -11,7 +11,7 @@ public class FPS_CMD extends TerminalCommand {
 	
 	public FPS_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "fps"; }

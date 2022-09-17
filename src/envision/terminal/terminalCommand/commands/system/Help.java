@@ -1,14 +1,12 @@
 package envision.terminal.terminalCommand.commands.system;
 
 import envision.terminal.TerminalHandler;
-import envision.terminal.terminalCommand.CommandType;
 import envision.terminal.terminalCommand.IListableCommand;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.Box2;
-import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
+import eutil.strings.EStringBuilder;
 import game.QoT;
 
 //Author: Hunter Bragg
@@ -17,11 +15,11 @@ public class Help extends TerminalCommand implements IListableCommand {
 	
 	public Help() {
 		setCategory("System");
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 	
 	@Override public String getName() { return "help"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("h", "commands", "cmds", "cmd"); }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("h", "commands", "cmds"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "List all commands with aliases and can display info on a specific command."; }
 	@Override public String getUsage() { return "ex: help deb"; }
 	
@@ -58,39 +56,32 @@ public class Help extends TerminalCommand implements IListableCommand {
 	@Override
 	public void list(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		termIn.writeln("Listing all terminal commands\n", EColors.lgreen);
-		for (Box2<CommandType, BoxList<String, EArrayList<TerminalCommand>>> box : TerminalHandler.getSortedCommands()) {
-			boolean norm = false;
-			BoxList<String, EArrayList<TerminalCommand>> catHolder = box.getB();
+		
+		for (var box : TerminalHandler.getSortedCommands()) {
+			//print category name
+			termIn.writeln("  " +  box.getA(), EColors.orange);
 			
-			if (box.getA() == CommandType.NORMAL) {
-				termIn.writeln("Built-In", EColors.cyan);
-				norm = true;
-			}
-			
-			for (Box2<String, EArrayList<TerminalCommand>> catCommands : catHolder) {
-				EArrayList<TerminalCommand> commands = catCommands.getB();
-				boolean notEmpty = commands.isNotEmpty();
+			//print each command under the current category
+			for (TerminalCommand command : box.getB()) {
+				var aliasList = command.getAliases();
 				
-				if (norm && notEmpty) {
-					termIn.writeln("  " + catCommands.getA(), EColors.orange);
+				//if the command doesn't have any aliases, just print the command name
+				if (aliasList == null || aliasList.isEmpty()) {
+					termIn.writeln("    " + command.getName(), 0xffb2b2b2);
+					continue;
 				}
 				
-				for (TerminalCommand command : catCommands.getB()) {
-					if (command.getAliases() == null) {
-						termIn.writeln((norm ? "    " : "  ") + command.getName(), 0xffb2b2b2);
-					}
-					else {
-						String a = EColors.mc_green + "";
-						for (int i = 0; i < command.getAliases().size(); i++) {
-							String commandAlias = command.getAliases().get(i);
-							if (i == command.getAliases().size() - 1) a += commandAlias;
-							else a += (commandAlias + ", ");
-						}
-						termIn.writeln((norm ? "    " : "  ") + command.getName() + ": " + a, 0xffb2b2b2);
-					}
+				//print the command name followed by all of the command's aliases
+				EStringBuilder a = new EStringBuilder();
+				a.a(EColors.mc_green);
+				
+				for (int i = 0; i < command.getAliases().size(); i++) {
+					String commandAlias = command.getAliases().get(i);
+					if (i == command.getAliases().size() - 1) a.a(commandAlias);
+					else a.a(commandAlias, ", ");
 				}
 				
-				//if (norm) { termIn.writeln(); }
+				termIn.writeln(EColors.lgray, "    ", command.getName(), ": ", a);
 			}
 		}
 	}

@@ -4,86 +4,103 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.debug.Broken;
 
-/** Used to concatenate EColors and EnumChatFormating objects within Strings. */
+/** Used to concatenate 'EColors' color codes within drawn Strings. */
 public class EStringOutputFormatter {
+	
+	/** The color of the shadow in the range of [0, 255]. */
+	public static int shadowColor = 60;
 	
 	public static double drawString(String s, double x, double y, double scaleX, double scaleY, EColors colorIn, boolean centered, boolean shadow) {
 		return drawString(s, x, y, scaleX, scaleY, colorIn.intVal, centered, shadow);
 	}
 	
 	public static double drawString(String s, double x, double y, double scaleX, double scaleY, int colorIn, boolean centered, boolean shadow) {
-		if (s != null) {
-			double lastX = (centered) ? x - (getStringWidth(s) / 2) : x;
-			int i = 0;
-			String curString = "";
-			int curColor = colorIn;
-			boolean hasCode = false;
+		if (s == null) return -1.0;
+		
+		double lastX = (centered) ? x - (getStringWidth(s) / 2) : x;
+		int i = 0;
+		String curString = "";
+		int curColor = colorIn;
+		boolean hasCode = false;
+		
+		while (i < s.length()) {
+			char c = s.charAt(i);
 			
-			while (i < s.length()) {
-				char c = s.charAt(i);
-				
-				if (c == 8750 && i + 2 < s.length()) { //the 'countour integral' character
-					
-					if (hasCode) {
-						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
-						curString = "";
+			// '8750' == the 'contour integral' character
+			if (c == 8750 && i + 2 < s.length()) {
+				if (hasCode) {
+					if (shadow) {
+						int br = EColors.changeBrightness(curColor, shadowColor);
+						FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
 					}
-					else {
-						lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY) - 1;
-						curString = "";
-					}
-					hasCode = true;
-					
-					try {
-						int code = Integer.parseInt(s.substring(i + 1, i + 3));
-						EColors color = EColors.byCode(code);
-						
-						curColor = (color != null) ? color.intVal : EColors.white.intVal;
-						
-						i += 2;
-					}
-					catch (Exception e) { e.printStackTrace(); }
+					lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
+					curString = "";
 				}
 				else {
-					curString += c;
+					if (shadow) {
+						int br = EColors.changeBrightness(curColor, shadowColor);
+						FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+					}
+					lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY) - 1;
+					curString = "";
 				}
+				hasCode = true;
 				
-				i++;
-			}
-			
-			if (!hasCode) {
-				lastX = FontRenderer.drawString(s, lastX, y, colorIn, scaleX, scaleY);
+				try {
+					int code = Integer.parseInt(s.substring(i + 1, i + 3));
+					EColors color = EColors.byCode(code);
+					
+					curColor = (color != null) ? color.intVal : EColors.white.intVal;
+					
+					i += 2;
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			else {
-				lastX = FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
+				curString += c;
 			}
 			
-			return lastX;
+			i++;
 		}
 		
-		return -1;
+		if (!hasCode) {
+			if (shadow) {
+				int br = EColors.changeBrightness(colorIn, shadowColor);
+				FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+			}
+			lastX = FontRenderer.drawString(s, lastX, y, colorIn, scaleX, scaleY);
+		}
+		else {
+			if (shadow) {
+				int br = EColors.changeBrightness(colorIn, shadowColor);
+				FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+			}
+			lastX = FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
+		}
+		
+		return lastX;
 	}
 	
 	public static int getStringWidth(String in) {
-		if (in != null) {
+		if (in == null) return -1;
+		
+		//remove EMC color codes
+		String str = "";
+		for (int i = 0, j = 0; i < in.length(); i++) {
+			char c = in.charAt(i);
 			
-			//remove EMC color codes
-			String str = "";
-			for (int i = 0, j = 0; i < in.length(); i++) {
-				char c = in.charAt(i);
-				
-				if (j > 0) {
-					if (++j >= 3) j = 0;
-				}
-				else if (c == 8750) { //the 'countour integral' character
-					j = 1;
-				}
-				else str += c;
+			if (j > 0) {
+				if (++j >= 3) j = 0;
 			}
-			
-			return FontRenderer.getStringWidth(str);
+			else if (c == 8750) { //the 'contour integral' character
+				j = 1;
+			}
+			else str += c;
 		}
-		return -1;
+		
+		return FontRenderer.getStringWidth(str);
 	}
 	
 	/** Breaks a String into a list of smaller strings based on a set maximum line width. */
@@ -129,7 +146,10 @@ public class EStringOutputFormatter {
 			}
 			else lines.add(stringIn);
 		}
-		catch (Exception e) { e.printStackTrace(); }
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return lines;
 	}
 	

@@ -13,7 +13,7 @@ public class DebugControl extends TerminalCommand {
 	
 	public DebugControl() {
 		setCategory("System");
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 
 	@Override public String getName() { return "debug"; }

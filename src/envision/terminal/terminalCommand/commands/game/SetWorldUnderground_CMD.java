@@ -9,13 +9,13 @@ public class SetWorldUnderground_CMD extends TerminalCommand {
 	
 	public SetWorldUnderground_CMD() {
 		setCategory("Game");
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 
-	@Override public String getName() { return "set_underground"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("setunder"); }
+	@Override public String getName() { return "underground"; }
+	@Override public EArrayList<String> getAliases() { return new EArrayList<>("under"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Modifies whether or not the current world is underground or not."; }
-	@Override public String getUsage() { return "ex: set_underground true"; }
+	@Override public String getUsage() { return "ex: underground"; }
 	
 	@Override
 	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
@@ -24,15 +24,22 @@ public class SetWorldUnderground_CMD extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+		if (QoT.theWorld == null) {
+			termIn.error("No world loaded!");
+			return;
+		}
+		
+		//empty -- toggle
+		if (args.length() == 0) {
+			QoT.theWorld.setUnderground(!QoT.theWorld.isUnderground());
+			return;
+		}
+		
 		if (args.length() != 1) {
 			errorUsage(termIn, ERROR_NOT_ENOUGH);
 			return;
 		}
 		
-		if (QoT.theWorld == null) {
-			termIn.error("No world loaded!");
-			return;
-		}
 		
 		String val = args.get(0).toLowerCase();
 		

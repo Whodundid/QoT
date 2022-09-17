@@ -10,7 +10,7 @@ public class ListEntities_CMD extends TerminalCommand {
 	
 	public ListEntities_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "listentities"; }

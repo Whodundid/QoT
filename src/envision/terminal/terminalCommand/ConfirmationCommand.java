@@ -11,9 +11,6 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 	protected String yes = "y", no = "n";
 	
 	protected ConfirmationCommand() {}
-	protected ConfirmationCommand(CommandType typeIn) {
-		super(typeIn);
-	}
 	
 	@Override
 	public void onConfirmation(String response) {

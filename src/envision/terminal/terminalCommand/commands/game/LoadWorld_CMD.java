@@ -16,7 +16,7 @@ public class LoadWorld_CMD extends FileCommand {
 	
 	public LoadWorld_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "loadworld"; }

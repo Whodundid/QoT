@@ -12,7 +12,7 @@ public class CreateDungeon_CMD extends TerminalCommand {
 	
 	public CreateDungeon_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "createdung"; }

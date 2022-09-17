@@ -12,7 +12,7 @@ public class ToFrontWindow extends TerminalCommand {
 	
 	public ToFrontWindow() {
 		setCategory("Windows");
-		numArgs = 1;
+		expectedArgLength = 1;
 	}
 
 	@Override public String getName() { return "tofront"; }

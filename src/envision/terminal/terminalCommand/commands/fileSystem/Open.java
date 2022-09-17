@@ -19,7 +19,7 @@ import eutil.strings.EStringUtil;
 public class Open extends FileCommand {
 	
 	public Open() {
-		numArgs = 1;
+		expectedArgLength = 1;
 		setAcceptedModifiers("-a");
 	}
 	

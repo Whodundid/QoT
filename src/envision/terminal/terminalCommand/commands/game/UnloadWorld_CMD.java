@@ -11,7 +11,7 @@ public class UnloadWorld_CMD extends TerminalCommand {
 	
 	public UnloadWorld_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "unloadworld"; }

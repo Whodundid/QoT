@@ -12,7 +12,7 @@ public class SystemCMD extends TerminalCommand {
 	
 	public SystemCMD() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "system"; }

@@ -13,7 +13,7 @@ public class Envision_CMD extends TerminalCommand {
 	
 	public Envision_CMD() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "envision"; }

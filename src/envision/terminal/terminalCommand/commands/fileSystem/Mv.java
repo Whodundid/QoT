@@ -12,7 +12,7 @@ import eutil.datatypes.EArrayList;
 public class Mv extends FileCommand {
 	
 	public Mv() {
-		numArgs = 2;
+		expectedArgLength = 2;
 	}
 	
 	@Override public String getName() { return "mv"; }

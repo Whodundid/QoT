@@ -10,7 +10,7 @@ import eutil.datatypes.EArrayList;
 public class Pwd extends FileCommand {
 	
 	public Pwd() {
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 	
 	@Override public String getName() { return "pwd"; }

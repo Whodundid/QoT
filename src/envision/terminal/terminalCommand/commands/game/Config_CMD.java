@@ -14,14 +14,15 @@ import game.settings.QoTSettings;
 public class Config_CMD extends TerminalCommand {
 	
 	public Config_CMD() {
-		numArgs = 1;
+		setCategory("game");
 		setAcceptedModifiers("-a");
+		expectedArgLength = 1;
 	}
 	
 	@Override public String getName() { return "config"; }
 	@Override public EArrayList<String> getAliases() { return new EArrayList<>("conf"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Provides an interface to the game's config file"; }
-	@Override public String getUsage() { return "ex: conf"; }
+	@Override public String getUsage() { return "ex: conf    -OR-    conf 'edit|reload|save|reset'"; }
 	
 	@Override
 	public void handleTabComplete(ETerminal termin, EArrayList<String> args) {
@@ -46,7 +47,7 @@ public class Config_CMD extends TerminalCommand {
 			case "res":
 			case "reset": resetConfig(termIn); break;
 			default:
-				termIn.error("Invalid action argument!");
+				errorUsage(termIn, "Invalid action argument!");
 			}
 		}
 	}
@@ -58,10 +59,10 @@ public class Config_CMD extends TerminalCommand {
 		for (var setting : config) {
 			termIn.writeln(EColors.yellow, "  ", setting.getA(), " ", EColors.seafoam, setting.getB());
 		}
-		
 	}
 	
 	private void editConfig(ETerminal termIn) {
+		termIn.writeln();
 		File configFile = QoTSettings.getGameConfig().getFile();
 		if (configFile == null) {
 			termIn.error("Failed to read config file!");

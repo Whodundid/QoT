@@ -10,7 +10,7 @@ public class WhoAmI extends TerminalCommand {
 	
 	public WhoAmI() {
 		setCategory("System");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "whoami"; }

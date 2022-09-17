@@ -12,7 +12,7 @@ public class Volume_CMD extends TerminalCommand {
 	
 	public Volume_CMD() {
 		setCategory("Game");
-		numArgs = 0;
+		expectedArgLength = 0;
 	}
 
 	@Override public String getName() { return "volume"; }

@@ -15,24 +15,17 @@ public abstract class TerminalCommand {
 	public static final String ERROR_TOO_MANY = "Too many arguments!";
 	public static final String ERROR_NOT_ENOUGH = "Not enough arguments!";
 	
-	private CommandType type = CommandType.NORMAL;
 	private String category = "none";
-	protected EArrayList<String> acceptedModifiers = new EArrayList();
-	protected EArrayList<String> modifiers = new EArrayList();
-	protected int numArgs = 0;
+	private final EArrayList<String> acceptedModifiers = new EArrayList<>();
+	private final EArrayList<String> parsedModifiers = new EArrayList<>();
+	protected int expectedArgLength = 0;
 	protected boolean shouldRegister = true;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public TerminalCommand() {
-		type = CommandType.NORMAL;
-	}
-	
-	public TerminalCommand(CommandType typeIn) {
-		type = typeIn;
-	}
+	public TerminalCommand() {}
 	
 	//------------------
 	// Abstract Methods
@@ -60,12 +53,15 @@ public abstract class TerminalCommand {
 	 * @param runVisually
 	 */
 	public void preRun(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+		//clear out old modifiers
+		parsedModifiers.clear();
+		
 		//extract '-[x]' args
 		var it = args.iterator();
 		while (it.hasNext()) {
 			var s = it.next();
 			if (s.startsWith("-") && s.length() > 1) {
-				if (acceptedModifiers.contains(s)) modifiers.add(s);
+				if (acceptedModifiers.contains(s)) parsedModifiers.add(s);
 				it.remove();
 			}
 		}
@@ -77,10 +73,14 @@ public abstract class TerminalCommand {
 	// Getters
 	//---------
 	
-	public CommandType getType() { return type; }
-	public EArrayList<String> getModifiers() { return modifiers; }
+	/** Returns the list of parsed modifiers when this command was executed. */
+	public EArrayList<String> getParsedModifiers() { return parsedModifiers; }
+	/** Returns the list of modifiers accepted by this command (ex: '-a', 'r', 'rf', etc...) */
+	public EArrayList<String> getAcceptedModifiers() { return acceptedModifiers; }
+	/** The type category of this terminal command -- used to group commands by category. */
 	public String getCategory() { return category; }
-	public int getNumArgs() { return numArgs; }
+	/** Returns the total number of arguments that this command is expected to read in. */
+	public int getExpectedArgLength() { return expectedArgLength; }
 	/** Returns true if this command should actually be allowed to register within a TerminalHandler. */
 	public boolean shouldRegister() { return shouldRegister; }
 	
@@ -109,7 +109,7 @@ public abstract class TerminalCommand {
 	 * @return
 	 */
 	protected boolean hasModifier(String in) {
-		return in != null && in.length() >= 1 && modifiers.contains(in);
+		return in != null && in.length() >= 1 && parsedModifiers.contains(in);
 	}
 	
 	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, String... completionsIn) {
@@ -117,7 +117,7 @@ public abstract class TerminalCommand {
 	}
 	
 	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, EArrayList<String> completionsIn) {
-		int limit = numArgs == -1 ? args.size() : ENumUtil.clamp(args.size(), 0, numArgs);
+		int limit = (expectedArgLength == -1) ? args.size() : ENumUtil.clamp(args.size(), 0, expectedArgLength);
 		
 		if (args.isEmpty()) {
 			termIn.buildTabCompletions(completionsIn);
