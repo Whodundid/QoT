@@ -10,7 +10,7 @@ public class TrollBoar extends Enemy {
 	public TrollBoar(int posX, int posY) {
 		super("Troll Boar");
 		init(posX, posY, 64, 64);
-		sprite = EntityTextures.trollboar;
+		tex = EntityTextures.trollboar;
 		setMaxHealth(20);
 		setHealth(20);
 		setExperienceRewardedOnKill(25);

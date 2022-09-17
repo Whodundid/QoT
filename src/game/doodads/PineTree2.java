@@ -20,7 +20,7 @@ public class PineTree2 extends Entity {
 		
 		
 		init(posX, posY, (int) baseX, (int) baseY);
-		sprite = TreeTextures.tree_pine_2;
+		tex = TreeTextures.tree_pine_2;
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		double sx = (facing == Rotation.RIGHT) ? 10 : 10;

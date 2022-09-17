@@ -2,7 +2,7 @@ package envision.layers;
 
 import java.util.Iterator;
 
-import envision.gameEngine.world.gameWorld.IGameWorld;
+import envision.inputHandlers.Mouse;
 import eutil.datatypes.EArrayList;
 
 public class LayerSystem implements Iterable<ScreenLayer> {
@@ -34,10 +34,10 @@ public class LayerSystem implements Iterable<ScreenLayer> {
 	// Render
 	//--------
 	
-	public void onRenderTick(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void onRenderTick() {
 		for (int i = 0; i < layers.size(); i++) {
 			ScreenLayer l = layers.get(i);
-			l.renderLayer(world, x, y, w, h, brightness, mouseOver);
+			l.renderLayer(Mouse.getMx(), Mouse.getMy());
 		}
 	}
 	
@@ -45,18 +45,18 @@ public class LayerSystem implements Iterable<ScreenLayer> {
 	// Methods
 	//---------
 	
-	public void pushLayer() {
-		layers.push(new ScreenLayer());
+	public ScreenLayer pushLayer() {
+		return layers.pushR(new ScreenLayer());
 	}
 	
-	public void popLayer() {
-		if (layers.isEmpty()) return;
-		layers.pop();
+	public ScreenLayer popLayer() {
+		if (layers.isEmpty()) return null;
+		return layers.pop();
 	}
 	
-	public void insertLayerAtIndex(int index) {
-		if (index < 0 || index >= layers.size()) return;
-		layers.add(index, new ScreenLayer());
+	public ScreenLayer insertLayerAtIndex(int index) {
+		if (index < 0 || index >= layers.size()) return null;
+		return layers.addR(index, new ScreenLayer());
 	}
 	
 	public void setNumLayer(int num) {
@@ -76,5 +76,8 @@ public class LayerSystem implements Iterable<ScreenLayer> {
 	public ScreenLayer getLayerAt(int index) {
 		return layers.get(index);
 	}
+	
+	public boolean isEmpty() { return layers.isEmpty(); }
+	public boolean isNotEmpty() { return layers.isNotEmpty(); }
 	
 }

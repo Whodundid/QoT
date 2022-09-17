@@ -43,7 +43,7 @@ public class Region extends GameObject {
 	public String toString() { return toSaveString(); }
 	
 	@Override
-	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
 		
 	}
 	

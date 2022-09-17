@@ -2,6 +2,7 @@ package envision.gameEngine.world.worldEditor.editorUtil;
 
 import envision.gameEngine.GameObject;
 import envision.gameEngine.world.gameWorld.GameWorld;
+import envision.gameEngine.world.gameWorld.IGameWorld;
 import eutil.datatypes.Box2;
 
 /** A point in the world where the player will be positioned when being loaded.
@@ -33,6 +34,11 @@ public class PlayerSpawnPoint extends GameObject {
 	@Override
 	public int getInternalSaveID() {
 		return 6;
+	}
+	
+	@Override
+	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+		
 	}
 	
 }

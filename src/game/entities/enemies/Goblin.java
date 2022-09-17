@@ -23,7 +23,7 @@ public class Goblin extends Enemy {
 		setHealth(10);
 		
 		init(posX, posY, 64, 64);
-		sprite = EntityTextures.goblin;
+		tex = EntityTextures.goblin;
 		
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 		setExperienceRewardedOnKill(25);

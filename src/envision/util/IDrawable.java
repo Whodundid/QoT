@@ -12,7 +12,9 @@ public interface IDrawable {
 	
 	/**
 	 * Draws the object at the given position with the given dimensions.
+	 * @param midX TODO
+	 * @param midY TODO
 	 */
-	void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver);
+	void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY);
 	
 }

@@ -27,15 +27,15 @@ public class GameTextures extends TextureLoader {
 	
 	//-------------------------------
 	
-	private CursorTextures cursorTextures = CursorTextures.instance();
-	private DoodadTextures doodadTextures = DoodadTextures.instance();
-	private EditorTextures editorTextures = EditorTextures.instance();
-	private EntityTextures entityTextures = EntityTextures.instance();
-	private GeneralTextures generalTextures = GeneralTextures.instance();
-	private ItemTextures itemTextures = ItemTextures.instance();
-	private TaskBarTextures taskBarTextures = TaskBarTextures.instance();
-	private WindowTextures windowTextures = WindowTextures.instance();
-	private WorldTextures worldTextures = WorldTextures.instance();
+	public static CursorTextures cursorTextures = CursorTextures.instance();
+	public static DoodadTextures doodadTextures = DoodadTextures.instance();
+	public static EditorTextures editorTextures = EditorTextures.instance();
+	public static EntityTextures entityTextures = EntityTextures.instance();
+	public static GeneralTextures generalTextures = GeneralTextures.instance();
+	public static ItemTextures itemTextures = ItemTextures.instance();
+	public static TaskBarTextures taskBarTextures = TaskBarTextures.instance();
+	public static WindowTextures windowTextures = WindowTextures.instance();
+	public static WorldTextures worldTextures = WorldTextures.instance();
 	
 	//-------------------------------
 	

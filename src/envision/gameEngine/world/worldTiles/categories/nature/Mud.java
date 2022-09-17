@@ -15,8 +15,8 @@ public class Mud extends WorldTile {
 	}
 	
 	@Override
-	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
-		super.draw(world, x, y, w, h, brightness, mouseOver);
+	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+		super.draw(world, zoom, midDrawX, midDrawY, midX, midY, distX, distY);
 	}
 	
 	@Override

@@ -1,9 +1,11 @@
 package envision.gameEngine.world.gameWorld;
 
 import envision.gameEngine.GameObject;
+import envision.gameEngine.gameObjects.entity.Entity;
 import envision.gameEngine.world.worldTiles.WorldTile;
 import envision.inputHandlers.Keyboard;
 import envision.inputHandlers.Mouse;
+import envision.layers.WorldLayer;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.topOverlay.GameTopScreen;
 import envision.util.InsertionSort;
@@ -36,7 +38,10 @@ public class WorldRenderer extends EGui {
 	boolean drawEntityHitboxes = false;
 	boolean drawEntityOutlines = false;
 	
-	private EArrayList<WorldTile> entityOrder = new EArrayList();
+	private int left, top, right, bot;
+	
+	/** Temporary list for testing world layers. */
+	private EArrayList<WorldLayer> worldLayers = new EArrayList<>();
 	
 	//--------------
 	// Constructors
@@ -57,20 +62,35 @@ public class WorldRenderer extends EGui {
 			//load entities
 			world.spawnEntities();
 			
-			//add all walls to a separate list
-			int w = world.getWidth();
-			int h = world.getHeight();
-			for (int i = 0; i < h; i++) {
-				for (int j = 0; j < w; j++) {
-					WorldTile t = world.getTileAt(j, i);
-					if (t == null) continue;
-					if (t.isWall()) entityOrder.add(t);
-				}
-			}
+			TEMP_createWorldLayers();
 			
 			world.setZoom(3);
 			//entityOrder.addAll(world.getEntitiesInWorld());
 		}
+	}
+	
+	private void TEMP_createWorldLayers() {
+		WorldLayer layerZero = new WorldLayer(world, 0);
+		WorldLayer layerOne = new WorldLayer(world, 1);
+		
+		for (int i = 0; i < world.getHeight(); i++) {
+			for (int j = 0; j < world.getWidth(); j++) {
+				WorldTile t = world.getTileAt(j, i);
+				if (t == null) continue;
+				else if (!t.isWall() || t.getWallHeight() < 0.20) {
+					t.setRenderLayer(0);
+				}
+				else {
+					t.setRenderLayer(1);
+				}
+			}
+		}
+		
+		for (var ent : world.getEntitiesInWorld()) {
+			ent.setRenderLayer(1);
+		}
+		
+		worldLayers.add(layerZero, layerOne);
 	}
 	
 	//------------------------
@@ -118,12 +138,38 @@ public class WorldRenderer extends EGui {
 			//the top most y coordinate for map drawing
 			double y = (int) (midY - (distY * h) - (h / 2));
 			
-			renderMap(x, y, w, h);
-			renderEntities(x, y, w, h);
+			//renderMap(x, y, w, h);
+			//renderEntities(x, y, w, h);
+			renderMapLayers();
 			
 			if (drawPosBox) {
 				drawPosBox(x, y, w, h);
 			}
+		}
+		
+		//var tex = StoneFloorTextures.clay_pad;
+		//drawTexture(tex, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color);
+	}
+	
+	private void renderMapLayers() {
+		QoT_Player p = QoT.thePlayer;
+		
+		//keep the player at the center of the world (THIS SHOULD BE CHANGED TO 'CAMERA' AT SOME POINT!)
+		midDrawX = p.worldX;
+		midDrawY = p.worldY;
+		
+		//calculations to determine how many tiles to draw out in each direction from the mid of the screen
+		left = ENumUtil.clamp(midDrawX - distX, 0, world.getWidth() - 1);
+		top = ENumUtil.clamp(midDrawY - distY, 0, world.getHeight() - 1);
+		right = ENumUtil.clamp(midDrawX + distX, left, world.getWidth() - 1);
+		bot = ENumUtil.clamp(midDrawY + distY, top, world.getHeight() - 1);
+		
+		//System.out.println(left + " : " + top + " : " + right + " : " + bot);
+		
+		for (WorldLayer layer : worldLayers) {
+			layer.buildLayer(left, top, right, bot);
+			//System.out.println(layer + " : " + layer.getDrawnObjects());
+			layer.renderLayer(world, world.zoom, midDrawX, midDrawY, midX, midY, distX, distY);
 		}
 	}
 	
@@ -139,10 +185,10 @@ public class WorldRenderer extends EGui {
 		double offsetY = (p.startY % world.getTileHeight()) * world.zoom;
 		
 		//calculations to determine how many tiles to draw out in each direction from the mid of the screen
-		int left = ENumUtil.clamp(midDrawX - distX, 0, world.getWidth() - 1);
-		int top = ENumUtil.clamp(midDrawY - distY, 0, world.getHeight() - 1);
-		int right = ENumUtil.clamp(midDrawX + distX, left, world.getWidth() - 1);
-		int bot = ENumUtil.clamp(midDrawY + distY, top, world.getHeight() - 1);
+		left = ENumUtil.clamp(midDrawX - distX, 0, world.getWidth() - 1);
+		top = ENumUtil.clamp(midDrawY - distY, 0, world.getHeight() - 1);
+		right = ENumUtil.clamp(midDrawX + distX, left, world.getWidth() - 1);
+		bot = ENumUtil.clamp(midDrawY + distY, top, world.getHeight() - 1);
 		
 		//draw the tiles of the world using the calculated dimensions
 		for (int i = top, iy = 0; i <= bot; i++, iy++) {
@@ -170,7 +216,8 @@ public class WorldRenderer extends EGui {
 				dY -= offsetY;
 				
 				//call the tile's self rendering code with the proper screen coordinates and dimensions
-				t.draw(world, dX, dY, w, h, calcBrightness(j, i), false);
+				//t.draw(world, dX, dY, w, h, calcBrightness(j, i), false);
+				t.drawTile(world, dX, dY, w, h, calcBrightness(j, i), false);
 			}
 		}
 	}
@@ -226,7 +273,13 @@ public class WorldRenderer extends EGui {
 			boolean mouseOver = (mX >= drawX && mX <= drawX + drawW && mY >= drawY && mY <= drawY + drawH);
 			
 			//render the entity
-			ent.draw(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
+			//ent.drawEntity(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
+			if (ent == QoT.thePlayer) {
+				((QoT_Player) ent).drawEntity(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver); 
+			}
+			else if (ent instanceof Entity e) {
+				e.drawEntity(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
+			}
 			
 			if (drawEntityHitboxes) {
 				double colSX = drawX + (ent.getCollision().startX * world.zoom);

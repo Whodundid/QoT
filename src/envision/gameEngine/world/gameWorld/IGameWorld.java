@@ -32,5 +32,6 @@ public interface IGameWorld {
 	//void setPlayerSpawn(int x, int y);
 	
 	boolean isLoaded();
+	boolean isUnderground();
 	
 }

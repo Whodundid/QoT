@@ -5,13 +5,17 @@ import envision.gameEngine.world.gameWorld.IGameWorld;
 import envision.renderEngine.GLObject;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.util.IDrawable;
+import eutil.colors.EColors;
 import eutil.math.EDimension;
+import eutil.math.ENumUtil;
 import eutil.misc.Rotation;
+import game.QoT;
+import game.entities.player.QoT_Player;
 
 public abstract class GameObject extends GLObject implements IDrawable {
 	
 	public IGameWorld world;
-	protected GameTexture sprite;
+	protected GameTexture tex;
 	public int startX, startY, endX, endY;
 	public int midX, midY;
 	public int width, height;
@@ -25,6 +29,9 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	
 	/** The animation handler of this entity. */
 	protected AnimationHandler animationHandler;
+	
+	/** The layer that this object is rendered at. Zero by default. */
+	protected int renderLayer = 0;
 	
 	//--------------
 	// Constructors
@@ -52,11 +59,7 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	}
 	
 	@Override
-	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
-		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
-		
-		drawTexture(sprite, x, y, w, h, flip, brightness);
-	}
+	public abstract void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY);
 	
 	public void onGameTick() {
 		onLivingUpdate();
@@ -79,13 +82,14 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	public void setObjectID(int idIn) { objectID = idIn; }
 	
 	public String getName() { return name; }
-	public GameTexture getTexture() { return sprite; }
+	public GameTexture getTexture() { return tex; }
 	public Rotation getFacing() { return facing; }
+	public int getRenderLayer() { return renderLayer; }
 	
 	public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
 	
 	public GameObject setName(String nameIn) { name = nameIn; return this; }
-	public GameObject setTexture(GameTexture in) { sprite = in; return this; }
+	public GameObject setTexture(GameTexture in) { tex = in; return this; }
 	public GameObject setFacing(Rotation dir) { facing = dir; return this; }
 	
 	public EDimension getCollision() { return collisionBox; }
@@ -100,5 +104,32 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	public double getSortPoint() {
 		return startY + collisionBox.endY;
 	}
+	
+	protected int calcBrightness() { return calcBrightness(worldX, worldY); }
+	public int calcBrightness(int x, int y) {
+		if (QoT.theWorld == null || !QoT.theWorld.isUnderground()) return 0xffffffff;
+		QoT_Player p = QoT.thePlayer;
+		
+		double cmx = p.collisionBox.midX; //collision mid x
+		double cmy = p.collisionBox.midY; //collision mid y
+		double tw = QoT.theWorld.getTileWidth(); //tile width
+		double th = QoT.theWorld.getTileHeight(); //tile height
+		
+		//offset world coordinates to middle of collision box
+		int mwcx = (int) Math.ceil(cmx / tw); //mid world coords x
+		int mwcy = (int) Math.floor(cmy / th); //mid world coords y
+		
+		//light render position
+		int lightx = p.worldX + mwcx;
+		int lighty = p.worldY + mwcy;
+		int viewDist = 18;
+		
+		int distToPlayer = viewDist - (int) (ENumUtil.distance(x, y, lightx, lighty));
+		distToPlayer = ENumUtil.clamp(distToPlayer, 0, distToPlayer);
+		int ratio = (distToPlayer * 255) / viewDist;
+		return EColors.changeBrightness(0xffffffff, ratio);
+	}
+	
+	public void setRenderLayer(int layerIn) { renderLayer = layerIn; }
 	
 }

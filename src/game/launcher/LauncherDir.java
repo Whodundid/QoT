@@ -109,7 +109,7 @@ public class LauncherDir {
 	 */
 	static void updateLauncherSettingsFile(LauncherSettings settings) throws Exception {
 		//create settings file for which to store launcher specific setting in
-		launcherSettingsFile = new File(launcherDir, "settings.txt");
+		launcherSettingsFile = new File(launcherDir, "settings.ini");
 		
 		try (var writer = new FileWriter(launcherSettingsFile, Charset.forName("UTF-8"))) {
 			String version = "# QoT Version: " + QoT.version;

@@ -18,7 +18,7 @@ public class Thyrah extends Enemy {
 	public Thyrah(int posX, int posY) {
 		super("Thyrah, the Dragon");
 		init(posX, posY, 128, 128);
-		sprite = EntityTextures.thyrah;
+		tex = EntityTextures.thyrah;
 		
 		setBaseMeleeDamage(10);
 		setMaxHealth(40);

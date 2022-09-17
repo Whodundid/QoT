@@ -18,7 +18,7 @@ public class Whodundid extends Enemy {
 	public Whodundid(int posX, int posY) {
 		super("Whodundid");
 		init(posX, posY, 64, 64);
-		sprite = EntityTextures.whodundid;
+		tex = EntityTextures.whodundid;
 		lastDir = ERandomUtil.randomDir();
 		
 		setBaseMeleeDamage(3);

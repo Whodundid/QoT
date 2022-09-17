@@ -12,7 +12,7 @@ public class StoneGroundClutter extends Entity {
 	public StoneGroundClutter(int posX, int posY) {
 		super("stone_ground_clutter");
 		init(posX, posY, 32, 32);
-		sprite = GroundClutterTextures.stones.getRandVariant();
+		tex = GroundClutterTextures.stones.getRandVariant();
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		setCollisionBox(0, 0, 0, 0);

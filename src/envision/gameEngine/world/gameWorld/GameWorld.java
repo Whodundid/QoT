@@ -426,6 +426,8 @@ public class GameWorld implements IGameWorld {
 	/** Returns this world's rendering system. */
 	public WorldRenderer getWorldRenderer() { return worldRenderer; }
 	
+	public LayerSystem getLayerSystem() { return layers; }
+	
 	//---------
 	// Setters
 	//---------

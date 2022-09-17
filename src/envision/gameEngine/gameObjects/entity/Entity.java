@@ -106,14 +106,71 @@ public abstract class Entity extends GameObject {
 	//-----------
 	
 	@Override
-	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+		if (tex == null) return;
+		
+		//pixel width of each tile
+		double w = (int) (world.getTileWidth() * zoom);
+		//pixel height of each tile
+		double h = (int) (world.getTileHeight() * zoom);
+		
+		//the left most x coordinate for map drawing
+		double x = (int) (midX - (distX * w) - (w / 2));
+		//the top most y coordinate for map drawing
+		double y = (int) (midY - (distY * h) - (h / 2));
+		
+		double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * zoom;
+		double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * zoom;
+		double entityOffsetX = (startX % world.getTileWidth()) * zoom;
+		double entityOffsetY = (startY % world.getTileWidth()) * zoom;
+		
+		//transform the world coordinates of the entity to screen x/y coordinates
+		double drawX = (worldX * w) + x;
+		double drawY = (worldY * h) + y;
+		
+		//translate to the middle drawn world tile
+		drawX += (distX - midDrawX) * w;
+		drawY += (distY - midDrawY) * h;
+		
+		//if (this != QoT.thePlayer) {
+			drawX += entityOffsetX;
+			drawY += entityOffsetY;
+			drawX -= cameraOffsetX;
+			drawY -= cameraOffsetY;
+		//}
+		
+		//calculate the entity's draw width and height based off of actual dims and zoom
+		double drawW = width * zoom;
+		double drawH = height * zoom;
+		
+		double cmx = collisionBox.midX; //collision mid x
+		double cmy = collisionBox.midY; //collision mid y
+		double tw = world.getTileWidth(); //tile width
+		double th = world.getTileHeight(); //tile height
+		
+		//offset world coordinates to middle of collision box
+		int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
+		int mwcy = (int) Math.floor(cmy / th); //mid world coords y
+		
+		//light render position
+		int lightx = worldX + mwcx;
+		int lighty = worldY + mwcy;
+		
+		int mX = Mouse.getMx();
+		int mY = Mouse.getMy();
+		boolean mouseOver = (mX >= drawX && mX <= drawX + drawW && mY >= drawY && mY <= drawY + drawH);
+		
+		drawEntity(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
+	}
+	
+	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
 		
-		drawTexture(sprite, x, y, w, h, flip, brightness);
+		drawTexture(tex, x, y, w, h, flip, brightness);
 		healthBar.setDimensions(x, y - 7, w, 7);
 		healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
 		
-		if ((recentlyAttacked || healthChanged || mouseOver) && !invincible && (health < maxHealth)) {
+		if ((recentlyAttacked || healthChanged) && !invincible && (health < maxHealth)) {
 //			EDimension draw = new EDimension(x + 20, y - 7, x + w - 20, y);
 //			
 //			var cur = health;

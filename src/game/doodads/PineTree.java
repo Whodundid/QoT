@@ -12,7 +12,7 @@ public class PineTree extends Entity {
 	public PineTree(int posX, int posY) {
 		super("pine");
 		init(posX, posY, 200, 200);
-		sprite = TreeTextures.tree_pine_0;
+		tex = TreeTextures.tree_pine_0;
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		double sx = (facing == Rotation.RIGHT) ? 15 : 10;

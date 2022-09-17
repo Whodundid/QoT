@@ -17,14 +17,14 @@ public class MapSettingsTab extends ContainerTab {
 	// Fields
 	//--------
 	
-	MapEditorScreen editor;
+	private MapEditorScreen editor;
 	
-	WindowScrollList list;
+	private WindowScrollList list;
 	
-	WindowLabel mapWidth, mapHeight;
-	WindowButton incWidth, decWidth;
-	WindowButton incHeight, decHeight;
-	WindowTextBox widthBox, heightBox;
+	private WindowLabel mapWidth, mapHeight;
+	private WindowButton incWidth, decWidth;
+	private WindowButton incHeight, decHeight;
+	private WindowTextBox widthBox, heightBox;
 	
 	//--------------
 	// Constructors

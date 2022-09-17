@@ -1,5 +1,6 @@
 package envision.gameEngine.world.worldTiles;
 
+import envision.debug.DebugSettings;
 import envision.gameEngine.GameObject;
 import envision.gameEngine.gameObjects.entity.Entity;
 import envision.gameEngine.world.gameWorld.IGameWorld;
@@ -9,6 +10,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
 import game.QoT;
+import game.entities.player.QoT_Player;
 
 public abstract class WorldTile extends GameObject implements Comparable<WorldTile> {
 	
@@ -29,7 +31,7 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	/**
 	 * The primary texture of this tile.
 	 */
-	protected GameTexture tex;
+	//protected GameTexture tex;
 	
 	/**
 	 * If this tile is a wall, this is the texture that is drawn either above or
@@ -93,7 +95,7 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	 * <p>
 	 * Note: this does NOT represent screen coordinates.
 	 */
-	protected int worldX, worldY;
+	//protected int worldX, worldY;
 	
 	protected boolean hasSideBrightness = false;
 	protected int sideBrightness = 255;
@@ -146,6 +148,11 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 		return id.tileID;
 	}
 	
+	@Override
+	public double getSortPoint() {
+		return (worldY + 1) * QoT.theWorld.getTileHeight();
+	}
+	
 	//---------
 	// Methods
 	//---------
@@ -175,7 +182,52 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	 */
 	@SuppressWarnings("unused")
 	@Override
-	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+		//ignore if there is no texture
+		if (!hasTexture()) return;
+		
+		QoT_Player p = QoT.thePlayer;
+		
+		//pixel width of each tile
+		double w = (int) (world.getTileWidth() * zoom);
+		//pixel height of each tile
+		double h = (int) (world.getTileHeight() * zoom);
+		
+		//the left most x coordinate for map drawing
+		double x = (int) (midX - (distX * w) - (w / 2));
+		//the top most y coordinate for map drawing
+		double y = (int) (midY - (distY * h) - (h / 2));
+		
+		double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * zoom;
+		double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * zoom;
+		double tileOffsetX = (startX % world.getTileWidth()) * zoom;
+		double tileOffsetY = (startY % world.getTileWidth()) * zoom;
+		
+		//transform the world coordinates of the tile to screen x/y coordinates
+		double drawX = (worldX * w) + x;
+		double drawY = (worldY * h) + y;
+		
+		//translate to the middle drawn world tile
+		drawX += (distX - midDrawX) * w;
+		drawY += (distY - midDrawY) * h;
+		
+		drawX += tileOffsetX;
+		drawY += tileOffsetY;
+		drawX -= cameraOffsetX;
+		drawY -= cameraOffsetY;
+		
+		//calculate the entity's draw width and height based off of actual dims and zoom
+		double drawW = width * zoom;
+		double drawH = height * zoom;
+		
+		//apply the player's (CAMERA'S) offset to the drawn tile
+		//dX -= offsetX;
+		//dY -= offsetY;
+		
+		drawTile(world, drawX, drawY, w, h, calcBrightness(worldX, worldY), false);
+	}
+	
+	public void drawTile(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		double wh = h * wallHeight; //wh == 'wallHeight'
 		
 		WorldTile tb = null; // tb == 'tileBelow'
@@ -186,7 +238,10 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 		if ((worldY - 1) >= 0) ta = world.getTileAt(worldX, worldY - 1);
 		if ((worldY + 1) < world.getHeight()) tb = world.getTileAt(worldX, worldY + 1);
 		
-		if (isWall) {
+		if (isWall && DebugSettings.drawFlatWalls) {
+			
+		}
+		else if (isWall) {
 			//determine tile brightness
 			int tileBrightness = brightness;
 			int wallBrightness = brightness;
@@ -270,7 +325,7 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 			}
 		}
 		
-		if (QoT.isDebugMode()) {
+		if (QoT.isDebugMode() && DebugSettings.drawTileInfo) {
 			String tText = "[" + worldX + "," + worldY + "] " + this;
 			String taText = (ta != null) ? "[" + ta.worldX + "," + ta.worldY + "] " + ta.getName(): "null";
 			String tbText = (tb != null) ? "[" + tb.worldX + "," + tb.worldY + "] " + tb.getName(): "null";

@@ -1,17 +1,25 @@
 package envision.layers;
 
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.util.IDrawable;
-import envision.util.InsertionSort;
+import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.EArrayList;
 
 public class ScreenLayer {
 	
-	private EArrayList<IDrawable> objects = new EArrayList<>();
+	private EArrayList<IWindowObject<?>> objects = new EArrayList<>();
 	
-	public void renderLayer(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
-		InsertionSort.sort(objects);
-		objects.forEach(o -> o.draw(world, x, y, w, h, brightness, mouseOver));
+	public <E extends IWindowObject<?>> boolean add(E object) { return objects.add(object); }
+	public <E extends IWindowObject<?>> void add(int index, E object) { objects.add(index, object); }
+	public <E extends IWindowObject<?>> E addR(E object) { objects.add(object); return object; }
+	public <E extends IWindowObject<?>> E addR(int index, E object) { objects.add(index, object); return object; }
+	public <E extends IWindowObject<?>> ScreenLayer addRT(E object) { objects.add(object); return this; }
+	public <E extends IWindowObject<?>> ScreenLayer addRT(int index, E object) { objects.add(index, object); return this; }
+	
+	public void clear() { objects.clear(); }
+	
+	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
+	
+	public void renderLayer(int mXIn, int mYIn) {
+		objects.forEach(o -> o.drawObject(mXIn, mYIn));
 	}
 	
 }

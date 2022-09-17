@@ -217,6 +217,8 @@ public class EditorWorld implements IGameWorld {
 	@Override public int getTileWidth() { return tileWidth; }
 	@Override public int getTileHeight() { return tileHeight; }
 	
+	@Override public boolean isUnderground() { return underground; }
+	
 	//---------
 	// Setters
 	//---------

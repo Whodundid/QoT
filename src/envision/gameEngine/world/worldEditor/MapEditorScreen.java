@@ -350,8 +350,9 @@ public class MapEditorScreen extends GameScreen {
 													  Mouse.getMx() < (dX + w) &&
 													  Mouse.getMy() >= dY &&
 													  Mouse.getMy() < (dY + h);
-				
-				t.draw(editorWorld, dX, dY, w, h, 0xffffffff, mouseOver);
+													  
+				//t.draw(editorWorld, actualWorld.getZoom(), midDrawX, midDrawY, drawDistX, drawDistY);
+				t.drawTile(editorWorld, dX, dY, w, h, 0xffffffff, mouseOver);
 			}
 		}
 	}
@@ -387,7 +388,8 @@ public class MapEditorScreen extends GameScreen {
 			
 			//render the entity
 			//ent.renderObject(drawX, drawY, drawW, drawH);
-			ent.draw(editorWorld, drawX, drawY, drawW, drawH, 0xffffffff, false);
+			//ent.draw(editorWorld, actualWorld.getZoom(), midDrawX, midDrawY, drawDistX, drawDistY);
+			ent.drawEntity(editorWorld, drawX, drawY, drawW, drawH, 0xffffffff, mouseOver);
 			//drawTexture(tex, drawX, drawY, drawW, drawH);
 			
 			if (settings.drawEntityHitBoxes) {

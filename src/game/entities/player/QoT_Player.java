@@ -4,9 +4,11 @@ import envision.gameEngine.gameObjects.entity.Entity;
 import envision.gameEngine.gameObjects.entity.Player;
 import envision.gameEngine.gameObjects.entity.PlayerStats;
 import envision.gameEngine.world.gameWorld.IGameWorld;
+import envision.inputHandlers.Mouse;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
+import eutil.misc.Rotation;
 import game.QoT;
 import game.assets.textures.entity.EntityTextures;
 import game.assets.textures.item.ItemTextures;
@@ -29,7 +31,7 @@ public class QoT_Player extends Player {
 		
 		setCollisionBox(midX - 8, endY - 10, midX + 8, endY);
 		//setCollisionBox(midX + 18, endY - 10, midX + 28, endY);
-		sprite = EntityTextures.player;
+		tex = EntityTextures.player;
 		timeUntilNextAttack = 175l;
 	}
 	
@@ -38,8 +40,33 @@ public class QoT_Player extends Player {
 	//----------------
 	
 	@Override
-	public void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
-		super.draw(world, x, y, w, h, brightness, mouseOver);
+	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+		super.draw(world, zoom, midDrawX, midDrawY, midX, midY, distX, distY);
+	}
+	
+	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
+		
+		drawTexture(tex, x, y, w, h, flip, brightness);
+		//healthBar.setDimensions(x, y - 7, w, 7);
+		//healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
+		
+		if ((recentlyAttacked || healthChanged) && !invincible && (health < maxHealth)) {
+//			EDimension draw = new EDimension(x + 20, y - 7, x + w - 20, y);
+//			
+//			var cur = health;
+//			var percent = (double) cur / (double) maxHealth;
+//			var pw = (draw.width * percent);
+//			
+//			drawRect(draw.add(1), EColors.black);
+//			var end = (this == QoT.thePlayer) ? 4 : 1;
+//			drawRect(draw.startX, draw.startY, draw.startX + pw, draw.endY - end, EColors.mc_darkred);
+			
+			//healthBar.keepDrawing();
+		}
+		
+		drawStringC(headText, x + w/2, y - h/4);
+		//drawStringC(recentlyAttacked + ":" + recentlyHit + ":" + mouseOver, x + w/2, y - h/2, 0.5, 0.5);
 		
 		//draw sword *crapily*
 		if (attacking) {
@@ -62,7 +89,7 @@ public class QoT_Player extends Player {
 			var percent = (double) cur / (double) timeUntilNextAttack / 2;
 			var pw = (draw.width * percent);
 			
-			drawRect(draw.startX + pw, draw.startY, draw.endX - pw, draw.endY, EColors.mc_gold.opacity(180));
+			//drawRect(draw.startX + pw, draw.startY, draw.endX - pw, draw.endY, EColors.mc_gold.opacity(180));
 		}
 	}
 	

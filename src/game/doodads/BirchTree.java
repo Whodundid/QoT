@@ -12,7 +12,7 @@ public class BirchTree extends Entity {
 	public BirchTree(int posX, int posY) {
 		super("birch");
 		init(posX, posY, 160, 160);
-		sprite = TreeTextures.birch_0;
+		tex = TreeTextures.birch_0;
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		double sx = (facing == Rotation.RIGHT) ? 15 : 5;

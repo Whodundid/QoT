@@ -3,23 +3,27 @@ package game.screens.main;
 import envision.gameEngine.effects.sounds.SoundEngine;
 import envision.gameEngine.gameSystems.screens.GameScreen;
 import envision.gameEngine.world.worldEditor.MapMenuScreen;
-import envision.gameEngine.world.worldTiles.categories.DungeonTiles;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
+import eutil.random.ERandomUtil;
 import game.QoT;
 import game.assets.sounds.Songs;
 import game.assets.textures.general.GeneralTextures;
+import game.assets.textures.taskbar.TaskBarTextures;
+import game.assets.textures.world.floors.stone.StoneFloorTextures;
 
 public class MainMenuScreen extends GameScreen {
 	
 	WindowButton newGame, loadGame, options, closeGame;
 	WindowButton mapTest;
+	private boolean secret = false;
 	
 	public MainMenuScreen() {
 		super();
 		aliases.add("main", "mainmenu", "titlescreen");
+		secret = ERandomUtil.roll(1, 1, 10);
 	}
 	
 	@Override
@@ -56,7 +60,13 @@ public class MainMenuScreen extends GameScreen {
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
-		drawTexture(DungeonTiles.dungFloor.getTexture());
+		if (secret) {
+			drawTexture(StoneFloorTextures.clay_pad);
+			drawTexture(TaskBarTextures.textureviewer);
+		}
+		else {
+			drawTexture(StoneFloorTextures.dung_floor);
+		}
 		//drawRect(EColors.rainbow());
 		//GLSettings.pushMatrix();
 		//double r = 350;

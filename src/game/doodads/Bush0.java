@@ -12,7 +12,7 @@ public class Bush0 extends Entity {
 	public Bush0(int posX, int posY) {
 		super("bush0");
 		init(posX, posY, 32, 32);
-		sprite = BushTextures.bush_0;
+		tex = BushTextures.bush_0;
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		setCollisionBox(midX - 10, midY - 5, midX + 10, midY + 10);
 		invincible = true;
