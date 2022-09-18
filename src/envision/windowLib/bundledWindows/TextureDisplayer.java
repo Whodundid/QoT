@@ -16,6 +16,7 @@ import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowObjects.basicObjects.WindowImageBox;
 import envision.windowLib.windowTypes.WindowParent;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envision.windowLib.windowTypes.interfaces.IWindowObject;
 
 public class TextureDisplayer extends WindowParent {
 	
@@ -80,7 +81,7 @@ public class TextureDisplayer extends WindowParent {
 		if (previous.endX > (open.startX - 1)) previous.setDimensions(open.startX - 1 - w, previous.startY, w, previous.height);
 		if (open.endX > (next.startX - 1)) next.setDimensions(open.endX + 1, next.startY, w, next.height);
 		
-		setVisible(navigationDrawn, previous, next);
+		IWindowObject.setVisible(navigationDrawn, previous, next);
 		open.setVisible(file != null ? files.get(curFile) != null : false);
 		
 		imageBox.setImage(tex);

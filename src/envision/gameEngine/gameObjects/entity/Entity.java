@@ -459,7 +459,7 @@ public abstract class Entity extends GameObject {
 	public void levelUp() {
 		if (EntityLevel.checkLevelUp(level, experience)) {
 			level++;
-			xpNeeded = EntityLevel.getXPNeededForNextLevel(level);
+			xpNeeded = EntityLevel.getTotalXPNeeded(level + 1);
 		}
 	}
 	

@@ -1239,33 +1239,19 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	public default void print(Object... toPrint) { DebugToolKit.print(toPrint); }
 	public default void println(Object... toPrint) { DebugToolKit.println(toPrint); }
 	
-	//-----------------
-	// Default setters
-	//-----------------
-	
-	public default void setMoveable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setMoveable(val), objs); }
-	public default void setResizeable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setResizeable(val), objs); }
-	public default void setCloseable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setCloseable(val), objs); }
-	public default void setClickable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setClickable(val), objs); }
-	public default void setHidden(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setHidden(val), objs); }
-	public default void setEnabled(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setEnabled(val), objs); }
-	public default void setVisible(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setVisible(val), objs); }
-	public default void setPersistent(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
-	public default void setHoverText(String text, IWindowObject<?>... objs) { setVal(o -> o.setHoverText(text), objs); }
-	
 	//----------------
 	// Static Methods
 	//----------------
 	
-	public static void setMoveableS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setMoveable(val), objs); }
-	public static void setResizeableS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setResizeable(val), objs); }
-	public static void setCloseableS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setCloseable(val), objs); }
-	public static void setClickableS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setClickable(val), objs); }
-	public static void setHiddenS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setHidden(val), objs); }
-	public static void setEnabledS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setEnabled(val), objs); }
-	public static void setVisibleS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setVisible(val), objs); }
-	public static void setPersistentS(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
-	public static void setHoverTextS(String text, IWindowObject<?>... objs) { setVal(o -> o.setHoverText(text), objs); }
+	public static void setMoveable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setMoveable(val), objs); }
+	public static void setResizeable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setResizeable(val), objs); }
+	public static void setCloseable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setCloseable(val), objs); }
+	public static void setClickable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setClickable(val), objs); }
+	public static void setHidden(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setHidden(val), objs); }
+	public static void setEnabled(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setEnabled(val), objs); }
+	public static void setVisible(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setVisible(val), objs); }
+	public static void setPersistent(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
+	public static void setHoverText(String text, IWindowObject<?>... objs) { setVal(o -> o.setHoverText(text), objs); }
 	
 	public static void setVal(Consumer<? super IWindowObject<?>> action, IWindowObject<?>... objs) {
 		EUtil.filterNullForEachA(action, objs);

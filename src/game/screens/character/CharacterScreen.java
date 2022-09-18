@@ -1,11 +1,15 @@
 package game.screens.character;
 
 import envision.gameEngine.gameObjects.entity.Entity;
+import envision.gameEngine.gameObjects.entity.EntityLevel;
 import envision.gameEngine.gameSystems.screens.GameScreen;
 import envision.inputHandlers.Keyboard;
+import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import eutil.EUtil;
 import eutil.colors.EColors;
 import game.QoT;
 import game.assets.textures.window.WindowTextures;
@@ -93,6 +97,15 @@ public class CharacterScreen extends GameScreen {
 		drawStats();
 		drawInventory();
 		drawAbilities();
+		
+		if (EUtil.notNull(upHealth, upStrength, upMana)) {
+			if (EntityLevel.checkLevelUp(theEntity.getLevel(), theEntity.getExperience())) {
+				IWindowObject.setVisible(true, upHealth, upStrength, upMana);
+			}
+			else {
+				IWindowObject.setVisible(false, upHealth, upStrength, upMana);
+			}
+		}
 	}
 	
 	private void drawChar() {
@@ -125,7 +138,7 @@ public class CharacterScreen extends GameScreen {
 		double bX = (tX / 2);
 		double bY = (tY / 2);
 		double bEX = fX - (bX);
-		double bEY = midY;
+		double bEY = midY + 120;
 		drawRect(bX, bY, bEX, bEY, EColors.black);
 		drawRect(bX + 1, bY + 1, bEX - 1, bEY- 1, EColors.pdgray.brightness(0x88));
 		
@@ -134,16 +147,21 @@ public class CharacterScreen extends GameScreen {
 		drawString(theEntity.getLevel(), tX, tY + (cY));
 		
 		//Experience
-		drawString("Experience", tX, tY + (cY * 3), EColors.purple);
-		drawString(theEntity.getExperience() +  " / " + theEntity.getXPNeeded(), tX, tY + (cY * 4));
+		drawString("Experience", tX, tY + (cY * 2.5), EColors.purple);
+		drawString(theEntity.getExperience() +  " / " + theEntity.getXPNeeded(), tX, tY + (cY * 3.5));
 		
 		//Health
-		drawString("Health", tX, tY + (cY * 6), EColors.mc_darkred);
-		drawString(theEntity.getHealth() +  " / " + theEntity.getMaxHealth(), tX, tY + (cY * 7));
+		drawString("Health", tX, tY + (cY * 5), EColors.mc_darkred);
+		drawString(theEntity.getHealth() +  " / " + theEntity.getMaxHealth(), tX, tY + (cY * 6));
 		
 		//Mana
-		drawString("Mana", tX, tY + (cY * 9), EColors.skyblue);
-		drawString(theEntity.getMana() +  " / " + theEntity.getMaxMana(), tX, tY + (cY * 10));
+		drawString("Mana", tX, tY + (cY * 7.5), EColors.skyblue);
+		drawString(theEntity.getMana() +  " / " + theEntity.getMaxMana(), tX, tY + (cY * 8.5));
+		
+		//draw skills
+		drawStringS("Hitpoints " + EColors.white + theEntity.getHitpointsLevel(), upHealth.endX + 20, upHealth.midY - FontRenderer.HALF_FH, EColors.red);
+		drawStringS("Strength " + EColors.white + theEntity.getStrengthLevel(), upStrength.endX + 20, upStrength.midY - FontRenderer.HALF_FH, EColors.lgreen);
+		drawStringS("Magic " + EColors.white + theEntity.getMagicLevel(), upMana.endX + 20, upMana.midY - FontRenderer.HALF_FH, EColors.blue);
 	}
 	
 	private void drawInventory() {
@@ -176,8 +194,17 @@ public class CharacterScreen extends GameScreen {
 		reInitChildren();
 	}
 	
-	private void levelHP() {}
-	private void levelStrength() {}
-	private void levelMana() {}
+	private void levelHP() {
+		theEntity.setHitpointsLevel(theEntity.getHitpointsLevel() + 1);
+		theEntity.levelUp();
+	}
+	private void levelStrength() {
+		theEntity.setStrengthLevel(theEntity.getStrengthLevel() + 1);
+		theEntity.levelUp();
+	}
+	private void levelMana() {
+		theEntity.setMagicLevel(theEntity.getMagicLevel() + 1);
+		theEntity.levelUp();
+	}
 	
 }

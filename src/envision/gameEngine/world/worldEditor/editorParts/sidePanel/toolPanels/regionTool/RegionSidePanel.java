@@ -42,7 +42,7 @@ public class RegionSidePanel extends SidePanel {
 		regionList = new WindowTextArea(panel, startX + 10, startY + 10, width - 20, edit.startY - startY - 20);
 		regionList.setDrawLineNumbers(true);
 		
-		IWindowObject.setEnabledS(false, edit, delete);
+		IWindowObject.setEnabled(false, edit, delete);
 		
 		panel.addObject(regionList);
 		panel.addObject(edit, delete);
@@ -75,7 +75,7 @@ public class RegionSidePanel extends SidePanel {
 	
 	@Override
 	public void drawTool(int mXIn, int mYIn) {
-		IWindowObject.setEnabledS(regionList.getCurrentLine() != null, edit, delete);
+		IWindowObject.setEnabled(regionList.getCurrentLine() != null, edit, delete);
 		
 		drawRect(EColors.black);
 		drawRect(EColors.dgray, 1);
