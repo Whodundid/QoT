@@ -10,8 +10,9 @@ import game.QoT;
 public class QoTSettings {
 	
 	private static File localGameDir;
-	private static File profilesDir;
+	private static File savesDir;
 	private static File editorWorldsDir;
+	private static File menuWorldsDir;
 	private static File resourcesDir;
 	
 	/** The primary configuration file for the game. */
@@ -84,17 +85,23 @@ public class QoTSettings {
 		}
 		
 		//create mappings to game directories
-		profilesDir = new File(localGameDir, "saves");
+		savesDir = new File(localGameDir, "saves");
 		editorWorldsDir = new File(localGameDir, "editorWorlds");
+		menuWorldsDir = new File(localGameDir, "menuWorlds");
 		
-		if (!profilesDir.exists()) {
+		if (!savesDir.exists()) {
 			QoT.warn("Profiles directory not found! Attempting to create new one!");
-			profilesDir.mkdirs();
+			savesDir.mkdirs();
 		}
 		
 		if (!editorWorldsDir.exists()) {
 			QoT.warn("Editor worlds directory not found! Attempting to create new one!");
 			editorWorldsDir.mkdirs();
+		}
+		
+		if (!menuWorldsDir.exists()) {
+			QoT.warn("Menu worlds directory not found! Attempting to create new one!");
+			menuWorldsDir.mkdirs();
 		}
 		
 		return true;
@@ -106,8 +113,9 @@ public class QoTSettings {
 	
 	public static File getResourcesDir() { return resourcesDir; }
 	public static File getLocalGameDir() { return localGameDir; }
-	public static File getProfilesDir() { return profilesDir; }
+	public static File getSavesDir() { return savesDir; }
 	public static File getEditorWorldsDir() { return editorWorldsDir; }
+	public static File getMenuWorldsDir() { return menuWorldsDir; }
 	
 	public static MainConfigFile getGameConfig() { return mainConfig; }
 	

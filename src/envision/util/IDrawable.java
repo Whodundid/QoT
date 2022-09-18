@@ -1,6 +1,7 @@
 package envision.util;
 
 import envision.gameEngine.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 
 public interface IDrawable {
 	
@@ -15,6 +16,6 @@ public interface IDrawable {
 	 * @param midX TODO
 	 * @param midY TODO
 	 */
-	void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY);
+	void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY);
 	
 }

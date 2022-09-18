@@ -3,6 +3,7 @@ package envision.gameEngine.gameObjects.entity;
 import envision.gameEngine.GameObject;
 import envision.gameEngine.world.gameWorld.IGameWorld;
 import envision.gameEngine.world.worldTiles.WorldTile;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import envision.inputHandlers.Mouse;
 import eutil.debug.Broken;
 import eutil.math.EDimension;
@@ -106,8 +107,10 @@ public abstract class Entity extends GameObject {
 	//-----------
 	
 	@Override
-	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
 		if (tex == null) return;
+		
+		double zoom = camera.getZoom();
 		
 		//pixel width of each tile
 		double w = (int) (world.getTileWidth() * zoom);
@@ -119,8 +122,6 @@ public abstract class Entity extends GameObject {
 		//the top most y coordinate for map drawing
 		double y = (int) (midY - (distY * h) - (h / 2));
 		
-		double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * zoom;
-		double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * zoom;
 		double entityOffsetX = (startX % world.getTileWidth()) * zoom;
 		double entityOffsetY = (startY % world.getTileWidth()) * zoom;
 		
@@ -132,12 +133,10 @@ public abstract class Entity extends GameObject {
 		drawX += (distX - midDrawX) * w;
 		drawY += (distY - midDrawY) * h;
 		
-		//if (this != QoT.thePlayer) {
-			drawX += entityOffsetX;
-			drawY += entityOffsetY;
-			drawX -= cameraOffsetX;
-			drawY -= cameraOffsetY;
-		//}
+		drawX += entityOffsetX;
+		drawY += entityOffsetY;
+		drawX -= camera.getOffsetX();
+		drawY -= camera.getOffsetY();
 		
 		//calculate the entity's draw width and height based off of actual dims and zoom
 		double drawW = width * zoom;

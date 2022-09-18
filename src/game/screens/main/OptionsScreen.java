@@ -92,7 +92,7 @@ public class OptionsScreen extends GameScreen {
 	//---------------------------------------------
 	
 	private void back() {
-		closeScreen();
+		QoT.displayScreen(new MainMenuScreen());
 	}
 	
 	private void volumeSlider() {

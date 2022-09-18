@@ -1,18 +1,27 @@
 package game.screens.main;
 
+import java.io.File;
+
+import envision.debug.DebugSettings;
 import envision.gameEngine.effects.sounds.SoundEngine;
 import envision.gameEngine.gameSystems.screens.GameScreen;
+import envision.gameEngine.world.gameWorld.GameWorld;
 import envision.gameEngine.world.worldEditor.MapMenuScreen;
+import envision.inputHandlers.Keyboard;
+import envision.renderEngine.fontRenderer.FontRenderer;
+import envision.renderEngine.textureSystem.GameTexture;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
+import eutil.misc.ETimer;
 import eutil.random.ERandomUtil;
 import game.QoT;
 import game.assets.sounds.Songs;
+import game.assets.textures.GameTextures;
 import game.assets.textures.general.GeneralTextures;
-import game.assets.textures.taskbar.TaskBarTextures;
 import game.assets.textures.world.floors.stone.StoneFloorTextures;
+import game.settings.QoTSettings;
 
 public class MainMenuScreen extends GameScreen {
 	
@@ -20,14 +29,25 @@ public class MainMenuScreen extends GameScreen {
 	WindowButton mapTest;
 	private boolean secret = false;
 	
+	private volatile GameWorld menuWorld = null;
+	private ETimer fadeInTimer = new ETimer(1300l);
+	private ETimer nextWorldTimer = new ETimer(20000l);
+	private ETimer fadeOutTimer = new ETimer(1300l);
+	private ETimer fadeDelayTimer = new ETimer(100l);
+	private long timeLoaded = -1;
+	private int lastGameTick = -1;
+	
 	public MainMenuScreen() {
 		super();
 		aliases.add("main", "mainmenu", "titlescreen");
-		secret = ERandomUtil.roll(1, 1, 10);
+		secret = ERandomUtil.roll(1, 1, 1000);
 	}
 	
 	@Override
 	public void initScreen() {
+		DebugSettings.drawFlatWalls = false;
+		DebugSettings.drawTileGrid = false;
+		
 		if (QoT.theWorld != null) {
 			QoT.loadWorld(null);
 		}
@@ -37,6 +57,43 @@ public class MainMenuScreen extends GameScreen {
 		}
 		SoundEngine.loopIfNotPlaying(Songs.zarus);
 		setObjectName("Main Menu Screen");
+		
+		loadMenuWorld();
+	}
+	
+	private void loadMenuWorld() {
+		menuWorld = null;
+		timeLoaded = -1;
+		lastGameTick = -1;
+		fadeInTimer.reset();
+		fadeDelayTimer.reset();
+		
+		String[] maps = QoTSettings.getMenuWorldsDir().list();
+		if (maps.length > 0) {
+			int theMap = ERandomUtil.getRoll(0, maps.length - 1);
+			String selected = maps[theMap];
+			Runnable loader = () -> {
+				if (secret) return;
+				
+				menuWorld = new GameWorld(new File(QoTSettings.getMenuWorldsDir(), selected));
+				var w = QoT.theWorld = menuWorld;
+				w.getWorldRenderer().onWorldLoaded();
+				w.setCameraZoom(ERandomUtil.getRoll(2.5, 3.5));
+				w.setUnderground(ERandomUtil.randomBool());
+				int ww = w.getWidth();
+				int wh = w.getHeight();
+				int lowerX = (ww / 2) - ww / 4;
+				int lowerY = (wh / 2) - wh / 4;
+				int upperX = (ww / 2) + ww / 4;
+				int upperY = (wh / 2) + wh / 4;
+				int wx = ERandomUtil.getRoll(lowerX, upperX);
+				int wy = ERandomUtil.getRoll(lowerY, upperY);
+				w.getCamera().setFocusedCoords(wx, wy);
+				
+			};
+			Thread loaderThread = new Thread(loader);
+			loaderThread.start();
+		}
 	}
 	
 	@Override
@@ -52,6 +109,9 @@ public class MainMenuScreen extends GameScreen {
 		options = new WindowButton(this, x, y + (gap + h) * 2, w, h, "Options");
 		closeGame = new WindowButton(this, x, y + (gap + h) * 3, w, h, "Quit Game");
 		
+		var tex = StoneFloorTextures.stone_pad;
+		WindowButton.setTextures(tex, tex, newGame, loadGame, options, closeGame);
+		
 		mapTest = new WindowButton(this, 10, 10, w, h, "Map Editor");
 		
 		addObject(newGame, loadGame, options, closeGame);
@@ -60,27 +120,124 @@ public class MainMenuScreen extends GameScreen {
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
-		if (secret) {
-			drawTexture(StoneFloorTextures.clay_pad);
-			drawTexture(TaskBarTextures.textureviewer);
-		}
-		else {
-			drawTexture(StoneFloorTextures.dung_floor);
-		}
-		//drawRect(EColors.rainbow());
-		//GLSettings.pushMatrix();
-		//double r = 350;
-		//double degree = (System.currentTimeMillis() % (360 * 16)) / 16;
-		//double dX = midX + r * Math.cos(degree * (Math.PI / 180));
-		//double dY = (midY - 50) + r * Math.sin(degree * (Math.PI / 180));
-		//drawStringC("QUEST OF THYRAH", dX, dY, EColors.black);
-		//GLSettings.popMatrix();
+		updateBackground();
+		
 		drawRect(newGame.startX - 10, newGame.startY - 10, newGame.endX + 10, closeGame.endY + 10, EColors.dsteel);
 		double w = 250;
 		
 		drawFilledEllipse(midX, midY - 220, 156, 106, 10, EColors.vdgray);
 		drawFilledEllipse(midX, midY - 220, 150, 100, 10, EColors.rainbow());
 		drawTexture(GeneralTextures.logo, midX - w / 2, midY - 320, w, 200);
+		
+		//draw copyright
+		{
+			var text = FontRenderer.COPYRIGHT + "Placeholder Industries";
+			var sc = 0.7;
+			var dx = 3;
+			var dy = height - FontRenderer.FH * sc - 3;
+			drawStringS(text, dx, dy, sc, sc, EColors.lgray);
+		}
+	}
+	
+	@Override
+	public void mouseScrolled(int change) {
+		super.mouseScrolled(change);
+		
+		if (menuWorld == null) return;
+		
+		double c = Math.signum(change);
+		double z = 1.0;
+		
+		if (Keyboard.isCtrlDown()) {
+			if (c > 0 && menuWorld.getCameraZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
+			else if (menuWorld.getCameraZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
+			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
+			else if (menuWorld.getCameraZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
+			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
+			
+			z = ENumUtil.round(menuWorld.getCameraZoom() + z, 2);
+			menuWorld.setCameraZoom(z);
+		}
+	}
+	
+	@Override
+	public void onGameTick(long ticks) {
+		if (menuWorld != null) {
+			menuWorld.onGameTick();
+		}
+	}
+	
+	private void updateBackground() {
+		//draw underlying background image
+		drawBackground();
+		
+		//check if delay timer has finished -- if so, start fade timer
+		if (fadeDelayTimer.check()) { fadeInTimer.start(); }
+		//check if the next world should start to be loaded
+		if (nextWorldTimer.check()) fadeOutTimer.start();
+		//check if the fade out is complete -- in which case, load the new world
+		if (fadeOutTimer.check()) {
+			secret = ERandomUtil.roll(1, 1, 1000);
+			if (secret) nextWorldTimer.setDuration(1000l);
+			else nextWorldTimer.setDuration(20000l);
+			loadMenuWorld();
+			return;
+		}
+		
+		//check to see whether or not the standard background should still draw
+		if (!secret && (menuWorld == null || !menuWorld.isFileLoaded()) ||
+			ETimer.anyCounting(fadeInTimer, fadeDelayTimer, fadeOutTimer))
+		{
+			drawNullWorldBackground();
+			//start timer until the next world will be loaded
+			if (fadeInTimer.check()) nextWorldTimer.start();
+		}
+		else if (timeLoaded == -1) {
+			timeLoaded = System.currentTimeMillis();
+			fadeDelayTimer.start();
+		}
+	}
+	
+	private void drawBackground() {
+		if (fadeDelayTimer.isCounting()) return;
+		
+		if (secret) {
+			drawTexture(GeneralTextures.noscreens);
+		}
+		else if (menuWorld != null && menuWorld.isFileLoaded()) {
+			menuWorld.getWorldRenderer().onRenderTick();
+			drawRect(EColors.vdgray.opacity(30));
+		}
+	}
+	
+	private void drawNullWorldBackground() {
+		//GameTexture tex = StoneFloorTextures.stone_pad;
+		GameTexture tex = StoneFloorTextures.dung_floor;
+		double scale = 4.5;
+		double tW = tex.getWidth() * scale;
+		double tH = tex.getHeight() * scale;
+		int numX = (int) Math.ceil(QoT.getWidth() / tW);
+		int numY = (int) Math.ceil(QoT.getHeight() / tH);
+		
+		int opacity = 255;
+		
+		//check fade in/out timers
+		if (fadeInTimer.isCounting()) {
+			var ratio = ((255L * fadeInTimer.getProgress()) / fadeInTimer.getDuration());
+			opacity = 255 - (int) ratio;
+		}
+		else if (fadeOutTimer.isCounting()) {
+			var ratio = ((255L * fadeOutTimer.getProgress()) / fadeOutTimer.getDuration());
+			opacity = (int) ratio;
+		}
+		
+		opacity = ENumUtil.clamp(opacity, 0, 255);
+		
+		for (int i = 0; i < numY; i++) {
+			for (int j = 0; j < numX; j++) {
+				drawTexture(tex, tW * j, tH * i, tW, tH, EColors.lgray.opacity(opacity));
+			}
+		}
 	}
 	
 	@Override
@@ -90,6 +247,14 @@ public class MainMenuScreen extends GameScreen {
 		if (object == options) 		options();
 		if (object == closeGame) 	closeGame();
 		if (object == mapTest) 		mapTest();
+	}
+	
+	@Override
+	public void onScreenResized() {
+		super.onScreenResized();
+		if (menuWorld != null) {
+			menuWorld.getWorldRenderer().onWindowResized();
+		}
 	}
 	
 	//---------------------------------------------------

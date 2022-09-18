@@ -4,6 +4,7 @@ import envision.gameEngine.gameObjects.entity.Entity;
 import envision.gameEngine.gameObjects.entity.Player;
 import envision.gameEngine.gameObjects.entity.PlayerStats;
 import envision.gameEngine.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import envision.inputHandlers.Mouse;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -40,8 +41,8 @@ public class QoT_Player extends Player {
 	//----------------
 	
 	@Override
-	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
-		super.draw(world, zoom, midDrawX, midDrawY, midX, midY, distX, distY);
+	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+		super.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
 	}
 	
 	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {

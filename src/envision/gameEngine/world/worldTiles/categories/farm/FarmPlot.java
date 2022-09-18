@@ -3,6 +3,7 @@ package envision.gameEngine.world.worldTiles.categories.farm;
 import envision.gameEngine.world.gameWorld.IGameWorld;
 import envision.gameEngine.world.worldTiles.TileIDs;
 import envision.gameEngine.world.worldTiles.WorldTile;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import envision.renderEngine.textureSystem.GameTexture;
 import game.assets.textures.world.farmland.FarmTextures;
 import game.assets.textures.world.floors.wood.WoodFloorTextures;
@@ -31,8 +32,8 @@ public class FarmPlot extends WorldTile {
 	//-----------
 
 	@Override
-	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
-		super.draw(world, zoom, midDrawX, midDrawY, midX, midY, distX, distY);
+	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+		super.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
 	}
 	
 	@Override

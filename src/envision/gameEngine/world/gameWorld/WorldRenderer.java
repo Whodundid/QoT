@@ -55,17 +55,15 @@ public class WorldRenderer extends EGui {
 	 * Called when the world has just been loaded and just before it is about
 	 * to be rendered.
 	 */
-	public void onWorldLoaded() {
+	public synchronized void onWorldLoaded() {
 		onWindowResized();
-		
 		if (world != null) {
 			//load entities
 			world.spawnEntities();
 			
 			TEMP_createWorldLayers();
 			
-			world.setZoom(3);
-			//entityOrder.addAll(world.getEntitiesInWorld());
+			world.setCameraZoom(3);
 		}
 	}
 	
@@ -116,6 +114,7 @@ public class WorldRenderer extends EGui {
 	 * Should be called from main game render tick, every tick.
 	 */
 	public void onRenderTick() {
+		world.camera.onRenderTick();
 		renderWorld();
 	}
 	
@@ -129,9 +128,9 @@ public class WorldRenderer extends EGui {
 			if (!world.isUnderground()) drawRect(0xff4fbaff);
 			
 			//pixel width of each tile
-			double w = (int) (world.getTileWidth() * world.getZoom());
+			double w = (int) (world.getTileWidth() * world.getCameraZoom());
 			//pixel height of each tile
-			double h = (int) (world.getTileHeight() * world.getZoom());
+			double h = (int) (world.getTileHeight() * world.getCameraZoom());
 			
 			//the left most x coordinate for map drawing
 			double x = (int) (midX - (distX * w) - (w / 2));
@@ -152,11 +151,9 @@ public class WorldRenderer extends EGui {
 	}
 	
 	private void renderMapLayers() {
-		QoT_Player p = QoT.thePlayer;
-		
 		//keep the player at the center of the world (THIS SHOULD BE CHANGED TO 'CAMERA' AT SOME POINT!)
-		midDrawX = p.worldX;
-		midDrawY = p.worldY;
+		midDrawX = world.camera.getWorldX();
+		midDrawY = world.camera.getWorldY();
 		
 		//calculations to determine how many tiles to draw out in each direction from the mid of the screen
 		left = ENumUtil.clamp(midDrawX - distX, 0, world.getWidth() - 1);
@@ -169,7 +166,7 @@ public class WorldRenderer extends EGui {
 		for (WorldLayer layer : worldLayers) {
 			layer.buildLayer(left, top, right, bot);
 			//System.out.println(layer + " : " + layer.getDrawnObjects());
-			layer.renderLayer(world, world.zoom, midDrawX, midDrawY, midX, midY, distX, distY);
+			layer.renderLayer(world, world.getCamera(), midDrawX, midDrawY, midX, midY, distX, distY);
 		}
 	}
 	
@@ -181,8 +178,8 @@ public class WorldRenderer extends EGui {
 		midDrawY = p.worldY;
 		
 		//uses the player's (SHOULD BE A CAMERA OBJECT) pixel position as an offset to apply to rendered tiles 
-		double offsetX = (p.startX % world.getTileWidth()) * world.zoom;
-		double offsetY = (p.startY % world.getTileHeight()) * world.zoom;
+		double offsetX = (p.startX % world.getTileWidth()) * world.getCameraZoom();
+		double offsetY = (p.startY % world.getTileHeight()) * world.getCameraZoom();
 		
 		//calculations to determine how many tiles to draw out in each direction from the mid of the screen
 		left = ENumUtil.clamp(midDrawX - distX, 0, world.getWidth() - 1);
@@ -231,10 +228,10 @@ public class WorldRenderer extends EGui {
 			GameTexture tex = ent.getTexture();
 			if (tex == null) continue;
 			
-			double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * world.zoom;
-			double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * world.zoom;
-			double entityOffsetX = (ent.startX % world.getTileWidth()) * world.zoom;
-			double entityOffsetY = (ent.startY % world.getTileWidth()) * world.zoom;
+			double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * world.getCameraZoom();
+			double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * world.getCameraZoom();
+			double entityOffsetX = (ent.startX % world.getTileWidth()) * world.getCameraZoom();
+			double entityOffsetY = (ent.startY % world.getTileWidth()) * world.getCameraZoom();
 			
 			//transform the world coordinates of the entity to screen x/y coordinates
 			double drawX = (ent.worldX * w) + x;
@@ -252,8 +249,8 @@ public class WorldRenderer extends EGui {
 			}
 			
 			//calculate the entity's draw width and height based off of actual dims and zoom
-			double drawW = ent.width * world.getZoom();
-			double drawH = ent.height * world.getZoom();
+			double drawW = ent.width * world.getCameraZoom();
+			double drawH = ent.height * world.getCameraZoom();
 			
 			double cmx = ent.collisionBox.midX; //collision mid x
 			double cmy = ent.collisionBox.midY; //collision mid y
@@ -282,10 +279,10 @@ public class WorldRenderer extends EGui {
 			}
 			
 			if (drawEntityHitboxes) {
-				double colSX = drawX + (ent.getCollision().startX * world.zoom);
-				double colSY = drawY + (ent.getCollision().startY * world.zoom);
-				double colEX = colSX + (ent.getCollision().width * world.zoom);
-				double colEY = colSY + (ent.getCollision().height * world.zoom);
+				double colSX = drawX + (ent.getCollision().startX * world.getCameraZoom());
+				double colSY = drawY + (ent.getCollision().startY * world.getCameraZoom());
+				double colEX = colSX + (ent.getCollision().width * world.getCameraZoom());
+				double colEY = colSY + (ent.getCollision().height * world.getCameraZoom());
 				
 				drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
 			}
@@ -293,8 +290,8 @@ public class WorldRenderer extends EGui {
 			if (drawEntityOutlines) {
 				double colSX = drawX;
 				double colSY = drawY;
-				double colEX = colSX + ent.width * world.zoom;
-				double colEY = colSY + ent.height * world.zoom;
+				double colEX = colSX + ent.width * world.getCameraZoom();
+				double colEY = colSY + ent.height * world.getCameraZoom();
 				
 				drawHRect(colSX, colSY, colEX, colEY, 1, EColors.blue);
 			}
@@ -310,8 +307,8 @@ public class WorldRenderer extends EGui {
 		double offsetX = (p.startX % world.getTileWidth());
 		double offsetY = (p.startY % world.getTileHeight());
 		
-		drawX -= offsetX * world.zoom;
-		drawY -= offsetY * world.zoom;
+		drawX -= offsetX * world.getCameraZoom();
+		drawY -= offsetY * world.getCameraZoom();
 		
 		double sX = drawX;
 		double sY = drawY;
@@ -368,8 +365,8 @@ public class WorldRenderer extends EGui {
 			//distX = (int) 5;
 			//distY = (int) 5;
 			
-			//w = (int) (world.getTileWidth() * world.getZoom());
-			//h = (int) (world.getTileHeight() * world.getZoom());
+			//w = (int) (world.getTileWidth() * world.getCameraZoom());
+			//h = (int) (world.getTileHeight() * world.getCameraZoom());
 			//x = (int) midX - (distX / 2 * w) - w;
 			//y = (int) midY - (distY / 2 * h) - h;
 		}

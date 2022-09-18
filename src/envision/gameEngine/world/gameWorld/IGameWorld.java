@@ -6,6 +6,7 @@ import envision.gameEngine.gameObjects.entity.EntitySpawn;
 import envision.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.gameEngine.world.worldTiles.WorldTile;
 import envision.gameEngine.world.worldUtil.Region;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import eutil.datatypes.EArrayList;
 
 public interface IGameWorld {
@@ -30,6 +31,10 @@ public interface IGameWorld {
 	
 	PlayerSpawnPoint getPlayerSpawn();
 	//void setPlayerSpawn(int x, int y);
+	
+	WorldCamera getCamera();
+	double getCameraZoom();
+	void setCameraZoom(double zoomIn);
 	
 	boolean isLoaded();
 	boolean isUnderground();

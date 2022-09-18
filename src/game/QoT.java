@@ -35,6 +35,7 @@ import envision.windowLib.windowTypes.TopWindowParent;
 import envision.windowLib.windowTypes.interfaces.IWindowParent;
 import envision.windowLib.windowUtil.ObjectPosition;
 import envision_lang.EnvisionLang;
+import eutil.colors.EColors;
 import eutil.file.FileOpener;
 import eutil.math.EDimension;
 import game.assets.textures.GameTextures;
@@ -342,6 +343,13 @@ public class QoT implements EnvisionGame {
 		
 		topRenderer.onRenderTick();
 		
+		//draw version
+		{
+			double dX = width - FontRenderer.getStringWidth("QoT Alpha") * 0.7 - 3;
+			double dY = height - FontRenderer.FH * 0.7 - 3;
+			GLObject.drawStringS("QoT Alpha", dX, dY, 0.7, 0.7, EColors.lgray);
+		}
+		
 		GLFW.glfwSwapBuffers(handle);
 	}
 	
@@ -475,8 +483,8 @@ public class QoT implements EnvisionGame {
 		//unload the last world (if there was one)
 		if (theWorld != null) {
 			theWorld.setLoaded(false);
-			//TODO This should be removed from worlds
-			if (worldIn != null) worldIn.setZoom(theWorld.getZoom());
+			//carry over zoom from old camera
+			if (worldIn != null) worldIn.setCameraZoom(theWorld.getCameraZoom());
 		}
 		
 		theWorld = worldIn;

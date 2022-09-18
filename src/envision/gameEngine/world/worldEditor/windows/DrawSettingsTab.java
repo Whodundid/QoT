@@ -1,5 +1,6 @@
 package envision.gameEngine.world.worldEditor.windows;
 
+import envision.debug.DebugSettings;
 import envision.gameEngine.world.worldEditor.MapEditorScreen;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
@@ -135,23 +136,36 @@ public class DrawSettingsTab extends ContainerTab {
 	
 	// this can be made ***sooooooo*** much better...
 	private void updateCheckBoxes(IActionObject object) {
-		if (object == drawMapBorders) editor.getSettings().drawMapBorders = !editor.getSettings().drawMapBorders;
-		if (object == drawCenterPosition) editor.getSettings().drawCenterPositionBox = !editor.getSettings().drawCenterPositionBox;
-		if (object == drawEntities) editor.getSettings().drawEntities = !editor.getSettings().drawEntities;
-		if (object == drawRegions) editor.getSettings().drawRegions = !editor.getSettings().drawRegions;
-		if (object == drawEntityHitBoxes) editor.getSettings().drawEntityHitBoxes = !editor.getSettings().drawEntityHitBoxes;
-		if (object == drawWallBox) editor.getSettings().drawWallBox = !editor.getSettings().drawWallBox;
-		if (object == drawFlatWalls) editor.getSettings().drawFlatWalls = !editor.getSettings().drawFlatWalls;
-		if (object == drawTileGrid) editor.getSettings().drawTileGrid = !editor.getSettings().drawTileGrid;
+		var s = editor.getSettings();
 		
-		drawMapBorders.setIsChecked(editor.getSettings().drawMapBorders);
-		drawCenterPosition.setIsChecked(editor.getSettings().drawCenterPositionBox);
-		drawEntities.setIsChecked(editor.getSettings().drawEntities);
-		drawRegions.setIsChecked(editor.getSettings().drawRegions);
-		drawEntityHitBoxes.setIsChecked(editor.getSettings().drawEntityHitBoxes);
-		drawWallBox.setIsChecked(editor.getSettings().drawWallBox);
-		drawFlatWalls.setIsChecked(editor.getSettings().drawFlatWalls);
-		drawTileGrid.setIsChecked(editor.getSettings().drawTileGrid);
+		if (object == drawMapBorders) s.drawMapBorders = !s.drawMapBorders;
+		if (object == drawCenterPosition) s.drawCenterPositionBox = !s.drawCenterPositionBox;
+		if (object == drawEntities) s.drawEntities = !s.drawEntities;
+		if (object == drawRegions) s.drawRegions = !s.drawRegions;
+		if (object == drawEntityHitBoxes) s.drawEntityHitBoxes = !s.drawEntityHitBoxes;
+		if (object == drawWallBox) s.drawWallBox = !s.drawWallBox;
+		
+		if (object == drawFlatWalls) {
+			s.drawFlatWalls = !s.drawFlatWalls;
+			s.drawTileGrid = false;
+		}
+		
+		if (object == drawTileGrid) {
+			s.drawTileGrid = !s.drawTileGrid;
+			if (s.drawTileGrid) s.drawFlatWalls = true;
+		}
+		
+		drawMapBorders.setIsChecked(s.drawMapBorders);
+		drawCenterPosition.setIsChecked(s.drawCenterPositionBox);
+		drawEntities.setIsChecked(s.drawEntities);
+		drawRegions.setIsChecked(s.drawRegions);
+		drawEntityHitBoxes.setIsChecked(s.drawEntityHitBoxes);
+		drawWallBox.setIsChecked(s.drawWallBox);
+		drawFlatWalls.setIsChecked(s.drawFlatWalls);
+		drawTileGrid.setIsChecked(s.drawTileGrid);
+		
+		DebugSettings.drawFlatWalls = s.drawFlatWalls;
+		DebugSettings.drawTileGrid = s.drawTileGrid;
 	}
 	
 }

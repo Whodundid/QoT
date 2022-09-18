@@ -43,6 +43,18 @@ public class Goblin extends Enemy {
 			move(lastDir);
 		}
 		
+		if (QoT.thePlayer == null) {
+			boolean shouldMove = ERandomUtil.roll(10, 0, 10);
+			headText = "";
+			
+			if (shouldMove) {
+				Direction dir = ERandomUtil.randomDir();
+				move(dir);
+			}
+			
+			return;
+		}
+		
 		double distToPlayer = ((GameWorld) world).getDistance(this, QoT.thePlayer);
 		
 		//check if distance to player is less than 200 pixels

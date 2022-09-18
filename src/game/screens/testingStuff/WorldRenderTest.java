@@ -94,8 +94,8 @@ public class WorldRenderTest extends GameScreen {
 		else if (world.getWidth() < 0 || world.getHeight() < 0 || world.getTileWidth() <= 0 || world.getTileHeight() <= 0) { drawStringC("Bad world dimensions!", midX, midY); }
 		else {
 			
-			int w = (int) (world.getTileWidth() * world.getZoom());
-			int h = (int) (world.getTileHeight() * world.getZoom());
+			int w = (int) (world.getTileWidth() * world.getCameraZoom());
+			int h = (int) (world.getTileHeight() * world.getCameraZoom());
 			
 			int x = (int) (midX - (distX * w) - (w / 2));
 			int y = (int) (midY - (distY * h) - (h / 2));

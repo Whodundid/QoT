@@ -46,6 +46,8 @@ public class Whodundid extends Enemy {
 			move(lastDir);
 		}
 		
+		if (QoT.thePlayer == null) return;
+		
 		EDimension testDim;
 		EDimension pDims;
 		

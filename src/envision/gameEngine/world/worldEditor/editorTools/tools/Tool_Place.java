@@ -35,10 +35,10 @@ public class Tool_Place extends EditorTool {
 		GameTexture tex = primary.getTexture();
 		double tW = primary.getGameObject().width;
 		double tH = primary.getGameObject().height;
-		double tDrawW = tW * editor.getActualWorld().getZoom();
-		double tDrawH = tH * editor.getActualWorld().getZoom();
-		double tmx = primary.getGameObject().collisionBox.midX * editor.getActualWorld().getZoom();
-		double tmy = primary.getGameObject().collisionBox.midY * editor.getActualWorld().getZoom();
+		double tDrawW = tW * editor.getActualWorld().getCameraZoom();
+		double tDrawH = tH * editor.getActualWorld().getCameraZoom();
+		double tmx = primary.getGameObject().collisionBox.midX * editor.getActualWorld().getCameraZoom();
+		double tmy = primary.getGameObject().collisionBox.midY * editor.getActualWorld().getCameraZoom();
 		
 		drawTexture(tex, Mouse.getMx() - tmx, Mouse.getMy() - tmy, tDrawW, tDrawH, 0x99ffffff);
 		//drawTexture(tex, mX, mY, tDrawW, tDrawH, 0x99ffffff);

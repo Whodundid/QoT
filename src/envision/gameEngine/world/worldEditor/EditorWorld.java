@@ -9,6 +9,7 @@ import envision.gameEngine.world.worldEditor.editorParts.util.EditorObject;
 import envision.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.gameEngine.world.worldTiles.WorldTile;
 import envision.gameEngine.world.worldUtil.Region;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import envision.layers.LayerSystem;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.ExpandableGrid;
@@ -244,5 +245,9 @@ public class EditorWorld implements IGameWorld {
 	public void setWorldName(String nameIn) {
 		worldName = nameIn;
 	}
+
+	@Override public WorldCamera getCamera() { return null; }
+	@Override public double getCameraZoom() { return 0; }
+	@Override public void setCameraZoom(double zoomIn) {}
 	
 }

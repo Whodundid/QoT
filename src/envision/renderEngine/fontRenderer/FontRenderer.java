@@ -17,6 +17,9 @@ public class FontRenderer {
 	public static final double FH = FONT_HEIGHT;
 	public static final double HALF_FH = FONT_HEIGHT / 2;
 	
+	public static final char COPYRIGHT = '\u00A9';
+	public static final char ERROR_CHAR = '\u0000';
+	
 	public static GameFont defaultFont = GameFont.createFont(fontDir + "font_map.txt", fontDir + "font.png");
 	public static GameFont newFont = GameFont.createFont(fontDir + "control_map.txt", fontDir + "font_test_fix.png");
 	public static GameFont font8 = GameFont.createFont(fontDir + "font_map_8x8.txt", fontDir + "font_8x8.png");
@@ -24,9 +27,9 @@ public class FontRenderer {
 	
 	private GameFont currentFont;
 	
-	//---------------
-	//Static Instance
-	//---------------
+	//-----------------
+	// Static Instance
+	//-----------------
 	
 	private static FontRenderer instance;
 	
@@ -34,9 +37,9 @@ public class FontRenderer {
 		return instance = (instance != null) ? instance : new FontRenderer();
 	}
 
-	//-------------------------
-	//FontRenderer Constructors
-	//-------------------------
+	//--------------
+	// Constructors
+	//--------------
 	
 	private FontRenderer() {
 		QoT.getTextureSystem().registerTexture(defaultFont.getFontTexture());
@@ -46,9 +49,9 @@ public class FontRenderer {
 		currentFont = newFont;
 	}
 	
-	//--------------------
-	//FontRenderer Methods
-	//--------------------
+	//---------
+	// Methods
+	//---------
 	
 	public static double drawString(Object in, Number xIn, Number yIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
 	public static double drawString(String in, Number xIn, Number yIn) { return drawString(in, xIn, yIn, 0xffffffff); }
@@ -72,9 +75,9 @@ public class FontRenderer {
 		return instance.createString(in, xIn, yIn, colorIn, scaleX, scaleY);
 	}
 	
-	//--------------------
-	//FontRenderer Getters
-	//--------------------
+	//---------
+	// Getters
+	//---------
 	
 	public static GameFont getCurrentFont() { return getInstance().currentFont; }
 	
@@ -84,9 +87,9 @@ public class FontRenderer {
 	public static double getScaleH() { return instance.currentFont.getScaleH(); }
 	public static double getScaleSpace() { return instance.currentFont.getScaleSpace(); }
 	
-	//--------------------
-	//FontRenderer Setters
-	//--------------------	
+	//---------
+	// Setters
+	//---------
 	
 	public static void setCurrentFont(GameFont fontIn) {
 		if (fontIn != null) {
@@ -95,28 +98,27 @@ public class FontRenderer {
 		}
 	}
 	
-	//-----------------------------
-	//FontRenderer Internal Methods
-	//-----------------------------
+	//------------------
+	// Internal Methods
+	//------------------
 	
 	private double createString(String in, Number xIn, Number yIn, int colorIn, double scaleX, double scaleY) {
-		if (in != null) {
-			double sX = xIn.doubleValue();
-			for (int i = 0; i < in.length(); i++) {
-				char c = in.charAt(i);
-				Box2<Integer, Integer> loc = currentFont.getCharImage(c);
-				
-				int w = currentFont.getWidth();
-				int h = currentFont.getHeight();
-				int xPos = loc.getA() * w;
-				int yPos = loc.getB() * h;
-				
-				drawChar(sX, yIn.doubleValue(), xPos, yPos, colorIn, scaleX, scaleY);
-				sX += (w * currentFont.getScaleSpace() / QoT.getGameScale()) * scaleX;
-			}
-			return sX;
+		if (in == null) return 0;
+		
+		double sX = xIn.doubleValue();
+		for (int i = 0; i < in.length(); i++) {
+			char c = in.charAt(i);
+			Box2<Integer, Integer> loc = currentFont.getCharImage(c);
+			
+			int w = currentFont.getWidth();
+			int h = currentFont.getHeight();
+			int xPos = loc.getA() * w;
+			int yPos = loc.getB() * h;
+			
+			drawChar(sX, yIn.doubleValue(), xPos, yPos, colorIn, scaleX, scaleY);
+			sX += (w * currentFont.getScaleSpace() / QoT.getGameScale()) * scaleX;
 		}
-		return 0;
+		return sX;
 	}
 	
 	private void drawChar(double posX, double posY, int tX, int tY, int color, double scaleX, double scaleY) {

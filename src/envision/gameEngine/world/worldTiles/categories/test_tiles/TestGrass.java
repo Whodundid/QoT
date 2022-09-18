@@ -3,6 +3,7 @@ package envision.gameEngine.world.worldTiles.categories.test_tiles;
 import envision.gameEngine.world.gameWorld.IGameWorld;
 import envision.gameEngine.world.worldTiles.TileIDs;
 import envision.gameEngine.world.worldTiles.WorldTile;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import eutil.colors.EColors;
 import eutil.random.ERandomUtil;
 import game.assets.textures.world.nature.grass.GrassTextures;
@@ -36,7 +37,7 @@ public class TestGrass extends WorldTile {
 	}
 	
 	@Override
-	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
 //		double wh = h * wallHeight; //wh == 'wallHeight'
 //		
 //		if (isWall) {

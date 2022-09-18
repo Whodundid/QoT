@@ -10,6 +10,7 @@ import envision.gameEngine.gameObjects.entity.EntitySpawn;
 import envision.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.gameEngine.world.worldTiles.WorldTile;
 import envision.gameEngine.world.worldUtil.Region;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import envision.layers.LayerSystem;
 import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.EArrayList;
@@ -37,7 +38,6 @@ public class GameWorld implements IGameWorld {
 	protected File worldFile;
 	protected int width, height;
 	protected int tileWidth, tileHeight;
-	protected double zoom = 1;
 	protected WorldTile[][] worldData = new WorldTile[0][0];
 	protected EArrayList<GameObject> worldObjects = new EArrayList<>();
 	protected EArrayList<Entity> entityData = new EArrayList<>();
@@ -47,6 +47,7 @@ public class GameWorld implements IGameWorld {
 	/** The script to be executed when the world first gets loaded. */
 	protected EnvisionProgram worldLoadScript;
 	protected WorldRenderer worldRenderer;
+	protected WorldCamera camera;
 	protected boolean underground = false;
 	protected LayerSystem layers = new LayerSystem();
 	
@@ -82,6 +83,7 @@ public class GameWorld implements IGameWorld {
 		fileLoaded = true;
 		worldFileSystem = new WorldFileSystem(this);
 		worldRenderer = new WorldRenderer(this);
+		camera = new WorldCamera(this);
 	}
 	
 	public GameWorld(File worldFile) {
@@ -97,6 +99,7 @@ public class GameWorld implements IGameWorld {
 		}
 		
 		worldRenderer = new WorldRenderer(this);
+		camera = new WorldCamera(this);
 	}
 	
 	/**
@@ -135,6 +138,7 @@ public class GameWorld implements IGameWorld {
 		
 		worldFileSystem = new WorldFileSystem(this);
 		worldRenderer = new WorldRenderer(this);
+		camera = new WorldCamera(this);
 		fileLoaded = true;
 	}
 	
@@ -144,7 +148,6 @@ public class GameWorld implements IGameWorld {
 		height = 0;
 		tileWidth = 0;
 		tileHeight = 0;
-		zoom = 1;
 		worldData = new WorldTile[0][0];
 		worldObjects = new EArrayList<>();
 		entityData = new EArrayList<>();
@@ -170,10 +173,11 @@ public class GameWorld implements IGameWorld {
 		if (QoT.thePlayer != null) {
 			addEntity(QoT.thePlayer);
 			QoT.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
+			camera.setFocusedObject(QoT.thePlayer);
 		}
 	}
 	
-	public void onGameTick() {
+	public synchronized void onGameTick() {
 		//update time of day
 		if (timeOfDay++ >= lengthOfDay) timeOfDay = 0;
 		
@@ -267,14 +271,14 @@ public class GameWorld implements IGameWorld {
 	}
 	
 	//Any GameObject
-	public <E extends GameObject> E addObjectToWorld(E ent) { return (E) toAdd.addR(ent); }
-	public <E extends GameObject> void addObjectToWorld(E... ents) { toAdd.add(ents); }
-	public <E extends GameObject> void removeObjectFromWorld(E... ents) { toDelete.add(ents); }
+	public synchronized <E extends GameObject> E addObjectToWorld(E ent) { return (E) toAdd.addR(ent); }
+	public synchronized <E extends GameObject> void addObjectToWorld(E... ents) { toAdd.add(ents); }
+	public synchronized <E extends GameObject> void removeObjectFromWorld(E... ents) { toDelete.add(ents); }
 	
 	//Entity specific
-	public Entity addEntity(Entity ent) { return addObjectToWorld(ent); }
-	public void addEntity(Entity... ents) { addObjectToWorld(ents); }
-	public void removeEntity(Entity... ents) { removeObjectFromWorld(ents); }
+	public synchronized Entity addEntity(Entity ent) { return addObjectToWorld(ent); }
+	public synchronized void addEntity(Entity... ents) { addObjectToWorld(ents); }
+	public synchronized void removeEntity(Entity... ents) { removeObjectFromWorld(ents); }
 	
 	private void addEntityInternal(Entity ent) {
 		//assign world and add
@@ -395,7 +399,6 @@ public class GameWorld implements IGameWorld {
 	public int getPixelWidth() { return width * tileWidth; }
 	public int getPixelHeight() { return height * tileHeight; }
 	public WorldTile[][] getWorldData() { return worldData; }
-	public double getZoom() { return zoom; }
 	public boolean isUnderground() { return underground; }
 	@Override public PlayerSpawnPoint getPlayerSpawn() { return playerSpawn; }
 	public EnvisionProgram getStartupScript() { return worldLoadScript; }
@@ -427,6 +430,10 @@ public class GameWorld implements IGameWorld {
 	public WorldRenderer getWorldRenderer() { return worldRenderer; }
 	
 	public LayerSystem getLayerSystem() { return layers; }
+	
+	@Override public WorldCamera getCamera() { return camera; }
+	@Override public double getCameraZoom() { return camera.getZoom(); }
+	@Override public void setCameraZoom(double zoomIn) { camera.setZoom(zoomIn); }
 	
 	//---------
 	// Setters
@@ -465,7 +472,6 @@ public class GameWorld implements IGameWorld {
 	
 	public GameWorld setLoaded(boolean val) { loaded = val && isFileLoaded(); return this; }
 	public GameWorld setWorldLoadScript(EnvisionProgram scriptIn) { worldLoadScript = scriptIn; return this; }
-	public GameWorld setZoom(double val) { zoom = val; zoom = ENumUtil.clamp(zoom, 0.25, 10); return this; }
 	public GameWorld setUnderground(boolean val) { underground = val; return this; }
 	
 	public GameWorld setTimeOfDay(long timeInTicks) {

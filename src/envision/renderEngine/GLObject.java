@@ -147,6 +147,8 @@ public abstract class GLObject {
 	/** Draws a String at the specified position. */
 	public static double drawStringC(String text, double x, double y, double scaleX, double scaleY) { return drawStringC(text, x, y, scaleX, scaleY, EColors.white.intVal); }
 	/** Draws a String at the specified position. */
+	public static double drawStringS(String text, double x, double y, double scaleX, double scaleY) { return drawStringS(text, x, y, scaleX, scaleY, EColors.white.intVal); }
+	/** Draws a String at the specified position. */
 	public static double drawStringC(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringC(text, x, y, scaleX, scaleY, colorIn.intVal); }
 	/** Draws a String at the specified position. */
 	public static double drawStringS(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringS(text, x, y, scaleX, scaleY, colorIn.intVal); }

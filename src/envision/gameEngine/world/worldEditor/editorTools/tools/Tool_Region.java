@@ -38,7 +38,7 @@ public class Tool_Region extends EditorTool {
 			double drawDistX = editor.drawDistX;
 			double drawDistY = editor.drawDistY;
 			
-			double z = editor.getActualWorld().getZoom();
+			double z = editor.getActualWorld().getCameraZoom();
 			double sX = (r.startX * z);
 			double sY = (r.startY * z);
 			double rw = (r.width * z);

@@ -69,7 +69,7 @@ public class EditorScreenTopHeader extends WindowObject {
 			double endName = drawString("Map: " + world.getWorldName(), scripts.endX + 25, startY + 7, EColors.lime);
 			double endSize = drawString("Size: (" + world.getWidth() + ", " + world.getHeight() + ")", endName + 30, startY + 7, EColors.aquamarine);
 			double endMouse = drawString("Mouse: (" + (editor.getWorldMX() + 1) + ", " + (editor.getWorldMY() + 1) + ")", endSize + 30, startY + 7, EColors.lorange);
-			/*double endZoom = */drawString("Zoom: x" + editor.getZoom(), endMouse + 30, startY + 7);
+			/*double endZoom = */drawString("Zoom: x" + editor.getCameraZoom(), endMouse + 30, startY + 7);
 		}
 		
 		super.drawObject(mXIn, mYIn);

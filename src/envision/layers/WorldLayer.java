@@ -3,6 +3,7 @@ package envision.layers;
 import envision.gameEngine.GameObject;
 import envision.gameEngine.world.gameWorld.IGameWorld;
 import envision.gameEngine.world.worldTiles.WorldTile;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import envision.util.IDrawable;
 import envision.util.InsertionSort;
 import eutil.datatypes.EArrayList;
@@ -101,7 +102,7 @@ public class WorldLayer {
 	 * @param brightness
 	 * @param mouseOver
 	 */
-	public void renderLayer(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+	public void renderLayer(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
 		if (!built) return;
 		
 		//sort the layer before draw
@@ -118,7 +119,7 @@ public class WorldLayer {
 		//draw each object on the layer
 		for (var obj : builtLayer) {
 			//if (layer == 1) System.out.println(obj);
-			obj.draw(world, zoom, midDrawX, midDrawY, midX, midY, distX, distY);
+			obj.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
 		}
 	}
 	

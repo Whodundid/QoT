@@ -219,6 +219,8 @@ public class QoTInstaller {
 			//copy bundled maps into install map dir
 			try { extractDataToDir("editorWorlds", dir); }
 			catch (Exception e) { e.printStackTrace(); throw e; }
+			try { extractDataToDir("menuWorlds", dir); }
+			catch (Exception e) { e.printStackTrace(); throw e; }
 		}
 	}
 	
@@ -634,8 +636,10 @@ public class QoTInstaller {
 			catch (Exception e) { e.printStackTrace(); throw e; }
 			//try { verified &= verifyDir("shaders", resourcesDir); }
 			//catch (Exception e) { e.printStackTrace(); throw e; }
-			//copy bundled maps into install map dir
+			//verify bundled maps in install dir
 			try { verified &= verifyDir("editorWorlds", dir); }
+			catch (Exception e) { e.printStackTrace(); throw e; }
+			try { verified &= verifyDir("menuWorlds", dir); }
 			catch (Exception e) { e.printStackTrace(); throw e; }
 		}
 		catch (Exception e) {

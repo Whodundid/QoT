@@ -4,13 +4,13 @@ import envision.debug.DebugSettings;
 import envision.gameEngine.GameObject;
 import envision.gameEngine.gameObjects.entity.Entity;
 import envision.gameEngine.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
 import game.QoT;
-import game.entities.player.QoT_Player;
 
 public abstract class WorldTile extends GameObject implements Comparable<WorldTile> {
 	
@@ -182,11 +182,11 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	 */
 	@SuppressWarnings("unused")
 	@Override
-	public void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
 		//ignore if there is no texture
 		if (!hasTexture()) return;
 		
-		QoT_Player p = QoT.thePlayer;
+		double zoom = camera.getZoom();
 		
 		//pixel width of each tile
 		double w = (int) (world.getTileWidth() * zoom);
@@ -198,8 +198,6 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 		//the top most y coordinate for map drawing
 		double y = (int) (midY - (distY * h) - (h / 2));
 		
-		double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * zoom;
-		double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * zoom;
 		double tileOffsetX = (startX % world.getTileWidth()) * zoom;
 		double tileOffsetY = (startY % world.getTileWidth()) * zoom;
 		
@@ -213,8 +211,8 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 		
 		drawX += tileOffsetX;
 		drawY += tileOffsetY;
-		drawX -= cameraOffsetX;
-		drawY -= cameraOffsetY;
+		drawX -= camera.getOffsetX();
+		drawY -= camera.getOffsetY();
 		
 		//calculate the entity's draw width and height based off of actual dims and zoom
 		double drawW = width * zoom;
@@ -239,7 +237,12 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 		if ((worldY + 1) < world.getHeight()) tb = world.getTileAt(worldX, worldY + 1);
 		
 		if (isWall && DebugSettings.drawFlatWalls) {
+			drawTexture(tex, x, y, w, h, drawFlipped, rot, brightness);
 			
+			//draw bottom of map edge or if right above a tile with no texture/void
+			if ((tb == null || !tb.hasTexture())) {
+				drawTexture(tex, x, y + h, w, h / 2, drawFlipped, rot, EColors.changeBrightness(brightness, 145));
+			}
 		}
 		else if (isWall) {
 			//determine tile brightness
@@ -323,6 +326,11 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 			else {
 				drawHRect(x, y, x + w, y + h, 1, EColors.chalk);
 			}
+		}
+		
+		if (DebugSettings.drawTileGrid) {
+			drawRect(x, y, x + w, y + 1, EColors.vdgray);
+			drawRect(x, y, x + 1, y + h, EColors.vdgray);
 		}
 		
 		if (QoT.isDebugMode() && DebugSettings.drawTileInfo) {

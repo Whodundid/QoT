@@ -161,8 +161,8 @@ public class MapEditorScreen extends GameScreen {
 		
 		if (actualWorld == null || !actualWorld.isFileLoaded()) drawStringC("Failed to load!", midX, midY);
 		else {
-			tileDrawWidth = (editorWorld.getTileWidth() * actualWorld.getZoom()); //pixel width of each tile
-			tileDrawHeight = (editorWorld.getTileHeight() * actualWorld.getZoom()); //pixel height of each tile
+			tileDrawWidth = (editorWorld.getTileWidth() * actualWorld.getCameraZoom()); //pixel width of each tile
+			tileDrawHeight = (editorWorld.getTileHeight() * actualWorld.getCameraZoom()); //pixel height of each tile
 			drawAreaMidX = (QoT.getWidth() - sidePanel.width) / 2; //the middle x of the map draw area
 			drawAreaMidY = topHeader.endY + (QoT.getHeight() - topHeader.height) / 2; //the middle y of the map draw area
 			mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2)); //the left most x coordinate for map drawing
@@ -210,14 +210,14 @@ public class MapEditorScreen extends GameScreen {
 		double z = 1.0;
 		
 		if (Keyboard.isCtrlDown()) {
-			if (c > 0 && actualWorld.getZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
-			else if (actualWorld.getZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
+			if (c > 0 && actualWorld.getCameraZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
+			else if (actualWorld.getCameraZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
 			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
-			else if (actualWorld.getZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
+			else if (actualWorld.getCameraZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
 			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
 			
-			z = ENumUtil.round(actualWorld.getZoom() + z, 2);
-			actualWorld.setZoom(z);
+			z = ENumUtil.round(actualWorld.getCameraZoom() + z, 2);
+			actualWorld.setCameraZoom(z);
 			
 			updateDrawDist();
 		}
@@ -274,7 +274,10 @@ public class MapEditorScreen extends GameScreen {
 		else super.keyPressed(typedChar, keyCode);
 	}
 	
-	@Override public void actionPerformed(IActionObject object, Object... args) {}
+	@Override
+	public void actionPerformed(IActionObject object, Object... args) {
+		
+	}
 	
 	@Override
 	public void onGameTick(long ticks) {
@@ -351,7 +354,7 @@ public class MapEditorScreen extends GameScreen {
 													  Mouse.getMy() >= dY &&
 													  Mouse.getMy() < (dY + h);
 													  
-				//t.draw(editorWorld, actualWorld.getZoom(), midDrawX, midDrawY, drawDistX, drawDistY);
+				//t.draw(editorWorld, actualWorld.getCameraZoom(), midDrawX, midDrawY, drawDistX, drawDistY);
 				t.drawTile(editorWorld, dX, dY, w, h, 0xffffffff, mouseOver);
 			}
 		}
@@ -372,8 +375,8 @@ public class MapEditorScreen extends GameScreen {
 			double drawY = y + h * (ent.worldY + drawDistY - midDrawY);
 			
 			//calculate the entity's draw width and height based off of actual dims and zoom
-			double drawW = ent.width * actualWorld.getZoom();
-			double drawH = ent.height * actualWorld.getZoom();
+			double drawW = ent.width * actualWorld.getCameraZoom();
+			double drawH = ent.height * actualWorld.getCameraZoom();
 			
 			//draw the entity on top of the tile it's on (elevated if it's a wall)
 			if (ent.worldX >= 0 && ent.worldX < editorWorld.getWidth() &&
@@ -388,7 +391,7 @@ public class MapEditorScreen extends GameScreen {
 			
 			//render the entity
 			//ent.renderObject(drawX, drawY, drawW, drawH);
-			//ent.draw(editorWorld, actualWorld.getZoom(), midDrawX, midDrawY, drawDistX, drawDistY);
+			//ent.draw(editorWorld, actualWorld.getCameraZoom(), midDrawX, midDrawY, drawDistX, drawDistY);
 			ent.drawEntity(editorWorld, drawX, drawY, drawW, drawH, 0xffffffff, mouseOver);
 			//drawTexture(tex, drawX, drawY, drawW, drawH);
 			
@@ -407,19 +410,19 @@ public class MapEditorScreen extends GameScreen {
 		
 		if (mapFile != null) {
 			double oldZoom = 1;
-			if (actualWorld != null) oldZoom = actualWorld.getZoom();
+			if (actualWorld != null) oldZoom = actualWorld.getCameraZoom();
 			if (mapFile.isDirectory()) {
 				String mapName = mapFile.getName().replace(".twld", "");
 				String mapDir = mapFile.getParent();
 				mapFile = new File(mapDir, mapName + "/" + mapName + ".twld");
 			}
 			actualWorld = new GameWorld(mapFile);
-			actualWorld.setZoom(oldZoom);
+			actualWorld.setCameraZoom(oldZoom);
 		}
 		else if (actualWorld != null) {
-			double oldZoom = actualWorld.getZoom();
+			double oldZoom = actualWorld.getCameraZoom();
 			mapFile = actualWorld.getWorldFile();
-			actualWorld.setZoom(oldZoom);
+			actualWorld.setCameraZoom(oldZoom);
 		}
 		
 		//create editor world
@@ -428,8 +431,8 @@ public class MapEditorScreen extends GameScreen {
 		if (center) {
 			midDrawX = actualWorld.getWidth() / 2;
 			midDrawY = actualWorld.getHeight() / 2;
-			drawDistX = (int) (actualWorld.getWidth() / getZoom());
-			drawDistY = (int) (actualWorld.getHeight() / getZoom());
+			drawDistX = (int) (actualWorld.getWidth() / getCameraZoom());
+			drawDistY = (int) (actualWorld.getHeight() / getCameraZoom());
 		}
 		
 		loading = false;
@@ -486,7 +489,7 @@ public class MapEditorScreen extends GameScreen {
 	}
 	
 	private void drawRegion(Region r, double x, double y, double w, double h) {
-		double z = actualWorld.getZoom();
+		double z = actualWorld.getCameraZoom();
 		double sX = (r.startX * z);
 		double sY = (r.startY * z);
 		double rw = (r.width * z);
@@ -506,9 +509,9 @@ public class MapEditorScreen extends GameScreen {
 		int yWorldPixel = (int) Math.floor(mYIn - y - ((drawDistY - midDrawY) * h));
 		
 		//The X world pixel under the mouse with zoom scaling removed
-		int xWorldPixelNoZoom = (int) (xWorldPixel / actualWorld.getZoom());
+		int xWorldPixelNoZoom = (int) (xWorldPixel / actualWorld.getCameraZoom());
 		//The Y world pixel under the mouse with zoom scaling removed
-		int yWorldPixelNoZoom = (int) (yWorldPixel / actualWorld.getZoom());
+		int yWorldPixelNoZoom = (int) (yWorldPixel / actualWorld.getCameraZoom());
 		
 		//The X coordinate world tile under the mouse
 		double xMouseTile = xWorldPixel / w;
@@ -565,8 +568,8 @@ public class MapEditorScreen extends GameScreen {
 	private void updateDrawDist() {
 		if (editorWorld == null) return;
 		
-		double w = editorWorld.getTileWidth() * actualWorld.getZoom();
-		double h = editorWorld.getTileHeight() * actualWorld.getZoom();
+		double w = editorWorld.getTileWidth() * actualWorld.getCameraZoom();
+		double h = editorWorld.getTileHeight() * actualWorld.getCameraZoom();
 		
 		double dw = ((QoT.getWidth() - sidePanel.width) / w) / 2.0;
 		double dh = ((QoT.getHeight() - topHeader.height) / h) / 2.0;
@@ -598,7 +601,7 @@ public class MapEditorScreen extends GameScreen {
 	public int getWorldMX() { return worldXPos; }
 	public int getWorldMY() { return worldYPos; }
 	
-	public double getZoom() { return (actualWorld != null) ? actualWorld.getZoom() : 1; }
+	public double getCameraZoom() { return (actualWorld != null) ? actualWorld.getCameraZoom() : 1; }
 	
 	public GameWorld getActualWorld() { return actualWorld; }
 	public EditorWorld getEditorWorld() { return editorWorld; }

@@ -2,6 +2,7 @@ package envision.gameEngine;
 
 import envision.gameEngine.effects.animations.AnimationHandler;
 import envision.gameEngine.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import envision.renderEngine.GLObject;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.util.IDrawable;
@@ -10,7 +11,6 @@ import eutil.math.EDimension;
 import eutil.math.ENumUtil;
 import eutil.misc.Rotation;
 import game.QoT;
-import game.entities.player.QoT_Player;
 
 public abstract class GameObject extends GLObject implements IDrawable {
 	
@@ -59,7 +59,7 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	}
 	
 	@Override
-	public abstract void draw(IGameWorld world, double zoom, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY);
+	public abstract void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY);
 	
 	public void onGameTick() {
 		onLivingUpdate();
@@ -107,22 +107,34 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	
 	protected int calcBrightness() { return calcBrightness(worldX, worldY); }
 	public int calcBrightness(int x, int y) {
-		if (QoT.theWorld == null || !QoT.theWorld.isUnderground()) return 0xffffffff;
-		QoT_Player p = QoT.thePlayer;
+		var world = QoT.theWorld;
+		if (world == null || !world.isUnderground())
+			return 0xffffffff;
 		
-		double cmx = p.collisionBox.midX; //collision mid x
-		double cmy = p.collisionBox.midY; //collision mid y
-		double tw = QoT.theWorld.getTileWidth(); //tile width
-		double th = QoT.theWorld.getTileHeight(); //tile height
-		
-		//offset world coordinates to middle of collision box
-		int mwcx = (int) Math.ceil(cmx / tw); //mid world coords x
-		int mwcy = (int) Math.floor(cmy / th); //mid world coords y
-		
-		//light render position
-		int lightx = p.worldX + mwcx;
-		int lighty = p.worldY + mwcy;
 		int viewDist = 18;
+		int lightx = x, lighty = y;
+		var obj = world.getCamera().getFocusedObject();
+		
+		if (obj != null) {
+			var p = obj;
+			
+			double cmx = p.collisionBox.midX; //collision mid x
+			double cmy = p.collisionBox.midY; //collision mid y
+			double tw = QoT.theWorld.getTileWidth(); //tile width
+			double th = QoT.theWorld.getTileHeight(); //tile height
+			
+			//offset world coordinates to middle of collision box
+			int mwcx = (int) Math.ceil(cmx / tw); //mid world coords x
+			int mwcy = (int) Math.floor(cmy / th); //mid world coords y
+			
+			//light render position
+			lightx = p.worldX + mwcx;
+			lighty = p.worldY + mwcy;
+		}
+		else {
+			lightx = world.getCamera().getWorldX();
+			lighty = world.getCamera().getWorldY();
+		}
 		
 		int distToPlayer = viewDist - (int) (ENumUtil.distance(x, y, lightx, lighty));
 		distToPlayer = ENumUtil.clamp(distToPlayer, 0, distToPlayer);
