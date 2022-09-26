@@ -49,10 +49,9 @@ public class GamePauseWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(int xPos, int yPos) {
+	public void drawObject(int mXIn, int mYIn) {
 		drawRect(0, 0, QoT.getWidth(), QoT.getHeight(), EColors.vdgray.opacity(150));
 		drawDefaultBackground();
-		super.drawObject(xPos, yPos);
 	}
 	
 	@Override

@@ -45,7 +45,7 @@ public class WindowContainer<E> extends WindowObject<E> {
 	//-----------
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject_i(int mXIn, int mYIn) {
 		if (drawBorder) drawRect(startX, startY, endX, endY, borderColor); //border
 		if (drawBackground) drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor); //inner
 		if (drawTitle) {
@@ -61,7 +61,7 @@ public class WindowContainer<E> extends WindowObject<E> {
 		}
 		
 		scissor(startX + 1, startY + titleAreaHeight + 1, endX - 1, endY - 1);
-		super.drawObject(mXIn, mYIn);
+		super.drawObject_i(mXIn, mYIn);
 		endScissor();
 	}
 	

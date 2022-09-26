@@ -20,7 +20,7 @@ public class OptionsScreen extends GameScreen {
 	WindowButton back;
 	WindowSlider volumeSlider, fpsSlider;
 	WindowTextField upsInput;
-	WindowCheckBox vSync;
+	WindowCheckBox vSync, animatedMainMenu;
 	WindowButton resolution;
 	private boolean changed = false;
 	
@@ -56,10 +56,13 @@ public class OptionsScreen extends GameScreen {
 		boolean vS = QoTSettings.vsync.get();
 		vSync = new WindowCheckBox(this, fullscreen.startX, fullscreen.endY + 20, 50, 50, vS);
 		
+		boolean amm = QoTSettings.animatedMainMenu.get();
+		animatedMainMenu = new WindowCheckBox(this, vSync.startX, vSync.endY + 20, 50, 50, amm);
+		
 		resolution = new WindowButton(this, fullscreen.startX, vSync.endY + 20, 250, 50);
 		resolution.setString("1920x1080");
 		
-		addObject(back, volumeSlider, fpsSlider, upsInput, fullscreen, vSync);
+		addObject(back, volumeSlider, fpsSlider, upsInput, fullscreen, vSync, animatedMainMenu);
 		//addChild(resolution);
 	}
 	
@@ -70,7 +73,8 @@ public class OptionsScreen extends GameScreen {
 		drawString("Music Volume", volumeSlider.startX, volumeSlider.startY - 30);
 		drawString("FPS", fpsSlider.startX, fpsSlider.startY - 30);
 		drawString("Game Updates Per Second", upsInput.startX, upsInput.startY - 30);
-		drawString("V-Sync", vSync.endX + 10, vSync.midY - FontRenderer.FONT_HEIGHT / 2);
+		drawString("V-Sync", vSync.endX + 10, vSync.midY - FontRenderer.HALF_FH);
+		drawString("Animated Main Menu", animatedMainMenu.endX + 10, animatedMainMenu.midY - FontRenderer.HALF_FH);
 		
 		if (changed && !Mouse.isLeftDown()) {
 			QoTSettings.saveConfig();
@@ -87,6 +91,7 @@ public class OptionsScreen extends GameScreen {
 		if (object == vSync) 			vSync();
 		if (object == fullscreen)		fullscreen();
 		if (object == resolution)		resolution();
+		if (object == animatedMainMenu) animatedMainMenu();
 	}
 	
 	//---------------------------------------------
@@ -166,6 +171,11 @@ public class OptionsScreen extends GameScreen {
 		case 3:
 		case 4:
 		}
+	}
+	
+	private void animatedMainMenu() {
+		QoTSettings.animatedMainMenu.toggle();
+		QoTSettings.saveConfig();
 	}
 	
 }

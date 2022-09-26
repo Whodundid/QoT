@@ -71,8 +71,6 @@ public class OverlayShortcut extends WindowObject {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		super.drawObject(mXIn, mYIn);
-		
 		//draw icon
 		GameTexture tex = icon;
 		if (tex == null) tex = TaskBarTextures.window;

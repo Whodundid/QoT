@@ -60,8 +60,6 @@ public class WindowStatusBar extends WindowObject {
 		if (isMouseInside(mXIn, mYIn)) {
 			drawStringC((int) current + "/" + (int) max, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 2.5);
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 
 	//------------------

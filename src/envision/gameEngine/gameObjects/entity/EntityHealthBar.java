@@ -55,8 +55,6 @@ public class EntityHealthBar extends WindowObject {
 			var end = (theEntity == QoT.thePlayer) ? 4 : 1;
 			drawRect(startX, startY, startX + pw, endY - end, EColors.mc_darkred.opacity(opacity));
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 
 	//---------

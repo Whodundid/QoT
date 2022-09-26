@@ -20,6 +20,7 @@ public abstract class TerminalCommand {
 	private final EArrayList<String> parsedModifiers = new EArrayList<>();
 	protected int expectedArgLength = 0;
 	protected boolean shouldRegister = true;
+	protected boolean allowAnyModifier = false;
 	
 	//--------------
 	// Constructors
@@ -61,7 +62,7 @@ public abstract class TerminalCommand {
 		while (it.hasNext()) {
 			var s = it.next();
 			if (s.startsWith("-") && s.length() > 1) {
-				if (acceptedModifiers.contains(s)) parsedModifiers.add(s);
+				if (allowAnyModifier || acceptedModifiers.contains(s)) parsedModifiers.add(s);
 				it.remove();
 			}
 		}
@@ -110,6 +111,11 @@ public abstract class TerminalCommand {
 	 */
 	protected boolean hasModifier(String in) {
 		return in != null && in.length() >= 1 && parsedModifiers.contains(in);
+	}
+	
+	/** Basic 'true/false' tab complete options. */
+	protected void tabCompleteTF(ETerminal termIn, EArrayList<String> args) {
+		basicTabComplete(termIn, args, "true", "false");
 	}
 	
 	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, String... completionsIn) {

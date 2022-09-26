@@ -1,1 +1,19 @@
-loadWorld("new")
+class point {
+	-int x, y
+	
+	+init() -> init(0, 0)
+	+init(x, y)
+	
+	+func toString() -> "<{x}, {y}>"
+	
+	+func add(point p) -> point(x + p.x, y + p.y)
+	
+	+operator +(point p) -> add(p)
+}
+
+ri = randInt
+
+p1 = point(ri(0, 5), ri(0, 5))
+p2 = point(ri(0, 4), ri(0, 4))
+
+writeln(p1, p2, p1 + p2)

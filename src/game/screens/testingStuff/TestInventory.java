@@ -63,9 +63,6 @@ public class TestInventory<E> extends WindowParent<E> {
 			//GL11.glTranslated(-sourceCenterX, -sourceCenterY, mYIn);
 			drawStringC("HELLO", midX, midY);
 		GL11.glPopMatrix();
-		
-		//AT THE END -- IN ORDER TO DRAW CHILD OBJECTS
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

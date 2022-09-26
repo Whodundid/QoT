@@ -58,61 +58,64 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	
 	//main draw
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject_i(int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
+		if (!willBeDrawn()) return;
+		
+		//reset highlighted windows
+		highlightedWindows.clear();
 		
 		//prime renderer
 		GLSettings.pushMatrix();
 		GLSettings.enableBlend();
 		GLSettings.clearDepth();
 		
-		if (isVisible()) {
-			if (!hasFirstDraw()) onFirstDraw();
-			
-			//draw debug stuff
-			if (QoT.isDebugMode()) drawDebugInfo();
-			
-			//reset highlighted
-			highlightedWindows.clear();
-			
-			//draw all child objects
-			for (var o : getChildren()) {
-				if (o.willBeDrawn() && !o.isHidden()) {
-					boolean draw = true;
+		//update first draw state
+		if (!hasFirstDraw()) onFirstDraw_i();
+		
+		//draw this object first
+		drawObject(mX, mY);
+		
+		//draw debug stuff on top of object
+		if (QoT.isDebugMode()) drawDebugInfo();
+		
+		//now draw all child objects on top of parent
+		for (var o : getChildren()) {
+			if (o.willBeDrawn() && !o.isHidden()) {
+				boolean draw = true;
+				
+				if (o instanceof IWindowParent<?> wp) {
+					draw = (!wp.isMinimized() || wp.drawsWhileMinimized());
+					if (wp.isHighlighted()) highlightedWindows.add(wp);
+				}
+				
+				if (draw) {
+					GLSettings.colorA(1.0f);
+					GLSettings.clearDepth();
+					GLSettings.disableScissor();
 					
-					if (o instanceof IWindowParent<?> wp) {
-						draw = (!wp.isMinimized() || wp.drawsWhileMinimized());
-						if (wp.isHighlighted()) highlightedWindows.add(wp);
-					}
+					if (!o.hasFirstDraw()) o.onFirstDraw_i();
+					o.drawObject_i(mX, mY);
 					
-					if (draw) {
-						GLSettings.colorA(1.0f);
-						GLSettings.clearDepth();
-						GLSettings.disableScissor();
-						
-						if (!o.hasFirstDraw()) o.onFirstDraw();
-						o.drawObject(mX, mY);
-						
-						//draw grayed out overlay over everything if a focus lock object is present
-						if (focusLockObject != null && !o.equals(focusLockObject)) {
-							if (o.isVisible()) {
-								EDimension d = o.getDimensions();
-								drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
-							}
+					//draw grayed out overlay over everything if a focus lock object is present
+					if (focusLockObject != null && !o.equals(focusLockObject)) {
+						if (o.isVisible()) {
+							EDimension d = o.getDimensions();
+							drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 						}
 					}
 				}
 			}
-			
-			//draw highlighted window borders
-			for (IWindowParent<?> p : highlightedWindows) {
-				if (p == null) continue;
-				p.drawHighlightBorder();
-			}
-			
-			//notify hover object
-			if (getHoveringObject() != null) getHoveringObject().onMouseHover(mX, mY);
 		}
+		
+		//draw highlighted window borders
+		for (IWindowParent<?> p : highlightedWindows) {
+			if (p == null) continue;
+			p.drawHighlightBorder();
+		}
+		
+		//notify hover object
+		if (getHoveringObject() != null) getHoveringObject().onMouseHover(mX, mY);
 		
 		GLSettings.popMatrix();
 	}
@@ -297,7 +300,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 				
 				o.properties().isBeingRemoved = true;
 				properties().children.remove(o);
-				o.onRemoved();
+				o.onRemoved_i();
 				o.properties().isBeingRemoved = false;
 				postEvent(new EventObjects(this, o, ObjectEventType.OBJECT_REMOVED));
 			}
@@ -312,7 +315,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 				
 				o.properties().isBeingAdded = true;
 				properties().children.add(o);
-				o.onAdded();
+				o.onAdded_i();
 				o.properties().isBeingAdded = false;
 				postEvent(new EventObjects(this, o, ObjectEventType.OBJECT_ADDED));
 			}

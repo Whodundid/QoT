@@ -45,7 +45,6 @@ public abstract class GameScreen<E>
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawScreen(mXIn, mYIn);
-		super.drawObject(mXIn, mYIn);
 		
 
 	}
@@ -58,8 +57,7 @@ public abstract class GameScreen<E>
 	
 	@Override
 	public void onFirstDraw() {
-		super.onFirstDraw();
-		//fadeIn();
+		
 	}
 	
 	@Override public void onEvent(GameEvent e) {}

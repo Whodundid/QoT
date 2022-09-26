@@ -332,7 +332,7 @@ public class QoT implements EnvisionGame {
 		}
 		
 		if (currentScreen != null) {
-			currentScreen.drawObject(Mouse.getMx(), Mouse.getMy());
+			currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
 			//currentScreen.drawString("deltaF: " + deltaF, 0, currentScreen.endY - currentScreen.midY / 2, EColors.aquamarine);
 			//currentScreen.drawString("deltaU: " + deltaU, 0, currentScreen.endY - currentScreen.midY / 2 + 25, EColors.aquamarine);
 		}
@@ -433,7 +433,7 @@ public class QoT implements EnvisionGame {
 			
 			if (old != null) {
 				old.close();
-				old.onClosed();
+				old.onClosed_i();
 				old.onScreenClosed();
 			}
 			
@@ -464,7 +464,7 @@ public class QoT implements EnvisionGame {
 			
 			if (old != null) {
 				old.close();
-				old.onClosed();
+				old.onClosed_i();
 				old.onScreenClosed();
 			}
 		}

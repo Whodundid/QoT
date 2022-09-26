@@ -155,60 +155,13 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Tracked state of whether or not this object has been closed. */
 	public default boolean isClosed() { return properties().isClosed; }
 	
-	//---------------
-	// Future Events
-	//---------------
+	//--------------
+	// Future Tasks
+	//--------------
 	
 	/** Returns this object's FutureTaskManager. */
-	public default FutureTaskManager getFutureTaskManager() { return properties().futureTaskManager; }
-	
-	/** Event fired once this object has been fully initialized with all of its children. */
-	public default void onInit() {
-		properties().isInit = true;
-		var ftm = getFutureTaskManager();
-		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_INIT);
-	}
-	
-	/** Event fired once this object has initialized all of its children. */
-	public default void onChildrenInit() {
-		properties().isChildInit = true;
-		var ftm = getFutureTaskManager();
-		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_CHILDREN_INIT);
-	}
-	
-	/** Event fired from the top parent when the object is drawn for the first time. */
-	public default void onFirstDraw() {
-		properties().hasFirstDraw = true;
-		var ftm = getFutureTaskManager();
-		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_FIRST_DRAW);
-	}
-	
-	/** Event fired when this object first receives focus. */
-	public default void onInitialFocusGained() {
-		properties().hasReceivedFocus = true;
-		var ftm = getFutureTaskManager();
-		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_INITIAL_FOCUS_GAINED);
-	}
-	
-	/** Event called when this object has actually been added to its parent. */
-	public default void onAdded() {
-		properties().isAdded = true;
-		var ftm = getFutureTaskManager();
-		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_ADDED);
-	}
-	
-	/** Event fired when this object is removed from its parent. */
-	public default void onRemoved() {
-		properties().isRemoved = true;
-		var ftm = getFutureTaskManager();
-		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_REMOVED);
-	}
-	
-	/** Event fired when object is closed. */
-	public default void onClosed() {
-		properties().isClosed = true;
-		var ftm = getFutureTaskManager();
-		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_CLOSED);
+	public default FutureTaskManager getFutureTaskManager() {
+		return properties().futureTaskManager;
 	}
 	
 	/**
@@ -247,28 +200,162 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		return new EArrayList<>();
 	}
 	
+	/**
+	 * Internal event fired once this object has been fully initialized with
+	 * all of its children.
+	 * <p>
+	 * Most developers will probably want to override the non-internal 'onInit'
+	 * method instead of this one.
+	 * <p>
+	 * If this method is overridden, future tasks will not be propagated and
+	 * internal object properties will not be set unless manually set.
+	 */
+	public default void onInit_i() {
+		properties().isInit = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_INIT);
+		onInit();
+	}
+	
+	/**
+	 * Internal event fired once this object has initialized all of its
+	 * children.
+	 * <p>
+	 * Most developers will probably want to override the non-internal
+	 * 'onChildrenInit' method instead of this one.
+	 * <p>
+	 * If this method is overridden, future tasks will not be propagated and
+	 * internal object properties will not be set unless manually set.
+	 */
+	public default void onChildrenInit_i() {
+		properties().isChildInit = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_CHILDREN_INIT);
+		onChildrenInit();
+	}
+	
+	/**
+	 * Internal event fired from the top parent when the object is drawn for
+	 * the first time.
+	 * <p>
+	 * Most developers will probably want to override the non-internal
+	 * 'onFirstDraw' method instead of this one.
+	 * <p>
+	 * If this method is overridden, future tasks will not be propagated and
+	 * internal object properties will not be set unless manually set.
+	 */
+	public default void onFirstDraw_i() {
+		properties().hasFirstDraw = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_FIRST_DRAW);
+		onFirstDraw();
+	}
+	
+	/**
+	 * Internal event fired when this object first receives focus.
+	 * <p>
+	 * Most developers will probably want to override the non-internal
+	 * 'onInitialFocusGained' method instead of this one.
+	 * <p>
+	 * If this method is overridden, future tasks will not be propagated and
+	 * internal object properties will not be set unless manually set.
+	 */
+	public default void onInitialFocusGained_i() {
+		properties().hasReceivedFocus = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_INITIAL_FOCUS_GAINED);
+		onInitialFocusGained();
+	}
+	
+	/**
+	 * Internal event called when this object has actually been added to its
+	 * parent.
+	 * <p>
+	 * Most developers will probably want to override the non-internal
+	 * 'onAdded' method instead of this one.
+	 * <p>
+	 * If this method is overridden, future tasks will not be propagated and
+	 * internal object properties will not be set unless manually set.
+	 */
+	public default void onAdded_i() {
+		properties().isAdded = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_ADDED);
+		onAdded();
+	}
+	
+	/**
+	 * Internal event fired when this object is removed from its parent.
+	 * <p>
+	 * Most developers will probably want to override the non-internal
+	 * 'onRemoved' method instead of this one.
+	 * <p>
+	 * If this method is overridden, future tasks will not be propagated and
+	 * internal object properties will not be set unless manually set.
+	 */
+	public default void onRemoved_i() {
+		properties().isRemoved = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_REMOVED);
+		onRemoved();
+	}
+	
+	/**
+	 * Internal event fired when this object is closed.
+	 * <p>
+	 * Most developers will probably want to override the non-internal
+	 * 'onClosed' method instead of this one.
+	 * <p>
+	 * If this method is overridden, future tasks will not be propagated and
+	 * internal object properties will not be set unless manually set.
+	 */
+	public default void onClosed_i() {
+		properties().isClosed = true;
+		var ftm = getFutureTaskManager();
+		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_CLOSED);
+		onClosed();
+	}
+	
+	/** Called immediately <b>AFTER</b> an object's initialization event. */
+	public default void onInit() {}
+	/** Called immediately <b>AFTER</b> this object initializes its children. */
+	public default void onChildrenInit() {}
+	/** Called <b>RIGHT_BEFORE</b> this object is about to be drawn for the first time. */
+	public default void onFirstDraw() {}
+	/** Called immediately <b>AFTER</b> this object first receives focus. */
+	public default void onInitialFocusGained() {}
+	/** Called immediately <b>AFTER</b> this object has been added to its parent. */
+	public default void onAdded() {}
+	/** Called immediately <b>AFTER</b> this object has been removed from its parent. */
+	public default void onRemoved() {}
+	/** Called immediately <b>AFTER</b> this object has been closed. */
+	public default void onClosed() {}
+	
 	//-----------
 	// Main Draw
 	//-----------
 	
-	/** Event fired from the top parent to draw this object. */
-	public default void drawObject(int mXIn, int mYIn) {
+	/** Internal event fired from the top parent to draw this object. */
+	public default void drawObject_i(int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		try {
 			if (!willBeDrawn()) return;
 			GLSettings.pushMatrix();
 			GLSettings.enableBlend();
 			
-			//draw all child objects
+			//draw this object first
+			drawObject(mXIn, mYIn);
+			
+			//now draw all child objects on top of parent
 			for (var o : getChildren()) {
 				//only draw if the object is actually visible
 				if (!o.willBeDrawn() || o.isHidden()) continue;
 				GLSettings.fullBright();
 				
 				//notify object on first draw
-				if (!o.hasFirstDraw()) o.onFirstDraw();
-				//actually draw the object
-				o.drawObject(mXIn, mYIn);
+				if (!o.hasFirstDraw()) o.onFirstDraw_i();
+				//actually draw the child object
+				o.drawObject_i(mXIn, mYIn);
 				
 				//draw grayed out overlay over everything if a focus lock object is present
 				var f = getTopParent().getFocusLockObject();
@@ -286,6 +373,9 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 			e.printStackTrace();
 		}
 	}
+	
+	/** Called when this object specifically (not children) is being drawn. */
+	public default void drawObject(int mXIn, int mYIn) {}
 	
 	/**
 	 * Event fired from this object's pre draw setup to perform
@@ -390,7 +480,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 				
 				o.properties().isBeingRemoved = true;
 				properties().children.remove(o);
-				o.onRemoved();
+				o.onRemoved_i();
 				o.properties().isBeingRemoved = false;
 				postEvent(new EventObjects(this, o, ObjectEventType.OBJECT_REMOVED));
 			}
@@ -405,7 +495,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 				
 				o.properties().isBeingAdded = true;
 				properties().children.add(o);
-				o.onAdded();
+				o.onAdded_i();
 				o.properties().isBeingAdded = false;
 				postEvent(new EventObjects(this, o, ObjectEventType.OBJECT_ADDED));
 			}
@@ -798,7 +888,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 				//initialize all of the children's children
 				o.setParent(this);
 				o.initChildren();
-				o.onChildrenInit();
+				o.onChildrenInit_i();
 				
 				//o.setZLevel(parent.getZLevel() + o.getZLevel() + 1); //increment the child's z layer based off of the parent
 				//if the parent has a boundary enforcer, apply it to the child as well
@@ -807,7 +897,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 				//give the processed child to the parent so that it will be added
 				getAddingChildren().add(o);
 				//tell the child that it has been fully initialized and that it is ready to be added on the next draw cycle
-				o.onInit();
+				o.onInit_i();
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -925,7 +1015,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	public default void onFocusGained(EventFocus eventIn) {
 		postEvent(new EventFocus(this, this, FocusType.GAINED));
 		//check if this is the first time this object has received parent focus
-		if (!hasReceivedFocus()) onInitialFocusGained();
+		if (!hasReceivedFocus()) onInitialFocusGained_i();
 		
 		if (eventIn.getFocusType().equals(FocusType.MOUSE_PRESS)) {
 			mousePressed(eventIn.getMX(), eventIn.getMY(), eventIn.getActionCode());
@@ -1217,7 +1307,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		
 		properties().parent.removeObject(this);
 		properties().isClosing = false;
-		onClosed();
+		onClosed_i();
 	}
 	
 	//------------------

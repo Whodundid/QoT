@@ -25,15 +25,16 @@ public class QoTSettings {
 	//       settings
 	//-----------------------
 	
-	public static final ConfigSetting<Integer> musicVolume = new ConfigSetting(Integer.class, "musicVolume", "Music Volume", 60);
-	public static final ConfigSetting<Integer> targetFPS = new ConfigSetting(Integer.class, "targetFPS", "Target FPS", 60);
-	public static final ConfigSetting<Integer> targetUPS = new ConfigSetting(Integer.class, "targetUPS", "Target UPS", 150);
-	public static final ConfigSetting<String> lastEditorMap = new ConfigSetting(String.class, "lastEditorMap", "Last Editor Map", "");
-	public static final ConfigSetting<String> lastMap = new ConfigSetting(String.class, "lastMap", "Last Map", "");
-	public static final ConfigSetting<Boolean> drawFPS = new ConfigSetting(Boolean.class, "drawFPS", "Draw FPS", false);
-	public static final ConfigSetting<Boolean> fullscreen = new ConfigSetting(Boolean.class, "fullscreen", "Fullscreen", false);
-	public static final ConfigSetting<Boolean> vsync = new ConfigSetting(Boolean.class, "vSync", "V-Sync", false);
-	public static final ConfigSetting<Integer> resolutionScale = new ConfigSetting(Integer.class, "resScale", "Resolution Scale", 1);
+	public static final ConfigSetting<Integer> musicVolume = new ConfigSetting<>(Integer.class, "musicVolume", "Music Volume", 50);
+	public static final ConfigSetting<Integer> targetFPS = new ConfigSetting<>(Integer.class, "targetFPS", "Target FPS", 60);
+	public static final ConfigSetting<Integer> targetUPS = new ConfigSetting<>(Integer.class, "targetUPS", "Target UPS", 150);
+	public static final ConfigSetting<String> lastEditorMap = new ConfigSetting<>(String.class, "lastEditorMap", "Last Editor Map", "");
+	public static final ConfigSetting<String> lastMap = new ConfigSetting<>(String.class, "lastMap", "Last Map", "");
+	public static final ConfigSetting<Boolean> drawFPS = new ConfigSetting<>(Boolean.class, "drawFPS", "Draw FPS", false);
+	public static final ConfigSetting<Boolean> fullscreen = new ConfigSetting<>(Boolean.class, "fullscreen", "Fullscreen", false);
+	public static final ConfigSetting<Boolean> vsync = new ConfigSetting<>(Boolean.class, "vSync", "V-Sync", false);
+	public static final ConfigSetting<Integer> resolutionScale = new ConfigSetting<>(Integer.class, "resScale", "Resolution Scale", 1);
+	public static final ConfigSetting<Boolean> animatedMainMenu = new ConfigSetting<>(Boolean.class, "animatedMainMenu", "Animated Main Menu", true);
 	
 	//-----------------------
 	
@@ -46,6 +47,8 @@ public class QoTSettings {
 		settings.add(drawFPS);
 		settings.add(fullscreen);
 		settings.add(vsync);
+		//settings.add(resolutionScale);
+		settings.add(animatedMainMenu);
 	}
 	
 	public static EArrayList<ConfigSetting> getSettings() { return settings; }

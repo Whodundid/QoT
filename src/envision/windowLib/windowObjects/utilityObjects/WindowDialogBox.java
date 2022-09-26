@@ -105,7 +105,6 @@ public class WindowDialogBox extends ActionWindowParent {
 			endScissor();
 			
 		}
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

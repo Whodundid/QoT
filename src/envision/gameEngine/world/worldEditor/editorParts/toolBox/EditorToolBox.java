@@ -51,8 +51,6 @@ public class EditorToolBox extends WindowObject {
 				obj.transferFocus(getTopParent());
 			}
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

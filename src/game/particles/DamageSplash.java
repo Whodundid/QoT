@@ -21,7 +21,6 @@ public class DamageSplash extends Particle {
 	@Override
 	public void onFirstDraw() {
 		creationTime = System.currentTimeMillis();
-		super.onFirstDraw();
 	}
 	
 	@Override
@@ -38,8 +37,6 @@ public class DamageSplash extends Particle {
 		drawStringC(damage, midX, midY - 8);
 		
 		move(0, -1);
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 }

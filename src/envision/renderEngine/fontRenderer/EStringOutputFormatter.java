@@ -104,7 +104,7 @@ public class EStringOutputFormatter {
 	}
 	
 	/** Breaks a String into a list of smaller strings based on a set maximum line width. */
-	@Broken("June 5, 2022")
+	@Broken(since="June 5, 2022")
 	public static EArrayList<String> createWordWrapString(String stringIn, double widthMax) {
 		EArrayList<String> lines = new EArrayList();
 		try {

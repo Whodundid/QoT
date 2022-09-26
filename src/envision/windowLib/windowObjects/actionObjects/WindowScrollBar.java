@@ -124,8 +124,6 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 			}
 			drawRect(thumbStartX, thumbStartY, thumbEndX, thumbEndY, color);
 		}
-		
-		super.drawObject(mX, mY);
 	}
 	
 	@Override

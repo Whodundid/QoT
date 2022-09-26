@@ -178,8 +178,6 @@ public class ColorPickerSimple extends ActionWindowParent {
 			EDimension cDim = colorDisplay.getDimensions();
 			drawRect(cDim.startX - 1, cDim.startY - 1, cDim.endX + 1, cDim.endY + 1, 0xff000000);
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

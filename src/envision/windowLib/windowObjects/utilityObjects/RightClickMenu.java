@@ -71,8 +71,6 @@ public class RightClickMenu extends ActionWindowParent {
 			drawRect(startX + 1, startY + titleHeight, endX - 1, startY + titleHeight + 1, separatorLineColor);
 			drawStringC(title, midX, startY + titleHeight / 2 - FontRenderer.FONT_HEIGHT / 2 + 3, EColors.mc_gold);
 		}
-		
-		super.drawObject(mX, mY);
 	}
 	
 	@Override

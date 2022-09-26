@@ -87,8 +87,6 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 			double endPos = startY + (listContents.size() * entryHeight) + entryHeight + offset;
 			drawRect(startX, endPos, endX, endPos + 1, borderColor);
 		}
-		
-		super.drawObject(mX, mY);
 	}
 	
 	@Override

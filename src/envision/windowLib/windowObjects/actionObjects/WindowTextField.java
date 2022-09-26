@@ -90,7 +90,6 @@ public class WindowTextField<E> extends ActionObject<E> {
 		drawString(drawText, startX + 5, endY - FontRenderer.FONT_HEIGHT, textColor);
 		
 		endScissor();
-		super.drawObject(mX, mY);
 	}
 	
 	@Override 

@@ -2,6 +2,7 @@ package envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package;
 
 import envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.methods.LoadWorld_ENV;
 import envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.methods.TermCall_ENV;
+import envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.methods.TermWritef_ENV;
 import envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.methods.TermWriteln_ENV;
 import envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.objects.QoTWorldClass;
 import envision_lang.packages.EnvisionLangPackage;
@@ -16,22 +17,15 @@ public class Envision_QoT_Package extends EnvisionLangPackage {
 	
 	@Override
 	public void buildFunctions() {
-		packageScope.defineFunction(new TermCall_ENV());
-		packageScope.defineFunction(new TermWriteln_ENV());
-		packageScope.defineFunction(new LoadWorld_ENV());
-	}
-	
-	@Override
-	public void buildFields() {
+		define(new TermCall_ENV());
+		define(new TermWriteln_ENV());
+		define(new LoadWorld_ENV());
+		define(new TermWritef_ENV());
 	}
 	
 	@Override
 	public void buildClasses() {
-		packageScope.defineClass(new QoTWorldClass());
-	}
-	
-	@Override
-	public void buildPackages() {
+		define(new QoTWorldClass());
 	}
 	
 }

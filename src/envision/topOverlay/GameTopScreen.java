@@ -61,19 +61,25 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 				drawRect(borderWidth, height - borderWidth, width - borderWidth, height, borderColor); //bottom
 			}
 			
-			drawString("Debug", borderWidth + 2, endY - borderWidth - FontRenderer.FONT_HEIGHT, EColors.dgray);
+			//drawString("Debug", borderWidth + 2, endY - borderWidth - FontRenderer.FONT_HEIGHT, EColors.dgray);
 		}
 		
 		if (isVisible()) {
-			if (!hasFirstDraw()) onFirstDraw();
-			
-			//draw debug stuff
-			if (QoT.isDebugMode()) drawDebugInfo();
+			int mX = Mouse.getMx();
+			int mY = Mouse.getMy();
 			
 			//reset highlighted
 			highlightedWindows.clear();
 			
-			//draw all child objects
+			if (!hasFirstDraw()) onFirstDraw_i();
+			
+			//draw this object first
+			drawObject(mX, mY);
+			
+			//draw debug stuff
+			if (QoT.isDebugMode()) drawDebugInfo();
+			
+			//now draw all child objects on top of parent
 			for (var o : getChildren()) {
 				//only draw if the object is actually visible
 				if (!o.willBeDrawn() || o.isHidden()) continue;
@@ -91,9 +97,9 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 				GLSettings.disableScissor();
 				
 				//notify object on first draw
-				if (!o.hasFirstDraw()) o.onFirstDraw();
-				//actually draw the object
-				o.drawObject(Mouse.getMx(), Mouse.getMy());
+				if (!o.hasFirstDraw()) o.onFirstDraw_i();
+				//actually draw the child object
+				o.drawObject_i(mX, mY);
 				
 				//draw grayed out overlay over everything if a focus lock object is present
 				if (focusLockObject != null && !o.equals(focusLockObject)) {

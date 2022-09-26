@@ -52,8 +52,6 @@ public class EditorMiniMap extends WindowObject {
 		//drawMap();
 		drawCameraPos();
 		//endScissor();
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

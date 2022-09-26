@@ -174,8 +174,6 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		getHeader().setTitle("Terminal");
 		
 		drawRect(startX, startY, endX, endY, 0xff000000);
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override
@@ -648,14 +646,14 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		isCommand = false;
 	}
 	
-	public ETerminal writeln() { return writeln("", 0xffffffff); }
+	public ETerminal writeln() { return writeln(0xffffffff, ""); }
 	public ETerminal writeln(Object objIn) { return writeln(objIn != null ? objIn.toString() : "null", 0xffffffff); }
 	public ETerminal writeln(Object objIn, EColors colorIn) { return writeln(objIn != null ? objIn.toString() : "null", colorIn.intVal); }
-	public ETerminal writeln(Object objIn, int colorIn) { return writeln(objIn != null ? objIn.toString() : "null", colorIn); }
-	public ETerminal writeln(String msgIn) { return writeln(msgIn, 0xffffffff); }
-	public ETerminal writeln(String msgIn, EColors colorIn) { return writeln(msgIn, colorIn.intVal); }
-	public ETerminal writeln(String msgIn, int colorIn) {
-		parseText(msgIn, colorIn);
+	public ETerminal writeln(Object objIn, int colorIn) { //return writeln(objIn != null ? objIn.toString() : "null", colorIn); }
+//	public ETerminal writeln(String msgIn) { return writeln(msgIn, 0xffffffff); }
+//	public ETerminal writeln(String msgIn, EColors colorIn) { return writeln(msgIn, colorIn.intVal); }
+//	public ETerminal writeln(String msgIn, int colorIn) {
+		parseText(colorIn, objIn);
 		return this;
 	}
 	
@@ -664,6 +662,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		return this;
 	}
 	
+	/** Object Integer to distinguish between writeln(color, arguments) and writeln(arguments). */
 	public ETerminal writeln(Integer color, Object... arguments) {
 		writeln(EStringBuilder.ofR(arguments), color);
 		return this;
@@ -680,10 +679,14 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		return this;
 	}
 	
-	public ETerminal info(String msgIn) { parseText(msgIn, 0xffffff00); return this; }
-	public ETerminal warn(String msgIn) { parseText("Warning: " + msgIn, EColors.orange.intVal); return this; }
-	public ETerminal error(String msgIn) { parseText(msgIn, 0xffff5555); return this; }
-	public ETerminal javaError(String msgIn) { parseText(msgIn, 0xffff0000); return this; }
+	public ETerminal info(Object... msgIn) { parseText(0xffffff00, msgIn); return this; }
+	public ETerminal warn(Object... msgIn) { parseText(EColors.orange.intVal, msgIn); return this; }
+	public ETerminal error(Object... msgIn) { parseText(0xffff5555, msgIn); return this; }
+	public ETerminal javaError(Object... msgIn) { parseText(0xffff0000, msgIn); return this; }
+	
+	private void parseText(int color, Object... msgIn) {
+		parseText(EStringUtil.combineAll(msgIn, ""), color);
+	}
 	
 	private void parseText(String msgIn, int colorIn) {
 		String[] lines = msgIn.split("[\\r\\n]+", -1);

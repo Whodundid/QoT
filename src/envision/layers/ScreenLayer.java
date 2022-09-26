@@ -19,7 +19,7 @@ public class ScreenLayer {
 	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
 	
 	public void renderLayer(int mXIn, int mYIn) {
-		objects.forEach(o -> o.drawObject(mXIn, mYIn));
+		objects.forEach(o -> o.drawObject_i(mXIn, mYIn));
 	}
 	
 }

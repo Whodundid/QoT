@@ -14,11 +14,10 @@ import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
-import eutil.misc.ETimer;
 import eutil.random.ERandomUtil;
+import eutil.timing.ETimer;
 import game.QoT;
 import game.assets.sounds.Songs;
-import game.assets.textures.GameTextures;
 import game.assets.textures.general.GeneralTextures;
 import game.assets.textures.world.floors.stone.StoneFloorTextures;
 import game.settings.QoTSettings;
@@ -52,13 +51,13 @@ public class MainMenuScreen extends GameScreen {
 			QoT.loadWorld(null);
 		}
 		
-		if (!SoundEngine.isPlaying(Songs.zarus) && SoundEngine.getAllPlaying().size() == 1) {
+		if (!SoundEngine.isPlaying(Songs.theme) && SoundEngine.getAllPlaying().size() == 1) {
 			SoundEngine.stopAll();
 		}
-		SoundEngine.loopIfNotPlaying(Songs.zarus);
+		SoundEngine.loopIfNotPlaying(Songs.theme);
 		setObjectName("Main Menu Screen");
 		
-		loadMenuWorld();
+		if (QoTSettings.animatedMainMenu.get()) loadMenuWorld();
 	}
 	
 	private void loadMenuWorld() {
@@ -78,8 +77,8 @@ public class MainMenuScreen extends GameScreen {
 				menuWorld = new GameWorld(new File(QoTSettings.getMenuWorldsDir(), selected));
 				var w = QoT.theWorld = menuWorld;
 				w.getWorldRenderer().onWorldLoaded();
-				w.setCameraZoom(ERandomUtil.getRoll(2.5, 3.5));
-				w.setUnderground(ERandomUtil.randomBool());
+				w.setCameraZoom(ERandomUtil.getRoll(2.5, 3));
+				w.setUnderground(ERandomUtil.roll(1, 1, 10));
 				int ww = w.getWidth();
 				int wh = w.getHeight();
 				int lowerX = (ww / 2) - ww / 4;
@@ -172,7 +171,7 @@ public class MainMenuScreen extends GameScreen {
 		drawBackground();
 		
 		//check if delay timer has finished -- if so, start fade timer
-		if (fadeDelayTimer.check()) { fadeInTimer.start(); }
+		if (fadeDelayTimer.check()) fadeInTimer.start();
 		//check if the next world should start to be loaded
 		if (nextWorldTimer.check()) fadeOutTimer.start();
 		//check if the fade out is complete -- in which case, load the new world
@@ -182,7 +181,7 @@ public class MainMenuScreen extends GameScreen {
 			else nextWorldTimer.setDuration(20000l);
 			loadMenuWorld();
 			return;
-		}
+		};
 		
 		//check to see whether or not the standard background should still draw
 		if (!secret && (menuWorld == null || !menuWorld.isFileLoaded()) ||
@@ -199,7 +198,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void drawBackground() {
-		if (fadeDelayTimer.isCounting()) return;
+		if (fadeDelayTimer.isStarted()) return;
 		
 		if (secret) {
 			drawTexture(GeneralTextures.noscreens);
@@ -222,12 +221,12 @@ public class MainMenuScreen extends GameScreen {
 		int opacity = 255;
 		
 		//check fade in/out timers
-		if (fadeInTimer.isCounting()) {
-			var ratio = ((255L * fadeInTimer.getProgress()) / fadeInTimer.getDuration());
+		if (fadeInTimer.isStarted()) {
+			var ratio = ((255L * fadeInTimer.getRunTime()) / fadeInTimer.getDuration());
 			opacity = 255 - (int) ratio;
 		}
-		else if (fadeOutTimer.isCounting()) {
-			var ratio = ((255L * fadeOutTimer.getProgress()) / fadeOutTimer.getDuration());
+		else if (fadeOutTimer.isStarted()) {
+			var ratio = ((255L * fadeOutTimer.getRunTime()) / fadeOutTimer.getDuration());
 			opacity = (int) ratio;
 		}
 		

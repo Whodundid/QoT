@@ -1,10 +1,12 @@
 package envision.terminal.terminalCommand.commands.system;
 
-import java.io.File;
+import java.util.List;
 
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import envision_lang.EnvisionLang;
+import envision_lang._launch.EnvisionLangSettings;
+import envision_lang._launch.EnvisionProgram;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import game.QoT;
@@ -13,7 +15,7 @@ public class Envision_CMD extends TerminalCommand {
 	
 	public Envision_CMD() {
 		setCategory("System");
-		expectedArgLength = 0;
+		allowAnyModifier = true;
 	}
 
 	@Override public String getName() { return "envision"; }
@@ -24,21 +26,35 @@ public class Envision_CMD extends TerminalCommand {
 	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.writeln(EnvisionLang.getVersionString(), EColors.seafoam);
-			termIn.info("To run an Envision script, add the file name to the end of this command.");
+			termIn.info("To run an Envision script, add an Envision program directory\n",
+						"along with any of its launch arguments to the end of this command.");
 			termIn.info(getUsage());
+			return;
 		}
-		else if (args.hasOne()) {
-			String fileName = args.getFirst();
-			//fileName = (fileName.endsWith(".nvis")) ? fileName : fileName + ".nvis";
-			File f = new File(fileName);
-			
-			try {
-				QoT.getEnvision().runProgram(f);
+		
+		String fileName = args.getFirst();
+		EnvisionProgram program = new EnvisionProgram(fileName);
+		
+		//arguments to be passed to the Envision Language
+		List<String> toParse = new EArrayList<>();
+		
+		List<String> modifiers = getParsedModifiers();
+		if (modifiers.size() > 0) {
+			for (int i = 0; i < modifiers.size(); i++) {
+				toParse.add(modifiers.get(i));
 			}
-			catch (Exception e) {
-				e.printStackTrace();
-				error(termIn, e);
-			}
+			var launchArgs = EnvisionLangSettings.of(toParse);
+			program.setLaunchArgs(launchArgs);
+		}
+		
+		try {
+			long start = System.currentTimeMillis();
+			QoT.getEnvision().runProgram(program);
+			termIn.writeln(EColors.lgreen, "END ", EColors.yellow, (System.currentTimeMillis() - start), "ms");
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+			error(termIn, e);
 		}
 	}
 	

@@ -9,10 +9,10 @@ import envision_lang.lang.natives.Primitives;
 import game.QoT;
 
 /** Creates a mapping between Envision and the QoT terminal. */
-public class TermWriteln_ENV extends EnvisionFunction {
+public class TermWritef_ENV extends EnvisionFunction {
 	
-	public TermWriteln_ENV() {
-		super(Primitives.VOID, "writeln");
+	public TermWritef_ENV() {
+		super(Primitives.VOID, "writef");
 	}
 	
 	@Override

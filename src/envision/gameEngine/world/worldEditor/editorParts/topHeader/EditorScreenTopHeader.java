@@ -71,8 +71,6 @@ public class EditorScreenTopHeader extends WindowObject {
 			double endMouse = drawString("Mouse: (" + (editor.getWorldMX() + 1) + ", " + (editor.getWorldMY() + 1) + ")", endSize + 30, startY + 7, EColors.lorange);
 			/*double endZoom = */drawString("Zoom: x" + editor.getCameraZoom(), endMouse + 30, startY + 7);
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

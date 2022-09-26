@@ -120,8 +120,6 @@ public class WindowImageBox<E> extends WindowObject<E> {
 				drawStringC(nullText, midX, midY - (FontRenderer.FONT_HEIGHT / 2), nullTextColor);
 			}
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

@@ -48,8 +48,6 @@ public class WindowLine<E> extends WindowObject<E> {
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawLine(startX, startY, endX, endY, color);
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 }

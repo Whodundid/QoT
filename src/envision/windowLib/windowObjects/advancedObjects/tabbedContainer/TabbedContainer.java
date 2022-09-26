@@ -57,7 +57,6 @@ public class TabbedContainer extends WindowObject {
 		//drawRect(EColors.pdgray, 1);
 		drawRect(startX + 1, startY + 1 + tabHeight, endX - 1, startY + 2 + tabHeight, EColors.black);
 		//drawRect(startX + 1, startY + 1, endX - 1, startY + 1 + tabHeight, EColors.dgray);
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	//---------

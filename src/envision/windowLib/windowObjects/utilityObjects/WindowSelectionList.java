@@ -108,8 +108,6 @@ public class WindowSelectionList extends ActionWindowParent {
 		if (select != null && list != null) {
 			select.setEnabled(list.getCurrentLine() != null && list.getCurrentLine().getGenericObject() != null);
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

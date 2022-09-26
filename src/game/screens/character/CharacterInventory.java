@@ -31,7 +31,7 @@ public class CharacterInventory extends WindowObject {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		super.drawObject(mXIn, mYIn);
+		
 	}
 	
 	@Override

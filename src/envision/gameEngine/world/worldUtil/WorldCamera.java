@@ -18,9 +18,9 @@ public class WorldCamera {
 	/** The object this camera is following. */
 	private GameObject focusedObject;
 	/** The world coordinates that this camera is focused around. */
-	private final Box2<Integer, Integer> focusedCoords = new Box2<>();
+	private final Box2<Integer, Integer> focusedCoords = new Box2<>(0, 0);
 	/** The pixel world coordinates that this camera is precisely focused on. */
-	private final Box2<Integer, Integer> focusedPoint = new Box2<>();
+	private final Box2<Integer, Integer> focusedPoint = new Box2<>(0, 0);
 	/** The zoom of the camera. Higher values are more zoomed in. */
 	private double zoom = 1.0;
 	

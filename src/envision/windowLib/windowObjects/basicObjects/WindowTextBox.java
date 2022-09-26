@@ -45,7 +45,6 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		
 		//draw background
 		if (drawBackground) {
 			drawRect(startX, startY, startX + width, startY + height, EColors.black);
@@ -71,8 +70,6 @@ public class WindowTextBox<E> extends WindowObject<E> {
 		}
 		
 		endScissor();
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	//---------

@@ -48,6 +48,7 @@ import envision.terminal.terminalCommand.commands.system.ForLoop;
 import envision.terminal.terminalCommand.commands.system.Help;
 import envision.terminal.terminalCommand.commands.system.HexToDec;
 import envision.terminal.terminalCommand.commands.system.ID_CMD;
+import envision.terminal.terminalCommand.commands.system.JavaTrace;
 import envision.terminal.terminalCommand.commands.system.ListCMD;
 import envision.terminal.terminalCommand.commands.system.OpenScreen;
 import envision.terminal.terminalCommand.commands.system.OpenWindow;
@@ -173,6 +174,7 @@ public class TerminalHandler {
 		registerCommand(new Help(), termIn, runVisually);
 		registerCommand(new HexToDec(), termIn, runVisually);
 		registerCommand(new ID_CMD(), termIn, runVisually);
+		registerCommand(new JavaTrace(), termIn, runVisually);
 		registerCommand(new ListCMD(), termIn, runVisually);
 		registerCommand(new OpenScreen(), termIn, runVisually);
 		registerCommand(new OpenWindow(), termIn, runVisually);

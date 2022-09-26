@@ -35,7 +35,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	// Static Fields
 	//---------------
 	
-	/** Deafult header height in pixels. */
+	/** Default header height in pixels. */
 	public static int defaultHeight = 35;
 	/** Default header button width in pixels. (also button height) */
 	public static int buttonWidth = 32;
@@ -143,7 +143,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	//-----------
 	
 	@Override
-	public void drawObject(int mX, int mY) {
+	public void drawObject_i(int mX, int mY) {
 		//preventative logic to stop windows from moving while the left mouse button is not held down
 		if (moving && !Mouse.isButtonDown(0)) {
 			moving = false;
@@ -164,7 +164,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		//only true if the header itself should be drawn
 		if (drawHeader) {
 			drawHeader();
-			super.drawObject(mX, mY);
+			super.drawObject_i(mX, mY);
 		}
 		
 		handleMaximizeDraw(mX, mY);

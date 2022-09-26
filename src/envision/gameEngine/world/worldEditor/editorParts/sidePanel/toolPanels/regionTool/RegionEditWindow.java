@@ -72,7 +72,6 @@ public class RegionEditWindow extends WindowParent {
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawDefaultBackground();
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

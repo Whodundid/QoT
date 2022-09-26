@@ -332,7 +332,7 @@ public final class Envision implements IRendererErrorReceiver {
 			
 			if (old != null) {
 				old.close();
-				old.onClosed();
+				old.onClosed_i();
 				old.onScreenClosed();
 			}
 			
@@ -363,7 +363,7 @@ public final class Envision implements IRendererErrorReceiver {
 			
 			if (old != null) {
 				old.close();
-				old.onClosed();
+				old.onClosed_i();
 				old.onScreenClosed();
 			}
 		}

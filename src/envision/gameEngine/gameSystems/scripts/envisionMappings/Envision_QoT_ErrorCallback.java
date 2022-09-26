@@ -18,6 +18,8 @@ public class Envision_QoT_ErrorCallback implements EnvisionLangErrorCallBack {
 		if (term != null) {
 			term.javaError(e.toString());
 		}
+		
+		e.printStackTrace();
 	}
 	
 }

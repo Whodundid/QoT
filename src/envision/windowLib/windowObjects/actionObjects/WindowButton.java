@@ -167,8 +167,6 @@ public class WindowButton<E> extends ActionObject<E> {
 		}
 		
 		forceDrawHover = false;
-		
-		super.drawObject(mX, mY);
 	}
 	
 	@Override

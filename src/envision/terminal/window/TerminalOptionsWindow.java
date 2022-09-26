@@ -76,7 +76,6 @@ public class TerminalOptionsWindow extends WindowParent {
 	public void drawObject(int mXIn, int mYIn) {
 		drawDefaultBackground();
 		//System.out.println(this.getDimensions());
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

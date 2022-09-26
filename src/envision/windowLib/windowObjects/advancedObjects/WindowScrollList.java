@@ -80,7 +80,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject_i(int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		drawRect(startX, startY, endX, endY, borderColor);
 		
@@ -102,10 +102,10 @@ public class WindowScrollList<E> extends WindowObject<E> {
 					//only draw the objects that are actually in the viewable area
 					for (var o : drawnListObjects) {
 						if (o.willBeDrawn()) {
-							if (!o.hasFirstDraw()) o.onFirstDraw();
+							if (!o.hasFirstDraw()) o.onFirstDraw_i();
 							GLSettings.fullBright();
 							//EDimension d = o.getDimensions();
-							o.drawObject(mXIn, mYIn);
+							o.drawObject_i(mXIn, mYIn);
 						}
 					}
 				}
@@ -117,9 +117,9 @@ public class WindowScrollList<E> extends WindowObject<E> {
 				//draw non list contents as normal (non scissored)
 				for (var o : getChildren()) {
 					if (o.willBeDrawn() && listContents.notContains(o)) {
-						if (!o.hasFirstDraw()) o.onFirstDraw();
+						if (!o.hasFirstDraw()) o.onFirstDraw_i();
 						GLSettings.fullBright();
-	    	        	o.drawObject(mXIn, mYIn);
+	    	        	o.drawObject_i(mXIn, mYIn);
 	    			}
 				}
 				
@@ -133,7 +133,6 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	
 	@Override
 	public void onFirstDraw() {
-		super.onFirstDraw();
 		updateDrawnObjects();
 	}
 	
@@ -433,7 +432,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 				
 				o.setParent(this);
 				o.initChildren();
-				o.onChildrenInit();
+				o.onChildrenInit_i();
 				
 				//limit the boundary of each object to the list's boundary
 				o.setBoundaryEnforcer(bounds);
@@ -445,7 +444,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 				listObjsToBeAdded.add(o);
 				
 				if (o instanceof WindowParent p) p.initWindow();
-				o.onInit();
+				o.onInit_i();
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -499,7 +498,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 			
 			o.properties().isBeingRemoved = true;
 			listContents.remove(o);
-			o.onRemoved();
+			o.onRemoved_i();
 			o.properties().isBeingRemoved = false;
 			postEvent(new EventObjects(this, o, ObjectEventType.OBJECT_REMOVED));
 		}
@@ -515,7 +514,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 			
 			o.properties().isBeingAdded = true;
 			listContents.add(o);
-			o.onAdded();
+			o.onAdded_i();
 			o.properties().isBeingAdded = false;
 			postEvent(new EventObjects(this, o, ObjectEventType.OBJECT_ADDED));
 		}

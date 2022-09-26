@@ -1,10 +1,5 @@
 package envision.windowLib.windowObjects.advancedObjects.textArea;
 
-import eutil.EUtil;
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import eutil.math.ENumUtil;
-
 import java.util.Iterator;
 
 import envision.inputHandlers.Mouse;
@@ -14,6 +9,9 @@ import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import envision.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
 import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
 import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
@@ -58,7 +56,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	//---------------------------
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject_i(int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		drawRect(startX, startY, endX, endY, borderColor);
 		
@@ -88,9 +86,9 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 					//only draw the objects that are actually in the viewable area
 					for (var o : drawnListObjects) {
 						if (o.willBeDrawn()) {
-							if (!o.hasFirstDraw()) o.onFirstDraw();
+							if (!o.hasFirstDraw()) o.onFirstDraw_i();
 							GLSettings.fullBright();
-							o.drawObject(mXIn, mYIn);
+							o.drawObject_i(mXIn, mYIn);
 						}
 					}
 				}
@@ -114,9 +112,9 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				//draw non list contents as normal (non scissored)
 				for (var o : getChildren()) {
 					if (o.willBeDrawn() && listContents.notContains(o)) {
-						if (!o.hasFirstDraw()) o.onFirstDraw();
+						if (!o.hasFirstDraw()) o.onFirstDraw_i();
 						GLSettings.fullBright();
-	    	        	o.drawObject(mXIn, mYIn);
+	    	        	o.drawObject_i(mXIn, mYIn);
 	    			}
 				}
 				

@@ -68,8 +68,6 @@ public class TaskBar<E> extends WindowObject<E> {
 		if (buttons.isEmpty() && toAdd.isEmpty()) {
 			drawString("No currently open windows..", startX + 5, midY - 4, EColors.lgray);
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

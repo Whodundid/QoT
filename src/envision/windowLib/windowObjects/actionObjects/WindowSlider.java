@@ -91,8 +91,6 @@ public class WindowSlider<E> extends ActionObject<E> {
 			if (drawDisplayString) drawStringC(displayValue, midX, midY - 8, displayValueColor);
 		}
 		else if (drawDisplayString) drawStringC(displayValue, midX, midY - 8, displayValueColor);
-		
-		super.drawObject(mX, mY);
 	}
 	
 	@Override

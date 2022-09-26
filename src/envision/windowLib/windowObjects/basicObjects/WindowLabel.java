@@ -72,7 +72,6 @@ public class WindowLabel<E> extends WindowObject<E> {
 				
 			}
 		}
-		super.drawObject(mX, mY);
 	}
 	
 	//---------

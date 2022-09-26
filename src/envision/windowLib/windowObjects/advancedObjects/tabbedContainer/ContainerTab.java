@@ -79,8 +79,6 @@ public class ContainerTab<E> extends WindowObject<E> {
 			drawRect(EColors.black, 7);
 			drawRect(tabBackgroundColor, 8);
 		}
-		
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

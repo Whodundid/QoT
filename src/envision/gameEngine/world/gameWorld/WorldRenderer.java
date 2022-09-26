@@ -68,27 +68,29 @@ public class WorldRenderer extends EGui {
 	}
 	
 	private void TEMP_createWorldLayers() {
-		WorldLayer layerZero = new WorldLayer(world, 0);
-		WorldLayer layerOne = new WorldLayer(world, 1);
-		
-		for (int i = 0; i < world.getHeight(); i++) {
-			for (int j = 0; j < world.getWidth(); j++) {
-				WorldTile t = world.getTileAt(j, i);
-				if (t == null) continue;
-				else if (!t.isWall() || t.getWallHeight() < 0.20) {
-					t.setRenderLayer(0);
-				}
-				else {
-					t.setRenderLayer(1);
+		synchronized (world) {
+			WorldLayer layerZero = new WorldLayer(world, 0);
+			WorldLayer layerOne = new WorldLayer(world, 1);
+			
+			for (int i = 0; i < world.getHeight(); i++) {
+				for (int j = 0; j < world.getWidth(); j++) {
+					WorldTile t = world.getTileAt(j, i);
+					if (t == null) continue;
+					else if (!t.isWall() || t.getWallHeight() < 0.20) {
+						t.setRenderLayer(0);
+					}
+					else {
+						t.setRenderLayer(1);
+					}
 				}
 			}
+			
+			for (var ent : world.getEntitiesInWorld()) {
+				ent.setRenderLayer(1);
+			}
+			
+			worldLayers.add(layerZero, layerOne);
 		}
-		
-		for (var ent : world.getEntitiesInWorld()) {
-			ent.setRenderLayer(1);
-		}
-		
-		worldLayers.add(layerZero, layerOne);
 	}
 	
 	//------------------------

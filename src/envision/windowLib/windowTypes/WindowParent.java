@@ -113,8 +113,11 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject_i(int mXIn, int mYIn) {
 		if (drawDefaultBackground) drawDefaultBackground();
+		super.drawObject_i(mXIn, mYIn);
+		if (!willBeDrawn() && QoT.isDebugMode()) return;
+		
 		if (QoT.isDebugMode()) {
 			if (!isMaximized()) {
 				double y = hasHeader() ? getHeader().startY - 22 : startY - 22;
@@ -155,7 +158,6 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 				}
 			}
 		}
-		super.drawObject(mXIn, mYIn);
 	}
 	
 	@Override

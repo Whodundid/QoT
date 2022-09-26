@@ -2,6 +2,8 @@ package game.items.weapons.melee.swords;
 
 import envision.gameEngine.gameObjects.entity.Entity;
 import envision.gameEngine.gameObjects.items.Weapon;
+import envision.gameEngine.world.gameWorld.IGameWorld;
+import envision.gameEngine.world.worldUtil.WorldCamera;
 import game.assets.textures.item.ItemTextures;
 import game.items.ItemList;
 
@@ -20,5 +22,16 @@ public class Sword_Wooden extends Weapon {
 	@Override
 	public void onItemUse(Entity user) {
 	}
+
+	@Override
+	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY,
+		int distX, int distY) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getInternalSaveID() { // TODO Auto-generated method stub
+	return 0; }
 	
 }
