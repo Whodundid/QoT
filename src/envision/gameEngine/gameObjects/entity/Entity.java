@@ -198,6 +198,7 @@ public abstract class Entity extends GameObject {
 	
 	/** Reduces health by amount. If result is less than or equal to 0, the entity dies. */
 	public void drainHealth(int amount) {
+		if (invincible) return;
 		health = ENumUtil.clamp(health - amount, 0, health);
 		healthChanged();
 	}

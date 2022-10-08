@@ -1,19 +1,97 @@
-class point {
-	-int x, y
+class Board {
+	-board = []
+	-int w, h
 	
-	+init() -> init(0, 0)
-	+init(x, y)
+	+init(w, h) {
+		for (i to h) {
+			l = board.addR([])
+			for (j to w) l.add("_")
+		}
+	}
 	
-	+func toString() -> "<{x}, {y}>"
+	+func toString() {
+		out = ""
+		for (i to h) {
+			for (j to w) {
+				out += board[i][j]
+				out += " "
+			}
+			out += '\n'
+		}
+		return out
+	}
 	
-	+func add(point p) -> point(x + p.x, y + p.y)
+	+func dims() -> w, h
 	
-	+operator +(point p) -> add(p)
+	+func getPos(x, y) -> board[y][x]
+	+func setPos(x, y, o) -> board[y][x] = o
 }
 
-ri = randInt
+class TicTacToe {
+	-xTurn = true
+	-string p1, p2
+	-over = true
+	-Board board
+	
+	+init(p1, p2) {
+		board = Board(3, 3)
+	}
+	
+	+func start() {
+		println("Welcome {p1} and {p2}!")
+		println("Tic Tac Toe Challenge!")
+		
+		int i = 0
+		while (over && i++ < 10) {
+			println((xTurn) ? p1 : p2, "turn! Select position!")
+			
+			opens = getOpens(3, 3)
+			if (opens.size() == 0) {
+				over = true
+				break
+			}
+			
+			pos = (xTurn) ? getPos() : randPos(opens)
+			
+			board.setPos(pos[0], pos[1], (xTurn) ? 'X' : 'O')
+			endTurn()
+		}
+	}
+	
+	-func getPos() {
+		w = board.dims()[0]
+		h = board.dims()[1]
+		int x = read()
+		int y = read()
+		if (x < 0 || x >= w) println("Bad X!")
+		if (y < 0 || y >= w) println("Bad Y!")
+		return x, y
+	}
+	
+	-func randPos(opens) {
+		return opens[randInt(0, opens.size() - 1)]
+	}
+	
+	-func getOpens(w, h) {
+		l = []
+		for (i to h) {
+			for (j to w) {
+				if (board.getPos(i, j) == "_")
+					l += [i, j]
+			}
+		}
+		return l
+	}
+	
+	-func checkWin() {
+	
+	}
+	
+	-func endTurn() {
+		xTurn = !xTurn
+		println(board)
+	}
+}
 
-p1 = point(ri(0, 5), ri(0, 5))
-p2 = point(ri(0, 4), ri(0, 4))
-
-writeln(p1, p2, p1 + p2)
+g = TicTacToe("Paul", "Lary")
+g.start()

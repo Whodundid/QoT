@@ -28,6 +28,8 @@
 				<version>3.8.1</version>
 				<configuration>
 					<release>18</release>
+					<parameters>true</parameters>
+					<testCompilerArgument>-parameters</testCompilerArgument>
 				</configuration>
 			</plugin>
 		</plugins>

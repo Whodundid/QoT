@@ -5,7 +5,7 @@ import java.util.List;
 import envision.terminal.terminalCommand.TerminalCommand;
 import envision.terminal.window.ETerminal;
 import envision_lang.EnvisionLang;
-import envision_lang._launch.EnvisionLangSettings;
+import envision_lang._launch.EnvisionLaunchSettings;
 import envision_lang._launch.EnvisionProgram;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -43,7 +43,7 @@ public class Envision_CMD extends TerminalCommand {
 			for (int i = 0; i < modifiers.size(); i++) {
 				toParse.add(modifiers.get(i));
 			}
-			var launchArgs = EnvisionLangSettings.of(toParse);
+			var launchArgs = EnvisionLaunchSettings.of(toParse);
 			program.setLaunchArgs(launchArgs);
 		}
 		

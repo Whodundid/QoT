@@ -22,6 +22,7 @@ import envision.terminal.terminalCommand.commands.fileSystem.Tail;
 import envision.terminal.terminalCommand.commands.game.Config_CMD;
 import envision.terminal.terminalCommand.commands.game.CreateDungeon_CMD;
 import envision.terminal.terminalCommand.commands.game.FPS_CMD;
+import envision.terminal.terminalCommand.commands.game.God_CMD;
 import envision.terminal.terminalCommand.commands.game.Kill_CMD;
 import envision.terminal.terminalCommand.commands.game.ListEntities_CMD;
 import envision.terminal.terminalCommand.commands.game.LoadWorld_CMD;
@@ -161,6 +162,7 @@ public class TerminalHandler {
 		registerCommand(new Kill_CMD(), termIn, runVisually);
 		registerCommand(new ReloadWorld_CMD(), termIn, runVisually);
 		registerCommand(new Config_CMD(), termIn, runVisually);
+		registerCommand(new God_CMD(), termIn, runVisually);
 		
 		//system
 		registerCommand(new CalcCommand(), termIn, runVisually);

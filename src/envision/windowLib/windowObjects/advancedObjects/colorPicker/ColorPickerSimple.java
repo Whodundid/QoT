@@ -5,8 +5,8 @@ import envision.windowLib.windowObjects.actionObjects.WindowTextField;
 import envision.windowLib.windowObjects.basicObjects.WindowContainer;
 import envision.windowLib.windowObjects.basicObjects.WindowLabel;
 import envision.windowLib.windowObjects.basicObjects.WindowRect;
-import envision.windowLib.windowObjects.utilityObjects.WindowDialogBox;
-import envision.windowLib.windowObjects.utilityObjects.WindowDialogBox.DialogBoxTypes;
+import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
+import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox.DialogBoxTypes;
 import envision.windowLib.windowTypes.ActionWindowParent;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
@@ -220,7 +220,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			WindowDialogBox error = new WindowDialogBox(this, DialogBoxTypes.OK);
+			WindowDialogueBox error = new WindowDialogueBox(this, DialogBoxTypes.OK);
 			error.setTitle("Error!");
 			error.setTitleColor(EColors.lred.c());
 			error.setMessage("Cannot parse the value: " + inputField.getText());

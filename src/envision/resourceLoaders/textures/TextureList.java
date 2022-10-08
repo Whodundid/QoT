@@ -9,6 +9,7 @@ import envision.resourceLoaders.IResourceManager;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
 import eutil.file.EFileUtil;
+import eutil.file.LineReader;
 import game.QoT;
 
 /**
@@ -19,7 +20,7 @@ import game.QoT;
  */
 public class TextureList implements IResourceManager {
 	
-	/** The active record of all loaded game textures. */
+	/** The active record of all loaded game textures. Maps name to texture. */
 	private final HashMap<String, GameTexture> textures = new HashMap<>();
 	/**
 	 * Keeps track of textures that have been parsed but not yet loaded.
@@ -103,17 +104,27 @@ public class TextureList implements IResourceManager {
 	 */
 	@Override
 	public void load() throws Exception {
-		
+		loadAll();
 	}
 	
 	@Override
 	public void unload() throws Exception {
-		
+		unloadAll();
 	}
 	
 	private void loadFile() {
 		if (!EFileUtil.fileExists(textureFile)) return;
 		
+		try (var reader = new LineReader(textureFile)) {
+			while (reader.hasNextLine()) {
+				String line = reader.nextLine();
+				
+				
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

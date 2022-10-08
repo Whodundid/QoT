@@ -12,7 +12,7 @@ import envision.gameEngine.world.worldUtil.Region;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envision.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import envision.windowLib.windowObjects.utilityObjects.WindowDialogBox;
+import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import envision.windowLib.windowTypes.interfaces.IWindowObject;
 import envision.windowLib.windowTypes.interfaces.IWindowParent;
@@ -86,7 +86,7 @@ public class RegionSidePanel extends SidePanel {
 		if (object == edit) edit();
 		if (object == delete) delete();
 		
-		if (object instanceof WindowDialogBox b) {
+		if (object instanceof WindowDialogueBox b) {
 			if (args.length >= 1 && args[0] instanceof Integer code &&
 				b.getGenericObject() instanceof TextAreaLine line &&
 				line.getGenericObject() instanceof Region)
@@ -148,7 +148,7 @@ public class RegionSidePanel extends SidePanel {
 	}
 	
 	private void openDeleter(TextAreaLine<Region> lineIn) {
-		WindowDialogBox deletingBox = new WindowDialogBox(panel) {
+		WindowDialogueBox deletingBox = new WindowDialogueBox(panel) {
 			
 			WindowButton yes, cancel;
 			

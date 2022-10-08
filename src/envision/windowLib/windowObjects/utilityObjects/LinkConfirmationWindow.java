@@ -9,7 +9,7 @@ import game.QoT;
 
 //Author: Hunter Bragg
 
-public class LinkConfirmationWindow extends WindowDialogBox {
+public class LinkConfirmationWindow extends WindowDialogueBox {
 	
 	//--------
 	// Fields

@@ -15,6 +15,7 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
 	protected IWindowObject<?> actionReceiver;
+	protected Runnable onPressAction = null;
 	
 	//--------------
 	// Constructors
@@ -51,6 +52,8 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 		if (runActionOnRelease) performAction();
 	}
 	
+	public void setOnPressAction(Runnable action) { onPressAction = action; }
+	
 	//---------------------------
 	// Overrides : IActionObject
 	//---------------------------
@@ -64,7 +67,12 @@ public abstract class ActionObject<E> extends WindowObject<E> implements IAction
 		}
 	}
 	
-	@Override public void onPress(int button) {}
+	@Override
+	public void onPress(int button) {
+		if (onPressAction != null) onPressAction.run();
+		if (runActionOnPress) performAction(button);
+	}
+	
 	@Override public boolean runsActionOnPress() { return runActionOnPress; }
 	@Override public boolean runsActionOnRelease() { return runActionOnRelease; }
 	@Override public void setRunActionOnPress(boolean value) { runActionOnPress = value; }

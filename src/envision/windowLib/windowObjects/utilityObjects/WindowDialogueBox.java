@@ -11,7 +11,7 @@ import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
-public class WindowDialogBox extends ActionWindowParent {
+public class WindowDialogueBox extends ActionWindowParent {
 	
 	//-------
 	// Types
@@ -34,8 +34,8 @@ public class WindowDialogBox extends ActionWindowParent {
 	// Constructors
 	//--------------
 	
-	public WindowDialogBox(IWindowObject<?> parentIn) { this(parentIn, DialogBoxTypes.CUSTOM); }
-	public WindowDialogBox(IWindowObject<?> parentIn, DialogBoxTypes typeIn) {
+	public WindowDialogueBox(IWindowObject<?> parentIn) { this(parentIn, DialogBoxTypes.CUSTOM); }
+	public WindowDialogueBox(IWindowObject<?> parentIn, DialogBoxTypes typeIn) {
 		super(parentIn);
 		type = typeIn;
 		setSize(400, 200);
@@ -59,18 +59,24 @@ public class WindowDialogBox extends ActionWindowParent {
 				double bw = ENumUtil.clamp((width - 10) / 3, 0, 140);
 				double g = width / 30;
 				
-				yes = new WindowButton(this, midX - g - bw, endY - 30, bw, 20, "Yes");
-				no = new WindowButton(this, midX + g, endY - 30, bw, 20, "No");
+				yes = new WindowButton(this, midX - g - bw, endY - 40, bw, 30, "Yes");
+				no = new WindowButton(this, midX + g, endY - 40, bw, 30, "No");
+				
+				yes.setOnPressAction(() -> WindowDialogueBox.this.performAction("y", yes));
+				no.setOnPressAction(() -> WindowDialogueBox.this.performAction("n", no));
 				
 				no.setStringColor(EColors.yellow);
 				yes.setStringColor(EColors.lgreen);
+				
+				yes.setRunActionOnPress(true);
+				no.setRunActionOnPress(true);
 				
 				addObject(yes, no);
 				
 				defaultObject = yes;
 				break;
 			case OK:
-				okButton = new WindowButton(this, midX - 40, endY - 30, 80, 20, "Ok") {
+				okButton = new WindowButton(this, midX - 40, endY - 30, 80, 30, "Ok") {
 					@Override
 					public void onPress(int button) {
 						playPressSound();

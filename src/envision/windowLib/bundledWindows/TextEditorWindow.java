@@ -9,8 +9,8 @@ import envision.inputHandlers.Keyboard;
 import envision.windowLib.windowObjects.actionObjects.WindowButton;
 import envision.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envision.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import envision.windowLib.windowObjects.utilityObjects.WindowDialogBox;
-import envision.windowLib.windowObjects.utilityObjects.WindowDialogBox.DialogBoxTypes;
+import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
+import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox.DialogBoxTypes;
 import envision.windowLib.windowTypes.WindowParent;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import envision.windowLib.windowUtil.windowEvents.ObjectEvent;
@@ -256,7 +256,7 @@ public class TextEditorWindow extends WindowParent {
 	}
 	
 	private void openDialogue(boolean pass) {
-		WindowDialogBox box = new WindowDialogBox(this, DialogBoxTypes.OK);
+		WindowDialogueBox box = new WindowDialogueBox(this, DialogBoxTypes.OK);
 		
 		box.setTitle("Saving File");
 		box.setTitleColor(EColors.lgray.intVal);

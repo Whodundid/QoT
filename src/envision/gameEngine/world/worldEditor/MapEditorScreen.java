@@ -1,5 +1,7 @@
 package envision.gameEngine.world.worldEditor;
 
+import static envision.inputHandlers.Keyboard.*;
+
 import java.io.File;
 import java.util.Collection;
 
@@ -23,6 +25,7 @@ import envision.inputHandlers.Mouse;
 import envision.renderEngine.fontRenderer.FontRenderer;
 import envision.renderEngine.textureSystem.GameTexture;
 import envision.util.InsertionSort;
+import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
 import envision.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
@@ -79,6 +82,8 @@ public class MapEditorScreen extends GameScreen {
 	private boolean loading = false;
 	private boolean hasBeenModified = false;
 	private boolean hasSaved = false;
+	private WindowDialogueBox exitSaverBox = null;
+	private boolean cancelExitClick = false;
 	
 	private final EArrayList<EditorObject> selectedObjects = new EArrayList<>();
 	
@@ -183,7 +188,7 @@ public class MapEditorScreen extends GameScreen {
 			if (settings.drawCenterPositionBox) drawCenterPositionBox(x, y, w, h);
 			
 			mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
-			if (drawingMousePos = mouseInMap) {
+			if (drawingMousePos = mouseInMap && exitSaverBox == null) {
 				if (sidePanel.getCurrentPanelType() == SidePanelType.TERRAIN) drawHoveredTileBox(x, y, w, h);
 				toolHandler.drawCurrentTool(x, y, w, h);
 			}
@@ -202,12 +207,22 @@ public class MapEditorScreen extends GameScreen {
 			oldWorldY = midDrawY;
 			
 		}
+		
+		if (exitSaverBox != null) {
+			if (containsObject(exitSaverBox)) drawRect(EColors.vdgray.opacity(80));
+			else exitSaverBox = null;
+		}
 	}
 	
 	@Override
 	public void mouseScrolled(int change) {
 		double c = Math.signum(change);
 		double z = 1.0;
+		
+		if (exitSaverBox != null) {
+			exitSaverBox.drawFocusLockBorder();
+			return;
+		}
 		
 		if (Keyboard.isCtrlDown()) {
 			if (c > 0 && actualWorld.getCameraZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
@@ -234,6 +249,12 @@ public class MapEditorScreen extends GameScreen {
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
+		
+		if (exitSaverBox != null && !exitSaverBox.isMouseInside()) {
+			exitSaverBox.drawFocusLockBorder();
+			return;
+		}
+		
 		if (drawingMousePos = mouseInMap && getTopParent().getModifyingObject() == null) {
 			toolHandler.handleToolPress(button);
 		}
@@ -242,6 +263,15 @@ public class MapEditorScreen extends GameScreen {
 	@Override
 	public void mouseReleased(int mXIn, int mYIn, int button) {
 		super.mouseReleased(mXIn, mYIn, button);
+		
+		if (exitSaverBox != null && !exitSaverBox.isMouseInside()) {
+			exitSaverBox.drawFocusLockBorder();
+			return;
+		}
+		else {
+			cancelExitClick = false;
+		}
+		
 		if (!firstPress && button == 0) {
 			firstPress = true;
 		}
@@ -253,6 +283,11 @@ public class MapEditorScreen extends GameScreen {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
+		if (exitSaverBox != null) {
+			exitSaverBox.drawFocusLockBorder();
+			return;
+		}
+		
 		if (mouseOver) {
 			if (Keyboard.isCtrlS(keyCode)) saveWorld();
 			if (Keyboard.isCtrlR(keyCode)) {
@@ -265,10 +300,20 @@ public class MapEditorScreen extends GameScreen {
 			
 			if (keyCode == Keyboard.KEY_ESC) {
 				if (!hasSaved && hasBeenModified) {
-					
+					if (exitSaverBox == null || !containsObject(exitSaverBox)) {
+						exitSaverBox = new WindowDialogueBox(this, WindowDialogueBox.DialogBoxTypes.YES_NO);
+						exitSaverBox.setTitle("World not saved!");
+						exitSaverBox.setMessage("Do you wish to exit without saving?");
+						exitSaverBox.setMinimizable(false);
+						exitSaverBox.setActionReceiver(this);
+						setFocusLockObject(exitSaverBox);
+						displayWindow(exitSaverBox);
+						cancelExitClick = true;
+					}
 				}
-				
-				if (!screenHistory.isEmpty()) closeScreen();
+				else {
+					if (!screenHistory.isEmpty()) closeScreen();
+				}
 			}
 		}
 		else super.keyPressed(typedChar, keyCode);
@@ -276,13 +321,18 @@ public class MapEditorScreen extends GameScreen {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		
+		if (object == exitSaverBox) {
+			if (args[0] instanceof String action) {
+				if (action.equals("y")) closeScreen();
+				else exitSaverBox.close();
+			}
+		}
 	}
 	
 	@Override
 	public void onGameTick(long ticks) {
 		updateMovement();
-		if (hasFocus()) {
+		if (hasFocus() && exitSaverBox == null && !cancelExitClick) {
 			toolHandler.handleToolUpdate();
 		}
 	}
@@ -302,8 +352,13 @@ public class MapEditorScreen extends GameScreen {
 	//------------------------
 	
 	private void updateMovement() {
-		if (QoT.getTopRenderer().hasFocus()) { return; }
-		if (System.currentTimeMillis() - timeSinceKey < 37) { return; }
+		if (QoT.getTopRenderer().hasFocus()) return;
+		if (System.currentTimeMillis() - timeSinceKey < 37) return;
+		
+		if (exitSaverBox != null && Keyboard.isAnyKeyDown(KEY_W, KEY_UP, KEY_A, KEY_LEFT, KEY_S, KEY_DOWN, KEY_D, KEY_RIGHT)) {
+			exitSaverBox.drawFocusLockBorder();
+			return;
+		}
 		
 		if (!Keyboard.isCtrlDown()) {
 			if (Keyboard.isWDown() || Keyboard.isKeyDown(Keyboard.KEY_UP)) { midDrawY--; midDrawY = (midDrawY < 0) ? 0 : midDrawY; }
