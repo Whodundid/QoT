@@ -48,7 +48,7 @@ import game.settings.QoTSettings;
 
 public class QoT implements EnvisionGame {
 	
-	public static final String version = "Aug 7, 2022";
+	public static final String version = "Oct 8, 2022";
 	
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------
