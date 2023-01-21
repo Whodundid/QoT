@@ -1,10 +1,10 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.file.LineReader;
 import eutil.strings.EStringUtil;
 
@@ -19,7 +19,7 @@ public class Cat extends FileCommand {
 	@Override public String getUsage() { return "ex: cat '.txt'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		try {
 			if (args.size() == 0) termIn.error("Not enough arguments!");
 			else if (args.size() >= 1) {

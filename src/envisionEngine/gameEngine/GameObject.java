@@ -1,16 +1,16 @@
-package envision.gameEngine;
+package envisionEngine.gameEngine;
 
-import envision.gameEngine.effects.animations.AnimationHandler;
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.gameEngine.world.worldUtil.WorldCamera;
-import envision.renderEngine.GLObject;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.util.IDrawable;
+import envisionEngine.gameEngine.effects.animations.AnimationHandler;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
+import envisionEngine.renderEngine.GLObject;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.util.IDrawable;
 import eutil.colors.EColors;
 import eutil.math.EDimension;
 import eutil.math.ENumUtil;
 import eutil.misc.Rotation;
-import game.QoT;
+import qot.QoT;
 
 public abstract class GameObject extends GLObject implements IDrawable {
 	

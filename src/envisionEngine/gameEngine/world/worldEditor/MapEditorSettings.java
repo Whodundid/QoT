@@ -1,10 +1,10 @@
-package envision.gameEngine.world.worldEditor;
+package envisionEngine.gameEngine.world.worldEditor;
 
 import java.io.File;
 
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldEditor.editorParts.util.EditorObject;
-import envision.gameEngine.world.worldEditor.editorTools.EditorToolType;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.util.EditorObject;
+import envisionEngine.gameEngine.world.worldEditor.editorTools.EditorToolType;
 
 /** A holder that keeps track of active map editor properties. */
 public class MapEditorSettings {

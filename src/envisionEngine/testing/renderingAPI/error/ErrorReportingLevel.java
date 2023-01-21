@@ -1,4 +1,4 @@
-package envision.testing.renderingAPI.error;
+package envisionEngine.testing.renderingAPI.error;
 
 public enum ErrorReportingLevel {
 	HIGH(0),

@@ -1,16 +1,16 @@
-package envision.gameEngine.gameObjects.entity;
+package envisionEngine.gameEngine.gameObjects.entity;
 
-import envision.gameEngine.GameObject;
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.gameEngine.world.worldUtil.WorldCamera;
-import envision.inputHandlers.Mouse;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
+import envisionEngine.inputHandlers.Mouse;
 import eutil.debug.Broken;
 import eutil.math.EDimension;
 import eutil.math.ENumUtil;
 import eutil.misc.Direction;
 import eutil.misc.Rotation;
-import game.QoT;
+import qot.QoT;
 
 public abstract class Entity extends GameObject {
 	
@@ -43,6 +43,16 @@ public abstract class Entity extends GameObject {
 	/** Instead of making the gold an entity has an inventory item, gold is stored directly
 	 *  on the character themselves. */
 	protected int gold;
+	
+	/**
+	 * The rate (in ms) that hitpoints will regen on their own without potions.
+	 * Default is 1 hp every 20 seconds.
+	 */
+	protected long hpRegenRate = 20000;
+	/** The amount of hp that an entity will heal each time they regen. */
+	protected int hpRegenAmount = 1;
+	/** The point in time that hp last regenerated. */
+	protected long lastRegenUpdate = 0l;
 	
 	protected boolean invincible = false;
 	
@@ -556,7 +566,7 @@ public abstract class Entity extends GameObject {
 	
 	public void setStrengthLevel(int levelIn) {
 		strengthLevel = levelIn;
-		baseMeleeDamage = 2 + (levelIn * 2);
+		baseMeleeDamage = 1 + EntityLevel.calculateBaseDamage(levelIn);
 	}
 	
 	public void setGold(int amountIn) {

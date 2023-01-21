@@ -1,7 +1,7 @@
-package envision.events.types.screen;
+package envisionEngine.events.types.screen;
 
-import envision.events.EventType;
-import envision.events.GameEvent;
+import envisionEngine.events.EventType;
+import envisionEngine.events.GameEvent;
 
 public abstract class ScreenEvent extends GameEvent {
 	

@@ -1,9 +1,9 @@
-package envision.gameEngine.gameSystems.scripts.envisionMappings;
+package envisionEngine.gameEngine.gameSystems.scripts.envisionMappings;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import envision_lang._launch.EnvisionLangErrorCallBack;
 import envision_lang.exceptions.EnvisionLangError;
-import game.QoT;
+import qot.QoT;
 
 public class Envision_QoT_ErrorCallback implements EnvisionLangErrorCallBack {
 

@@ -1,23 +1,23 @@
-package envision.windowLib.windowObjects.advancedObjects.header;
+package envisionEngine.windowLib.windowObjects.advancedObjects.header;
 
-import envision.debug.DebugFunctions;
-import envision.inputHandlers.Mouse;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
-import envision.windowLib.windowUtil.EObjectGroup;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import envisionEngine.debug.DebugFunctions;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.EObjectGroup;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
-import game.QoT;
-import game.assets.textures.window.WindowTextures;
+import qot.QoT;
+import qot.assets.textures.window.WindowTextures;
 
 //Author: Hunter Bragg
 

@@ -1,14 +1,15 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
 import java.io.File;
 
-import envision.inputHandlers.Keyboard;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
-import game.settings.QoTSettings;
+import qot.settings.QoTSettings;
 
 public class WorldsDir_CMD extends TerminalCommand {
 	
@@ -19,12 +20,12 @@ public class WorldsDir_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "worldsdir"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("wdir"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("wdir"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "CDs to the directory where worlds are stored."; }
 	@Override public String getUsage() { return "ex: wdir"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() > 1) {
 			termIn.error("This command may only take one additional argument! (-c, -o)");
 		}

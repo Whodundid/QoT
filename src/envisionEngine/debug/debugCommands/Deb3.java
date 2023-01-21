@@ -1,8 +1,8 @@
-package envision.debug.debugCommands;
+package envisionEngine.debug.debugCommands;
 
-import envision.debug.testStuff.TestWindow;
-import envision.terminal.window.ETerminal;
-import game.QoT;
+import envisionEngine.debug.testStuff.TestWindow;
+import envisionEngine.terminal.window.ETerminal;
+import qot.QoT;
 
 @SuppressWarnings("unused")
 public class Deb3 extends DebugCommand {

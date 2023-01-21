@@ -1,12 +1,12 @@
-package game.assets.textures.world.nature;
+package qot.assets.textures.world.nature;
 
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
-import game.assets.textures.world.nature.grass.GrassTextures;
-import game.assets.textures.world.nature.rock.RockTextures;
-import game.assets.textures.world.nature.sand.SandTextures;
-import game.assets.textures.world.nature.water.WaterTextures;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
+import qot.assets.textures.world.nature.grass.GrassTextures;
+import qot.assets.textures.world.nature.rock.RockTextures;
+import qot.assets.textures.world.nature.sand.SandTextures;
+import qot.assets.textures.world.nature.water.WaterTextures;
 
 public class NatureTextures extends TextureLoader {
 	

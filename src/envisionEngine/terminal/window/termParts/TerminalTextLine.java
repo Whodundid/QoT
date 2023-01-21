@@ -1,12 +1,12 @@
-package envision.terminal.window.termParts;
+package envisionEngine.terminal.window.termParts;
 
-import envision.inputHandlers.Keyboard;
-import envision.terminal.window.ETerminal;
-import envision.terminal.window.TerminalRCM;
-import envision.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
-import envision.windowLib.windowUtil.ObjectPosition;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.EventType;
-import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.terminal.window.TerminalRCM;
+import envisionEngine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.EventType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
 
 public class TerminalTextLine extends TextAreaLine {

@@ -1,6 +1,6 @@
-package game.assets.textures.world.nature.grass;
+package qot.assets.textures.world.nature.grass;
 
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 public class LeafyGrass extends GameTexture {
 	

@@ -1,10 +1,9 @@
-package envision.gameEngine.gameSystems.shops;
-
-import game.items.potions.healing.Healing_Lesser;
+package envisionEngine.gameEngine.gameSystems.shops;
 
 import java.util.ArrayList;
 
-import envision.gameEngine.gameObjects.items.Item;
+import envisionEngine.gameEngine.gameObjects.items.Item;
+import qot.items.potions.healing.Healing_Lesser;
 
 public class Shop {
 	

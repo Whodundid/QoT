@@ -1,9 +1,9 @@
-package envision.gameEngine.world.worldTiles.categories.stone;
+package envisionEngine.gameEngine.world.worldTiles.categories.stone;
 
-import envision.gameEngine.world.worldTiles.TileIDs;
-import envision.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldTiles.TileIDs;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
 import eutil.misc.Rotation;
-import game.assets.textures.world.floors.stone.StoneFloorTextures;
+import qot.assets.textures.world.floors.stone.StoneFloorTextures;
 
 public class StonePad extends WorldTile {
 	

@@ -1,10 +1,11 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class Kill_CMD extends TerminalCommand {
 	
@@ -14,12 +15,12 @@ public class Kill_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "kill"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("k"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("k"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Kills an Entity Based on Entity ID"; }
 	@Override public String getUsage() { return "ex: kill 0"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (QoT.theWorld == null) {
 			termIn.error("Current World is Null");
 			return;

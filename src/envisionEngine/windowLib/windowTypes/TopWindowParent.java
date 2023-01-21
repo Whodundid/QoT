@@ -1,28 +1,28 @@
-package envision.windowLib.windowTypes;
+package envisionEngine.windowLib.windowTypes;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import envision.inputHandlers.CursorHelper;
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.GLSettings;
-import envision.topOverlay.GameTopScreen;
-import envision.windowLib.StaticTopParent;
-import envision.windowLib.windowObjects.advancedObjects.header.WindowHeader;
-import envision.windowLib.windowTypes.interfaces.ITopParent;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectEventType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
-import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
-import envision.windowLib.windowUtil.windowEvents.events.EventObjects;
-import envision.windowLib.windowUtil.windowEvents.events.EventRedraw;
+import envisionEngine.inputHandlers.CursorHelper;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.GLSettings;
+import envisionEngine.topOverlay.GameTopScreen;
+import envisionEngine.windowLib.StaticTopParent;
+import envisionEngine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
+import envisionEngine.windowLib.windowTypes.interfaces.ITopParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectEventType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventFocus;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventObjects;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventRedraw;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
-import game.QoT;
+import qot.QoT;
 
 public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E> {
 	
@@ -230,10 +230,10 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	@Override public IWindowObject<?> getHoveringObject() { return hoveringTextObject; }
 	
 	//double click
-	@Override public void setLastClickedObject(IWindowObject<?> objectIn) { lastClickedObject = objectIn; }
-	@Override public IWindowObject<?> getLastClickedObject() { return lastClickedObject; }
-	@Override public void setLastClickTime(long timeIn) { lastClickTime = timeIn; }
-	@Override public long getLastClickTime() { return lastClickTime; }
+	@Override public void setLastClickedChild(IWindowObject<?> objectIn) { lastClickedObject = objectIn; }
+	@Override public IWindowObject<?> getLastClickedChild() { return lastClickedObject; }
+	@Override public void setLastChildClickTime(long timeIn) { lastClickTime = timeIn; }
+	@Override public long getLastChildClickTime() { return lastClickTime; }
 	
 	//focus
 	@Override public IWindowObject<?> getFocusedObject() { return focusedObject; }

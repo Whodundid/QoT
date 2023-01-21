@@ -1,15 +1,13 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import java.util.List;
-
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import envision_lang.EnvisionLang;
 import envision_lang._launch.EnvisionLaunchSettings;
 import envision_lang._launch.EnvisionProgram;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class Envision_CMD extends TerminalCommand {
 	
@@ -23,7 +21,7 @@ public class Envision_CMD extends TerminalCommand {
 	@Override public String getUsage() { return "ex: envision 'file'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.writeln(EnvisionLang.getVersionString(), EColors.seafoam);
 			termIn.info("To run an Envision script, add an Envision program directory\n",
@@ -36,9 +34,9 @@ public class Envision_CMD extends TerminalCommand {
 		EnvisionProgram program = new EnvisionProgram(fileName);
 		
 		//arguments to be passed to the Envision Language
-		List<String> toParse = new EArrayList<>();
+		EList<String> toParse = EList.newList();
 		
-		List<String> modifiers = getParsedModifiers();
+		EList<String> modifiers = getParsedModifiers();
 		if (modifiers.size() > 0) {
 			for (int i = 0; i < modifiers.size(); i++) {
 				toParse.add(modifiers.get(i));
@@ -49,7 +47,7 @@ public class Envision_CMD extends TerminalCommand {
 		
 		try {
 			long start = System.currentTimeMillis();
-			QoT.getEnvision().runProgram(program);
+			//QoT.getEnvision().runProgram(program);
 			termIn.writeln(EColors.lgreen, "END ", EColors.yellow, (System.currentTimeMillis() - start), "ms");
 		}
 		catch (Throwable e) {

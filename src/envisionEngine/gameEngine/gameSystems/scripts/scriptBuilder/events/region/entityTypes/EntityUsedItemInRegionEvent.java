@@ -1,10 +1,10 @@
-package envision.gameEngine.gameSystems.scripts.scriptBuilder.events.region.entityTypes;
+package envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.events.region.entityTypes;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameObjects.items.Item;
-import envision.gameEngine.gameSystems.scripts.scriptBuilder.events.region.EntityRegionEvent;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldUtil.Region;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.items.Item;
+import envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.events.region.EntityRegionEvent;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldUtil.Region;
 
 public class EntityUsedItemInRegionEvent extends EntityRegionEvent {
 	

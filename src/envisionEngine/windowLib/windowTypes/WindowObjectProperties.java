@@ -1,11 +1,11 @@
-package envision.windowLib.windowTypes;
+package envisionEngine.windowLib.windowTypes;
 
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowUtil.EObjectGroup;
-import envision.windowLib.windowUtil.FutureTaskManager;
-import envision.windowLib.windowUtil.windowEvents.ObjectEventHandler;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowUtil.EObjectGroup;
+import envisionEngine.windowLib.windowUtil.FutureTaskManager;
+import envisionEngine.windowLib.windowUtil.windowEvents.ObjectEventHandler;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.EDimension;
 
 /**
@@ -37,11 +37,11 @@ public class WindowObjectProperties<E> {
 	public IWindowObject<?> defaultFocusObject;
 	
 	/** The current children on this object. */
-	public EArrayList<IWindowObject<?>> children = new EArrayList();
+	public EList<IWindowObject<?>> children = EList.newList();
 	/** The children that will be removed on the next draw cycle. */
-	public EArrayList<IWindowObject<?>> childrenToBeRemoved = new EArrayList();
+	public EList<IWindowObject<?>> childrenToBeRemoved = EList.newList();
 	/** The children that will be added on the next draw cycle. */
-	public EArrayList<IWindowObject<?>> childrenToBeAdded = new EArrayList();
+	public EList<IWindowObject<?>> childrenToBeAdded = EList.newList();
 	
 	/** Specifies a region for which this object is interactably restricted by beyond its normal dimensions. */
 	public EDimension boundaryDimension;

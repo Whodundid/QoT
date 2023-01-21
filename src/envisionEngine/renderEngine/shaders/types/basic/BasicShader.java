@@ -1,6 +1,6 @@
-package envision.renderEngine.shaders.types.basic;
+package envisionEngine.renderEngine.shaders.types.basic;
 
-import envision.renderEngine.shaders.ShaderProgram;
+import envisionEngine.renderEngine.shaders.ShaderProgram;
 
 /** Basic shader program. Very limited functionality! */
 public class BasicShader extends ShaderProgram {

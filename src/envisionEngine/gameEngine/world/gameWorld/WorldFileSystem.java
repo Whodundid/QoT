@@ -1,4 +1,4 @@
-package envision.gameEngine.world.gameWorld;
+package envisionEngine.gameEngine.world.gameWorld;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,17 +7,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
-import envision.gameEngine.gameObjects.entity.EntitySpawn;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.gameEngine.world.worldUtil.Region;
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.gameEngine.gameObjects.entity.EntitySpawn;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldUtil.Region;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
 import eutil.file.LineReader;
 import eutil.math.ENumUtil;
 import eutil.misc.EByteBuilder;
 import eutil.strings.EStringUtil;
-import game.settings.QoTSettings;
+import qot.settings.QoTSettings;
 
 public class WorldFileSystem {
 	

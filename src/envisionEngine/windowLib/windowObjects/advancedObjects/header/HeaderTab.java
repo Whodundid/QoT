@@ -1,6 +1,6 @@
-package envision.windowLib.windowObjects.advancedObjects.header;
+package envisionEngine.windowLib.windowObjects.advancedObjects.header;
 
-import envision.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.WindowObject;
 
 public class HeaderTab<E> extends WindowObject<E> {
 	

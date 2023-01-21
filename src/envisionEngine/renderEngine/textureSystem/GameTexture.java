@@ -1,9 +1,9 @@
-package envision.renderEngine.textureSystem;
+package envisionEngine.renderEngine.textureSystem;
 
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
 import eutil.random.ERandomUtil;
-import game.settings.QoTSettings;
+import qot.settings.QoTSettings;
 
 import org.lwjgl.opengl.GL11;
 

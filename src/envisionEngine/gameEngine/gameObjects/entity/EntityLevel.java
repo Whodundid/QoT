@@ -1,4 +1,4 @@
-package envision.gameEngine.gameObjects.entity;
+package envisionEngine.gameEngine.gameObjects.entity;
 
 /**
  * A static helper class which helps to keep track of experience and
@@ -78,9 +78,31 @@ public class EntityLevel {
 		return 17 + (int) Math.ceil(magicLevel * 2.50);
 	}
 	
+//	public static boolean calculateHitChance(int accuracyLevel) {
+//		
+//	}
+	
 	public static int calculateBaseDamage(int strengthLevel) {
 		int x = strengthLevel;
-		return (int) (Math.ceil(x*0.516667)+Math.floor(0.04*x*Math.exp(0.0386538*x)));
+//		return (int) (Math.ceil(x*0.516667)+Math.floor(0.04*x*Math.exp(0.0386538*x)));
+//		double r = Math.floor(x*0.256667)+Math.floor(0.04*x*Math.exp(0.0256538*x));
+		
+		int debugDamage = 1;
+		
+		// doing this switch in the beginning because I want early levels to feel like
+		// have more impact to the player early on
+		switch (x) {
+		//temp -> I want level 0 return 0 damage eventually but it would be impossible to test otherwise
+		case 0: return 0 + debugDamage;
+		case 1:
+		case 2: return 1 + debugDamage;
+		case 3:
+		case 4:
+		case 5: return 2 + debugDamage;
+		default:
+			int r = (int) (Math.floor(x*0.206667)+Math.floor(0.03*x*Math.exp(0.0206538*x)));
+			return 2 + debugDamage + r;
+		}
 	}
 	
 }

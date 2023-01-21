@@ -1,4 +1,4 @@
-package envision.gameEngine.world.worldTiles;
+package envisionEngine.gameEngine.world.worldTiles;
 
 /** Tile material indicates what kind of sound is played when the tile is stepped on. */
 public enum TileMaterial {

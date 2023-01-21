@@ -1,7 +1,7 @@
-package envision.events.types.window;
+package envisionEngine.events.types.window;
 
-import envision.events.EventType;
-import envision.windowLib.windowTypes.WindowParent;
+import envisionEngine.events.EventType;
+import envisionEngine.windowLib.windowTypes.WindowParent;
 
 public class WindowOpenedEvent extends WindowEvent {
 

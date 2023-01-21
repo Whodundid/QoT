@@ -1,6 +1,6 @@
-package envision.gameEngine.gameObjects.entity;
+package envisionEngine.gameEngine.gameObjects.entity;
 
-import envision.gameEngine.gameObjects.items.Item;
+import envisionEngine.gameEngine.gameObjects.items.Item;
 import eutil.datatypes.EArrayList;
 
 public class EntityInventory {

@@ -1,8 +1,8 @@
-package game.assets.textures.world.walls.dungeon;
+package qot.assets.textures.world.walls.dungeon;
 
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
 
 public class DungeonWallTextures extends TextureLoader {
 	

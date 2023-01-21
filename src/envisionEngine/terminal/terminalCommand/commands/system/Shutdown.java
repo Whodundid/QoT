@@ -1,9 +1,10 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.ConfirmationCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.ConfirmationCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class Shutdown extends ConfirmationCommand {
 	
@@ -18,17 +19,17 @@ public class Shutdown extends ConfirmationCommand {
 	@Override public String getUsage() { return "ex: shutdown"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		basicTabComplete(termIn, args, new EArrayList<>("true", "false"));
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) checkConfirm(termIn, args, runVisually);
 	}
 
 	@Override
-	public void runAction(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runAction(ETerminal termIn, EList<String> args, boolean runVisually) {
 		QoT.stopGame();
 	}
 	

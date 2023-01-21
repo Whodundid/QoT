@@ -1,6 +1,6 @@
-package envision.renderEngine.shaders.types.basic;
+package envisionEngine.renderEngine.shaders.types.basic;
 
-import envision.renderEngine.shaders.util.VertexShader;
+import envisionEngine.renderEngine.shaders.util.VertexShader;
 
 /** Basic vertex shader. */
 public class BasicVertex extends VertexShader {

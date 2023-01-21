@@ -1,13 +1,13 @@
-package envision.renderEngine;
+package envisionEngine.renderEngine;
 
 import org.lwjgl.glfw.GLFW;
 
-import envision.Envision;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.TextureSystem;
-import envision.testing.renderingAPI.RendererContextType;
-import envision.testing.renderingAPI.RenderingContext;
-import envision.testing.renderingAPI.opengl.OpenGLContext;
+import envisionEngine.Envision;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import envisionEngine.testing.renderingAPI.RendererContextType;
+import envisionEngine.testing.renderingAPI.RenderingContext;
+import envisionEngine.testing.renderingAPI.opengl.OpenGLContext;
 
 public class RenderEngine {
 	

@@ -1,8 +1,8 @@
-package envision.gameEngine.world.worldTiles.categories.stone;
+package envisionEngine.gameEngine.world.worldTiles.categories.stone;
 
-import envision.gameEngine.world.worldTiles.TileIDs;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import game.assets.textures.world.walls.stone.StoneWallTextures;
+import envisionEngine.gameEngine.world.worldTiles.TileIDs;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import qot.assets.textures.world.walls.stone.StoneWallTextures;
 
 public class StoneWall extends WorldTile {
 	

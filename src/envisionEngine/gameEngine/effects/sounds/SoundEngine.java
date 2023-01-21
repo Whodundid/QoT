@@ -1,9 +1,9 @@
-package envision.gameEngine.effects.sounds;
+package envisionEngine.gameEngine.effects.sounds;
 
 import eutil.datatypes.EArrayList;
 import eutil.math.ENumUtil;
-import game.QoT;
-import game.settings.QoTSettings;
+import qot.QoT;
+import qot.settings.QoTSettings;
 
 /**
  * A static utility class which manages all playable sounds/songs

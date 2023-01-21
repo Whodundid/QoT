@@ -1,7 +1,7 @@
-package envision.events.types.song;
+package envisionEngine.events.types.song;
 
-import envision.events.EventType;
-import envision.gameEngine.effects.sounds.Audio;
+import envisionEngine.events.EventType;
+import envisionEngine.gameEngine.effects.sounds.Audio;
 
 public class SongStartedEvent extends SongEvent {
 	

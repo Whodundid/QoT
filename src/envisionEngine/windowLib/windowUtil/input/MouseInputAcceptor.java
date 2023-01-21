@@ -1,4 +1,4 @@
-package envision.windowLib.windowUtil.input;
+package envisionEngine.windowLib.windowUtil.input;
 
 public interface MouseInputAcceptor {
 	

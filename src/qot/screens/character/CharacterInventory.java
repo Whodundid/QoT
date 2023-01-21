@@ -1,9 +1,9 @@
-package game.screens.character;
+package qot.screens.character;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.windowLib.windowObjects.advancedObjects.WindowScrollList;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.windowLib.windowObjects.advancedObjects.WindowScrollList;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 
 public class CharacterInventory extends WindowObject {
 	

@@ -1,12 +1,12 @@
-package game.assets.textures.world;
+package qot.assets.textures.world;
 
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
-import game.assets.textures.world.farmland.FarmTextures;
-import game.assets.textures.world.floors.FloorTextures;
-import game.assets.textures.world.nature.NatureTextures;
-import game.assets.textures.world.roofs.RoofTextures;
-import game.assets.textures.world.walls.WallTextures;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
+import qot.assets.textures.world.farmland.FarmTextures;
+import qot.assets.textures.world.floors.FloorTextures;
+import qot.assets.textures.world.nature.NatureTextures;
+import qot.assets.textures.world.roofs.RoofTextures;
+import qot.assets.textures.world.walls.WallTextures;
 
 public class WorldTextures extends TextureLoader {
 	

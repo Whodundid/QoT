@@ -1,13 +1,13 @@
-package game.entities.enemies;
+package qot.entities.enemies;
 
-import envision.gameEngine.gameObjects.entity.Enemy;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.gameObjects.entity.Enemy;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
 import eutil.math.EDimension;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
-import game.QoT;
-import game.assets.textures.entity.EntityTextures;
+import qot.QoT;
+import qot.assets.textures.entity.EntityTextures;
 
 public class Goblin extends Enemy {
 	

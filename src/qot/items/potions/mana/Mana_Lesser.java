@@ -1,10 +1,10 @@
-package game.items.potions.mana;
+package qot.items.potions.mana;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameObjects.items.Potion;
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.gameEngine.world.worldUtil.WorldCamera;
-import game.items.ItemList;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.items.Potion;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
+import qot.items.ItemList;
 
 public class Mana_Lesser extends Potion {
 	

@@ -1,13 +1,13 @@
-package envision.gameEngine.world.worldEditor.editorTools.tools;
+package envisionEngine.gameEngine.world.worldEditor.editorTools.tools;
 
-import envision.gameEngine.GameObject;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
-import envision.gameEngine.world.worldEditor.editorParts.util.EditorObject;
-import envision.gameEngine.world.worldEditor.editorTools.EditorTool;
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.util.EditorObject;
+import envisionEngine.gameEngine.world.worldEditor.editorTools.EditorTool;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 public class Tool_Place extends EditorTool {
 	

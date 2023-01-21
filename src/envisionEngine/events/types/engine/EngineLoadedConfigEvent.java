@@ -1,6 +1,6 @@
-package envision.events.types.engine;
+package envisionEngine.events.types.engine;
 
-import envision.events.EventType;
+import envisionEngine.events.EventType;
 
 public class EngineLoadedConfigEvent extends EngineEvent {
 	

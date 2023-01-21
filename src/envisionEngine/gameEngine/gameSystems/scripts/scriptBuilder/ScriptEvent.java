@@ -1,6 +1,6 @@
-package envision.gameEngine.gameSystems.scripts.scriptBuilder;
+package envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder;
 
-import envision.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
 
 public abstract class ScriptEvent {
 	

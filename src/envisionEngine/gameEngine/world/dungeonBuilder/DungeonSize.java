@@ -1,4 +1,4 @@
-package envision.gameEngine.world.dungeonBuilder;
+package envisionEngine.gameEngine.world.dungeonBuilder;
 
 public enum DungeonSize {
 	SMALL(45, 45),

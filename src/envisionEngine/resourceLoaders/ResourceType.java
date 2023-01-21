@@ -1,4 +1,4 @@
-package envision.resourceLoaders;
+package envisionEngine.resourceLoaders;
 
 public enum ResourceType {
 	SOUND,

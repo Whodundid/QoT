@@ -1,15 +1,15 @@
-package envision.gameEngine.world.worldEditor.editorTools;
+package envisionEngine.gameEngine.world.worldEditor.editorTools;
 
-import envision.gameEngine.GameObject;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.MapEditorSettings;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
-import envision.gameEngine.world.worldEditor.editorParts.util.EditorObject;
-import envision.gameEngine.world.worldEditor.editorTools.ToolHandler.ToolEvent;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.GLObject;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorSettings;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.util.EditorObject;
+import envisionEngine.gameEngine.world.worldEditor.editorTools.ToolHandler.ToolEvent;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.GLObject;
 import eutil.datatypes.Box2;
 
 public abstract class EditorTool extends GLObject {

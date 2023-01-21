@@ -1,4 +1,4 @@
-package game.items;
+package qot.items;
 
 public enum ItemList {
 	

@@ -1,7 +1,7 @@
-package envision.gameEngine.gameObjects.doodads;
+package envisionEngine.gameEngine.gameObjects.doodads;
 
-import envision.renderEngine.GLObject;
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.GLObject;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 import eutil.math.EDimension;
 
 public abstract class Doodad extends GLObject {

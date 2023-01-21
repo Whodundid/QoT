@@ -1,15 +1,15 @@
-package envision.gameEngine.gameSystems.screens;
+package envisionEngine.gameEngine.gameSystems.screens;
 
 import java.util.Stack;
 
-import envision.events.GameEvent;
-import envision.events.IEventListener;
-import envision.inputHandlers.Keyboard;
-import envision.windowLib.windowTypes.TopWindowParent;
-import envision.windowLib.windowTypes.interfaces.ITopParent;
+import envisionEngine.events.GameEvent;
+import envisionEngine.events.IEventListener;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.windowLib.windowTypes.TopWindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.ITopParent;
 import eutil.datatypes.EArrayList;
-import game.QoT;
-import game.screens.main.MainMenuScreen;
+import qot.QoT;
+import qot.screens.main.MainMenuScreen;
 
 public abstract class GameScreen<E>
 	extends TopWindowParent<E>

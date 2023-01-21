@@ -1,10 +1,10 @@
-package envision.gameEngine.gameObjects.entity;
+package envisionEngine.gameEngine.gameObjects.entity;
 
-import envision.gameEngine.gameObjects.items.Item;
-import envision.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.gameObjects.items.Item;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
-import game.entities.EntityList;
+import qot.entities.EntityList;
 
 public class EntitySpawn {
 	

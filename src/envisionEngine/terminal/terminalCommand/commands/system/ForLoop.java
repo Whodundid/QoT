@@ -1,11 +1,12 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.strings.EStringUtil;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -21,7 +22,7 @@ public class ForLoop extends TerminalCommand {
 	@Override public String getUsage() { return "ex: for 0-9-1 'cmd'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() < 2) {
 			termIn.error("Not enought arguments for loop!");
 			termIn.info(getUsage());

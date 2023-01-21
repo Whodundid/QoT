@@ -1,17 +1,18 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.gameEngine.gameSystems.screens.ScreenRepository;
-import envision.terminal.terminalCommand.IListableCommand;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.gameEngine.gameSystems.screens.ScreenRepository;
+import envisionEngine.terminal.terminalCommand.IListableCommand;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -23,18 +24,18 @@ public class ListCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "list"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("l"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("l"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to list various things. (mods, players, etc.)"; }
 	@Override public String getUsage() { return "ex: list screens"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		String[] types = {"objects, windows, screens, commands"};
 		super.basicTabComplete(termIn, args, new EArrayList().addA(types));
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			if (runVisually) termIn.writeln("objects, windows, screens, commands", EColors.green);
 			else termIn.info(getUsage());
@@ -83,7 +84,7 @@ public class ListCMD extends TerminalCommand {
 		}
 	}
 	
-	private void listObjects(ETerminal<?> termIn, EArrayList<String> args, boolean runVisually) {
+	private void listObjects(ETerminal<?> termIn, EList<String> args, boolean runVisually) {
 		termIn.writeln("Listing all current objects in this top renderer\n", EColors.lgreen);
 		if (runVisually) {
 			int grandTotal = 0; //this isn't completely right tree wise, but whatever
@@ -147,8 +148,8 @@ public class ListCMD extends TerminalCommand {
 		}
 	}
 	
-	private void listWindows(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		EArrayList<WindowParent<?>> windows = termIn.getTopParent().getAllActiveWindows();
+	private void listWindows(ETerminal termIn, EList<String> args, boolean runVisually) {
+		EList<WindowParent<?>> windows = termIn.getTopParent().getAllActiveWindows();
 		
 		String plural = windows.size() > 1 ? "s" : "";
 		
@@ -166,7 +167,7 @@ public class ListCMD extends TerminalCommand {
 		}
 	}
 	
-	private void listScreens(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	private void listScreens(ETerminal termIn, EList<String> args, boolean runVisually) {
 		/**
 		String dir = (args.size() >= 2) ? args.get(1) : "engine.screens";
 		

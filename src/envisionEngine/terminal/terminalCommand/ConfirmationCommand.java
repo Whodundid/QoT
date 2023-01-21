@@ -1,7 +1,7 @@
-package envision.terminal.terminalCommand;
+package envisionEngine.terminal.terminalCommand;
 
-import envision.terminal.window.ETerminal;
-import eutil.datatypes.EArrayList;
+import envisionEngine.terminal.window.ETerminal;
+import eutil.datatypes.util.EList;
 
 public abstract class ConfirmationCommand extends TerminalCommand {
 
@@ -20,7 +20,7 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 		}
 	}
 	
-	public boolean checkConfirm(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public boolean checkConfirm(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (responseReceived) {
 			if (confirmed) { runAction(termIn, args, runVisually); }
 			else { termIn.info("User requested cancellation, command aborted!\n"); }
@@ -31,7 +31,7 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 		return false;
 	}
 	
-	public abstract void runAction(ETerminal termIn, EArrayList<String> args, boolean runVisually);
+	public abstract void runAction(ETerminal termIn, EList<String> args, boolean runVisually);
 
 	public void setConfirmationString(String in) { setConfirmationString(in, "y", "n"); }
 	public void setConfirmationString(String in, String yesMessage, String noMessage) {

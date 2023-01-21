@@ -1,9 +1,9 @@
-package envision.windowLib.windowObjects.basicObjects;
+package envisionEngine.windowLib.windowObjects.basicObjects;
 
-import envision.renderEngine.fontRenderer.EStringOutputFormatter;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.renderEngine.fontRenderer.EStringOutputFormatter;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;

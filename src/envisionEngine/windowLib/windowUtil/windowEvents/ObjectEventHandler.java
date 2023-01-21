@@ -1,6 +1,6 @@
-package envision.windowLib.windowUtil.windowEvents;
+package envisionEngine.windowLib.windowUtil.windowEvents;
 
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.EArrayList;
 
 //Author: Hunter Bragg

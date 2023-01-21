@@ -1,24 +1,24 @@
-package envision.windowLib.windowObjects.advancedObjects.textArea;
+package envisionEngine.windowLib.windowObjects.advancedObjects.textArea;
 
-import envision.inputHandlers.Keyboard;
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.actionObjects.WindowTextField;
-import envision.windowLib.windowObjects.basicObjects.WindowLabel;
-import envision.windowLib.windowObjects.utilityObjects.LinkConfirmationWindow;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
-import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
-import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowTextField;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowLabel;
+import envisionEngine.windowLib.windowObjects.utilityObjects.LinkConfirmationWindow;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventFocus;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
 import eutil.misc.ScreenLocation;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 

@@ -1,7 +1,8 @@
-package envision.terminal.terminalCommand;
+package envisionEngine.terminal.terminalCommand;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
 /**
@@ -16,8 +17,8 @@ public abstract class TerminalCommand {
 	public static final String ERROR_NOT_ENOUGH = "Not enough arguments!";
 	
 	private String category = "none";
-	private final EArrayList<String> acceptedModifiers = new EArrayList<>();
-	private final EArrayList<String> parsedModifiers = new EArrayList<>();
+	private final EList<String> acceptedModifiers = EList.newList();
+	private final EList<String> parsedModifiers = EList.newList();
 	protected int expectedArgLength = 0;
 	protected boolean shouldRegister = true;
 	protected boolean allowAnyModifier = false;
@@ -33,13 +34,13 @@ public abstract class TerminalCommand {
 	//------------------
 	
 	public abstract String getName();
-	public abstract void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually);
+	public abstract void runCommand(ETerminal termIn, EList<String> args, boolean runVisually);
 	
 	public boolean showInHelp() { return true; }
-	public EArrayList<String> getAliases() { return new EArrayList<>(); }
+	public EList<String> getAliases() { return new EArrayList<>(); }
 	public String getHelpInfo(boolean runVisually) { return "(No help info for '" + getName() + "'!"; }
 	public String getUsage() { return "(No usage info for '" + getName() + "'!"; }
-	public void handleTabComplete(ETerminal conIn, EArrayList<String> args) {}
+	public void handleTabComplete(ETerminal conIn, EList<String> args) {}
 	
 	//---------
 	// Methods
@@ -53,7 +54,7 @@ public abstract class TerminalCommand {
 	 * @param args
 	 * @param runVisually
 	 */
-	public void preRun(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void preRun(ETerminal termIn, EList<String> args, boolean runVisually) {
 		//clear out old modifiers
 		parsedModifiers.clear();
 		
@@ -75,9 +76,9 @@ public abstract class TerminalCommand {
 	//---------
 	
 	/** Returns the list of parsed modifiers when this command was executed. */
-	public EArrayList<String> getParsedModifiers() { return parsedModifiers; }
+	public EList<String> getParsedModifiers() { return parsedModifiers; }
 	/** Returns the list of modifiers accepted by this command (ex: '-a', 'r', 'rf', etc...) */
-	public EArrayList<String> getAcceptedModifiers() { return acceptedModifiers; }
+	public EList<String> getAcceptedModifiers() { return acceptedModifiers; }
 	/** The type category of this terminal command -- used to group commands by category. */
 	public String getCategory() { return category; }
 	/** Returns the total number of arguments that this command is expected to read in. */
@@ -114,15 +115,15 @@ public abstract class TerminalCommand {
 	}
 	
 	/** Basic 'true/false' tab complete options. */
-	protected void tabCompleteTF(ETerminal termIn, EArrayList<String> args) {
+	protected void tabCompleteTF(ETerminal termIn, EList<String> args) {
 		basicTabComplete(termIn, args, "true", "false");
 	}
 	
-	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, String... completionsIn) {
+	protected void basicTabComplete(ETerminal termIn, EList<String> args, String... completionsIn) {
 		basicTabComplete(termIn, args, new EArrayList<String>(completionsIn));
 	}
 	
-	protected void basicTabComplete(ETerminal termIn, EArrayList<String> args, EArrayList<String> completionsIn) {
+	protected void basicTabComplete(ETerminal termIn, EList<String> args, EList<String> completionsIn) {
 		int limit = (expectedArgLength == -1) ? args.size() : ENumUtil.clamp(args.size(), 0, expectedArgLength);
 		
 		if (args.isEmpty()) {

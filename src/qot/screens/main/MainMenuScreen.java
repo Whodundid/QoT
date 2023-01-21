@@ -1,26 +1,26 @@
-package game.screens.main;
+package qot.screens.main;
 
 import java.io.File;
 
-import envision.debug.DebugSettings;
-import envision.gameEngine.effects.sounds.SoundEngine;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldEditor.MapMenuScreen;
-import envision.inputHandlers.Keyboard;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.debug.DebugSettings;
+import envisionEngine.gameEngine.effects.sounds.SoundEngine;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldEditor.MapMenuScreen;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import eutil.random.ERandomUtil;
-import eutil.timing.ETimer;
-import game.QoT;
-import game.assets.sounds.Songs;
-import game.assets.textures.general.GeneralTextures;
-import game.assets.textures.world.floors.stone.StoneFloorTextures;
-import game.settings.QoTSettings;
+import eutil.timing.ESimpleTimer;
+import qot.QoT;
+import qot.assets.sounds.Songs;
+import qot.assets.textures.general.GeneralTextures;
+import qot.assets.textures.world.floors.stone.StoneFloorTextures;
+import qot.settings.QoTSettings;
 
 public class MainMenuScreen extends GameScreen {
 	
@@ -29,10 +29,10 @@ public class MainMenuScreen extends GameScreen {
 	private boolean secret = false;
 	
 	private volatile GameWorld menuWorld = null;
-	private ETimer fadeInTimer = new ETimer(1300l);
-	private ETimer nextWorldTimer = new ETimer(20000l);
-	private ETimer fadeOutTimer = new ETimer(1300l);
-	private ETimer fadeDelayTimer = new ETimer(100l);
+	private ESimpleTimer fadeInTimer = new ESimpleTimer(1300l);
+	private ESimpleTimer nextWorldTimer = new ESimpleTimer(20000l);
+	private ESimpleTimer fadeOutTimer = new ESimpleTimer(1300l);
+	private ESimpleTimer fadeDelayTimer = new ESimpleTimer(100l);
 	private long timeLoaded = -1;
 	private int lastGameTick = -1;
 	
@@ -170,12 +170,14 @@ public class MainMenuScreen extends GameScreen {
 		//draw underlying background image
 		drawBackground();
 		
+		//System.out.println(ESimpleTimer.anyCounting(fadeInTimer, fadeDelayTimer, fadeOutTimer));
+		
 		//check if delay timer has finished -- if so, start fade timer
-		if (fadeDelayTimer.check()) fadeInTimer.start();
+		if (fadeDelayTimer.isFinished()) fadeInTimer.start();
 		//check if the next world should start to be loaded
-		if (nextWorldTimer.check()) fadeOutTimer.start();
+		if (nextWorldTimer.isFinished()) fadeOutTimer.start();
 		//check if the fade out is complete -- in which case, load the new world
-		if (fadeOutTimer.check()) {
+		if (fadeOutTimer.isFinished()) {
 			secret = ERandomUtil.roll(1, 1, 1000);
 			if (secret) nextWorldTimer.setDuration(1000l);
 			else nextWorldTimer.setDuration(20000l);
@@ -185,11 +187,11 @@ public class MainMenuScreen extends GameScreen {
 		
 		//check to see whether or not the standard background should still draw
 		if (!secret && (menuWorld == null || !menuWorld.isFileLoaded()) ||
-			ETimer.anyCounting(fadeInTimer, fadeDelayTimer, fadeOutTimer))
+			ESimpleTimer.anyCounting(fadeInTimer, fadeDelayTimer, fadeOutTimer))
 		{
 			drawNullWorldBackground();
 			//start timer until the next world will be loaded
-			if (fadeInTimer.check()) nextWorldTimer.start();
+			if (fadeInTimer.isFinished()) nextWorldTimer.start();
 		}
 		else if (timeLoaded == -1) {
 			timeLoaded = System.currentTimeMillis();

@@ -1,10 +1,10 @@
-package envision.gameEngine.world.worldEditor.windows;
+package envisionEngine.gameEngine.world.worldEditor.windows;
 
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.QoT;
+import qot.QoT;
 
 public class EditorSettingsWindow extends WindowParent {
 	

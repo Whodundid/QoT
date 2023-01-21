@@ -1,9 +1,10 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class NoClip_CMD extends TerminalCommand {
 	
@@ -13,12 +14,12 @@ public class NoClip_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "noclip"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("nc"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("nc"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Allows player no-clipping"; }
 	@Override public String getUsage() { return "ex: nc"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (QoT.thePlayer != null) {
 			QoT.thePlayer.setNoClipAllowed(!QoT.thePlayer.isNoClipping());
 			termIn.writeln(((QoT.thePlayer.isNoClipping()) ? "Enabled" : "Disabled") + " no clipping");

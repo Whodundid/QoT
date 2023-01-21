@@ -1,24 +1,24 @@
-package envision.debug.testStuff.testRender;
+package envisionEngine.debug.testStuff.testRender;
 
 import eutil.colors.EColors;
 import eutil.math.Vec2f;
 import eutil.math.Vec3f;
-import game.QoT;
+import qot.QoT;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.renderEngine.GLObject;
-import envision.renderEngine.shaders.ShaderProgram;
-import envision.renderEngine.shaders.Shaders;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.renderEngine.GLObject;
+import envisionEngine.renderEngine.shaders.ShaderProgram;
+import envisionEngine.renderEngine.shaders.Shaders;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 
 public class TestRenderScreen extends GameScreen {
 	

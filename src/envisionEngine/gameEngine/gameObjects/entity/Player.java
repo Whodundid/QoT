@@ -1,4 +1,4 @@
-package envision.gameEngine.gameObjects.entity;
+package envisionEngine.gameEngine.gameObjects.entity;
 
 public abstract class Player extends Entity {
 

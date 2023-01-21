@@ -1,11 +1,11 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class World_CMD extends TerminalCommand {
 	
@@ -19,12 +19,12 @@ public class World_CMD extends TerminalCommand {
 	@Override public String getUsage() { return "ex: world"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			errorUsage(termIn, ERROR_NO_ARGS);
 			return;

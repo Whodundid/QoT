@@ -1,4 +1,4 @@
-package envision.gameEngine.world.worldEditor.editorParts.sidePanel;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel;
 
 public enum SidePanelType {
 	TERRAIN,

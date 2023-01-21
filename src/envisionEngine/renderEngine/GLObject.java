@@ -1,17 +1,17 @@
-package envision.renderEngine;
+package envisionEngine.renderEngine;
 
 import eutil.colors.EColors;
 import eutil.math.EDimension;
 import eutil.misc.Rotation;
-import game.QoT;
+import qot.QoT;
 
 import java.util.Objects;
 
 import org.lwjgl.opengl.GL11;
 
-import envision.renderEngine.fontRenderer.EStringOutputFormatter;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.renderEngine.textureSystem.TextureSystem;
+import envisionEngine.renderEngine.fontRenderer.EStringOutputFormatter;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
 
 /** The base underlying object that all window objects are drawn from. */
 public abstract class GLObject {
@@ -574,15 +574,15 @@ public abstract class GLObject {
 	}
 	
 	/** 'to double for x' converts a given value into a corresponding double value between -1.0f and 1.0f based on window x size. */
-	public static float tdx(Number valIn) {
-		float midX = ((float) QoT.getWidth()) / 2.0f;
-		return (float) (((valIn.floatValue() * QoT.getGameScale()) - midX) / midX);
+	public static double tdx(double valIn) {
+		double midX = QoT.getWidth() * 0.5f;
+		return (valIn * QoT.getGameScale() - midX) / midX;
 	}
 	
 	/** 'to double for y' converts a given value into a corresponding double value between -1.0f and 1.0f based on window y size. */
-	public static float tdy(Number valIn) {
-		float midY = ((float) QoT.getHeight()) / 2.0f;
-		return (float) ((midY - (valIn.floatValue() * QoT.getGameScale())) / midY);
+	public static double tdy(double valIn) {
+		double midY = QoT.getHeight() * 0.5f;
+		return (midY - (valIn * QoT.getGameScale())) / midY;
 	}
 	
 	/** Binds a 2d texture. */
@@ -621,9 +621,9 @@ public abstract class GLObject {
 	
 	
 	/** Declares a new vertex from 2 points. */
-	private static void vertex(Number a, Number b) { vertex(a.doubleValue(), b.doubleValue(), 0); }
+	private static void vertex(double a, double b) { vertex(a, b, 0); }
 	/** Declares a new vertex from 3 points. */
-	private static void vertex(Number a, Number b, Number c) { GL11.glVertex3d(a.doubleValue(), b.doubleValue(), c.doubleValue()); }
+	private static void vertex(double a, double b, double c) { GL11.glVertex3d(a, b, c); }
 	
 	private static void tv(boolean f, Rotation r, double sx, double sy, double ex, double ey) {
 		switch (r) {

@@ -1,11 +1,12 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
 import eutil.strings.EStringUtil;
 import eutil.sys.OSType;
@@ -22,7 +23,7 @@ public class Ls extends FileCommand {
 	@Override public String getUsage() { return "ex: ls 'dir'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		//if empty -- ls current dir
 		if (args.isEmpty()) {
 			listDir(termIn, null);

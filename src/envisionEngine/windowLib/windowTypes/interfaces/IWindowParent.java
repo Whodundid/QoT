@@ -1,4 +1,4 @@
-package envision.windowLib.windowTypes.interfaces;
+package envisionEngine.windowLib.windowTypes.interfaces;
 
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
@@ -6,7 +6,7 @@ import eutil.misc.ScreenLocation;
 
 import java.util.Stack;
 
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 //Author: Hunter Bragg
 

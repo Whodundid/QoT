@@ -1,8 +1,8 @@
-package envision.gameEngine.gameObjects.entity;
+package envisionEngine.gameEngine.gameObjects.entity;
 
-import envision.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.WindowObject;
 import eutil.colors.EColors;
-import game.QoT;
+import qot.QoT;
 
 public class EntityHealthBar extends WindowObject {
 	

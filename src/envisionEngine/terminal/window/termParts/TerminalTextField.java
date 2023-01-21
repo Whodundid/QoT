@@ -1,10 +1,10 @@
-package envision.terminal.window.termParts;
+package envisionEngine.terminal.window.termParts;
 
-import envision.terminal.TerminalHandler;
-import envision.terminal.window.ETerminal;
-import envision.terminal.window.TerminalRCM;
-import envision.windowLib.windowObjects.actionObjects.WindowTextField;
-import envision.windowLib.windowUtil.ObjectPosition;
+import envisionEngine.terminal.TerminalHandler;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.terminal.window.TerminalRCM;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowTextField;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
 
 //Author: Hunter Bragg
 

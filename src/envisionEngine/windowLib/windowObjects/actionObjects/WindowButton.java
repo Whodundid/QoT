@@ -1,15 +1,15 @@
-package envision.windowLib.windowObjects.actionObjects;
+package envisionEngine.windowLib.windowObjects.actionObjects;
 
 import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
 
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.GLSettings;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowTypes.ActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.GLSettings;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowTypes.ActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
 
@@ -54,6 +54,10 @@ public class WindowButton<E> extends ActionObject<E> {
 	//--------------
 	// Constructors
 	//--------------
+	
+	public WindowButton() {
+		
+	}
 	
 	public WindowButton(IWindowObject<?> parentIn) {
 		super(parentIn);

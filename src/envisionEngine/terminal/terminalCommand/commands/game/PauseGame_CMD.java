@@ -1,10 +1,10 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class PauseGame_CMD extends TerminalCommand {
 	
@@ -18,7 +18,7 @@ public class PauseGame_CMD extends TerminalCommand {
 	@Override public String getUsage() { return "ex: pause"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			termIn.error("This command takes no arguments!");
 			return;

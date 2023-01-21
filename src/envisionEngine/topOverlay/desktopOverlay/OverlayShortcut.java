@@ -1,15 +1,16 @@
-package envision.topOverlay.desktopOverlay;
+package envisionEngine.topOverlay.desktopOverlay;
 
 import java.io.File;
 
-import envision.inputHandlers.Keyboard;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import game.QoT;
-import game.assets.textures.taskbar.TaskBarTextures;
+import qot.QoT;
+import qot.assets.textures.taskbar.TaskBarTextures;
 
 public class OverlayShortcut extends WindowObject {
 	
@@ -21,7 +22,8 @@ public class OverlayShortcut extends WindowObject {
 	private File fileTarget;
 	private String terminalCommandTarget;
 	private String envisionProgramTarget;
-	private WindowObject<?> windowTarget;
+	private IWindowParent<?> windowTarget;
+	private Class<?> windowClassTarget;
 	private GameTexture icon;
 	private String description = "New Shortcut";
 	private boolean selected = false;
@@ -40,8 +42,8 @@ public class OverlayShortcut extends WindowObject {
 		init(x, y);
 	}
 	
-	public OverlayShortcut(int x, int y, WindowObject<?> windowIn) {
-		type = ShortcutType.PROGRAM;
+	public OverlayShortcut(int x, int y, IWindowParent<?> windowIn) {
+		type = ShortcutType.WINDOW;
 		windowTarget = windowIn;
 		init(x, y);
 	}
@@ -59,10 +61,10 @@ public class OverlayShortcut extends WindowObject {
 	//------
 	
 	private void init(int x, int y) {
-		double w = 64;
-		double h = 64;
+		double w = 80;
+		double h = 80;
 		
-		init(QoT.getTopRenderer(), 0, 0, w, h);
+		init(QoT.getTopRenderer(), x, y, w, h);
 	}
 	
 	//-----------
@@ -84,8 +86,11 @@ public class OverlayShortcut extends WindowObject {
 			else drawRect(color.opacity(60));
 		}
 		
+		double scale = 1;
+		double drawX = midX;
+		
 		//draw description text below icon
-		drawStringC(description, midX, endY + FontRenderer.FONT_HEIGHT + 6, EColors.chalk);
+		drawStringC(description, drawX, endY + 6, scale, scale, EColors.chalk);
 	}
 	
 	@Override
@@ -116,10 +121,13 @@ public class OverlayShortcut extends WindowObject {
 	}
 	
 	@Override
+	public void onDoubleClick() {
+		openShortcut();
+	}
+	
+	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		super.actionPerformed(object, args);
-		
-		
 	}
 	
 	//---------
@@ -127,13 +135,34 @@ public class OverlayShortcut extends WindowObject {
 	//---------
 	
 	public void openShortcut() {
+		if (type == null) return;
+		
 		switch (type) {
 		case FILE:
-			
+			break;
 		case COMMAND:
 			QoT.getTerminalHandler().executeCommand(null, description);
+			break;
 		case SCRIPT:
-		case PROGRAM:
+			//try { QoT.envision.runProgram(envisionProgramTarget); }
+			//catch (Exception e) { e.printStackTrace(); }
+			break;
+		case WINDOW:
+			if (windowClassTarget != null) {
+				try {
+					var constructor = windowClassTarget.getConstructor();
+					if (constructor != null) {
+						QoT.getTopRenderer().displayWindow((IWindowParent<?>) constructor.newInstance(), ObjectPosition.EXISTING_OBJECT_INDENT);
+					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			else if (windowTarget != null) {
+				QoT.getTopRenderer().displayWindow(windowTarget, ObjectPosition.EXISTING_OBJECT_INDENT);
+			}
+			break;
 		}
 	}
 	
@@ -144,6 +173,33 @@ public class OverlayShortcut extends WindowObject {
 	//---------
 	// Setters
 	//---------
+	
+	public void setFileTarget(File fileIn) {
+		type = ShortcutType.FILE;
+		fileTarget = fileIn;
+	}
+	
+	public void setWindowTarget(IWindowParent<?> windowIn) {
+		type = ShortcutType.WINDOW;
+		windowTarget = windowIn;
+		windowClassTarget = null;
+	}
+	
+	public void setWindowTarget(Class<?> windowClassIn) {
+		type = ShortcutType.WINDOW;
+		windowClassTarget = windowClassIn;
+		windowTarget = null;
+	}
+	
+	public void setCommandTarget(String commandIn) {
+		type = ShortcutType.COMMAND;
+		terminalCommandTarget = commandIn;
+	}
+	
+	public void setEnvisionTarget(String programIn) {
+		type = ShortcutType.SCRIPT;
+		envisionProgramTarget = programIn;
+	}
 	
 	public void setIcon(GameTexture iconIn) { icon = iconIn; }
 	public void setDescription(String descIn) { description = descIn; }

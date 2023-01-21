@@ -1,9 +1,10 @@
-package game;
+package main;
 
 import eutil.sys.TracingPrintStream;
-import game.launcher.LauncherSettings;
-import game.launcher.QoTInstaller;
-import game.launcher.QoTLauncher;
+import qot.QoT;
+import qot.launcher.LauncherSettings;
+import qot.launcher.QoTInstaller;
+import qot.launcher.QoTLauncher;
 
 public class Main {
 
@@ -34,11 +35,32 @@ public class Main {
 	 */
 	public static final boolean EXTRACT_RESOURCES = false;
 	
+	//-----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
+	
+	/**
+	 * Does not run QoT, instead runs an OpenGL testing environment instead.
+	 */
+	public static final boolean RUN_OPEN_GL_TESTING_ENVIRONMENT = false;
+	
 	//------
 	// Main
 	//------
 	
 	public static void main(String[] args) throws IllegalArgumentException, IllegalAccessException {
+		if (args.length > 0) {
+			System.out.println("QOT: Got '" + args.length + "' command line arguments!");
+			for (int i = 0; i < args.length; i++) {
+				System.out.println(i + ": '" + args[i] + "'");
+			}
+		}
+		
+		var properties = System.getProperties();
+		for (var key : properties.keySet()) {
+			System.out.println("PROPERTY: " + key + "=" + properties.getProperty((String) key));
+		}
+		
 		//setup print tracing
 		TracingPrintStream.enableTrace();
 		TracingPrintStream.setTracePrimitives(true);

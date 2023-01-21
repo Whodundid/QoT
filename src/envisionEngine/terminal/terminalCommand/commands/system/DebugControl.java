@@ -1,11 +1,12 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.debug.DebugFunctions;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.debug.DebugFunctions;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -18,12 +19,12 @@ public class DebugControl extends TerminalCommand {
 
 	@Override public String getName() { return "debug"; }
 	@Override public boolean showInHelp() { return false; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("deb", "dev"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("deb", "dev"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Toggles debug mode for EMC."; }
 	@Override public String getUsage() { return "ex: deb init"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() >= 1) {
 			try {
 				String arg = args.get(0).toLowerCase();

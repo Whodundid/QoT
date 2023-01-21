@@ -1,4 +1,4 @@
-package envision.debug.testStuff.testRender;
+package envisionEngine.debug.testStuff.testRender;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 public class Mesh {
 	

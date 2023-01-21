@@ -1,6 +1,6 @@
-package game.screens.gameplay.combat;
+package qot.screens.gameplay.combat;
 
-import envision.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
 import eutil.datatypes.EArrayList;
 
 /** Keeps track of fighting entities of two teams over the course of a fight. */

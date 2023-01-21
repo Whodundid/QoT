@@ -1,10 +1,10 @@
-package envision.debug.debugCommands;
+package envisionEngine.debug.debugCommands;
 
-import envision.terminal.window.ETerminal;
-import game.QoT;
-import game.entities.player.QoT_Player;
-import game.screens.character.CharacterScreen;
-import game.screens.main.MainMenuScreen;
+import envisionEngine.terminal.window.ETerminal;
+import qot.QoT;
+import qot.entities.player.QoT_Player;
+import qot.screens.character.CharacterScreen;
+import qot.screens.main.MainMenuScreen;
 
 @SuppressWarnings("unused")
 public class Deb1 extends DebugCommand {

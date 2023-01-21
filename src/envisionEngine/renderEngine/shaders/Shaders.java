@@ -1,8 +1,8 @@
-package envision.renderEngine.shaders;
+package envisionEngine.renderEngine.shaders;
 
 import org.lwjgl.glfw.GLFW;
 
-import envision.renderEngine.shaders.types.basic.BasicShader;
+import envisionEngine.renderEngine.shaders.types.basic.BasicShader;
 import eutil.datatypes.EArrayList;
 
 /** Stores references to all available shaders. */
@@ -36,6 +36,12 @@ public final class Shaders {
 	public static void bind(ShaderProgram program) {
 		if (init && program != null && program.isBuilt()) {
 			program.bind();
+		}
+	}
+	
+	public static void unbind(ShaderProgram program) {
+		if (init && program != null && program.isBuilt()) {
+			program.unbind();
 		}
 	}
 	

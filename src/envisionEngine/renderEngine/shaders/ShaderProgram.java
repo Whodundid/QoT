@@ -1,13 +1,13 @@
-package envision.renderEngine.shaders;
+package envisionEngine.renderEngine.shaders;
 
 import java.nio.FloatBuffer;
 
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
 
-import envision.renderEngine.shaders.util.FragmentShader;
-import envision.renderEngine.shaders.util.VertexShader;
-import envision.testing.renderingAPI.math.Matrix4f;
+import envisionEngine.renderEngine.shaders.util.FragmentShader;
+import envisionEngine.renderEngine.shaders.util.VertexShader;
+import envisionEngine.testing.renderingAPI.math.Matrix4f;
 import eutil.math.Vec2f;
 import eutil.math.Vec3f;
 import eutil.math.Vec4f;
@@ -72,10 +72,10 @@ public abstract class ShaderProgram {
 		}
 		
 		//allows each shader to individually assign their own attribute values
-		createAttribs();
+		//createAttribs();
 		
 		//allows each shader to individually assign their own uniform values
-		createUniforms();
+		//createUniforms();
 	}
 	
 	//---------
@@ -125,16 +125,16 @@ public abstract class ShaderProgram {
 	}
 	
 	protected void createAttribs() {
-		bindAttrib(0, "position");
-		bindAttrib(1, "tex");
-		//bindAttrib(2, "normal");
+		bindAttrib(0, "in_position");
+		bindAttrib(2, "in_color");
+		bindAttrib(1, "in_texCoord");
 	}
 	
 	protected void createUniforms() {
-		uniform_transform = gul("transform");
-		uniform_view = gul("view");
-		uniform_projection = gul("projection");
-		uniform_isTexture = gul("isTexture");
+		uniform_view = gul("u_projection");
+		uniform_transform = gul("u_transform");
+		uniform_transform = gul("u_model");
+		//uniform_isTexture = gul("isTexture");
 		//uniform_lightPos = gul("lightPos");
 		//uniform_lightColor = gul("lightColor");
 	}
@@ -142,19 +142,19 @@ public abstract class ShaderProgram {
 	public void enableAttribs() {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
-		//GL20.glEnableVertexAttribArray(2);
+		GL20.glEnableVertexAttribArray(2);
 	}
 
 	public void disableAttribs() {
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
-		//GL20.glDisableVertexAttribArray(2);
+		GL20.glDisableVertexAttribArray(2);
 	}
 	
-	public void loadTransform(Matrix4f transform) { setUniform(uniform_transform, transform); }
-	public void loadView(Matrix4f view) { setUniform(uniform_view, view); }
-	public void loadProjection(Matrix4f projection) { setUniform(uniform_projection, projection); }
-	public void loadIsTexture(boolean isTexture) { setUniform(uniform_isTexture, isTexture); }
+//	public void loadTransform(Matrix4f transform) { setUniform(uniform_transform, transform); }
+//	public void loadView(Matrix4f view) { setUniform(uniform_view, view); }
+//	public void loadProjection(Matrix4f projection) { setUniform(uniform_projection, projection); }
+//	public void loadIsTexture(boolean isTexture) { setUniform(uniform_isTexture, isTexture); }
 	
 	public void setUniform(int location, float val) { GL20.glUniform1f(location, val); }
 	public void setUniform(int location, int val) { GL20.glUniform1i(location, val); }

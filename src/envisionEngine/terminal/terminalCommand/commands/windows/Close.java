@@ -1,11 +1,11 @@
-package envision.terminal.terminalCommand.commands.windows;
+package envisionEngine.terminal.terminalCommand.commands.windows;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
-import envision.windowLib.windowTypes.WindowParent;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.windowLib.windowTypes.WindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class Close extends TerminalCommand {
@@ -20,12 +20,12 @@ public class Close extends TerminalCommand {
 	@Override public String getUsage() { return "ex: close 23 (where 23 is the window pid)"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) termIn.close();
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
-				EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+				EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 				
 				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getWindowID() == pid);
 				if (EUtil.nullDo(theWindow, w -> w.close())) {
@@ -37,7 +37,7 @@ public class Close extends TerminalCommand {
 			catch (Exception e) {
 				try {
 					String name = EStringUtil.combineAll(args, " ").toLowerCase().trim();
-					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+					EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					
 					if (name.equals("all") ) {
 						for (WindowParent p : windows) {

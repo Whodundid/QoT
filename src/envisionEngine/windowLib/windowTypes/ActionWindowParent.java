@@ -1,9 +1,9 @@
-package envision.windowLib.windowTypes;
+package envisionEngine.windowLib.windowTypes;
 
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 

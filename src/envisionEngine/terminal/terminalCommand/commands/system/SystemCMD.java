@@ -1,12 +1,13 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
 import java.io.File;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.terminalUtil.ESystemInfo;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.terminalUtil.ESystemInfo;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class SystemCMD extends TerminalCommand {
 	
@@ -16,12 +17,12 @@ public class SystemCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "system"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("sys"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("sys"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays information on the system"; }
 	@Override public String getUsage() { return "ex: sys"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			termIn.error("This command does not take any arguments");
 		}

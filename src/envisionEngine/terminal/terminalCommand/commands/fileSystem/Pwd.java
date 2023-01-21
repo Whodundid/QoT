@@ -1,11 +1,12 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 import java.io.IOException;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class Pwd extends FileCommand {
 	
@@ -14,13 +15,13 @@ public class Pwd extends FileCommand {
 	}
 	
 	@Override public String getName() { return "pwd"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("dir"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("dir"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Prints the current working directory."; }
 	@Override public String getUsage() { return "ex: pwd"; }
-	@Override public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {}
+	@Override public void handleTabComplete(ETerminal termIn, EList<String> args) {}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() == 0) {
 			try {
 				String path = termIn.getDir().getCanonicalPath();

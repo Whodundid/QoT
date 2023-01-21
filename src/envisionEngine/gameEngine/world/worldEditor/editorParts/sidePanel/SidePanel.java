@@ -1,8 +1,8 @@
-package envision.gameEngine.world.worldEditor.editorParts.sidePanel;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel;
 
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowUtil.EGui;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowUtil.EGui;
 
 public abstract class SidePanel extends EGui {
 	

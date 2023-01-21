@@ -1,9 +1,9 @@
-package envision.gameEngine.world.worldEditor.editorParts.util;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.util;
 
-import envision.gameEngine.GameObject;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 /**
  * An item that can be placed and used in the map editor hotbar. Can be used to

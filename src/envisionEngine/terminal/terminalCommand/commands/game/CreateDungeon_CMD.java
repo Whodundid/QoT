@@ -1,12 +1,13 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.gameEngine.world.dungeonBuilder.DungeonBuilder;
-import envision.gameEngine.world.dungeonBuilder.DungeonBuilderSettings;
-import envision.gameEngine.world.dungeonBuilder.DungeonSize;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.gameEngine.world.dungeonBuilder.DungeonBuilder;
+import envisionEngine.gameEngine.world.dungeonBuilder.DungeonBuilderSettings;
+import envisionEngine.gameEngine.world.dungeonBuilder.DungeonSize;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class CreateDungeon_CMD extends TerminalCommand {
 	
@@ -16,12 +17,12 @@ public class CreateDungeon_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "createdung"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("crdung"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("crdung"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Creates a new random dungeon map"; }
 	@Override public String getUsage() { return "ex: crdung small 'name'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		DungeonBuilder builder = new DungeonBuilder();
 		
 		if (args.isEmpty()) {

@@ -1,9 +1,10 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class HexToDec extends TerminalCommand {
 	
@@ -13,12 +14,12 @@ public class HexToDec extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "hextodec"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("h2d", "hex"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("h2d", "hex"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "converts a hex value to a decimal value"; }
 	@Override public String getUsage() { return "ex: h2d 0xff"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.info(getUsage()); }
 		
 		String s = args.get(0);

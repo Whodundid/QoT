@@ -1,6 +1,6 @@
-package envision.windowLib.windowTypes;
+package envisionEngine.windowLib.windowTypes;
 
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;

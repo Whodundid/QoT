@@ -1,23 +1,23 @@
-package game.screens.gameplay;
+package qot.screens.gameplay;
 
-import envision.gameEngine.effects.sounds.SoundEngine;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.inputHandlers.Keyboard;
-import envision.topOverlay.GameTopScreen;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.basicObjects.WindowRect;
-import envision.windowLib.windowObjects.basicObjects.WindowStatusBar;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.effects.sounds.SoundEngine;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.topOverlay.GameTopScreen;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowRect;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowStatusBar;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
-import game.QoT;
-import game.assets.sounds.Songs;
-import game.entities.player.QoT_Player;
-import game.screens.character.CharacterScreen;
-import game.screens.gameplay.combat.DeathScreen;
-import game.screens.main.MainMenuScreen;
+import qot.QoT;
+import qot.assets.sounds.Songs;
+import qot.entities.player.QoT_Player;
+import qot.screens.character.CharacterScreen;
+import qot.screens.gameplay.combat.DeathScreen;
+import qot.screens.main.MainMenuScreen;
 
 //rabbit fish
 

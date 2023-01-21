@@ -1,4 +1,4 @@
-package envision.gameEngine.gameObjects.entity.classes;
+package envisionEngine.gameEngine.gameObjects.entity.classes;
 
 public abstract class EntityClass {
 	

@@ -1,14 +1,14 @@
-package game.screens.gameplay;
+package qot.screens.gameplay;
 
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowUtil.FutureTaskEventType;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowUtil.FutureTaskEventType;
 import eutil.colors.EColors;
-import game.QoT;
-import game.screens.main.MainMenuScreen;
-import game.screens.main.OptionsScreen;
+import qot.QoT;
+import qot.screens.main.MainMenuScreen;
+import qot.screens.main.OptionsScreen;
 
 public class GamePauseWindow extends WindowParent {
 	

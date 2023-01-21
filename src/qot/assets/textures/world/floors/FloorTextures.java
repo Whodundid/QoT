@@ -1,9 +1,9 @@
-package game.assets.textures.world.floors;
+package qot.assets.textures.world.floors;
 
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
-import game.assets.textures.world.floors.stone.StoneFloorTextures;
-import game.assets.textures.world.floors.wood.WoodFloorTextures;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
+import qot.assets.textures.world.floors.stone.StoneFloorTextures;
+import qot.assets.textures.world.floors.wood.WoodFloorTextures;
 
 public class FloorTextures extends TextureLoader {
 	

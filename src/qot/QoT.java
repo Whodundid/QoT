@@ -1,4 +1,4 @@
-package game;
+package qot;
 
 import java.nio.IntBuffer;
 import java.util.logging.Level;
@@ -12,52 +12,40 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
-import envision.EnvisionGame;
-import envision.events.EventHandler;
-import envision.events.GameEvent;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.gameEngine.gameSystems.screens.ScreenLevel;
-import envision.gameEngine.gameSystems.scripts.envisionMappings.Envision_QoT_ErrorCallback;
-import envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.Envision_QoT_Package;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.inputHandlers.Keyboard;
-import envision.inputHandlers.Mouse;
-import envision.inputHandlers.WindowResizeListener;
-import envision.renderEngine.GLObject;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.shaders.Shaders;
-import envision.renderEngine.textureSystem.TextureSystem;
-import envision.terminal.TerminalHandler;
-import envision.testing.OpenGLTestingEnvironment;
-import envision.topOverlay.GameTopScreen;
-import envision.windowLib.WindowSize;
-import envision.windowLib.windowTypes.TopWindowParent;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
-import envision.windowLib.windowUtil.ObjectPosition;
-import envision_lang.EnvisionLang;
+import envisionEngine.EnvisionGame;
+import envisionEngine.events.EventHandler;
+import envisionEngine.events.GameEvent;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.gameEngine.gameSystems.screens.ScreenLevel;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.inputHandlers.WindowResizeListener;
+import envisionEngine.renderEngine.GLObject;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.shaders.Shaders;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import envisionEngine.terminal.TerminalHandler;
+import envisionEngine.testing.OpenGLTestingEnvironment;
+import envisionEngine.topOverlay.GameTopScreen;
+import envisionEngine.windowLib.WindowSize;
+import envisionEngine.windowLib.windowTypes.TopWindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import eutil.file.FileOpener;
 import eutil.math.EDimension;
-import game.assets.textures.GameTextures;
-import game.assets.textures.general.GeneralTextures;
-import game.entities.player.QoT_Player;
-import game.launcher.LauncherLogger;
-import game.launcher.LauncherSettings;
-import game.screens.main.MainMenuScreen;
-import game.settings.QoTSettings;
+import main.Main;
+import qot.assets.textures.GameTextures;
+import qot.assets.textures.general.GeneralTextures;
+import qot.entities.player.QoT_Player;
+import qot.launcher.LauncherLogger;
+import qot.launcher.LauncherSettings;
+import qot.settings.QoTSettings;
 
 public class QoT implements EnvisionGame {
 	
 	public static final String version = "Oct 8, 2022";
-	
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	
-	/**
-	 * Does not run QoT, instead runs an OpenGL testing environment instead.
-	 */
-	public static final boolean RUN_OPEN_GL_TESTING_ENVIRONMENT = false;
 	
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------
@@ -72,7 +60,7 @@ public class QoT implements EnvisionGame {
 	/** The active game settings for this QoT instance. */
 	public static final QoTSettings settings = new QoTSettings();
 	/** The Envision Scripting Language instance. */
-	public static final EnvisionLang envision = new EnvisionLang().addBuildPackage(new Envision_QoT_Package());
+	//public static final EnvisionLang envision = new EnvisionLang().addBuildPackage(new Envision_QoT_Package());
 	
 	private static Keyboard keyboard;
 	private static Mouse mouse;
@@ -133,7 +121,7 @@ public class QoT implements EnvisionGame {
 			LauncherLogger.log("Running game with settings: " + settings);
 			QoTSettings.init(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
 			setupGLFW();
-			if (RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.runTestingEnvironment(handle);
+			if (Main.RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.runTestingEnvironment(handle);
 			else getGame().runGameLoop();
 		}
 		catch (Exception e) {
@@ -218,7 +206,7 @@ public class QoT implements EnvisionGame {
 	
 	@Override
 	public void onGameSetup() {
-		envision.setErrorCallback(new Envision_QoT_ErrorCallback());
+		//envision.setErrorCallback(new Envision_QoT_ErrorCallback());
 		
 		topRenderer = GameTopScreen.getInstance();
 		terminalHandler = TerminalHandler.getInstance();
@@ -250,7 +238,7 @@ public class QoT implements EnvisionGame {
 		setTargetUPS(QoTSettings.targetUPS.get());
 		
 		//load main menu
-		displayScreen(new MainMenuScreen());
+		//displayScreen(new MainMenuScreen());
 		
 		//prepare timers
 		startTime = System.currentTimeMillis();
@@ -662,7 +650,7 @@ public class QoT implements EnvisionGame {
 	/** Returns this game's active world. */
 	public static GameWorld getWorld() { return theWorld; }
 	
-	public static EnvisionLang getEnvision() { return envision; }
+	//public static EnvisionLang getEnvision() { return envision; }
 	
 	//----------------
 	// Static Setters

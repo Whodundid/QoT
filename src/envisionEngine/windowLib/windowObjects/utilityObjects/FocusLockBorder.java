@@ -1,7 +1,7 @@
-package envision.windowLib.windowObjects.utilityObjects;
+package envisionEngine.windowLib.windowObjects.utilityObjects;
 
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.math.EDimension;
 
 //Author: Hunter Bragg

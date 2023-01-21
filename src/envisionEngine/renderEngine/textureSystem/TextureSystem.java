@@ -1,4 +1,4 @@
-package envision.renderEngine.textureSystem;
+package envisionEngine.renderEngine.textureSystem;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -10,9 +10,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.stb.STBImage;
 
+import envisionEngine.Envision;
 import eutil.datatypes.EArrayList;
 import eutil.reflection.ReflectionHelper;
-import game.QoT;
 
 public class TextureSystem {
 
@@ -64,7 +64,7 @@ public class TextureSystem {
 			textureIn.registerChildTextures(this);
 		}
 		else {
-			QoT.error("Failed to register texture: " + textureIn.getFilePath());
+			Envision.error("Failed to register texture: " + textureIn.getFilePath());
 		}
 		
 		return textureIn;
@@ -83,7 +83,7 @@ public class TextureSystem {
 	public void destroyTexture(GameTexture textureIn) {
 		if (textureIn == null) return;
 		if (!isTextureRegistered(textureIn)) {
-			QoT.error("Texture destroy error: " + textureIn.getFilePath() + " has not been registered!");
+			Envision.error("Texture destroy error: " + textureIn.getFilePath() + " has not been registered!");
 			return;
 		}
 		
@@ -106,7 +106,7 @@ public class TextureSystem {
 	public void bind(GameTexture textureIn) {
 		if (textureIn != null) {
 			if (!isTextureRegistered(textureIn)) {
-				QoT.error("Texture bind error: " + textureIn.getFilePath() + " has not been registered!");
+				Envision.error("Texture bind error: " + textureIn.getFilePath() + " has not been registered!");
 			}
 			GL46.glBindTexture(GL46.GL_TEXTURE_2D, textureIn.getTextureID());
 			current = textureIn;
@@ -179,7 +179,7 @@ public class TextureSystem {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Failed to read the image information! " + filePath);
+			Envision.errorf("Failed to read the image information! {}", filePath);
 		}
 	}
 	

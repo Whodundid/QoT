@@ -1,4 +1,4 @@
-package game.launcher;
+package qot.launcher;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,9 +11,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.jar.JarFile;
 
-import envision.terminal.terminalUtil.ESystemInfo;
+import envisionEngine.terminal.terminalUtil.ESystemInfo;
 import eutil.sys.OSType;
-import game.Main;
+import main.Main;
 
 public class QoTInstaller {
 
@@ -409,11 +409,14 @@ public class QoTInstaller {
 	private static boolean verifyDir(String fromPath, File toDir) throws IOException {
 		//this line is used to specifically grab the class system's file structure to determine
 		//what kind of environment the game is being executed from (an IDE or a Jar)
-		String path = Main.class.getResource(Main.class.getSimpleName() + ".class").getFile();
+		String path = QoTLauncher.mainPath;
+		System.out.println("InJar: " + QoTLauncher.inJar + " : path: '" + path + "'");
 		
 		//if path does not start with a '/' then it's very likely a jar file!
-		if (!path.startsWith("/")) {
-			path = ClassLoader.getSystemClassLoader().getResource(path).getFile();
+		if (QoTLauncher.inJar) {
+			System.out.println("Attempting to read jar path of: '" + path + "'");
+			LauncherLogger.log("Attempting to read jar path of: '" + path + "'");
+			path = ClassLoader.getSystemResource(path).getFile();
 			path = path.substring(path.indexOf(':') + 1);
 			path = path.substring(0, path.lastIndexOf('!'));
 			

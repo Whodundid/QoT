@@ -1,10 +1,10 @@
-package game.doodads;
+package qot.doodads;
 
-import envision.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
-import game.assets.textures.doodads.ground_clutter.GroundClutterTextures;
-import game.entities.EntityList;
+import qot.assets.textures.doodads.ground_clutter.GroundClutterTextures;
+import qot.entities.EntityList;
 
 public class StoneGroundClutter extends Entity {
 	

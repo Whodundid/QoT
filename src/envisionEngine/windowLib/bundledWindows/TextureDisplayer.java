@@ -1,22 +1,22 @@
-package envision.windowLib.bundledWindows;
+package envisionEngine.windowLib.bundledWindows;
 
 import eutil.datatypes.EArrayList;
 import eutil.file.FileOpener;
 import eutil.math.ENumUtil;
-import game.QoT;
-import game.assets.textures.taskbar.TaskBarTextures;
-import game.assets.textures.window.WindowTextures;
+import qot.QoT;
+import qot.assets.textures.taskbar.TaskBarTextures;
+import qot.assets.textures.window.WindowTextures;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.basicObjects.WindowImageBox;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowImageBox;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 
 public class TextureDisplayer extends WindowParent {
 	

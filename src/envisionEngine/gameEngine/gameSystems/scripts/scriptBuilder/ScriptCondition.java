@@ -1,6 +1,6 @@
-package envision.gameEngine.gameSystems.scripts.scriptBuilder;
+package envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder;
 
-import envision.gameEngine.gameSystems.scripts.scriptBuilder.conditions.ConditionType;
+import envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.conditions.ConditionType;
 
 public abstract class ScriptCondition {
 	

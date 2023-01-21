@@ -1,7 +1,7 @@
-package envision.windowLib.windowUtil.windowEvents;
+package envisionEngine.windowLib.windowUtil.windowEvents;
 
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.EventType;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.EventType;
 
 //Author: Hunter Bragg
 

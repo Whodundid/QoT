@@ -1,9 +1,9 @@
-package game.assets.textures.taskbar;
+package qot.assets.textures.taskbar;
 
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
-import game.settings.QoTSettings;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
+import qot.settings.QoTSettings;
 
 public class TaskBarTextures extends TextureLoader {
 	

@@ -1,12 +1,13 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.gameEngine.effects.sounds.SoundEngine;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.gameEngine.effects.sounds.SoundEngine;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
-import game.settings.QoTSettings;
+import qot.settings.QoTSettings;
 
 public class Volume_CMD extends TerminalCommand {
 	
@@ -16,12 +17,12 @@ public class Volume_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "volume"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("vol"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("vol"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays or changes the game volume"; }
 	@Override public String getUsage() { return "ex: vol 50"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.writeln(EColors.yellow, "Volume: " + QoTSettings.musicVolume.get());
 			return;

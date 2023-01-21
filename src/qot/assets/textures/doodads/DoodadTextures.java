@@ -1,11 +1,11 @@
-package game.assets.textures.doodads;
+package qot.assets.textures.doodads;
 
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
-import game.assets.textures.doodads.bushes.BushTextures;
-import game.assets.textures.doodads.ground_clutter.GroundClutterTextures;
-import game.assets.textures.doodads.house.HouseTextures;
-import game.assets.textures.doodads.trees.TreeTextures;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
+import qot.assets.textures.doodads.bushes.BushTextures;
+import qot.assets.textures.doodads.ground_clutter.GroundClutterTextures;
+import qot.assets.textures.doodads.house.HouseTextures;
+import qot.assets.textures.doodads.trees.TreeTextures;
 
 public class DoodadTextures extends TextureLoader {
 	

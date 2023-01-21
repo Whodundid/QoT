@@ -1,8 +1,8 @@
-package game.assets;
+package qot.assets;
 
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.settings.QoTSettings;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.settings.QoTSettings;
 
 public abstract class TextureLoader {
 	

@@ -1,6 +1,6 @@
-package envision.windowLib.windowObjects.basicObjects;
+package envisionEngine.windowLib.windowObjects.basicObjects;
 
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.math.EDimension;
 

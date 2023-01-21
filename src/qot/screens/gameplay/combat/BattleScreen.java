@@ -1,9 +1,9 @@
-package game.screens.gameplay.combat;
+package qot.screens.gameplay.combat;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
 

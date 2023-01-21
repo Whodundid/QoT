@@ -1,10 +1,10 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class Rm extends FileCommand {
@@ -19,7 +19,7 @@ public class Rm extends FileCommand {
 	@Override public String getUsage() { return "ex: rm 'dir'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		if (args.size() == 1) {
 			try {

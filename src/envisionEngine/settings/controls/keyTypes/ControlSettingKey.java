@@ -1,8 +1,8 @@
-package envision.settings.controls.keyTypes;
+package envisionEngine.settings.controls.keyTypes;
 
-import envision.settings.controls.KeyActionType;
-import envision.settings.controls.KeyBinding;
-import envision.settings.controls.util.KeyCombo;
+import envisionEngine.settings.controls.KeyActionType;
+import envisionEngine.settings.controls.KeyBinding;
+import envisionEngine.settings.controls.util.KeyCombo;
 
 public class ControlSettingKey extends KeyBinding {
 

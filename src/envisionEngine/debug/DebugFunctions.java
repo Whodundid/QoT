@@ -1,17 +1,17 @@
-package envision.debug;
+package envisionEngine.debug;
 
-import envision.debug.debugCommands.Deb0;
-import envision.debug.debugCommands.Deb1;
-import envision.debug.debugCommands.Deb2;
-import envision.debug.debugCommands.Deb3;
-import envision.debug.debugCommands.Deb4;
-import envision.debug.debugCommands.Deb5;
-import envision.debug.debugCommands.Deb6;
-import envision.debug.debugCommands.Deb7;
-import envision.debug.debugCommands.Deb8;
-import envision.debug.debugCommands.Deb9;
-import envision.debug.debugCommands.DebugCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.debug.debugCommands.Deb0;
+import envisionEngine.debug.debugCommands.Deb1;
+import envisionEngine.debug.debugCommands.Deb2;
+import envisionEngine.debug.debugCommands.Deb3;
+import envisionEngine.debug.debugCommands.Deb4;
+import envisionEngine.debug.debugCommands.Deb5;
+import envisionEngine.debug.debugCommands.Deb6;
+import envisionEngine.debug.debugCommands.Deb7;
+import envisionEngine.debug.debugCommands.Deb8;
+import envisionEngine.debug.debugCommands.Deb9;
+import envisionEngine.debug.debugCommands.DebugCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
 

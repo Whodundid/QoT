@@ -1,4 +1,4 @@
-package envision.testing.renderingAPI.opengl;
+package envisionEngine.testing.renderingAPI.opengl;
 
 import static org.lwjgl.opengl.AMDDebugOutput.*;
 import static org.lwjgl.opengl.ARBDebugOutput.*;
@@ -15,8 +15,8 @@ import org.lwjgl.opengl.GLDebugMessageARBCallback;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.opengl.KHRDebug;
 
-import envision.testing.renderingAPI.error.ErrorReportingLevel;
-import envision.testing.renderingAPI.error.RendererErrorReporter;
+import envisionEngine.testing.renderingAPI.error.ErrorReportingLevel;
+import envisionEngine.testing.renderingAPI.error.RendererErrorReporter;
 
 public class GL_ErrorReporter {
 	

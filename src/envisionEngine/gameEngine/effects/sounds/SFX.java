@@ -1,4 +1,4 @@
-package envision.gameEngine.effects.sounds;
+package envisionEngine.gameEngine.effects.sounds;
 import java.io.File;
 
 import javax.sound.sampled.AudioInputStream;

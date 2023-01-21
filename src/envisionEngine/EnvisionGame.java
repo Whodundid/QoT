@@ -1,7 +1,8 @@
-package envision;
+package envisionEngine;
 
-import envision.events.GameEvent;
-import envision.events.IEventListener;
+import envisionEngine.events.GameEvent;
+import envisionEngine.events.IEventListener;
+import envisionEngine.terminal.TerminalHandler;
 
 public interface EnvisionGame extends IEventListener {
 	
@@ -23,7 +24,14 @@ public interface EnvisionGame extends IEventListener {
 	
 	default void onEvent(GameEvent e) {}
 	
+	default void onTerminalLoad(TerminalHandler handler) {}
+	
+	default void onPreGameSetup() {}
 	default void onGameSetup() {}
+	default void onPostGameSetup() {}
+	
+	default void onPreGameUnload() {}
 	default void onGameUnload() {}
+	default void onPostGameUnload() {}
 	
 }

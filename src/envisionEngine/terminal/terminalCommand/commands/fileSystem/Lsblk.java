@@ -1,9 +1,9 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 
-import envision.terminal.window.ETerminal;
-import eutil.datatypes.EArrayList;
+import envisionEngine.terminal.window.ETerminal;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class Lsblk extends FileCommand {
@@ -17,7 +17,7 @@ public class Lsblk extends FileCommand {
 	@Override public String getUsage() { return "ex: lsblk"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		try {
 			if (args.size() == 0) {
 				File[] drives = File.listRoots();

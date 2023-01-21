@@ -1,9 +1,9 @@
-package game.items;
+package qot.items;
 
-import envision.gameEngine.gameObjects.items.Potion;
-import envision.gameEngine.gameObjects.items.Weapon;
-import game.items.potions.healing.Healing_Lesser;
-import game.items.weapons.melee.swords.Sword_Wooden;
+import envisionEngine.gameEngine.gameObjects.items.Potion;
+import envisionEngine.gameEngine.gameObjects.items.Weapon;
+import qot.items.potions.healing.Healing_Lesser;
+import qot.items.weapons.melee.swords.Sword_Wooden;
 
 public class Items {
 	

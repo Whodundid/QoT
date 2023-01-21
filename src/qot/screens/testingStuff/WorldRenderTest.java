@@ -1,26 +1,26 @@
-package game.screens.testingStuff;
+package qot.screens.testingStuff;
 
 import java.io.File;
 import java.util.Stack;
 
 import org.lwjgl.glfw.GLFW;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldEditor.NewMapCreatorScreen;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.inputHandlers.Keyboard;
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldEditor.NewMapCreatorScreen;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.ENumUtil;
-import game.QoT;
-import game.entities.player.QoT_Player;
+import qot.QoT;
+import qot.entities.player.QoT_Player;
 
 public class WorldRenderTest extends GameScreen {
 

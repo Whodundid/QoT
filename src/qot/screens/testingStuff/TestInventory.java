@@ -1,14 +1,14 @@
-package game.screens.testingStuff;
+package qot.screens.testingStuff;
 
 import org.lwjgl.opengl.GL11;
 
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.QoT;
-import game.screens.main.MainMenuScreen;
+import qot.QoT;
+import qot.screens.main.MainMenuScreen;
 
 public class TestInventory<E> extends WindowParent<E> {
 	

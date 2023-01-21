@@ -1,7 +1,7 @@
-package envision.events.types.terminal;
+package envisionEngine.events.types.terminal;
 
-import envision.events.EventType;
-import envision.events.GameEvent;
+import envisionEngine.events.EventType;
+import envisionEngine.events.GameEvent;
 
 public abstract class TerminalEvent extends GameEvent {
 	

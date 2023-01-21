@@ -1,13 +1,13 @@
-package envision.renderEngine.fontRenderer;
+package envisionEngine.renderEngine.fontRenderer;
 
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
-import game.QoT;
-import game.settings.QoTSettings;
+import qot.QoT;
+import qot.settings.QoTSettings;
 
 import org.lwjgl.opengl.GL11;
 
-import envision.renderEngine.GLObject;
+import envisionEngine.renderEngine.GLObject;
 
 public class FontRenderer {
 	

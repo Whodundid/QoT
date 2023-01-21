@@ -1,20 +1,20 @@
-package envision.gameEngine.world.worldUtil;
+package envisionEngine.gameEngine.world.worldUtil;
 
 import java.io.File;
 import java.util.Scanner;
 
-import envision.events.types.entity.EntityEnteredRegionEvent;
-import envision.events.types.entity.EntityExitedRegionEvent;
-import envision.gameEngine.GameObject;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.events.types.entity.EntityEnteredRegionEvent;
+import envisionEngine.events.types.entity.EntityExitedRegionEvent;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.math.EDimensionI;
-import game.QoT;
-import game.settings.QoTSettings;
+import qot.QoT;
+import qot.settings.QoTSettings;
 
 public class Region extends GameObject {
 	

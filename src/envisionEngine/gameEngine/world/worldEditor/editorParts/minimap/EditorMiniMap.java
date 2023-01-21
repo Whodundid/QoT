@@ -1,4 +1,4 @@
-package envision.gameEngine.world.worldEditor.editorParts.minimap;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.minimap;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -6,13 +6,13 @@ import java.io.FileOutputStream;
 
 import javax.imageio.ImageIO;
 
-import envision.gameEngine.world.worldEditor.EditorWorld;
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.testing.TextureLoader;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.world.worldEditor.EditorWorld;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.testing.TextureLoader;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 
 public class EditorMiniMap extends WindowObject {

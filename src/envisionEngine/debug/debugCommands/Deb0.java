@@ -1,9 +1,9 @@
-package envision.debug.debugCommands;
+package envisionEngine.debug.debugCommands;
 
-import envision.gameEngine.gameSystems.screens.ScreenLevel;
-import envision.terminal.window.ETerminal;
-import envision.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
-import game.QoT;
+import envisionEngine.gameEngine.gameSystems.screens.ScreenLevel;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
+import qot.QoT;
 
 @SuppressWarnings("unused")
 public class Deb0 extends DebugCommand {

@@ -1,4 +1,4 @@
-package envision.gameEngine.gameObjects.items;
+package envisionEngine.gameEngine.gameObjects.items;
 
 public abstract class Potion extends Item {
 	

@@ -1,4 +1,4 @@
-package game.launcher;
+package qot.launcher;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -26,15 +26,17 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import eutil.datatypes.Box2;
 import eutil.swing.ActionPerformer;
 import eutil.swing.LeftClick;
-import game.Main;
-import game.QoT;
+import main.Main;
+import qot.QoT;
 
 public class QoTLauncher extends JFrame {
 	
 	private static QoTLauncher launcher;
 	
+	static String mainPath;
 	static boolean inJar = false;
 	static String resourcePath = "";
 	
@@ -46,10 +48,22 @@ public class QoTLauncher extends JFrame {
 	public static void runLauncher() {
 		//this line is used to specifically grab the class system's file structure to determine
 		//what kind of environment the game is being executed from (an IDE or a Jar)
-		String path = Main.class.getResource(Main.class.getSimpleName() + ".class").getFile();
+		String main = Main.class.getSimpleName() + ".class";
+		mainPath = Main.class.getResource(main).getFile();
+		
+		System.out.println("MAIN PATH: '" + mainPath);
+		
+		//if the main path starts with 'file:/' then the game is being run in a strange way
+		//remove 'file:' portion and attempt to continue and assume running in jar
+		if (mainPath.startsWith("file:/")) {
+			// index 4 = '/' in main path
+			mainPath = mainPath.substring(5);
+			System.out.println("NEW MAIN PATH: '" + mainPath);
+			inJar = true;
+		}
 		
 		//if path does not start with a '/' then it's very likely a jar file!
-		if (!path.startsWith("/")) {
+		else if (!mainPath.startsWith("/")) {
 			inJar = true;
 			resourcePath = "resources/";
 		}
@@ -160,9 +174,17 @@ public class QoTLauncher extends JFrame {
 	private void loadLauncherResources() {
 		try {
 			LauncherLogger.log("Loading launcher resources...");
-			var dir = "/" + resourcePath + "textures/launcher/";
 			
-			programIcon = loadResource(dir, "whodundid_base.png");
+			// Attempt to load first resource: 'programIcon'
+			// try to read the current dir -- if it fails revert to non-resources path
+			var box = tryFirstLoad("textures/launcher/", "whodundid_base.png");
+			if (box == null) throw new IllegalStateException("Failed to load resources!");
+			
+			// if load was successful, grab the dir out of the return
+			String dir = box.getA();
+			programIcon = box.getB();
+			
+			// load additional resources
 			logo = loadResource(dir, "qot_logo.png");
 			background = loadResource(dir, "background.png");
 			selectionsBackground = loadResource(dir, "options_back.png");
@@ -189,16 +211,67 @@ public class QoTLauncher extends JFrame {
 		}
 	}
 	
+	/**
+	 * Attempts to read the very first resource.
+	 * 
+	 * @param base
+	 * @param file
+	 * @return the file path last attempted
+	 */
+	private Box2<String, BufferedImage> tryFirstLoad(final String dirIn, final String resourceName) {
+		String dir = "/" + resourcePath + dirIn;
+		
+		// try to load resource
+		BufferedImage img = loadResource(dir, resourceName, false);
+		
+		// if the resource loaded successfully, then this method can exit safely
+		if (img != null) {
+			return new Box2<>(dir, img);
+		}
+		
+		// if the resource is null, then attempt to modify the path
+		
+		if (inJar) {
+			LauncherLogger.logError("Failed to read using 'resources' path! Attempting fallback..");
+			dir = "/" + (resourcePath = "") + dirIn;
+			//inJar = false;
+		}
+		else {
+			LauncherLogger.logError("Failed to read not using 'resources' path! Attempting fallback..");
+			dir = "/" + (resourcePath = "resources/") + "textures/launcher/";
+			//inJar = true;
+		}
+		
+		// try read again
+		img = loadResource(dir, resourceName, false);
+		
+		// if it's still null, then there is something else wrong altogether!
+		if (img == null) {
+			LauncherLogger.logError("Loading resources continued to fail! Aborting resource loading process!");
+			return null;
+		}
+		
+		return new Box2<>(dir, img);
+	}
+	
 	private BufferedImage loadResource(String base, String file) {
+		return loadResource(base, file, true);
+	}
+	
+	private BufferedImage loadResource(String base, String file, boolean printError) {
 		try {
 			if (base.endsWith("/") && file.startsWith("/")) file = file.substring(0, file.length() - 1);
 			if (!base.endsWith("/") && !file.startsWith("/")) base += "/";
-			return ImageIO.read(QoTLauncher.class.getResource(base + file));
+			String resourcePath = base + file;
+			var resource = QoTLauncher.class.getResource(resourcePath);
+			System.out.println("Reading resource: '" + resourcePath + "'");
+			LauncherLogger.log(LauncherLogLevel.DEBUG, "Reading resource: '" + resourcePath + "'");
+			return ImageIO.read(resource);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			if (printError) e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 	
 	//--------------

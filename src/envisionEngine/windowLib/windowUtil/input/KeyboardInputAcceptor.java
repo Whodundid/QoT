@@ -1,6 +1,6 @@
-package envision.windowLib.windowUtil.input;
+package envisionEngine.windowLib.windowUtil.input;
 
-import envision.inputHandlers.Keyboard;
+import envisionEngine.inputHandlers.Keyboard;
 
 public interface KeyboardInputAcceptor {
 	

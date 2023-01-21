@@ -1,19 +1,26 @@
-package envision.topOverlay;
+package envisionEngine.topOverlay;
 
-import envision.inputHandlers.Keyboard;
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.GLObject;
-import envision.renderEngine.GLSettings;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.terminal.window.ETerminal;
-import envision.topOverlay.desktopOverlay.TaskBar;
-import envision.windowLib.windowTypes.TopWindowParent;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.GLObject;
+import envisionEngine.renderEngine.GLSettings;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.topOverlay.desktopOverlay.DesktopRCM;
+import envisionEngine.topOverlay.desktopOverlay.OverlayShortcut;
+import envisionEngine.topOverlay.desktopOverlay.TaskBar;
+import envisionEngine.windowLib.bundledWindows.CalculatorWindow;
+import envisionEngine.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
+import envisionEngine.windowLib.windowTypes.TopWindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
-import game.QoT;
-import game.settings.QoTSettings;
+import qot.QoT;
+import qot.assets.textures.taskbar.TaskBarTextures;
+import qot.assets.textures.window.WindowTextures;
+import qot.settings.QoTSettings;
 
 /** The renderer that is overlaid onto every other one. (Need a better name). */
 public class GameTopScreen<E> extends TopWindowParent<E> {
@@ -30,6 +37,29 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 	private GameTopScreen() {
 		res = QoT.getWindowSize();
 		initChildren();
+	}
+	
+	@Override
+	public void initChildren() {
+		OverlayShortcut explorer = new OverlayShortcut(200, QoT.getHeight() - 200);
+		OverlayShortcut calculator = new OverlayShortcut(400, QoT.getHeight() - 200);
+		OverlayShortcut terminal = new OverlayShortcut(600, QoT.getHeight() - 200);
+		
+		explorer.setWindowTarget(FileExplorerWindow.class);
+		calculator.setWindowTarget(CalculatorWindow.class);
+		terminal.setWindowTarget(ETerminal.class);
+		
+		explorer.setIcon(WindowTextures.file_folder);
+		calculator.setIcon(TaskBarTextures.calculator);
+		terminal.setIcon(TaskBarTextures.terminal);
+		
+		explorer.setDescription("File Explorer");
+		calculator.setDescription("Calculator");
+		terminal.setDescription("Terminal");
+		
+		IWindowObject.setHidden(true, explorer, calculator, terminal);
+		
+		addObject(explorer, calculator, terminal);
 	}
 	
 	public void onRenderTick() {
@@ -136,6 +166,8 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 	public void handleMouseInput(int action, int mXIn, int mYIn, int button, int change) {
 		if (hasFocus) {
 			super.handleMouseInput(action, mXIn, mYIn, button, change);
+			//check if desktop rcm should open
+			DesktopRCM.checkOpen(action, button);
 		}
 		else if (QoT.currentScreen != null) {
 			QoT.currentScreen.handleMouseInput(action, mXIn, mYIn, button, change);

@@ -1,22 +1,22 @@
-package game.entities;
+package qot.entities;
 
-import envision.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
 import eutil.random.ERandomUtil;
-import game.doodads.BirchTree;
-import game.doodads.Bush0;
-import game.doodads.PineTree;
-import game.doodads.PineTree2;
-import game.doodads.StoneGroundClutter;
-import game.entities.enemies.Goblin;
-import game.entities.enemies.Thyrah;
-import game.entities.enemies.TrollBoar;
-import game.entities.enemies.Whodundid;
-import game.entities.house.Barrel;
-import game.entities.house.Chair;
-import game.entities.house.Crate;
-import game.entities.house.Stool;
-import game.entities.neutral.WhodundidsBrother;
-import game.entities.player.QoT_Player;
+import qot.doodads.BirchTree;
+import qot.doodads.Bush0;
+import qot.doodads.PineTree;
+import qot.doodads.PineTree2;
+import qot.doodads.StoneGroundClutter;
+import qot.entities.enemies.Goblin;
+import qot.entities.enemies.Thyrah;
+import qot.entities.enemies.TrollBoar;
+import qot.entities.enemies.Whodundid;
+import qot.entities.house.Barrel;
+import qot.entities.house.Chair;
+import qot.entities.house.Crate;
+import qot.entities.house.Stool;
+import qot.entities.neutral.WhodundidsBrother;
+import qot.entities.player.QoT_Player;
 
 public enum EntityList {
 	PLAYER(0),

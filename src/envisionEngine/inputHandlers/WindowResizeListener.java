@@ -1,9 +1,10 @@
-package envision.inputHandlers;
+package envisionEngine.inputHandlers;
 
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
-import envision.testing.OpenGLTestingEnvironment;
-import game.QoT;
+import envisionEngine.testing.OpenGLTestingEnvironment;
+import main.Main;
+import qot.QoT;
 
 public class WindowResizeListener extends GLFWWindowSizeCallback {
 
@@ -24,7 +25,7 @@ public class WindowResizeListener extends GLFWWindowSizeCallback {
 		width = widthIn;
 		height = heightIn;
 		
-		if (QoT.RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.onWindowResized();
+		if (Main.RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.onWindowResized();
 		else QoT.getGame().onWindowResize();
 	}
 

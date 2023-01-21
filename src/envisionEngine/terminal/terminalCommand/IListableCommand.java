@@ -1,10 +1,10 @@
-package envision.terminal.terminalCommand;
+package envisionEngine.terminal.terminalCommand;
 
-import envision.terminal.window.ETerminal;
-import eutil.datatypes.EArrayList;
+import envisionEngine.terminal.window.ETerminal;
+import eutil.datatypes.util.EList;
 
 public interface IListableCommand {
 	
-	public void list(ETerminal termIn, EArrayList<String> args, boolean runVisually);
+	public void list(ETerminal termIn, EList<String> args, boolean runVisually);
 
 }

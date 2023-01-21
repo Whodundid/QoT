@@ -1,8 +1,8 @@
-package game.entities.enemies;
+package qot.entities.enemies;
 
-import envision.gameEngine.gameObjects.entity.Enemy;
+import envisionEngine.gameEngine.gameObjects.entity.Enemy;
 import eutil.random.ERandomUtil;
-import game.assets.textures.entity.EntityTextures;
+import qot.assets.textures.entity.EntityTextures;
 
 public class TrollBoar extends Enemy {
 

@@ -1,7 +1,7 @@
-package envision.gameEngine.gameSystems.scripts.scriptBuilder.events.script;
+package envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.events.script;
 
-import envision.gameEngine.gameSystems.scripts.scriptBuilder.ScriptEvent;
-import envision.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.ScriptEvent;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
 
 public class ScriptStartedEvent extends ScriptEvent {
 

@@ -1,12 +1,12 @@
-package envision.gameEngine.world.worldEditor.editorParts.toolBox;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.toolBox;
 
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 
 import java.util.List;
 
-import envision.gameEngine.world.worldEditor.editorTools.EditorToolType;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.gameEngine.world.worldEditor.editorTools.EditorToolType;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
 
 public class ToolCategory {
 	

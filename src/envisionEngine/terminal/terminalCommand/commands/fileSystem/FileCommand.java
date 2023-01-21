@@ -1,11 +1,11 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 import java.io.IOException;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
-import eutil.datatypes.EArrayList;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public abstract class FileCommand extends TerminalCommand {
@@ -23,7 +23,7 @@ public abstract class FileCommand extends TerminalCommand {
 	//-----------
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		fileTabComplete(termIn, args);
 	}
 	
@@ -31,7 +31,7 @@ public abstract class FileCommand extends TerminalCommand {
 	// FileCommand Methods
 	//---------------------
 	
-	protected void fileTabComplete(ETerminal termIn, EArrayList<String> args) {
+	protected void fileTabComplete(ETerminal termIn, EList<String> args) {
 		try {
 			fileTabComplete(termIn, termIn.getDir().getCanonicalPath(), args);
 		}
@@ -40,7 +40,7 @@ public abstract class FileCommand extends TerminalCommand {
 		}
 	}
 	
-	protected void fileTabComplete(ETerminal termIn, File dir, EArrayList<String> args) {
+	protected void fileTabComplete(ETerminal termIn, File dir, EList<String> args) {
 		try {
 			fileTabComplete(termIn, dir.getCanonicalPath(), args);
 		}
@@ -49,12 +49,12 @@ public abstract class FileCommand extends TerminalCommand {
 		}
 	}
 	
-	protected void fileTabComplete(ETerminal termIn, String dir, EArrayList<String> args) {
+	protected void fileTabComplete(ETerminal termIn, String dir, EList<String> args) {
 		try {
 			if (args.isEmpty()) {
 				File f = new File(dir);
 				
-				EArrayList<String> options = new EArrayList();
+				EList<String> options = EList.newList();
 				
 				for (File file : f.listFiles()) {
 					options.add(file.getName());
@@ -64,7 +64,7 @@ public abstract class FileCommand extends TerminalCommand {
 				if (!termIn.getTab1()) termIn.setTextTabBeing("");
 			}
 			else if (!termIn.getTab1()) {
-				EArrayList<String> options = new EArrayList<>();
+				EList<String> options = EList.newList();
 				
 				File home = new File(System.getProperty("user.dir"));
 				File f = new File(dir);
@@ -146,7 +146,7 @@ public abstract class FileCommand extends TerminalCommand {
 	    return path.delete();
 	}
 	
-	protected File parsePath(ETerminal termIn, EArrayList<String> args) {
+	protected File parsePath(ETerminal termIn, EList<String> args) {
 		File homeFile = new File(System.getProperty("user.dir"));
 		String homePath = homeFile.getAbsolutePath();
 		

@@ -1,18 +1,16 @@
-package game.entities.player;
+package qot.entities.player;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameObjects.entity.Player;
-import envision.gameEngine.gameObjects.entity.PlayerStats;
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.gameEngine.world.worldUtil.WorldCamera;
-import envision.inputHandlers.Mouse;
-import eutil.colors.EColors;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.Player;
+import envisionEngine.gameEngine.gameObjects.entity.PlayerStats;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.misc.Rotation;
-import game.QoT;
-import game.assets.textures.entity.EntityTextures;
-import game.assets.textures.item.ItemTextures;
+import qot.QoT;
+import qot.assets.textures.entity.EntityTextures;
+import qot.assets.textures.item.ItemTextures;
 
 public class QoT_Player extends Player {
 	
@@ -26,9 +24,9 @@ public class QoT_Player extends Player {
 		//init(posX, posY, 48, 48);
 		init(posX, posY, 40, 40);
 		
-		setMaxHealth(50);
-		setHealth(50);
-		setBaseMeleeDamage(2);
+		setMaxHealth(10);
+		setHealth(10);
+		setBaseMeleeDamage(1);
 		
 		setCollisionBox(midX - 8, endY - 10, midX + 8, endY);
 		//setCollisionBox(midX + 18, endY - 10, midX + 28, endY);

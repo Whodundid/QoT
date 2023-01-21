@@ -1,8 +1,8 @@
-package envision.events.types.world;
+package envisionEngine.events.types.world;
 
-import envision.events.EventType;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.events.EventType;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
 
 public class WorldRemovedEntityEvent extends WorldEvent {
 

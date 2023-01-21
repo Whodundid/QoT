@@ -1,14 +1,14 @@
-package envision.windowLib.windowObjects.actionObjects;
+package envisionEngine.windowLib.windowObjects.actionObjects;
 
-import envision.inputHandlers.Keyboard;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowTypes.ActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowTypes.ActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import eutil.strings.EStringUtil;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 

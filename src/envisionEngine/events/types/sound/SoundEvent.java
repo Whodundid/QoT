@@ -1,7 +1,7 @@
-package envision.events.types.sound;
+package envisionEngine.events.types.sound;
 
-import envision.events.EventType;
-import envision.events.GameEvent;
+import envisionEngine.events.EventType;
+import envisionEngine.events.GameEvent;
 
 public abstract class SoundEvent extends GameEvent {
 	

@@ -1,16 +1,16 @@
-package envision.gameEngine.world.worldEditor.windows;
+package envisionEngine.gameEngine.world.worldEditor.windows;
 
-import envision.debug.DebugSettings;
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.actionObjects.WindowCheckBox;
-import envision.windowLib.windowObjects.advancedObjects.WindowScrollList;
-import envision.windowLib.windowObjects.advancedObjects.tabbedContainer.ContainerTab;
-import envision.windowLib.windowObjects.basicObjects.WindowLabel;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.debug.DebugSettings;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowCheckBox;
+import envisionEngine.windowLib.windowObjects.advancedObjects.WindowScrollList;
+import envisionEngine.windowLib.windowObjects.advancedObjects.tabbedContainer.ContainerTab;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowLabel;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.assets.textures.window.WindowTextures;
+import qot.assets.textures.window.WindowTextures;
 
 public class DrawSettingsTab extends ContainerTab {
 

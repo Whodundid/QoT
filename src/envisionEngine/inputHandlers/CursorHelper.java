@@ -1,4 +1,4 @@
-package envision.inputHandlers;
+package envisionEngine.inputHandlers;
 
 
 import java.awt.MouseInfo;
@@ -15,8 +15,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 
-import envision.renderEngine.textureSystem.GameTexture;
-import game.QoT;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import qot.QoT;
 
 public class CursorHelper {
 	

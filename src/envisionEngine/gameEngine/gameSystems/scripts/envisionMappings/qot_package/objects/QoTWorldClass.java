@@ -1,6 +1,6 @@
-package envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.objects;
+package envisionEngine.gameEngine.gameSystems.scripts.envisionMappings.qot_package.objects;
 
-import envision.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
 import envision_lang.interpreter.EnvisionInterpreter;
 import envision_lang.interpreter.util.creationUtil.ObjectCreator;
 import envision_lang.interpreter.util.scope.Scope;

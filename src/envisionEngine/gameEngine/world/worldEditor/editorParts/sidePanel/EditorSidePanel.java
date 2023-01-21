@@ -1,17 +1,17 @@
-package envision.gameEngine.world.worldEditor.editorParts.sidePanel;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel;
 
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.editorParts.minimap.EditorMiniMap;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.assetTool.AssetSidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.regionTool.RegionSidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.scriptTool.ScriptSidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.terrainTool.TerrainSidePanel;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.minimap.EditorMiniMap;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.assetTool.AssetSidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.regionTool.RegionSidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.scriptTool.ScriptSidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.terrainTool.TerrainSidePanel;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.math.EDimension;
-import game.QoT;
+import qot.QoT;
 
 public class EditorSidePanel extends WindowObject {
 	

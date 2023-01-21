@@ -1,4 +1,4 @@
-package envision.windowLib.windowTypes.interfaces;
+package envisionEngine.windowLib.windowTypes.interfaces;
 
 import eutil.datatypes.Box2;
 import eutil.misc.ScreenLocation;

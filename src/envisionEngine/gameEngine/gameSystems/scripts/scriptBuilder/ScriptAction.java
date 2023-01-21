@@ -1,4 +1,4 @@
-package envision.gameEngine.gameSystems.scripts.scriptBuilder;
+package envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder;
 
 public abstract class ScriptAction {
 	

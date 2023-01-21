@@ -1,8 +1,8 @@
-package envision.debug.debugCommands;
+package envisionEngine.debug.debugCommands;
 
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.terminal.window.ETerminal;
-import game.QoT;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.terminal.window.ETerminal;
+import qot.QoT;
 
 @SuppressWarnings("unused")
 public class Deb5 extends DebugCommand {

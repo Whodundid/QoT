@@ -1,8 +1,8 @@
-package envision.gameEngine.world.worldTiles.categories.dungeon;
+package envisionEngine.gameEngine.world.worldTiles.categories.dungeon;
 
-import envision.gameEngine.world.worldTiles.TileIDs;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import game.assets.textures.world.walls.dungeon.DungeonWallTextures;
+import envisionEngine.gameEngine.world.worldTiles.TileIDs;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import qot.assets.textures.world.walls.dungeon.DungeonWallTextures;
 
 public class DungWallB extends WorldTile {
 	

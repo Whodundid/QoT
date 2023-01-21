@@ -1,4 +1,4 @@
-package envision.gameEngine.world.worldEditor.editorParts.util;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.util;
 
 public enum EditorObjectType {
 	TILE,

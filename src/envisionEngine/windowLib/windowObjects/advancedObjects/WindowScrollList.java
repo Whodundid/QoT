@@ -1,17 +1,17 @@
-package envision.windowLib.windowObjects.advancedObjects;
+package envisionEngine.windowLib.windowObjects.advancedObjects;
 
-import envision.inputHandlers.Keyboard;
-import envision.renderEngine.GLSettings;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.actionObjects.WindowScrollBar;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectEventType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
-import envision.windowLib.windowUtil.windowEvents.events.EventModify;
-import envision.windowLib.windowUtil.windowEvents.events.EventObjects;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.renderEngine.GLSettings;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowScrollBar;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectEventType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventModify;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventObjects;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
@@ -154,7 +154,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 					else {
 						if (listContents.contains(o)) {
 							var initial = o.getInitialPosition();
-							o.setInitialPosition(initial.getA() + newX, initial.getB() + newY);
+							o.setInitialPosition(initial.x + newX, initial.y + newY);
 						}
 						o.move(newX, newY);
 					}
@@ -229,7 +229,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 			double hScrollPos = hScroll.getScrollPos() - hScroll.getVisibleAmount();
 			
 			for (var o : EArrayList.combineLists(listContents, listObjsToBeAdded)) {
-				o.setPosition(o.getInitialPosition().getA() - hScrollPos, o.getInitialPosition().getB() - vScrollPos);
+				o.setPosition(o.getInitialPosition().x - hScrollPos, o.getInitialPosition().y - vScrollPos);
 			}
 			
 			updateDrawnObjects();

@@ -1,4 +1,4 @@
-package envision.debug;
+package envisionEngine.debug;
 
 public class DebugSettings {
 	

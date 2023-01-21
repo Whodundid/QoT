@@ -1,4 +1,4 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,12 +7,12 @@ import java.io.IOException;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 
-import envision.terminal.window.ETerminal;
-import envision.windowLib.bundledWindows.TextEditorWindow;
-import envision.windowLib.bundledWindows.TextureDisplayer;
-import envision.windowLib.windowUtil.ObjectPosition;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.windowLib.bundledWindows.TextEditorWindow;
+import envisionEngine.windowLib.bundledWindows.TextureDisplayer;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
 import eutil.strings.EStringUtil;
 
@@ -28,7 +28,7 @@ public class Open extends FileCommand {
 	@Override public String getUsage() { return "ex: open 'file'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.error("Not enough arguments!");
 			termIn.info(getUsage());

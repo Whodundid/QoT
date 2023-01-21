@@ -1,6 +1,6 @@
-package game.assets.textures.world.walls.stone;
+package qot.assets.textures.world.walls.stone;
 
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 public class StoneWall extends GameTexture {
 	

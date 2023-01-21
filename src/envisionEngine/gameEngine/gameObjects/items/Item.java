@@ -1,8 +1,8 @@
-package envision.gameEngine.gameObjects.items;
+package envisionEngine.gameEngine.gameObjects.items;
 
-import envision.gameEngine.GameObject;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 public abstract class Item extends GameObject {
 	

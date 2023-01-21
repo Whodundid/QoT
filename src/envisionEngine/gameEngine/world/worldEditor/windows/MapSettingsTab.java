@@ -1,15 +1,15 @@
-package envision.gameEngine.world.worldEditor.windows;
+package envisionEngine.gameEngine.world.worldEditor.windows;
 
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.advancedObjects.WindowScrollList;
-import envision.windowLib.windowObjects.advancedObjects.tabbedContainer.ContainerTab;
-import envision.windowLib.windowObjects.basicObjects.WindowLabel;
-import envision.windowLib.windowObjects.basicObjects.WindowTextBox;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.advancedObjects.WindowScrollList;
+import envisionEngine.windowLib.windowObjects.advancedObjects.tabbedContainer.ContainerTab;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowLabel;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowTextBox;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.misc.Direction;
-import game.assets.textures.window.WindowTextures;
+import qot.assets.textures.window.WindowTextures;
 
 public class MapSettingsTab extends ContainerTab {
 

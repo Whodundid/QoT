@@ -1,8 +1,8 @@
-package game.particles;
+package qot.particles;
 
-import envision.gameEngine.effects.particles.Particle;
+import envisionEngine.gameEngine.effects.particles.Particle;
 import eutil.colors.EColors;
-import game.QoT;
+import qot.QoT;
 
 public class DamageSplash extends Particle {
 	

@@ -1,9 +1,9 @@
-package envision.gameEngine.world.worldUtil;
+package envisionEngine.gameEngine.world.worldUtil;
 
 import java.util.Objects;
 
-import envision.gameEngine.GameObject;
-import envision.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
 import eutil.datatypes.Box2;
 import eutil.math.ENumUtil;
 

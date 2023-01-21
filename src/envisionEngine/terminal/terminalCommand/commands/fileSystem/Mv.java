@@ -1,13 +1,13 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class Mv extends FileCommand {
 	
@@ -20,7 +20,7 @@ public class Mv extends FileCommand {
 	@Override public String getUsage() { return "ex: mv 'src' 'dest'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() < 2) { termIn.error("Not enough arguments!"); }
 		else if (args.size() == 2) {
 			try {

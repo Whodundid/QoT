@@ -1,13 +1,13 @@
-package envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.methods;
+package envisionEngine.gameEngine.gameSystems.scripts.envisionMappings.qot_package.methods;
 
-import envision.terminal.TerminalHandler;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.TerminalHandler;
+import envisionEngine.terminal.window.ETerminal;
 import envision_lang.interpreter.EnvisionInterpreter;
 import envision_lang.lang.EnvisionObject;
 import envision_lang.lang.internal.EnvisionFunction;
 import envision_lang.lang.natives.Primitives;
 import eutil.strings.EStringUtil;
-import game.QoT;
+import qot.QoT;
 
 /** Creates a mapping between Envision and the QoT terminal. */
 public class TermCall_ENV extends EnvisionFunction {

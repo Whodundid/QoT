@@ -1,4 +1,4 @@
-package envision.testing.renderingAPI.opengl;
+package envisionEngine.testing.renderingAPI.opengl;
 
 import java.util.Objects;
 
@@ -6,10 +6,10 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-import envision.inputHandlers.WindowResizeListener;
-import envision.testing.renderingAPI.RendererContextType;
-import envision.testing.renderingAPI.RenderingContext;
-import game.launcher.LauncherLogger;
+import envisionEngine.inputHandlers.WindowResizeListener;
+import envisionEngine.testing.renderingAPI.RendererContextType;
+import envisionEngine.testing.renderingAPI.RenderingContext;
+import qot.launcher.LauncherLogger;
 
 public class OpenGLContext extends RenderingContext {
 	

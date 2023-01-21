@@ -1,4 +1,4 @@
-package envision.resourceLoaders;
+package envisionEngine.resourceLoaders;
 
 import java.io.File;
 
@@ -12,5 +12,7 @@ public interface IResourceManager {
 	boolean isLoaded();
 	/** Returns the file that this resource manager is responsible for. */
 	File getResourceFile();
+	/** Reloads the assets in this resource manager. */
+	boolean reload();
 	
 }

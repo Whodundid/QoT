@@ -1,18 +1,18 @@
-package envision.windowLib.windowTypes.interfaces;
+package envisionEngine.windowLib.windowTypes.interfaces;
 
-import envision.inputHandlers.Mouse;
-import envision.terminal.window.ETerminal;
-import envision.topOverlay.desktopOverlay.TaskBar;
-import envision.windowLib.StaticTopParent;
-import envision.windowLib.windowTypes.OverlayWindow;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowUtil.ObjectPosition;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
-import eutil.datatypes.EArrayList;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.topOverlay.desktopOverlay.TaskBar;
+import envisionEngine.windowLib.StaticTopParent;
+import envisionEngine.windowLib.windowTypes.OverlayWindow;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import eutil.datatypes.util.EList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -53,13 +53,13 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	//--------------
 	
 	/** Specifies the child object that was clicked last by the left moused button. */
-	public void setLastClickedObject(IWindowObject<?> objectIn);
+	public void setLastClickedChild(IWindowObject<?> objectIn);
 	/** Returns the last clicked child object. */
-	public IWindowObject<?> getLastClickedObject();
+	public IWindowObject<?> getLastClickedChild();
 	/** Sets the time the last child object was clicked. */
-	public void setLastClickTime(long timeIn);
+	public void setLastChildClickTime(long timeIn);
 	/** Returns the time the last child object was clicked. */
-	public long getLastClickTime();
+	public long getLastChildClickTime();
 	
 	//---------
 	// Objects
@@ -143,7 +143,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	/** Returns the objects with this highest z level under the mouse. */
 	public default IWindowObject<?> getHighestZObjectUnderMouse() { return StaticTopParent.getHighestZObjectUnderMouse(this); }
 	/** Returns a list of all objects underneath the mouse. */
-	public default EArrayList<IWindowObject<?>> getAllObjectsUnderMouse() { return StaticTopParent.getAllObjectsUnderMouse(this); }
+	public default EList<IWindowObject<?>> getAllObjectsUnderMouse() { return StaticTopParent.getAllObjectsUnderMouse(this); }
 	
 	//-------
 	// Close
@@ -172,8 +172,8 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Returns a list of all actively drawn window parents. */
-	public default EArrayList<IWindowParent<?>> getAllActiveWindows() {
-		EArrayList<IWindowParent<?>> windows = new EArrayList<>();
+	public default EList<IWindowParent<?>> getAllActiveWindows() {
+		EList<IWindowParent<?>> windows = EList.newList();
 		try {
 			getCombinedChildren().filterForEach(o -> IWindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((IWindowParent<?>) w));
 		}
@@ -188,13 +188,13 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	}
 	
 	/** Returns the first active instance of a specified type of window parent. If none are active, null is returned instead. */
-	public default <T extends IWindowParent<?>> T getWindowInstance(Class<T> windowIn) {
+	public default <T extends IWindowParent> T getWindowInstance(Class<T> windowIn) {
 		return (windowIn != null) ? (T) (getAllChildren().filter(o -> o.getClass() == windowIn).getFirst()) : null;
 	}
 	
 	/** Returns a list of all actively drawn window parents of a given type. */
-	public default <T extends IWindowParent> EArrayList<T> getAllWindowInstances(Class<T> windowIn) {
-		var windows = new EArrayList<T>();
+	public default <T extends IWindowParent> EList<T> getAllWindowInstances(Class<T> windowIn) {
+		EList<T> windows = EList.newList();
 		try {
 			getCombinedChildren().filterForEach(o -> o.getClass() == windowIn && !o.isBeingRemoved(), w -> windows.add((T) w));
 		}
@@ -319,15 +319,17 @@ public interface ITopParent<E> extends IWindowObject<E> {
 			}
 			break;
 		case EXISTING_OBJECT_INDENT:
-			EArrayList<WindowParent<?>> windows = new EArrayList<>();
+			EList<WindowParent<?>> windows = EList.newList();
 			getAllChildren().stream().filter(o -> windowIn.getClass().isInstance(o)).filter(o -> !o.isBeingRemoved()).forEach(w -> windows.add((WindowParent) w));
 			
-			if (windows.isNotEmpty()) {
-				if (windows.get(0) != null) {
-					EDimension objDim = windows.get(0).getDimensions();
-					sX = (int) (objDim.startX + 25);
-					sY = (int) (objDim.startY + 25);
-				}
+			if (windows.isEmpty()) {
+				sX = (int) ((QoT.getWidth() / 2) - (gDim.width / 2));
+				sY = (int) ((QoT.getHeight() / 2) - (gDim.height / 2));
+			}
+			else if (windows.getLast() != null) {
+				EDimension objDim = windows.getLast().getDimensions();
+				sX = (int) (objDim.startX + 25);
+				sY = (int) (objDim.startY + 25);
 			}
 			
 			break;

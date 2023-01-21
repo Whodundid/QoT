@@ -1,9 +1,9 @@
-package game.assets.textures.world.walls;
+package qot.assets.textures.world.walls;
 
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
-import game.assets.textures.world.walls.dungeon.DungeonWallTextures;
-import game.assets.textures.world.walls.stone.StoneWallTextures;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
+import qot.assets.textures.world.walls.dungeon.DungeonWallTextures;
+import qot.assets.textures.world.walls.stone.StoneWallTextures;
 
 public class WallTextures extends TextureLoader {
 	

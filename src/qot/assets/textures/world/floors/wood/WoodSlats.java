@@ -1,6 +1,6 @@
-package game.assets.textures.world.floors.wood;
+package qot.assets.textures.world.floors.wood;
 
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 public class WoodSlats extends GameTexture {
 	

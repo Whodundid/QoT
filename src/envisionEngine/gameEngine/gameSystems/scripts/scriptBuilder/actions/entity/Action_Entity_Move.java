@@ -1,7 +1,7 @@
-package envision.gameEngine.gameSystems.scripts.scriptBuilder.actions.entity;
+package envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.actions.entity;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameSystems.scripts.scriptBuilder.ScriptAction;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.ScriptAction;
 import eutil.misc.Direction;
 
 public class Action_Entity_Move extends ScriptAction {

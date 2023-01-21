@@ -1,18 +1,18 @@
-package envision.windowLib.windowUtil;
+package envisionEngine.windowLib.windowUtil;
 
-import envision.renderEngine.GLObject;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.WindowSize;
-import envision.windowLib.windowUtil.input.KeyboardInputAcceptor;
-import envision.windowLib.windowUtil.input.MouseInputAcceptor;
+import envisionEngine.renderEngine.GLObject;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.WindowSize;
+import envisionEngine.windowLib.windowUtil.input.KeyboardInputAcceptor;
+import envisionEngine.windowLib.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;
-import eutil.datatypes.Box2;
+import eutil.datatypes.Point2d;
 import eutil.math.EDimension;
 import eutil.math.ENumUtil;
 import eutil.misc.Rotation;
 import eutil.misc.ScreenLocation;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -141,12 +141,12 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	// Getters
 	//---------
 	
-	public Box2<Double, Double> getPosition() { return new Box2<Double, Double>(startX, startY); }
-	public Box2<Double, Double> getInitialPosition() { return new Box2<Double, Double>(startXPos, startYPos); }
+	public Point2d getPosition() { return new Point2d(startX, startY); }
+	public Point2d getInitialPosition() { return new Point2d(startXPos, startYPos); }
 	public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
 	
-	public Box2<Double, Double> getMinDims() { return new Box2<>(minWidth, minHeight); }
-	public Box2<Double, Double> getMaxDims() { return new Box2<>(maxWidth, maxHeight); }
+	public Point2d getMinDims() { return new Point2d(minWidth, minHeight); }
+	public Point2d getMaxDims() { return new Point2d(maxWidth, maxHeight); }
 	public double getMinWidth() { return minWidth; }
 	public double getMinHeight() { return minHeight; }
 	public double getMaxWidth() { return maxWidth; }

@@ -1,8 +1,8 @@
-package game.entities.house;
+package qot.entities.house;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import game.assets.textures.doodads.house.HouseTextures;
-import game.entities.EntityList;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import qot.assets.textures.doodads.house.HouseTextures;
+import qot.entities.EntityList;
 
 public class Barrel extends Entity {
 

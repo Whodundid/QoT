@@ -1,8 +1,8 @@
-package game.assets.textures.doodads.trees;
+package qot.assets.textures.doodads.trees;
 
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
 
 public class TreeTextures extends TextureLoader {
 	

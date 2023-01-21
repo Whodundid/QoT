@@ -1,4 +1,4 @@
-package envision.gameEngine.effects.sounds;
+package envisionEngine.gameEngine.effects.sounds;
 
 import java.io.File;
 
@@ -7,7 +7,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
-import game.settings.QoTSettings;
+import qot.settings.QoTSettings;
 
 public class Audio {
 	

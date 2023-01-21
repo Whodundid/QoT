@@ -1,10 +1,10 @@
-package envision.gameEngine.world.worldTiles.categories.nature;
+package envisionEngine.gameEngine.world.worldTiles.categories.nature;
 
-import envision.gameEngine.world.worldTiles.TileIDs;
-import envision.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldTiles.TileIDs;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
-import game.assets.textures.world.nature.rock.RockTextures;
+import qot.assets.textures.world.nature.rock.RockTextures;
 
 public class RockyStone extends WorldTile {
 	

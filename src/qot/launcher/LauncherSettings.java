@@ -1,4 +1,4 @@
-package game.launcher;
+package qot.launcher;
 
 import java.io.File;
 

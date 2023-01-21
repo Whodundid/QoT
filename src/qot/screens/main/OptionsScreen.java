@@ -1,18 +1,18 @@
-package game.screens.main;
+package qot.screens.main;
 
-import envision.gameEngine.effects.sounds.SoundEngine;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.actionObjects.WindowCheckBox;
-import envision.windowLib.windowObjects.actionObjects.WindowSlider;
-import envision.windowLib.windowObjects.actionObjects.WindowTextField;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.effects.sounds.SoundEngine;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowCheckBox;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowSlider;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowTextField;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
-import game.QoT;
-import game.settings.QoTSettings;
+import qot.QoT;
+import qot.settings.QoTSettings;
 
 public class OptionsScreen extends GameScreen {
 	

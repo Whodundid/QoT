@@ -1,4 +1,4 @@
-package envision.renderEngine.shaders.util;
+package envisionEngine.renderEngine.shaders.util;
 
 import java.io.File;
 import java.util.Scanner;

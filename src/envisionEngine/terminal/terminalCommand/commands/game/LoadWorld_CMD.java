@@ -1,16 +1,16 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
 import java.io.File;
 
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.terminal.terminalCommand.commands.fileSystem.FileCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.terminal.terminalCommand.commands.fileSystem.FileCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import game.QoT;
-import game.entities.player.QoT_Player;
-import game.screens.gameplay.GamePlayScreen;
-import game.settings.QoTSettings;
+import eutil.datatypes.util.EList;
+import qot.QoT;
+import qot.entities.player.QoT_Player;
+import qot.screens.gameplay.GamePlayScreen;
+import qot.settings.QoTSettings;
 
 public class LoadWorld_CMD extends FileCommand {
 	
@@ -20,54 +20,56 @@ public class LoadWorld_CMD extends FileCommand {
 	}
 
 	@Override public String getName() { return "loadworld"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("lw"); }
+	@Override public EList<String> getAliases() { return EList.of("lw"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Loads the specified world"; }
 	@Override public String getUsage() { return "ex: lw (world name)"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		fileTabComplete(termIn, QoTSettings.getEditorWorldsDir(), args);
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { termIn.error("Error: Map name empty!"); }
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
+		if (args.isEmpty()) {
+			termIn.error("Error: Map name empty!");
+			return;
+		}
+		
+		String worldName = args.get(0);
+		GameWorld world = buildWorld(worldName);
+		
+		boolean switchTo = true;
+		
+		if (args.length() > 1) {
+			try {
+				String flag = args.get(1);
+				if ("-ns".equals(flag)) switchTo = false;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (world.getWorldFile().exists()) {
+			termIn.writeln("Loading world...", EColors.green);
+			
+			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
+			
+			if (switchTo) {
+				QoT.displayScreen(new GamePlayScreen());
+			}
+			
+			GameWorld w = QoT.loadWorld(world);
+			w.addEntity(p);
+		}
 		else {
-			String worldName = args.get(0);
-			GameWorld world = buildWorld(worldName);
-			
-			boolean switchTo = true;
-			
-			if (args.length() > 1) {
-				try {
-					String flag = args.get(1);
-					if ("-ns".equals(flag)) switchTo = false;
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-			if (world.getWorldFile().exists()) {
-				termIn.writeln("Loading world...", EColors.green);
-				
-				QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
-				
-				if (switchTo) {
-					QoT.displayScreen(new GamePlayScreen());
-				}
-				
-				GameWorld w = QoT.loadWorld(world);
-				w.addEntity(p);
-			}
-			else {
-				termIn.error("World '" + worldName + "' does not exist!");
-			}
+			termIn.error("World '" + worldName + "' does not exist!");
 		}
 	}
 	
 	public static GameWorld buildWorld(String worldName) {
-		worldName = (worldName.endsWith(".twld")) ? worldName : worldName + ".twld";
+		//worldName = (worldName.endsWith(".twld")) ? worldName : worldName + ".twld";
 		File f = new File(QoTSettings.getEditorWorldsDir(), worldName);
 		return new GameWorld(f);
 	}

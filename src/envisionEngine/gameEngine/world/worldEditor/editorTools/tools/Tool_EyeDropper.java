@@ -1,7 +1,7 @@
-package envision.gameEngine.world.worldEditor.editorTools.tools;
+package envisionEngine.gameEngine.world.worldEditor.editorTools.tools;
 
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.editorTools.EditorTool;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.editorTools.EditorTool;
 
 public class Tool_EyeDropper extends EditorTool {
 

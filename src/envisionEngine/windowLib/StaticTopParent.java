@@ -1,28 +1,29 @@
-package envision.windowLib;
+package envisionEngine.windowLib;
 
 import java.util.Deque;
 
-import envision.inputHandlers.Mouse;
-import envision.topOverlay.desktopOverlay.TaskBar;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.advancedObjects.header.WindowHeader;
-import envision.windowLib.windowTypes.interfaces.ITopParent;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
-import envision.windowLib.windowUtil.EGui;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.KeyboardType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
-import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
-import envision.windowLib.windowUtil.windowEvents.events.EventKeyboard;
-import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.topOverlay.desktopOverlay.TaskBar;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
+import envisionEngine.windowLib.windowTypes.interfaces.ITopParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.EGui;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.KeyboardType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventFocus;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventKeyboard;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.misc.ScreenLocation;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -59,21 +60,24 @@ public class StaticTopParent extends EGui {
 				
 				var focused = objIn.getFocusedObject();
 				focused.mousePressed(mX, mY, button);
+				boolean dclicked = false;
 				
 				//check if the object was recently pressed and is eligible for a double click event
 				if (button == 0) {
-					var lastClicked = objIn.getLastClickedObject();
+					var lastClicked = objIn.getLastClickedChild();
 					if (lastClicked == focused) {
-						long clickTime = objIn.getLastClickTime();
+						long clickTime = objIn.getLastChildClickTime();
 						
-						if (System.currentTimeMillis() - clickTime <= 400) {
+						if (System.currentTimeMillis() - clickTime <= 200) {
 							focused.onDoubleClick();
+							dclicked = true;
 						}
 					}
 				}
 				
-				objIn.setLastClickedObject(focused);
-				objIn.setLastClickTime(System.currentTimeMillis());
+				objIn.setLastClickedChild(focused);
+				if (dclicked) objIn.setLastChildClickTime(0);
+				else objIn.setLastChildClickTime(System.currentTimeMillis());
 			}
 			else focusQueue.add(new EventFocus(objIn, underMouse, FocusType.MOUSE_PRESS, button, mX, mY));
 		}
@@ -157,8 +161,8 @@ public class StaticTopParent extends EGui {
 			
 			var modObj = (top != null) ? top.getModifyingObject() : null;
 			var modType = (top != null) ? top.getModifyType() : null;
-			var lastClickObj = (top != null) ? top.getLastClickedObject() : null;
-			var lastClickTime = (top != null) ? top.getLastClickTime() : null;
+			var lastClickObj = (top != null) ? top.getLastClickedChild() : null;
+			var lastClickTime = (top != null) ? top.getLastChildClickTime() : null;
 			var focusedObj = (top != null) ? top.getFocusedObject() : null;
 			var ho = (top != null) ? top.getHighestZObjectUnderMouse() : null;
 			var focusLockObj = (top != null) ? top.getFocusLockObject() : null;
@@ -438,12 +442,12 @@ public class StaticTopParent extends EGui {
 	/** Returns the object that has the highest z level under the cursor. */
 	public static IWindowObject<?> getHighestZObjectUnderMouse(ITopParent<?> objIn) {
 		try {
-			BoxList<IWindowObject<?>, EArrayList<IWindowObject<?>>> sortedByParent = new BoxList<>();
+			BoxList<IWindowObject<?>, EList<IWindowObject<?>>> sortedByParent = new BoxList<>();
 			var underMouse = objIn.getAllObjectsUnderMouse();
 			
 			//first setup the sorted list
 			for (int i = objIn.getChildren().size() - 1; i >= 0; i--) {
-				sortedByParent.add(objIn.getChildren().get(i), new EArrayList());
+				sortedByParent.add(objIn.getChildren().get(i), EList.newList());
 			}
 			
 			//next iterate through each of the objects found under the mouse and add them to the corresponding parents
@@ -470,9 +474,9 @@ public class StaticTopParent extends EGui {
 	}
 	
 	/** Returns a list of all objects that currently under the cursor. */
-	public static EArrayList<IWindowObject<?>> getAllObjectsUnderMouse(ITopParent<?> objIn) {
-		EArrayList<IWindowObject<?>> underMouse = new EArrayList<>();
-		EArrayList<IWindowObject<?>> children = objIn.getAllChildren();
+	public static EList<IWindowObject<?>> getAllObjectsUnderMouse(ITopParent<?> objIn) {
+		EList<IWindowObject<?>> underMouse = EList.newList();
+		EList<IWindowObject<?>> children = objIn.getAllChildren();
 		
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();

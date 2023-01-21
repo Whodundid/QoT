@@ -1,8 +1,8 @@
-package envision.gameEngine.gameSystems.scripts.envisionMappings.qot_package.methods;
+package envisionEngine.gameEngine.gameSystems.scripts.envisionMappings.qot_package.methods;
 
 import java.io.File;
 
-import envision.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
 import envision_lang.exceptions.EnvisionLangError;
 import envision_lang.exceptions.errors.ArgLengthError;
 import envision_lang.exceptions.errors.InvalidArgumentError;
@@ -12,10 +12,10 @@ import envision_lang.lang.classes.ClassInstance;
 import envision_lang.lang.datatypes.EnvisionString;
 import envision_lang.lang.internal.EnvisionFunction;
 import envision_lang.lang.natives.Primitives;
-import game.QoT;
-import game.entities.player.QoT_Player;
-import game.screens.gameplay.GamePlayScreen;
-import game.settings.QoTSettings;
+import qot.QoT;
+import qot.entities.player.QoT_Player;
+import qot.screens.gameplay.GamePlayScreen;
+import qot.settings.QoTSettings;
 
 /** Creates a mapping between Envision and the QoT terminal. */
 public class LoadWorld_ENV extends EnvisionFunction {

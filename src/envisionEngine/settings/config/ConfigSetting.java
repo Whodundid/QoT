@@ -1,10 +1,10 @@
-package envision.settings.config;
+package envisionEngine.settings.config;
 
-import static eutil.datatypes.util.EDataType.*;
+import static eutil.datatypes.util.JavaDatatype.*;
 
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.EDataType;
+import eutil.datatypes.util.JavaDatatype;
 
 import java.util.Collection;
 
@@ -17,7 +17,7 @@ public class ConfigSetting<T> {
 	private boolean requiresDev = false;
 	private T val = null;
 	private T defaultVal = null;
-	private EDataType type;
+	private JavaDatatype type;
 	private EArrayList additionalArgs = new EArrayList();
 	private final Class<T> cType;
 	private boolean ignoreConfigRead = false;
@@ -59,7 +59,7 @@ public class ConfigSetting<T> {
 	public String getDescription() { return description; }
 	public String asString() { return val != null ? val.toString() : "null"; }
 	public String defAsString() { return defaultVal != null ? defaultVal.toString() : "null"; }
-	public EDataType getType() { return type; }
+	public JavaDatatype getType() { return type; }
 	public Class<T> getClassType() { return cType; }
 	public T get() { return val; }
 	public boolean getRequiresDev() { return requiresDev; }

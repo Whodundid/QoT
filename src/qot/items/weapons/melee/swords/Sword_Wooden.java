@@ -1,11 +1,11 @@
-package game.items.weapons.melee.swords;
+package qot.items.weapons.melee.swords;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameObjects.items.Weapon;
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.gameEngine.world.worldUtil.WorldCamera;
-import game.assets.textures.item.ItemTextures;
-import game.items.ItemList;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.items.Weapon;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
+import qot.assets.textures.item.ItemTextures;
+import qot.items.ItemList;
 
 public class Sword_Wooden extends Weapon {
 	// Wooden Sword

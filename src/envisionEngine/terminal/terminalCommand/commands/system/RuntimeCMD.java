@@ -1,9 +1,10 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class RuntimeCMD extends TerminalCommand {
 	
@@ -13,12 +14,12 @@ public class RuntimeCMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "runtime"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("rt"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("rt"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Gets info on the current system run time"; }
 	@Override public String getUsage() { return "ex: runtime"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) termIn.error("This command does not take any arguments");
 		else {
 			Runtime rt = Runtime.getRuntime();

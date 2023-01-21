@@ -1,11 +1,11 @@
-package envision.windowLib.windowObjects.utilityObjects;
+package envisionEngine.windowLib.windowObjects.utilityObjects;
 
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.basicObjects.WindowLabel;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowLabel;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 

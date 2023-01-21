@@ -1,14 +1,15 @@
-package envision.inputHandlers;
+package envisionEngine.inputHandlers;
 
 import eutil.datatypes.Box2;
-import game.QoT;
+import main.Main;
+import qot.QoT;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
-import envision.testing.OpenGLTestingEnvironment;
+import envisionEngine.testing.OpenGLTestingEnvironment;
 
 public class Mouse extends GLFWMouseButtonCallback {
 	
@@ -73,7 +74,7 @@ public class Mouse extends GLFWMouseButtonCallback {
 	//-----------
 	
 	private void distribute(int action, int mXIn, int mYIn, int button, int change) {
-		if (QoT.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
+		if (Main.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
 			OpenGLTestingEnvironment.onMouseEvent(action, mXIn, mYIn, button, change);
 		}
 		else {

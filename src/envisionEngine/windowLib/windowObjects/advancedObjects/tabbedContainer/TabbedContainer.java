@@ -1,7 +1,7 @@
-package envision.windowLib.windowObjects.advancedObjects.tabbedContainer;
+package envisionEngine.windowLib.windowObjects.advancedObjects.tabbedContainer;
 
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;

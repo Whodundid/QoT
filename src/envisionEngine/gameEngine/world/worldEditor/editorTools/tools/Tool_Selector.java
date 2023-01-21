@@ -1,9 +1,9 @@
-package envision.gameEngine.world.worldEditor.editorTools.tools;
+package envisionEngine.gameEngine.world.worldEditor.editorTools.tools;
 
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
-import envision.gameEngine.world.worldEditor.editorTools.EditorTool;
-import envision.inputHandlers.Mouse;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
+import envisionEngine.gameEngine.world.worldEditor.editorTools.EditorTool;
+import envisionEngine.inputHandlers.Mouse;
 
 public class Tool_Selector extends EditorTool {
 	

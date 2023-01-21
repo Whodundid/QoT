@@ -1,4 +1,4 @@
-package envision.gameEngine.world.dungeonBuilder;
+package envisionEngine.gameEngine.world.dungeonBuilder;
 
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;

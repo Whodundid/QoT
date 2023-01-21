@@ -1,4 +1,4 @@
-package envision.renderEngine;
+package envisionEngine.renderEngine;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.glBlendFuncSeparate;

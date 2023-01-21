@@ -1,9 +1,9 @@
-package envision.debug.debugCommands;
+package envisionEngine.debug.debugCommands;
 
-import envision.gameEngine.gameObjects.entity.EntityLevel;
-import envision.terminal.window.ETerminal;
-import game.QoT;
-import game.screens.testingStuff.TestScreen;
+import envisionEngine.gameEngine.gameObjects.entity.EntityLevel;
+import envisionEngine.terminal.window.ETerminal;
+import qot.QoT;
+import qot.screens.testingStuff.TestScreen;
 
 @SuppressWarnings("unused")
 public class Deb9 extends DebugCommand {

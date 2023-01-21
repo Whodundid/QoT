@@ -1,7 +1,7 @@
-package envision.events.types.window;
+package envisionEngine.events.types.window;
 
-import envision.events.EventType;
-import envision.events.GameEvent;
+import envisionEngine.events.EventType;
+import envisionEngine.events.GameEvent;
 
 public abstract class WindowEvent extends GameEvent {
 	

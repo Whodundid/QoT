@@ -1,10 +1,10 @@
-package game.doodads;
+package qot.doodads;
 
-import envision.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
-import game.assets.textures.doodads.trees.TreeTextures;
-import game.entities.EntityList;
+import qot.assets.textures.doodads.trees.TreeTextures;
+import qot.entities.EntityList;
 
 public class BirchTree extends Entity {
 

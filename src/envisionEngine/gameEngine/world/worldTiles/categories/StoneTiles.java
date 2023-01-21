@@ -1,10 +1,10 @@
-package envision.gameEngine.world.worldTiles.categories;
+package envisionEngine.gameEngine.world.worldTiles.categories;
 
-import envision.gameEngine.world.worldTiles.TileCategory;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.gameEngine.world.worldTiles.categories.stone.ClayPad;
-import envision.gameEngine.world.worldTiles.categories.stone.StonePad;
-import envision.gameEngine.world.worldTiles.categories.stone.StoneWall;
+import envisionEngine.gameEngine.world.worldTiles.TileCategory;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldTiles.categories.stone.ClayPad;
+import envisionEngine.gameEngine.world.worldTiles.categories.stone.StonePad;
+import envisionEngine.gameEngine.world.worldTiles.categories.stone.StoneWall;
 
 public class StoneTiles implements TileCategory {
 	

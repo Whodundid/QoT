@@ -1,7 +1,7 @@
-package envision.gameEngine.gameObjects.abilities;
+package envisionEngine.gameEngine.gameObjects.abilities;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 public class Ability {
 	

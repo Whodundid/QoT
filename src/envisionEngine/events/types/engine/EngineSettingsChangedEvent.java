@@ -1,7 +1,7 @@
-package envision.events.types.engine;
+package envisionEngine.events.types.engine;
 
-import envision.events.EventType;
-import envision.settings.config.ConfigSetting;
+import envisionEngine.events.EventType;
+import envisionEngine.settings.config.ConfigSetting;
 
 public class EngineSettingsChangedEvent extends EngineEvent {
 	

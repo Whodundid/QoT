@@ -1,11 +1,11 @@
-package game.settings;
+package qot.settings;
 
 import java.io.File;
 
-import envision.settings.MainConfigFile;
-import envision.settings.config.ConfigSetting;
+import envisionEngine.settings.MainConfigFile;
+import envisionEngine.settings.config.ConfigSetting;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import qot.QoT;
 
 public class QoTSettings {
 	

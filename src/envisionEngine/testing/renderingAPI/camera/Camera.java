@@ -1,7 +1,7 @@
-package envision.testing.renderingAPI.camera;
+package envisionEngine.testing.renderingAPI.camera;
 
-import envision.inputHandlers.Keyboard;
-import envision.inputHandlers.Mouse;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.inputHandlers.Mouse;
 import eutil.math.ENumUtil;
 import eutil.math.Vec3f;
 

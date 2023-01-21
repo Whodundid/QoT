@@ -1,7 +1,7 @@
-package envision.gameEngine.world.dungeonBuilder;
+package envisionEngine.gameEngine.world.dungeonBuilder;
 
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
 import eutil.random.ERandomUtil;
 
 public class DungeonBuilder {

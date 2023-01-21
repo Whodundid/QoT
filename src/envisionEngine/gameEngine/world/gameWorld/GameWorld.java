@@ -1,17 +1,17 @@
-package envision.gameEngine.world.gameWorld;
+package envisionEngine.gameEngine.world.gameWorld;
 
 import java.awt.Point;
 import java.io.File;
 
-import envision.events.types.world.WorldAddedEntityEvent;
-import envision.gameEngine.GameObject;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameObjects.entity.EntitySpawn;
-import envision.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.gameEngine.world.worldUtil.Region;
-import envision.gameEngine.world.worldUtil.WorldCamera;
-import envision.layers.LayerSystem;
+import envisionEngine.events.types.world.WorldAddedEntityEvent;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.EntitySpawn;
+import envisionEngine.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldUtil.Region;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
+import envisionEngine.layers.LayerSystem;
 import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.EArrayList;
 import eutil.debug.Inefficient;
@@ -19,7 +19,7 @@ import eutil.math.EDimension;
 import eutil.math.EDimensionI;
 import eutil.math.ENumUtil;
 import eutil.misc.Direction;
-import game.QoT;
+import qot.QoT;
 
 public class GameWorld implements IGameWorld {
 	
@@ -161,7 +161,7 @@ public class GameWorld implements IGameWorld {
 	public void onInitialLoad() {
 		if (worldLoadScript != null) {
 			try {
-				QoT.envision.runProgram(worldLoadScript);
+				//QoT.envision.runProgram(worldLoadScript);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

@@ -1,14 +1,14 @@
-package envision.debug.debugCommands;
+package envisionEngine.debug.debugCommands;
 
-import envision.terminal.window.ETerminal;
-import game.QoT;
-import game.entities.enemies.Goblin;
-import game.entities.enemies.Thyrah;
-import game.entities.enemies.TrollBoar;
-import game.entities.enemies.Whodundid;
-import game.entities.player.QoT_Player;
-import game.screens.gameplay.combat.BattleScreen;
-import game.screens.gameplay.combat.Party;
+import envisionEngine.terminal.window.ETerminal;
+import qot.QoT;
+import qot.entities.enemies.Goblin;
+import qot.entities.enemies.Thyrah;
+import qot.entities.enemies.TrollBoar;
+import qot.entities.enemies.Whodundid;
+import qot.entities.player.QoT_Player;
+import qot.screens.gameplay.combat.BattleScreen;
+import qot.screens.gameplay.combat.Party;
 
 @SuppressWarnings("unused")
 public class Deb2 extends DebugCommand {

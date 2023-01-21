@@ -1,6 +1,6 @@
-package envision.gameEngine.gameSystems.shops;
+package envisionEngine.gameEngine.gameSystems.shops;
 
-import envision.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
 
 public abstract class Shopkeeper extends Entity {
 	

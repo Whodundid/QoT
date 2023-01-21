@@ -1,8 +1,8 @@
-package game.screens.character;
+package qot.screens.character;
 
-import envision.gameEngine.gameObjects.items.Item;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowTypes.WindowObject;
+import envisionEngine.gameEngine.gameObjects.items.Item;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowTypes.WindowObject;
 
 public class InventorySlot extends WindowObject {
 	

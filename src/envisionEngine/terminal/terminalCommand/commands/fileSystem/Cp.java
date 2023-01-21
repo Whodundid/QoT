@@ -1,12 +1,12 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class Cp extends FileCommand {
 	
@@ -19,7 +19,7 @@ public class Cp extends FileCommand {
 	@Override public String getUsage() { return "ex: cp 'src' 'dest'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() < 2) { termIn.error("Not enough arguments!"); }
 		else if (args.size() == 2) {
 			try {

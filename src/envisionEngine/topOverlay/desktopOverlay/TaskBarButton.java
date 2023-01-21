@@ -1,17 +1,17 @@
-package envision.topOverlay.desktopOverlay;
+package envisionEngine.topOverlay.desktopOverlay;
 
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.utilityObjects.RightClickMenu;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
-import envision.windowLib.windowUtil.ObjectPosition;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.utilityObjects.RightClickMenu;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.ENumUtil;
-import game.QoT;
-import game.assets.textures.taskbar.TaskBarTextures;
-import game.assets.textures.window.WindowTextures;
+import qot.QoT;
+import qot.assets.textures.taskbar.TaskBarTextures;
+import qot.assets.textures.window.WindowTextures;
 
 public class TaskBarButton<E> extends WindowButton<E> implements Comparable<TaskBarButton<?>> {
 	

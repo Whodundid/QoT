@@ -1,9 +1,10 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class SetWorldUnderground_CMD extends TerminalCommand {
 	
@@ -13,17 +14,17 @@ public class SetWorldUnderground_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "underground"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("under"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("under"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Modifies whether or not the current world is underground or not."; }
 	@Override public String getUsage() { return "ex: underground"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		basicTabComplete(termIn, args, new EArrayList<>("true", "false"));
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (QoT.theWorld == null) {
 			termIn.error("No world loaded!");
 			return;

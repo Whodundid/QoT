@@ -1,11 +1,11 @@
-package envision.terminal.terminalCommand.commands.windows;
+package envisionEngine.terminal.terminalCommand.commands.windows;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
-import envision.windowLib.windowTypes.WindowParent;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.windowLib.windowTypes.WindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class ToFrontWindow extends TerminalCommand {
@@ -16,12 +16,12 @@ public class ToFrontWindow extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "tofront"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("front"); }
+	@Override public EList<String> getAliases() { return EList.of("front"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Brings a window to the front"; }
 	@Override public String getUsage() { return "ex: tofront 4 (where 4 is the window pid)"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.bringToFront();
 			termIn.writeln("Window: [" + termIn.getObjectName() + " | " + termIn.getObjectID() + "] brought to front.", EColors.green);
@@ -29,7 +29,7 @@ public class ToFrontWindow extends TerminalCommand {
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
-				EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+				EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 				
 				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getObjectID() == pid);
 				if (theWindow != null) {
@@ -43,7 +43,7 @@ public class ToFrontWindow extends TerminalCommand {
 				try {
 					String name = EStringUtil.combineAll(args, " ").trim();
 					
-					EArrayList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+					EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					WindowParent theWindow = null;
 					
 					for (WindowParent p : windows) {

@@ -1,9 +1,9 @@
-package envision.windowLib.bundledWindows;
+package envisionEngine.windowLib.bundledWindows;
 
-import envision.inputHandlers.Keyboard;
-import envision.windowLib.windowTypes.WindowParent;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.windowLib.windowTypes.WindowParent;
 import eutil.colors.EColors;
-import game.assets.textures.taskbar.TaskBarTextures;
+import qot.assets.textures.taskbar.TaskBarTextures;
 
 public class GLKeyChecker extends WindowParent {
 	

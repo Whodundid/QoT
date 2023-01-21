@@ -1,21 +1,21 @@
-package envision.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.regionTool;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
-import envision.gameEngine.world.worldEditor.editorParts.toolBox.ToolCategory;
-import envision.gameEngine.world.worldEditor.editorTools.EditorToolType;
-import envision.gameEngine.world.worldUtil.Region;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
-import envision.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.toolBox.ToolCategory;
+import envisionEngine.gameEngine.world.worldEditor.editorTools.EditorToolType;
+import envisionEngine.gameEngine.world.worldUtil.Region;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
+import envisionEngine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
+import envisionEngine.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
@@ -123,10 +123,10 @@ public class RegionSidePanel extends SidePanel {
 	
 	private void delete() {	
 		TextAreaLine<Region> line = regionList.getCurrentLine();
-		if (line == null) { return; }
+		if (line == null) return;
 		
 		Region r = line.getGenericObject();
-		if (r == null) { throw new RuntimeException("Region on line: '" + line + "' is null!"); }
+		if (r == null) throw new RuntimeException("Region on line: '" + line + "' is null!");
 		
 		openDeleter(line);
 	}
@@ -136,6 +136,9 @@ public class RegionSidePanel extends SidePanel {
 		
 		GameWorld world = editor.getActualWorld();
 		world.getRegionData().remove(r);
+		
+		IGameWorld editorWorld = editor.getEditorWorld();
+		editorWorld.getRegionData().remove(r);
 		
 		regionList.deleteLine(lineIn);
 	}
@@ -157,7 +160,7 @@ public class RegionSidePanel extends SidePanel {
 				setGenericObject(lineIn);
 				setTitle("Delete Region");
 				setTitleColor(EColors.gray.intVal);
-				setSize(getMinWidth(), getMinHeight());
+				//setSize(getMinWidth(), getMinHeight());
 			}
 			
 			@Override
@@ -175,7 +178,7 @@ public class RegionSidePanel extends SidePanel {
 				yes.setStringColor(EColors.lred);
 				cancel.setStringColor(EColors.green);
 				
-				addObject(cancel);
+				addObject(yes, cancel);
 			}
 			
 			@Override

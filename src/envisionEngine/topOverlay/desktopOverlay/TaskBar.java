@@ -1,22 +1,23 @@
-package envision.topOverlay.desktopOverlay;
+package envisionEngine.topOverlay.desktopOverlay;
 
 import java.util.Collections;
 
-import envision.windowLib.windowObjects.utilityObjects.RightClickMenu;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
-import envision.windowLib.windowUtil.ObjectPosition;
+import envisionEngine.windowLib.windowObjects.utilityObjects.RightClickMenu;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.EStringUtil;
-import game.QoT;
-import game.assets.textures.window.WindowTextures;
+import qot.QoT;
+import qot.assets.textures.window.WindowTextures;
 
 public class TaskBar<E> extends WindowObject<E> {
 	
@@ -137,7 +138,7 @@ public class TaskBar<E> extends WindowObject<E> {
 				
 				if (selection.equals("Recenter") && w != null) {
 					var c = w.getClass();
-					EArrayList<? extends WindowParent> windows = QoT.getTopRenderer().getAllWindowInstances(c);
+					EList<? extends WindowParent> windows = QoT.getTopRenderer().getAllWindowInstances(c);
 					
 					if (windows.size() == 1) {
 						var p = windows.get(0);

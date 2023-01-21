@@ -1,44 +1,46 @@
-package envision.windowLib.windowTypes.interfaces;
+package envisionEngine.windowLib.windowTypes.interfaces;
 
 import java.util.function.Consumer;
 
-import envision.inputHandlers.CursorHelper;
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.GLObject;
-import envision.renderEngine.GLSettings;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowObjects.advancedObjects.header.WindowHeader;
-import envision.windowLib.windowObjects.utilityObjects.FocusLockBorder;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.WindowObjectProperties;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowUtil.EObjectGroup;
-import envision.windowLib.windowUtil.FutureTaskEventType;
-import envision.windowLib.windowUtil.FutureTaskManager;
-import envision.windowLib.windowUtil.input.KeyboardInputAcceptor;
-import envision.windowLib.windowUtil.input.MouseInputAcceptor;
-import envision.windowLib.windowUtil.windowEvents.ObjectEvent;
-import envision.windowLib.windowUtil.windowEvents.ObjectEventHandler;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectEventType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
-import envision.windowLib.windowUtil.windowEvents.events.EventAction;
-import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
-import envision.windowLib.windowUtil.windowEvents.events.EventModify;
-import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
-import envision.windowLib.windowUtil.windowEvents.events.EventObjects;
-import envision.windowLib.windowUtil.windowEvents.events.EventRedraw;
+import envisionEngine.inputHandlers.CursorHelper;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.GLObject;
+import envisionEngine.renderEngine.GLSettings;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
+import envisionEngine.windowLib.windowObjects.utilityObjects.FocusLockBorder;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.WindowObjectProperties;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowUtil.EObjectGroup;
+import envisionEngine.windowLib.windowUtil.FutureTaskEventType;
+import envisionEngine.windowLib.windowUtil.FutureTaskManager;
+import envisionEngine.windowLib.windowUtil.input.KeyboardInputAcceptor;
+import envisionEngine.windowLib.windowUtil.input.MouseInputAcceptor;
+import envisionEngine.windowLib.windowUtil.windowEvents.ObjectEvent;
+import envisionEngine.windowLib.windowUtil.windowEvents.ObjectEventHandler;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectEventType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventAction;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventFocus;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventModify;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventMouse;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventObjects;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventRedraw;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.Box2;
 import eutil.datatypes.BoxList;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.Point2d;
+import eutil.datatypes.util.EList;
 import eutil.debug.DebugToolKit;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
-import game.QoT;
-import game.assets.textures.cursor.CursorTextures;
+import qot.QoT;
+import qot.assets.textures.cursor.CursorTextures;
 
 //Author: Hunter Bragg
 
@@ -194,7 +196,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * @param type The type of future tasks to be executed
 	 * @return A list of all tasks that will be run for the given type
 	 */
-	public default EArrayList<Runnable> getFutureTasks(FutureTaskEventType type) {
+	public default EList<Runnable> getFutureTasks(FutureTaskEventType type) {
 		var ftm = getFutureTaskManager();
 		if (ftm != null) return ftm.getFutureTasks(type);
 		return new EArrayList<>();
@@ -559,13 +561,13 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Returns the current dimensions of this object. */
 	public default EDimension getDimensions() { return instance().getDimensions(); }
 	/** Returns the current position of this object. */
-	public default Box2<Double, Double> getPosition() { return instance().getPosition(); }
+	public default Point2d getPosition() { return instance().getPosition(); }
 	/** Returns the position this object will relocate to when reset. */
-	public default Box2<Double, Double> getInitialPosition() { return instance().getInitialPosition(); }
+	public default Point2d getInitialPosition() { return instance().getInitialPosition(); }
 	/** Returns the minimum width and height that this object can have. */
-	public default Box2<Double, Double> getMinDims() { return instance().getMinDims(); }
+	public default Point2d getMinDims() { return instance().getMinDims(); }
 	/** Returns the maximum width and height that this object can have. */
-	public default Box2<Double, Double> getMaxDims() { return instance().getMaxDims(); }
+	public default Point2d getMaxDims() { return instance().getMaxDims(); }
 	/** Returns the minimum width that this object can have. */
 	public default double getMinWidth() { return instance().getMinWidth(); }
 	/** Returns the minimum height that this object can have. */
@@ -730,7 +732,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		var loc = new Box2<>(d.startX, d.startY);
 		
 		//holder to store each object and their relative child locations
-		BoxList<IWindowObject<?>, Box2<Double, Double>> previousLocations = new BoxList<>();
+		BoxList<IWindowObject<?>, Point2d> previousLocations = new BoxList<>();
 		
 		//grab all immediate objects
 		var objs = getCombinedChildren();
@@ -738,7 +740,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		//get each of the object's children's relative positions and click-able areas relative to each child
 		for (var o : objs) {
 			var dims = o.getDimensions();
-			var prev = new Box2<>(dims.startX - loc.getA(), dims.startY - loc.getB());
+			var prev = new Point2d(dims.startX - loc.getA(), dims.startY - loc.getB());
 			previousLocations.add(o, prev);
 		}
 		
@@ -752,7 +754,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 			
 			var oldLoc = previousLocations.getBoxWithA(o).getB();
 			//move the child to the new location with the parent's offset
-			o.setPosition(newX + oldLoc.getA(), newY + oldLoc.getB()); 
+			o.setPosition(newX + oldLoc.x, newY + oldLoc.y); 
 		}
 	}
 	
@@ -772,17 +774,17 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//----------
 
 	/** Returns a list of all objects that are directly children of this object. */
-	public default EArrayList<IWindowObject<?>> getChildren() { return properties().children; }
+	public default EList<IWindowObject<?>> getChildren() { return properties().children; }
 	/** Returns a list of all objects that are going to be added on the next draw cycle */
-	public default EArrayList<IWindowObject<?>> getAddingChildren() { return properties().childrenToBeAdded; }
+	public default EList<IWindowObject<?>> getAddingChildren() { return properties().childrenToBeAdded; }
 	/** Returns a list of all objects that are going to be removed on the next draw cycle */
-	public default EArrayList<IWindowObject<?>> getRemovingChildren() { return properties().childrenToBeRemoved; }
+	public default EList<IWindowObject<?>> getRemovingChildren() { return properties().childrenToBeRemoved; }
 
 	/** Returns a list of all children that descend from this parent. */
-	public default EArrayList<IWindowObject<?>> getAllChildren() {
-		EArrayList<IWindowObject<?>> foundObjs = new EArrayList<>();
-		EArrayList<IWindowObject<?>> objsWithChildren = new EArrayList<>();
-		EArrayList<IWindowObject<?>> workList = new EArrayList<>();
+	public default EList<IWindowObject<?>> getAllChildren() {
+		EList<IWindowObject<?>> foundObjs = EList.newList();
+		EList<IWindowObject<?>> objsWithChildren = EList.newList();
+		EList<IWindowObject<?>> workList = EList.newList();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
 		getChildren().forEach(o -> {
@@ -814,7 +816,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns a list of all children from 'getAllChildren()' that are
 	 * currently under the mouse.
 	 */
-	public default EArrayList<IWindowObject<?>> getAllChildrenUnderMouse() {
+	public default EList<IWindowObject<?>> getAllChildrenUnderMouse() {
 		//only add objects if they are visible and if the cursor is over them.
 		return getAllChildren().filterNull(o -> o.willBeDrawn() && o.isMouseInside());
 	}
@@ -919,8 +921,8 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns a list combining the objects currently within within this
 	 * object as well as the ones being added.
 	 */
-	public default EArrayList<IWindowObject<?>> getCombinedChildren() {
-		return EArrayList.combineLists(getChildren(), getAddingChildren());
+	public default EList<IWindowObject<?>> getCombinedChildren() {
+		return EList.combineLists(getChildren(), getAddingChildren());
 	}
 	
 	//---------
@@ -1023,9 +1025,9 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 			
 			//check if eligible for a double click event
 			if (eventIn.getActionCode() == 0) {
-				var lastClicked = t.getLastClickedObject();
+				var lastClicked = t.getLastClickedChild();
 				if (lastClicked == this) {
-					long clickTime = t.getLastClickTime();
+					long clickTime = t.getLastChildClickTime();
 					
 					if (System.currentTimeMillis() - clickTime <= 400) {
 						onDoubleClick();
@@ -1033,8 +1035,8 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 				}
 			}
 			
-			t.setLastClickedObject(this);
-			t.setLastClickTime(System.currentTimeMillis());
+			t.setLastClickedChild(this);
+			t.setLastChildClickTime(System.currentTimeMillis());
 		}
 		var default_obj = getDefaultFocusObject();
 		if (default_obj != null) default_obj.requestFocus();

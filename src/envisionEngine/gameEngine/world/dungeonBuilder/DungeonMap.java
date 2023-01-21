@@ -1,8 +1,8 @@
-package envision.gameEngine.world.dungeonBuilder;
+package envisionEngine.gameEngine.world.dungeonBuilder;
 
-import envision.gameEngine.gameObjects.entity.EntitySpawn;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.gameObjects.entity.EntitySpawn;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
 import eutil.misc.Direction;
 
 /** A map manager which allows multiple builders to be able to add onto the same map object

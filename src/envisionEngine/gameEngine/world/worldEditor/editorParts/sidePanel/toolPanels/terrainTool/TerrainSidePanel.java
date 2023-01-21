@@ -1,19 +1,19 @@
-package envision.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.terrainTool;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.toolPanels.terrainTool;
 
-import static envision.gameEngine.world.worldEditor.editorTools.EditorToolType.*;
+import static envisionEngine.gameEngine.world.worldEditor.editorTools.EditorToolType.*;
 
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.MapEditorSettings;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.PaletteSidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
-import envision.gameEngine.world.worldEditor.editorParts.toolBox.ToolCategory;
-import envision.gameEngine.world.worldEditor.editorParts.util.EditorObject;
-import envision.gameEngine.world.worldEditor.editorTools.EditorToolType;
-import envision.gameEngine.world.worldTiles.GlobalTileList;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorSettings;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.PaletteSidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.toolBox.ToolCategory;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.util.EditorObject;
+import envisionEngine.gameEngine.world.worldEditor.editorTools.EditorToolType;
+import envisionEngine.gameEngine.world.worldTiles.GlobalTileList;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 

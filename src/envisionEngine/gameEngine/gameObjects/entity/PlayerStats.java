@@ -1,6 +1,6 @@
-package envision.gameEngine.gameObjects.entity;
+package envisionEngine.gameEngine.gameObjects.entity;
 
-import envision.gameEngine.gameSystems.quests.Quest;
+import envisionEngine.gameEngine.gameSystems.quests.Quest;
 import eutil.datatypes.EArrayList;
 
 public class PlayerStats {

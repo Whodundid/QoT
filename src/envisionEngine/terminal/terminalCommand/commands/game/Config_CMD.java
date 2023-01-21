@@ -1,36 +1,37 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
 import java.io.File;
 
-import envision.Envision;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
-import envision.windowLib.bundledWindows.TextEditorWindow;
+import envisionEngine.Envision;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.windowLib.bundledWindows.TextEditorWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
-import game.settings.QoTSettings;
+import qot.settings.QoTSettings;
 
 public class Config_CMD extends TerminalCommand {
 	
 	public Config_CMD() {
-		setCategory("game");
+		setCategory("Game");
 		setAcceptedModifiers("-a");
 		expectedArgLength = 1;
 	}
 	
 	@Override public String getName() { return "config"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("conf"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("conf"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Provides an interface to the game's config file"; }
 	@Override public String getUsage() { return "ex: conf    -OR-    conf 'edit|reload|save|reset'"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termin, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termin, EList<String> args) {
 		if (args.size() <= 1) basicTabComplete(termin, args, "edit", "reload", "save", "reset");
 	}
 
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			displayConfig(termIn);
 			if (hasModifier("-a")) FileOpener.openFile(QoTSettings.getGameConfig().getFile());

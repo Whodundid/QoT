@@ -1,13 +1,14 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.TerminalHandler;
-import envision.terminal.terminalCommand.IListableCommand;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.TerminalHandler;
+import envisionEngine.terminal.terminalCommand.IListableCommand;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -19,18 +20,18 @@ public class Help extends TerminalCommand implements IListableCommand {
 	}
 	
 	@Override public String getName() { return "help"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("h", "commands", "cmds"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("h", "commands", "cmds"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "List all commands with aliases and can display info on a specific command."; }
 	@Override public String getUsage() { return "ex: help deb"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		EArrayList<String> options = TerminalHandler.getSortedCommandNames();
 		super.basicTabComplete(termIn, args, options);
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.size() == 0) {
 			list(termIn, args, runVisually);
 			termIn.writeln();
@@ -54,7 +55,7 @@ public class Help extends TerminalCommand implements IListableCommand {
 	}
 	
 	@Override
-	public void list(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void list(ETerminal termIn, EList<String> args, boolean runVisually) {
 		termIn.writeln("Listing all terminal commands\n", EColors.lgreen);
 		
 		for (var box : TerminalHandler.getSortedCommands()) {

@@ -1,10 +1,11 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class SaveWorld_CMD extends TerminalCommand {
 	
@@ -14,12 +15,12 @@ public class SaveWorld_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "saveworld"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("sw"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("sw"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Saves the current world (if any)"; }
 	@Override public String getUsage() { return "ex: sw"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (QoT.theWorld != null) {
 			termIn.writeln("Saving '" + QoT.theWorld.getWorldName() + "'", EColors.green);
 			QoT.theWorld.saveWorldToFile();

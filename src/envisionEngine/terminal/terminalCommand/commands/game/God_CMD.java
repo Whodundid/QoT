@@ -1,9 +1,10 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 public class God_CMD extends TerminalCommand {
 	
@@ -13,12 +14,12 @@ public class God_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "god"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("godmode"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("godmode"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Toggles god mode on the player."; }
 	@Override public String getUsage() { return "ex: god"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			termIn.errorUsage(ERROR_TOO_MANY, getUsage());
 			return;

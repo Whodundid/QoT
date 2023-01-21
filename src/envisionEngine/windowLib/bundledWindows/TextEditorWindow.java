@@ -1,25 +1,25 @@
-package envision.windowLib.bundledWindows;
+package envisionEngine.windowLib.bundledWindows;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 
-import envision.inputHandlers.Keyboard;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
-import envision.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
-import envision.windowLib.windowObjects.utilityObjects.WindowDialogueBox.DialogBoxTypes;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowUtil.windowEvents.ObjectEvent;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
+import envisionEngine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
+import envisionEngine.windowLib.windowObjects.utilityObjects.WindowDialogueBox;
+import envisionEngine.windowLib.windowObjects.utilityObjects.WindowDialogueBox.DialogBoxTypes;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowUtil.windowEvents.ObjectEvent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.ENumUtil;
-import game.QoT;
-import game.assets.textures.taskbar.TaskBarTextures;
-import game.assets.textures.window.WindowTextures;
+import qot.QoT;
+import qot.assets.textures.taskbar.TaskBarTextures;
+import qot.assets.textures.window.WindowTextures;
 
 public class TextEditorWindow extends WindowParent {
 	

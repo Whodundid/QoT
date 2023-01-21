@@ -1,15 +1,15 @@
-package envision.windowLib.windowTypes;
+package envisionEngine.windowLib.windowTypes;
 
-import envision.inputHandlers.Mouse;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowUtil.EGui;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.KeyboardType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
-import envision.windowLib.windowUtil.windowEvents.events.EventKeyboard;
-import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowUtil.EGui;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.KeyboardType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.ObjectModifyType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventKeyboard;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.misc.ScreenLocation;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -19,7 +19,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	// Fields
 	//--------
 	
-	protected WindowObjectProperties properties = new WindowObjectProperties(this);
+	protected WindowObjectProperties<E> properties = new WindowObjectProperties(this);
 	
 	//---------------------
 	// Initializer Methods

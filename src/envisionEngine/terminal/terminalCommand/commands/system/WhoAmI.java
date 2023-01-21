@@ -1,8 +1,8 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
-import eutil.datatypes.EArrayList;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
+import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
 
@@ -17,7 +17,7 @@ public class WhoAmI extends TerminalCommand {
 	@Override public String getHelpInfo(boolean runVisually) { return "Provides user info on the current player."; }
 
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) termIn.writeln("User");
 		else errorUsage(termIn, ERROR_NO_ARGS);
 	}

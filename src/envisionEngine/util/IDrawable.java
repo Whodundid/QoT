@@ -1,7 +1,7 @@
-package envision.util;
+package envisionEngine.util;
 
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.gameEngine.world.worldUtil.WorldCamera;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
 
 public interface IDrawable {
 	

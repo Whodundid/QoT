@@ -1,9 +1,10 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -15,12 +16,12 @@ public class Version extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "version"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("ver", "v"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("ver", "v"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "displays the version of the provided argument."; }
 	@Override public String getUsage() { return "ex: v"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		termIn.writeln(QoT.version);
 	}
 	

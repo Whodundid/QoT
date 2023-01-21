@@ -1,11 +1,11 @@
-package envision.gameEngine.world.dungeonBuilder;
+package envisionEngine.gameEngine.world.dungeonBuilder;
 
-import envision.gameEngine.gameObjects.entity.EntitySpawn;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.gameEngine.world.worldTiles.categories.DungeonTiles;
+import envisionEngine.gameEngine.gameObjects.entity.EntitySpawn;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldTiles.categories.DungeonTiles;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
-import game.entities.EntityList;
+import qot.entities.EntityList;
 
 public class DungeonRoomSquare extends DungeonPiece {
 	

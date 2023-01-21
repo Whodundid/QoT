@@ -1,9 +1,9 @@
-package envision.debug.testStuff;
+package envisionEngine.debug.testStuff;
 
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.advancedObjects.tabbedContainer.TabbedContainer;
-import envision.windowLib.windowTypes.WindowParent;
-import game.QoT;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.advancedObjects.tabbedContainer.TabbedContainer;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import qot.QoT;
 
 public class TestWindow extends WindowParent {
 	

@@ -1,16 +1,16 @@
-package envision.gameEngine.world.worldTiles;
+package envisionEngine.gameEngine.world.worldTiles;
 
-import envision.debug.DebugSettings;
-import envision.gameEngine.GameObject;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.world.gameWorld.IGameWorld;
-import envision.gameEngine.world.worldUtil.WorldCamera;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.debug.DebugSettings;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
-import game.QoT;
+import qot.QoT;
 
 public abstract class WorldTile extends GameObject implements Comparable<WorldTile> {
 	

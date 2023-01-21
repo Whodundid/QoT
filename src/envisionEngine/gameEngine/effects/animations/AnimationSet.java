@@ -1,6 +1,6 @@
-package envision.gameEngine.effects.animations;
+package envisionEngine.gameEngine.effects.animations;
 
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.EArrayList;
 
 /**

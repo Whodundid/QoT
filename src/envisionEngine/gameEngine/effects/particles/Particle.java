@@ -1,6 +1,6 @@
-package envision.gameEngine.effects.particles;
+package envisionEngine.gameEngine.effects.particles;
 
-import envision.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.WindowObject;
 
 public abstract class Particle<E> extends WindowObject<E> {
 	

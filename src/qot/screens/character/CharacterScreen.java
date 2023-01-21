@@ -1,18 +1,18 @@
-package game.screens.character;
+package qot.screens.character;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameObjects.entity.EntityLevel;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.inputHandlers.Keyboard;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.EntityLevel;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import game.QoT;
-import game.assets.textures.window.WindowTextures;
+import qot.QoT;
+import qot.assets.textures.window.WindowTextures;
 
 public class CharacterScreen extends GameScreen {
 	

@@ -1,7 +1,7 @@
-package envision.gameEngine.world.worldEditor.editorParts.sidePanel;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel;
 
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.editorParts.util.EditorObject;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.util.EditorObject;
 import eutil.colors.EColors;
 
 public abstract class PaletteSidePanel extends SidePanel {

@@ -1,14 +1,14 @@
-package envision.windowLib.windowObjects.advancedObjects.textArea;
+package envisionEngine.windowLib.windowObjects.advancedObjects.textArea;
 
 import java.util.Iterator;
 
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.GLSettings;
-import envision.windowLib.windowObjects.advancedObjects.WindowScrollList;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.GLSettings;
+import envisionEngine.windowLib.windowObjects.advancedObjects.WindowScrollList;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.ENumUtil;

@@ -1,11 +1,12 @@
-package envision.terminal.terminalCommand.commands.game;
+package envisionEngine.terminal.terminalCommand.commands.game;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
-import game.QoT;
+import qot.QoT;
 
 public class FPS_CMD extends TerminalCommand {
 	
@@ -15,12 +16,12 @@ public class FPS_CMD extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "fps"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("frames"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("frames"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays the current game framerate."; }
 	@Override public String getUsage() { return "ex: fps"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.writeln("FPS: " + QoT.getTargetFPS(), EColors.lime);
 		}

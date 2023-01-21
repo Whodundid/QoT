@@ -1,4 +1,4 @@
-package envision.gameEngine.gameSystems.scripts.scriptBuilder.conditions;
+package envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.conditions;
 
 public enum ConditionType {
 	//general conditions

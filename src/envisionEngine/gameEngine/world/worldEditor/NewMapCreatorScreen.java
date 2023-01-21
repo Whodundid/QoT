@@ -1,16 +1,16 @@
-package envision.gameEngine.world.worldEditor;
+package envisionEngine.gameEngine.world.worldEditor;
 
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.gameEngine.world.worldTiles.categories.NatureTiles;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.actionObjects.WindowCheckBox;
-import envision.windowLib.windowObjects.actionObjects.WindowTextField;
-import envision.windowLib.windowObjects.basicObjects.WindowLabel;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldTiles.categories.NatureTiles;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowCheckBox;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowTextField;
+import envisionEngine.windowLib.windowObjects.basicObjects.WindowLabel;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.QoT;
+import qot.QoT;
 
 public class NewMapCreatorScreen extends GameScreen {
 

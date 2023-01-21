@@ -1,13 +1,15 @@
-package envision.testing.renderingAPI.math;
+package envisionEngine.testing.renderingAPI.math;
 
-import envision.testing.renderingAPI.camera.Camera;
+import envisionEngine.testing.renderingAPI.camera.Camera;
+import eutil.math.EDimensionf;
+import eutil.math.Vec2f;
 import eutil.math.Vec3f;
 
 public class MatrixBuilder {
 	
 	private static final float FOV = 70;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 1000;
+	private static final float NEAR_PLANE = 0.01f;
+	private static final float FAR_PLANE = 100.0f;
 	
 	public static Matrix4f transform(Vec3f translation, Vec3f rotation, Vec3f scale) {
 		Matrix4f matrix = new Matrix4f();
@@ -31,7 +33,7 @@ public class MatrixBuilder {
 		return viewMatrix;
 	}
 	
-	public static Matrix4f projection(float fov, float aspect, float near, float far) {
+	public static Matrix4f perspectiveProjection(float fov, float aspect, float near, float far) {
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))) * aspect);
 		float x_scale = y_scale / aspect;
 		float range = far - near;
@@ -45,6 +47,24 @@ public class MatrixBuilder {
 		proj.m33 = 0;
 		
 		return proj;
+	}
+	
+	public static Matrix4f orthoProjection(Vec2f focus, EDimensionf windowDims, float near, float far) {
+		float left = focus.x - windowDims.midX;
+		float right = focus.x + windowDims.midX;
+		float top = focus.y - windowDims.midY;
+		float bottom = focus.y + windowDims.midY;
+		
+		Matrix4f ortho = new Matrix4f();
+		ortho.m00 = 2.0f / (right - left);
+		ortho.m11 = 2.0f / (top - bottom);
+		ortho.m22 = 1.0f / (near - far);
+		ortho.m30 = (left + right) / (left - right);
+		ortho.m31 = (top + bottom) / (bottom - top);
+		ortho.m32 = near / (near - far);
+		ortho.m33 = 1.0f;
+		
+		return ortho;
 	}
 	
 }

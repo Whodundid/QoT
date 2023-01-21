@@ -1,6 +1,6 @@
-package envision.renderEngine.shaders.types.basic;
+package envisionEngine.renderEngine.shaders.types.basic;
 
-import envision.renderEngine.shaders.util.FragmentShader;
+import envisionEngine.renderEngine.shaders.util.FragmentShader;
 
 /** Basic fragment shader. */
 public class BasicFragment extends FragmentShader {

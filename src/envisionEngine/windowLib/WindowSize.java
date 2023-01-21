@@ -1,6 +1,6 @@
-package envision.windowLib;
+package envisionEngine.windowLib;
 
-import game.QoT;
+import qot.QoT;
 
 public class WindowSize {
 	
@@ -18,6 +18,11 @@ public class WindowSize {
 	public WindowSize(QoT qoT) {
 		width = QoT.getWidth();
 		height = QoT.getHeight();
+	}
+	
+	public WindowSize(int widthIn, int heightIn) {
+		width = widthIn;
+		height = heightIn;
 	}
 	
 	//-----------

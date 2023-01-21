@@ -1,7 +1,7 @@
-package envision.events.types.song;
+package envisionEngine.events.types.song;
 
-import envision.events.EventType;
-import envision.events.GameEvent;
+import envisionEngine.events.EventType;
+import envisionEngine.events.GameEvent;
 
 public abstract class SongEvent extends GameEvent {
 	

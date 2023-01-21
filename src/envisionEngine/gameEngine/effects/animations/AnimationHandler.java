@@ -1,9 +1,9 @@
-package envision.gameEngine.effects.animations;
+package envisionEngine.gameEngine.effects.animations;
 
 import java.util.HashMap;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.EArrayList;
 
 /**

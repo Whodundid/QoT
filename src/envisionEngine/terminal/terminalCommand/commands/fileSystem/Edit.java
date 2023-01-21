@@ -1,11 +1,11 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 
-import envision.terminal.window.ETerminal;
-import envision.windowLib.bundledWindows.TextEditorWindow;
-import envision.windowLib.windowUtil.ObjectPosition;
-import eutil.datatypes.EArrayList;
+import envisionEngine.terminal.window.ETerminal;
+import envisionEngine.windowLib.bundledWindows.TextEditorWindow;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class Edit extends FileCommand {
@@ -19,7 +19,7 @@ public class Edit extends FileCommand {
 	@Override public String getUsage() { return "ex: edit 'file'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		else if (args.size() >= 1) {
 			try {

@@ -1,9 +1,9 @@
-package envision.renderEngine.fontRenderer;
+package envisionEngine.renderEngine.fontRenderer;
 
 import java.io.File;
 import java.util.Scanner;
 
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 import eutil.datatypes.Box2;
 import eutil.datatypes.EArrayList;
 

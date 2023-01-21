@@ -1,19 +1,19 @@
-package envision.gameEngine.world.worldEditor.editorParts.topHeader;
+package envisionEngine.gameEngine.world.worldEditor.editorParts.topHeader;
 
-import envision.gameEngine.gameSystems.screens.ScreenLevel;
-import envision.gameEngine.world.worldEditor.EditorWorld;
-import envision.gameEngine.world.worldEditor.MapEditorScreen;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanel;
-import envision.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
-import envision.gameEngine.world.worldEditor.windows.EditorSettingsWindow;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.gameSystems.screens.ScreenLevel;
+import envisionEngine.gameEngine.world.worldEditor.EditorWorld;
+import envisionEngine.gameEngine.world.worldEditor.MapEditorScreen;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanel;
+import envisionEngine.gameEngine.world.worldEditor.editorParts.sidePanel.SidePanelType;
+import envisionEngine.gameEngine.world.worldEditor.windows.EditorSettingsWindow;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import game.QoT;
-import game.assets.textures.window.WindowTextures;
+import qot.QoT;
+import qot.assets.textures.window.WindowTextures;
 
 public class EditorScreenTopHeader extends WindowObject {
 	

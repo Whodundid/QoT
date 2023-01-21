@@ -1,16 +1,17 @@
-package game.assets.textures;
+package qot.assets.textures;
 
-import envision.renderEngine.textureSystem.TextureSystem;
-import game.assets.TextureLoader;
-import game.assets.textures.cursor.CursorTextures;
-import game.assets.textures.doodads.DoodadTextures;
-import game.assets.textures.editor.EditorTextures;
-import game.assets.textures.entity.EntityTextures;
-import game.assets.textures.general.GeneralTextures;
-import game.assets.textures.item.ItemTextures;
-import game.assets.textures.taskbar.TaskBarTextures;
-import game.assets.textures.window.WindowTextures;
-import game.assets.textures.world.WorldTextures;
+import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import qot.assets.TextureLoader;
+import qot.assets.textures.cursor.CursorTextures;
+import qot.assets.textures.doodads.DoodadTextures;
+import qot.assets.textures.editor.EditorTextures;
+import qot.assets.textures.entity.EntityTextures;
+import qot.assets.textures.general.GeneralTextures;
+import qot.assets.textures.item.ItemTextures;
+import qot.assets.textures.taskbar.TaskBarTextures;
+import qot.assets.textures.window.WindowTextures;
+import qot.assets.textures.windowbuilder.WindowBuilderTextures;
+import qot.assets.textures.world.WorldTextures;
 
 /** Contains mappings to all of QoT's textures. */
 public class GameTextures extends TextureLoader {
@@ -35,6 +36,7 @@ public class GameTextures extends TextureLoader {
 	public static ItemTextures itemTextures = ItemTextures.instance();
 	public static TaskBarTextures taskBarTextures = TaskBarTextures.instance();
 	public static WindowTextures windowTextures = WindowTextures.instance();
+	public static WindowBuilderTextures windowBuilderTextures = WindowBuilderTextures.instance();
 	public static WorldTextures worldTextures = WorldTextures.instance();
 	
 	//-------------------------------
@@ -53,6 +55,7 @@ public class GameTextures extends TextureLoader {
 		itemTextures.onRegister(sys);
 		taskBarTextures.onRegister(sys);
 		windowTextures.onRegister(sys);
+		windowBuilderTextures.onRegister(sys);
 		worldTextures.onRegister(sys);
 	}
 	

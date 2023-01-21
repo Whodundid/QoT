@@ -1,11 +1,11 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 import java.util.Scanner;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class Head extends FileCommand {
@@ -19,7 +19,7 @@ public class Head extends FileCommand {
 	@Override public String getUsage() { return "ex: head 'file path' 10"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); termIn.info(getUsage()); }
 		else if (args.size() == 1) { tryFind(termIn, args, 10); }
 		else if (args.size() == 2) {
@@ -38,7 +38,7 @@ public class Head extends FileCommand {
 		else { termIn.error("Too many arguments!"); termIn.info(getUsage()); }
 	}
 	
-	private void tryFind(ETerminal termIn, EArrayList<String> args, int len) {
+	private void tryFind(ETerminal termIn, EList<String> args, int len) {
 		String all = EStringUtil.combineAll(args, " ");
 		File f = new File(all);
 		

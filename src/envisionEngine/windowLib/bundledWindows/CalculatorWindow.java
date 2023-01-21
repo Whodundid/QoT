@@ -1,12 +1,12 @@
-package envision.windowLib.bundledWindows;
+package envisionEngine.windowLib.bundledWindows;
 
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowObjects.actionObjects.WindowTextField;
-import envision.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowTextField;
+import envisionEngine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.assets.textures.taskbar.TaskBarTextures;
+import qot.assets.textures.taskbar.TaskBarTextures;
 
 public class CalculatorWindow<E> extends WindowParent<E> {
 

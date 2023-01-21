@@ -1,12 +1,12 @@
-package envision.gameEngine.world.gameWorld;
+package envisionEngine.gameEngine.world.gameWorld;
 
-import envision.gameEngine.GameObject;
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameObjects.entity.EntitySpawn;
-import envision.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
-import envision.gameEngine.world.worldTiles.WorldTile;
-import envision.gameEngine.world.worldUtil.Region;
-import envision.gameEngine.world.worldUtil.WorldCamera;
+import envisionEngine.gameEngine.GameObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameObjects.entity.EntitySpawn;
+import envisionEngine.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.world.worldUtil.Region;
+import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
 import eutil.datatypes.EArrayList;
 
 public interface IGameWorld {

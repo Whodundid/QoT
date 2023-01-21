@@ -1,17 +1,17 @@
-package envision.windowLib.windowObjects.utilityObjects;
+package envisionEngine.windowLib.windowObjects.utilityObjects;
 
-import envision.inputHandlers.Mouse;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.ActionWindowParent;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowUtil.windowEvents.ObjectEvent;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
+import envisionEngine.inputHandlers.Mouse;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.ActionWindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowUtil.windowEvents.ObjectEvent;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventMouse;
 import eutil.colors.EColors;
 import eutil.datatypes.BoxList;
-import game.QoT;
+import qot.QoT;
 
 //Author: Hunter Bragg
 

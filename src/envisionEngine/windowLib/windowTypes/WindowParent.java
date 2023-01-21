@@ -1,22 +1,22 @@
-package envision.windowLib.windowTypes;
+package envisionEngine.windowLib.windowTypes;
 
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.EDimension;
 import eutil.misc.ScreenLocation;
-import game.QoT;
+import qot.QoT;
 
 import java.util.Stack;
 
-import envision.debug.DebugFunctions;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.renderEngine.textureSystem.GameTexture;
-import envision.topOverlay.desktopOverlay.TaskBar;
-import envision.windowLib.windowObjects.advancedObjects.header.WindowHeader;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowParent;
-import envision.windowLib.windowUtil.ObjectPosition;
+import envisionEngine.debug.DebugFunctions;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envisionEngine.topOverlay.desktopOverlay.TaskBar;
+import envisionEngine.windowLib.windowObjects.advancedObjects.header.WindowHeader;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
+import envisionEngine.windowLib.windowUtil.ObjectPosition;
 
 //Author: Hunter Bragg
 

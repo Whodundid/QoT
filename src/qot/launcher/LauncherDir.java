@@ -1,4 +1,4 @@
-package game.launcher;
+package qot.launcher;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 
 import eutil.file.LineReader;
 import eutil.strings.EStringUtil;
-import game.QoT;
+import qot.QoT;
 
 /**
  * Manages the QoT Launcher dir that is installed to
@@ -61,6 +61,7 @@ public class LauncherDir {
 	static boolean setupLauncherDir() {
 		try {
 			String dir = QoTInstaller.getDefaultInstallDir();
+			System.out.println("LauncherDir: installing launcher dir to: '" + dir + "'");
 			launcherDir = new File(dir + "\\QoT Launcher");
 			
 			//check if launcher directory already exists
@@ -77,6 +78,7 @@ public class LauncherDir {
 		//check if launcher settings file exists and create default if not
 		try {
 			launcherSettingsFile = new File(launcherDir, "settings.txt");
+			System.out.println("LauncherDir: Checking for settings file: '" + launcherSettingsFile + "'");
 			
 			//create default launcher settings file
 			if (!launcherSettingsFile.exists()) {

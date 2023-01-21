@@ -1,15 +1,15 @@
-package game.screens.gameplay.combat;
+package qot.screens.gameplay.combat;
 
-import envision.gameEngine.effects.sounds.SoundEngine;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.renderEngine.fontRenderer.FontRenderer;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.effects.sounds.SoundEngine;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.renderEngine.fontRenderer.FontRenderer;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
-import game.QoT;
-import game.assets.sounds.Songs;
-import game.screens.main.MainMenuScreen;
+import qot.QoT;
+import qot.assets.sounds.Songs;
+import qot.screens.main.MainMenuScreen;
 
 public class DeathScreen extends GameScreen {
 	

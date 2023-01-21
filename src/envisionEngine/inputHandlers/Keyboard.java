@@ -1,4 +1,4 @@
-package envision.inputHandlers;
+package envisionEngine.inputHandlers;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -10,8 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-import envision.testing.OpenGLTestingEnvironment;
-import game.QoT;
+import envisionEngine.testing.OpenGLTestingEnvironment;
+import main.Main;
+import qot.QoT;
 
 /**
  * A static helper class for all keyboard related operations and functions.
@@ -101,7 +102,7 @@ public class Keyboard extends GLFWKeyCallback {
 	 * @param keyCode
 	 */
 	private void distribute(int action, char typedChar, int keyCode) {
-		if (QoT.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
+		if (Main.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
 			OpenGLTestingEnvironment.onKeyboardEvent(action, typedChar, keyCode);
 		}
 		else {

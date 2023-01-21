@@ -1,11 +1,11 @@
-package envision.terminal.terminalCommand.commands.fileSystem;
+package envisionEngine.terminal.terminalCommand.commands.fileSystem;
 
 import java.io.File;
 import java.io.IOException;
 
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class Cd extends FileCommand {
@@ -19,7 +19,7 @@ public class Cd extends FileCommand {
 	@Override public String getUsage() { return "ex: cd 'dir'"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		if (args.size() >= 1) {
 			try {
@@ -54,7 +54,7 @@ public class Cd extends FileCommand {
 		}
 	}
 	
-	private void setDir(ETerminal termIn, EArrayList<String> args, boolean runVisually, File dir) {
+	private void setDir(ETerminal termIn, EList<String> args, boolean runVisually, File dir) {
 		if (dir == null) { dir = termIn.getDir(); }
 		
 		if (dir.exists()) {

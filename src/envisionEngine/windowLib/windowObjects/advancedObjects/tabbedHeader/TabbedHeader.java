@@ -1,6 +1,6 @@
-package envision.windowLib.windowObjects.advancedObjects.tabbedHeader;
+package envisionEngine.windowLib.windowObjects.advancedObjects.tabbedHeader;
 
-import envision.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.WindowObject;
 
 /**
  * A header bar that can be added to any object's side and is used to

@@ -1,4 +1,4 @@
-package envision.windowLib.windowTypes.dynamicWindow;
+package envisionEngine.windowLib.windowTypes.dynamicWindow;
 
 public enum DynamicObjectTypes {
 	BUTTON,

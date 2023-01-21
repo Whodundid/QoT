@@ -1,9 +1,9 @@
-package game.assets.sounds;
+package qot.assets.sounds;
 
-import envision.gameEngine.effects.sounds.Audio;
-import envision.gameEngine.effects.sounds.SoundEngine;
+import envisionEngine.gameEngine.effects.sounds.Audio;
+import envisionEngine.gameEngine.effects.sounds.SoundEngine;
 import eutil.datatypes.EArrayList;
-import game.settings.QoTSettings;
+import qot.settings.QoTSettings;
 
 /** This contains every song in the game! */
 public class Songs {

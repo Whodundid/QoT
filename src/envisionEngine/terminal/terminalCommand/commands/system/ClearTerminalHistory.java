@@ -1,9 +1,10 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.datatypes.EArrayList;
-import game.QoT;
+import eutil.datatypes.util.EList;
+import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -15,12 +16,12 @@ public class ClearTerminalHistory extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "clearhistory"; }
-	@Override public EArrayList<String> getAliases() { return new EArrayList<>("clearh", "clrh"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>("clearh", "clrh"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Clears the typed terminal command history"; }
 	@Override public String getUsage() { return "ex: clrh"; }
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		QoT.getTerminalHandler().clearHistory();
 		termIn.writeln("Terminal history cleared..", 0xff55ff55);
 	}

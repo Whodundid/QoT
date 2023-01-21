@@ -1,9 +1,9 @@
-package envision.terminal.terminalCommand.commands.system;
+package envisionEngine.terminal.terminalCommand.commands.system;
 
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.ETerminal;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.ETerminal;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.sys.TracingPrintStream;
 
 //Author: Hunter Bragg
@@ -20,12 +20,12 @@ public class JavaTrace extends TerminalCommand {
 	@Override public String getUsage() { return "ex: javatrace"; }
 	
 	@Override
-	public void handleTabComplete(ETerminal termIn, EArrayList<String> args) {
+	public void handleTabComplete(ETerminal termIn, EList<String> args) {
 		tabCompleteTF(termIn, args);
 	}
 	
 	@Override
-	public void runCommand(ETerminal termIn, EArrayList<String> args, boolean runVisually) {
+	public void runCommand(ETerminal termIn, EList<String> args, boolean runVisually) {
 		if (TracingPrintStream.isTracing()) {
 			TracingPrintStream.disableTrace();
 			termIn.writeln("Disabled tracing", EColors.lgray);

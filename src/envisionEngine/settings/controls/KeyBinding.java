@@ -1,8 +1,8 @@
-package envision.settings.controls;
+package envisionEngine.settings.controls;
 
-import envision.inputHandlers.Keyboard;
-import envision.settings.controls.util.KeyCategory;
-import envision.settings.controls.util.KeyCombo;
+import envisionEngine.inputHandlers.Keyboard;
+import envisionEngine.settings.controls.util.KeyCategory;
+import envisionEngine.settings.controls.util.KeyCombo;
 
 public class KeyBinding {
 	

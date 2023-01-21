@@ -1,7 +1,7 @@
-package envision.windowLib.windowObjects.basicObjects;
+package envisionEngine.windowLib.windowObjects.basicObjects;
 
-import envision.windowLib.windowTypes.WindowObject;
-import envision.windowLib.windowTypes.interfaces.IWindowObject;
+import envisionEngine.windowLib.windowTypes.WindowObject;
+import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg
 

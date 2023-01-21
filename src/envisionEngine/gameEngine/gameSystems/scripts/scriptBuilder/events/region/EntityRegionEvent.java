@@ -1,8 +1,8 @@
-package envision.gameEngine.gameSystems.scripts.scriptBuilder.events.region;
+package envisionEngine.gameEngine.gameSystems.scripts.scriptBuilder.events.region;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.world.gameWorld.GameWorld;
-import envision.gameEngine.world.worldUtil.Region;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.world.gameWorld.GameWorld;
+import envisionEngine.gameEngine.world.worldUtil.Region;
 
 public abstract class EntityRegionEvent extends RegionEvent {
 	

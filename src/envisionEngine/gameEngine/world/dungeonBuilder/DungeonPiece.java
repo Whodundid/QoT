@@ -1,7 +1,7 @@
-package envision.gameEngine.world.dungeonBuilder;
+package envisionEngine.gameEngine.world.dungeonBuilder;
 
-import envision.gameEngine.gameObjects.entity.EntitySpawn;
-import envision.gameEngine.world.worldTiles.WorldTile;
+import envisionEngine.gameEngine.gameObjects.entity.EntitySpawn;
+import envisionEngine.gameEngine.world.worldTiles.WorldTile;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;

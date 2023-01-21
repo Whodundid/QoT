@@ -1,6 +1,6 @@
-package game.assets.textures.doodads.ground_clutter;
+package qot.assets.textures.doodads.ground_clutter;
 
-import envision.renderEngine.textureSystem.GameTexture;
+import envisionEngine.renderEngine.textureSystem.GameTexture;
 
 public class StoneClutter extends GameTexture {
 	

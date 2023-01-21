@@ -1,35 +1,36 @@
-package envision.terminal.window;
+package envisionEngine.terminal.window;
 
 import java.io.File;
 
-import envision.terminal.TerminalHandler;
-import envision.terminal.terminalCommand.TerminalCommand;
-import envision.terminal.window.termParts.TerminalTextField;
-import envision.terminal.window.termParts.TerminalTextLine;
-import envision.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
-import envision.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
-import envision.windowLib.windowTypes.WindowParent;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
-import envision.windowLib.windowUtil.EObjectGroup;
-import envision.windowLib.windowUtil.windowEvents.ObjectEvent;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
-import envision.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.windowLib.windowUtil.windowEvents.events.EventFocus;
-import envision.windowLib.windowUtil.windowEvents.events.EventMouse;
-import envision_lang._launch.EnvisionLangConsoleReceiver;
+import envisionEngine.terminal.TerminalHandler;
+import envisionEngine.terminal.terminalCommand.TerminalCommand;
+import envisionEngine.terminal.window.termParts.TerminalTextField;
+import envisionEngine.terminal.window.termParts.TerminalTextLine;
+import envisionEngine.windowLib.windowObjects.advancedObjects.textArea.TextAreaLine;
+import envisionEngine.windowLib.windowObjects.advancedObjects.textArea.WindowTextArea;
+import envisionEngine.windowLib.windowTypes.WindowParent;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.windowLib.windowUtil.EObjectGroup;
+import envisionEngine.windowLib.windowUtil.windowEvents.ObjectEvent;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.FocusType;
+import envisionEngine.windowLib.windowUtil.windowEvents.eventUtil.MouseType;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventFocus;
+import envisionEngine.windowLib.windowUtil.windowEvents.events.EventMouse;
+import envision_lang._launch.EnvisionConsoleOutputReceiver;
 import eutil.colors.EColors;
 import eutil.datatypes.Box3;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
-import game.QoT;
-import game.assets.textures.taskbar.TaskBarTextures;
+import qot.QoT;
+import qot.assets.textures.taskbar.TaskBarTextures;
 
 //Author: Hunter Bragg
 
-public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsoleReceiver {
+public class ETerminal<E> extends WindowParent<E> implements EnvisionConsoleOutputReceiver {
 	
 	TerminalTextField inputField;
 	WindowTextArea history;
@@ -43,8 +44,8 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	public int tabPos = -1;
 	public int startArgPos = -1;
 	public String tabBase = "";
-	public EArrayList<String> tabData = new EArrayList();
-	EArrayList<TextAreaLine> tabDisplayLines = new EArrayList();
+	public EList<String> tabData = EList.newList();
+	public EList<TextAreaLine> tabDisplayLines = EList.newList();
 	boolean isCommand = false;
 	protected boolean isChat = false;
 	
@@ -55,7 +56,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	
 	public boolean requireConfirmation = false;
 	public String confirmationMessage = "";
-	public EArrayList<String> previousArgs = null;
+	public EList<String> previousArgs = null;
 	public boolean prevRunVisually = false;
 	public TerminalCommand confirmationCommand = null;
 	
@@ -87,8 +88,8 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	@Override
 	public void initWindow() {
 		setObjectName("Terminal");
-		int w = ENumUtil.clamp(1150, 200, QoT.getWindowSize().getWidth());
-		int h = ENumUtil.clamp(600, 200, QoT.getWindowSize().getHeight());
+		int w = ENumUtil.clamp(750, 200, QoT.getWindowSize().getWidth());
+		int h = ENumUtil.clamp(400, 200, QoT.getWindowSize().getHeight());
 		setSize(w, h);
 		setMinDims(480, 285);
 		setResizeable(true);
@@ -169,9 +170,10 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		if (header != null) header.setTitleColor(-EColors.rainbow() + 0xff222222);
-		
-		getHeader().setTitle("Terminal");
+		if (header != null) {
+			header.setTitleColor(-EColors.rainbow() + 0xff222222);
+			header.setTitle("Terminal");
+		}
 		
 		drawRect(startX, startY, endX, endY, 0xff000000);
 	}
@@ -528,8 +530,8 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 		catch (Exception e) { e.printStackTrace(); }
 	}
 	
-	public ETerminal buildTabCompletions(String... dataIn) { return buildTabCompletions(new EArrayList().addA(dataIn)); }
-	public ETerminal buildTabCompletions(EArrayList<String> dataIn) {
+	public ETerminal buildTabCompletions(String... dataIn) { return buildTabCompletions(EList.of(dataIn)); }
+	public ETerminal buildTabCompletions(EList<String> dataIn) {
 		clearTabCompletions();
 		
 		if (dataIn.isNotEmpty()) {
@@ -724,7 +726,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	public WindowTextArea getTextArea() { return history; }
 	public TerminalTextField getInputField() { return inputField; }
 	public File getDir() { return dir; }
-	public EArrayList<TextAreaLine> getInfoLines() { return tabDisplayLines; }
+	public EList<TextAreaLine> getInfoLines() { return tabDisplayLines; }
 	public int getTabPos() { return tabPos; }
 	public boolean getTab1() { return tab1; }
 	public String getTextTabBegin() { return textTabBegin; }
@@ -735,7 +737,7 @@ public class ETerminal<E> extends WindowParent<E> implements EnvisionLangConsole
 	//ETerminal Setters
 	//-----------------
 	
-	public ETerminal setRequiresCommandConfirmation(TerminalCommand commandIn, String message, EArrayList<String> args, boolean runVisually) {
+	public ETerminal setRequiresCommandConfirmation(TerminalCommand commandIn, String message, EList<String> args, boolean runVisually) {
 		if (commandIn != null) {
 			requireConfirmation = true;
 			confirmationCommand = commandIn;

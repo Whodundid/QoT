@@ -1,11 +1,11 @@
-package game.screens.character;
+package qot.screens.character;
 
-import envision.gameEngine.gameObjects.entity.Entity;
-import envision.gameEngine.gameSystems.screens.GameScreen;
-import envision.windowLib.windowObjects.actionObjects.WindowButton;
-import envision.windowLib.windowTypes.interfaces.IActionObject;
+import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
+import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
+import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import game.QoT;
+import qot.QoT;
 
 public class LevelUpScreen extends GameScreen {
 	
