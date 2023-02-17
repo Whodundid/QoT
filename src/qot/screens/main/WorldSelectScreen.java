@@ -2,13 +2,13 @@ package qot.screens.main;
 
 import java.io.File;
 
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.gameEngine.world.gameWorld.GameWorld;
-import envisionEngine.renderEngine.fontRenderer.FontRenderer;
-import envisionEngine.windowLib.bundledWindows.fileExplorer.FileExplorerWindow;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
-import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
-import envisionEngine.windowLib.windowUtil.ObjectPosition;
+import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.screens.GameScreen;
+import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
+import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.windows.windowUtil.ObjectPosition;
+import envision.game.world.GameWorld;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import qot.QoT;

@@ -1,8 +1,8 @@
 package qot.assets.textures.cursor;
 
-import envisionEngine.inputHandlers.CursorHelper;
-import envisionEngine.renderEngine.textureSystem.GameTexture;
-import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import envision.engine.inputHandlers.CursorHelper;
+import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 
 public class CursorTextures extends TextureLoader {

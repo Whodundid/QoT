@@ -1,0 +1,24 @@
+package envision.debug.terminal.commands.categories.windows;
+
+import envision.debug.terminal.commands.TerminalCommand;
+import envision.debug.terminal.window.ETerminalWindow;
+import eutil.colors.EColors;
+import eutil.datatypes.util.EList;
+
+public class CMD_TermID extends TerminalCommand {
+	
+	public CMD_TermID() {
+		setCategory("Windows");
+		expectedArgLength = 0;
+	}
+
+	@Override public String getName() { return "id"; }
+	@Override public String getHelpInfo(boolean runVisually) { return "returns the window id for this terminal"; }
+	@Override public String getUsage() { return "ex: id"; }
+	
+	@Override
+	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+		termIn.writeln(termIn.getObjectName() + EColors.lgray + " Window ID: " + termIn.getObjectID(), EColors.yellow);
+	}
+	
+}

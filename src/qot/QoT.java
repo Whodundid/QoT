@@ -12,35 +12,35 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
-import envisionEngine.EnvisionGame;
-import envisionEngine.events.EventHandler;
-import envisionEngine.events.GameEvent;
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.gameEngine.gameSystems.screens.ScreenLevel;
-import envisionEngine.gameEngine.world.gameWorld.GameWorld;
-import envisionEngine.inputHandlers.Keyboard;
-import envisionEngine.inputHandlers.Mouse;
-import envisionEngine.inputHandlers.WindowResizeListener;
-import envisionEngine.renderEngine.GLObject;
-import envisionEngine.renderEngine.fontRenderer.FontRenderer;
-import envisionEngine.renderEngine.shaders.Shaders;
-import envisionEngine.renderEngine.textureSystem.TextureSystem;
-import envisionEngine.terminal.TerminalHandler;
-import envisionEngine.testing.OpenGLTestingEnvironment;
-import envisionEngine.topOverlay.GameTopScreen;
-import envisionEngine.windowLib.WindowSize;
-import envisionEngine.windowLib.windowTypes.TopWindowParent;
-import envisionEngine.windowLib.windowTypes.interfaces.IWindowParent;
-import envisionEngine.windowLib.windowUtil.ObjectPosition;
+import envision.EnvisionGame;
+import envision.debug.terminal.TerminalCommandHandler;
+import envision.debug.testStuff.testing.OpenGLTestingEnvironment;
+import envision.engine.GameTopScreen;
+import envision.engine.inputHandlers.Keyboard;
+import envision.engine.inputHandlers.Mouse;
+import envision.engine.inputHandlers.WindowResizeListener;
+import envision.engine.rendering.GLObject;
+import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.rendering.shaders.Shaders;
+import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.screens.GameScreen;
+import envision.engine.screens.ScreenLevel;
+import envision.engine.windows.WindowSize;
+import envision.engine.windows.windowTypes.TopWindowParent;
+import envision.engine.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.windows.windowUtil.ObjectPosition;
+import envision.game.events.EventHandler;
+import envision.game.events.GameEvent;
+import envision.game.world.GameWorld;
 import eutil.colors.EColors;
 import eutil.file.FileOpener;
-import eutil.math.EDimension;
-import main.Main;
+import eutil.math.dimensions.EDimension;
 import qot.assets.textures.GameTextures;
 import qot.assets.textures.general.GeneralTextures;
 import qot.entities.player.QoT_Player;
 import qot.launcher.LauncherLogger;
 import qot.launcher.LauncherSettings;
+import qot.screens.main.MainMenuScreen;
 import qot.settings.QoTSettings;
 
 public class QoT implements EnvisionGame {
@@ -69,7 +69,7 @@ public class QoT implements EnvisionGame {
 	private static TextureSystem textureSystem;
 	
 	private static GameTopScreen<?> topRenderer;
-	private static TerminalHandler terminalHandler;
+	private static TerminalCommandHandler terminalHandler;
 	private static EventHandler eventHandler;
 	
 	private static int width;
@@ -209,7 +209,7 @@ public class QoT implements EnvisionGame {
 		//envision.setErrorCallback(new Envision_QoT_ErrorCallback());
 		
 		topRenderer = GameTopScreen.getInstance();
-		terminalHandler = TerminalHandler.getInstance();
+		terminalHandler = TerminalCommandHandler.getInstance();
 		eventHandler = EventHandler.getInstance();
 		//tickManager = new TickManager();
 		
@@ -238,7 +238,7 @@ public class QoT implements EnvisionGame {
 		setTargetUPS(QoTSettings.targetUPS.get());
 		
 		//load main menu
-		//displayScreen(new MainMenuScreen());
+		displayScreen(new MainMenuScreen());
 		
 		//prepare timers
 		startTime = System.currentTimeMillis();
@@ -636,7 +636,7 @@ public class QoT implements EnvisionGame {
 	/** Returns the actively rendered screen. */
 	public static GameScreen<?> getCurrentScreen() { return currentScreen; }
 	/** Returns this game's central terminal command handler. */
-	public static TerminalHandler getTerminalHandler() { return terminalHandler; }
+	public static TerminalCommandHandler getTerminalHandler() { return terminalHandler; }
 	
 	public static EventHandler getEventHandler() { return eventHandler; }
 	/** Posts a game event to the engine's event handler. */

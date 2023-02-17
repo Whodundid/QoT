@@ -1,6 +1,6 @@
 package qot.assets.textures.world.floors.stone;
 
-import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.GameTexture;
 
 public class ClayPad extends GameTexture {
 	

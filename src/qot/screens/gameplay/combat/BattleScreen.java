@@ -1,9 +1,9 @@
 package qot.screens.gameplay.combat;
 
-import envisionEngine.gameEngine.gameObjects.entity.Entity;
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
-import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.engine.screens.GameScreen;
+import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.game.objects.entities.Entity;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
 

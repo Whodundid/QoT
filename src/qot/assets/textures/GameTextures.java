@@ -1,6 +1,6 @@
 package qot.assets.textures;
 
-import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 import qot.assets.textures.cursor.CursorTextures;
 import qot.assets.textures.doodads.DoodadTextures;

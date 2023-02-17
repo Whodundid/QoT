@@ -1,14 +1,14 @@
 package qot.screens.character;
 
-import envisionEngine.gameEngine.gameObjects.entity.Entity;
-import envisionEngine.gameEngine.gameObjects.entity.EntityLevel;
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.inputHandlers.Keyboard;
-import envisionEngine.renderEngine.fontRenderer.FontRenderer;
-import envisionEngine.renderEngine.textureSystem.GameTexture;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
-import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
-import envisionEngine.windowLib.windowTypes.interfaces.IWindowObject;
+import envision.engine.inputHandlers.Keyboard;
+import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.screens.GameScreen;
+import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.game.objects.entities.Entity;
+import envision.game.objects.entities.EntityLevel;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import qot.QoT;
@@ -30,7 +30,7 @@ public class CharacterScreen extends GameScreen {
 	private WindowButton back;
 	private WindowButton upHealth, upStrength, upMana;
 	
-	//private CharacterInventory inventory;
+	private InventoryRenderer inventory;
 	
 	//--------------
 	// Constructors
@@ -82,6 +82,15 @@ public class CharacterScreen extends GameScreen {
 		
 		WindowButton.setTextures(WindowTextures.plus, WindowTextures.plus_sel, upHealth, upStrength, upMana);
 		
+		inventory = new InventoryRenderer(theEntity);
+		
+		double inventoryWidth = inventory.width;
+		double inventoryHeight = inventory.height;
+		double inventoryX = midX - inventoryWidth / 2;
+		double inventoryY = endY - (midY / 4) - inventoryHeight / 2;
+		inventory.setPosition(inventoryX, inventoryY);
+		
+		addObject(inventory);
 		addObject(upHealth, upStrength, upMana);
 	}
 	

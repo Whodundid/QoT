@@ -1,9 +1,9 @@
 package qot.entities.enemies;
 
-import envisionEngine.gameEngine.gameObjects.entity.Enemy;
-import envisionEngine.gameEngine.gameObjects.entity.Entity;
-import envisionEngine.gameEngine.world.gameWorld.GameWorld;
-import eutil.math.EDimension;
+import envision.game.objects.entities.Enemy;
+import envision.game.objects.entities.Entity;
+import envision.game.world.GameWorld;
+import eutil.math.dimensions.EDimension;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.QoT;
@@ -58,7 +58,7 @@ public class Goblin extends Enemy {
 		double distToPlayer = ((GameWorld) world).getDistance(this, QoT.thePlayer);
 		
 		//check if distance to player is less than 200 pixels
-		if (distToPlayer <= 200) {
+		if (QoT.thePlayer != null && distToPlayer <= 200) {
 			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, QoT.thePlayer);
 			//headText = (int) distToPlayer + " : " + dirToPlayer;
 			

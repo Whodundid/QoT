@@ -1,6 +1,6 @@
 package qot.assets.textures.world.walls;
 
-import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 import qot.assets.textures.world.walls.dungeon.DungeonWallTextures;
 import qot.assets.textures.world.walls.stone.StoneWallTextures;

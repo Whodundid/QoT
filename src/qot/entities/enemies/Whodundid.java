@@ -1,9 +1,9 @@
 package qot.entities.enemies;
 
-import envisionEngine.gameEngine.gameObjects.entity.Enemy;
-import envisionEngine.gameEngine.gameObjects.entity.Entity;
-import envisionEngine.gameEngine.world.gameWorld.GameWorld;
-import eutil.math.EDimension;
+import envision.game.objects.entities.Enemy;
+import envision.game.objects.entities.Entity;
+import envision.game.world.GameWorld;
+import eutil.math.dimensions.EDimension;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.QoT;
@@ -85,7 +85,7 @@ public class Whodundid extends Enemy {
 		}
 		
 		double distToPlayer = ((GameWorld) world).getDistance(this, QoT.thePlayer);
-		if (distToPlayer <= 300) {
+		if (QoT.thePlayer != null && distToPlayer <= 300) {
 			headText = "" + health;
 			
 			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, QoT.thePlayer);

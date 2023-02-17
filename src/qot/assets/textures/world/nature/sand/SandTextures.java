@@ -1,7 +1,7 @@
 package qot.assets.textures.world.nature.sand;
 
-import envisionEngine.renderEngine.textureSystem.GameTexture;
-import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 
 public class SandTextures extends TextureLoader {

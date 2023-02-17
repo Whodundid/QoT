@@ -1,6 +1,6 @@
 package qot.assets.textures.world;
 
-import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 import qot.assets.textures.world.farmland.FarmTextures;
 import qot.assets.textures.world.floors.FloorTextures;

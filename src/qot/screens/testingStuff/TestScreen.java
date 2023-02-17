@@ -1,10 +1,10 @@
 package qot.screens.testingStuff;
 
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.inputHandlers.Keyboard;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowTextField;
-import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.engine.inputHandlers.Keyboard;
+import envision.engine.screens.GameScreen;
+import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 
 public class TestScreen extends GameScreen {

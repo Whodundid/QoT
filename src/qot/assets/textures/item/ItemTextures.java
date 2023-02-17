@@ -1,7 +1,7 @@
 package qot.assets.textures.item;
 
-import envisionEngine.renderEngine.textureSystem.GameTexture;
-import envisionEngine.renderEngine.textureSystem.TextureSystem;
+import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 import qot.settings.QoTSettings;
 
@@ -29,7 +29,9 @@ public class ItemTextures extends TextureLoader {
 	
 	dragon_shield = new GameTexture(textureDir, "dragon_shield.png"),
 	iron_sword = new GameTexture(textureDir, "iron_sword.png"),
-	wooden_stick = new GameTexture(textureDir, "wooden_stick.png");
+	wooden_stick = new GameTexture(textureDir, "wooden_stick.png"),
+	lesser_healing = new GameTexture(textureDir, "lesser_healing.png"),
+	lesser_mana = new GameTexture(textureDir, "lesser_mana.png");
 	
 	//-----------
 	// Overrides
@@ -40,6 +42,8 @@ public class ItemTextures extends TextureLoader {
 		reg(sys, iron_sword);
 		reg(sys, wooden_stick);
 		reg(sys, dragon_shield);
+		reg(sys, lesser_healing);
+		reg(sys, lesser_mana);
 	}
 	
 }

@@ -1,10 +1,10 @@
 package qot.entities.neutral;
 
-import envisionEngine.gameEngine.effects.animations.AnimationHandler;
-import envisionEngine.gameEngine.gameObjects.entity.Enemy;
-import envisionEngine.gameEngine.gameObjects.entity.Entity;
-import envisionEngine.gameEngine.world.gameWorld.GameWorld;
-import eutil.math.EDimension;
+import envision.game.objects.effects.animations.AnimationHandler;
+import envision.game.objects.entities.Enemy;
+import envision.game.objects.entities.Entity;
+import envision.game.world.GameWorld;
+import eutil.math.dimensions.EDimension;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.QoT;

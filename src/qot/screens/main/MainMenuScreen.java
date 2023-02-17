@@ -2,16 +2,16 @@ package qot.screens.main;
 
 import java.io.File;
 
-import envisionEngine.debug.DebugSettings;
-import envisionEngine.gameEngine.effects.sounds.SoundEngine;
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.gameEngine.world.gameWorld.GameWorld;
-import envisionEngine.gameEngine.world.worldEditor.MapMenuScreen;
-import envisionEngine.inputHandlers.Keyboard;
-import envisionEngine.renderEngine.fontRenderer.FontRenderer;
-import envisionEngine.renderEngine.textureSystem.GameTexture;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
-import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.debug.DebugSettings;
+import envision.engine.inputHandlers.Keyboard;
+import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.screens.GameScreen;
+import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.game.objects.effects.sounds.SoundEngine;
+import envision.game.world.GameWorld;
+import envision.game.world.worldEditor.MapMenuScreen;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import eutil.random.ERandomUtil;
@@ -46,6 +46,8 @@ public class MainMenuScreen extends GameScreen {
 	public void initScreen() {
 		DebugSettings.drawFlatWalls = false;
 		DebugSettings.drawTileGrid = false;
+		
+		QoT.thePlayer = null;
 		
 		if (QoT.theWorld != null) {
 			QoT.loadWorld(null);
@@ -130,7 +132,7 @@ public class MainMenuScreen extends GameScreen {
 		
 		//draw copyright
 		{
-			var text = FontRenderer.COPYRIGHT + "Placeholder Industries";
+			var text = FontRenderer.COPYRIGHT + "Placeholder Studios";
 			var sc = 0.7;
 			var dx = 3;
 			var dy = height - FontRenderer.FH * sc - 3;

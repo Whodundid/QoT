@@ -1,7 +1,7 @@
 package qot;
 
-import envisionEngine.gameEngine.GameObject;
-import envisionEngine.gameEngine.world.worldEditor.editorUtil.PlayerSpawnPoint;
+import envision.game.objects.GameObject;
+import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import eutil.datatypes.EArrayList;
 import qot.doodads.BirchTree;
 import qot.doodads.Bush0;

@@ -11,9 +11,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.jar.JarFile;
 
-import envisionEngine.terminal.terminalUtil.ESystemInfo;
+import envision.debug.terminal.terminalUtil.ESystemInfo;
 import eutil.sys.OSType;
-import main.Main;
+import qot.Main;
 
 public class QoTInstaller {
 

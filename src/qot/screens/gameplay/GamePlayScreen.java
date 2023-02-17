@@ -1,15 +1,15 @@
 package qot.screens.gameplay;
 
-import envisionEngine.gameEngine.effects.sounds.SoundEngine;
-import envisionEngine.gameEngine.gameObjects.entity.Entity;
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.gameEngine.world.gameWorld.GameWorld;
-import envisionEngine.inputHandlers.Keyboard;
-import envisionEngine.topOverlay.GameTopScreen;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
-import envisionEngine.windowLib.windowObjects.basicObjects.WindowRect;
-import envisionEngine.windowLib.windowObjects.basicObjects.WindowStatusBar;
-import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.engine.GameTopScreen;
+import envision.engine.inputHandlers.Keyboard;
+import envision.engine.screens.GameScreen;
+import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowObjects.basicObjects.WindowRect;
+import envision.engine.windows.windowObjects.basicObjects.WindowStatusBar;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.game.objects.effects.sounds.SoundEngine;
+import envision.game.objects.entities.Entity;
+import envision.game.world.GameWorld;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import qot.QoT;
@@ -98,9 +98,12 @@ public class GamePlayScreen extends GameScreen {
 			//System.out.println(QoT.theWorld.getWorldName());
 		}
 		
-		health.setBarValue(QoT.thePlayer.getHealth());
-		if (QoT.thePlayer != null && QoT.thePlayer.isDead()) {
-			QoT.displayScreen(new DeathScreen());
+		if (QoT.thePlayer != null) {
+			health.setBarValue(QoT.thePlayer.getHealth());
+			
+			if (QoT.thePlayer.isDead()) {
+				QoT.displayScreen(new DeathScreen());
+			}
 		}
 		
 		drawString("x" + world.getCameraZoom(), QoT.getWidth() - 250, 12, EColors.dsteel);

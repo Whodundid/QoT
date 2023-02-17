@@ -1,14 +1,14 @@
 package qot.screens.main;
 
-import envisionEngine.gameEngine.effects.sounds.SoundEngine;
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.inputHandlers.Mouse;
-import envisionEngine.renderEngine.fontRenderer.FontRenderer;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowCheckBox;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowSlider;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowTextField;
-import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
+import envision.engine.inputHandlers.Mouse;
+import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.screens.GameScreen;
+import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowObjects.actionObjects.WindowCheckBox;
+import envision.engine.windows.windowObjects.actionObjects.WindowSlider;
+import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.game.objects.effects.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import qot.QoT;

@@ -1,7 +1,7 @@
 package qot.assets.sounds;
 
-import envisionEngine.gameEngine.effects.sounds.Audio;
-import envisionEngine.gameEngine.effects.sounds.SoundEngine;
+import envision.game.objects.effects.sounds.Audio;
+import envision.game.objects.effects.sounds.SoundEngine;
 import eutil.datatypes.EArrayList;
 import qot.settings.QoTSettings;
 

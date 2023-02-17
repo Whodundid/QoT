@@ -1,16 +1,20 @@
 package qot.entities.player;
 
-import envisionEngine.gameEngine.gameObjects.entity.Entity;
-import envisionEngine.gameEngine.gameObjects.entity.Player;
-import envisionEngine.gameEngine.gameObjects.entity.PlayerStats;
-import envisionEngine.gameEngine.world.gameWorld.IGameWorld;
-import envisionEngine.gameEngine.world.worldUtil.WorldCamera;
+import envision.game.objects.entities.Entity;
+import envision.game.objects.entities.Player;
+import envision.game.objects.entities.PlayerStats;
+import envision.game.world.IGameWorld;
+import envision.game.world.WorldCamera;
+import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.EDimension;
+import eutil.math.dimensions.EDimension;
 import eutil.misc.Rotation;
+import eutil.random.ERandomUtil;
 import qot.QoT;
 import qot.assets.textures.entity.EntityTextures;
 import qot.assets.textures.item.ItemTextures;
+import qot.entities.enemies.Thyrah;
+import qot.items.Items;
 
 public class QoT_Player extends Player {
 	
@@ -28,6 +32,12 @@ public class QoT_Player extends Player {
 		setHealth(10);
 		setBaseMeleeDamage(1);
 		
+		baseInventorySize = 10;
+		inventory.setSize(baseInventorySize);
+		
+		inventory.setItem(0, Items.lesserHealing);
+		inventory.setItem(1, Items.lesserMana);
+		
 		setCollisionBox(midX - 8, endY - 10, midX + 8, endY);
 		//setCollisionBox(midX + 18, endY - 10, midX + 28, endY);
 		tex = EntityTextures.player;
@@ -43,6 +53,7 @@ public class QoT_Player extends Player {
 		super.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
 	}
 	
+	@Override
 	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
 		
@@ -88,7 +99,7 @@ public class QoT_Player extends Player {
 			var percent = (double) cur / (double) timeUntilNextAttack / 2;
 			var pw = (draw.width * percent);
 			
-			//drawRect(draw.startX + pw, draw.startY, draw.endX - pw, draw.endY, EColors.mc_gold.opacity(180));
+			drawRect(draw.startX + pw, draw.startY, draw.endX - pw, draw.endY, EColors.mc_gold.opacity(180));
 		}
 	}
 	
@@ -111,6 +122,9 @@ public class QoT_Player extends Player {
 				e.drainHealth(damage);
 				//addObject(new DamageSplash(e.startX + e.midX, e.startY + e.midY, damage));
 				if (e.isDead()) {
+					if (e instanceof Thyrah) getInventory().addItem(Items.random());
+					else if (ERandomUtil.roll(5, 0, 10)) getInventory().addItem(Items.random());
+					
 					getStats().addKilled(1);
 					QoT.theWorld.getEntitiesInWorld().remove(e);
 					addXP(e.getExperienceRewardedOnKill());

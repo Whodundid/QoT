@@ -1,6 +1,6 @@
 package qot.entities;
 
-import envisionEngine.gameEngine.gameObjects.entity.Entity;
+import envision.game.objects.entities.Entity;
 import eutil.random.ERandomUtil;
 import qot.doodads.BirchTree;
 import qot.doodads.Bush0;

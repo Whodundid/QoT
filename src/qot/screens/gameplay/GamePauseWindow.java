@@ -1,10 +1,10 @@
 package qot.screens.gameplay;
 
-import envisionEngine.gameEngine.gameSystems.screens.GameScreen;
-import envisionEngine.windowLib.windowObjects.actionObjects.WindowButton;
-import envisionEngine.windowLib.windowTypes.WindowParent;
-import envisionEngine.windowLib.windowTypes.interfaces.IActionObject;
-import envisionEngine.windowLib.windowUtil.FutureTaskEventType;
+import envision.engine.screens.GameScreen;
+import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowTypes.WindowParent;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.windows.windowUtil.FutureTaskEventType;
 import eutil.colors.EColors;
 import qot.QoT;
 import qot.screens.main.MainMenuScreen;

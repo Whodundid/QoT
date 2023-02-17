@@ -1,6 +1,6 @@
 package qot.assets.textures.world.nature.sand;
 
-import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.GameTexture;
 
 public class Texture_CoarseSand extends GameTexture {
 	

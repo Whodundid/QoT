@@ -1,6 +1,6 @@
 package qot.assets.textures.world.nature.grass;
 
-import envisionEngine.renderEngine.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.GameTexture;
 
 public class LightGrass extends GameTexture {
 	

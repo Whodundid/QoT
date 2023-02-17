@@ -1,0 +1,19 @@
+package envision.game.world.worldTiles.categories.nature;
+
+import envision.game.world.worldTiles.TileIDs;
+import envision.game.world.worldTiles.WorldTile;
+import qot.assets.textures.world.nature.NatureTextures;
+
+public class Dirt extends WorldTile {
+	
+	public Dirt() {
+		super(TileIDs.DIRT);
+		setTexture(NatureTextures.dirt);
+	}
+	
+	@Override
+	public WorldTile copy() {
+		return copyFields(this, new Dirt());
+	}
+	
+}

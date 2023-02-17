@@ -2,8 +2,8 @@ package qot.settings;
 
 import java.io.File;
 
-import envisionEngine.settings.MainConfigFile;
-import envisionEngine.settings.config.ConfigSetting;
+import envision.engine.settings.MainConfigFile;
+import envision.engine.settings.config.ConfigSetting;
 import eutil.datatypes.EArrayList;
 import qot.QoT;
 
