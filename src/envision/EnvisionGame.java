@@ -6,9 +6,6 @@ import envision.game.events.IEventListener;
 
 public interface EnvisionGame extends IEventListener {
 	
-	default void onEngineLoad() {}
-	default void onEngineUnload() {}
-	
 	default void onRenderTick() {}
 	default void onGameTick() {}
 	
@@ -26,12 +23,12 @@ public interface EnvisionGame extends IEventListener {
 	
 	default void onTerminalLoad(TerminalCommandHandler handler) {}
 	
-	default void onPreGameSetup() {}
-	default void onGameSetup() {}
-	default void onPostGameSetup() {}
+	default void onPreEngineLoad() {}
+	default void onPostEngineLoad() {}
+	default void onPreEngineUnload() {}
+	default void onPostEngineUnload() {}
 	
 	default void onPreGameUnload() {}
-	default void onGameUnload() {}
 	default void onPostGameUnload() {}
 	
 }

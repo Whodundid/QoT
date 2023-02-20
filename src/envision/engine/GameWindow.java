@@ -5,12 +5,13 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
+import envision.Envision;
 import envision.engine.windows.WindowSize;
+import eutil.datatypes.points.Point2i;
 import eutil.math.dimensions.EDimension;
-import eutil.math.vectors.Vec2i;
+import eutil.math.dimensions.EDimensionI;
 
 public class GameWindow {
 	
@@ -42,7 +43,7 @@ public class GameWindow {
 	// Constructors
 	//==============
 	
-	public GameWindow() { this ("Game", 800, 640); }
+	public GameWindow() { this ("Game", 1600, 900); }
 	public GameWindow(int widthIn, int heightIn) { this("Game", widthIn, heightIn); }
 	public GameWindow(String windowTitleIn, int widthIn, int heightIn) {
 		windowTitle = windowTitleIn;
@@ -55,6 +56,7 @@ public class GameWindow {
 	}
 	
 	protected void init() {
+		windowHandle = GLFW.glfwCreateWindow(width, height, Envision.getGameName(), 0, 0);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer w = stack.mallocInt(1);
 			IntBuffer h = stack.mallocInt(1);
@@ -80,21 +82,6 @@ public class GameWindow {
 		windowX = x.get();
 		windowY = y.get();
 		windowDims.set(windowX, windowY, windowX + width, windowY + height);
-		
-		GL11.glViewport(0, 0, width, height);
-		
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		
-		// back to model view for drawing
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		
-		GL11.glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
-		GL11.glTranslatef(-1.0f, -1.0f, 0.0f);
-		GL11.glScalef(2.0f / width, 2.0f / height, 1);
-		
-		GL11.glTranslatef(2.0f, 2.0f, 0.0f);
 	}
 	
 	/**
@@ -108,13 +95,13 @@ public class GameWindow {
 	public int getHeight() { return height; }
 	
 	/** Returns the X and Y coordinates of where this window is located on the screen. */
-	public Vec2i getWindowPosition() {
+	public Point2i getWindowPosition() {
 		IntBuffer x = BufferUtils.createIntBuffer(1);
 		IntBuffer y = BufferUtils.createIntBuffer(1);
 		GLFW.glfwGetWindowPos(windowHandle, x, y);
 		windowX = x.get();
 		windowY = y.get();
-		return new Vec2i(windowX, windowY);
+		return new Point2i(windowX, windowY);
 	}
 	
 	/** Returns the X coordinate of where this window is located on the screen. */
@@ -123,9 +110,9 @@ public class GameWindow {
 	public int getY() { return (int) getWindowPosition().y; }
 	
 	/** Returns the screen dimensions of where this window is located on the screen. */
-	public EDimension getWindowDims() {
-		Vec2i pos = getWindowPosition();
-		return new EDimension(pos.x, pos.y, pos.x + width, pos.y + height);
+	public EDimensionI getWindowDims() {
+		Point2i pos = getWindowPosition();
+		return new EDimensionI(pos.x, pos.y, pos.x + width, pos.y + height);
 	}
 	
 	public long getWindowHandle() { return windowHandle; }

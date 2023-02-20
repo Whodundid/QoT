@@ -51,14 +51,14 @@ public class QoTLauncher extends JFrame {
 		String main = Main.class.getSimpleName() + ".class";
 		mainPath = Main.class.getResource(main).getFile();
 		
-		System.out.println("MAIN PATH: '" + mainPath);
+		//System.out.println("MAIN PATH: '" + mainPath);
 		
 		//if the main path starts with 'file:/' then the game is being run in a strange way
 		//remove 'file:' portion and attempt to continue and assume running in jar
 		if (mainPath.startsWith("file:/")) {
 			// index 4 = '/' in main path
 			mainPath = mainPath.substring(5);
-			System.out.println("NEW MAIN PATH: '" + mainPath);
+			//System.out.println("NEW MAIN PATH: '" + mainPath);
 			inJar = true;
 		}
 		
@@ -264,7 +264,7 @@ public class QoTLauncher extends JFrame {
 			if (!base.endsWith("/") && !file.startsWith("/")) base += "/";
 			String resourcePath = base + file;
 			var resource = QoTLauncher.class.getResource(resourcePath);
-			System.out.println("Reading resource: '" + resourcePath + "'");
+			//System.out.println("Reading resource: '" + resourcePath + "'");
 			LauncherLogger.log(LauncherLogLevel.DEBUG, "Reading resource: '" + resourcePath + "'");
 			return ImageIO.read(resource);
 		}

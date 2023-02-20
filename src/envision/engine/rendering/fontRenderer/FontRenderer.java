@@ -1,17 +1,18 @@
 package envision.engine.rendering.fontRenderer;
 
+import org.lwjgl.opengl.GL11;
+
+import envision.debug.testStuff.testing.OpenGLTestingEnvironment;
+import envision.engine.rendering.GLObject;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import eutil.colors.EColors;
 import eutil.datatypes.boxes.Box2;
 import qot.QoT;
 import qot.settings.QoTSettings;
 
-import org.lwjgl.opengl.GL11;
-
-import envision.engine.rendering.GLObject;
-
 public class FontRenderer {
 	
-	private static final String fontDir = QoTSettings.getResourcesDir().toString() + "\\font\\";
+	
 	
 	public static final double FONT_HEIGHT = 24;
 	public static final double FH = FONT_HEIGHT;
@@ -20,10 +21,12 @@ public class FontRenderer {
 	public static final char COPYRIGHT = '\u00A9';
 	public static final char ERROR_CHAR = '\u0000';
 	
-	public static GameFont defaultFont = GameFont.createFont(fontDir + "font_map.txt", fontDir + "font.png");
-	public static GameFont newFont = GameFont.createFont(fontDir + "control_map.txt", fontDir + "font_test_fix.png");
-	public static GameFont font8 = GameFont.createFont(fontDir + "font_map_8x8.txt", fontDir + "font_8x8.png");
-	public static GameFont courier = GameFont.createFont(fontDir + "courier_map.txt", fontDir + "courier.png");
+	public static GameFont defaultFont = GameFont.createFont("font_map.txt", "font.png");
+	public static GameFont newFont = GameFont.createFont("control_map.txt", "font_test_fix.png");
+	public static GameFont font8 = GameFont.createFont("font_map_8x8.txt", "font_8x8.png");
+	public static GameFont courier = GameFont.createFont("courier_map.txt", "courier.png");
+	
+	public static GameFont smooth = GameFont.createFont("control_map.txt", "font_test_fix.png", GL11.GL_LINEAR, GL11.GL_LINEAR);
 	
 	private GameFont currentFont;
 	
@@ -42,10 +45,11 @@ public class FontRenderer {
 	//--------------
 	
 	private FontRenderer() {
-		QoT.getTextureSystem().registerTexture(defaultFont.getFontTexture());
-		QoT.getTextureSystem().registerTexture(newFont.getFontTexture());
-		QoT.getTextureSystem().registerTexture(font8.getFontTexture());
-		QoT.getTextureSystem().registerTexture(courier.getFontTexture());
+		TextureSystem.getInstance().registerTexture(defaultFont.getFontTexture());
+		TextureSystem.getInstance().registerTexture(newFont.getFontTexture());
+		TextureSystem.getInstance().registerTexture(font8.getFontTexture());
+		TextureSystem.getInstance().registerTexture(courier.getFontTexture());
+		TextureSystem.getInstance().registerTexture(smooth.getFontTexture());
 		currentFont = newFont;
 	}
 	
@@ -53,25 +57,25 @@ public class FontRenderer {
 	// Methods
 	//---------
 	
-	public static double drawString(Object in, Number xIn, Number yIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
-	public static double drawString(String in, Number xIn, Number yIn) { return drawString(in, xIn, yIn, 0xffffffff); }
+	public static double drawString(Object in, double xIn, double yIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
+	public static double drawString(String in, double xIn, double yIn) { return drawString(in, xIn, yIn, 0xffffffff); }
 	
-	public static double drawString(Object in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public static double drawString(Object in, Number xIn, Number yIn, int colorIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn); }
+	public static double drawString(Object in, double xIn, double yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
+	public static double drawString(Object in, double xIn, double yIn, int colorIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn); }
 	
-	public static double drawString(String in, Number xIn, Number yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public static double drawString(String in, Number xIn, Number yIn, int colorIn) {
+	public static double drawString(String in, double xIn, double yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
+	public static double drawString(String in, double xIn, double yIn, int colorIn) {
 		return instance.createString(in, xIn, yIn, colorIn, 1.0, 1.0);
 	}
 	
-	public static double drawString(Object in, Number xIn, Number yIn, double scaleX, double scaleY) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff, scaleX, scaleY); }
-	public static double drawString(String in, Number xIn, Number yIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, 0xffffffff, scaleX, scaleY); }
+	public static double drawString(Object in, double xIn, double yIn, double scaleX, double scaleY) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff, scaleX, scaleY); }
+	public static double drawString(String in, double xIn, double yIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, 0xffffffff, scaleX, scaleY); }
 	
-	public static double drawString(Object in, Number xIn, Number yIn, EColors colorIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
-	public static double drawString(Object in, Number xIn, Number yIn, int colorIn, double scaleX, double scaleY) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn, scaleX, scaleY); }
+	public static double drawString(Object in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
+	public static double drawString(Object in, double xIn, double yIn, int colorIn, double scaleX, double scaleY) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn, scaleX, scaleY); }
 	
-	public static double drawString(String in, Number xIn, Number yIn, EColors colorIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
-	public static double drawString(String in, Number xIn, Number yIn, int colorIn, double scaleX, double scaleY) {
+	public static double drawString(String in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
+	public static double drawString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY) {
 		return instance.createString(in, xIn, yIn, colorIn, scaleX, scaleY);
 	}
 	
@@ -102,10 +106,10 @@ public class FontRenderer {
 	// Internal Methods
 	//------------------
 	
-	private double createString(String in, Number xIn, Number yIn, int colorIn, double scaleX, double scaleY) {
+	private double createString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY) {
 		if (in == null) return 0;
 		
-		double sX = xIn.doubleValue();
+		double sX = xIn;
 		for (int i = 0; i < in.length(); i++) {
 			char c = in.charAt(i);
 			Box2<Integer, Integer> loc = currentFont.getCharImage(c);
@@ -115,20 +119,27 @@ public class FontRenderer {
 			int xPos = loc.getA() * w;
 			int yPos = loc.getB() * h;
 			
-			drawChar(sX, yIn.doubleValue(), xPos, yPos, colorIn, scaleX, scaleY);
+			drawChar(sX, yIn, xPos, yPos, colorIn, scaleX, scaleY);
+			//drawCharBetter(sX, yIn, xPos, yPos, colorIn, scaleX, scaleY);
 			sX += (w * currentFont.getScaleSpace() / QoT.getGameScale()) * scaleX;
 		}
 		return sX;
 	}
 	
 	private void drawChar(double posX, double posY, int tX, int tY, int color, double scaleX, double scaleY) {
-		GL11.glPushMatrix();
 		double w = currentFont.getWidth();
 		double h = currentFont.getHeight();
 		double sw = currentFont.getScaleW() * scaleX;
 		double sh = currentFont.getScaleH() * scaleY;
 		GLObject.drawTexture(currentFont.getFontTexture(), posX, posY, w * sw, h * sh, tX, tY, w, h, color);
-		GL11.glPopMatrix();
+	}
+	
+	private void drawCharBetter(double posX, double posY, int tX, int tY, int color, double scaleX, double scaleY) {
+		double w = currentFont.getWidth();
+		double h = currentFont.getHeight();
+		double sw = currentFont.getScaleW() * scaleX;
+		double sh = currentFont.getScaleH() * scaleY;
+		OpenGLTestingEnvironment.drawTexture(currentFont.getFontTexture(), posX, posY, w * sw, h * sh, tX, tY, w, h, color, false);
 	}
 	
 	public String trimToWidth(String in, int width) { return trimToWidth(in, width, true); }

@@ -1,21 +1,18 @@
 package envision.engine.inputHandlers;
 
-import qot.Main;
-import qot.QoT;
-
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
-import envision.debug.testStuff.testing.OpenGLTestingEnvironment;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2i;
+import qot.QoT;
 
 public class Mouse extends GLFWMouseButtonCallback {
 	
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	private GLFWCursorPosCallback cursorCallback;
 	private GLFWScrollCallback scrollCallback;
@@ -26,20 +23,28 @@ public class Mouse extends GLFWMouseButtonCallback {
 	private static int mX = 0, mY = 0;
 	private static Mouse instance;
 	
-	//--------------------
-	// Singleton Instance
-	//--------------------
+	private IMouseInputReceiver receiver;
 	
-	public static Mouse getInstance() {
-		return instance = (instance != null) ? instance : new Mouse();
+	//==================
+	// Static Singleton
+	//==================
+	
+	public static Mouse create() { return create((IMouseInputReceiver) null); }
+	public static Mouse create(IMouseInputReceiver receiverIn) {
+		return instance = new Mouse(receiverIn);
 	}
 	
-	//--------------
-	// Constructors
-	//--------------
+	public static Mouse getInstance() {
+		return instance = (instance != null) ? instance : new Mouse(null);
+	}
 	
-	private Mouse() {
+	//==============
+	// Constructors
+	//==============
+	
+	private Mouse(IMouseInputReceiver receiverIn) {
 		super();
+		receiver = receiverIn;
 		
 		cursorCallback = new GLFWCursorPosCallback() {
 			@Override
@@ -58,9 +63,9 @@ public class Mouse extends GLFWMouseButtonCallback {
 		};
 	}
 	
-	//--------------------------------------
-	// Overrides : GLFWMouseButtonCallbackI 
-	//--------------------------------------
+	//======================================
+	// Overrides : GLFWMouseButtonCallbackI
+	//======================================
 	
 	@Override
 	public void invoke(long window, int button, int action, int mods) {
@@ -69,22 +74,24 @@ public class Mouse extends GLFWMouseButtonCallback {
 		lastAction = action;
 	}
 	
-	//-----------
-	// Functions
-	//-----------
+	//=========
+	// Methods
+	//=========
 	
 	private void distribute(int action, int mXIn, int mYIn, int button, int change) {
-		if (Main.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
-			OpenGLTestingEnvironment.onMouseEvent(action, mXIn, mYIn, button, change);
-		}
-		else {
-			QoT.mouseEvent(action, mXIn, mYIn, button, change);
+		if (receiver != null) {
+			receiver.onMouseInput(action, mXIn, mYIn, button, change);
 		}
 	}
 	
-	//------------------
-	// Static Functions
-	//------------------
+	public Mouse setReceiver(IMouseInputReceiver receiverIn) {
+		receiver = receiverIn;
+		return this;
+	}
+	
+	//================
+	// Static Methods
+	//================
 	
 	public static boolean isButtonDown(int button) {
 		return GLFW.glfwGetMouseButton(QoT.getWindowHandle(), button) == 1;
@@ -95,18 +102,18 @@ public class Mouse extends GLFWMouseButtonCallback {
 	public static boolean isLeftDown() { return isButtonDown(0); }
 	public static boolean isRightDown() { return isButtonDown(1); }
 	
-	//----------------
+	//================
 	// Static Getters
-	//----------------
+	//================
 	
 	public static int getMx() { return (int) mX; }
 	public static int getMy() { return (int) mY; }
 	public static int getButton() { return lastButton; }
-	public static Box2<Integer, Integer> getPos() { return new Box2(mX, mY); }
+	public static Point2i getPos() { return new Point2i(mX, mY); }
 	
-	//------------------
+	//==================
 	// Callback Getters
-	//------------------
+	//==================
 	
 	public GLFWCursorPosCallback getCursorPosCallBack() { return cursorCallback; }
 	public GLFWScrollCallback getScrollCallBack() { return scrollCallback; }

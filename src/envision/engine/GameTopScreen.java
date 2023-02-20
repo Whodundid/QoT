@@ -1,5 +1,6 @@
 package envision.engine;
 
+import envision.Envision;
 import envision.debug.desktopOverlay.DesktopRCM;
 import envision.debug.desktopOverlay.OverlayShortcut;
 import envision.debug.desktopOverlay.TaskBar;
@@ -7,7 +8,6 @@ import envision.debug.terminal.window.ETerminalWindow;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.GLObject;
-import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.bundledWindows.CalculatorWindow;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
@@ -17,7 +17,6 @@ import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.dimensions.EDimension;
-import qot.QoT;
 import qot.assets.textures.taskbar.TaskBarTextures;
 import qot.assets.textures.window.WindowTextures;
 import qot.settings.QoTSettings;
@@ -35,15 +34,15 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 	}
 	
 	private GameTopScreen() {
-		res = QoT.getWindowSize();
+		res = Envision.getWindowDims();
 		initChildren();
 	}
 	
 	@Override
 	public void initChildren() {
-		OverlayShortcut explorer = new OverlayShortcut(200, QoT.getHeight() - 200);
-		OverlayShortcut calculator = new OverlayShortcut(400, QoT.getHeight() - 200);
-		OverlayShortcut terminal = new OverlayShortcut(600, QoT.getHeight() - 200);
+		OverlayShortcut explorer = new OverlayShortcut(200, Envision.getHeight() - 200);
+		OverlayShortcut calculator = new OverlayShortcut(400, Envision.getHeight() - 200);
+		OverlayShortcut terminal = new OverlayShortcut(600, Envision.getHeight() - 200);
 		
 		explorer.setWindowTarget(FileExplorerWindow.class);
 		calculator.setWindowTarget(CalculatorWindow.class);
@@ -65,11 +64,6 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 	public void onRenderTick() {
 		updateBeforeNextDraw(Mouse.getMx(), Mouse.getMy());
 		//if (getChildren().isEmpty()) hasFocus = false;
-		
-		//prime renderer
-		GLSettings.pushMatrix();
-		GLSettings.enableBlend();
-		GLSettings.clearDepth();
 		
 		if (hasFocus) {
 			drawRect(EColors.dsteel.opacity(140));
@@ -107,7 +101,7 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 			drawObject(mX, mY);
 			
 			//draw debug stuff
-			if (QoT.isDebugMode()) drawDebugInfo();
+			if (Envision.isDebugMode()) drawDebugInfo();
 			
 			//now draw all child objects on top of parent
 			for (var o : getChildren()) {
@@ -121,10 +115,6 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 				}
 				
 				if (!draw) continue;
-				
-				GLSettings.fullBright();
-				GLSettings.clearDepth();
-				GLSettings.disableScissor();
 				
 				//notify object on first draw
 				if (!o.hasFirstDraw()) o.onFirstDraw_i();
@@ -154,12 +144,10 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 		
 		//draw game fps
 		if (QoTSettings.drawFPS.get()) {
-			String s = "FPS: " + QoT.getFPS();
+			String s = "FPS: " + Envision.getFPS();
 			int s_width = FontRenderer.getStringWidth(s);
-			drawString(s, QoT.getWidth() - 10 - s_width, 10);
+			drawString(s, Envision.getWidth() - 10 - s_width, 10);
 		}
-		
-		GLSettings.popMatrix();
 	}
 	
 	@Override
@@ -169,8 +157,8 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 			//check if desktop rcm should open
 			DesktopRCM.checkOpen(action, button);
 		}
-		else if (QoT.currentScreen != null) {
-			QoT.currentScreen.handleMouseInput(action, mXIn, mYIn, button, change);
+		else if (Envision.currentScreen != null) {
+			Envision.currentScreen.handleMouseInput(action, mXIn, mYIn, button, change);
 		}
 	}
 	
@@ -178,7 +166,7 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 	public void handleKeyboardInput(int action, char typedChar, int keyCode) {
 		//debug terminal
 		if (action == 1 && Keyboard.isAltDown() && keyCode == Keyboard.KEY_TILDE) {
-			if (QoT.currentScreen != null) {
+			if (Envision.currentScreen != null) {
 				if (!isTerminalOpen()) {
 					displayWindow(new ETerminalWindow());
 					setFocused(true);
@@ -203,8 +191,8 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 		else if (hasFocus) {
 			super.handleKeyboardInput(action, typedChar, keyCode);
 		}
-		else if (QoT.currentScreen != null) {
-			QoT.currentScreen.handleKeyboardInput(action, typedChar, keyCode);
+		else if (Envision.currentScreen != null) {
+			Envision.currentScreen.handleKeyboardInput(action, typedChar, keyCode);
 		}
 	}
 	

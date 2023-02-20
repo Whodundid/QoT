@@ -1,7 +1,6 @@
 package envision.engine.windows.windowObjects.advancedObjects;
 
 import envision.engine.inputHandlers.Keyboard;
-import envision.engine.rendering.GLSettings;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowScrollBar;
 import envision.engine.windows.windowTypes.WindowObject;
@@ -91,9 +90,6 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		//int scale = res.getScaleFactor();
 		try {
 			if (willBeDrawn() && height > (isHScrollDrawn() ? 5 : 2) && width > (isVScrollDrawn() ? 5 : 2)) {
-				GLSettings.pushMatrix();
-				GLSettings.enableBlend();
-				
 				//draw list contents scissored
 				scissor(startX + 1, startY + 1.0, endX - (isVScrollDrawn() ? vScroll.width + 2 : 1), endY - (isHScrollDrawn() ? hScroll.height + 2 : 0));
 				drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor); //draw background
@@ -103,7 +99,6 @@ public class WindowScrollList<E> extends WindowObject<E> {
 					for (var o : drawnListObjects) {
 						if (o.willBeDrawn()) {
 							if (!o.hasFirstDraw()) o.onFirstDraw_i();
-							GLSettings.fullBright();
 							//EDimension d = o.getDimensions();
 							o.drawObject_i(mXIn, mYIn);
 						}
@@ -118,12 +113,9 @@ public class WindowScrollList<E> extends WindowObject<E> {
 				for (var o : getChildren()) {
 					if (o.willBeDrawn() && listContents.notContains(o)) {
 						if (!o.hasFirstDraw()) o.onFirstDraw_i();
-						GLSettings.fullBright();
 	    	        	o.drawObject_i(mXIn, mYIn);
 	    			}
 				}
-				
-				GLSettings.popMatrix();
 			}
 		}
 		catch (Exception e) {

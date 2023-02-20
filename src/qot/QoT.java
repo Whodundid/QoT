@@ -16,6 +16,7 @@ import envision.EnvisionGame;
 import envision.debug.terminal.TerminalCommandHandler;
 import envision.debug.testStuff.testing.OpenGLTestingEnvironment;
 import envision.engine.GameTopScreen;
+import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
@@ -43,7 +44,7 @@ import qot.launcher.LauncherSettings;
 import qot.screens.main.MainMenuScreen;
 import qot.settings.QoTSettings;
 
-public class QoT implements EnvisionGame {
+public class QoT implements EnvisionGame, IEnvisionInputReceiver {
 	
 	public static final String version = "Oct 8, 2022";
 	
@@ -62,9 +63,9 @@ public class QoT implements EnvisionGame {
 	/** The Envision Scripting Language instance. */
 	//public static final EnvisionLang envision = new EnvisionLang().addBuildPackage(new Envision_QoT_Package());
 	
-	private static Keyboard keyboard;
-	private static Mouse mouse;
-	private static WindowResizeListener resizeListener;
+	private Keyboard keyboard;
+	private Mouse mouse;
+	private WindowResizeListener resizeListener;
 	private static FontRenderer fontRenderer;
 	private static TextureSystem textureSystem;
 	
@@ -117,12 +118,17 @@ public class QoT implements EnvisionGame {
 	
 	public static void startGame(LauncherSettings settings) {
 		try {
-			LauncherLogger.log("---------------------------\n");
-			LauncherLogger.log("Running game with settings: " + settings);
 			QoTSettings.init(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
-			setupGLFW();
-			if (Main.RUN_OPEN_GL_TESTING_ENVIRONMENT) OpenGLTestingEnvironment.runTestingEnvironment(handle);
-			else getGame().runGameLoop();
+			getGame().setup();
+			
+			if (Main.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
+				OpenGLTestingEnvironment.runTestingEnvironment(settings, handle);
+			}
+			else {
+				LauncherLogger.log("---------------------------\n");
+				LauncherLogger.log("Running game with settings: " + settings);
+				getGame().runGameLoop();
+			}
 		}
 		catch (Exception e) {
 			LauncherLogger.logError(e);
@@ -145,13 +151,19 @@ public class QoT implements EnvisionGame {
 	// Constructors
 	//--------------
 	
-	private QoT() {}
+	private QoT() {
+		instance = this;
+	}
 	
 	//-------------------
 	// Pre-Setup Methods
 	//-------------------
 	
-	private static void setupGLFW() {
+	private void setup() {
+		setupGLFW();
+	}
+	
+	private void setupGLFW() {
 		width = 1600;
 		height = 900;
 		
@@ -177,9 +189,9 @@ public class QoT implements EnvisionGame {
 		}
 		
 		//initialize other things
-		keyboard = Keyboard.getInstance();
-		mouse = Mouse.getInstance();
-		resizeListener = WindowResizeListener.getInstance();
+		keyboard = Keyboard.create(this);
+		mouse = Mouse.create(this);
+		resizeListener = WindowResizeListener.create(this);
 		
 		GLFW.glfwSetKeyCallback(handle, keyboard);
 		GLFW.glfwSetMouseButtonCallback(handle, mouse);
@@ -205,7 +217,7 @@ public class QoT implements EnvisionGame {
 	}
 	
 	@Override
-	public void onGameSetup() {
+	public void onPostEngineLoad() {
 		//envision.setErrorCallback(new Envision_QoT_ErrorCallback());
 		
 		topRenderer = GameTopScreen.getInstance();
@@ -231,7 +243,7 @@ public class QoT implements EnvisionGame {
 		setupOpenGL();
 		
 		//initialize QoT back-end before continuing
-		onGameSetup();
+		onPostEngineLoad();
 		
 		//set fps/ups targets
 		setTargetFPS(QoTSettings.targetFPS.get());
@@ -345,20 +357,6 @@ public class QoT implements EnvisionGame {
 	// Public Methods
 	//----------------
 	
-	/**
-	 * Called whenever the game window itself is resized. Do not manually
-	 * call!
-	 */
-	public void onWindowResize() {
-		width = WindowResizeListener.getWidth();
-		height = WindowResizeListener.getHeight();
-		GL11.glViewport(0, 0, width, height);
-		
-		if (theWorld != null && theWorld.isLoaded()) theWorld.getWorldRenderer().onWindowResized();
-		if (currentScreen != null) currentScreen.onScreenResized();
-		topRenderer.onScreenResized();
-	}
-	
 	private long getTargetFPSi() { return FPS; }
 	private long getTargetUPSi() { return UPS; }
 	
@@ -382,7 +380,8 @@ public class QoT implements EnvisionGame {
 	// Engine Input Handlers
 	//-----------------------
 	
-	public static void keyboardEvent(int action, char typedChar, int keyCode) {
+	@Override
+	public void onKeyboardInput(int action, char typedChar, int keyCode) {
 		if (getGLInit()) {
 			topRenderer.handleKeyboardInput(action, typedChar, keyCode);
 			if (theWorld != null) {
@@ -394,12 +393,24 @@ public class QoT implements EnvisionGame {
 		}
 	}
 	
-	public static void mouseEvent(int action, int mXIn, int mYIn, int button, int change) {
+	@Override
+	public void onMouseInput(int action, int mXIn, int mYIn, int button, int change) {
 		if (getGLInit()) {
 			topRenderer.handleMouseInput(action, mXIn, mYIn, button, change);
 			//if (currentScreen != null && !topRenderer.hasFocus()) { currentScreen.handleMouseInput(action, mXIn, mYIn, button, change); }
 			//worldRenderer.handleMouseInput(action, mXIn, mYIn, button, change);
 		}
+	}
+	
+	@Override
+	public void onWindowResized(long window, int newWidth, int newHeight) {
+		width = WindowResizeListener.getWidth();
+		height = WindowResizeListener.getHeight();
+		GL11.glViewport(0, 0, width, height);
+		
+		if (theWorld != null && theWorld.isLoaded()) theWorld.getWorldRenderer().onWindowResized();
+		if (currentScreen != null) currentScreen.onScreenResized();
+		topRenderer.onScreenResized();
 	}
 	
 	//--------------------------------
@@ -618,7 +629,7 @@ public class QoT implements EnvisionGame {
 			GLFW.glfwSetWindowMonitor(handle, 0, xPos[0], yPos[0], width, height, 0);
 		}
 		
-		instance.onWindowResize();
+		//instance.onWindowResize();
 	}
 	
 	public static void setVSync(boolean val) {

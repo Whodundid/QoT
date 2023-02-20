@@ -1,6 +1,5 @@
 package envision.engine.windows.windowObjects.basicObjects;
 
-import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.windows.windowTypes.WindowObject;
@@ -55,9 +54,6 @@ public class WindowImageBox<E> extends WindowObject<E> {
 		if (drawBackground) drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor);
 		if (drawImage) {
 			if (images.isNotEmpty() && images.get(0) != null) {
-				GLSettings.enableAlpha();
-				GLSettings.enableBlend();
-				
 				double posX = startX + 2;
 				double posY = startY + 2;
 				double w = width - 4;
@@ -92,8 +88,10 @@ public class WindowImageBox<E> extends WindowObject<E> {
 					posX = startX + 2 + ((width - 4) - w) / 2;
 				}
 				
+				GameTexture texToDraw;
+				
 				if (singleImage) {
-					bindTexture(images.get(0));
+					texToDraw = images.get(0);
 				}
 				else {
 					if (System.currentTimeMillis() - timeSince >= updateInterval) {
@@ -101,20 +99,15 @@ public class WindowImageBox<E> extends WindowObject<E> {
 						if (curImage == images.size()) curImage = 0;
 						timeSince = System.currentTimeMillis();
 					}
-					bindTexture(images.get(curImage));
+					texToDraw = images.get(curImage);
 				}
-				
-				GLSettings.color(2.0f, 2.0f, 2.0f, 2.0f);
 				
 				zoomX = 10 * ((w / h) * zoom);
 				zoomY = 10 * ((h / w) * zoom);
 				
 				scissor(startX + 1, startY + 1, endX - 0.5, endY - 0.5);
-				drawTexture(posX - (zoomX / 2), posY - (zoomY / 2), w + zoomX, h + zoomY);
+				drawTexture(texToDraw, posX - (zoomX / 2), posY - (zoomY / 2), w + zoomX, h + zoomY);
 				endScissor();
-				
-				GLSettings.disableAlpha();
-				GLSettings.disableBlend();
 			}
 			else {
 				drawStringC(nullText, midX, midY - (FontRenderer.FONT_HEIGHT / 2), nullTextColor);

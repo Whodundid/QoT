@@ -1,7 +1,7 @@
 package envision.engine.rendering;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL14.glBlendFuncSeparate;
+import static org.lwjgl.opengl.GL14.*;
 
 //final to prevent extension
 public final class GLSettings {
@@ -18,10 +18,10 @@ public final class GLSettings {
 	//-------------------------
 	
 	public static void enableBlend() { enable(GL_BLEND); }
-	public static void enableAlpha() { enable(GL_ALPHA); }
+	public static void enableAlpha() { enable(GL_ALPHA_TEST); }
 	
 	public static void disableBlend() { disable(GL_BLEND); }
-	public static void disableAlpha() { disable(GL_ALPHA); }
+	public static void disableAlpha() { disable(GL_ALPHA_TEST); }
 	
 	public static void pushMatrix() { glPushMatrix(); }
 	public static void popMatrix() { glPopMatrix(); }

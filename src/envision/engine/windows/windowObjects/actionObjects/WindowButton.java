@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import org.lwjgl.glfw.GLFW;
 
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.windows.windowTypes.ActionObject;
@@ -49,6 +48,7 @@ public class WindowButton<E> extends ActionObject<E> {
 	protected boolean acceptRightClicks = false;
 	protected GameTexture btnTexture = null;
 	protected GameTexture btnSelTexture = null;
+	private GameTexture curTexture;
 	protected String displayString;
 	
 	//--------------
@@ -94,7 +94,7 @@ public class WindowButton<E> extends ActionObject<E> {
 		}
 		
 		//reset the color buffer to prepare for texture drawing
-		GLSettings.fullBright();
+//		GLSettings.fullBright();
 		
 		//only draw textures if specified
 		if (drawTextures) {
@@ -108,20 +108,15 @@ public class WindowButton<E> extends ActionObject<E> {
 			else if (mouseHover) bindSel();
 			else bindBase();
 			
-			//prime the renderer
-			GLSettings.enableBlend();
-			GLSettings.blendSeparate();
-			GLSettings.blendFunc();
-			
 			//draw the textures
 			if (usingBaseTextures) {
-				if (stretchTextures) drawTexture(startX, startY, width, height);
+				if (stretchTextures) drawTexture(curTexture, startX, startY, width, height);
 				else drawBaseTexture(mouseHover);
 			}
 			else if (btnTexture != null) {
 				
 				//if (stretchTextures) {
-					drawTexture(startX, startY, width, height);
+					drawTexture(curTexture, startX, startY, width, height);
 				//}
 				/*
 				else {
@@ -233,8 +228,8 @@ public class WindowButton<E> extends ActionObject<E> {
 	//---------------------------------
 	
 	//texture binding methods
-	private void bindBase() { if (btnTexture != null) bindTexture(btnTexture); }
-	private void bindSel() { if (btnSelTexture != null ) bindTexture(btnSelTexture); }
+	private void bindBase() { curTexture = btnTexture; }
+	private void bindSel() { curTexture = btnSelTexture; }
 	
 	//draw method
 	private void drawBaseTexture(boolean mouseHover) {

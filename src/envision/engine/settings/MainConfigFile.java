@@ -3,11 +3,11 @@ package envision.engine.settings;
 import java.io.File;
 
 import envision.engine.settings.config.ConfigSetting;
-import envision.engine.settings.config.QotConfigFile;
-import eutil.datatypes.EArrayList;
+import envision.engine.settings.config.EnvisionConfigFile;
+import eutil.datatypes.util.EList;
 import qot.settings.QoTSettings;
 
-public class MainConfigFile extends QotConfigFile {
+public class MainConfigFile extends EnvisionConfigFile {
 
 	public MainConfigFile(File path) {
 		super(path, "MainConfig", "Quest of Thyrah Config");
@@ -17,7 +17,7 @@ public class MainConfigFile extends QotConfigFile {
 	public boolean tryLoad() {
 		boolean good = true;
 		
-		EArrayList<ConfigSetting> settings = QoTSettings.getSettings();
+		EList<ConfigSetting> settings = QoTSettings.getSettings();
 		
 		if (!exists()) trySave(settings);
 		

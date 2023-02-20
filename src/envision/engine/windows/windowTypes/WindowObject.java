@@ -1,5 +1,6 @@
 package envision.engine.windows.windowTypes;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.EGui;
@@ -9,7 +10,6 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyTyp
 import envision.engine.windows.windowUtil.windowEvents.events.EventKeyboard;
 import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -28,7 +28,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	/** Initializes this WindowObject with the specified parent. */
 	public void init(IWindowObject<?> objIn) {
 		properties.parent = objIn;
-		res = QoT.getWindowSize();
+		res = Envision.getWindowDims();
 	}
 	
 	/** Initializes this WindowObject with the specified parent and starting coordinates. */
@@ -38,7 +38,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 		startY = yIn.doubleValue();
 		startXPos = startX;
 		startYPos = startY;
-		res = QoT.getWindowSize();
+		res = Envision.getWindowDims();
 	}
 	
 	/** Initializes this WindowObject with the specified parent and dimensions. */
@@ -49,7 +49,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 		startWidth = widthIn.doubleValue();
 		startHeight = heightIn.doubleValue();
 		setDimensions(xIn.doubleValue(), yIn.doubleValue(), widthIn.doubleValue(), heightIn.doubleValue());
-		res = QoT.getWindowSize();
+		res = Envision.getWindowDims();
 	}
 	
 	//-----------

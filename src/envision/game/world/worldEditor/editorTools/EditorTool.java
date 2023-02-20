@@ -103,7 +103,8 @@ public abstract class EditorTool extends GLObject {
 	private void onPressI(int buttonIn) {
 		pressed = true;
 		button = buttonIn;
-		pressPoint.set(Mouse.getPos());
+		var pos = Mouse.getPos();
+		pressPoint.set(pos.x, pos.y);
 		oldPoint.set(pressPoint);
 		if (editor.isMouseInMap()) {
 			updateWorldPoint();

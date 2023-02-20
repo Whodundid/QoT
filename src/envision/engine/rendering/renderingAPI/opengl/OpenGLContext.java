@@ -1,4 +1,4 @@
-package envision.debug.testStuff.testing.renderingAPI.opengl;
+package envision.engine.rendering.renderingAPI.opengl;
 
 import java.util.Objects;
 
@@ -6,15 +6,18 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-import envision.debug.testStuff.testing.renderingAPI.RendererContextType;
-import envision.debug.testStuff.testing.renderingAPI.RenderingContext;
 import envision.engine.inputHandlers.WindowResizeListener;
+import envision.engine.rendering.OpenGLBatchManager;
+import envision.engine.rendering.renderingAPI.RendererContextType;
+import envision.engine.rendering.renderingAPI.RenderingContext;
+import envision.engine.rendering.shaders.ShaderProgram;
 import qot.launcher.LauncherLogger;
 
 public class OpenGLContext extends RenderingContext {
 	
 	private boolean isInit = false;
 	private long windowHandle;
+	private OpenGLBatchManager primaryBatch;
 	
 	public OpenGLContext(long windowHandleIn) {
 		super(RendererContextType.OPENGL);
@@ -26,6 +29,7 @@ public class OpenGLContext extends RenderingContext {
 		GLFW.glfwMakeContextCurrent(windowHandle);
 		GL.createCapabilities();
 		GL_ErrorReporter.setup();
+		primaryBatch = new OpenGLBatchManager();
 		isInit = true;
 	}
 	
@@ -70,6 +74,21 @@ public class OpenGLContext extends RenderingContext {
 		clearErrors();
 		r.run();
 		if (checkErrors()) throw new RuntimeException();
+	}
+
+	@Override
+	public OpenGLBatchManager getPrimaryBatch() {
+		return primaryBatch;
+	}
+	
+	@Override
+	public void drawFrame() {
+		primaryBatch.draw();
+	}
+
+	@Override
+	public void useShader(ShaderProgram programIn) {
+		primaryBatch.setShader(programIn);
 	}
 	
 }

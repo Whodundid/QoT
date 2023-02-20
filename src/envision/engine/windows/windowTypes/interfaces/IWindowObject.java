@@ -2,10 +2,10 @@ package envision.engine.windows.windowTypes.interfaces;
 
 import java.util.function.Consumer;
 
+import envision.Envision;
 import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.GLObject;
-import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowObjects.utilityObjects.FocusLockBorder;
@@ -342,8 +342,6 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		updateBeforeNextDraw(mXIn, mYIn);
 		try {
 			if (!willBeDrawn()) return;
-			GLSettings.pushMatrix();
-			GLSettings.enableBlend();
 			
 			//draw this object first
 			drawObject(mXIn, mYIn);
@@ -352,7 +350,6 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 			for (var o : getChildren()) {
 				//only draw if the object is actually visible
 				if (!o.willBeDrawn() || o.isHidden()) continue;
-				GLSettings.fullBright();
 				
 				//notify object on first draw
 				if (!o.hasFirstDraw()) o.onFirstDraw_i();
@@ -371,8 +368,6 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 					GLObject.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 				}
 			}
-			
-			GLSettings.popMatrix();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -463,7 +458,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 */
 	public default void updateBeforeNextDraw(int mXIn, int mYIn) {
 		postEvent(new EventRedraw(this));
-		instance().res = QoT.getWindowSize();
+		instance().res = Envision.getWindowDims();
 		
 		//check for mouse entered event
 		if (!properties().mouseEntered && isMouseOver()) {
@@ -1168,7 +1163,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 */
 	public default boolean isMouseInside() {
 		//if the top renderer is being drawn and this object is not a child of the top renderer -- ignore
-		if (QoT.getTopRenderer().hasFocus() && !isChildOf(QoT.getTopRenderer())) return false;
+		if (Envision.getTopScreen().hasFocus() && !isChildOf(QoT.getTopRenderer())) return false;
 		
 		EDimension d = getDimensions();
 		int mX = Mouse.getMx();

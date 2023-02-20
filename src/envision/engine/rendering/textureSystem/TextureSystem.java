@@ -12,12 +12,13 @@ import org.lwjgl.stb.STBImage;
 
 import envision.Envision;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.reflection.EReflectionUtil;
 
 public class TextureSystem {
 
-	private EArrayList<GameTexture> registeredTextures = new EArrayList();
-	private GameTexture current = null;
+	private EList<GameTexture> registeredTextures = new EArrayList();
+//	private GameTexture current = null;
 	
 	private static TextureSystem instance;
 
@@ -56,7 +57,7 @@ public class TextureSystem {
 			throw new IllegalStateException("Texture ID already somehow registered! " + textureIn.getTextureID() + " : " + textureIn.getFilePath());
 		}
 		
-		registerI(textureIn);
+		registerI(textureIn, textureIn.getMinFilter(), textureIn.getMagFilter());
 		registeredTextures.add(textureIn);
 		
 		//now register child textures (if there are any)
@@ -75,7 +76,7 @@ public class TextureSystem {
 		while (it.hasNext()) {
 			GameTexture t = it.next();
 			GL11.glDeleteTextures(t.getTextureID());
-			registerI(t);
+			registerI(t, t.getMinFilter(), t.getMagFilter());
 		}
 	}
 
@@ -102,15 +103,26 @@ public class TextureSystem {
 		}
 	}
 
-	/** Binds the current texture to OpenGL if the texture has been registered. */
+	/** Binds the given texture to OpenGL if the texture has been registered. */
 	public void bind(GameTexture textureIn) {
-		if (textureIn != null) {
-			if (!isTextureRegistered(textureIn)) {
-				Envision.error("Texture bind error: " + textureIn.getFilePath() + " has not been registered!");
-			}
-			GL46.glBindTexture(GL46.GL_TEXTURE_2D, textureIn.getTextureID());
-			current = textureIn;
+		if (textureIn == null) return;
+		if (!isTextureRegistered(textureIn)) {
+			Envision.error("Texture bind error: " + textureIn.getFilePath() + " has not been registered!");
+			return;
 		}
+		
+		GL46.glBindTexture(GL46.GL_TEXTURE_2D, textureIn.getTextureID());
+	}
+	
+	/** Unbinds the given texture from the active texture slot in opengl if the texture has been registered. */
+	public void unbind(GameTexture textureIn) {
+		if (textureIn == null) return;
+		if (!isTextureRegistered(textureIn)) {
+			Envision.error("Texture unbind error: " + textureIn.getFilePath() + " has not been registered!");
+			return;
+		}
+		
+		GL46.glBindTexture(GL46.GL_TEXTURE_2D, 0);
 	}
 
 	/** Returns true if the specified texture has been registered into OpenGL. */
@@ -121,7 +133,7 @@ public class TextureSystem {
 	public void destroyAllTextures() {
 		//unbind first
 		GL46.glBindTexture(GL46.GL_TEXTURE_2D, 0);
-		current = null;
+//		current = null;
 		
 		//destroy each
 		registeredTextures.forEach(t -> t.destroy());
@@ -131,15 +143,15 @@ public class TextureSystem {
 	// Getters
 	//---------
 	
-	public GameTexture getBoundTexture() {
-		return current;
-	}
+//	public GameTexture getBoundTexture() {
+//		return current;
+//	}
 	
 	//------------------
 	// Internal Methods
 	//------------------
 
-	private void registerI(GameTexture textureIn) {
+	private void registerI(GameTexture textureIn, int minFilter, int magFilter) {
 		String filePath = textureIn.getFilePath();
 		
 		// ensure that OpenGL is initialized first.
@@ -158,8 +170,8 @@ public class TextureSystem {
 			
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
 			
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, minFilter);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, magFilter);
 			
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
 			STBImage.stbi_image_free(data);

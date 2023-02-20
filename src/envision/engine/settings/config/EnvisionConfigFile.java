@@ -5,30 +5,29 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
+import eutil.datatypes.util.EList;
 import eutil.file.LineReader;
 
-public class QotConfigFile {
+public class EnvisionConfigFile {
 	
 	protected File configPath;
 	protected String configName = "";
 	protected String configTitleLine = null;
-	protected BoxList<String, EArrayList<String>> configValues;
+	protected BoxList<String, EList<String>> configValues;
 	
 	/** temp list used for saving */
-	private EArrayList<ConfigBlock> config = new EArrayList();
+	private EList<ConfigBlock> config = new EArrayList();
 	
-	public QotConfigFile(File path, String name) { this(path, name, null); }
-	public QotConfigFile(File path, String name, String configTitleIn) {
+	public EnvisionConfigFile(File path, String name) { this(path, name, null); }
+	public EnvisionConfigFile(File path, String name, String configTitleIn) {
 		configPath = path;
 		configName = name;
 		configTitleLine = configTitleIn;
-		configValues = new BoxList<String, EArrayList<String>>();
+		configValues = new BoxList<>();
 	}
 	
 	public boolean saveConfig() { return trySave(); }
@@ -37,8 +36,8 @@ public class QotConfigFile {
 	
 	/** Attempts to parse through a potentially existing config file and match identifier-value pairs.
 	 *  Returns false if the file cannot be found. */
-	public BoxList<String, EArrayList<String>> getConfigContents() {
-		if (configValues == null) { configValues = new BoxList<String, EArrayList<String>>(); }
+	public BoxList<String, EList<String>> getConfigContents() {
+		if (configValues == null) { configValues = new BoxList<String, EList<String>>(); }
 		configValues.clear();
 		parseFile();
 		return configValues;
@@ -52,8 +51,8 @@ public class QotConfigFile {
 	/** Attempts to create an identifier-value pair based on a given keyWord and a specific Class type to parse the value as with a
 	 *  default value to fall back on in case the parsing fails. */
 	protected <Val extends Object> Val getConfigVal(String keyWord, Class<Val> asType, Val defaultVal) throws Exception {
-		BoxList holder = configValues;
-		Box2<String, EArrayList<String>> box = holder.getBoxWithA(keyWord);
+		var holder = configValues;
+		var box = holder.getBoxWithA(keyWord);
 		if (box != null) {
 			String sVal = box.getB().get(0);
 			Val returnVal = null;
@@ -115,77 +114,80 @@ public class QotConfigFile {
 	}
 	
 	private void parseFile() {
-		if (configPath.exists()) {
-			try (var reader = new LineReader(configPath)) {
-				while (reader.hasNextLine()) {
-					String line = reader.nextLine();
-					if (line.startsWith("#")) continue; //comment identifier
-					if (line.length() == 1) break; //ignore one character long lines
-					
-					String identifier = "", restOfLine = "";
-					if (line.length() > 0) {
-						for (int i = 0; i < line.length(); i++) {
-							if (line.charAt(i) == ':') {
-								identifier = line.substring(0, i + 1);
-								restOfLine = line.substring(i + 1, line.length());
-								break;
-							}
-						}
-						if (!identifier.isEmpty()) {
-							if (restOfLine.isEmpty()) configValues.add(identifier, new EArrayList<String>());
-							else {
-								String[] lineContents = restOfLine.split(" ");
-								if (lineContents.length > 1) {
-									EArrayList<String> values = new EArrayList();
-									for (int i = 1; i < lineContents.length; i++) values.add(lineContents[i]);
-									configValues.add(identifier, values);
-								}
-							}
-						} //if
-					}
-				} //while
+		if (!configPath.exists()) return;
+		
+		try (var reader = new LineReader(configPath)) {
+			while (reader.hasNextLine()) {
+				String line = reader.nextLine();
+				if (line.length() <= 1) continue; //ignore empty or one character long lines
+				if (line.startsWith("#")) continue; //comment identifier
 				
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+				String identifier = "", restOfLine = "";
+				
+				// separate 'identifier' and 'restOfLine' pieces
+				for (int i = 0; i < line.length(); i++) {
+					if (line.charAt(i) == ':') {
+						identifier = line.substring(0, i + 1);
+						restOfLine = line.substring(i + 1, line.length());
+						break;
+					}
+				}
+				
+				if (identifier.isEmpty()) continue;
+				
+				if (restOfLine.isEmpty()) configValues.add(identifier, EList.newList());
+				else {
+					String[] lineContents = restOfLine.split(" ");
+					if (lineContents.length > 1) {
+						EList<String> values = new EArrayList<>();
+						for (int i = 1; i < lineContents.length; i++) values.add(lineContents[i]);
+						configValues.add(identifier, values);
+					}
+				}
+			} //while
+			
+		}
+		catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
 	protected boolean doesFileContainIdentifier(String identifierIn) {
-		if (configPath.exists()) {
-			
-			try (var reader = new LineReader(configPath)) {
-				while (reader.hasNextLine()) {
-					String line = reader.nextLine();
-					if (line.startsWith("#")) continue; //comment identifier
-					if (line.length() == 1) break; //ignore one character long lines
-					
-					String identifier = "";
-					if (line.length() > 0) {
-						for (int i = 0; i < line.length(); i++) {
-							if (line.charAt(i) == ':') {
-								identifier = line.substring(0, i + 1);
-								//if (EUtil.findMatch(identifier, identifiers)) total++;
-								if (identifier == identifierIn) return true;
-								break;
-							}
-						}
+		if (!configPath.exists()) return false;
+		
+		try (var reader = new LineReader(configPath)) {
+			while (reader.hasNextLine()) {
+				String line = reader.nextLine();
+				if (line.length() <= 1) break; //ignore empty or one character long lines
+				if (line.startsWith("#")) continue; //comment identifier
+				
+				String identifier = "";
+				for (int i = 0; i < line.length(); i++) {
+					if (line.charAt(i) == ':') {
+						identifier = line.substring(0, i + 1);
+						if (identifier == identifierIn) return true;
+						break;
 					}
 				}
 			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 	
-	protected boolean createConfig(EArrayList<ConfigBlock> configContentsIn) {
+	protected boolean createConfig(EList<ConfigBlock> configContentsIn) {
 		try (var saver = new PrintWriter(configPath, "UTF-8")) {
 			//check for any special config blocks
-			EArrayList<CreateIfExistsConfigBlock> special = new EArrayList(configContentsIn.stream().filter(b -> b instanceof CreateIfExistsConfigBlock).collect(Collectors.toList()));
-			special.stream().filter(b -> !doesFileContainIdentifier(b.getStringToCheckFor())).forEach(b -> configContentsIn.remove(b));
+			EList<CreateIfExistsConfigBlock> special = configContentsIn.stream()
+																	   .filter(b -> b instanceof CreateIfExistsConfigBlock)
+																	   .map(b -> (CreateIfExistsConfigBlock) b)
+																	   .collect(EList.toEList());
+			special.stream()
+			       .filter(b -> !doesFileContainIdentifier(b.getStringToCheckFor()))
+			       .forEach(configContentsIn::remove);
 			
 			/*
 			for (ConfigBlock block : new EArrayList<ConfigBlock>(configContentsIn)) {
@@ -199,9 +201,9 @@ public class QotConfigFile {
 			
 			//move on to creating/overwriting the original file
 			for (ConfigBlock block : configContentsIn) {
-				BoxList<String, List<String>> blockContents = block.getBlockContents();
+				var blockContents = block.getBlockContents();
 				
-				for (Box2<String, List<String>> line : blockContents) {
+				for (var line : blockContents) {
 					saver.print(line.getA() + " ");
 					List<String> values = line.getB();
 					for (int i = 0; i < values.size(); i++) {
@@ -231,24 +233,24 @@ public class QotConfigFile {
 	// Saving methods
 	//----------------
 	
-	public QotConfigFile addLine(ConfigBlock blockIn) {
+	public EnvisionConfigFile addLine(ConfigBlock blockIn) {
 		config.addIfNotNull(blockIn);
 		return this;
 	}
 	
-	public QotConfigFile addLine(String keyWord, ConfigSetting setting) { return addLine(keyWord, setting, false); }
-	public QotConfigFile addLine(String keyWord, ConfigSetting setting, boolean useDefault) {
+	public EnvisionConfigFile addLine(String keyWord, ConfigSetting setting) { return addLine(keyWord, setting, false); }
+	public EnvisionConfigFile addLine(String keyWord, ConfigSetting setting, boolean useDefault) {
 		config.add(new ConfigBlock(keyWord, setting, useDefault));
 		return this;
 	}
 	
-	public QotConfigFile addLine(ConfigSetting setting) { return addLine(setting, false); }
-	public QotConfigFile addLine(ConfigSetting setting, boolean useDefault) {
+	public EnvisionConfigFile addLine(ConfigSetting setting) { return addLine(setting, false); }
+	public EnvisionConfigFile addLine(ConfigSetting setting, boolean useDefault) {
 		config.add(new ConfigBlock(setting.getDescription() + ":", setting, useDefault));
 		return this;
 	}
 	
-	public <T> QotConfigFile addLine(Class<T> type, String keyWord, T... vals) {
+	public <T> EnvisionConfigFile addLine(Class<T> type, String keyWord, T... vals) {
 		ConfigBlock b = null;
 		
 		try {
@@ -271,7 +273,7 @@ public class QotConfigFile {
 		return this;
 	}
 	
-	public QotConfigFile addLine(String comment) {
+	public EnvisionConfigFile addLine(String comment) {
 		config.add(new CommentConfigBlock(comment));
 		return this;
 	}
@@ -290,7 +292,7 @@ public class QotConfigFile {
 	}
 	
 	public boolean trySave() { return trySave(null); }
-	public boolean trySave(EArrayList<ConfigSetting> settings) {
+	public boolean trySave(EList<ConfigSetting> settings) {
 		addLine(configTitleLine != null ? configTitleLine : configName + " Config").nl();
 		if (settings != null) {
 			EUtil.filterForEach(settings, s -> !s.getIgnoreConfigWrite(), s -> addLine(s));
@@ -299,7 +301,7 @@ public class QotConfigFile {
 	}
 	
 	public boolean tryLoad() { return tryLoad(null); }
-	public boolean tryLoad(EArrayList<ConfigSetting> settings) {
+	public boolean tryLoad(EList<ConfigSetting> settings) {
 		try {
 			if (load()) {
 				if (settings != null) {
@@ -315,7 +317,7 @@ public class QotConfigFile {
 	}
 	
 	public boolean tryReset() { return tryReset(null); }
-	public boolean tryReset(EArrayList<ConfigSetting> settings) {
+	public boolean tryReset(EList<ConfigSetting> settings) {
 		addLine(configTitleLine != null ? configTitleLine : configName + " Config").nl();
 		if (settings != null) {
 			settings.forEach(c -> addLine(c, true));

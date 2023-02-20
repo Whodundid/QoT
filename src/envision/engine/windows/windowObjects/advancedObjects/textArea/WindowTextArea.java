@@ -3,7 +3,6 @@ package envision.engine.windows.windowObjects.advancedObjects.textArea;
 import java.util.Iterator;
 
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.GLSettings;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
@@ -68,9 +67,6 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 		//int scale = 1;//res.getScaleFactor();
 		try {
 			if (willBeDrawn() && height > (isHScrollDrawn() ? 5 : 2) && width > (isVScrollDrawn() ? 5 : 2)) {
-				GLSettings.pushMatrix();
-				GLSettings.enableBlend();
-				
 				double sX = startX + 1 + getLineNumberOffset() - 2;
 				
 				//draw list contents scissored
@@ -88,7 +84,6 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 					for (var o : drawnListObjects) {
 						if (o.willBeDrawn()) {
 							if (!o.hasFirstDraw()) o.onFirstDraw_i();
-							GLSettings.fullBright();
 							o.drawObject_i(mXIn, mYIn);
 						}
 					}
@@ -114,12 +109,9 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				for (var o : getChildren()) {
 					if (o.willBeDrawn() && listContents.notContains(o)) {
 						if (!o.hasFirstDraw()) o.onFirstDraw_i();
-						GLSettings.fullBright();
 	    	        	o.drawObject_i(mXIn, mYIn);
 	    			}
 				}
-				
-				GLSettings.popMatrix();
 			}
 		}
 		catch (Exception e) {

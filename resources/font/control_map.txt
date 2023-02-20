@@ -93,5 +93,3 @@ _
 |
 ~
 `
-error
-copyright

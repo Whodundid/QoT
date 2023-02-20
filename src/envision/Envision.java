@@ -2,22 +2,21 @@ package envision;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.GL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import envision.debug.terminal.TerminalCommandHandler;
-import envision.debug.testStuff.testing.renderingAPI.error.ErrorReportingLevel;
-import envision.debug.testStuff.testing.renderingAPI.error.IRendererErrorReceiver;
-import envision.debug.testStuff.testing.renderingAPI.error.RendererErrorReporter;
 import envision.engine.GameTopScreen;
 import envision.engine.GameWindow;
+import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
-import envision.engine.rendering.GLObject;
 import envision.engine.rendering.RenderEngine;
 import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.rendering.renderingAPI.error.ErrorReportingLevel;
+import envision.engine.rendering.renderingAPI.error.IRendererErrorReceiver;
+import envision.engine.rendering.renderingAPI.error.RendererErrorReporter;
 import envision.engine.rendering.shaders.Shaders;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.resourceLoaders.textures.TextureLoader;
@@ -29,24 +28,26 @@ import envision.game.objects.entities.Player;
 import envision.game.world.GameWorld;
 import envision.game.world.layerSystem.LayerSystem;
 import envision_lang.EnvisionLang;
+import eutil.datatypes.points.Point2i;
 import eutil.file.FileOpener;
+import eutil.math.dimensions.EDimensionI;
 import qot.assets.textures.GameTextures;
 import qot.assets.textures.general.GeneralTextures;
 import qot.launcher.LauncherLogger;
 import qot.launcher.LauncherSettings;
 import qot.settings.QoTSettings;
 
-public final class Envision implements IRendererErrorReceiver {
+public final class Envision implements IRendererErrorReceiver, IEnvisionInputReceiver {
 	
-	//--------
+	//========
 	// Logger
-	//--------
+	//========
 	
 	private static final Logger envisionLogger = LoggerFactory.getLogger(Envision.class);
 	
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	private static boolean gameCreated = false;
 	
@@ -55,9 +56,9 @@ public final class Envision implements IRendererErrorReceiver {
 	private static String gameName;
 	private static GameScreen startScreen;
 	
-	//---------------
+	//===============
 	// Engine Fields
-	//---------------
+	//===============
 	
 	/** True if the engine's main components have been created and successfully initialized. */
 	private static boolean init = false;
@@ -115,9 +116,9 @@ public final class Envision implements IRendererErrorReceiver {
 	private int frames = 0;
 	private int curFrameRate = 0;
 	
-	//-----------
+	//===========
 	// Overrides
-	//-----------
+	//===========
 	
 	public void onRenderErrorReporterMessage(String msg, ErrorReportingLevel reportingLevel) {
 		if (reportingLevel == ErrorReportingLevel.HIGH) {
@@ -129,9 +130,9 @@ public final class Envision implements IRendererErrorReceiver {
 		}
 	}
 	
-	//-------------------
+	//===================
 	// Instance Creation
-	//-------------------
+	//===================
 	
 	public static void createGame(EnvisionGame gameObject) { createGame(gameObject, "Envision Game Engine"); }
 	public static void createGame(EnvisionGame gameObject, String gameName) { createInstance(gameObject, gameName); }
@@ -147,18 +148,31 @@ public final class Envision implements IRendererErrorReceiver {
 		instance = new Envision(game, gameName);
 	}
 	
-	//--------------
+	//==============
 	// Constructors
-	//--------------
+	//==============
 	
 	private Envision(EnvisionGame gameClassIn, String gameNameIn) {
 		gameCreated = true;
 		gameInstance = gameClassIn;
 		gameName = gameNameIn;
 		
+		gameInstance.onPreEngineLoad();
+		
+		setupGLFW();
+		setupRenderingContext();
+		setupEngine();
+		
+		init = true;
+		
+		//init game
+		gameInstance.onPostEngineLoad();
+	}
+	
+	private void setupGLFW() {
 		GLFWErrorCallback.createPrint(System.err).set();
 		
-		// setup OpenGL
+		// setup GLFW
 		if (!GLFW.glfwInit()) {
 			System.err.println("GLFW Failed to initialize.");
 			System.exit(1);
@@ -166,35 +180,9 @@ public final class Envision implements IRendererErrorReceiver {
 		
 		gameWindow = new GameWindow();
 		
-		//set error reporter for renderer
-		RendererErrorReporter.setReceiver(Envision.instance);
-		
-		GLFW.glfwMakeContextCurrent(gameWindow.getWindowHandle());
-		GL.createCapabilities();
-		
-		int interval = (QoTSettings.vsync.get()) ? 1 : 0;
-		GLFW.glfwSwapInterval(interval);
-		
-		//initialize shaders
-		Shaders.init();
-		
-		textureSystem = TextureSystem.getInstance();
-		fontRenderer = FontRenderer.getInstance();
-		
-		//init engine
-		renderEngine = RenderEngine.getInstance();
-		soundEngine = SoundEngine.getInstance();
-		renderEngine.init();
-		
-		keyboard = Keyboard.getInstance();
-		mouse = Mouse.getInstance();
-		resizeListener = WindowResizeListener.getInstance();
-		
-		topScreen = GameTopScreen.getInstance();
-		eventHandler = EventHandler.getInstance();
-		terminalHandler = TerminalCommandHandler.getInstance();
-		layerHandler = new LayerSystem();
-		//envisionLang = new EnvisionLang();
+		keyboard = Keyboard.create(this);
+		mouse = Mouse.create(this);
+		resizeListener = WindowResizeListener.create(this);
 		
 		GLFW.glfwSetKeyCallback(gameWindow.getWindowHandle(), keyboard);
 		GLFW.glfwSetMouseButtonCallback(gameWindow.getWindowHandle(), mouse);
@@ -202,16 +190,37 @@ public final class Envision implements IRendererErrorReceiver {
 		GLFW.glfwSetScrollCallback(gameWindow.getWindowHandle(), mouse.getScrollCallBack());
 		GLFW.glfwSetWindowSizeCallback(gameWindow.getWindowHandle(), resizeListener);
 		
-		GameTextures.instance().onRegister(textureSystem);
-		terminalHandler.initCommands();
-		
-		init = true;
-		gameInstance.onEngineLoad();
-		
-		//init game
-		gameInstance.onGameSetup();
-		
 		GLFW.glfwShowWindow(gameWindow.getWindowHandle());
+	}
+	
+	private void setupRenderingContext() {
+		//set error reporter for renderer
+		RendererErrorReporter.setReceiver(Envision.instance);
+		
+		renderEngine = RenderEngine.getInstance();
+		renderEngine.init(gameWindow.getWindowHandle());
+		
+		Shaders.init();
+		renderEngine.getPrimaryBatch().setShader(Shaders.basic);
+		
+		int interval = (QoTSettings.vsync.get()) ? 1 : 0;
+		GLFW.glfwSwapInterval(interval);
+		
+		textureSystem = TextureSystem.getInstance();
+		fontRenderer = FontRenderer.getInstance();
+		
+		GameTextures.instance().onRegister(textureSystem);
+	}
+	
+	private void setupEngine() {
+		soundEngine = SoundEngine.getInstance();
+		topScreen = GameTopScreen.getInstance();
+		eventHandler = EventHandler.getInstance();
+		layerHandler = new LayerSystem();
+		envisionLang = EnvisionLang.getInstance();
+		
+		terminalHandler = TerminalCommandHandler.getInstance();
+		terminalHandler.initCommands();
 	}
 	
 	//=======
@@ -233,30 +242,34 @@ public final class Envision implements IRendererErrorReceiver {
 		}
 	}
 	
-	//----------
+	//==========
 	// Shutdown
-	//----------
+	//==========
 	
 	public static void shutdown() {
-		if (instance == null)
+		if (instance == null) {
 			throw new IllegalStateException("No Envision Engine instance exists -- cannot shutdown!");
+		}
 		instance.shutdownEngine();
 	}
 	
 	private void shutdownEngine() {
-		if (Envision.getGame() != null)
-			Envision.getGame().onGameUnload();
+		if (gameInstance != null) {
+			gameInstance.onPreGameUnload();
+		}
 		
 		theWorld = null;
 		thePlayer = null;
 		currentScreen = null;
 		
-		renderEngine.shutdown();
+		if (gameInstance != null) {
+			gameInstance.onPostGameUnload();
+		}
 	}
 	
-	//-------------------
+	//===================
 	// Primary Game Loop
-	//-------------------
+	//===================
 	
 	private void runGameLoop() {
 		//ignore if already running
@@ -268,7 +281,7 @@ public final class Envision implements IRendererErrorReceiver {
 		long initialTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
 		
-		while (running && !RenderEngine.shouldClose()) {
+		while (running && !GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
 			try {
 				long currentTime = System.nanoTime();
 				deltaU += (currentTime - initialTime) / timeU;
@@ -279,7 +292,7 @@ public final class Envision implements IRendererErrorReceiver {
 				if (deltaU >= 1) {
 					//update inputs
 					GLFW.glfwPollEvents();
-					if (RenderEngine.shouldClose()) { running = false; }
+					if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) { running = false; }
 					runGameTick();
 					if (ticks == Integer.MAX_VALUE) ticks = 0;
 					else ticks++;
@@ -313,9 +326,9 @@ public final class Envision implements IRendererErrorReceiver {
 		shutdownEngine();
 	}
 	
-	//-------------------------
+	//=========================
 	// Internal Event Managers
-	//-------------------------
+	//=========================
 	
 	private void runGameTick() {
 		//process game events
@@ -331,39 +344,41 @@ public final class Envision implements IRendererErrorReceiver {
 	}
 	
 	private void runRenderTick(long partialTicks) {
-		renderEngine.onRenderTick();
-		
 		if (currentScreen != null) {
 			currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
 			//currentScreen.drawString("deltaF: " + deltaF, 0, currentScreen.endY - currentScreen.midY / 2, EColors.aquamarine);
 			//currentScreen.drawString("deltaU: " + deltaU, 0, currentScreen.endY - currentScreen.midY / 2 + 25, EColors.aquamarine);
 		}
 		else {
-			GLObject.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
-			GLObject.drawString("No Screens?", 256, 256);
+			renderEngine.getPrimaryBatch().drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
+			//GLObject.drawString("No Screens?", 256, 256);
 		}
 		
 		topScreen.onRenderTick();
+		renderEngine.drawFrame();
 	}
 	
-	public static void keyboardEvent(int action, char typedChar, int keyCode) {
+	@Override
+	public void onKeyboardInput(int action, char typedChar, int keyCode) {
 		if (!renderEngine.isContextInit()) return;
 	}
 	
-	public static void mouseEvent(int action, int mXIn, int mYIn, int button, int change) {
+	@Override
+	public void onMouseInput(int action, int mXIn, int mYIn, int button, int change) {
 		if (!renderEngine.isContextInit()) return;
 	}
 	
-	public static void onWindowResized() {
-		gameWindow.onWindowResized(WindowResizeListener.getWidth(), WindowResizeListener.getHeight());
+	@Override
+	public void onWindowResized(long window, int newWidth, int newHeight) {
+		gameWindow.onWindowResized(newWidth, newHeight);
 		if (theWorld != null && theWorld.isLoaded()) theWorld.getWorldRenderer().onWindowResized();
 		if (currentScreen != null) currentScreen.onScreenResized();
 		topScreen.onScreenResized();
 	}
 	
-	//-----------------------
+	//=======================
 	// Game Loop FPS and UPS
-	//-----------------------
+	//=======================
 	
 	private long getTargetFPSi() { return FPS; }
 	private long getTargetUPSi() { return UPS; }
@@ -404,13 +419,9 @@ public final class Envision implements IRendererErrorReceiver {
 	public static void error(String err, Throwable throwable) { envisionLogger.error(err, throwable); }
 	public static void errorf(String err, Object... args) { envisionLogger.error(err, args); }
 	
-	//---------
-	// Methods
-	//---------
-	
-	//--------------------------------
-	// Public Static Engine Functions
-	//--------------------------------
+	//=========================
+	// Static Engine Functions
+	//=========================
 	
 	public static GameScreen displayScreen(GameScreen screenIn) { return displayScreen(screenIn, null, true, true); }
 	public static GameScreen displayScreen(GameScreen screenIn, boolean init) { return displayScreen(screenIn, null, init, true); }
@@ -500,9 +511,9 @@ public final class Envision implements IRendererErrorReceiver {
 	public static void pauseWorldRender() { renderWorld = false; }
 	public static void unpauseWorldRender() { renderWorld = true; }
 	
-	//---------
+	//=========
 	// Getters
-	//---------
+	//=========
 	
 	/** Returns the name of the game object that the engine is running. */
 	public static String getGameName() { return gameName; }
@@ -550,11 +561,22 @@ public final class Envision implements IRendererErrorReceiver {
 	/** Returns this game's central texture handling system. */
 	public static TextureSystem getTextureSystem() { return textureSystem; }
 	/** Returns the primary Envision engine instance. */
-	public static EnvisionLang getEnvision() { return envisionLang; }
+	public static EnvisionLang getEnvisionLang() { return envisionLang; }
 	
-	//---------
+	//================================
+	// Game Screen Dimension Wrappers
+	//================================
+	
+	public static EDimensionI getWindowDims() { return gameWindow.getWindowDims(); }
+	public static Point2i getWindowPosition() { return gameWindow.getWindowPosition(); }
+	public static int getWidth() { return gameWindow.getWidth(); }
+	public static int getHeight() { return gameWindow.getHeight(); }
+	/** Returns the game window's draw scale. 1 is default. */
+	public static double getGameScale() { return QoTSettings.resolutionScale.get(); }
+	
+	//=========
 	// Setters
-	//---------
+	//=========
 	
 	public static Player setPlayer(Player p) {
 		thePlayer = p;

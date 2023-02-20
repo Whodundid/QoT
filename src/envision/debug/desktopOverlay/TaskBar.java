@@ -2,6 +2,7 @@ package envision.debug.desktopOverlay;
 
 import java.util.Collections;
 
+import envision.Envision;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.WindowParent;
@@ -203,9 +204,9 @@ public class TaskBar<E> extends WindowObject<E> {
 	//------------------
 	
 	private void reorient() {
-		res = QoT.getWindowSize();
-		int w = res.getWidth();
-		int h = res.getHeight();
+		res = Envision.getWindowDims();
+		var w = res.getWidth();
+		var h = res.getHeight();
 		
 		//change draw dimensions
 		switch (drawSide) {

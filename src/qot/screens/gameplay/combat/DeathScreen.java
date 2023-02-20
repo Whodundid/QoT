@@ -37,6 +37,7 @@ public class DeathScreen extends GameScreen {
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.dsteel);
+		if (QoT.thePlayer == null) return;
 		
 		var tex = QoT.thePlayer.getTexture();
 		double w = 128;

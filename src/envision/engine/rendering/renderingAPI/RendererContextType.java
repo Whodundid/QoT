@@ -1,4 +1,4 @@
-package envision.debug.testStuff.testing.renderingAPI;
+package envision.engine.rendering.renderingAPI;
 
 public enum RendererContextType {
 	OPENGL,

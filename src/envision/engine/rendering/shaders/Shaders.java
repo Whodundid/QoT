@@ -1,7 +1,5 @@
 package envision.engine.rendering.shaders;
 
-import org.lwjgl.glfw.GLFW;
-
 import envision.engine.rendering.shaders.types.basic.BasicShader;
 import eutil.datatypes.EArrayList;
 
@@ -51,7 +49,7 @@ public final class Shaders {
 	
 	/** Initializes each shader. Will not double initialize. */
 	public static void init() {
-		if (GLFW.glfwInit() && !init) {
+		if (!init) {
 			
 			shaders.add(basic = new BasicShader());
 			

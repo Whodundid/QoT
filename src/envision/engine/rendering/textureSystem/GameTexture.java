@@ -30,6 +30,10 @@ public class GameTexture {
 	private int height = -1;
 	/** True if this texture ID has been deleted through OpenGL. */
 	private boolean destroyed = false;
+	/** Min Filter property for when registering texture. */
+	private int minFilter = GL11.GL_NEAREST;
+	/** Mag Filter property for when registering texture. */
+	private int magFilter = GL11.GL_NEAREST;
 	
 	//--------------
 	// Constructors
@@ -41,6 +45,16 @@ public class GameTexture {
 	public GameTexture(GameTexture parent, String basePath, String filePathIn) {
 		parentTexture = parent;
 		filePath = basePath + filePathIn;
+	}
+	
+	public GameTexture(String filePathIn, int minFilterIn, int magFilterIn) { this(null, "", filePathIn, minFilterIn, magFilterIn); }
+	public GameTexture(String basePath, String filePathIn, int minFilterIn, int magFilterIn) { this(null, basePath, filePathIn, minFilterIn, magFilterIn); }
+	public GameTexture(GameTexture parent, String filePathIn, int minFilterIn, int magFilterIn) { this(parent, "", filePathIn, minFilterIn, magFilterIn); }
+	public GameTexture(GameTexture parent, String basePath, String filePathIn, int minFilterIn, int magFilterIn) {
+		parentTexture = parent;
+		filePath = basePath + filePathIn;
+		minFilter = minFilterIn;
+		magFilter = magFilterIn;
 	}
 	
 	//-------------------
@@ -95,6 +109,8 @@ public class GameTexture {
 	public String getFilePath() { return filePath; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
+	public int getMinFilter() { return minFilter; }
+	public int getMagFilter() { return magFilter; }
 	public boolean hasBeenDestroyed() { return destroyed; }
 	public boolean hasParent() { return parentTexture != null; }
 	
@@ -142,5 +158,12 @@ public class GameTexture {
 	public GameTexture getChild(int id) {
 		return children.getA(id);
 	}
+	
+	//=========
+	// Setters
+	//=========
+	
+	public void setMinFilter(int filter) { minFilter = filter; }
+	public void setMagFilter(int filter) { magFilter = filter; }
 	
 }

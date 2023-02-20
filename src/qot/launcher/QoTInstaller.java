@@ -410,11 +410,11 @@ public class QoTInstaller {
 		//this line is used to specifically grab the class system's file structure to determine
 		//what kind of environment the game is being executed from (an IDE or a Jar)
 		String path = QoTLauncher.mainPath;
-		System.out.println("InJar: " + QoTLauncher.inJar + " : path: '" + path + "'");
+		//System.out.println("InJar: " + QoTLauncher.inJar + " : path: '" + path + "'");
 		
 		//if path does not start with a '/' then it's very likely a jar file!
 		if (QoTLauncher.inJar) {
-			System.out.println("Attempting to read jar path of: '" + path + "'");
+			//System.out.println("Attempting to read jar path of: '" + path + "'");
 			LauncherLogger.log("Attempting to read jar path of: '" + path + "'");
 			path = ClassLoader.getSystemResource(path).getFile();
 			path = path.substring(path.indexOf(':') + 1);

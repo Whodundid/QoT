@@ -1,17 +1,17 @@
 package envision.engine.rendering;
 
-import eutil.colors.EColors;
-import eutil.math.dimensions.EDimension;
-import eutil.misc.Rotation;
-import qot.QoT;
-
 import java.util.Objects;
 
 import org.lwjgl.opengl.GL11;
 
+import envision.Envision;
 import envision.engine.rendering.fontRenderer.EStringOutputFormatter;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
+import eutil.colors.EColors;
+import eutil.math.dimensions.EDimension;
+import eutil.misc.Rotation;
+import qot.QoT;
 
 /** The base underlying object that all window objects are drawn from. */
 public abstract class GLObject {
@@ -335,11 +335,16 @@ public abstract class GLObject {
 		GLSettings.blendSeparate();
 		setGLColor(color);
 		
+		double sx = tdx(left);
+		double sy = tdy(top);
+		double ex = tdx(right);
+		double ey = tdy(bottom);
+		
 		//define points
-		vertex(tdx(left), tdy(bottom));
-		vertex(tdx(right), tdy(bottom));
-		vertex(tdx(right), tdy(top));
-		vertex(tdx(left), tdy(top));
+		vertex(sx, ey);
+		vertex(ex, ey);
+		vertex(ex, sy);
+		vertex(sx, sy);
 		
 		//draw
 		draw();
@@ -357,7 +362,7 @@ public abstract class GLObject {
 	}
 	
 	/** Draws a texture with the given dimensions. */
-	public static void drawTexture(double x, double y, double w, double h) { drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, false, Rotation.UP, 0xffffffff); }
+	//public static void drawTexture(double x, double y, double w, double h) { drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, false, Rotation.UP, 0xffffffff); }
 	public static void drawTexture(GameTexture tex, double x, double y, double w, double h) { drawTexture(tex, x, y, w, h, false, Rotation.UP, 0xffffffff); }
 	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, int color) { drawTexture(tex, x, y, w, h, false, Rotation.UP, color); }
 	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, Rotation rotation) { drawTexture(tex, x, y, w, h, false, rotation, 0xffffffff); }
@@ -375,6 +380,7 @@ public abstract class GLObject {
 			bindTexture(tex);
 			
 			begin(GLModes.QUADS);
+			
 			//as far as I am concerned, this value might as well have come from the ether..
 			//However, it's necessary in order to prevent weird texture artifacts from being
 			//drawn at the bottom of the texture itself
@@ -382,22 +388,28 @@ public abstract class GLObject {
 			//modified by adding 0.1 to original value
 			//final double adjustment = 0.1019836425781818436357012429;
 			final double adjustment = 0.5;
-			tv(flip, rotation, x, y, x + w + adjustment, y + h + adjustment);
+			
+			double sx = tdx(x);
+			double sy = tdy(y);
+			double ex = tdx(x + w + adjustment);
+			double ey = tdy(y + h + adjustment);
+
+			tv(flip, rotation, sx, sy, ex, ey);
 			
 			draw();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 	}
 	
-	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH) {
-		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, 0xffffffff);
-	}
-	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, EColors color) {
-		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, color.intVal);
-	}
-	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color) {
-		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, color);
-	}
+//	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH) {
+//		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, 0xffffffff);
+//	}
+//	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, EColors color) {
+//		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, color.intVal);
+//	}
+//	public static void drawTexture(double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color) {
+//		drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, tX, tY, tW, tH, color);
+//	}
 	public static void drawTexture(GameTexture imageIn, double x, double y, double w, double h, double tX, double tY, double tW, double tH) {
 		drawTexture(imageIn, x, y, w, h, tX, tY, tW, tH, 0xffffffff);
 	}
@@ -425,10 +437,15 @@ public abstract class GLObject {
 			
 			begin(GLModes.QUADS);
 			
-			texCoord(x, 		y + h, 		xVal, 			yVal + hVal);
-			texCoord(x + w, 	y + h, 		xVal + wVal, 	yVal + hVal);
-			texCoord(x + w, 	y, 			xVal + wVal, 	yVal);
-			texCoord(x, 		y, 			xVal, 			yVal);
+			double sx = tdx(x);
+			double sy = tdy(y);
+			double ex = tdx(x + w);
+			double ey = tdy(y + h);
+			
+			texCoord(sx, ey, 	xVal, 			yVal + hVal);
+			texCoord(ex, ey, 	xVal + wVal, 	yVal + hVal);
+			texCoord(ex, sy, 	xVal + wVal, 	yVal);
+			texCoord(sx, sy, 	xVal, 			yVal);
 			
 			draw();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -495,6 +512,7 @@ public abstract class GLObject {
 		drawTexturePoly(t, x1, y1, x2, y2, x3, y3, x4, y4, flipped, rot, color.intVal);
 	}
 	
+	/** Draws a texture but with individually specified vertices, so not necessarily as a rect. */
 	public static void drawTexturePoly(GameTexture t, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, boolean flipped, Rotation rot, int color) {
 		if (t == null) return;
 		
@@ -505,6 +523,11 @@ public abstract class GLObject {
 		bindTexture(t);
 		
 		begin(GLModes.QUADS);
+		
+		x1 = tdx(x1);	y1 = tdy(y1);
+		x2 = tdx(x2);	y2 = tdy(y2);
+		x3 = tdx(x3);	y3 = tdy(y3);
+		x4 = tdx(x4);	y4 = tdy(y3);
 		
 		switch (rot) {
 		case UP:
@@ -575,19 +598,19 @@ public abstract class GLObject {
 	
 	/** 'to double for x' converts a given value into a corresponding double value between -1.0f and 1.0f based on window x size. */
 	public static double tdx(double valIn) {
-		double midX = QoT.getWidth() * 0.5f;
+		double midX = QoT.getWidth() * 0.5;
 		return (valIn * QoT.getGameScale() - midX) / midX;
 	}
 	
 	/** 'to double for y' converts a given value into a corresponding double value between -1.0f and 1.0f based on window y size. */
 	public static double tdy(double valIn) {
-		double midY = QoT.getHeight() * 0.5f;
+		double midY = QoT.getHeight() * 0.5;
 		return (midY - (valIn * QoT.getGameScale())) / midY;
 	}
 	
 	/** Binds a 2d texture. */
-	public static void bindTexture(GameTexture in) {
-		QoT.getTextureSystem().bind(in);
+	private static void bindTexture(GameTexture in) {
+		TextureSystem.getInstance().bind(in);
 	}
 	
 	//-----------------------------
@@ -656,7 +679,7 @@ public abstract class GLObject {
 	
 	private static void texCoord(double x, double y, double tX, double tY) {
 		GL11.glTexCoord2d(tX, tY);
-		vertex(tdx(x), tdy(y));
+		vertex(x, y);
 	}
 	
 	/** Sets the width of the a drawn line when drawing lines. */

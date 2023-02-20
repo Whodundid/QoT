@@ -1,9 +1,9 @@
 package envision.engine.windows.windowTypes;
 
+import envision.Envision;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -25,7 +25,7 @@ public abstract class ActionWindowParent<E> extends WindowParent<E> implements I
 	protected ActionWindowParent(IWindowObject<?> parentIn) {
 		actionReceiver = parentIn;
 		windowInstance = this;
-		res = QoT.getWindowSize();
+		res = Envision.getWindowDims();
 	}
 	
 	//---------------------------

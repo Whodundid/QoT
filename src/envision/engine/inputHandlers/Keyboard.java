@@ -5,13 +5,12 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-import envision.debug.testStuff.testing.OpenGLTestingEnvironment;
-import qot.Main;
 import qot.QoT;
 
 /**
@@ -28,11 +27,16 @@ public class Keyboard extends GLFWKeyCallback {
 	/** The managed singleton keyboard instance. */
 	private static Keyboard instance;
 	
+	public static Keyboard create() { return create((IKeyboardInputReceiver) null); }
+	public static Keyboard create(IKeyboardInputReceiver receiverIn) {
+		return instance = new Keyboard(receiverIn);
+	}
+	
 	/**
 	 * Returns the managed singleton keyboard instance.
 	 */
 	public static Keyboard getInstance() {
-		return instance = (instance != null) ? instance : new Keyboard();
+		return instance = (instance != null) ? instance : new Keyboard(null);
 	}
 	
 	//--------
@@ -44,16 +48,18 @@ public class Keyboard extends GLFWKeyCallback {
 	private static int lastKey = -1;
 	public static boolean repeatEvents = true;
 	
+	private IKeyboardInputReceiver receiver;
+	
 	/** Stores String->Keycode mappings for select known keyboard characters. */
-	private static final HashMap<String, Integer> keyMapings = new HashMap();
+	private static final Map<String, Integer> keyMapings = new HashMap<>();
 	
 	//--------------
 	// Constructors
 	//--------------
 	
 	//prevent outside instantiation
-	private Keyboard() {
-		super();
+	private Keyboard(IKeyboardInputReceiver receiverIn) {
+		receiver = receiverIn;
 	}
 	
 	//-----------
@@ -102,14 +108,12 @@ public class Keyboard extends GLFWKeyCallback {
 	 * @param keyCode
 	 */
 	private void distribute(int action, char typedChar, int keyCode) {
-		if (Main.RUN_OPEN_GL_TESTING_ENVIRONMENT) {
-			OpenGLTestingEnvironment.onKeyboardEvent(action, typedChar, keyCode);
-		}
-		else {
-			QoT.keyboardEvent(action, typedChar, keyCode);
-			//not ready yet..
-			//Envision.keyboardEvent(action, typedChar, keyCode);
-		}
+		if (receiver != null) receiver.onKeyboardInput(action, typedChar, keyCode);
+	}
+	
+	public Keyboard setReceiver(IKeyboardInputReceiver receiverIn) {
+		receiver = receiverIn;
+		return this;
 	}
 
 	//----------------

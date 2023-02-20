@@ -2,10 +2,11 @@ package envision.engine.rendering.shaders;
 
 import java.nio.FloatBuffer;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
-import envision.debug.testStuff.testing.renderingAPI.math.Matrix4f;
 import envision.engine.rendering.shaders.util.FragmentShader;
 import envision.engine.rendering.shaders.util.VertexShader;
 import eutil.math.vectors.Vec2f;
@@ -139,16 +140,23 @@ public abstract class ShaderProgram {
 		//uniform_lightColor = gul("lightColor");
 	}
 	
+	public void enableDebugOut() {
+		final CharSequence[] feedbackVaryings = { "debugX", "debugY", "debugZ" };
+		GL30.glTransformFeedbackVaryings(shaderProgram, feedbackVaryings, GL30.GL_INTERLEAVED_ATTRIBS);
+	}
+	
 	public void enableAttribs() {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
+		GL20.glEnableVertexAttribArray(3);
 	}
 
 	public void disableAttribs() {
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
+		GL20.glDisableVertexAttribArray(3);
 	}
 	
 //	public void loadTransform(Matrix4f transform) { setUniform(uniform_transform, transform); }
@@ -163,8 +171,7 @@ public abstract class ShaderProgram {
 	public void setUniform(int location, Vec3f val) { GL20.glUniform3f(location, val.x, val.y, val.z); }
 	public void setUniform(int location, Vec4f val) { GL20.glUniform4f(location, val.x, val.y, val.z, val.w); }
 	public void setUniform(int location, Matrix4f val) {
-		val.store(matrix);
-		matrix.flip();
+		val.get(matrix).flip();
 		GL20.glUniformMatrix4fv(location, false, matrix);
 	}
 
@@ -178,9 +185,12 @@ public abstract class ShaderProgram {
 	public void setUniform(String name, Vec3f val) { GL20.glUniform3f(gul(name), val.x, val.y, val.z); }
 	public void setUniform(String name, Vec4f val) { GL20.glUniform4f(gul(name), val.x, val.y, val.z, val.w); }
 	public void setUniform(String name, Matrix4f val) {
-		val.store(matrix);
-		matrix.flip();
+		val.get(matrix).flip();
 		GL20.glUniformMatrix4fv(gul(name), false, matrix);
+	}
+	
+	public void setUniform(String name, int[] array) {
+		GL20.glUniform1iv(gul(name), array);
 	}
 	
 	protected void bindAttrib(int attribute, String variableName) {

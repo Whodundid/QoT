@@ -61,7 +61,7 @@ public class LauncherDir {
 	static boolean setupLauncherDir() {
 		try {
 			String dir = QoTInstaller.getDefaultInstallDir();
-			System.out.println("LauncherDir: installing launcher dir to: '" + dir + "'");
+			//System.out.println("LauncherDir: installing launcher dir to: '" + dir + "'");
 			launcherDir = new File(dir + "\\QoT Launcher");
 			
 			//check if launcher directory already exists
@@ -78,7 +78,7 @@ public class LauncherDir {
 		//check if launcher settings file exists and create default if not
 		try {
 			launcherSettingsFile = new File(launcherDir, "settings.txt");
-			System.out.println("LauncherDir: Checking for settings file: '" + launcherSettingsFile + "'");
+			//System.out.println("LauncherDir: Checking for settings file: '" + launcherSettingsFile + "'");
 			
 			//create default launcher settings file
 			if (!launcherSettingsFile.exists()) {

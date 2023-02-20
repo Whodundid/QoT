@@ -1,5 +1,6 @@
 package envision.game.world;
 
+import envision.Envision;
 import envision.engine.GameTopScreen;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
@@ -357,7 +358,7 @@ public class WorldRenderer extends EGui {
 	}
 	
 	public void onWindowResized() {
-		res = QoT.getWindowSize();
+		res = Envision.getWindowDims();
 		setDimensions(0, 0, res.getWidth(), res.getHeight());
 		
 		if (world != null) {

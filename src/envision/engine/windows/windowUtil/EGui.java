@@ -1,15 +1,16 @@
 package envision.engine.windows.windowUtil;
 
+import envision.Envision;
 import envision.engine.rendering.GLObject;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.WindowSize;
 import envision.engine.windows.windowUtil.input.KeyboardInputAcceptor;
 import envision.engine.windows.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;
 import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.EDimensionI;
 import eutil.misc.Rotation;
 import eutil.misc.ScreenLocation;
 import qot.QoT;
@@ -23,7 +24,7 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	//--------
 	
 	public FontRenderer fontRenderer = QoT.getFontRenderer();
-	public WindowSize res = QoT.getWindowSize();
+	public EDimensionI res = Envision.getWindowDims();
 	public double startXPos, startYPos, startWidth, startHeight;
 	public double startX, startY, endX, endY;
 	public double width, height;

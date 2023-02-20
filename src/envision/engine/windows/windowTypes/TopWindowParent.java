@@ -3,10 +3,10 @@ package envision.engine.windows.windowTypes;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import envision.Envision;
 import envision.engine.GameTopScreen;
 import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.GLSettings;
 import envision.engine.windows.StaticTopParent;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
@@ -20,6 +20,7 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventObjects;
 import envision.engine.windows.windowUtil.windowEvents.events.EventRedraw;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.util.EList;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.ScreenLocation;
 import qot.QoT;
@@ -50,7 +51,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	protected long lastClickTime = 0l;
 	protected long doubleClickThreshold = 500l;
 	
-	private final EArrayList<IWindowParent> highlightedWindows = new EArrayList<>();
+	private final EList<IWindowParent> highlightedWindows = new EArrayList<>();
 	
 	//---------------------------
 	// Overrides : IWindowObject
@@ -66,9 +67,9 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		highlightedWindows.clear();
 		
 		//prime renderer
-		GLSettings.pushMatrix();
-		GLSettings.enableBlend();
-		GLSettings.clearDepth();
+//		GLSettings.pushMatrix();
+//		GLSettings.enableBlend();
+//		GLSettings.clearDepth();	
 		
 		//update first draw state
 		if (!hasFirstDraw()) onFirstDraw_i();
@@ -90,9 +91,9 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 				}
 				
 				if (draw) {
-					GLSettings.colorA(1.0f);
-					GLSettings.clearDepth();
-					GLSettings.disableScissor();
+//					GLSettings.colorA(1.0f);
+//					GLSettings.clearDepth();
+//					GLSettings.disableScissor();
 					
 					if (!o.hasFirstDraw()) o.onFirstDraw_i();
 					o.drawObject_i(mX, mY);
@@ -116,18 +117,16 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		
 		//notify hover object
 		if (getHoveringObject() != null) getHoveringObject().onMouseHover(mX, mY);
-		
-		GLSettings.popMatrix();
 	}
 	
 	//size
 	@Override public boolean hasHeader() { return false; }
 	@Override public boolean isResizeable() { return false; }
 	@Override public WindowHeader<?> getHeader() { return null; }
-	@Override public double getMinWidth() { return res.getWidth(); }
-	@Override public double getMinHeight() { return res.getHeight(); }
-	@Override public double getMaxWidth() { return res.getWidth(); }
-	@Override public double getMaxHeight() { return res.getHeight(); }
+	@Override public double getMinWidth() { return res.width; }
+	@Override public double getMinHeight() { return res.height; }
+	@Override public double getMaxWidth() { return res.width; }
+	@Override public double getMaxHeight() { return res.height; }
 	@Override public void setMinDims(double widthIn, double heightIn) {}
 	@Override public void setMaxDims(double widthIn, double heightIn) {}
 	@Override public void setMinWidth(double widthIn) {}
@@ -276,13 +275,13 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	@Override
 	public void updateBeforeNextDraw(int mXIn, int mYIn) {
 		postEvent(new EventRedraw(this));
-		res = QoT.getWindowSize();
-		setSize(res.getWidth(), res.getHeight());
+		res = Envision.getWindowDims();
+		setSize(res.width, res.height);
 		
 		mX = mXIn;
 		mY = mYIn;
 		
-		if (this == QoT.getTopRenderer()) {
+		if (this == Envision.getTopScreen()) {
 			if (GameTopScreen.isTopFocused()) updateCursor();
 		}
 		else if (!GameTopScreen.isTopFocused()) updateCursor();
@@ -447,13 +446,13 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	
 	public void onScreenResized() {
 		//handle windows
-		int oldW = res.getWidth();
-		int oldH = res.getHeight();
-		int newW = QoT.getWidth();
-		int newH = QoT.getHeight();
+		var oldW = res.width;
+		var oldH = res.height;
+		var newW = QoT.getWidth();
+		var newH = QoT.getHeight();
 		
-		res = QoT.getWindowSize();
-		setDimensions(0, 0, res.getWidth(), res.getHeight());
+		res = Envision.getWindowDims();
+		setDimensions(0, 0, res.width, res.height);
 		
 		for (var p : getAllActiveWindows()) {
 			

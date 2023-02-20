@@ -1,8 +1,10 @@
 package envision.engine.rendering.shaders.util;
 
 import java.io.File;
-import java.util.Scanner;
+
 import org.lwjgl.opengl.GL46;
+
+import eutil.file.LineReader;
 
 public abstract class VertexShader {
 	
@@ -30,7 +32,7 @@ public abstract class VertexShader {
 	
 	/** Attempts to build this vertex shader from the provided vertex shader glsl program. */
 	private void build() {
-		try (Scanner reader = new Scanner(programPath)) {
+		try (var reader = new LineReader(programPath)) {
 			while (reader.hasNextLine()) {
 				program += reader.nextLine() + "\n";
 			}
