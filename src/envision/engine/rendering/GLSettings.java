@@ -3,19 +3,26 @@ package envision.engine.rendering;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.*;
 
-//final to prevent extension
+import org.lwjgl.opengl.GL11;
+
+import envision.Envision;
+
+// final to prevent extension
 public final class GLSettings {
 	
-	//-----------------------
-	//GLSettings Constructors
-	//-----------------------
+	public static boolean scissor = false;
+	public static double scissorX, scissorY, scissorWidth, scissorHeight;
 	
-	//private to prevent instantiation
+	//==============
+	// Constructors
+	//==============
+	
+	// private to prevent instantiation
 	private GLSettings() {}
 	
-	//-------------------------
-	//GLSettings Static Methods
-	//-------------------------
+	//================
+	// Static Methods
+	//================
 	
 	public static void enableBlend() { enable(GL_BLEND); }
 	public static void enableAlpha() { enable(GL_ALPHA_TEST); }
@@ -27,8 +34,26 @@ public final class GLSettings {
 	public static void popMatrix() { glPopMatrix(); }
 	
 	public static void clearDepth() { clear(GL_DEPTH_BUFFER_BIT); }
-	public static void enableScissor() { enable(GL_SCISSOR_BIT); }
-	public static void disableScissor() { disable(GL_SCISSOR_TEST); }
+	public static void enableScissor() {
+		scissor = true;
+		enable(GL_SCISSOR_TEST);
+	}
+	
+	public static void disableScissor() {
+		scissor = false;
+		disable(GL_SCISSOR_TEST);
+	}
+	
+	public static void scissor() {
+		GL11.glScissor((int) scissorX, (int) scissorY, (int) scissorWidth, (int) scissorHeight);
+	}
+	
+	public static void setScissorBounds(double startX, double startY, double width, double height) {
+		scissorX = startX;
+		scissorY = startY;
+		scissorWidth = width;
+		scissorHeight = height;
+	}
 	
 	public static void color(float val) { color(val, val, val); }
 	public static void colorA(float val) { color(val, val, val, val); }
@@ -45,16 +70,16 @@ public final class GLSettings {
 	public static void setLight(float val) { colorA(val); }
 	
 	public static void enableTexture() {
-		blendFunc();
+//		blendFunc();
 		enable(GL_TEXTURE_2D);
-		disable(GL_CULL_FACE);
-		disable(GL_DEPTH_TEST);
+//		disable(GL_CULL_FACE);
+//		disable(GL_DEPTH_TEST);
 	}
 	
 	public static void disableTexture() {
 		disable(GL_TEXTURE_2D);
-		enable(GL_CULL_FACE);
-		enable(GL_DEPTH_TEST);
+//		enable(GL_CULL_FACE);
+//		enable(GL_DEPTH_TEST);
 	}
 	
 	public static void clear(int mask) { glClear(mask); }

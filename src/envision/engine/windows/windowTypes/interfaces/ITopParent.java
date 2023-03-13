@@ -1,9 +1,10 @@
 package envision.engine.windows.windowTypes.interfaces;
 
-import envision.debug.desktopOverlay.TaskBar;
-import envision.debug.terminal.window.ETerminalWindow;
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.StaticTopParent;
+import envision.engine.windows.desktopOverlay.TaskBar;
 import envision.engine.windows.windowTypes.OverlayWindow;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
@@ -12,7 +13,6 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyTyp
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -250,7 +250,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 			//position and add the window
 			if (loc != ObjectPosition.NONE) setPos(windowIn, oldObject, loc);
 			addObject(windowIn);
-			if (this == QoT.getTopRenderer()) TaskBar.windowOpened(windowIn);
+			if (this == Envision.getTopScreen()) TaskBar.windowOpened(windowIn);
 			windowIn.bringToFront();
 			if (transferFocus) windowIn.requestFocus();
 		}
@@ -270,23 +270,23 @@ public interface ITopParent<E> extends IWindowObject<E> {
 		
 		switch (typeIn) {
 		case SCREEN_CENTER:
-			sX = (int) ((QoT.getWidth() / 2) - (gDim.width / 2));
-			sY = (int) ((QoT.getHeight() / 2) - (gDim.height / 2));
+			sX = (int) ((Envision.getWidth() / 2) - (gDim.width / 2));
+			sY = (int) ((Envision.getHeight() / 2) - (gDim.height / 2));
 			break;
 		case BOT_LEFT:
 			sX = 1;
-			sY = (int) (QoT.getHeight() - 2 - gDim.height);
+			sY = (int) (Envision.getHeight() - 2 - gDim.height);
 			break;
 		case TOP_LEFT:
 			sX = 1;
 			sY = 2;
 			break;
 		case BOT_RIGHT:
-			sX = (int) (QoT.getWidth() - 1 - gDim.width);
-			sY = (int) (QoT.getHeight() - 2 - gDim.height);
+			sX = (int) (Envision.getWidth() - 1 - gDim.width);
+			sY = (int) (Envision.getHeight() - 2 - gDim.height);
 			break;
 		case TOP_RIGHT:
-			sX = (int) (QoT.getWidth() - 1 - gDim.width);
+			sX = (int) (Envision.getWidth() - 1 - gDim.width);
 			sY = 2;
 			break;
 		case CURSOR_CENTER:
@@ -323,8 +323,8 @@ public interface ITopParent<E> extends IWindowObject<E> {
 			getAllChildren().stream().filter(o -> windowIn.getClass().isInstance(o)).filter(o -> !o.isBeingRemoved()).forEach(w -> windows.add((WindowParent) w));
 			
 			if (windows.isEmpty()) {
-				sX = (int) ((QoT.getWidth() / 2) - (gDim.width / 2));
-				sY = (int) ((QoT.getHeight() / 2) - (gDim.height / 2));
+				sX = (int) ((Envision.getWidth() / 2) - (gDim.width / 2));
+				sY = (int) ((Envision.getHeight() / 2) - (gDim.height / 2));
 			}
 			else if (windows.getLast() != null) {
 				EDimension objDim = windows.getLast().getDimensions();
@@ -339,8 +339,8 @@ public interface ITopParent<E> extends IWindowObject<E> {
 		if (!(windowIn instanceof OverlayWindow<?>)) {
 			sX = sX < 0 ? 4 : sX;
 			sY = (int) ((sY - headerHeight) < 2 ? 4 + headerHeight : sY);
-			sX = (int) (sX + gDim.width > QoT.getWidth() ? -4 + sX - (sX + gDim.width - QoT.getWidth()) : sX);
-			sY = (int) (sY + gDim.height > QoT.getHeight() ? -4 + sY - (sY + gDim.height - QoT.getHeight()) : sY);
+			sX = (int) (sX + gDim.width > Envision.getWidth() ? -4 + sX - (sX + gDim.width - Envision.getWidth()) : sX);
+			sY = (int) (sY + gDim.height > Envision.getHeight() ? -4 + sY - (sY + gDim.height - Envision.getHeight()) : sY);
 		}
 		
 		windowIn.setPosition(sX, sY);

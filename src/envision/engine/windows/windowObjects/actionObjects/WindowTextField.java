@@ -1,5 +1,6 @@
 package envision.engine.windows.windowObjects.actionObjects;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowTypes.ActionObject;
@@ -8,7 +9,6 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import eutil.strings.EStringUtil;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -75,7 +75,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 		String drawText = text;
 		
 		if (hasFocus()) {
-			boolean cursor = QoT.getRunningTicks() / 50 % 2 == 0 || textRecentlyEntered;
+			boolean cursor = Envision.getRunningTicks() / 50 % 2 == 0 || textRecentlyEntered;
 			
 			int curX = (int) (startX + 5 + (cursorPosition * FontRenderer.getCharWidth()));
 			
@@ -87,7 +87,9 @@ public class WindowTextField<E> extends ActionObject<E> {
 			}
 		}
 		
-		drawString(drawText, startX + 5, endY - FontRenderer.FONT_HEIGHT, textColor);
+		if (drawText != null && !drawText.isEmpty()) {
+			drawString(drawText, startX + 5, endY - FontRenderer.FONT_HEIGHT, textColor);			
+		}
 		
 		endScissor();
 	}
@@ -193,7 +195,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 	@Override
 	public void onFocusGained(EventFocus eventIn) {
 		startTextTimer();
-		if (!alwaysDrawCursor) QoT.updateCounter = 0;
+		if (!alwaysDrawCursor) Envision.updateCounter = 0;
 		if (text.equals(textWhenEmpty)) {
 			text = "";
 			setTextColor(textColor);
@@ -420,7 +422,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 		if (posIn < 0) posIn = 0;
 		selectionEnd = posIn;
 		
-		if (QoT.getFontRenderer() != null) {
+		if (FontRenderer.getInstance() != null) {
 			if (lineScrollOffset > i) lineScrollOffset = i;
 			//int j = (int) getWidth();
 			//String s = Game.getFontRenderer().trimToWidth(text.substring(lineScrollOffset), j);

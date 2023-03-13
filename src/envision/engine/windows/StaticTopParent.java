@@ -2,8 +2,9 @@ package envision.engine.windows;
 
 import java.util.Deque;
 
-import envision.debug.desktopOverlay.TaskBar;
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.windows.desktopOverlay.TaskBar;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
@@ -24,11 +25,12 @@ import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 import eutil.debug.Inefficient;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
 public class StaticTopParent extends EGui {
+	
+	public static final EList<IWindowObject<?>> emptyObjectList = EList.emptyUnmodifiableList();
 	
 	//---------------------
 	// Basic Input Methods
@@ -154,13 +156,13 @@ public class StaticTopParent extends EGui {
 
 	/** Debug method used to display topParent information in the top left corner of the screen. */
 	public static void drawDebugInfo(ITopParent<?> objIn) {
-		if (QoT.isDebugMode() && objIn == QoT.getTopRenderer()) {
-			var top = QoT.getActiveTopParent();
+		if (Envision.isDebugMode() && objIn == Envision.getTopScreen()) {
+			var top = Envision.getActiveTopParent();
 			
 			double yPos = 40;
 			double xPos = 3;
 			
-			TaskBar bar = QoT.getTopRenderer().getTaskBar();
+			TaskBar bar = Envision.getTopScreen().getTaskBar();
 			if (bar != null && !bar.isHidden() && bar.willBeDrawn()) {
 				yPos = bar.endY + 6;
 			}
@@ -483,8 +485,10 @@ public class StaticTopParent extends EGui {
 	
 	/** Returns a list of all objects that currently under the cursor. */
 	public static EList<IWindowObject<?>> getAllObjectsUnderMouse(ITopParent<?> objIn) {
+		if (!objIn.willBeDrawn()) return emptyObjectList;
+		
 		EList<IWindowObject<?>> underMouse = EList.newList();
-		EList<IWindowObject<?>> children = objIn.getAllChildren();
+		EList<IWindowObject<?>> children = objIn.getAllVisibleChildren();
 		
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();
@@ -493,22 +497,20 @@ public class StaticTopParent extends EGui {
 		if (objIn.getModifyType() != ObjectModifyType.RESIZE) {
 			
 			for (var o : children) {
-				//check if the object can even be selected
-				if (o.willBeDrawn() && (o.isClickable() || o.getHoverText() != null)) {
-					if (o instanceof IWindowParent<?> wp) {
-						//then check if the mouse is in or around the object if it's resizeable
-						if (o.isMouseInside() || ((o.isResizeable() && o.isMouseOnEdge(mX, mY)) && !(wp.isMinimized() || wp.getMaximizedPosition() == ScreenLocation.TOP))) {
-							underMouse.add(o);
-						}
-					}
+				if (!o.willBeDrawn()) continue;
+				if (o instanceof IWindowParent<?> wp && wp.isMinimized()) continue;
+				if (!o.isClickable() && o.getHoverText() == null) continue;
+				
+				if (o instanceof IWindowParent<?> wp) {
 					//then check if the mouse is in or around the object if it's resizeable
-					else if (o.isMouseInside() || (o.isResizeable() && o.isMouseOnEdge(mX, mY))) {
-						var wp = o.getWindowParent();
-						if (wp != null) {
-							if (!wp.isMinimized()) underMouse.add(o);
-						}
-						else underMouse.add(o);
+					if (o.isMouseInside() || ((o.isResizeable() && o.isMouseOnEdge(mX, mY)) && !(wp.getMaximizedPosition() == ScreenLocation.TOP))) {
+						underMouse.add(o);
 					}
+				}
+				//then check if the mouse is in or around the object if it's resizeable
+				else if (o.isMouseInside() || (o.isResizeable() && o.isMouseOnEdge(mX, mY))) {
+					var wp = o.getWindowParent();
+					if (wp == null || !wp.isMinimized()) underMouse.add(o);
 				}
 			} //for
 		}

@@ -1,5 +1,6 @@
 package envision.game.objects;
 
+import envision.Envision;
 import envision.engine.rendering.GLObject;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.game.objects.effects.animations.AnimationHandler;
@@ -9,15 +10,14 @@ import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.Rotation;
-import qot.QoT;
 
 public abstract class GameObject extends GLObject implements IDrawable {
 	
 	public IGameWorld world;
 	protected GameTexture tex;
-	public int startX, startY, endX, endY;
-	public int midX, midY;
-	public int width, height;
+	public double startX, startY, endX, endY;
+	public double midX, midY;
+	public double width, height;
 	public EDimension collisionBox = new EDimension();
 	public int worldX, worldY;
 	protected String name;
@@ -60,12 +60,13 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	@Override
 	public abstract void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY);
 	
-	public void onGameTick() {
-		onLivingUpdate();
+	public void onGameTick(float dt) {
+		onLivingUpdate(dt);
 	}
 	
-	/** Can be overridden in child classes to denote specific entity behavior. */
-	public void onLivingUpdate() {}
+	/** Can be overridden in child classes to denote specific entity behavior. 
+	 * @param dt TODO*/
+	public void onLivingUpdate(float dt) {}
 	
 	/** Called from the world whenever this entity is removed from it. */
 	public void onRemovedFromWorld() {
@@ -106,7 +107,7 @@ public abstract class GameObject extends GLObject implements IDrawable {
 	
 	protected int calcBrightness() { return calcBrightness(worldX, worldY); }
 	public int calcBrightness(int x, int y) {
-		var world = QoT.theWorld;
+		var world = Envision.theWorld;
 		if (world == null || !world.isUnderground())
 			return 0xffffffff;
 		
@@ -119,8 +120,8 @@ public abstract class GameObject extends GLObject implements IDrawable {
 			
 			double cmx = p.collisionBox.midX; //collision mid x
 			double cmy = p.collisionBox.midY; //collision mid y
-			double tw = QoT.theWorld.getTileWidth(); //tile width
-			double th = QoT.theWorld.getTileHeight(); //tile height
+			double tw = Envision.theWorld.getTileWidth(); //tile width
+			double th = Envision.theWorld.getTileHeight(); //tile height
 			
 			//offset world coordinates to middle of collision box
 			int mwcx = (int) Math.ceil(cmx / tw); //mid world coords x

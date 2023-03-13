@@ -1,14 +1,8 @@
 package envision.engine.windows.bundledWindows.fileExplorer;
 
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import eutil.file.FileOpener;
-import eutil.strings.EStringUtil;
-import qot.QoT;
-import qot.assets.textures.window.WindowTextures;
-
 import java.io.File;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.bundledWindows.TextEditorWindow;
 import envision.engine.windows.bundledWindows.TextureDisplayer;
@@ -19,6 +13,12 @@ import envision.engine.windows.windowTypes.ActionWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.ObjectPosition;
+import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
+import eutil.file.FileOpener;
+import eutil.strings.EStringUtil;
+import qot.assets.textures.window.WindowTextures;
 
 public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	
@@ -35,22 +35,22 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	private WindowButton cancelBtn, selectBtn;
 	private WindowScrollList fileArea;
 	
-	private EArrayList<FilePreview> order = new EArrayList();
-	private EArrayList<FilePreview> highlighted = new EArrayList();
+	private EList<FilePreview> order = new EArrayList<>();
+	private EList<FilePreview> highlighted = new EArrayList<>();
 	
 	private boolean selectMode = false;
 	
 	private String text;
 	private double vPos = 0;
-	private EArrayList<Integer> prevHighlight;
+	private EList<Integer> prevHighlight;
 	
-	private EArrayList<Double> scrollBarPositionHistory = new EArrayList<>();
+	private EList<Double> scrollBarPositionHistory = new EArrayList<>();
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public FileExplorerWindow() { this(QoT.getTopRenderer()); }
+	public FileExplorerWindow() { this(Envision.getActiveTopParent()); }
 	public FileExplorerWindow(IWindowObject<?> parent) { this(parent, System.getProperty("user.dir"), false); }
 	public FileExplorerWindow(IWindowObject<?> parent, String dirIn) { this(parent, new File(dirIn), false); }
 	public FileExplorerWindow(IWindowObject<?> parent, File dirIn) { this(parent, dirIn, false); }

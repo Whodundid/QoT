@@ -1,10 +1,10 @@
 package envision.game.world.worldEditor.windows;
 
+import envision.Envision;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import eutil.colors.EColors;
-import qot.QoT;
 
 public class EditorSettingsWindow extends WindowParent {
 	
@@ -18,7 +18,7 @@ public class EditorSettingsWindow extends WindowParent {
 	
 	@Override
 	public void initWindow() {
-		setSize(QoT.getWidth() / 2, QoT.getHeight() / 2);
+		setSize(Envision.getWidth() / 2, Envision.getHeight() / 2);
 		setMinDims(300, 300);
 		setMaximizable(true);
 		setResizeable(true);

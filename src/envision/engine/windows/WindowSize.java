@@ -1,6 +1,6 @@
 package envision.engine.windows;
 
-import qot.QoT;
+import envision.Envision;
 
 public class WindowSize {
 	
@@ -15,9 +15,9 @@ public class WindowSize {
 	// Constructors
 	//--------------
 	
-	public WindowSize(QoT qoT) {
-		width = QoT.getWidth();
-		height = QoT.getHeight();
+	public WindowSize() {
+		width = Envision.getWidth();
+		height = Envision.getHeight();
 	}
 	
 	public WindowSize(int widthIn, int heightIn) {

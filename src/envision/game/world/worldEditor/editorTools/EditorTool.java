@@ -48,9 +48,9 @@ public abstract class EditorTool extends GLObject {
 		// logic to add object to world ~
 	}
 	
-	protected void addEntityToWorld(Entity ent) {
-		double cmx = ent.collisionBox.midX; //collision mid x
-		double cmy = ent.collisionBox.midY; //collision mid y
+	protected int[] getPlacementPosition(GameObject obj) {
+		double cmx = obj.collisionBox.midX; //collision mid x
+		double cmy = obj.collisionBox.midY; //collision mid y
 		double tw = editor.getEditorWorld().getTileWidth(); //tile width
 		double th = editor.getEditorWorld().getTileHeight(); //tile height
 		
@@ -58,12 +58,18 @@ public abstract class EditorTool extends GLObject {
 		int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
 		int mwcy = (int) Math.floor(cmy / th); //mid world coords y
 		
+		return new int[] { wx - mwcx, wy - mwcy };
+	}
+	
+	protected void addEntityToWorld(Entity ent) {
+		var placement = getPlacementPosition(ent);
+		
 		ent.world = editor.getEditorWorld();
-		ent.setWorldPos(wx - mwcx, wy - mwcy);
+		ent.setWorldPos(placement[0], placement[1]);
 		
 		//System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
 		editor.getEditorWorld().addEntity(ent);
-		editor.getEditorWorld().addEntitySpawn(ent);
+//		editor.getEditorWorld().addEntitySpawn(ent);
 	}
 	
 	protected void setTile(WorldTile t) { editor.setTileAt(wx, wy, t); }
@@ -106,7 +112,7 @@ public abstract class EditorTool extends GLObject {
 		var pos = Mouse.getPos();
 		pressPoint.set(pos.x, pos.y);
 		oldPoint.set(pressPoint);
-		if (editor.isMouseInMap()) {
+		if (editor.isMouseInMap() || editor.getCurrentTool() == EditorToolType.SELECTOR) {
 			updateWorldPoint();
 			onPress();
 		}

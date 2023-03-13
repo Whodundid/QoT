@@ -13,7 +13,6 @@ import eutil.math.dimensions.EDimension;
 import eutil.math.dimensions.EDimensionI;
 import eutil.misc.Rotation;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -23,7 +22,7 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	// Fields
 	//--------
 	
-	public FontRenderer fontRenderer = QoT.getFontRenderer();
+	public FontRenderer fontRenderer = FontRenderer.getInstance();
 	public EDimensionI res = Envision.getWindowDims();
 	public double startXPos, startYPos, startWidth, startHeight;
 	public double startX, startY, endX, endY;
@@ -38,17 +37,36 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	// Drawing Helpers
 	//-----------------
 	
-	public void drawRect(EColors color) { drawRect(color.c()); }
+	public static void drawRect(EGui o, EColors color) { drawRect(o.startX, o.startY, o.endX, o.endY, color.intVal); }
+	public static void drawRect(EGui o, int color) { drawRect(o.startX, o.startY, o.endX, o.endY, color); }
+	
+	public static void drawRect(EGui o, EColors color, int offset) {
+		drawRect(o.startX + offset,
+			     o.startY + offset,
+			     o.endX - offset,
+			     o.endY - offset,
+			     color.intVal);
+	}
+	
+	public static void drawRect(EGui o, int color, int offset) {
+		drawRect(o.startX + offset,
+			     o.startY + offset,
+			     o.endX - offset,
+			     o.endY - offset,
+			     color);
+	}
+	
+	public void drawRect(EColors color) { drawRect(color.intVal); }
 	public void drawRect(int color) { drawRect(startX, startY, endX, endY, color); }
 	
-	public void drawHRect(EColors color) { drawHRect(color.c()); }
+	public void drawHRect(EColors color) { drawHRect(color.intVal); }
 	public void drawHRect(int color) { drawHRect(startX, startY, endX, endY, 1, color); }
 	
-	public void drawRect(EColors color, int offset) { drawRect(color.c(), offset); }
+	public void drawRect(EColors color, int offset) { drawRect(color.intVal, offset); }
 	public void drawRect(int color, int offset) { drawRect(startX + offset, startY + offset, endX - offset, endY - offset, color); }
 	
-	public void drawHRect(EColors color, int offset) { drawHRect(color.c(), offset); }
-	public void drawHRect(EColors color, int size, int offset) { drawHRect(color.c(), size, offset); }
+	public void drawHRect(EColors color, int offset) { drawHRect(color.intVal, offset); }
+	public void drawHRect(EColors color, int size, int offset) { drawHRect(color.intVal, size, offset); }
 	public void drawHRect(int color, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, 1, color); }
 	public void drawHRect(int color, int size, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, size, color); }
 	
@@ -83,8 +101,8 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	
 	/** Centers the gui in the middle of the screen with the specified dimensions. */
 	public void centerGuiWithSize(double widthIn, double heightIn) {
-		double sWidth = QoT.getWidth();
-		double sHeight = QoT.getHeight();
+		double sWidth = Envision.getWidth();
+		double sHeight = Envision.getHeight();
 		double startX, startY, width, height;
 		
 		if (sWidth >= widthIn) { //check if the screen width is larger than the desired gui width

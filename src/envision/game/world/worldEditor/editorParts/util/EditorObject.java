@@ -2,7 +2,10 @@ package envision.game.world.worldEditor.editorParts.util;
 
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.game.objects.GameObject;
+import envision.game.objects.IDrawable;
 import envision.game.objects.entities.Entity;
+import envision.game.world.IGameWorld;
+import envision.game.world.WorldCamera;
 import envision.game.world.worldTiles.WorldTile;
 
 /**
@@ -10,7 +13,7 @@ import envision.game.world.worldTiles.WorldTile;
  * reference any of the game's assets without needing to individually specify
  * a different type for each.
  */
-public class EditorObject {
+public class EditorObject implements IDrawable {
 	
 	//--------
 	// Fields
@@ -67,5 +70,15 @@ public class EditorObject {
 	
 	public static EditorObject of(WorldTile tileIn) { return new EditorObject(tileIn); }
 	public static EditorObject of(GameObject entityIn) { return new EditorObject(entityIn); }
+	
+	@Override
+	public double getSortPoint() {
+		return theObject.getSortPoint();
+	}
+	
+	@Override
+	public void draw(
+		IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX,
+		int distY) {}
 	
 }

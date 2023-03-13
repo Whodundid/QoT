@@ -1,19 +1,20 @@
 package envision.game.objects.entities;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.game.objects.CollisionHelper;
 import envision.game.objects.GameObject;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
-import envision.game.world.worldTiles.WorldTile;
+import envision.game.world.WorldRenderer;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
-import eutil.debug.Broken;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.Direction;
 import eutil.misc.Rotation;
-import qot.QoT;
+import eutil.strings.EStringBuilder;
 import qot.particles.FloatingTextEntity;
 
 public abstract class Entity extends GameObject {
@@ -93,6 +94,10 @@ public abstract class Entity extends GameObject {
 	protected EntityHealthBar healthBar;
 	protected EList<IWindowObject> drawnObjects = EList.newList();
 	
+	protected final CollisionHelper collisionHelper;
+	/** I am.. SPEED */
+	public double speed = 32 * 4.5;
+	
 	//--------------
 	// Constructors
 	//--------------
@@ -105,6 +110,8 @@ public abstract class Entity extends GameObject {
 		//determine initial next level
 		xpNeeded = EntityLevel.getXPNeededForNextLevel(level + 1);
 		healthBar = new EntityHealthBar(this);
+		
+		collisionHelper = new CollisionHelper(this);
 	}
 	
 	//------------------
@@ -132,7 +139,7 @@ public abstract class Entity extends GameObject {
 	
 	@Override
 	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
-		//if (tex == null) return;
+		if (tex == null) return;
 		
 		double zoom = camera.getZoom();
 		
@@ -184,6 +191,19 @@ public abstract class Entity extends GameObject {
 		boolean mouseOver = (mX >= drawX && mX <= drawX + drawW && mY >= drawY && mY <= drawY + drawH);
 		
 		drawEntity(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
+		
+		if (WorldRenderer.drawEntityHitboxes) {
+			double colSX = drawX + (collisionBox.startX * zoom);
+			double colSY = drawY + (collisionBox.startY * zoom);
+			double colEX = colSX + (collisionBox.width * zoom);
+			double colEY = colSY + (collisionBox.height * zoom);
+			
+			drawHRect(colSX - 1, colSY, colEX, colEY - 1, 1, EColors.yellow);
+		}
+		
+		if (WorldRenderer.drawEntityOutlines) {
+			drawHRect(drawX, drawY, drawX + drawW, drawY + drawH, 1, EColors.blue);
+		}
 	}
 	
 	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
@@ -220,15 +240,15 @@ public abstract class Entity extends GameObject {
 		boolean drawDamageSplash = true;
 		if (drawDamageSplash) {
 			var dmg = new FloatingTextEntity(worldX, worldY, amount, 1500).setColor(EColors.red);
-			QoT.getWorld().getEntitiesInWorld().add(dmg);
+			Envision.getWorld().getEntitiesInWorld().add(dmg);
 		}
 		
 		healthChanged(amount);
 	}
 	
 	@Override
-	public void onGameTick() {
-		super.onGameTick();
+	public void onGameTick(float dt) {
+		super.onGameTick(dt);
 		
 		if (healthChanged && (System.currentTimeMillis() - healthChangedTime >= healthChangedTimeout)) {
 			healthChanged = false;
@@ -273,212 +293,17 @@ public abstract class Entity extends GameObject {
 		case E: move(1, 0); break;
 		case S: move(0, 1); break;
 		case W: move(-1, 0); break;
-		case NE: move(1.41421356237, -1.41421356237); break;
-		case NW: move(-1.41421356237, -1.41421356237); break;
-		case SE: move(1.41421356237, 1.41421356237); break;
-		case SW: move(-1.41421356237, 1.41421356237); break;
+		case NE: move(1, -1); break;
+		case NW: move(-1, -1); break;
+		case SE: move(1, 1); break;
+		case SW: move(-1, 1); break;
 		default: break;
 		}
 	}
 	
-	// broken due to not allowing for movement in any direction greater than 1
-	@Broken
 	public void move(double x, double y) {
-		if (world != null) {
-			x = Math.signum(x);
-			y = Math.signum(y);
-			boolean stopMove = false;
-			
-			//if (this != QoT.thePlayer) return;
-			boolean left = false, right = false, up = false, down = false;
-			if (x < 0) 			left = true;
-			else if (x > 0) 	right = true;
-			if (y < 0) 			up = true;
-			else if (y > 0) 	down = true;
-			
-			if (left) 		facing = Rotation.LEFT;
-			else if (right) facing = Rotation.RIGHT;
-			else if (up)	facing = Rotation.UP;
-			else if (down) 	facing = Rotation.DOWN;
-			
-			
-			if (!allowNoClip) {
-				double w = world.getTileWidth();
-				double h = world.getTileHeight();
-
-				//System.out.println(collisionBox.endX);
-				
-				double cSX = startX + collisionBox.startX;
-				double cSY = startY + collisionBox.startY;
-				double cEX = endX - (width - collisionBox.endX);
-				double cEY = endY - (height - collisionBox.endY);
-				
-				EDimension col = new EDimension(cSX, cSY, cEX, cEY);
-				//System.out.println(col);
-				//col = col.expand(1);
-				
-				int lVal = (left) ?		-1 :  0;
-				int uVal = (up) ? 		-1 :  0;
-				int rVal = (right) ?	 0 : -1;
-				int dVal = (down) ?		 0 : -1;
-				
-				int movingToSX = (int) ((col.startX + lVal) / w);
-				int movingToSY = (int) ((col.startY + uVal) / h);
-				int movingToEX = (int) ((col.endX + rVal) / w);
-				int movingToEY = (int) ((col.endY + dVal) / h);
-				
-				//col.endX += 1;
-				//col.endY += 1;
-				//col = col.contract(1);
-
-				movingToSX = ENumUtil.clamp(movingToSX, 0, world.getWidth() - 1);
-				movingToSY = ENumUtil.clamp(movingToSY, 0, world.getHeight() - 1);
-				movingToEX = ENumUtil.clamp(movingToEX, 0, world.getWidth() - 1);
-				movingToEY = ENumUtil.clamp(movingToEY, 0, world.getHeight() - 1);
-				
-				WorldTile tl = world.getTileAt(movingToSX, movingToSY);
-				WorldTile tr = world.getTileAt(movingToEX, movingToSY);
-				WorldTile bl = world.getTileAt(movingToSX, movingToEY);
-				WorldTile br = world.getTileAt(movingToEX, movingToEY);
-				
-				boolean tlBlock = (tl == null) || tl.blocksMovement();
-				boolean trBlock = (tr == null) || tr.blocksMovement();
-				boolean blBlock = (bl == null) || bl.blocksMovement();
-				boolean brBlock = (br == null) || br.blocksMovement();
-				
-				double sX = movingToSX * w;
-				double sY = movingToSY * h;
-				double eX = movingToEX * w;
-				double eY = movingToEY * h;
-				
-				EDimension tlDim = new EDimension(sX, sY, sX + w, sY + h);
-				EDimension blDim = new EDimension(sX, eY, sX + w, eY + h);
-				EDimension trDim = new EDimension(eX, sY, eX + w, sY + h);
-				EDimension brDim = new EDimension(eX, eY, eX + w, eY + h);
-				
-				//System.out.println("[" + movingToSX + ", " + movingToSY + "] [" + movingToEX + ", " + movingToSY + "]");
-				//System.out.println("[" + movingToSX + ", " + movingToEY + "] [" + movingToEX + ", " + movingToEY + "]");
-				
-				//System.out.println("tl: " + tlDim);
-				//System.out.println("tr: " + blDim);
-				//System.out.println("bl: " + blDim);
-				//System.out.println("br: " + brDim);
-				//System.out.println("cl: " + col);
-				
-				boolean clearUp = true;
-				boolean clearLeft = true;
-				boolean clearDown = true;
-				boolean clearRight = true;
-				
-				//System.out.println("[" + tlBlock + "] [" + trBlock + "]");
-				//System.out.println("[" + blBlock + "] [" + brBlock + "]");
-				
-				//clearUp
-				if (tlBlock) {
-					if (trBlock) {
-						//int aVal = (int) ((col.startY + y) - tlDim.endY);
-						//int bVal = (int) ((col.startY + y) - trDim.endY);
-						//System.out.println("u A: " + aVal + " " + bVal);
-						
-						clearUp = (col.startY > tlDim.endY || col.startX >= tlDim.endX) && (col.startY > trDim.endY || col.endX <= trDim.startX);
-					}
-					else {
-						//System.out.println("u B: " + col.startY + " > " + tlDim.endY);
-						clearUp = (col.startY > tlDim.endY || col.startX >= tlDim.endX);
-					}
-				}
-				else if (trBlock) {
-					//System.out.println("u C: " + col.startY + " > " + trDim.endY + " || " + col.endX + " < " + trDim.startX);
-					clearUp = (col.startY > trDim.endY || col.endX <= trDim.startX);
-				}
-				
-				//clearLeft
-				if (tlBlock) {
-					if (blBlock) {
-						//System.out.println("l A: " + col.startX + " > " + tlDim.endX + " && " + col.startX + " > " + blDim.endX);
-						clearLeft = (col.startX > tlDim.endX && col.startX > blDim.endX);
-					}
-					else {
-						//System.out.println("l B: " + col.startX + " > " + tlDim.endX);
-						clearLeft = (col.startX > tlDim.endX);
-					}
-				}
-				else if (blBlock) {
-					//System.out.println("l C: " + col.startX + " > " + blDim.endX);
-					clearLeft = (col.startX > blDim.endX);
-				}
-				
-				//clearDown
-				if (blBlock) {
-					if (brBlock) {
-						//System.out.println("d A: " + col.endY + " < " + blDim.startY + " && " + col.endY + " < " + brDim.startY);
-						clearDown = (col.endY < blDim.startY && col.endY < brDim.startY);
-					}
-					else {
-						//System.out.println("d B: " + col.endY + " < " + blDim.startY);
-						clearDown = (col.endY < blDim.startY);
-					}
-				}
-				else if (brBlock) {
-					//System.out.println("d C: " + col.endY + " < " + brDim.startY);
-					clearDown = (col.endY < brDim.startY);
-				}
-				
-				//clerRight
-				if (trBlock) {
-					if (brBlock) {
-						//System.out.println("r A: " + col.endX + " < " + trDim.startX + " && " + col.endX + " < " + brDim.startX);
-						clearRight = (col.endX < trDim.startX || col.startY >= trDim.endY) && (col.endX < brDim.startX || col.endY <= brDim.startY);
-					}
-					else {
-						//System.out.println("r B: " + col.endX + " < " + trDim.startX + " || " + col.startY + " >= " + trDim.endY);
-						clearRight = (col.endX < trDim.startX || col.startY >= trDim.endY);
-					}
-				}
-				else if (brBlock) {
-					//System.out.println("r C: " + col.endX + " < " + brDim.startX + " || " + col.endY + " <= " + brDim.startY);
-					clearRight = (col.endX < brDim.startX || col.endY <= brDim.startY);
-				}
-				
-				//System.out.println("   [" + clearUp + "]");
-				//System.out.println("[" + clearLeft + "] [" + clearRight + "]");
-				//System.out.println("   [" + clearDown + "]");
-				
-				if (left && !(clearLeft)) 		stopMove = true;
-				if (right && !(clearRight)) 	stopMove = true;
-				if (up && !(clearUp)) 			stopMove = true;
-				if (down && !(clearDown)) 		stopMove = true;
-			}
-			
-			if (!stopMove || (this == QoT.thePlayer && allowNoClip)) {
-				startX += x;
-				endX += x;
-				startY += y;
-				endY += y;
-				
-				if (!allowNoClip) {
-					startX = (int) ENumUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
-					startY = (int) ENumUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
-					endX = (int) ENumUtil.clamp(endX, width - collisionBox.startX, world.getPixelWidth() + (width - collisionBox.endX));
-					endY = (int) ENumUtil.clamp(endY, height - collisionBox.startY, world.getPixelHeight() + (height - collisionBox.endY));
-				}
-				
-				midX = startX + (width / 2);
-				midY = startY + (height / 2);
-				
-				double valX = startX / world.getTileWidth();
-				double valY = startY / world.getTileHeight();
-				
-				worldX = (int) valX;
-				worldY = (int) valY;
-				
-				//if (!allowNoClip) {
-					//if (this == QoT.thePlayer) System.out.println(worldX + " : " + worldY);
-					//worldX = NumberUtil.clamp(worldX, 0, world.getWidth() - 1);
-					//worldY = NumberUtil.clamp(worldY, 0, world.getHeight() - 1);
-				//}
-			}
-		}
+//		System.out.println("MOVING: " + x + " : " + y + " : " + Envision.getDeltaTime());
+		collisionHelper.tryMove(x, y, Envision.getDeltaTime());
 	}
 	
 	/**
@@ -545,6 +370,8 @@ public abstract class Entity extends GameObject {
 	public boolean isInvincible() { return invincible; }
 	public long getExperienceRewardedOnKill() { return experienceRewarded; }
 	
+	public CollisionHelper getCollisionHelper() { return collisionHelper; }
+	
 	//---------
 	// Setters
 	//---------
@@ -552,6 +379,11 @@ public abstract class Entity extends GameObject {
 	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }
 	public Entity setCollisionBox(double sX, double sY, double eX, double eY) { collisionBox = new EDimension(sX, sY, eX, eY); return this; }
+	public Entity setHeadText(Object... textIn) {
+		var sb = new EStringBuilder();
+		sb.a(textIn);
+		return setHeadText(sb.toString());
+	}
 	public Entity setHeadText(String textIn) { headText = textIn; return this; }
 	
 	/** Instantaneously moves this entity to the target world coordinates.

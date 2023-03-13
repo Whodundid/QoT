@@ -2,11 +2,11 @@ package qot.settings;
 
 import java.io.File;
 
+import envision.Envision;
 import envision.engine.settings.MainConfigFile;
 import envision.engine.settings.config.ConfigSetting;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
-import qot.QoT;
 
 public class QoTSettings {
 	
@@ -94,17 +94,17 @@ public class QoTSettings {
 		menuWorldsDir = new File(localGameDir, "menuWorlds");
 		
 		if (!savesDir.exists()) {
-			QoT.warn("Profiles directory not found! Attempting to create new one!");
+			Envision.warn("Profiles directory not found! Attempting to create new one!");
 			savesDir.mkdirs();
 		}
 		
 		if (!editorWorldsDir.exists()) {
-			QoT.warn("Editor worlds directory not found! Attempting to create new one!");
+			Envision.warn("Editor worlds directory not found! Attempting to create new one!");
 			editorWorldsDir.mkdirs();
 		}
 		
 		if (!menuWorldsDir.exists()) {
-			QoT.warn("Menu worlds directory not found! Attempting to create new one!");
+			Envision.warn("Menu worlds directory not found! Attempting to create new one!");
 			menuWorldsDir.mkdirs();
 		}
 		

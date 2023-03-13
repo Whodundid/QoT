@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-import qot.QoT;
+import envision.Envision;
 
 /**
  * A static helper class for all keyboard related operations and functions.
@@ -27,16 +27,16 @@ public class Keyboard extends GLFWKeyCallback {
 	/** The managed singleton keyboard instance. */
 	private static Keyboard instance;
 	
-	public static Keyboard create() { return create((IKeyboardInputReceiver) null); }
-	public static Keyboard create(IKeyboardInputReceiver receiverIn) {
-		return instance = new Keyboard(receiverIn);
+	public static Keyboard create() { return create(-1, (IKeyboardInputReceiver) null); }
+	public static Keyboard create(long windowHandle, IKeyboardInputReceiver receiverIn) {
+		return instance = new Keyboard(windowHandle, receiverIn);
 	}
 	
 	/**
 	 * Returns the managed singleton keyboard instance.
 	 */
 	public static Keyboard getInstance() {
-		return instance = (instance != null) ? instance : new Keyboard(null);
+		return instance = (instance != null) ? instance : create();
 	}
 	
 	//--------
@@ -58,8 +58,12 @@ public class Keyboard extends GLFWKeyCallback {
 	//--------------
 	
 	//prevent outside instantiation
-	private Keyboard(IKeyboardInputReceiver receiverIn) {
+	private Keyboard(long windowHandle, IKeyboardInputReceiver receiverIn) {
 		receiver = receiverIn;
+		
+		if (windowHandle > 0) {
+			GLFW.glfwSetKeyCallback(windowHandle, this);
+		}
 	}
 	
 	//-----------
@@ -127,7 +131,7 @@ public class Keyboard extends GLFWKeyCallback {
 	 * @return True if the given key is pressed
 	 */
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(QoT.getWindowHandle(), key) == 1;
+		return GLFW.glfwGetKey(Envision.getWindowHandle(), key) == 1;
 	}
 	
 	/**

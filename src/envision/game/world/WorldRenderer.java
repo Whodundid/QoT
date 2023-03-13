@@ -1,20 +1,19 @@
 package envision.game.world;
 
 import envision.Envision;
-import envision.engine.GameTopScreen;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.screens.GameTopScreen;
 import envision.engine.windows.windowUtil.EGui;
 import envision.game.objects.GameObject;
 import envision.game.objects.InsertionSort;
 import envision.game.objects.entities.Entity;
-import envision.game.world.layerSystem.WorldLayer;
+import envision.game.world.layerSystem.WorldDrawLayer;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
-import qot.QoT;
 import qot.entities.player.QoT_Player;
 
 //Author: Hunter Bragg
@@ -35,14 +34,14 @@ public class WorldRenderer extends EGui {
 	
 	private int viewDist = 18;
 	
-	boolean drawPosBox = false;
-	boolean drawEntityHitboxes = false;
-	boolean drawEntityOutlines = false;
+	public static boolean drawPosBox = false;
+	public static boolean drawEntityHitboxes = false;
+	public static boolean drawEntityOutlines = false;
 	
 	private int left, top, right, bot;
 	
 	/** Temporary list for testing world layers. */
-	private EList<WorldLayer> worldLayers = EList.newList();
+	private EList<WorldDrawLayer> worldLayers = EList.newList();
 	
 	//--------------
 	// Constructors
@@ -64,34 +63,35 @@ public class WorldRenderer extends EGui {
 			
 			TEMP_createWorldLayers();
 			
-			world.setCameraZoom(3);
+			//world.setCameraZoom(3);
 		}
 	}
 	
 	private void TEMP_createWorldLayers() {
-		synchronized (world) {
-			WorldLayer layerZero = new WorldLayer(world, 0);
-			WorldLayer layerOne = new WorldLayer(world, 1);
-			
-			for (int i = 0; i < world.getHeight(); i++) {
-				for (int j = 0; j < world.getWidth(); j++) {
-					WorldTile t = world.getTileAt(j, i);
-					if (t == null) continue;
-					else if (!t.isWall() || t.getWallHeight() < 0.20) {
-						t.setRenderLayer(0);
-					}
-					else {
-						t.setRenderLayer(1);
-					}
+		WorldDrawLayer layerZero = new WorldDrawLayer(world, 0);
+		WorldDrawLayer layerOne = new WorldDrawLayer(world, 1);
+		//WorldLayer layerTwo = new WorldLayer(world, 2);
+		
+		for (int i = 0; i < world.getHeight(); i++) {
+			for (int j = 0; j < world.getWidth(); j++) {
+				WorldTile t = world.getTileAt(j, i);
+				if (t == null) continue;
+				else if (!t.isWall() || t.getWallHeight() < 0.20) {
+					t.setRenderLayer(0);
+				}
+				else {
+					t.setRenderLayer(1);
 				}
 			}
-			
-			for (var ent : world.getEntitiesInWorld()) {
-				ent.setRenderLayer(1);
-			}
-			
-			worldLayers.add(layerZero, layerOne);
 		}
+		
+//		for (var ent : world.getEntitiesInWorld()) {
+//			ent.setRenderLayer(2);
+//		}
+		
+		worldLayers.add(layerZero);
+		worldLayers.add(layerOne);
+		//worldLayers.add(layerTwo);
 	}
 	
 	//------------------------
@@ -116,12 +116,12 @@ public class WorldRenderer extends EGui {
 	/**
 	 * Should be called from main game render tick, every tick.
 	 */
-	public void onRenderTick() {
-		world.camera.onRenderTick();
-		renderWorld();
+	public void onRenderTick(float partialTicks) {
+		world.camera.onRenderTick(partialTicks);
+		renderWorld(partialTicks);
 	}
 	
-	private void renderWorld() {
+	private void renderWorld(float partialTicks) {
 		if (world == null) drawStringC("Failed to load!", midX, midY);
 		else if (world.width < 0 || world.height < 0 || world.tileWidth <= 0 || world.tileHeight <= 0) {
 			drawStringC("Bad world dimensions!", midX, midY);
@@ -142,7 +142,10 @@ public class WorldRenderer extends EGui {
 			
 			//renderMap(x, y, w, h);
 			//renderEntities(x, y, w, h);
+			//Envision.renderEngine.getBatchManager().startBatch();
 			renderMapLayers();
+			//Envision.renderEngine.getBatchManager().endBatch();
+			//Envision.renderEngine.getBatchManager().draw();
 			
 			if (drawPosBox) {
 				drawPosBox(x, y, w, h);
@@ -166,15 +169,14 @@ public class WorldRenderer extends EGui {
 		
 		//System.out.println(left + " : " + top + " : " + right + " : " + bot);
 		
-		for (WorldLayer layer : worldLayers) {
+		for (WorldDrawLayer layer : worldLayers) {
 			layer.buildLayer(left, top, right, bot);
-			//System.out.println(layer + " : " + layer.getDrawnObjects());
 			layer.renderLayer(world, world.getCamera(), midDrawX, midDrawY, midX, midY, distX, distY);
 		}
 	}
 	
 	private void renderMap(double x, double y, double w, double h) {
-		QoT_Player p = QoT.thePlayer;
+		QoT_Player p = (QoT_Player) Envision.thePlayer;
 		
 		//keep the player at the center of the world (THIS SHOULD BE CHANGED TO 'CAMERA' AT SOME POINT!)
 		midDrawX = p.worldX;
@@ -193,7 +195,7 @@ public class WorldRenderer extends EGui {
 		//draw the tiles of the world using the calculated dimensions
 		for (int i = top, iy = 0; i <= bot; i++, iy++) {
 			for (int j = left, jx = 0; j <= right; j++, jx++) {
-				WorldTile t = world.getWorldData()[i][j];
+				WorldTile t = world.getWorldLayerData()[i][j];
 				
 				//ignore if either null or texture is null -- actually.. how could it be null?? :thinking:
 				if (t == null) continue;
@@ -231,8 +233,8 @@ public class WorldRenderer extends EGui {
 			GameTexture tex = ent.getTexture();
 			if (tex == null) continue;
 			
-			double cameraOffsetX = (QoT.thePlayer.startX % world.getTileWidth()) * world.getCameraZoom();
-			double cameraOffsetY = (QoT.thePlayer.startY % world.getTileHeight()) * world.getCameraZoom();
+			double cameraOffsetX = (Envision.thePlayer.startX % world.getTileWidth()) * world.getCameraZoom();
+			double cameraOffsetY = (Envision.thePlayer.startY % world.getTileHeight()) * world.getCameraZoom();
 			double entityOffsetX = (ent.startX % world.getTileWidth()) * world.getCameraZoom();
 			double entityOffsetY = (ent.startY % world.getTileWidth()) * world.getCameraZoom();
 			
@@ -244,7 +246,7 @@ public class WorldRenderer extends EGui {
 			drawX += (distX - midDrawX) * w;
 			drawY += (distY - midDrawY) * h;
 			
-			if (ent != QoT.thePlayer) {
+			if (ent != Envision.thePlayer) {
 				drawX += entityOffsetX;
 				drawY += entityOffsetY;
 				drawX -= cameraOffsetX;
@@ -274,7 +276,7 @@ public class WorldRenderer extends EGui {
 			
 			//render the entity
 			//ent.drawEntity(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
-			if (ent == QoT.thePlayer) {
+			if (ent == Envision.thePlayer) {
 				((QoT_Player) ent).drawEntity(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver); 
 			}
 			else if (ent instanceof Entity e) {
@@ -302,7 +304,7 @@ public class WorldRenderer extends EGui {
 	}
 	
 	private void drawPosBox(double x, double y, double w, double h) {
-		QoT_Player p = QoT.thePlayer;
+		QoT_Player p = (QoT_Player) Envision.thePlayer;
 		
 		double drawX = x + w * distX;
 		double drawY = y + h * distY;
@@ -330,7 +332,7 @@ public class WorldRenderer extends EGui {
 	
 	private int calcBrightness(int x, int y) {
 		if (world.underground) {
-			QoT_Player p = QoT.thePlayer;
+			QoT_Player p = (QoT_Player) Envision.thePlayer;
 			
 			double cmx = p.collisionBox.midX; //collision mid x
 			double cmy = p.collisionBox.midY; //collision mid y

@@ -5,8 +5,8 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
+import envision.Envision;
 import eutil.datatypes.points.Point2i;
-import qot.QoT;
 
 public class Mouse extends GLFWMouseButtonCallback {
 	
@@ -29,28 +29,28 @@ public class Mouse extends GLFWMouseButtonCallback {
 	// Static Singleton
 	//==================
 	
-	public static Mouse create() { return create((IMouseInputReceiver) null); }
-	public static Mouse create(IMouseInputReceiver receiverIn) {
-		return instance = new Mouse(receiverIn);
+	public static Mouse create() { return create(-1, (IMouseInputReceiver) null); }
+	public static Mouse create(long windowHandle, IMouseInputReceiver receiverIn) {
+		return instance = new Mouse(windowHandle, receiverIn);
 	}
 	
 	public static Mouse getInstance() {
-		return instance = (instance != null) ? instance : new Mouse(null);
+		return instance = (instance != null) ? instance : create();
 	}
 	
 	//==============
 	// Constructors
 	//==============
 	
-	private Mouse(IMouseInputReceiver receiverIn) {
+	private Mouse(long windowHandle, IMouseInputReceiver receiverIn) {
 		super();
 		receiver = receiverIn;
 		
 		cursorCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
-				mX = (int) (xpos / QoT.getGameScale());
-				mY = (int) (ypos / QoT.getGameScale());
+				mX = (int) (xpos / Envision.getGameScale());
+				mY = (int) (ypos / Envision.getGameScale());
 			}
 		};
 		
@@ -61,6 +61,12 @@ public class Mouse extends GLFWMouseButtonCallback {
 				lastChange = 0;
 			}
 		};
+		
+		if (windowHandle > 0) {
+			GLFW.glfwSetMouseButtonCallback(windowHandle, this);
+			GLFW.glfwSetCursorPosCallback(windowHandle, cursorCallback);
+			GLFW.glfwSetScrollCallback(windowHandle, scrollCallback);
+		}
 	}
 	
 	//======================================
@@ -94,7 +100,7 @@ public class Mouse extends GLFWMouseButtonCallback {
 	//================
 	
 	public static boolean isButtonDown(int button) {
-		return GLFW.glfwGetMouseButton(QoT.getWindowHandle(), button) == 1;
+		return GLFW.glfwGetMouseButton(Envision.getWindowHandle(), button) == 1;
 	}
 	
 	public static boolean isAnyButtonDown() { return isButtonDown(0) || isButtonDown(1) || isButtonDown(2); }

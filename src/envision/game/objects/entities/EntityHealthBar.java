@@ -1,8 +1,8 @@
 package envision.game.objects.entities;
 
+import envision.Envision;
 import envision.engine.windows.windowTypes.WindowObject;
 import eutil.colors.EColors;
-import qot.QoT;
 
 public class EntityHealthBar extends WindowObject {
 	
@@ -14,12 +14,12 @@ public class EntityHealthBar extends WindowObject {
 	private long fadeOutDuration = 600l;
 	
 	public EntityHealthBar(Entity entityIn) {
-		init(QoT.currentScreen);
+		init(Envision.currentScreen);
 		theEntity = entityIn;
 	}
 	
 	public EntityHealthBar(Entity entityIn, double x, double y, double w, double h) {
-		init(QoT.currentScreen, x, y, w, h);
+		init(Envision.currentScreen, x, y, w, h);
 		theEntity = entityIn;
 	}
 	
@@ -52,7 +52,7 @@ public class EntityHealthBar extends WindowObject {
 			var pw = (width * percent);
 			
 			drawRect(getDimensions().add(1), EColors.black.opacity(opacity));
-			var end = (theEntity == QoT.thePlayer) ? 4 : 1;
+			var end = (theEntity == Envision.thePlayer) ? 4 : 1;
 			drawRect(startX, startY, startX + pw, endY - end, EColors.mc_darkred.opacity(opacity));
 		}
 	}

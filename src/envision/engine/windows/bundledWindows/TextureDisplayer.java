@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowImageBox;
 import envision.engine.windows.windowTypes.WindowParent;
@@ -13,7 +14,6 @@ import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
 import eutil.math.ENumUtil;
-import qot.QoT;
 import qot.assets.textures.taskbar.TaskBarTextures;
 import qot.assets.textures.window.WindowTextures;
 
@@ -123,7 +123,7 @@ public class TextureDisplayer extends WindowParent {
 				
 				//attempt to parse into image
 				tex = new GameTexture(path.toString());
-				QoT.getTextureSystem().registerTexture(tex);
+				TextureSystem.getInstance().registerTexture(tex);
 				if (tex.hasBeenRegistered()) {
 					centered = (tex.getWidth() == tex.getHeight());
 				}
@@ -154,7 +154,7 @@ public class TextureDisplayer extends WindowParent {
 				setObjectName(file.getName());
 				
 				tex = new GameTexture(file.toString());
-				QoT.getTextureSystem().registerTexture(tex);
+				TextureSystem.getInstance().registerTexture(tex);
 				if (tex.hasBeenRegistered()) {
 					centered = (tex.getWidth() == tex.getHeight());
 				}
@@ -220,7 +220,7 @@ public class TextureDisplayer extends WindowParent {
 					if (getHeader() != null) getHeader().setTitle(newFile.getName());
 					
 					tex = new GameTexture(newFile.toString());
-					QoT.getTextureSystem().registerTexture(tex);
+					TextureSystem.getInstance().registerTexture(tex);
 					if (tex.hasBeenRegistered()) {
 						centered = (tex.getWidth() == tex.getHeight());
 						imageBox.setImage(tex);
@@ -238,7 +238,7 @@ public class TextureDisplayer extends WindowParent {
 				if (getHeader() != null) getHeader().setTitle(newPath.getFileName().toString());
 				
 				tex = new GameTexture(paths.get(curPath).toString());
-				QoT.getTextureSystem().registerTexture(tex);
+				TextureSystem.getInstance().registerTexture(tex);
 				if (tex.hasBeenRegistered()) {
 					centered = (tex.getWidth() == tex.getHeight());
 					imageBox.setImage(tex);

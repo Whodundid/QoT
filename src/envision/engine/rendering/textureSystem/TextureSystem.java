@@ -4,11 +4,11 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Iterator;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
 
 import envision.Envision;
 import eutil.datatypes.EArrayList;
@@ -157,10 +157,10 @@ public class TextureSystem {
 		// ensure that OpenGL is initialized first.
 		if (!GLFW.glfwInit()) return;
 		
-		try {
-			IntBuffer width = BufferUtils.createIntBuffer(1);
-			IntBuffer height = BufferUtils.createIntBuffer(1);
-			IntBuffer comp = BufferUtils.createIntBuffer(1);
+		try (var stack = MemoryStack.stackPush()) {
+			IntBuffer width = stack.mallocInt(1);
+			IntBuffer height = stack.mallocInt(1);
+			IntBuffer comp = stack.mallocInt(1);
 			
 			ByteBuffer data = STBImage.stbi_load(textureIn.getFilePath(), width, height, comp, 4);
 			int w = width.get(0);
@@ -174,11 +174,6 @@ public class TextureSystem {
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, magFilter);
 			
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
-			STBImage.stbi_image_free(data);
-			
-			//create bufferedImage object for internal use
-			//ByteArrayInputStream bas = new ByteArrayInputStream(data.array());
-			//BufferedImage img = ImageIO.read(bas);
 			
 			//--------------------------------------------
 			// Set the values onto the GameTexture object
@@ -187,7 +182,7 @@ public class TextureSystem {
 			EReflectionUtil.setField(textureIn, "width", w);
 			EReflectionUtil.setField(textureIn, "height", h);
 			EReflectionUtil.setField(textureIn, "textureID", texID);
-			//ReflectionHelper.setField(textureIn, "bi", img);
+			EReflectionUtil.setField(textureIn, "imageBytes", data);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

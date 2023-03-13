@@ -1,5 +1,6 @@
 package qot.screens.gameplay.combat;
 
+import envision.Envision;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -7,7 +8,6 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.objects.effects.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
-import qot.QoT;
 import qot.assets.sounds.Songs;
 import qot.screens.main.MainMenuScreen;
 
@@ -19,7 +19,7 @@ public class DeathScreen extends GameScreen {
 	public void initScreen() {
 		SoundEngine.stopAll();
 		SoundEngine.loopIfNotPlaying(Songs.lithinburg);
-		QoT.loadWorld(null);
+		Envision.loadWorld(null);
 	}
 	
 	@Override
@@ -37,21 +37,21 @@ public class DeathScreen extends GameScreen {
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		drawRect(EColors.dsteel);
-		if (QoT.thePlayer == null) return;
+		if (Envision.thePlayer == null) return;
 		
-		var tex = QoT.thePlayer.getTexture();
+		var tex = Envision.thePlayer.getTexture();
 		double w = 128;
 		double h = 128;
 		drawTexture(tex, midX - (w / 2), midY + (h / 4) - (h / 2), w, h, Rotation.LEFT);
 		
 		drawStringC("YOU DIED!", midX, midY - (midY / 4) - (FontRenderer.FONT_HEIGHT * 2), EColors.lred);
-		String killed = "You killed " + QoT.thePlayer.getStats().getEnemiesKilled() + " monsters!";
+		String killed = "You killed " + Envision.thePlayer.getStats().getEnemiesKilled() + " monsters!";
 		drawStringC(killed, midX, midY - (midY / 4), EColors.seafoam);
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == mainMenu) QoT.displayScreen(new MainMenuScreen());
+		if (object == mainMenu) Envision.displayScreen(new MainMenuScreen());
 	}
 
 }

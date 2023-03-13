@@ -80,17 +80,22 @@ public class WindowSlider<E> extends ActionObject<E> {
 			else displayValue = new DecimalFormat("0.00").format(sliderValue);
 		}
 		
-		if (vertical && getStringWidth(displayValue) > width) {
-			//GlStateManager.pushMatrix();
-			//double xPos = midX;
-			//double yPos = midY;
-			//GlStateManager.translate(xPos, yPos, 0);
-			//GlStateManager.rotate(90f, 0f, 0f, 45f);
-			//GlStateManager.translate(-xPos, -yPos, 0);
-			
-			if (drawDisplayString) drawStringC(displayValue, midX, midY - 8, displayValueColor);
+		if (drawDisplayString && displayValue != null && !displayValue.isEmpty()) {
+			if (vertical && getStringWidth(displayValue) > width) {
+				//GlStateManager.pushMatrix();
+				//double xPos = midX;
+				//double yPos = midY;
+				//GlStateManager.translate(xPos, yPos, 0);
+				//GlStateManager.rotate(90f, 0f, 0f, 45f);
+				//GlStateManager.translate(-xPos, -yPos, 0);
+				
+				drawStringC(displayValue, midX, midY - 8, displayValueColor);
+			}
+			else {
+				drawStringC(displayValue, midX, midY - 8, displayValueColor);
+			}
 		}
-		else if (drawDisplayString) drawStringC(displayValue, midX, midY - 8, displayValueColor);
+		
 	}
 	
 	@Override

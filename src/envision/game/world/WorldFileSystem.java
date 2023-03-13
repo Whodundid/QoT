@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.game.objects.entities.EntitySpawn;
+import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
@@ -142,68 +143,73 @@ public class WorldFileSystem {
 		//ensure the file actually exists before trying to read from it
 		if (!worldFile.exists()) return false;
 		
-		try {
-			//read in world file
-			EList<String> world = LineReader.readAllLines(worldFile);
-			
+		//read in world file
+		try (var reader = new LineReader(worldFile)) {
 			//read name
-			String mapName = world.next();
+			String mapName = reader.nextLine();
 			
 			//read map dims
-			String[] mapDims = world.next().split(" ");
+			String[] mapDims = reader.nextLine().split(" ");
 			int mapWidth = ENumUtil.parseInt(mapDims, 0, -1);
 			int mapHeight = ENumUtil.parseInt(mapDims, 1, -1);
 			int mapTileWidth = ENumUtil.parseInt(mapDims, 2, -1);
 			int mapTileHeight = ENumUtil.parseInt(mapDims, 3, -1);
 			
 			//read player spawn
-			String[] playerSpawn = world.next().split(" ");
+			String[] playerSpawn = reader.nextLine().split(" ");
 			int spawnX = ENumUtil.parseInt(playerSpawn, 0, -1);
 			int spawnY = ENumUtil.parseInt(playerSpawn, 1, -1);
 			
 			//get underground state
-			boolean underground = 1 == ENumUtil.parseInt(world.next(), 0);
+			boolean underground = 1 == ENumUtil.parseInt(reader.nextLine(), 0);
 			
-			//create map data array using parsed dims
-			WorldTile[][] data = new WorldTile[mapHeight][mapWidth];
+			// parse number of world layers and the data on that layer
+			int numLayers = ENumUtil.parseInt(reader.nextLine(), 0);
 			
-			for (int i = 0; i < mapHeight; i++) {
-				//grab the next line
-				String mapLine = world.next();
-				String[] lineTiles = mapLine.split(" ");
+			for (int layerNum = 0; layerNum < numLayers; layerNum++) {
+				//create map data array using parsed dims
+				WorldLayer layer = new WorldLayer(mapWidth, mapHeight);
 				
-				for (int j = 0; j < mapWidth; j++) {
-					String tile = lineTiles[j];
+				for (int i = 0; i < mapHeight; i++) {
+					//grab the next line
+					String mapLine = reader.nextLine();
+					String[] lineTiles = mapLine.split(" ");
 					
-					//break out into child parts (if there are any)
-					int tileID = -1;
-					int childID = 0;
-					String[] parts = tile.split(":");
-					
-					if (!"n".equals(parts[0])) {
-						tileID = Integer.parseInt(parts[0]);
-						if (parts.length > 1) childID = Integer.parseInt(parts[1]);
+					for (int j = 0; j < mapWidth; j++) {
+						String tile = lineTiles[j];
 						
-						//get tile from the parsed ID, add children, and store in map data
-						WorldTile t = WorldTile.getTileFromID(tileID, childID);
-						if (t == null) System.out.println("NULL: " + tileID + " : " + childID);
-						if (t != null) {
-							if (parts.length == 1) t.setWildCard(true);
-							t.setWorldPos(j, i);
+						//break out into child parts (if there are any)
+						int tileID = -1;
+						int childID = 0;
+						String[] parts = tile.split(":");
+						
+						if (!"n".equals(parts[0])) {
+							tileID = Integer.parseInt(parts[0]);
+							if (parts.length > 1) childID = Integer.parseInt(parts[1]);
+							
+							//get tile from the parsed ID, add children, and store in map data
+							WorldTile t = WorldTile.getTileFromID(tileID, childID);
+							if (t == null) System.out.println("NULL: " + tileID + " : " + childID);
+							if (t != null) {
+								if (parts.length == 1) t.setWildCard(true);
+								t.setWorldPos(j, i);
+							}
+							layer.setTileAt(t, j, i);
 						}
-						data[i][j] = t;
-					}
-					else {
-						data[i][j] = null;
+						else {
+							layer.setTileAt(new VoidTile(), j, i);
+						}
 					}
 				}
+				
+				theWorld.addWorldLayer(layer);
 			}
 			
-			EArrayList<EntitySpawn> entitySpawnsIn = new EArrayList<>();
-			EArrayList<Region> regions = new EArrayList<>();
+			EList<EntitySpawn> entitySpawnsIn = new EArrayList<>();
+			EList<Region> regions = new EArrayList<>();
 			
-			while (world.isNotEmpty()) {
-				String line = world.next();
+			while (reader.hasNextLine()) {
+				String line = reader.nextLine();
 				if (line.startsWith("r")) {
 					Region r = Region.parseRegion(theWorld, line);
 					if (r != null) regions.add(r);
@@ -222,7 +228,6 @@ public class WorldFileSystem {
 			theWorld.playerSpawn.setX(spawnX);
 			theWorld.playerSpawn.setY(spawnY);
 			theWorld.underground = underground;
-			theWorld.worldData = data;
 			theWorld.regionData = regions;
 			theWorld.entitySpawns = entitySpawnsIn;
 			
@@ -267,39 +272,44 @@ public class WorldFileSystem {
 		writer.println(theWorld.width + " " + theWorld.height + " " + theWorld.tileWidth + " " + theWorld.tileHeight);
 		writer.println(theWorld.playerSpawn.getX() + " " + theWorld.playerSpawn.getY());
 		writer.println(theWorld.underground ? 1 : 0);
+		//writer.println(theWorld.getWorldLayers().size());
+		writer.println(1); // layers
 		
 		//write map data
-		for (int i = 0; i < theWorld.height; i++) {
-			EByteBuilder sb = new EByteBuilder();
-			for (int j = 0; j < theWorld.width; j++) {
-				WorldTile t = theWorld.worldData[i][j];
-				String end = (j == (theWorld.width - 1)) ? "" : " ";
-				
-				if (t == null) {
-					writer.print("n" + end);
-					sb.append(("n" + end).getBytes());
-				}
-				else {
-					GameTexture tex = t.getTexture();
-					if (tex == null) {
+		for (int layerNum = 0; layerNum < theWorld.getWorldLayers().size(); layerNum++) {
+			if (layerNum > 0) break;
+			for (int i = 0; i < theWorld.height; i++) {
+				EByteBuilder sb = new EByteBuilder();
+				for (int j = 0; j < theWorld.width; j++) {
+					WorldTile t = theWorld.getWorldLayers().get(layerNum).getTileAt(j, i);
+					String end = (j == (theWorld.width - 1)) ? "" : " ";
+					
+					if (t == null) {
 						writer.print("n" + end);
 						sb.append(("n" + end).getBytes());
 					}
 					else {
-						String l = t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + end;
-						writer.print(l);
-						sb.append(l.getBytes());
+						GameTexture tex = t.getTexture();
+						if (tex == null) {
+							writer.print("n" + end);
+							sb.append(("n" + end).getBytes());
+						}
+						else {
+							String l = t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + end;
+							writer.print(l);
+							sb.append(l.getBytes());
+						}
 					}
 				}
-			}
-			
-			writer.println();
-			try {
-				mapWriter.write(sb.toByteArray());
-				mapWriter.write('\n');
-			}
-			catch (IOException e) {
-				e.printStackTrace();
+				
+				writer.println();
+				try {
+					mapWriter.write(sb.toByteArray());
+					mapWriter.write('\n');
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		

@@ -1,5 +1,6 @@
 package envision.game.world.worldEditor;
 
+import envision.Envision;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowCheckBox;
@@ -10,7 +11,6 @@ import envision.game.world.GameWorld;
 import envision.game.world.worldTiles.WorldTile;
 import envision.game.world.worldTiles.categories.NatureTiles;
 import eutil.colors.EColors;
-import qot.QoT;
 
 public class NewMapCreatorScreen extends GameScreen {
 
@@ -147,7 +147,7 @@ public class NewMapCreatorScreen extends GameScreen {
 	private void createMap() {
 		world = new GameWorld(name, width, height);
 		if (!empty) world.fillWith(fillTile);
-		QoT.displayScreen(new MapEditorScreen(world), this);
+		Envision.displayScreen(new MapEditorScreen(world), this);
 	}
 	
 }

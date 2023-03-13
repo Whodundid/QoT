@@ -1,9 +1,9 @@
 package qot.particles;
 
+import envision.Envision;
 import envision.game.objects.entities.Entity;
 import envision.game.world.IGameWorld;
 import eutil.colors.EColors;
-import qot.QoT;
 
 public class FloatingTextEntity extends Entity {
 
@@ -18,7 +18,7 @@ public class FloatingTextEntity extends Entity {
 		this.text = text + "";
 		creationTime = System.currentTimeMillis();
 		setInvincible(true);
-		world = QoT.theWorld;
+		world = Envision.theWorld;
 		setWorldPos(x, y);
 	}
 	
@@ -46,11 +46,11 @@ public class FloatingTextEntity extends Entity {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		if (!dieAfterSpecifiedTime) return;
 		if (System.currentTimeMillis() - creationTime >= timeToLive) {
 			kill();
-			QoT.theWorld.getEntitiesInWorld().remove(this);
+			Envision.theWorld.getEntitiesInWorld().remove(this);
 		}
 	}
 

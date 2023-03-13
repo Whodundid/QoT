@@ -17,7 +17,7 @@ public class Barrel extends Entity {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		
 	}
 	

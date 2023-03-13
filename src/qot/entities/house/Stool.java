@@ -18,7 +18,7 @@ public class Stool extends Entity {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		
 	}
 	

@@ -11,7 +11,6 @@ import envision.engine.rendering.textureSystem.TextureSystem;
 import eutil.colors.EColors;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.Rotation;
-import qot.QoT;
 
 /** The base underlying object that all window objects are drawn from. */
 public abstract class GLObject {
@@ -179,14 +178,14 @@ public abstract class GLObject {
 	public static void drawLine(double startX, double startY, double endX, double endY, int thickness, EColors color) { drawLine(startX, startY, endX, endY, thickness, color.intVal); }
 	/** Draws a line from point a to b with a variable thickness. */
 	public static void drawLine(double startX, double startY, double endX, double endY, int thickness, int color) {
-		//set mode
-		begin(GLModes.LINES);
-		
 		//set drawing settings
 		blendOn();
 		alphaOn();
 		setGLColor(color);
 		lineWidth(thickness);
+		
+		//set mode
+		begin(GLModes.LINES);
 		
 		//define points
 		vertex(tdx(startX), tdy(startY), 0);
@@ -271,15 +270,15 @@ public abstract class GLObject {
 	public static void drawFilledEllipse(double posX, double posY, double radiusX, double radiusY, int detail, EColors color) { drawFilledEllipse(posX, posY, radiusX, radiusY, detail, color.intVal); }
 	/** Draws a solid ellipse expanding out from the center. */
 	public static void drawFilledEllipse(double posX, double posY, double radiusX, double radiusY, int detail, int color) {
-		//set mode
-		begin(GLModes.TRIANGLE_FAN);
-		
 		//set drawing settings
 		blendOn();
 		alphaOn();
 		GLSettings.blendSeparate();
 		setGLColor(color);
 		
+		//set mode
+		begin(GLModes.TRIANGLE_FAN);
+
 		//define points
 		vertex(tdx(posX), tdy(posY));
 		
@@ -295,13 +294,13 @@ public abstract class GLObject {
 	}
 	
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public void drawRect(EDimension dims, EColors color) { drawRect(dims, color.intVal, 0); }
+	public static void drawRect(EDimension dims, EColors color) { drawRect(dims, color.intVal, 0); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public void drawRect(EDimension dims, int color) { drawRect(dims, color, 0); }
+	public static void drawRect(EDimension dims, int color) { drawRect(dims, color, 0); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public void drawRect(EDimension dims, EColors color, int offset) { drawRect(dims, color.intVal, offset); }
+	public static void drawRect(EDimension dims, EColors color, int offset) { drawRect(dims, color.intVal, offset); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public void drawRect(EDimension dims, int color, int offset) {
+	public static void drawRect(EDimension dims, int color, int offset) {
 		drawRect(dims.startX + offset,
 				 dims.startY + offset,
 				 dims.endX - offset,
@@ -310,7 +309,9 @@ public abstract class GLObject {
 	}
 	
 	/** Draws a filled rectangle. */
-	public static void drawRect(double left, double top, double right, double bottom, EColors colorIn) { drawRect(left, top, right, bottom, colorIn.intVal); }
+	public static void drawRect(double left, double top, double right, double bottom, EColors colorIn) {
+		drawRect(left, top, right, bottom, colorIn.intVal);
+	}
 	/** Draws a filled rectangle. */
 	public static void drawRect(double left, double top, double right, double bottom, int color) {
 		//correct dimensions (if necessary)
@@ -326,14 +327,14 @@ public abstract class GLObject {
 			bottom = j;
 		}
 		
-		//set mode
-		begin(GLModes.QUADS);
-		
 		//set drawing settings
 		blendOn();
 		alphaOn();
 		GLSettings.blendSeparate();
 		setGLColor(color);
+		
+		//set mode
+		begin(GLModes.QUADS);
 		
 		double sx = tdx(left);
 		double sy = tdy(top);
@@ -446,6 +447,7 @@ public abstract class GLObject {
 			texCoord(ex, ey, 	xVal + wVal, 	yVal + hVal);
 			texCoord(ex, sy, 	xVal + wVal, 	yVal);
 			texCoord(sx, sy, 	xVal, 			yVal);
+			
 			
 			draw();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -568,17 +570,22 @@ public abstract class GLObject {
 	public static void scissor(int startX, int startY, int endX, int endY, boolean useGlY) { scissor((double) startX, (double) startY, (double) endX, (double) endY, useGlY); }
 	/** Performs a scissoring on the specified region. IMPORTANT: ALWAYS CALL 'endScissor' OR gl11.disable(gl_scissor) AFTER THIS TO PREVENT RENDERING ERRORS!*/
 	public static void scissor(double startX, double startY, double endX, double endY, boolean useGlY) {
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		double scale = QoT.getGameScale();
+		GLSettings.enableScissor();
+		//Envision.renderEngine.getBatchManager().pushLayerIndex();
+		double scale = Envision.getGameScale();
 		int w = (int) ((endX - startX) * scale);
 		int h = (int) ((endY - startY) * scale);
 		int x = (int) (startX * scale);
-		int y = useGlY ? (int) (startY * scale) : (int) (QoT.getWindowSize().getHeight() - (startY * scale) - h);
+		int y = useGlY ? (int) (startY * scale) : (int) (Envision.getHeight() - (startY * scale) - h);
 		if (w >= 0 && h >= 0) GL11.glScissor(x, y, w, h);
+		GLSettings.setScissorBounds(x, y, w, h);
 	}
 	
 	/** Stops scissoring an area. */
-	public static void endScissor() { GL11.glDisable(GL11.GL_SCISSOR_TEST); }
+	public static void endScissor() {
+		//Envision.renderEngine.getBatchManager().popLayerIndex();
+		GLSettings.disableScissor();
+	}
 	
 	
 	//----------------------------
@@ -588,7 +595,6 @@ public abstract class GLObject {
 	
 	/** Breaks down an int representation of a color into the appropriate (r, g, b, a) OpenGL float values. */
 	public static void setGLColor(int colorIn) {
-		GL11.glClearColor(0, 0, 0, 0);
 		float f = (colorIn >> 16 & 255) / 255.0F;
 		float f1 = (colorIn >> 8 & 255) / 255.0F;
 		float f2 = (colorIn & 255) / 255.0F;
@@ -598,14 +604,14 @@ public abstract class GLObject {
 	
 	/** 'to double for x' converts a given value into a corresponding double value between -1.0f and 1.0f based on window x size. */
 	public static double tdx(double valIn) {
-		double midX = QoT.getWidth() * 0.5;
-		return (valIn * QoT.getGameScale() - midX) / midX;
+		double midX = Envision.getWidth() * 0.5;
+		return (valIn * Envision.getGameScale() - midX) / midX;
 	}
 	
 	/** 'to double for y' converts a given value into a corresponding double value between -1.0f and 1.0f based on window y size. */
 	public static double tdy(double valIn) {
-		double midY = QoT.getHeight() * 0.5;
-		return (midY - (valIn * QoT.getGameScale())) / midY;
+		double midY = Envision.getHeight() * 0.5;
+		return (midY - (valIn * Envision.getGameScale())) / midY;
 	}
 	
 	/** Binds a 2d texture. */

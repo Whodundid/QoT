@@ -1,22 +1,21 @@
 package envision.engine.windows.windowTypes;
 
+import java.util.Stack;
+
+import envision.Envision;
+import envision.debug.DebugFunctions;
+import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.windows.desktopOverlay.TaskBar;
+import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
+import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
-
-import java.util.Stack;
-
-import envision.debug.DebugFunctions;
-import envision.debug.desktopOverlay.TaskBar;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.engine.windows.windowTypes.interfaces.IWindowParent;
-import envision.engine.windows.windowUtil.ObjectPosition;
 
 //Author: Hunter Bragg
 
@@ -64,8 +63,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 
 	/** By default, set the parent to the QoT top overlay. */
 	
-	public WindowParent() { this(QoT.getActiveTopParent(), null); }
-	public WindowParent(IWindowParent<?> oldGuiIn) { this(QoT.getActiveTopParent(), oldGuiIn); }
+	public WindowParent() { this(Envision.getActiveTopParent(), null); }
+	public WindowParent(IWindowParent<?> oldGuiIn) { this(Envision.getActiveTopParent(), oldGuiIn); }
 	public WindowParent(IWindowObject<?> parentIn) { this(parentIn, null); }
 	public WindowParent(IWindowObject<?> parentIn, IWindowParent<?> oldGuiIn) {
 		__INIT__();
@@ -116,11 +115,11 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	public void drawObject_i(int mXIn, int mYIn) {
 		if (drawDefaultBackground) drawDefaultBackground();
 		super.drawObject_i(mXIn, mYIn);
-		if (!willBeDrawn() && QoT.isDebugMode()) return;
+		if (!willBeDrawn() && Envision.isDebugMode()) return;
 		
-		if (QoT.isDebugMode()) {
+		if (Envision.isDebugMode()) {
 			if (!isMaximized()) {
-				double y = hasHeader() ? getHeader().startY - 22 : startY - 22;
+				double y = hasHeader() ? getHeader().startY - FontRenderer.FONT_HEIGHT : startY - FontRenderer.FONT_HEIGHT;
 				int pos = 0;
 				int half = -1;
 				String draw = "";
@@ -146,7 +145,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 				drawRect(startX, y - 1, startX + pos + 5, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
 				drawRect(startX + 1, y, startX + pos + 4, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
 				if (half > 0) drawRect(startX + half, y, startX + half + 1, y + FontRenderer.FONT_HEIGHT, EColors.black);
-				drawString(draw, startX + 3, y + 1, EColors.cyan);
+				drawString(draw, startX + 3, y + 2);
 				
 				if (DebugFunctions.drawWindowDimensions) {
 					String dims = "[" + (int) startX + ", " + (int) startY + ", " + width + " " + height + "]";
@@ -168,17 +167,17 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	
 	@Override
 	public void close() {
-		if (getTopParent() == QoT.getTopRenderer()) {
+		if (getTopParent() == Envision.getTopScreen()) {
 			//update the taskbar
 			TaskBar.windowClosed(this);
 			
 			//get all active windows on the top renderer
-			var windows = QoT.getTopRenderer().getAllActiveWindows();
+			var windows = Envision.getTopScreen().getAllActiveWindows();
 			
 			//check if this is the only window on the top renderer
 			//if so, close the top renderer when closing the window
 			if (windows.size() == 1 && windows.getFirst() == this) {
-				QoT.getTopRenderer().setFocused(false);
+				Envision.getTopScreen().setFocused(false);
 			}
 		}
 		
@@ -233,7 +232,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	@Override
 	public void maximize() {
 		EDimension screen = getTopParent().getDimensions();
-		boolean hasTaskBar = QoT.getTopRenderer().getTaskBar() != null;
+		boolean hasTaskBar = Envision.getTopScreen().getTaskBar() != null;
 		
 		double sw = screen.width;
 		double sh = screen.height;

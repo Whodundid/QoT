@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
 
-import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.windows.windowTypes.ActionObject;
@@ -84,7 +83,7 @@ public class WindowButton<E> extends ActionObject<E> {
 	@Override
 	public void drawObject(int mX, int mY) {
 		boolean mouseHover = isClickable() && isMouseOver();
-		boolean mouseCheck = !Mouse.isButtonDown(0) && mouseHover;
+		boolean mouseCheck = /*!Mouse.isButtonDown(0) && */mouseHover;
 		int stringColor = isEnabled() ? (mouseCheck ? textHoverColor : color) : (drawDisabledColor ? disabledColor : color + 0xbbbbbb);
 		if (drawSelected) stringColor = selectedColor;
 		
@@ -152,7 +151,7 @@ public class WindowButton<E> extends ActionObject<E> {
 		//------------------------------------
 		//------------------------------------
 		
-		if (drawString) {
+		if (drawString && displayString != null && !displayString.isEmpty()) {
 			scissor(startX + 1, startY + 1, endX - 1, endY - 1);
 			
 			if (drawCentered) {

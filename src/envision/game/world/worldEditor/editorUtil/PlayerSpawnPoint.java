@@ -4,10 +4,14 @@ import envision.game.objects.GameObject;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2i;
+import qot.assets.textures.editor.EditorTextures;
 
-/** A point in the world where the player will be positioned when being loaded.
- *  The coordinates for positioning are based off of the top left corner of the player's collision box. */
+/**
+ * A point in the world where the player will be positioned when being
+ * loaded. The coordinates for positioning are based off of the top left
+ * corner of the player's collision box.
+ */
 public class PlayerSpawnPoint extends GameObject {
 	
 	/** The world for which this point is corresponding to. */
@@ -18,13 +22,16 @@ public class PlayerSpawnPoint extends GameObject {
 	public PlayerSpawnPoint(GameWorld worldIn) { this(worldIn, 0, 0); }
 	public PlayerSpawnPoint(GameWorld worldIn, int xIn, int yIn) {
 		super("Spawn");
+		init(xIn, yIn, 32, 32);
+		setTexture(EditorTextures.player_spawn);
+		
 		theWorld = worldIn;
 		xPos = xIn;
 		yPos = yIn;
 	}
 	
 	public GameWorld getWorld() { return theWorld; }
-	public Box2<Integer, Integer> getPos() { return new Box2(xPos, yPos); }
+	public Point2i getPos() { return new Point2i(xPos, yPos); }
 	public int getX() { return xPos; }
 	public int getY() { return yPos; }
 	

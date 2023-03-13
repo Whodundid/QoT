@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import envision.debug.terminal.commands.TerminalCommand;
-import envision.debug.terminal.terminalUtil.ClassFinder;
-import envision.debug.terminal.window.ETerminalWindow;
+import envision.engine.terminal.commands.TerminalCommand;
+import envision.engine.terminal.terminalUtil.ClassFinder;
+import envision.engine.terminal.window.ETerminalWindow;
 
 @SuppressWarnings("unused")
 public class Deb4 extends DebugCommand {

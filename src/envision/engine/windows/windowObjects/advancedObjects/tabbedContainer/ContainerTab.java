@@ -1,6 +1,5 @@
 package envision.engine.windows.windowObjects.advancedObjects.tabbedContainer;
 
-import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowObject;

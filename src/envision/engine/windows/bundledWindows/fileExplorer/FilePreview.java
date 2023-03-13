@@ -4,10 +4,10 @@ import eutil.colors.EColors;
 
 import java.io.File;
 
-import envision.debug.terminal.terminalUtil.FileType;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.terminal.terminalUtil.FileType;
 import envision.engine.windows.windowTypes.WindowObject;
 
 public class FilePreview<E extends File> extends WindowObject<E> {

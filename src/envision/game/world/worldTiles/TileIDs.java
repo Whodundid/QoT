@@ -40,6 +40,7 @@ public enum TileIDs {
 	STONE_WALL(28, "Stone Wall"),
 	
 	COARSE_SAND(29, "Coarse Sand"),
+	STONE_PAVER(30, "Stone Paver"),
 	;
 	
 	public final int tileID;

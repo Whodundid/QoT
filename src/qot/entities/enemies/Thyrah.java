@@ -1,12 +1,11 @@
 package qot.entities.enemies;
 
+import envision.Envision;
 import envision.game.objects.entities.Enemy;
-import envision.game.objects.entities.Entity;
 import envision.game.world.GameWorld;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
-import qot.QoT;
 import qot.assets.textures.entity.EntityTextures;
 
 public class Thyrah extends Enemy {
@@ -31,7 +30,7 @@ public class Thyrah extends Enemy {
 	}
 
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
 			waitTime = ERandomUtil.getRoll(randShort, randLong);
 			//moveTime = RandomUtil.getRoll(randShort, 800l);
@@ -44,29 +43,10 @@ public class Thyrah extends Enemy {
 			move(lastDir);
 		}
 		
-		if (QoT.thePlayer == null) return;
+		if (Envision.thePlayer == null) return;
 		
-		EDimension testDim;
-		EDimension pDims;
-		
-		{
-			double cSX = startX + collisionBox.startX;
-			double cSY = startY + collisionBox.startY;
-			double cEX = endX - (width - collisionBox.endX);
-			double cEY = endY - (height - collisionBox.endY);
-			
-			testDim = new EDimension(cSX, cSY, cEX, cEY);
-		}
-		
-		{
-			Entity e = QoT.thePlayer;
-			double cSX = e.startX + e.collisionBox.startX;
-			double cSY = e.startY + e.collisionBox.startY;
-			double cEX = e.endX - (e.width - e.collisionBox.endX);
-			double cEY = e.endY - (e.height - e.collisionBox.endY);
-			
-			pDims = new EDimension(cSX, cSY, cEX, cEY);
-		}
+		EDimension testDim = getCollisionDims();
+		EDimension pDims = Envision.thePlayer.getCollisionDims();
 		
 		if (testDim.partiallyContains(pDims)) {
 			if (hit) {
@@ -78,15 +58,15 @@ public class Thyrah extends Enemy {
 			else {
 				hit = true;
 				timeSinceLastHit = System.currentTimeMillis();
-				QoT.thePlayer.drainHealth(getBaseMeleeDamage());
+				Envision.thePlayer.drainHealth(getBaseMeleeDamage());
 			}
 		}
 		
-		double distToPlayer = ((GameWorld) world).getDistance(this, QoT.thePlayer);
+		double distToPlayer = ((GameWorld) world).getDistance(this, Envision.thePlayer);
 		if (distToPlayer <= 300) {
 			headText = "" + health;
 			
-			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, QoT.thePlayer);
+			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
 			move(dirToPlayer);
 		}
 		else {

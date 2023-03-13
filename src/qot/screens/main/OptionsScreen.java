@@ -1,5 +1,6 @@
 package qot.screens.main;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.screens.GameScreen;
@@ -11,7 +12,6 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.objects.effects.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
-import qot.QoT;
 import qot.settings.QoTSettings;
 
 public class OptionsScreen extends GameScreen {
@@ -33,7 +33,7 @@ public class OptionsScreen extends GameScreen {
 	
 	@Override
 	public void initChildren() {
-		double w = ENumUtil.clamp(QoT.getWidth() / 4, 150, 390);
+		double w = ENumUtil.clamp(Envision.getWidth() / 4, 150, 390);
 		double x = midX - w / 2;
 		
 		back = new WindowButton(this, x, endY - 100, w, 40, "Back");
@@ -43,10 +43,10 @@ public class OptionsScreen extends GameScreen {
 		
 		fpsSlider = new WindowSlider(this, volumeSlider.startX, volumeSlider.endY + 60, 300, 35, 30, 300, false);
 		fpsSlider.setUseIntegers(true);
-		fpsSlider.setSliderValue(QoT.getTargetFPS());
+		fpsSlider.setSliderValue(Envision.getTargetFPS());
 		
 		upsInput = new WindowTextField(this, fpsSlider.startX, fpsSlider.endY + 60, 75, 35);
-		upsInput.setText(QoT.getTargetUPS());
+		upsInput.setText(Envision.getTargetUPS());
 		
 		boolean fs = QoTSettings.fullscreen.get();
 		String fText = (fs) ? "Disable FullScreen" : "Enable FullScreen";
@@ -97,7 +97,7 @@ public class OptionsScreen extends GameScreen {
 	//---------------------------------------------
 	
 	private void back() {
-		QoT.displayScreen(new MainMenuScreen());
+		Envision.displayScreen(new MainMenuScreen());
 	}
 	
 	private void volumeSlider() {
@@ -117,7 +117,7 @@ public class OptionsScreen extends GameScreen {
 		double val = fpsSlider.getSliderValue();
 		
 		QoTSettings.targetFPS.set((int) val);
-		QoT.setTargetFPS((int) val);
+		Envision.setTargetFPS((int) val);
 		changed = true;
 	}
 	
@@ -125,7 +125,7 @@ public class OptionsScreen extends GameScreen {
 		String input = upsInput.getText();
 		
 		if (input == null) {
-			upsInput.setText(QoT.getTargetUPS());
+			upsInput.setText(Envision.getTargetUPS());
 			return;
 		}
 		
@@ -137,21 +137,21 @@ public class OptionsScreen extends GameScreen {
 			upsInput.setText(ups);
 			
 			QoTSettings.targetUPS.set((int) ups);
-			QoT.setTargetUPS(ups);
+			Envision.setTargetUPS(ups);
 			changed = true;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			upsInput.setText(QoT.getTargetUPS());
+			upsInput.setText(Envision.getTargetUPS());
 		}
 	}
 	
 	private void vSync() {
-		QoT.setVSync(!QoTSettings.vsync.get());
+		//Envision.setVSync(!QoTSettings.vsync.get());
 	}
 	
 	private void fullscreen() {
-		QoT.setFullScreen(!QoTSettings.fullscreen.get());
+		//Envision.setFullScreen(!QoTSettings.fullscreen.get());
 	}
 	
 	private void resolution() {

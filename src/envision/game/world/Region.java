@@ -3,15 +3,16 @@ package envision.game.world;
 import java.io.File;
 import java.util.Scanner;
 
+import envision.Envision;
 import envision.game.events.eventTypes.entity.EntityEnteredRegionEvent;
 import envision.game.events.eventTypes.entity.EntityExitedRegionEvent;
 import envision.game.objects.GameObject;
 import envision.game.objects.entities.Entity;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.dimensions.EDimension;
 import eutil.math.dimensions.EDimensionI;
-import qot.QoT;
 import qot.settings.QoTSettings;
 
 public class Region extends GameObject {
@@ -23,7 +24,7 @@ public class Region extends GameObject {
 	public int width, height;
 	protected int regionColor;
 	protected boolean onlyRenderInEditor = true;
-	protected EArrayList<Entity> entitiesInside = new EArrayList<>();
+	protected EList<Entity> entitiesInside = new EArrayList<>();
 	
 	public Region(IGameWorld worldIn, String nameIn) { this(worldIn, nameIn, 0, 0, 0, 0, 0xff55ff55); }
 	public Region(IGameWorld worldIn, String nameIn, EColors colorIn) { this(worldIn, nameIn, 0, 0, 0, 0, colorIn.intVal); }
@@ -45,7 +46,7 @@ public class Region extends GameObject {
 		
 	}
 	
-	public void updateRegion() {
+	public void updateRegion(float dt) {
 		//check to see if the entities that are said to be inside are still actually inside
 		var it = entitiesInside.iterator();
 		while (it.hasNext()) {
@@ -84,36 +85,36 @@ public class Region extends GameObject {
 		setDimensions(startX, startY, endX, endY);
 	}
 	
-	public synchronized EArrayList<Entity> getEntitiesInside() {
-		return new EArrayList<>(entitiesInside);
+	public synchronized EList<Entity> getEntitiesInside() {
+		return EList.of(entitiesInside);
 	}
 	
-	protected synchronized void onEntityEntered(Entity in, int xPos, int yPos) {
-		QoT.getEventHandler().postEvent(new EntityEnteredRegionEvent(world, in, this, xPos, yPos));
+	protected synchronized void onEntityEntered(Entity in, double xPos, double yPos) {
+		Envision.getEventHandler().postEvent(new EntityEnteredRegionEvent(world, in, this, xPos, yPos));
 		
 		//TODO: Remove this
-		if (in == QoT.thePlayer) {
+		if (in == Envision.thePlayer) {
 			if (world.getWorldName().equals("new")) {
 				if (name.equals("Cave")) {
-					QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")));
-					QoT.theWorld.setUnderground(true);
+					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")));
+					Envision.theWorld.setUnderground(true);
 				}
 				else if (name.equals("MountainPass")) {
-					QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")));
+					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")));
 				}
 			}
 			else if (world.getWorldName().equals("cave")) {
-				QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
 			}
 			else if (world.getWorldName().equals("mountains")) {
 				if (name.equals("Valley")) {
-					QoT.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
 				}
 			}
 		}
 	}
-	protected synchronized void onEntityExited(Entity in, int xPos, int yPos) {
-		QoT.getEventHandler().postEvent(new EntityExitedRegionEvent(world, in, this, xPos, yPos));
+	protected synchronized void onEntityExited(Entity in, double xPos, double yPos) {
+		Envision.getEventHandler().postEvent(new EntityExitedRegionEvent(world, in, this, xPos, yPos));
 	}
 	
 	public synchronized void addEntity(Entity in) {

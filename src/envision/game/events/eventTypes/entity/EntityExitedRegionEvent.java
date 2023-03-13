@@ -24,13 +24,13 @@ public class EntityExitedRegionEvent extends EntityEvent {
 	/** The region being exited. */
 	private final Region region;
 	/** The X and Y coordinates that the entity exited the region at. */
-	private final int x, y;
+	private final double x, y;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public EntityExitedRegionEvent(IGameWorld worldIn, Entity entIn, Region regionIn, int xIn, int yIn) {
+	public EntityExitedRegionEvent(IGameWorld worldIn, Entity entIn, Region regionIn, double xIn, double yIn) {
 		super(EventType.ENTITY_EXITED_REGION, true);
 		world = worldIn;
 		ent = entIn;
@@ -50,8 +50,8 @@ public class EntityExitedRegionEvent extends EntityEvent {
 	/** Returns the region that this took place in. */
 	public Region getRegion() { return region; }
 	/** Returns the X coordinate of the world that the entity exited the region from. */
-	public int getX() { return x; }
+	public double getX() { return x; }
 	/** Returns the Y coordinate of the world that the entity exited the region from. */
-	public int getY() { return y; }
+	public double getY() { return y; }
 	
 }

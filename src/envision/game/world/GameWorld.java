@@ -3,21 +3,23 @@ package envision.game.world;
 import java.awt.Point;
 import java.io.File;
 
+import envision.Envision;
 import envision.game.events.eventTypes.world.WorldAddedEntityEvent;
 import envision.game.objects.GameObject;
 import envision.game.objects.entities.Entity;
 import envision.game.objects.entities.EntitySpawn;
 import envision.game.world.layerSystem.LayerSystem;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
+import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import envision_lang._launch.EnvisionProgram;
+import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.debug.Inefficient;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.EDimension;
 import eutil.math.dimensions.EDimensionI;
 import eutil.misc.Direction;
-import qot.QoT;
 
 public class GameWorld implements IGameWorld {
 	
@@ -36,7 +38,10 @@ public class GameWorld implements IGameWorld {
 	protected File worldFile;
 	protected int width, height;
 	protected int tileWidth, tileHeight;
-	protected WorldTile[][] worldData = new WorldTile[0][0];
+	
+	protected EList<WorldLayer> worldLayers = new EArrayList<>();
+	
+	//protected WorldTile[][] worldData = new WorldTile[0][0];
 	protected EList<GameObject> worldObjects = EList.newList();
 	protected EList<Entity> entityData = EList.newList();
 	protected EList<EntitySpawn> entitySpawns = EList.newList();
@@ -75,7 +80,10 @@ public class GameWorld implements IGameWorld {
 		height = heightIn;
 		tileWidth = tileWidthIn;
 		tileHeight = tileHeightIn;
-		worldData = new WorldTile[width][height];
+		
+		WorldLayer layer0 = new WorldLayer(width, height);
+		worldLayers.add(layer0);
+				
 		worldObjects = EList.newList();
 		entityData = EList.newList();
 		fileLoaded = true;
@@ -113,17 +121,14 @@ public class GameWorld implements IGameWorld {
 		tileHeight = worldIn.tileHeight;
 		underground = worldIn.underground;
 		playerSpawn = worldIn.playerSpawn;
-		worldData = new WorldTile[width][height];
+		
 		worldObjects = EList.newList();
 		entityData = EList.newList();
 		
 		//copy tile data
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				var tile = worldIn.getTileAt(i, j);
-				if (tile == null) continue;
-				worldData[i][j] = WorldTile.copy(worldIn.getTileAt(i, j));
-			}
+		
+		for (int i = 0; i < worldIn.worldLayers.size(); i++) {
+			worldLayers.add(worldIn.worldLayers.get(i).copyLayer());
 		}
 		
 		//copy entity data
@@ -146,7 +151,10 @@ public class GameWorld implements IGameWorld {
 		height = 0;
 		tileWidth = 0;
 		tileHeight = 0;
-		worldData = new WorldTile[0][0];
+		
+		WorldLayer layer0 = new WorldLayer(width, height);
+		worldLayers.add(layer0);
+		
 		worldObjects = EList.newList();
 		entityData = EList.newList();
 		fileLoaded = false;
@@ -156,10 +164,11 @@ public class GameWorld implements IGameWorld {
 	// Methods
 	//---------
 	
-	public void onInitialLoad() {
+	@Override
+	public void onLoad() {
 		if (worldLoadScript != null) {
 			try {
-				//QoT.envision.runProgram(worldLoadScript);
+				//Envision.envision.runProgram(worldLoadScript);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -168,14 +177,20 @@ public class GameWorld implements IGameWorld {
 		
 		worldRenderer.onWorldLoaded();
 		
-		if (QoT.thePlayer != null) {
-			addEntity(QoT.thePlayer);
-			QoT.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
-			camera.setFocusedObject(QoT.thePlayer);
+		if (Envision.thePlayer != null) {
+			if (entityData.notContains(Envision.thePlayer) && toAdd.notContains(Envision.thePlayer)) {
+				addEntity(Envision.thePlayer);
+			}
+			Envision.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
+			camera.setFocusedObject(Envision.thePlayer);
 		}
 	}
 	
-	public synchronized void onGameTick() {
+	public void onRenderTick(float partialTicks) {
+		getWorldRenderer().onRenderTick(partialTicks);
+	}
+	
+	public synchronized void onGameTick(float dt) {
 		//update time of day
 		if (timeOfDay++ >= lengthOfDay) timeOfDay = 0;
 		
@@ -199,8 +214,8 @@ public class GameWorld implements IGameWorld {
 			toDelete.clear();
 		}
 		
-		updateEntities();
-		updateRegions();
+		updateEntities(dt);
+		updateRegions(dt);
 	}
 	
 	public void setPlayerSpawnPosition(int x, int y) {
@@ -211,11 +226,11 @@ public class GameWorld implements IGameWorld {
 		regionData.add(regionIn);
 	}
 	
-	public void updateEntities() {
+	public void updateEntities(float dt) {
 		for (int i = 0; i < entityData.size(); i++) {
 			GameObject e = entityData.get(i);
 			if (e != null) {
-				e.onGameTick();
+				e.onGameTick(dt);
 			}
 		}
 		
@@ -229,16 +244,14 @@ public class GameWorld implements IGameWorld {
 		}
 		
 		if (nullEntities > 0) {
-			QoT.warn("'" + nullEntities + "' were null in world: '" + getWorldName() + "' and have been removed!");
+			Envision.warn("'" + nullEntities + "' were null in world: '" + getWorldName() + "' and have been removed!");
 		}
 		
 		//temporary world tile update
 		
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				WorldTile t = worldData[y][x];
-				if (t != null) t.onWorldTick();
-			}
+		int size = worldLayers.size();
+		for (int i = 0; i < size; i++) {
+			worldLayers.get(i).onWorldTick();
 		}
 	}
 	
@@ -247,13 +260,13 @@ public class GameWorld implements IGameWorld {
 	 * entering or exiting it.
 	 */
 	@Inefficient(reason="Could impact performance if there are too many regions/entities in world")
-	protected void updateRegions() {
+	protected void updateRegions(float dt) {
 		//this is not efficient. :')
 		
 		for (Region r : regionData) {
 			EDimensionI rDims = r.getRegionDimensions();
 			//re-evaluate current region data
-			r.updateRegion();
+			r.updateRegion(dt);
 			
 			//check if any entities are in a region or are entering or exiting one
 			for (Entity ent : entityData) {
@@ -285,11 +298,11 @@ public class GameWorld implements IGameWorld {
 		
 		//assign entity ID
 		ent.setObjectID(getNextEntityID());
-		QoT.getEventHandler().postEvent(new WorldAddedEntityEvent(this, ent));
+		Envision.getEventHandler().postEvent(new WorldAddedEntityEvent(this, ent));
 		
 		//check if player
-		if (ent == QoT.thePlayer) {
-			QoT.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
+		if (ent == Envision.thePlayer) {
+			Envision.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
 		}
 	}
 	
@@ -338,6 +351,10 @@ public class GameWorld implements IGameWorld {
 		double dX = dest.midX - start.midX;
 		double dY = dest.midY - start.midY;
 		
+		// to prevent entity 'shaking'
+		if (dX > -1.0 && dX < 1.00) dX = 0;
+		if (dY > -1.0 && dY < 1.00) dY = 0;
+		
 		if (dX == 0)
 			if (dY > 0) return Direction.S;
 			else if (dY == 0) return Direction.OUT;
@@ -375,6 +392,25 @@ public class GameWorld implements IGameWorld {
 		//bresenham's line algorithm
 	}
 	
+	/** This is trash :) */
+	public void setNumWorldLayers(int num) {
+		for (int i = 0; i < num; i++) {
+			addWorldLayer();
+		}
+	}
+	
+	public WorldLayer addWorldLayer() {
+		return worldLayers.addR(new WorldLayer(width, height));
+	}
+	
+	public void addWorldLayer(WorldLayer layerIn) {
+		worldLayers.add(layerIn);
+	}
+	
+	public void removeWorldLayer(int layer) {
+		worldLayers.remove(layer);
+	}
+	
 	//--------------------------
 	// WORLD LOADING AND SAVING
 	//--------------------------
@@ -396,10 +432,13 @@ public class GameWorld implements IGameWorld {
 	@Override public int getTileHeight() { return tileHeight; }
 	public int getPixelWidth() { return width * tileWidth; }
 	public int getPixelHeight() { return height * tileHeight; }
-	public WorldTile[][] getWorldData() { return worldData; }
+	public WorldTile[][] getWorldLayerData() { return getWorldLayerData(0); }
+	public WorldTile[][] getWorldLayerData(int layer) { return worldLayers.get(layer).worldData; }
 	public boolean isUnderground() { return underground; }
 	@Override public PlayerSpawnPoint getPlayerSpawn() { return playerSpawn; }
-	public EnvisionProgram getStartupScript() { return worldLoadScript; }
+	@Override public void setPlayerSpawn(int x, int y) { playerSpawn = new PlayerSpawnPoint(this, x, y); }
+	@Override public EnvisionProgram getStartupScript() { return worldLoadScript; }
+	@Override public void setStartupScript(EnvisionProgram program) { worldLoadScript = program; }
 	
 	/** The file path to this specific map file. */
 	public String getFilePath() { return worldFileSystem.getFilePath(); }
@@ -411,10 +450,11 @@ public class GameWorld implements IGameWorld {
 	public boolean exists() { return worldFileSystem.exists(); }
 	/** Returns this world's file system manager. */
 	public WorldFileSystem getWorldFileSystem() { return worldFileSystem; }
+	public EList<WorldLayer> getWorldLayers() { return worldLayers; }
 	
 	@Override
-	public WorldTile getTileAt(int xIn, int yIn) {
-		return worldData[yIn][xIn];
+	public WorldTile getTileAt(int layer, int xIn, int yIn) {
+		return worldLayers.get(layer).getTileAt(xIn, yIn);
 	}
 	
 	@Override public EList<GameObject> getObjectsInWorld() { return worldObjects; }
@@ -443,9 +483,9 @@ public class GameWorld implements IGameWorld {
 	}
 	
 	@Override
-	public void setTileAt(WorldTile in, int xIn, int yIn) {
-		if (in != null) in.setWorldPos(xIn, yIn);
-		worldData[yIn][xIn] = in;
+	public void setTileAt(WorldTile in, int layerIn, int xIn, int yIn) {
+		if (in == null) in = new VoidTile();
+		worldLayers.get(layerIn).setTileAt(in, xIn, yIn);
 	}
 	
 	/**
@@ -456,7 +496,7 @@ public class GameWorld implements IGameWorld {
 	 * @param heightIn
 	 */
 	public void setWorldDims(int widthIn, int heightIn, int tileWidthIn, int tileHeightIn) {
-		worldData = new WorldTile[heightIn][widthIn];
+		worldLayers.forEach(l -> l.setDimensions(widthIn, heightIn));
 		this.width = widthIn;
 		this.height = heightIn;
 		this.tileWidth = tileWidthIn;
@@ -468,9 +508,8 @@ public class GameWorld implements IGameWorld {
 	public void setRegionData(EList<Region> regions) { regionData = regions; }
 	public void setPlayerSpawn(PlayerSpawnPoint point) { playerSpawn = point; }
 	
-	public GameWorld setLoaded(boolean val) { loaded = val && isFileLoaded(); return this; }
-	public GameWorld setWorldLoadScript(EnvisionProgram scriptIn) { worldLoadScript = scriptIn; return this; }
-	public GameWorld setUnderground(boolean val) { underground = val; return this; }
+	@Override public void setLoaded(boolean val) { loaded = val && isFileLoaded(); }
+	public void setUnderground(boolean val) { underground = val; }
 	
 	public GameWorld setTimeOfDay(long timeInTicks) {
 		timeOfDay = ENumUtil.clamp(timeInTicks, 0, lengthOfDay);
@@ -481,14 +520,9 @@ public class GameWorld implements IGameWorld {
 		return this;
 	}
 	
-	public GameWorld fillWith(WorldTile t) { return fillWith(t, true); }
-	public GameWorld fillWith(WorldTile t, boolean randomize) {
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				worldData[i][j] = WorldTile.randVariant(t).setWorldPos(i, j);
-			}
-		}
-		return this;
+	public void fillWith(WorldTile t) { fillWith(0, t); }
+	public void fillWith(int layer, WorldTile t) {
+		worldLayers.get(layer).fillWith(t);
 	}
 	
 }

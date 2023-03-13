@@ -1,18 +1,18 @@
 package qot.screens.character;
 
+import envision.Envision;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.objects.entities.Entity;
 import eutil.colors.EColors;
-import qot.QoT;
 
 public class LevelUpScreen extends GameScreen {
 	
 	WindowButton back, upHealth, upDamage, upMana, stats, escape;
 	Entity levelingEntity;
 	
-	public LevelUpScreen() { this(QoT.getPlayer()); }
+	public LevelUpScreen() { this(Envision.getPlayer()); }
 	public LevelUpScreen(Entity theEntity) {
 		levelingEntity = theEntity;
 	}

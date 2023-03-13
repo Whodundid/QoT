@@ -29,7 +29,8 @@ public class StoneFloorTextures extends TextureLoader {
 	dung_floor = new GameTexture(textureDir, "dung_floor.png"),
 	stone_pad = new GameTexture(textureDir, "stone_pad.png"),
 	
-	clay_pad = new ClayPad();
+	clay_pad = new ClayPad(),
+	stone_paver = new StonePaver();
 	
 	//-----------
 	// Overrides
@@ -41,6 +42,7 @@ public class StoneFloorTextures extends TextureLoader {
 		reg(sys, stone_pad);
 		
 		reg(sys, clay_pad);
+		reg(sys, stone_paver);
 	}
 	
 }

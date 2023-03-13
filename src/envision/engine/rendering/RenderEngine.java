@@ -1,11 +1,14 @@
 package envision.engine.rendering;
 
 import envision.Envision;
+import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.renderingAPI.RendererContextType;
 import envision.engine.rendering.renderingAPI.RenderingContext;
 import envision.engine.rendering.renderingAPI.opengl.OpenGLContext;
 
 public class RenderEngine {
+	
+	public Camera camera;
 	
 	//==================
 	// Static Singleton
@@ -49,6 +52,11 @@ public class RenderEngine {
 		
 		renderingContext.init();
 		
+		var width = Envision.getWidth();
+		var height = Envision.getHeight();
+		camera = new Camera();
+		camera.updateProjection(width, height);
+		
 		init = true;
 	}
 	
@@ -69,9 +77,11 @@ public class RenderEngine {
 	public boolean isInit() { return init; }
 	public boolean isContextInit() { return (renderingContext != null) ? renderingContext.isInit() : false; }
 	
+	public Camera getCamera() { return camera; }
+	
 	/** Returns the actual rendering context in use. */
 	public RenderingContext getRenderingContext() { return renderingContext; }
 	
-	public OpenGLBatchManager getPrimaryBatch() { return renderingContext.getPrimaryBatch(); }
+	public BatchManager getBatchManager() { return renderingContext.getBatchManager(); }
 	
 }

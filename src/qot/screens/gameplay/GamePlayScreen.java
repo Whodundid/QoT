@@ -1,18 +1,19 @@
 package qot.screens.gameplay;
 
-import envision.engine.GameTopScreen;
+import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.screens.GameScreen;
+import envision.engine.screens.GameTopScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowRect;
 import envision.engine.windows.windowObjects.basicObjects.WindowStatusBar;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.objects.effects.sounds.SoundEngine;
 import envision.game.objects.entities.Entity;
-import envision.game.world.GameWorld;
+import envision.game.objects.entities.Player;
+import envision.game.world.IGameWorld;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
-import qot.QoT;
 import qot.assets.sounds.Songs;
 import qot.entities.player.QoT_Player;
 import qot.screens.character.CharacterScreen;
@@ -23,8 +24,8 @@ import qot.screens.main.MainMenuScreen;
 
 public class GamePlayScreen extends GameScreen {
 	
-	QoT_Player player;
-	GameWorld world;
+	Player player;
+	IGameWorld world;
 	WindowRect topHud;
 	WindowRect botHud; //don't know if actually want this one
 	WindowStatusBar health, mana;
@@ -44,7 +45,7 @@ public class GamePlayScreen extends GameScreen {
 	public GamePlayScreen(boolean openPauseOnStart) {
 		super();
 		screenHistory.push(new MainMenuScreen());
-		world = QoT.getWorld();
+		world = Envision.getWorld();
 		openPause = openPauseOnStart;
 	}
 	
@@ -61,9 +62,9 @@ public class GamePlayScreen extends GameScreen {
 		getChildren().clear();
 		
 		//assign player field
-		player = QoT.getPlayer();
+		player = Envision.getPlayer();
 		
-		//topHud = new WindowRect(this, 0, 0, QoT.getWidth(), 39, EColors.dgray);
+		//topHud = new WindowRect(this, 0, 0, Envision.getWidth(), 39, EColors.dgray);
 		//addObject(topHud);
 		
 		health = new WindowStatusBar(this, 5, 5, 200, 30, 0, player.getMaxHealth(), EColors.red);
@@ -84,46 +85,58 @@ public class GamePlayScreen extends GameScreen {
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
 		//top hud
-		drawRect(0, 0, QoT.getWidth(), 39, EColors.lgray);
-		drawRect(0, 39, QoT.getWidth(), 41, EColors.gray);
+		drawRect(0, 0, Envision.getWidth(), 39, EColors.lgray);
+		drawRect(0, 39, Envision.getWidth(), 41, EColors.gray);
 		//mouse pos
 		
 		if (world == null) {
 			drawStringC("Null World!", midX, midY, EColors.lred);
 			//keep trying to grab world instance
-			world = QoT.theWorld;
+			world = Envision.theWorld;
 			return;
 		}
 		else {
-			//System.out.println(QoT.theWorld.getWorldName());
+			//System.out.println(Envision.theWorld.getWorldName());
 		}
 		
-		if (QoT.thePlayer != null) {
-			health.setBarValue(QoT.thePlayer.getHealth());
+		if (Envision.thePlayer != null) {
+			health.setBarValue(Envision.thePlayer.getHealth());
 			
-			if (QoT.thePlayer.isDead()) {
-				QoT.displayScreen(new DeathScreen());
+			if (Envision.thePlayer.isDead()) {
+				Envision.displayScreen(new DeathScreen());
 			}
 		}
 		
-		drawString("x" + world.getCameraZoom(), QoT.getWidth() - 250, 12, EColors.dsteel);
-		drawString("[" + player.worldX + ", " + player.worldY + "]", QoT.getWidth() - 900, 12, EColors.white);
-		//drawString("[" + player.startX + ", " + player.startY + "]", QoT.getWidth() - 750, 12, EColors.white);
-		//drawString("[" + world.getPixelWidth() + ", " + world.getPixelHeight() + "]", QoT.getWidth() - 550, 12, EColors.hotpink);
+		drawString("x" + world.getCameraZoom(), Envision.getWidth() - 250, 12, EColors.dsteel);
+		drawString("[" + player.worldX + ", " + player.worldY + "]", Envision.getWidth() - 900, 12, EColors.white);
+		//drawString("[" + player.startX + ", " + player.startY + "]", Envision.getWidth() - 750, 12, EColors.white);
+		//drawString("[" + world.getPixelWidth() + ", " + world.getPixelHeight() + "]", Envision.getWidth() - 550, 12, EColors.hotpink);
 		
 		//drawRect(midX, 0, midX + 1, endY, EColors.black);
 		//drawRect(0, midY, endX, midY + 1, EColors.black);
 	}
 	
 	@Override
-	public void onGameTick(long ticks) {
+	public void onGameTick(float dt) {
 		if (!GameTopScreen.isTopFocused()) {
-			QoT_Player p = QoT.thePlayer;
-			double moveSpeed = 1;
-			if (Keyboard.isWDown()) p.move(0, -moveSpeed);
-			if (Keyboard.isSDown()) p.move(0, moveSpeed);
-			if (Keyboard.isADown()) p.move(-moveSpeed, 0);		
-			if (Keyboard.isDDown()) p.move(moveSpeed, 0);
+			QoT_Player p = (QoT_Player) Envision.thePlayer;
+			
+			double moveX = 0.0, moveY = 0.0;
+			
+			if (Keyboard.isADown()) moveX -= 1;
+			if (Keyboard.isDDown()) moveX += 1;
+			if (Keyboard.isWDown()) moveY -= 1;
+			if (Keyboard.isSDown()) moveY += 1;
+			
+			if (Keyboard.isAnyKeyDown(Keyboard.KEY_A, Keyboard.KEY_D, Keyboard.KEY_W, Keyboard.KEY_S)) {
+				p.move(moveX, moveY);				
+			}
+			
+//			double moveSpeed = 1;
+//			if (Keyboard.isWDown()) p.move(0, -moveSpeed);
+//			if (Keyboard.isSDown()) p.move(0, moveSpeed);
+//			if (Keyboard.isADown()) p.move(-moveSpeed, 0);		
+//			if (Keyboard.isDDown()) p.move(moveSpeed, 0);
 		}
 	}
 	
@@ -131,22 +144,24 @@ public class GamePlayScreen extends GameScreen {
 	public void keyPressed(char typedChar, int keyCode) {
 		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
 		if (keyCode == Keyboard.KEY_ESC) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_LWIN)) QoT.displayScreen(new MainMenuScreen());
+			if (Keyboard.isKeyDown(Keyboard.KEY_LWIN)) Envision.displayScreen(new MainMenuScreen());
 			else openPauseWindow();
 		}
 		
-		if (keyCode == Keyboard.KEY_LEFT) QoT.thePlayer.move(-1, 0);
-		if (keyCode == Keyboard.KEY_RIGHT) QoT.thePlayer.move(1, 0);
-		if (keyCode == Keyboard.KEY_UP) QoT.thePlayer.move(0, -1);
-		if (keyCode == Keyboard.KEY_DOWN) QoT.thePlayer.move(0, 1);
+		if (keyCode == Keyboard.KEY_LEFT) Envision.thePlayer.move(-1, 0);
+		if (keyCode == Keyboard.KEY_RIGHT) Envision.thePlayer.move(1, 0);
+		if (keyCode == Keyboard.KEY_UP) Envision.thePlayer.move(0, -1);
+		if (keyCode == Keyboard.KEY_DOWN) Envision.thePlayer.move(0, 1);
 		
 		if (keyCode == Keyboard.KEY_N) {
 			Entity obj = world.getEntitiesInWorld().getRandom();
 			world.getCamera().setFocusedObject(obj);
 		}
 		if (keyCode == Keyboard.KEY_M) {
-			world.getCamera().setFocusedObject(QoT.thePlayer);
+			world.getCamera().setFocusedObject(Envision.thePlayer);
 		}
+		
+		//world.getWorldRenderer().keyPressed(typedChar, keyCode);
 		
 		//super.keyPressed(typedChar, keyCode);
 	}
@@ -155,8 +170,8 @@ public class GamePlayScreen extends GameScreen {
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
 		
-		if (QoT.thePlayer != null) {
-			QoT.thePlayer.onMousePress(mXIn, mYIn, button);
+		if (Envision.thePlayer != null) {
+			Envision.thePlayer.onMousePress(mXIn, mYIn, button);
 		}
 	}
 	
@@ -185,12 +200,12 @@ public class GamePlayScreen extends GameScreen {
 	@Override
 	public void onScreenClosed() {
 		//Game.displayScreen(new MainMenuScreen());
-		//QoT.loadWorld(null);
+		//Envision.loadWorld(null);
 		//Songs.stopAllMusic();
 	}
 	
 	private void openCharScreen() {
-		QoT.displayScreen(new CharacterScreen(QoT.thePlayer), this);
+		Envision.displayScreen(new CharacterScreen(Envision.thePlayer), this);
 	}
 	
 	public void openPauseWindowIfNotOpen() {
@@ -211,7 +226,7 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void onWorldLoaded() {
-		this.world = QoT.theWorld;
+		this.world = Envision.theWorld;
 	}
 	
 }

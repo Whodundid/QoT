@@ -1,5 +1,6 @@
 package envision.engine.windows.windowObjects.advancedObjects.header;
 
+import envision.Envision;
 import envision.debug.DebugFunctions;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -16,7 +17,6 @@ import eutil.datatypes.boxes.Box2;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
 import qot.assets.textures.window.WindowTextures;
 
 //Author: Hunter Bragg
@@ -306,7 +306,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		}
 		
 		//debug title stuff
-		if (QoT.isDebugMode()) {
+		if (Envision.isDebugMode()) {
 			if (p != null && p.isMaximized()) {
 				if (DebugFunctions.drawWindowPID) tempTitle += EColors.mc_aqua + "    PID: " + EColors.yellow + p.getObjectID();
 				if (DebugFunctions.drawWindowInit) {
@@ -325,7 +325,9 @@ public class WindowHeader<E> extends WindowObject<E> {
 			tx = startX + (width / 2 - tw / 2) + titleOffset + 1;
 		}
 		
-		drawString(tempTitle, tx, startY + height / 2 - 8, titleColor);
+		if (tempTitle != null && !tempTitle.isEmpty()) {
+			drawString(tempTitle, tx, startY + height / 2 - 8, titleColor);			
+		}
 	}
 	
 	protected void drawTabs() {
@@ -510,11 +512,11 @@ public class WindowHeader<E> extends WindowObject<E> {
 	}
 	
 	protected void handleMinimize() {
-		if (window != null) {
-			if (window.isMinimizable()) {
-				if (!window.isMinimized()) { window.setMinimized(true); }
-			}
-		}
+		if (window == null) return;
+		if (!window.isMinimizable()) return;
+		if (window.isMinimized()) return;
+		
+		window.setMinimized(true);
 	}
 	
 	protected void handleFileUp() {

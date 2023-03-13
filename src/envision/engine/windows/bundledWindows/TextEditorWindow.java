@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.TextAreaLine;
@@ -17,7 +18,6 @@ import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.math.ENumUtil;
-import qot.QoT;
 import qot.assets.textures.taskbar.TaskBarTextures;
 import qot.assets.textures.window.WindowTextures;
 
@@ -47,7 +47,7 @@ public class TextEditorWindow extends WindowParent {
 	//--------------
 	
 	public TextEditorWindow(File pathIn) {
-		super(QoT.getActiveTopParent());
+		super(Envision.getActiveTopParent());
 		path = pathIn;
 		windowIcon = TaskBarTextures.texteditor;
 		

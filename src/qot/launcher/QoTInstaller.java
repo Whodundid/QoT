@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.jar.JarFile;
 
-import envision.debug.terminal.terminalUtil.ESystemInfo;
+import envision.engine.terminal.terminalUtil.ESystemInfo;
 import eutil.sys.OSType;
 import qot.Main;
 
@@ -217,8 +217,8 @@ public class QoTInstaller {
 			//catch (Exception e) { e.printStackTrace(); throw e; }
 			
 			//copy bundled maps into install map dir
-			try { extractDataToDir("editorWorlds", dir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
+			//try { extractDataToDir("editorWorlds", dir); }
+			//catch (Exception e) { e.printStackTrace(); throw e; }
 			try { extractDataToDir("menuWorlds", dir); }
 			catch (Exception e) { e.printStackTrace(); throw e; }
 		}

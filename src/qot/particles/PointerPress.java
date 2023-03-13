@@ -1,8 +1,8 @@
 package qot.particles;
 
+import envision.Envision;
 import envision.game.objects.effects.particles.Particle;
 import eutil.colors.EColors;
-import qot.QoT;
 
 public class PointerPress extends Particle {
 	
@@ -16,7 +16,7 @@ public class PointerPress extends Particle {
 		pressY = mY;
 		rad = startRadius;
 		
-		init(QoT.getActiveTopParent(), mX - rad, mY - rad, rad * 2, rad * 2);
+		init(Envision.getActiveTopParent(), mX - rad, mY - rad, rad * 2, rad * 2);
 		curTime = System.currentTimeMillis();
 		
 		setClickable(false);

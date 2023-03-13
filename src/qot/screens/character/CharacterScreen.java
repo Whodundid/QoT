@@ -1,5 +1,6 @@
 package qot.screens.character;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
@@ -11,7 +12,6 @@ import envision.game.objects.entities.Entity;
 import envision.game.objects.entities.EntityLevel;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import qot.QoT;
 import qot.assets.textures.window.WindowTextures;
 
 public class CharacterScreen extends GameScreen {
@@ -66,7 +66,7 @@ public class CharacterScreen extends GameScreen {
 	
 	@Override
 	public void initScreen() {
-		QoT.pause();
+		Envision.pause();
 	}
 	
 	@Override
@@ -96,7 +96,7 @@ public class CharacterScreen extends GameScreen {
 	
 	@Override
 	public void onScreenClosed() {
-		QoT.unpause();
+		Envision.unpause();
 	}
 	
 	@Override
@@ -198,7 +198,7 @@ public class CharacterScreen extends GameScreen {
 	
 	@Override
 	public void onScreenResized() {
-		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
+		setDimensions(0, 0, Envision.getWidth(), Envision.getHeight());
 		updateDrawDimensions();
 		reInitChildren();
 	}

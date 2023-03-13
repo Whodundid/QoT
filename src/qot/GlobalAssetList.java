@@ -3,11 +3,19 @@ package qot;
 import envision.game.objects.GameObject;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import qot.doodads.BirchTree;
 import qot.doodads.Bush0;
+import qot.doodads.BushyTree0;
+import qot.doodads.BushyTree1;
+import qot.doodads.BushyTree2;
+import qot.doodads.LeavesGroundClutter;
 import qot.doodads.PineTree;
 import qot.doodads.PineTree2;
+import qot.doodads.SticksGroundClutter;
 import qot.doodads.StoneGroundClutter;
+import qot.doodads.WeedsGroundClutter;
+import qot.entities.enemies.Archer;
 import qot.entities.enemies.Goblin;
 import qot.entities.enemies.Thyrah;
 import qot.entities.enemies.TrollBoar;
@@ -21,7 +29,7 @@ import qot.entities.player.QoT_Player;
 
 public class GlobalAssetList {
 
-	private static final EArrayList<GameObject> assets = new EArrayList();
+	private static final EList<GameObject> assets = new EArrayList<>();
 	
 	static {
 		assets.add(new Goblin());
@@ -42,10 +50,20 @@ public class GlobalAssetList {
 		assets.add(new Bush0());
 		assets.add(new StoneGroundClutter());
 		assets.add(new PineTree2());
+		
+		assets.add(new BushyTree0());
+		assets.add(new BushyTree1());
+		assets.add(new BushyTree2());
+		
+		assets.add(new WeedsGroundClutter());
+		assets.add(new LeavesGroundClutter());
+		assets.add(new SticksGroundClutter());
+		
+		assets.add(new Archer());
 	}
 	
-	public static EArrayList<GameObject> getAssets() {
-		return new EArrayList(assets);
+	public static EList<GameObject> getAssets() {
+		return new EArrayList<>(assets);
 	}
 	
 }

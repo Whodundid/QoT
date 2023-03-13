@@ -1,6 +1,6 @@
 package envision;
 
-import envision.debug.terminal.TerminalCommandHandler;
+import envision.engine.terminal.TerminalCommandHandler;
 import envision.game.events.GameEvent;
 import envision.game.events.IEventListener;
 

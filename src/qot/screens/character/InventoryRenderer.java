@@ -1,5 +1,6 @@
 package qot.screens.character;
 
+import envision.Envision;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
@@ -13,7 +14,6 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
-import qot.QoT;
 
 public class InventoryRenderer extends WindowObject {
 	
@@ -51,7 +51,7 @@ public class InventoryRenderer extends WindowObject {
 	
 	@Override
 	public void initChildren() {
-		QoT.getCurrentScreen().registerListener(this);
+		Envision.getCurrentScreen().registerListener(this);
 		buildCharacterInventory();
 	}
 	
@@ -93,7 +93,7 @@ public class InventoryRenderer extends WindowObject {
 	
 	@Override
 	public void onEvent(ObjectEvent e) {
-		if (e.getEventParent() == QoT.getCurrentScreen()) {
+		if (e.getEventParent() == Envision.getCurrentScreen()) {
 			if (e instanceof EventMouse me && me.getMouseType() == MouseType.RELEASED) {
 				var ms = getMovingSlot();
 				if (ms != null && !isMouseInside()) {

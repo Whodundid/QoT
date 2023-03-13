@@ -2,6 +2,7 @@ package qot.screens.main;
 
 import java.io.File;
 
+import envision.Envision;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
@@ -11,7 +12,6 @@ import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.game.world.GameWorld;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
-import qot.QoT;
 import qot.entities.player.QoT_Player;
 import qot.screens.gameplay.GamePlayScreen;
 import qot.settings.QoTSettings;
@@ -36,7 +36,7 @@ public class WorldSelectScreen extends GameScreen {
 	
 	@Override
 	public void initChildren() {
-		int w = ENumUtil.clamp(QoT.getWidth() / 4, 150, 350);
+		int w = ENumUtil.clamp(Envision.getWidth() / 4, 150, 350);
 		double bw = midX - w / 2;
 		
 		defaultWorld = new WindowButton(this, bw, midY - 200, w, 45, "Default Map");
@@ -87,10 +87,10 @@ public class WorldSelectScreen extends GameScreen {
 	private void loadDefault() {
 		File f = new File(QoTSettings.getEditorWorldsDir(), "new.twld");
 		if (f.exists()) {
-			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
-			GameWorld w = QoT.loadWorld(new GameWorld(f));
-			w.addEntity(p);
-			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			Envision.setPlayer(new QoT_Player("Test"));
+			Envision.loadWorld(new GameWorld(f));
+			//w.addEntity(p);
+			Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
 			//Game.displayScreen(new WorldRenderTest(new File("test.twld")), this);
 		}
 	}
@@ -106,11 +106,10 @@ public class WorldSelectScreen extends GameScreen {
 		String last = QoTSettings.lastEditorMap.get();
 		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
 		else {
-			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
+			Envision.setPlayer(new QoT_Player("Test"));
 			File worldFile = new File(QoTSettings.getEditorWorldsDir(), last);
-			GameWorld w = QoT.loadWorld(new GameWorld(worldFile));
-			w.addEntity(p);
-			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			Envision.loadWorld(new GameWorld(worldFile));
+			Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
 		}
 	}
 	
@@ -118,11 +117,10 @@ public class WorldSelectScreen extends GameScreen {
 		String last = QoTSettings.lastMap.get().replace(".twld", "");
 		if (last.isBlank() || last.isEmpty()) error = "There is no last game map!";
 		else {
-			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
+			Envision.setPlayer(new QoT_Player("Test"));
 			File worldFile = new File(QoTSettings.getEditorWorldsDir(), last);
-			GameWorld w = QoT.loadWorld(new GameWorld(worldFile));
-			w.addEntity(p);
-			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			Envision.loadWorld(new GameWorld(worldFile));
+			Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
 		}
 	}
 	
@@ -136,11 +134,10 @@ public class WorldSelectScreen extends GameScreen {
 			QoTSettings.lastMap.set(f.getName().replace(".twld", ""));
 			QoTSettings.saveConfig();
 			
-			QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
-			GameWorld w = QoT.loadWorld(new GameWorld(f));
-			w.addEntity(p);
+			Envision.setPlayer(new QoT_Player("Test"));
+			Envision.loadWorld(new GameWorld(f));
 			
-			QoT.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
 		}
 	}
 	

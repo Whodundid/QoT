@@ -1,5 +1,6 @@
 package envision.game.world.worldTiles;
 
+import envision.Envision;
 import envision.debug.DebugSettings;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
@@ -8,9 +9,7 @@ import envision.game.objects.entities.Entity;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.misc.Rotation;
-import qot.QoT;
 
 public abstract class WorldTile extends GameObject implements Comparable<WorldTile> {
 	
@@ -100,9 +99,9 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	protected boolean hasSideBrightness = false;
 	protected int sideBrightness = 255;
 	
-	protected EArrayList<Entity> entitiesOnTile = new EArrayList(10);
-	protected EArrayList<Entity> entitiesAdding = new EArrayList(10);
-	protected EArrayList<Entity> entitiesRemoving = new EArrayList(10);
+//	protected EList<Entity> entitiesOnTile = new EArrayList<>(10);
+//	protected EList<Entity> entitiesAdding = new EArrayList<>(10);
+//	protected EList<Entity> entitiesRemoving = new EArrayList<>(10);
 	
 	/** This tile's rotation. */
 	protected Rotation rotation;
@@ -124,6 +123,7 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	// Constructors
 	//--------------
 	
+	protected WorldTile() {}
 	protected WorldTile(TileIDs idIn) {
 		id = idIn;
 		name = id.name;
@@ -150,7 +150,7 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	
 	@Override
 	public double getSortPoint() {
-		return (worldY + 1) * QoT.theWorld.getTileHeight();
+		return (worldY + 1) * Envision.theWorld.getTileHeight();
 	}
 	
 	//---------
@@ -333,7 +333,7 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 			drawRect(x, y, x + 1, y + h, EColors.vdgray);
 		}
 		
-		if (QoT.isDebugMode() && DebugSettings.drawTileInfo) {
+		if (Envision.isDebugMode() && DebugSettings.drawTileInfo) {
 			String tText = "[" + worldX + "," + worldY + "] " + this;
 			String taText = (ta != null) ? "[" + ta.worldX + "," + ta.worldY + "] " + ta.getName(): "null";
 			String tbText = (tb != null) ? "[" + tb.worldX + "," + tb.worldY + "] " + tb.getName(): "null";
@@ -472,9 +472,9 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 		to.worldY = from.worldY;
 		to.hasSideBrightness = from.hasSideBrightness;
 		to.sideBrightness = from.sideBrightness;
-		to.entitiesOnTile = from.entitiesOnTile;
-		to.entitiesAdding = from.entitiesAdding;
-		to.entitiesRemoving = from.entitiesRemoving;
+//		to.entitiesOnTile = from.entitiesOnTile;
+//		to.entitiesAdding = from.entitiesAdding;
+//		to.entitiesRemoving = from.entitiesRemoving;
 		to.rotation = from.rotation;
 		to.drawFlipped = from.drawFlipped;
 		

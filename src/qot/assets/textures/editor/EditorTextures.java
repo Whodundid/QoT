@@ -41,7 +41,9 @@ public class EditorTextures extends TextureLoader {
 	place = new GameTexture(textureDir, "place.png"),
 	
 	play = new GameTexture(textureDir, "play.png"),
-	stop = new GameTexture(textureDir, "stop.png");
+	stop = new GameTexture(textureDir, "stop.png"),
+	
+	player_spawn = new GameTexture(textureDir, "player_start.png");
 	
 	//-----------
 	// Overrides
@@ -63,6 +65,7 @@ public class EditorTextures extends TextureLoader {
 		reg(sys, place);
 		reg(sys, play);
 		reg(sys, stop);
+		reg(sys, player_spawn);
 	}
 	
 }

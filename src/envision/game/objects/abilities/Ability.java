@@ -3,7 +3,7 @@ package envision.game.objects.abilities;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.game.objects.entities.Entity;
 
-public class Ability {
+public abstract class Ability {
 	
 	private Entity ent;
 	private String name;
@@ -15,6 +15,8 @@ public class Ability {
 		ent = entIn;
 		texture = textureIn;
 	}
+	
+	public abstract boolean use(Entity e);
 	
 	public Entity getEntity() { return ent; }
 	public String getAbilityName() { return name; }

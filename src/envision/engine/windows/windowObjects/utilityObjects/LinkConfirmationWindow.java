@@ -1,11 +1,11 @@
 package envision.engine.windows.windowObjects.utilityObjects;
 
+import envision.Envision;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -22,7 +22,7 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 	// Constructors
 	//--------------
 	
-	public LinkConfirmationWindow(String linkIn) { this(QoT.getActiveTopParent(), linkIn); }
+	public LinkConfirmationWindow(String linkIn) { this(Envision.getActiveTopParent(), linkIn); }
 	public LinkConfirmationWindow(IWindowObject<?> parentIn, String linkIn) {
 		super(parentIn);
 		setResizeable(false);

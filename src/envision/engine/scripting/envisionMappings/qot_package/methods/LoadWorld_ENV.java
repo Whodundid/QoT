@@ -2,6 +2,8 @@ package envision.engine.scripting.envisionMappings.qot_package.methods;
 
 import java.io.File;
 
+import envision.Envision;
+import envision.game.objects.entities.Player;
 import envision.game.world.GameWorld;
 import envision_lang.interpreter.EnvisionInterpreter;
 import envision_lang.lang.EnvisionObject;
@@ -12,7 +14,6 @@ import envision_lang.lang.language_errors.EnvisionLangError;
 import envision_lang.lang.language_errors.error_types.ArgLengthError;
 import envision_lang.lang.language_errors.error_types.InvalidArgumentError;
 import envision_lang.lang.natives.Primitives;
-import qot.QoT;
 import qot.entities.player.QoT_Player;
 import qot.screens.gameplay.GamePlayScreen;
 import qot.settings.QoTSettings;
@@ -34,9 +35,9 @@ public class LoadWorld_ENV extends EnvisionFunction {
 			GameWorld world = buildWorld(worldName);
 			
 			if (world.getWorldFile().exists()) {
-				QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
-				QoT.displayScreen(new GamePlayScreen());
-				QoT.loadWorld(world);
+				Player p = Envision.setPlayer(new QoT_Player("Test"));
+				Envision.displayScreen(new GamePlayScreen());
+				Envision.loadWorld(world);
 				world.addObjectToWorld(p);
 			}
 			else throw new EnvisionLangError("The world '" + worldName + "' does not exist!");
@@ -47,9 +48,9 @@ public class LoadWorld_ENV extends EnvisionFunction {
 				
 				if (world != null) {
 					System.out.println("loading...");
-					QoT_Player p = QoT.setPlayer(new QoT_Player("Test"));
-					QoT.displayScreen(new GamePlayScreen());
-					QoT.loadWorld(world);
+					QoT_Player p = (QoT_Player) Envision.setPlayer(new QoT_Player("Test"));
+					Envision.displayScreen(new GamePlayScreen());
+					Envision.loadWorld(world);
 					world.addObjectToWorld(p);
 				}
 			}

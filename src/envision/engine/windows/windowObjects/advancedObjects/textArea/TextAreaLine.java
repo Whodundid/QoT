@@ -1,5 +1,6 @@
 package envision.engine.windows.windowObjects.advancedObjects.textArea;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
@@ -18,7 +19,6 @@ import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.boxes.Box3;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -245,7 +245,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 				
 				if (parentTextArea.isEditable()) {
 					int i = (int) (mX - startX - parentTextArea.getLineNumberOffset() + 3);
-					int cursorPos = QoT.getFontRenderer().trimToWidth(text, i).length();
+					int cursorPos = FontRenderer.getInstance().trimToWidth(text, i).length();
 					
 					setCursorPos(cursorPos);
 					selectionEnd = cursorPosition;
@@ -397,7 +397,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		
 		if (parentTextArea != null && parentTextArea.getCurrentLine() != null) {
 			lineEquals = parentTextArea.getCurrentLine().equals(this);
-			drawCursor = parentTextArea.isEditable() && lineEquals && QoT.updateCounter / 60 % 2 == 0;
+			drawCursor = parentTextArea.isEditable() && lineEquals && Envision.updateCounter / 60 % 2 == 0;
 		}
 	}
 	
@@ -473,8 +473,10 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		*/
 		
 		//draw text
-		if (drawShadowed) drawStringS(text, startX + parentTextArea.getLineNumberOffset(), startY + 5, textColor);
-		else drawString(text, startX + parentTextArea.getLineNumberOffset(), startY + 5, textColor);
+		if (text != null && !text.isEmpty()) {
+			if (drawShadowed) drawStringS(text, startX + parentTextArea.getLineNumberOffset(), startY + 5, textColor);
+			else drawString(text, startX + parentTextArea.getLineNumberOffset(), startY + 5, textColor);
+		}
 		
 		if (lineEquals && parentTextArea.isEditable()) {
 			if (hasSel) { //draw highlight

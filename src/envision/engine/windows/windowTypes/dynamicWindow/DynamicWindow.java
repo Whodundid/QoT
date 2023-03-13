@@ -3,13 +3,13 @@ package envision.engine.windows.windowTypes.dynamicWindow;
 import java.io.File;
 import java.io.IOException;
 
+import envision.Envision;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.Box2;
 import eutil.file.EFileUtil;
-import qot.QoT;
 
 /** A special type of WindowParent that can be directly constructed from a serialized file. */
 public class DynamicWindow extends WindowParent {
@@ -54,9 +54,9 @@ public class DynamicWindow extends WindowParent {
 	protected boolean parseFile() {
 		try {
 			String t = "Cannot prase DynamicWindow file: ";
-			if (!parseBase()) throw QoT.error(t + dataFile + " for scripts!", new IOException());
-			if (!parseObjects()) throw QoT.error(t + dataFile + " for objects!", new IOException());
-			if (!parseScripts()) throw QoT.error(t + dataFile + " for base values!", new IOException());
+			if (!parseBase()) Envision.error(t + dataFile + " for scripts!", new IOException());
+			if (!parseObjects()) Envision.error(t + dataFile + " for objects!", new IOException());
+			if (!parseScripts()) Envision.error(t + dataFile + " for base values!", new IOException());
 		}
 		catch (Exception e) {
 			failed = true;

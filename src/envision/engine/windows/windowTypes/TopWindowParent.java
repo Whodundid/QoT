@@ -4,9 +4,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import envision.Envision;
-import envision.engine.GameTopScreen;
 import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.screens.GameTopScreen;
 import envision.engine.windows.StaticTopParent;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
@@ -23,7 +23,6 @@ import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
 
 public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E> {
 	
@@ -75,36 +74,34 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		if (!hasFirstDraw()) onFirstDraw_i();
 		
 		//draw this object first
+		//Envision.getRenderEngine().getBatchManager().pushLayer();
 		drawObject(mX, mY);
 		
 		//draw debug stuff on top of object
-		if (QoT.isDebugMode()) drawDebugInfo();
+		if (Envision.isDebugMode()) drawDebugInfo();
 		
 		//now draw all child objects on top of parent
 		for (var o : getChildren()) {
-			if (o.willBeDrawn() && !o.isHidden()) {
-				boolean draw = true;
+			if (!o.willBeDrawn()) continue;
+			
+			boolean draw = true;
+			
+			if (o instanceof IWindowParent<?> wp) {
+				draw = (!wp.isMinimized() || wp.drawsWhileMinimized());
+				if (wp.isHighlighted()) highlightedWindows.add(wp);
+			}
+			
+			if (draw) {
+//				GLSettings.colorA(1.0f);
+//				GLSettings.clearDepth();
+//				GLSettings.disableScissor();
 				
-				if (o instanceof IWindowParent<?> wp) {
-					draw = (!wp.isMinimized() || wp.drawsWhileMinimized());
-					if (wp.isHighlighted()) highlightedWindows.add(wp);
-				}
+				if (!o.hasFirstDraw()) o.onFirstDraw_i();
+				o.drawObject_i(mX, mY);
 				
-				if (draw) {
-//					GLSettings.colorA(1.0f);
-//					GLSettings.clearDepth();
-//					GLSettings.disableScissor();
-					
-					if (!o.hasFirstDraw()) o.onFirstDraw_i();
-					o.drawObject_i(mX, mY);
-					
-					//draw grayed out overlay over everything if a focus lock object is present
-					if (focusLockObject != null && !o.equals(focusLockObject)) {
-						if (o.isVisible()) {
-							EDimension d = o.getDimensions();
-							drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
-						}
-					}
+				//draw grayed out overlay over everything if a focus lock object is present
+				if (focusLockObject != null && !o.equals(focusLockObject)) {
+					drawRect(o.getDimensions(), 0x77000000);
 				}
 			}
 		}
@@ -117,6 +114,8 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		
 		//notify hover object
 		if (getHoveringObject() != null) getHoveringObject().onMouseHover(mX, mY);
+		
+		//Envision.getRenderEngine().getBatchManager().popLayer();
 	}
 	
 	//size
@@ -448,8 +447,8 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		//handle windows
 		var oldW = res.width;
 		var oldH = res.height;
-		var newW = QoT.getWidth();
-		var newH = QoT.getHeight();
+		var newW = Envision.getWidth();
+		var newH = Envision.getHeight();
 		
 		res = Envision.getWindowDims();
 		setDimensions(0, 0, res.width, res.height);

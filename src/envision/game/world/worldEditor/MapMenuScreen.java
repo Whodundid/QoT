@@ -1,12 +1,8 @@
 package envision.game.world.worldEditor;
 
-import eutil.colors.EColors;
-import qot.QoT;
-import qot.assets.textures.editor.EditorTextures;
-import qot.settings.QoTSettings;
-
 import java.io.File;
 
+import envision.Envision;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -14,6 +10,9 @@ import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.ObjectPosition;
+import eutil.colors.EColors;
+import qot.assets.textures.editor.EditorTextures;
+import qot.settings.QoTSettings;
 
 public class MapMenuScreen extends GameScreen {
 	
@@ -87,7 +86,7 @@ public class MapMenuScreen extends GameScreen {
 	private void newMap() {
 		QoTSettings.lastEditorMap.set(nameField.getText());
 		QoTSettings.saveConfig();
-		QoT.displayScreen(new NewMapCreatorScreen(), this);
+		Envision.displayScreen(new NewMapCreatorScreen(), this);
 	}
 	
 	private void loadMap() {
@@ -100,7 +99,7 @@ public class MapMenuScreen extends GameScreen {
 			
 			File f = new File(QoTSettings.getEditorWorldsDir(), lastMap);
 			if (f.exists()) {
-				QoT.displayScreen(new MapEditorScreen(f), this);
+				Envision.displayScreen(new MapEditorScreen(f), this);
 			}
 			else {
 				error = "'" + lastMap + "' does not exist!";
@@ -124,7 +123,7 @@ public class MapMenuScreen extends GameScreen {
 			QoTSettings.lastEditorMap.set(f.getName());
 			QoTSettings.saveConfig();
 			explorer.close();
-			QoT.displayScreen(new MapEditorScreen(f), this);
+			Envision.displayScreen(new MapEditorScreen(f), this);
 		}
 	}
 	

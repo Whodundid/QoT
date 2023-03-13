@@ -1,12 +1,11 @@
 package envision.debug.debugCommands;
 
-import envision.debug.terminal.window.ETerminalWindow;
-import qot.QoT;
+import envision.Envision;
+import envision.engine.terminal.window.ETerminalWindow;
 import qot.entities.enemies.Goblin;
 import qot.entities.enemies.Thyrah;
 import qot.entities.enemies.TrollBoar;
 import qot.entities.enemies.Whodundid;
-import qot.entities.player.QoT_Player;
 import qot.screens.gameplay.combat.BattleScreen;
 import qot.screens.gameplay.combat.Party;
 
@@ -28,7 +27,7 @@ public class Deb2 extends DebugCommand {
 		B.setSlot(2, new Thyrah());
 		B.setSlot(3, new TrollBoar());
 		
-		QoT.displayScreen(new BattleScreen(A, B));
+		Envision.displayScreen(new BattleScreen(A, B));
 	}
 
 }

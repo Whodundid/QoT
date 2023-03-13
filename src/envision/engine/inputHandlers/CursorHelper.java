@@ -1,6 +1,5 @@
 package envision.engine.inputHandlers;
 
-
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -15,8 +14,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 
+import envision.Envision;
 import envision.engine.rendering.textureSystem.GameTexture;
-import qot.QoT;
 
 public class CursorHelper {
 	
@@ -41,7 +40,7 @@ public class CursorHelper {
 	
 	/** Attempts to set the cursor to the one specified. */
 	public static void setCursor(long cursorIn) {
-		GLFW.glfwSetCursor(QoT.getWindowHandle(), curCursor = cursorIn);
+		GLFW.glfwSetCursor(Envision.getGameWindow().getWindowHandle(), curCursor = cursorIn);
 	}
 	
 	/** Returns a new Cursor Object created from an EMC EResource. */
@@ -119,7 +118,9 @@ public class CursorHelper {
 	
 	/** Sets the cursor to be either visible or invisible. */
 	public static void setCursorVisibility(boolean visible) {
-		GLFW.glfwSetInputMode(QoT.getWindowHandle(), GLFW.GLFW_CURSOR, (isVisible = visible) ? GLFW.GLFW_CURSOR_NORMAL : GLFW.GLFW_CURSOR_HIDDEN);
+		GLFW.glfwSetInputMode(Envision.getGameWindow().getWindowHandle(),
+							  GLFW.GLFW_CURSOR,
+							  (isVisible = visible) ? GLFW.GLFW_CURSOR_NORMAL : GLFW.GLFW_CURSOR_HIDDEN);
 	}
 	
 	/** Returns the mouse location in terms of OpenGL. */

@@ -17,7 +17,7 @@ public class TrollBoar extends Enemy {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		move(ERandomUtil.randomDir());
 	}
 	

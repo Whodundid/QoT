@@ -4,9 +4,16 @@ import envision.game.objects.entities.Entity;
 import eutil.random.ERandomUtil;
 import qot.doodads.BirchTree;
 import qot.doodads.Bush0;
+import qot.doodads.BushyTree0;
+import qot.doodads.BushyTree1;
+import qot.doodads.BushyTree2;
+import qot.doodads.LeavesGroundClutter;
 import qot.doodads.PineTree;
 import qot.doodads.PineTree2;
+import qot.doodads.SticksGroundClutter;
 import qot.doodads.StoneGroundClutter;
+import qot.doodads.WeedsGroundClutter;
+import qot.entities.enemies.Archer;
 import qot.entities.enemies.Goblin;
 import qot.entities.enemies.Thyrah;
 import qot.entities.enemies.TrollBoar;
@@ -36,6 +43,16 @@ public enum EntityList {
 	BUSH0(12),
 	STONE_GROUND_CLUTTER(13),
 	PINE_TREE_2(14),
+	
+	BUSHY_TREE_0(15),
+	BUSHY_TREE_1(16),
+	BUSHY_TREE_2(17),
+	
+	WEEDS(18),
+	LEAVES(19),
+	STICKS(20),
+	
+	Archer(21),
 	;
 	
 	public final int ID;
@@ -72,6 +89,16 @@ public enum EntityList {
 		case BUSH0: return new Bush0();
 		case STONE_GROUND_CLUTTER: return new StoneGroundClutter();
 		case PINE_TREE_2: return new PineTree2();
+		
+		case BUSHY_TREE_0: return new BushyTree0();
+		case BUSHY_TREE_1: return new BushyTree1();
+		case BUSHY_TREE_2: return new BushyTree2();
+		
+		case WEEDS: return new WeedsGroundClutter();
+		case LEAVES: return new LeavesGroundClutter();
+		case STICKS: return new SticksGroundClutter();
+		
+		case Archer: return new Archer();
 		default: return null;
 		}
 	}

@@ -29,7 +29,10 @@ public class TreeTextures extends TextureLoader {
 	tree_pine_0 = new GameTexture(textureDir, "tree_pine_0.png"),
 	tree_pine_1 = new GameTexture(textureDir, "tree_pine_1.png"),
 	tree_pine_2 = new GameTexture(textureDir, "tree_pine_2.png"),
-	birch_0 = new GameTexture(textureDir, "birch_0.png");
+	birch_0 = new GameTexture(textureDir, "birch_0.png"),
+	bushy_tree_0 = new GameTexture(textureDir, "bushy_tree_0.png"),
+	bushy_tree_1 = new GameTexture(textureDir, "bushy_tree_1.png"),
+	bushy_tree_2 = new GameTexture(textureDir, "bushy_tree_2.png");
 	
 	//-----------
 	// Overrides
@@ -41,6 +44,9 @@ public class TreeTextures extends TextureLoader {
 		reg(sys, tree_pine_1);
 		reg(sys, tree_pine_2);
 		reg(sys, birch_0);
+		reg(sys, bushy_tree_0);
+		reg(sys, bushy_tree_1);
+		reg(sys, bushy_tree_2);
 	}
 	
 }

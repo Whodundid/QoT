@@ -1,6 +1,9 @@
 package envision.engine.rendering.textureSystem;
 
+import java.nio.ByteBuffer;
+
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.stb.STBImage;
 
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
@@ -28,10 +31,12 @@ public class GameTexture {
 	private int width = -1;
 	/** The texture's height in pixels. -- Assigned dynamically through texture registration. */
 	private int height = -1;
+	/** The texture's bytes. */
+	private ByteBuffer imageBytes;
 	/** True if this texture ID has been deleted through OpenGL. */
 	private boolean destroyed = false;
 	/** Min Filter property for when registering texture. */
-	private int minFilter = GL11.GL_NEAREST;
+	private int minFilter = GL11.GL_LINEAR;
 	/** Mag Filter property for when registering texture. */
 	private int magFilter = GL11.GL_NEAREST;
 	
@@ -86,6 +91,7 @@ public class GameTexture {
 	
 	public boolean destroy() {
 		if (textureID != -1) {
+			STBImage.stbi_image_free(imageBytes);
 			GL11.glDeleteTextures(textureID);
 			textureID = -1;
 			destroyed = true;
@@ -109,6 +115,7 @@ public class GameTexture {
 	public String getFilePath() { return filePath; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
+	public ByteBuffer getImageBytes() { return imageBytes; }
 	public int getMinFilter() { return minFilter; }
 	public int getMagFilter() { return magFilter; }
 	public boolean hasBeenDestroyed() { return destroyed; }

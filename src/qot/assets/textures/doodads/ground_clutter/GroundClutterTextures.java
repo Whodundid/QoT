@@ -26,7 +26,10 @@ public class GroundClutterTextures extends TextureLoader {
 	
 	public static final GameTexture
 	
-	stones = new StoneClutter();
+	stones = new StoneClutter(),
+	weeds = new WeedClutter(),
+	leaves = new LeavesClutter(),
+	sticks = new SticksClutter();
 	
 	//-----------
 	// Overrides
@@ -35,6 +38,9 @@ public class GroundClutterTextures extends TextureLoader {
 	@Override
 	public void onRegister(TextureSystem sys) {
 		reg(sys, stones);
+		reg(sys, weeds);
+		reg(sys, leaves);
+		reg(sys, sticks);
 	}
 	
 }

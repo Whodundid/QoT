@@ -1,8 +1,8 @@
 package envision.game.objects.effects.sounds;
 
+import envision.Envision;
 import eutil.datatypes.EArrayList;
 import eutil.math.ENumUtil;
-import qot.QoT;
 import qot.settings.QoTSettings;
 
 /**
@@ -174,7 +174,7 @@ public class SoundEngine {
 	
 	/** Utility logging function. */
 	private static void log(String msg) {
-		QoT.info("[Sound_Engine] " + msg);
+		Envision.info("[Sound_Engine] " + msg);
 	}
 	
 }

@@ -153,10 +153,10 @@ public abstract class ShaderProgram {
 	}
 
 	public void disableAttribs() {
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
 		GL20.glDisableVertexAttribArray(3);
+		GL20.glDisableVertexAttribArray(2);
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(0);
 	}
 	
 //	public void loadTransform(Matrix4f transform) { setUniform(uniform_transform, transform); }
@@ -171,7 +171,7 @@ public abstract class ShaderProgram {
 	public void setUniform(int location, Vec3f val) { GL20.glUniform3f(location, val.x, val.y, val.z); }
 	public void setUniform(int location, Vec4f val) { GL20.glUniform4f(location, val.x, val.y, val.z, val.w); }
 	public void setUniform(int location, Matrix4f val) {
-		val.get(matrix).flip();
+		val.get(matrix);
 		GL20.glUniformMatrix4fv(location, false, matrix);
 	}
 
@@ -185,7 +185,7 @@ public abstract class ShaderProgram {
 	public void setUniform(String name, Vec3f val) { GL20.glUniform3f(gul(name), val.x, val.y, val.z); }
 	public void setUniform(String name, Vec4f val) { GL20.glUniform4f(gul(name), val.x, val.y, val.z, val.w); }
 	public void setUniform(String name, Matrix4f val) {
-		val.get(matrix).flip();
+		val.get(matrix);
 		GL20.glUniformMatrix4fv(gul(name), false, matrix);
 	}
 	

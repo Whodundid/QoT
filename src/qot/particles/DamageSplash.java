@@ -1,8 +1,8 @@
 package qot.particles;
 
+import envision.Envision;
 import envision.game.objects.effects.particles.Particle;
 import eutil.colors.EColors;
-import qot.QoT;
 
 public class DamageSplash extends Particle {
 	
@@ -15,7 +15,7 @@ public class DamageSplash extends Particle {
 		posX = posXIn;
 		posY = posYIn;
 		damage = damageIn;
-		init(QoT.getActiveTopParent(), posX - 10, posY - 10, 20, 20);
+		init(Envision.getActiveTopParent(), posX - 10, posY - 10, 20, 20);
 	}
 	
 	@Override

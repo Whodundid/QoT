@@ -11,10 +11,18 @@ public class EStringOutputFormatter {
 	public static int shadowColor = 60;
 	
 	public static double drawString(String s, double x, double y, double scaleX, double scaleY, EColors colorIn, boolean centered, boolean shadow) {
-		return drawString(s, x, y, scaleX, scaleY, colorIn.intVal, centered, shadow);
+		return drawString(s, x, y, scaleX, scaleY, colorIn.intVal, centered, shadow, false);
+	}
+	
+	public static double drawString(String s, double x, double y, double scaleX, double scaleY, EColors colorIn, boolean centered, boolean shadow, boolean batch) {
+		return drawString(s, x, y, scaleX, scaleY, colorIn.intVal, centered, shadow, batch);
 	}
 	
 	public static double drawString(String s, double x, double y, double scaleX, double scaleY, int colorIn, boolean centered, boolean shadow) {
+		return drawString(s, x, y, scaleX, scaleY, colorIn, centered, shadow, false);
+	}
+	
+	public static double drawString(String s, double x, double y, double scaleX, double scaleY, int colorIn, boolean centered, boolean shadow, boolean batch) {
 		if (s == null) return -1.0;
 		
 		double lastX = (centered) ? x - (getStringWidth(s) / 2) : x;
@@ -22,6 +30,7 @@ public class EStringOutputFormatter {
 		String curString = "";
 		int curColor = colorIn;
 		boolean hasCode = false;
+		
 		
 		while (i < s.length()) {
 			char c = s.charAt(i);
@@ -31,17 +40,19 @@ public class EStringOutputFormatter {
 				if (hasCode) {
 					if (shadow) {
 						int br = EColors.changeBrightness(curColor, shadowColor);
-						FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+						FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY, batch);
 					}
-					lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
+					lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY, batch);
 					curString = "";
 				}
 				else {
 					if (shadow) {
 						int br = EColors.changeBrightness(curColor, shadowColor);
-						FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+						FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY, batch);
 					}
-					lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY) - 1;
+					double val = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY, batch) - 1;
+					// duct tape fix
+					if (val != -1) lastX = val;
 					curString = "";
 				}
 				hasCode = true;
@@ -68,16 +79,16 @@ public class EStringOutputFormatter {
 		if (!hasCode) {
 			if (shadow) {
 				int br = EColors.changeBrightness(colorIn, shadowColor);
-				FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+				FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY, batch);
 			}
-			lastX = FontRenderer.drawString(s, lastX, y, colorIn, scaleX, scaleY);
+			lastX = FontRenderer.drawString(s, lastX, y, colorIn, scaleX, scaleY, batch);
 		}
 		else {
 			if (shadow) {
 				int br = EColors.changeBrightness(colorIn, shadowColor);
-				FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+				FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY, batch);
 			}
-			lastX = FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
+			lastX = FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY, batch);
 		}
 		
 		return lastX;

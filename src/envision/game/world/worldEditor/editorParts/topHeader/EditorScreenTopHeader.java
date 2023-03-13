@@ -1,5 +1,6 @@
 package envision.game.world.worldEditor.editorParts.topHeader;
 
+import envision.Envision;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowObject;
@@ -12,7 +13,6 @@ import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.windows.EditorSettingsWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import qot.QoT;
 import qot.assets.textures.window.WindowTextures;
 
 public class EditorScreenTopHeader extends WindowObject {
@@ -24,7 +24,7 @@ public class EditorScreenTopHeader extends WindowObject {
 	
 	public EditorScreenTopHeader(MapEditorScreen editorIn) {
 		editor = editorIn;
-		init(editor, 0, 0, QoT.getWidth(), 34);
+		init(editor, 0, 0, Envision.getWidth(), 34);
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public class EditorScreenTopHeader extends WindowObject {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == settings) QoT.displayWindow(ScreenLevel.SCREEN, new EditorSettingsWindow(editor));
+		if (object == settings) Envision.displayWindow(ScreenLevel.SCREEN, new EditorSettingsWindow(editor));
 		if (object == terrain) terrain();
 		if (object == assets) assets();
 		if (object == regions) regions();

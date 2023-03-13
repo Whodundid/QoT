@@ -1,5 +1,6 @@
 package envision.engine.windows.windowObjects.utilityObjects;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
@@ -12,7 +13,6 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.colors.EColors;
 import eutil.datatypes.boxes.BoxList;
-import qot.QoT;
 
 //Author: Hunter Bragg
 
@@ -38,7 +38,7 @@ public class RightClickMenu extends ActionWindowParent {
 	// Constructors
 	//--------------
 	
-	public RightClickMenu() { this(QoT.getActiveTopParent()); }
+	public RightClickMenu() { this(Envision.getActiveTopParent()); }
 	public RightClickMenu(IWindowObject<?> obj) {
 		super(obj);
 		setDimensions(Mouse.getMx(), Mouse.getMy(), 260, 60);
@@ -104,11 +104,11 @@ public class RightClickMenu extends ActionWindowParent {
 	
 	public void display() { displayOnCurrent(); }
 	public void displayOnCurrent() {
-		QoT.getCurrentScreen().displayWindow(this, ObjectPosition.CURSOR_CORNER);
+		Envision.getCurrentScreen().displayWindow(this, ObjectPosition.CURSOR_CORNER);
 	}
 	
 	public void displayOnTop() {
-		QoT.getTopRenderer().displayWindow(this, ObjectPosition.CURSOR_CORNER);
+		Envision.getTopScreen().displayWindow(this, ObjectPosition.CURSOR_CORNER);
 	}
 	
 	public void addOption(String... optionNames) { for (String s : optionNames) { addOption(s); } }

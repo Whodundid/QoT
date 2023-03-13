@@ -24,7 +24,7 @@ public class Bush0 extends Entity {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		
 	}
 	

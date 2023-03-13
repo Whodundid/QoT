@@ -1,5 +1,6 @@
 package envision.game.world.worldEditor.editorParts.sidePanel;
 
+import envision.Envision;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
@@ -11,7 +12,6 @@ import envision.game.world.worldEditor.editorParts.sidePanel.toolPanels.terrainT
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.math.dimensions.EDimension;
-import qot.QoT;
 
 public class EditorSidePanel extends WindowObject {
 	
@@ -42,16 +42,16 @@ public class EditorSidePanel extends WindowObject {
 		editor = in;
 		
 		int w = 251;
-		int sx = QoT.getWidth() - w;
+		int sx = Envision.getWidth() - w;
 		int y = (int) editor.getTopHeader().endY;
-		setDimensions(sx, y, w, QoT.getHeight() - y);
+		setDimensions(sx, y, w, Envision.getHeight() - y);
 		
 		miniMap = new EditorMiniMap(this);
 		miniMap.setDimensions(startX + 5, startY + 5, width - 10, width - 10);
 		int py = (int) miniMap.endY + 5;
 		
 		//apply panelDims
-		panelDims = new EDimension(sx + 5, py, QoT.getWidth() - 5, QoT.getHeight() - 5);
+		panelDims = new EDimension(sx + 5, py, Envision.getWidth() - 5, Envision.getHeight() - 5);
 		
 		terrainTool = new TerrainSidePanel(this, in);
 		assetTool = new AssetSidePanel(this, in);

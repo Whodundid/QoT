@@ -1,31 +1,40 @@
 package envision;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import envision.debug.terminal.TerminalCommandHandler;
-import envision.engine.GameTopScreen;
-import envision.engine.GameWindow;
 import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
+import envision.engine.rendering.GLObject;
+import envision.engine.rendering.GameWindow;
 import envision.engine.rendering.RenderEngine;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.renderingAPI.error.ErrorReportingLevel;
 import envision.engine.rendering.renderingAPI.error.IRendererErrorReceiver;
 import envision.engine.rendering.renderingAPI.error.RendererErrorReporter;
-import envision.engine.rendering.shaders.Shaders;
+import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.resourceLoaders.textures.TextureLoader;
 import envision.engine.screens.GameScreen;
+import envision.engine.screens.GameTopScreen;
+import envision.engine.screens.ScreenLevel;
+import envision.engine.terminal.TerminalCommandHandler;
+import envision.engine.windows.windowTypes.TopWindowParent;
+import envision.engine.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.game.events.EventHandler;
 import envision.game.events.GameEvent;
 import envision.game.objects.effects.sounds.SoundEngine;
 import envision.game.objects.entities.Player;
 import envision.game.world.GameWorld;
+import envision.game.world.IGameWorld;
 import envision.game.world.layerSystem.LayerSystem;
 import envision_lang.EnvisionLang;
 import eutil.datatypes.points.Point2i;
@@ -49,11 +58,13 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	// Fields
 	//========
 	
+	public static final String version = "Feb 20, 2023";
 	private static boolean gameCreated = false;
+	public static long updateCounter = 0;
 	
-	private static EnvisionGame gameInstance;
-	private static GameWindow gameWindow;
-	private static String gameName;
+	public static EnvisionGame gameInstance;
+	public static GameWindow gameWindow;
+	public static String gameName;
 	private static GameScreen startScreen;
 	
 	//===============
@@ -73,7 +84,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** True if the game world will be rendered. */
 	private static boolean renderWorld = true;
 	
-	private static RenderEngine renderEngine;
+	public static RenderEngine renderEngine;
 	private static SoundEngine soundEngine;
 
 	private static Keyboard keyboard;
@@ -90,12 +101,12 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private static TextureLoader textureLoader = new TextureLoader("");
 	
 	/** The top most rendered screen. */
-	private static GameTopScreen<?> topScreen;
+	public static GameTopScreen<?> topScreen;
 	/** The screen currently being displayed. */
 	public static GameScreen<?> currentScreen;
 	
 	/** The game's world. */
-	public static GameWorld theWorld;
+	public static IGameWorld theWorld;
 	/** The game's player object. */
 	public static Player thePlayer;
 	
@@ -112,6 +123,12 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private double timeF = 1000000000 / FPS;
 	private double deltaF = 0;
 	private long startTime = 0l;
+	/** The time of the current update. */
+	private long curTime = 0l;
+	/** The time of the last update. */
+	private long oldTime = 0l;
+	/** The change in time between updates. */
+	private float dt = 0.0f;
 	private long runningTime = 0l;
 	private int frames = 0;
 	private int curFrameRate = 0;
@@ -146,6 +163,21 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		if (instance != null || gameCreated)
 			throw new IllegalStateException("Engine already created! Only one instance of the Envision Engine may be created per JVM!");
 		instance = new Envision(game, gameName);
+		//init game
+		gameInstance.onPostEngineLoad();
+	}
+	
+	public void setIcon(GameTexture textureIn) {
+		if (!init) return;
+		
+		GLFWImage image = GLFWImage.malloc();
+		GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
+		image.set(textureIn.getWidth(), textureIn.getHeight(), textureIn.getImageBytes());
+		imagebf.put(0, image);
+		
+		GLFW.glfwSetWindowIcon(gameWindow.getWindowHandle(), imagebf);
+		image.free();
+		imagebf.free();
 	}
 	
 	//==============
@@ -164,9 +196,6 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		setupEngine();
 		
 		init = true;
-		
-		//init game
-		gameInstance.onPostEngineLoad();
 	}
 	
 	private void setupGLFW() {
@@ -179,16 +208,11 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		}
 		
 		gameWindow = new GameWindow();
+		long handle = gameWindow.getWindowHandle();
 		
-		keyboard = Keyboard.create(this);
-		mouse = Mouse.create(this);
-		resizeListener = WindowResizeListener.create(this);
-		
-		GLFW.glfwSetKeyCallback(gameWindow.getWindowHandle(), keyboard);
-		GLFW.glfwSetMouseButtonCallback(gameWindow.getWindowHandle(), mouse);
-		GLFW.glfwSetCursorPosCallback(gameWindow.getWindowHandle(), mouse.getCursorPosCallBack());
-		GLFW.glfwSetScrollCallback(gameWindow.getWindowHandle(), mouse.getScrollCallBack());
-		GLFW.glfwSetWindowSizeCallback(gameWindow.getWindowHandle(), resizeListener);
+		keyboard = Keyboard.create(handle, this);
+		mouse = Mouse.create(handle, this);
+		resizeListener = WindowResizeListener.create(handle, this);
 		
 		GLFW.glfwShowWindow(gameWindow.getWindowHandle());
 	}
@@ -200,8 +224,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		renderEngine = RenderEngine.getInstance();
 		renderEngine.init(gameWindow.getWindowHandle());
 		
-		Shaders.init();
-		renderEngine.getPrimaryBatch().setShader(Shaders.basic);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		
 		int interval = (QoTSettings.vsync.get()) ? 1 : 0;
 		GLFW.glfwSwapInterval(interval);
@@ -265,6 +288,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		if (gameInstance != null) {
 			gameInstance.onPostGameUnload();
 		}
+		
+		info("Stopping Game!");
+		running = false;
 	}
 	
 	//===================
@@ -278,8 +304,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		
 		//prepare timers
 		startTime = System.currentTimeMillis();
+		oldTime = startTime;
+		long timer = startTime;
 		long initialTime = System.nanoTime();
-		long timer = System.currentTimeMillis();
 		
 		while (running && !GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
 			try {
@@ -290,17 +317,26 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 				
 				//synchronize game inputs to 60 ticks per second by default
 				if (deltaU >= 1) {
+					oldTime = curTime;
+					curTime = System.currentTimeMillis();
+					
+					dt = curTime - oldTime;
+					dt /= 1000.0f;
+					
+					//if (dt < 0.006f) dt = 0.006f;
+					if (dt > 0.015f) dt = 0.015f;
+					
 					//update inputs
 					GLFW.glfwPollEvents();
 					if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) { running = false; }
-					runGameTick();
+					runGameTick(dt);
 					if (ticks == Integer.MAX_VALUE) ticks = 0;
 					else ticks++;
 					deltaU--;
 				}
 				
 				if (deltaF >= 1) {
-					runRenderTick(1);
+					runRenderTick(currentTime - oldTime);
 					frames++;
 					deltaF--;
 				}
@@ -330,7 +366,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	// Internal Event Managers
 	//=========================
 	
-	private void runGameTick() {
+	private void runGameTick(float dt) {
 		//process game events
 		eventHandler.onGameTick();
 		
@@ -339,37 +375,49 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		
 		//update current world (if there is one, and it's loaded, and the engine is not paused)
 		if (theWorld != null && theWorld.isLoaded() && !pause) {
-			theWorld.onGameTick();
+			theWorld.onGameTick(dt);
 		}
 	}
 	
 	private void runRenderTick(long partialTicks) {
+		if (theWorld != null && theWorld.isLoaded() && renderWorld) {
+			theWorld.onRenderTick(partialTicks);
+		}
+		
 		if (currentScreen != null) {
 			currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
 			//currentScreen.drawString("deltaF: " + deltaF, 0, currentScreen.endY - currentScreen.midY / 2, EColors.aquamarine);
 			//currentScreen.drawString("deltaU: " + deltaU, 0, currentScreen.endY - currentScreen.midY / 2 + 25, EColors.aquamarine);
 		}
 		else {
-			renderEngine.getPrimaryBatch().drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
-			//GLObject.drawString("No Screens?", 256, 256);
+			GLObject.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
+			GLObject.drawString("No Screens?", 256, 256);
 		}
 		
 		topScreen.onRenderTick();
+		//renderEngine.getRenderingContext().swapBuffers();
 		renderEngine.drawFrame();
 	}
 	
 	@Override
 	public void onKeyboardInput(int action, char typedChar, int keyCode) {
 		if (!renderEngine.isContextInit()) return;
+		topScreen.handleKeyboardInput(action, typedChar, keyCode);
+		if (theWorld != null) {
+			if (action == 0) { theWorld.getWorldRenderer().keyReleased(typedChar, keyCode); }
+			if (action == 1 || action == 2) { theWorld.getWorldRenderer().keyPressed(typedChar, keyCode); }
+		}
 	}
 	
 	@Override
 	public void onMouseInput(int action, int mXIn, int mYIn, int button, int change) {
 		if (!renderEngine.isContextInit()) return;
+		topScreen.handleMouseInput(action, mXIn, mYIn, button, change);
 	}
 	
 	@Override
 	public void onWindowResized(long window, int newWidth, int newHeight) {
+		renderEngine.getRenderingContext().onWindowResized();
 		gameWindow.onWindowResized(newWidth, newHeight);
 		if (theWorld != null && theWorld.isLoaded()) theWorld.getWorldRenderer().onWindowResized();
 		if (currentScreen != null) currentScreen.onScreenResized();
@@ -422,6 +470,32 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	//=========================
 	// Static Engine Functions
 	//=========================
+	
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn) { return displayWindow(level, windowIn, null, true, false, false, ObjectPosition.SCREEN_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, ObjectPosition loc) { return displayWindow(level, windowIn, null, true, false, false, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus) { return displayWindow(level, windowIn, null, transferFocus, false, false, ObjectPosition.SCREEN_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus, ObjectPosition loc) { return displayWindow(level, windowIn, null, transferFocus, false, false, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject) { return displayWindow(level, windowIn, oldObject, true, true, true, ObjectPosition.OBJECT_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, ObjectPosition loc) { return displayWindow(level, windowIn, oldObject, true, true, true, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(level, windowIn, oldObject, transferFocus, true, true, ObjectPosition.OBJECT_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, ObjectPosition loc) { return displayWindow(level, windowIn, oldObject, transferFocus, true, true, loc); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(level, windowIn, oldObject, transferFocus, closeOld, true, ObjectPosition.OBJECT_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(level, windowIn, oldObject, transferFocus, closeOld, transferHistory, ObjectPosition.OBJECT_CENTER); }
+	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
+		switch (level) {
+		case TOP:
+			topScreen.displayWindow(windowIn);
+			break;
+		case SCREEN:
+			if (currentScreen != null) currentScreen.displayWindow(windowIn);
+			break;
+		}
+		return windowIn;
+	}
+	
+	public static TopWindowParent<?> getActiveTopParent() {
+		return (GameTopScreen.isTopFocused()) ? topScreen : currentScreen;
+	}
 	
 	public static GameScreen displayScreen(GameScreen screenIn) { return displayScreen(screenIn, null, true, true); }
 	public static GameScreen displayScreen(GameScreen screenIn, boolean init) { return displayScreen(screenIn, null, init, true); }
@@ -483,7 +557,11 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	 */
 	public static GameWorld loadWorld(GameWorld worldIn) {
 		//unload the last world (if there was one)
-		if (theWorld != null) theWorld.setLoaded(false);
+		if (theWorld != null) {
+			theWorld.setLoaded(false);
+			//carry over zoom from old camera
+			if (worldIn != null) worldIn.setCameraZoom(theWorld.getCameraZoom());
+		}
 		
 		theWorld = worldIn;
 		
@@ -493,8 +571,10 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 			
 			//load the world
 			theWorld.setLoaded(true);
+			theWorld.onLoad();
 			pause = false;
 			renderWorld = true;
+			if (currentScreen != null) currentScreen.onWorldLoaded();
 			
 			//check if loaded
 			if (!theWorld.isLoaded()) warn("Failed to load world: ");
@@ -529,10 +609,14 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	/** Returns the FPS (frames per second) of the active game's game window. */
 	public static int getFPS() { return instance.curFrameRate; }
+	/** Returns the engine's current total number of game ticks run. */
+	public static long getRunningTicks() { return instance.ticks; }
 	/** Returns the FPS target that the window is trying to run at. */
 	public static int getTargetFPS() { return (int) instance.getTargetFPSi(); }
 	/** Returns the UPS (updates per second) that the game is trying to run at. */
 	public static int getTargetUPS() { return (int) instance.getTargetUPSi(); }
+	/** Returns the change in time between ticks. */
+	public static float getDeltaTime() { return instance.dt; }
 	
 	/** Returns Envision's underlying EventHandler. */
 	public static EventHandler getEventHandler() { return eventHandler; }
@@ -553,7 +637,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** Returns this game's constant player object. */
 	public static Player getPlayer() { return thePlayer; }
 	/** Returns this game's active world. */
-	public static GameWorld getWorld() { return theWorld; }
+	public static IGameWorld getWorld() { return theWorld; }
 	/** Returns the game's window. */
 	public static GameWindow getGameWindow() { return gameWindow; }
 	/** Returns this game's central font rendering system. */
@@ -573,6 +657,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	public static int getHeight() { return gameWindow.getHeight(); }
 	/** Returns the game window's draw scale. 1 is default. */
 	public static double getGameScale() { return QoTSettings.resolutionScale.get(); }
+	public static long getWindowHandle() { return gameWindow.getWindowHandle(); }
 	
 	//=========
 	// Setters

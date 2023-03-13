@@ -2,12 +2,11 @@ package qot.screens.testingStuff;
 
 import org.lwjgl.opengl.GL11;
 
+import envision.Envision;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import eutil.colors.EColors;
-import qot.QoT;
 import qot.screens.main.MainMenuScreen;
 
 public class TestInventory<E> extends WindowParent<E> {
@@ -71,7 +70,7 @@ public class TestInventory<E> extends WindowParent<E> {
 	}
 	
 	private void closeWindow() {
-		QoT.displayScreen(new MainMenuScreen());
+		Envision.displayScreen(new MainMenuScreen());
 	}
 	
 }

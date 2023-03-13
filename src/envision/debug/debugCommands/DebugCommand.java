@@ -1,6 +1,6 @@
 package envision.debug.debugCommands;
 
-import envision.debug.terminal.window.ETerminalWindow;
+import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.EArrayList;
 
 public abstract class DebugCommand {

@@ -87,11 +87,7 @@ public class AssetSidePanel extends PaletteSidePanel {
 			
 			MapEditorSettings s = editor.getSettings();
 			
-			//Switch the tool back to a pencil if it's currently an eraser
-			// -This is a convenience setting
-			if (s.getCurrentTool() == EditorToolType.ERASER) {
-				s.setCurrentTool(EditorToolType.PENCIL);
-			}
+			s.setCurrentTool(EditorToolType.PLACE);
 			
 			if (button == 0) s.setPrimaryPalette(item);
 			else s.setSecondaryPalette(item);

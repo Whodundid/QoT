@@ -15,7 +15,7 @@ public class StoneGroundClutter extends Entity {
 		tex = GroundClutterTextures.stones.getRandVariant();
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
-		setCollisionBox(0, 0, 0, 0);
+		//setCollisionBox(0, 0, 0, 0);
 		invincible = true;
 	}
 	
@@ -25,7 +25,7 @@ public class StoneGroundClutter extends Entity {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		
 	}
 	

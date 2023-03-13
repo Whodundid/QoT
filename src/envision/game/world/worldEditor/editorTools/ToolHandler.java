@@ -120,7 +120,6 @@ public class ToolHandler {
 	
 	private void handleTool(EditorToolType toolIn, ToolEvent event) {
 		if (button < 0) return;
-		
 		switch (toolIn) {
 		case SELECTOR: selectorTool.distributeEvent(event, button); break;
 		case ADD_REGION: regionTool.distributeEvent(event, button); break;

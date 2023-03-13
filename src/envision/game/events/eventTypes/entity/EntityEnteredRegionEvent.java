@@ -24,13 +24,13 @@ public class EntityEnteredRegionEvent extends EntityEvent {
 	/** The region being entered. */
 	private final Region region;
 	/** The X and Y coordinates that the entity entered the region at. */
-	private final int x, y;
+	private final double x, y;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public EntityEnteredRegionEvent(IGameWorld worldIn, Entity entIn, Region regionIn, int xIn, int yIn) {
+	public EntityEnteredRegionEvent(IGameWorld worldIn, Entity entIn, Region regionIn, double xIn, double yIn) {
 		super(EventType.ENTITY_ENTERED_REGION, true);
 		world = worldIn;
 		ent = entIn;
@@ -50,8 +50,8 @@ public class EntityEnteredRegionEvent extends EntityEvent {
 	/** Returns the region that this took place in. */
 	public Region getRegion() { return region; }
 	/** Returns the X coordinate of the world that the entity entered the region from. */
-	public int getX() { return x; }
+	public double getX() { return x; }
 	/** Returns the Y coordinate of the world that the entity entered the region from. */
-	public int getY() { return y; }
+	public double getY() { return y; }
 	
 }

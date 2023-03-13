@@ -1,7 +1,7 @@
 package envision.game.events.eventTypes.terminal;
 
-import envision.debug.terminal.commands.TerminalCommand;
-import envision.debug.terminal.window.ETerminalWindow;
+import envision.engine.terminal.commands.TerminalCommand;
+import envision.engine.terminal.window.ETerminalWindow;
 import envision.game.events.EventType;
 import eutil.datatypes.EArrayList;
 

@@ -1,5 +1,6 @@
 package envision.engine.inputHandlers;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
 public class WindowResizeListener extends GLFWWindowSizeCallback {
@@ -13,18 +14,22 @@ public class WindowResizeListener extends GLFWWindowSizeCallback {
 	// Static Singleton
 	//==================
 	
-	public static WindowResizeListener create() { return create((IWindowResizeEventReceiver) null); }
-	public static WindowResizeListener create(IWindowResizeEventReceiver receiverIn) {
-		return instance = new WindowResizeListener(receiverIn);
+	public static WindowResizeListener create() { return create(-1, (IWindowResizeEventReceiver) null); }
+	public static WindowResizeListener create(long windowHandle, IWindowResizeEventReceiver receiverIn) {
+		return instance = new WindowResizeListener(windowHandle, receiverIn);
 	}
 	
 	public static WindowResizeListener getInstance() {
-		return instance = (instance != null) ? instance : new WindowResizeListener(null);
+		return instance = (instance != null) ? instance : create();
 	}
 	
-	private WindowResizeListener(IWindowResizeEventReceiver receiverIn) {
+	private WindowResizeListener(long windowHandle, IWindowResizeEventReceiver receiverIn) {
 		super();
 		receiver = receiverIn;
+		
+		if (windowHandle > 0) {
+			GLFW.glfwSetWindowSizeCallback(windowHandle, this);
+		}
 	}
 	
 	//===========

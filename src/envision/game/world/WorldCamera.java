@@ -17,9 +17,9 @@ public class WorldCamera {
 	/** The object this camera is following. */
 	private GameObject focusedObject;
 	/** The world coordinates that this camera is focused around. */
-	private final Box2<Integer, Integer> focusedCoords = new Box2<>(0, 0);
+	private final Box2<Double, Double> focusedCoords = new Box2<>(0.0, 0.0);
 	/** The pixel world coordinates that this camera is precisely focused on. */
-	private final Box2<Integer, Integer> focusedPoint = new Box2<>(0, 0);
+	private final Box2<Double, Double> focusedPoint = new Box2<>(0.0, 0.0);
 	/** The zoom of the camera. Higher values are more zoomed in. */
 	private double zoom = 1.0;
 	
@@ -48,13 +48,13 @@ public class WorldCamera {
 	/**
 	 * Called each frame to update camera position.
 	 */
-	public synchronized void onRenderTick() {
-		if (focusedCoords.anyNull()) focusedCoords.set(0, 0);
-		if (focusedPoint.anyNull()) focusedPoint.set(0, 0);
+	public synchronized void onRenderTick(float partialTicks) {
+		if (focusedCoords.anyNull()) focusedCoords.set(0.0, 0.0);
+		if (focusedPoint.anyNull()) focusedPoint.set(0.0, 0.0);
 		
 		if (focusedObject != null) {
-			focusedCoords.setA(focusedObject.worldX);
-			focusedCoords.setB(focusedObject.worldY);
+			focusedCoords.setA((double) focusedObject.worldX);
+			focusedCoords.setB((double) focusedObject.worldY);
 			focusedPoint.setA(focusedObject.startX);
 			focusedPoint.setB(focusedObject.startY);
 			offsetX = (focusedObject.startX % theWorld.getTileWidth()) * zoom;
@@ -67,13 +67,13 @@ public class WorldCamera {
 	//---------
 	
 	/** Returns the exact X pixel coordinate that camera is focused on in the world. */
-	public int getX() { return focusedPoint.getA(); }
+	public double getX() { return focusedPoint.getA(); }
 	/** Returns the exact Y pixel coordinate that camera is focused on in the world. */
-	public int getY() { return focusedPoint.getB(); }
+	public double getY() { return focusedPoint.getB(); }
 	/** Returns the X world coordinate that camera is focused on. */
-	public int getWorldX() { return focusedCoords.getA(); }
+	public int getWorldX() { return (int) (double) focusedCoords.getA(); }
 	/** Returns the Y world coordinate that camera is focused on. */
-	public int getWorldY() { return focusedCoords.getB(); }
+	public int getWorldY() { return (int) (double) focusedCoords.getB(); }
 	/** Returns the number of pixels in the X dimension that the camera is offset by in world coordinates. */
 	public double getOffsetX() { return offsetX; }
 	/** Returns the number of pixels in the Y dimension that the camera is offset by in world coordinates. */
@@ -109,12 +109,12 @@ public class WorldCamera {
 	public synchronized void setFocusedObject(GameObject object) {
 		focusedObject = object;
 		if (focusedObject == null) {
-			focusedPoint.set(0, 0);
+			focusedPoint.set(0.0, 0.0);
 			offsetX = (focusedPoint.getA() % theWorld.getTileWidth()) * zoom;
 			offsetY = (focusedPoint.getB() % theWorld.getTileHeight()) * zoom;
 		}
 		else {
-			focusedCoords.set(focusedObject.worldX, focusedObject.worldY);
+			focusedCoords.set((double) focusedObject.worldX, (double) focusedObject.worldY);
 			focusedPoint.set(focusedObject.startX, focusedObject.startY);
 			offsetX = (focusedObject.startX % theWorld.getTileWidth()) * zoom;
 			offsetY = (focusedObject.startY % theWorld.getTileHeight()) * zoom;
@@ -129,7 +129,7 @@ public class WorldCamera {
 	 * @param x The X pixel coordinate
 	 * @param y The Y pixel coordinate
 	 */
-	public synchronized void setFocusedPoint(int x, int y) {
+	public synchronized void setFocusedPoint(double x, double y) {
 		focusedObject = null;
 		focusedCoords.set(x / theWorld.getTileWidth(), y / theWorld.getTileHeight());
 		focusedPoint.set(x, y);
@@ -145,7 +145,7 @@ public class WorldCamera {
 	 * @param x The X pixel coordinate
 	 * @param y The Y pixel coordinate
 	 */
-	public synchronized void setFocusedCoords(int x, int y) {
+	public synchronized void setFocusedCoords(double x, double y) {
 		focusedObject = null;
 		focusedCoords.set(x, y);
 		var tw = theWorld.getTileWidth();
@@ -153,7 +153,6 @@ public class WorldCamera {
 		focusedPoint.set(x * tw + tw / 2, y * th + th / 2);
 		offsetX = (focusedPoint.getA() % tw) * zoom;
 		offsetY = (focusedPoint.getB() % th) * zoom;
-		//System.out.println(focusedCoords + " : " + focusedPoint + " : " + offsetX + " : " + offsetY);
 	}
 	
 }

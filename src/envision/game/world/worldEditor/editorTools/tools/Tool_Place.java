@@ -8,6 +8,7 @@ import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
 import envision.game.world.worldEditor.editorTools.EditorTool;
+import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 
 public class Tool_Place extends EditorTool {
 	
@@ -80,17 +81,13 @@ public class Tool_Place extends EditorTool {
 		GameObject obj = object.getGameObject();
 		System.out.println("PLACE OBJECT: " + obj);
 		
-		if (obj instanceof Entity ent) {
-			//Entity ent = object.getEntity();
-			Class<? extends Entity> objClass = ent.getClass();
-			
-			try {
-				Entity newEnt = objClass.getConstructor().newInstance();
-				addEntityToWorld(newEnt);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+		var placement = getPlacementPosition(obj);
+		
+		if (obj instanceof PlayerSpawnPoint p) {
+			this.editor.getEditorWorld().setPlayerSpawn(placement[0], placement[1]);
+		}
+		else if (obj instanceof Entity e) {
+			placeEntity();
 		}
 	}
 	

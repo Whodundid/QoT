@@ -39,7 +39,6 @@ import eutil.datatypes.util.EList;
 import eutil.debug.DebugToolKit;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.ScreenLocation;
-import qot.QoT;
 import qot.assets.textures.cursor.CursorTextures;
 
 //Author: Hunter Bragg
@@ -430,11 +429,11 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		
 		sX = sX < 0 ? 1 : sX;
 		//sY = (sY - 7) < 2 ? 2 + 7 : sY;
-		if (sX + strWidth + 10 > QoT.getWidth()) {
-			sX = -1 + sX - (sX + strWidth + 10 - QoT.getWidth() + 6);
+		if (sX + strWidth + 10 > Envision.getWidth()) {
+			sX = -1 + sX - (sX + strWidth + 10 - Envision.getWidth() + 6);
 			sY -= 10;
 		}
-		sY = sY + 16 > QoT.getHeight() ? -2 + sY - (sY + 16 - QoT.getHeight() + 6) : sY;
+		sY = sY + 16 > Envision.getHeight() ? -2 + sY - (sY + 16 - Envision.getHeight() + 6) : sY;
 		
 		double eX = sX + strWidth + 10;
 		double eY = sY + FontRenderer.FONT_HEIGHT + 4;
@@ -520,7 +519,20 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//----------------
 	
 	/** Returns true if this object will be drawn on the next draw cycle. */
-	public default boolean willBeDrawn() { return properties().isAlwaysVisible || properties().isVisible; }
+	public default boolean willBeDrawn() {
+		if (properties().isAlwaysVisible) return true;
+		
+		boolean val = true;
+		
+		var p = getParent();
+		if (p != null) val &= p.willBeDrawn();
+		
+		val &= properties().isVisible;
+		val &= !properties().isHidden;
+		
+		return val;
+	}
+	
 	/** Returns true if this object's mouse checks are enforced by a boundary. */
 	public default boolean isBoundaryEnforced() { return properties().boundaryDimension != null; }
 	
@@ -810,13 +822,47 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		return foundObjs;
 	}
 	
+	/** Returns a list of all children that descend from this parent. */
+	public default EList<IWindowObject<?>> getAllVisibleChildren() {
+		if (!willBeDrawn()) return EList.newList();
+		
+		EList<IWindowObject<?>> foundObjs = EList.newList();
+		EList<IWindowObject<?>> objsWithChildren = EList.newList();
+		EList<IWindowObject<?>> workList = EList.newList();
+		
+		//grab all immediate children and add them to foundObjs, then check if any have children of their own
+		getChildren().forEach(o -> {
+			if (o.willBeDrawn()) foundObjs.add(o);
+			if (!o.getCombinedChildren().isEmpty()) objsWithChildren.add(o);
+		});
+		
+		//load the workList with every child found on each object
+		objsWithChildren.forEach(c -> workList.addAll(c.getCombinedChildren()));
+		
+		//only work as long as there are still child layers to process
+		while (workList.isNotEmpty()) {
+			//update the foundObjs
+			workList.filterForEach(o -> o.willBeDrawn(), foundObjs::add);
+			
+			//for the current layer, find all objects that have children
+			objsWithChildren.clear();
+			workList.filterForEach(o -> o.getCombinedChildren().isNotEmpty(), objsWithChildren::add);
+			
+			//put all children on the next layer into the work list
+			workList.clear();
+			objsWithChildren.forEach(c -> workList.addAll(c.getCombinedChildren()));
+		}
+		
+		return foundObjs;
+	}
+	
 	/**
 	 * Returns a list of all children from 'getAllChildren()' that are
 	 * currently under the mouse.
 	 */
 	public default EList<IWindowObject<?>> getAllChildrenUnderMouse() {
 		//only add objects if they are visible and if the cursor is over them.
-		return getAllChildren().filterNull(o -> o.willBeDrawn() && o.isMouseInside());
+		return getAllVisibleChildren().filterNull(o -> o.isMouseInside());
 	}
 	
 	/**
@@ -1163,7 +1209,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 */
 	public default boolean isMouseInside() {
 		//if the top renderer is being drawn and this object is not a child of the top renderer -- ignore
-		if (Envision.getTopScreen().hasFocus() && !isChildOf(QoT.getTopRenderer())) return false;
+		if (Envision.getTopScreen().hasFocus() && !isChildOf(Envision.getTopScreen())) return false;
 		
 		EDimension d = getDimensions();
 		int mX = Mouse.getMx();

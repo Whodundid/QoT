@@ -1,7 +1,6 @@
 package envision.engine.rendering.renderingAPI;
 
-import envision.engine.rendering.OpenGLBatchManager;
-import envision.engine.rendering.shaders.ShaderProgram;
+import envision.engine.rendering.batching.BatchManager;
 
 public abstract class RenderingContext {
 	
@@ -14,8 +13,7 @@ public abstract class RenderingContext {
 	public abstract void init();
 	public abstract boolean isInit();
 	public abstract void onWindowResized();
-	public abstract OpenGLBatchManager getPrimaryBatch();
-	public abstract void useShader(ShaderProgram programIn);
+	public abstract BatchManager getBatchManager();
 	public abstract void drawFrame();
 	public abstract void swapBuffers();
 	

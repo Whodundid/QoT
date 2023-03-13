@@ -2,6 +2,7 @@ package qot.screens.main;
 
 import java.io.File;
 
+import envision.Envision;
 import envision.debug.DebugSettings;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
@@ -16,7 +17,6 @@ import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import eutil.random.ERandomUtil;
 import eutil.timing.ESimpleTimer;
-import qot.QoT;
 import qot.assets.sounds.Songs;
 import qot.assets.textures.general.GeneralTextures;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
@@ -47,10 +47,10 @@ public class MainMenuScreen extends GameScreen {
 		DebugSettings.drawFlatWalls = false;
 		DebugSettings.drawTileGrid = false;
 		
-		QoT.thePlayer = null;
+		Envision.thePlayer = null;
 		
-		if (QoT.theWorld != null) {
-			QoT.loadWorld(null);
+		if (Envision.theWorld != null) {
+			Envision.loadWorld(null);
 		}
 		
 		if (!SoundEngine.isPlaying(Songs.theme) && SoundEngine.getAllPlaying().size() == 1) {
@@ -77,7 +77,7 @@ public class MainMenuScreen extends GameScreen {
 				if (secret) return;
 				
 				menuWorld = new GameWorld(new File(QoTSettings.getMenuWorldsDir(), selected));
-				var w = QoT.theWorld = menuWorld;
+				var w = Envision.theWorld = menuWorld;
 				w.getWorldRenderer().onWorldLoaded();
 				w.setCameraZoom(ERandomUtil.getRoll(2.5, 3));
 				w.setUnderground(ERandomUtil.roll(1, 1, 10));
@@ -99,7 +99,7 @@ public class MainMenuScreen extends GameScreen {
 	
 	@Override
 	public void initChildren() {
-		double w = ENumUtil.clamp(QoT.getWidth() / 4, 200, 320);
+		double w = ENumUtil.clamp(Envision.getWidth() / 4, 200, 320);
 		double x = midX - w / 2;
 		double y = midY - 50;
 		double h = 40;
@@ -162,9 +162,9 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	@Override
-	public void onGameTick(long ticks) {
+	public void onGameTick(float dt) {
 		if (menuWorld != null) {
-			menuWorld.onGameTick();
+			menuWorld.onGameTick(dt);
 		}
 	}
 	
@@ -208,7 +208,7 @@ public class MainMenuScreen extends GameScreen {
 			drawTexture(GeneralTextures.noscreens);
 		}
 		else if (menuWorld != null && menuWorld.isFileLoaded()) {
-			menuWorld.getWorldRenderer().onRenderTick();
+			menuWorld.getWorldRenderer().onRenderTick(0f);
 			drawRect(EColors.vdgray.opacity(30));
 		}
 	}
@@ -219,8 +219,8 @@ public class MainMenuScreen extends GameScreen {
 		double scale = 4.5;
 		double tW = tex.getWidth() * scale;
 		double tH = tex.getHeight() * scale;
-		int numX = (int) Math.ceil(QoT.getWidth() / tW);
-		int numY = (int) Math.ceil(QoT.getHeight() / tH);
+		int numX = (int) Math.ceil(Envision.getWidth() / tW);
+		int numY = (int) Math.ceil(Envision.getHeight() / tH);
 		
 		int opacity = 255;
 		
@@ -263,7 +263,7 @@ public class MainMenuScreen extends GameScreen {
 	//---------------------------------------------------
 	
 	private void newGame() {
-		QoT.displayScreen(new WorldSelectScreen(), this);
+		Envision.displayScreen(new WorldSelectScreen(), this);
 	}
 	
 	private void load() {
@@ -271,16 +271,16 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void options() {
-		QoT.displayScreen(new OptionsScreen(), this);
+		Envision.displayScreen(new OptionsScreen(), this);
 	}
 	
 	private void closeGame() {
 		SoundEngine.stopAll();
-		QoT.stopGame();
+		Envision.shutdown();
 	}
 	
 	private void mapTest() {
-		QoT.displayScreen(new MapMenuScreen(), this);
+		Envision.displayScreen(new MapMenuScreen(), this);
 	}
 	
 }

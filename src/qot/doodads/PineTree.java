@@ -28,7 +28,7 @@ public class PineTree extends Entity {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		/*
 		double distToPlayer = world.getDistance(this, QoT.thePlayer);
 		

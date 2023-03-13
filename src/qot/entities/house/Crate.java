@@ -20,7 +20,7 @@ public class Crate extends Entity {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		
 	}
 	

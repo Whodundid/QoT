@@ -1,12 +1,11 @@
 package qot.entities.enemies;
 
+import envision.Envision;
 import envision.game.objects.entities.Enemy;
-import envision.game.objects.entities.Entity;
 import envision.game.world.GameWorld;
 import eutil.math.dimensions.EDimension;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
-import qot.QoT;
 import qot.assets.textures.entity.EntityTextures;
 
 public class Goblin extends Enemy {
@@ -21,6 +20,7 @@ public class Goblin extends Enemy {
 		setBaseMeleeDamage(1);
 		setMaxHealth(10);
 		setHealth(10);
+		speed = 32 * 3;
 		
 		init(posX, posY, 64, 64);
 		tex = EntityTextures.goblin;
@@ -30,7 +30,7 @@ public class Goblin extends Enemy {
 	}
 	
 	@Override
-	public void onLivingUpdate() {
+	public void onLivingUpdate(float dt) {
 		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
 			waitTime = ERandomUtil.getRoll(randShort, randLong);
 			moveTime = ERandomUtil.getRoll(randShort, randLong);
@@ -43,7 +43,7 @@ public class Goblin extends Enemy {
 			move(lastDir);
 		}
 		
-		if (QoT.thePlayer == null) {
+		if (Envision.thePlayer == null) {
 			boolean shouldMove = ERandomUtil.roll(10, 0, 10);
 			headText = "";
 			
@@ -55,33 +55,15 @@ public class Goblin extends Enemy {
 			return;
 		}
 		
-		double distToPlayer = ((GameWorld) world).getDistance(this, QoT.thePlayer);
+		double distToPlayer = ((GameWorld) world).getDistance(this, Envision.thePlayer);
 		
 		//check if distance to player is less than 200 pixels
-		if (QoT.thePlayer != null && distToPlayer <= 200) {
-			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, QoT.thePlayer);
+		if (Envision.thePlayer != null && distToPlayer <= 200) {
+			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
 			//headText = (int) distToPlayer + " : " + dirToPlayer;
 			
-			EDimension testDim;
-			EDimension pDims;
-			{
-				double cSX = startX + collisionBox.startX;
-				double cSY = startY + collisionBox.startY;
-				double cEX = endX - (width - collisionBox.endX);
-				double cEY = endY - (height - collisionBox.endY);
-				
-				testDim = new EDimension(cSX, cSY, cEX, cEY);
-			}
-			
-			{
-				Entity e = QoT.thePlayer;
-				double cSX = e.startX + e.collisionBox.startX;
-				double cSY = e.startY + e.collisionBox.startY;
-				double cEX = e.endX - (e.width - e.collisionBox.endX);
-				double cEY = e.endY - (e.height - e.collisionBox.endY);
-				
-				pDims = new EDimension(cSX, cSY, cEX, cEY);
-			}
+			EDimension testDim = getCollisionDims();
+			EDimension pDims = Envision.thePlayer.getCollisionDims();
 			
 			headText = "" + getHealth();
 			if (testDim.partiallyContains(pDims)) {
@@ -94,7 +76,7 @@ public class Goblin extends Enemy {
 				else {
 					hit = true;
 					timeSinceLastHit = System.currentTimeMillis();
-					QoT.thePlayer.drainHealth(getBaseMeleeDamage());
+					Envision.thePlayer.drainHealth(getBaseMeleeDamage());
 				}
 			}
 			move(dirToPlayer);

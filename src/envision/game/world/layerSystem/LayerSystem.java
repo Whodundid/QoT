@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import envision.engine.inputHandlers.Mouse;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class LayerSystem implements Iterable<ScreenLayer> {
 	
@@ -19,7 +20,7 @@ public class LayerSystem implements Iterable<ScreenLayer> {
 	// Fields
 	//--------
 	
-	private final EArrayList<ScreenLayer> layers = new EArrayList<>();
+	private final EList<ScreenLayer> layers = new EArrayList<>();
 	
 	//-----------
 	// Overrides

@@ -1,12 +1,7 @@
 package envision.game.world.worldEditor.editorParts.minimap;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
 
-import javax.imageio.ImageIO;
-
-import envision.debug.testStuff.testing.TextureLoader;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
@@ -96,9 +91,9 @@ public class EditorMiniMap extends WindowObject {
 			}
 		}
 		
-		File minimapFile = new File(editor.getActualWorld().getWorldFile(), "minimap.png");
-		ImageIO.write(mapImage, "png", new FileOutputStream(minimapFile));
-		TextureLoader.loadTexture(null);
+//		File minimapFile = new File(editor.getActualWorld().getWorldFile(), "minimap.png");
+//		ImageIO.write(mapImage, "png", new FileOutputStream(minimapFile));
+//		TextureLoader.loadTexture(null);
 	}
 	
 	private void drawCameraPos() {

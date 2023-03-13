@@ -6,18 +6,19 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
+import envision.Envision;
 import envision.engine.inputHandlers.WindowResizeListener;
-import envision.engine.rendering.OpenGLBatchManager;
+import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.renderingAPI.RendererContextType;
 import envision.engine.rendering.renderingAPI.RenderingContext;
-import envision.engine.rendering.shaders.ShaderProgram;
+import envision.engine.rendering.shaders.Shaders;
 import qot.launcher.LauncherLogger;
 
 public class OpenGLContext extends RenderingContext {
 	
 	private boolean isInit = false;
 	private long windowHandle;
-	private OpenGLBatchManager primaryBatch;
+	private BatchManager batchManager;
 	
 	public OpenGLContext(long windowHandleIn) {
 		super(RendererContextType.OPENGL);
@@ -29,7 +30,8 @@ public class OpenGLContext extends RenderingContext {
 		GLFW.glfwMakeContextCurrent(windowHandle);
 		GL.createCapabilities();
 		GL_ErrorReporter.setup();
-		primaryBatch = new OpenGLBatchManager();
+		Shaders.init();
+		batchManager = new BatchManager();
 		isInit = true;
 	}
 	
@@ -43,6 +45,7 @@ public class OpenGLContext extends RenderingContext {
 		int width = WindowResizeListener.getWidth();
 		int height = WindowResizeListener.getHeight();
 		GL11.glViewport(0, 0, width, height);
+		Envision.getRenderEngine().getCamera().updateProjection(width, height);
 	}
 
 	@Override
@@ -77,18 +80,13 @@ public class OpenGLContext extends RenderingContext {
 	}
 
 	@Override
-	public OpenGLBatchManager getPrimaryBatch() {
-		return primaryBatch;
+	public BatchManager getBatchManager() {
+		return batchManager;
 	}
 	
 	@Override
 	public void drawFrame() {
-		primaryBatch.draw();
-	}
-
-	@Override
-	public void useShader(ShaderProgram programIn) {
-		primaryBatch.setShader(programIn);
+		batchManager.draw();
 	}
 	
 }

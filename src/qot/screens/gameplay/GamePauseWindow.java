@@ -1,12 +1,12 @@
 package qot.screens.gameplay;
 
+import envision.Envision;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.FutureTaskEventType;
 import eutil.colors.EColors;
-import qot.QoT;
 import qot.screens.main.MainMenuScreen;
 import qot.screens.main.OptionsScreen;
 
@@ -30,7 +30,7 @@ public class GamePauseWindow extends WindowParent {
 	
 	@Override
 	public void initChildren() {
-		QoT.pause();
+		Envision.pause();
 		
 		//defaultHeader();
 		
@@ -50,19 +50,19 @@ public class GamePauseWindow extends WindowParent {
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		drawRect(0, 0, QoT.getWidth(), QoT.getHeight(), EColors.vdgray.opacity(150));
+		drawRect(0, 0, Envision.getWidth(), Envision.getHeight(), EColors.vdgray.opacity(150));
 		drawDefaultBackground();
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == quit) {
-			QoT.loadWorld(null); // Unload current world
-			QoT.displayScreen(new MainMenuScreen()); // Display main menu
+			Envision.loadWorld(null); // Unload current world
+			Envision.displayScreen(new MainMenuScreen()); // Display main menu
 		}
 		
 		if (object == options) {
-			var opScreen = QoT.displayScreen(new OptionsScreen(), parent);
+			var opScreen = Envision.displayScreen(new OptionsScreen(), parent);
 			if (parent instanceof GamePlayScreen g) {
 				opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, () -> g.openPauseWindowIfNotOpen());
 			}
@@ -73,7 +73,7 @@ public class GamePauseWindow extends WindowParent {
 	
 	@Override
 	public void onClosed() {
-		QoT.unpause();
+		Envision.unpause();
 	}
 	
 }

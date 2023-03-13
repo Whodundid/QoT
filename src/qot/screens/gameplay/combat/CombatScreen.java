@@ -1,5 +1,6 @@
 package qot.screens.gameplay.combat;
 
+import envision.Envision;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowObject;
@@ -7,7 +8,6 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.objects.entities.Entity;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import qot.QoT;
 
 public class CombatScreen extends GameScreen {
 	
@@ -62,8 +62,8 @@ public class CombatScreen extends GameScreen {
 	
 	@Override
 	public void onScreenClosed() {
-		QoT.unpause();
-		QoT.unpauseWorldRender();
+		Envision.unpause();
+		Envision.unpauseWorldRender();
 	}
 	
 	@Override

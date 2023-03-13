@@ -1,6 +1,6 @@
 package envision.debug.debugCommands;
 
-import envision.debug.terminal.window.ETerminalWindow;
+import envision.engine.terminal.window.ETerminalWindow;
 import envision.game.objects.IDrawable;
 import envision.game.objects.InsertionSort;
 import envision.game.objects.entities.EntityLevel;

@@ -2,22 +2,23 @@ package envision.engine.screens;
 
 import java.util.Stack;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
 import envision.game.events.GameEvent;
 import envision.game.events.IEventListener;
 import eutil.datatypes.EArrayList;
-import qot.QoT;
+import eutil.datatypes.util.EList;
 import qot.screens.main.MainMenuScreen;
 
-public abstract class GameScreen<E>
+public class GameScreen<E>
 	extends TopWindowParent<E>
 	implements ITopParent<E>, IEventListener
 {
 	
-	protected Stack<GameScreen<?>> screenHistory = new Stack();
-	protected EArrayList<String> aliases = new EArrayList();
+	protected Stack<GameScreen<?>> screenHistory = new Stack<>();
+	protected EList<String> aliases = new EArrayList<>();
 	
 	/** The point at which the screen will start fading. */
 	protected long screenFadeStart;
@@ -36,6 +37,7 @@ public abstract class GameScreen<E>
 	
 	public GameScreen() {
 		setDefaultDims();
+		//Envision.getRenderEngine().getBatchManager().pushLayer();
 	}
 	
 	//-----------
@@ -45,8 +47,6 @@ public abstract class GameScreen<E>
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawScreen(mXIn, mYIn);
-		
-
 	}
 	
 	@Override
@@ -67,7 +67,7 @@ public abstract class GameScreen<E>
 	//---------
 	
 	protected void setDefaultDims() {
-		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
+		setDimensions(0, 0, Envision.getWidth(), Envision.getHeight());
 	}
 	
 	/** Initializer method that is called before a screen is built. */
@@ -75,7 +75,7 @@ public abstract class GameScreen<E>
 	/** Called everytime this screen is about to be drawn. */
 	public void drawScreen(int mXIn, int mYIn) {}
 	/** Called everytime a new game tick occurs. */
-	public void onGameTick(long ticks) {}
+	public void onGameTick(float dt) {}
 	/** Called whenever this screen is about to be closed. */
 	public void onScreenClosed() {}
 	/** Called whenever a world is loaded. */
@@ -86,7 +86,7 @@ public abstract class GameScreen<E>
 	}
 	
 	public void onScreenResized() {
-		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
+		setDimensions(0, 0, Envision.getWidth(), Envision.getHeight());
 		reInitChildren();
 	}
 	
@@ -111,20 +111,22 @@ public abstract class GameScreen<E>
 	 * @param hist
 	 */
 	public void closeScreen(boolean hist) {
-		QoT.getEventHandler().unsubscribeFromAll(this);
+		Envision.getEventHandler().unsubscribeFromAll(this);
 		
 		if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
 			var screen = screenHistory.pop();
 			screen.setScreenHistory(screenHistory);
 			
-			QoT.displayScreen(screen, (hist) ? this : new MainMenuScreen());
+			Envision.displayScreen(screen, (hist) ? this : new MainMenuScreen());
 		}
 		else {
-			QoT.displayScreen(new MainMenuScreen());
+			Envision.displayScreen(new MainMenuScreen());
 		}
+		
+		//Envision.getRenderEngine().getBatchManager().popLayer();
 	}
 	
-	public EArrayList<String> getAliases() {
+	public EList<String> getAliases() {
 		return aliases;
 	}
 	
@@ -133,7 +135,7 @@ public abstract class GameScreen<E>
 	}
 	
 	public GameScreen<E> setWindowSize() {
-		setDimensions(0, 0, QoT.getWidth(), QoT.getHeight());
+		setDimensions(0, 0, Envision.getWidth(), Envision.getHeight());
 		return this;
 	}
 	
