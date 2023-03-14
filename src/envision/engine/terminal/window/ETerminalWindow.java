@@ -158,7 +158,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 		vPos = history.getVScrollBar().getScrollPos();
 		hPos = history.getHScrollBar().getScrollPos();
 		
-		lines = history.getTextDocument();
+		lines = EList.of(history.getTextDocument());
 		clearTabCompletions();
 		
 		history.clear();
@@ -177,7 +177,8 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 	public void drawObject(int mXIn, int mYIn) {
 		if (header != null) {
 			header.setTitleColor(-EColors.rainbow() + 0xff222222);
-			header.setTitle("Terminal");
+			String dirS = "./" + dir.getName();
+			header.setTitle("Terminal " + EColors.yellow + dirS);
 		}
 		
 		drawRect(startX, startY, endX, endY, 0xff000000);
@@ -574,6 +575,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 		}
 		
 		tabDisplayLines.clear();
+		scrollToBottom();
 		
 		return this;
 	}

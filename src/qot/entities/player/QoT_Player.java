@@ -1,7 +1,7 @@
 package qot.entities.player;
 
 import envision.Envision;
-import envision.game.objects.CollisionHelper;
+import envision.engine.inputHandlers.Keyboard;
 import envision.game.objects.entities.Entity;
 import envision.game.objects.entities.Player;
 import envision.game.objects.entities.PlayerStats;
@@ -11,9 +11,7 @@ import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
-import eutil.math.ENumUtil;
 import eutil.math.dimensions.EDimension;
-import eutil.math.vectors.Vec2f;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
@@ -111,6 +109,7 @@ public class QoT_Player extends Player {
 		}
 	}
 	
+	@Override
 	public void onMousePress(int mXIn, int mYIn, int button) {
 		if (!attacking && button == 0) {
 			attacking = true;
@@ -141,109 +140,19 @@ public class QoT_Player extends Player {
 		}
 	}
 	
-//	@Override
-//	public void move(double x, double y) {
-//		super.move(x, y);
-//		//move(x, y, dt);
-//	}
-	
-	public void move(double moveX, double moveY, float timeSinceLastUpdate) {		
-		boolean isMovingX = moveX != 0.0d;
-		boolean isMovingY = moveY != 0.0d;
-		
-		boolean left = false, right = false, up = false, down = false;
-		if (moveX < 0) 			left = true;
-		else if (moveX > 0) 	right = true;
-		if (moveY < 0) 			up = true;
-		else if (moveY > 0) 	down = true;
-		
-		if (left) 		facing = Rotation.LEFT;
-		else if (right) facing = Rotation.RIGHT;
-		else if (up)	facing = Rotation.UP;
-		else if (down) 	facing = Rotation.DOWN;
-		
-		double len = Math.sqrt(moveX * moveX + moveY * moveY);
-		double normX = moveX / len;
-		double normY = moveY / len;
-		
-		normX *= speed;
-		normY *= speed;
-		
-		startX = startX + normX * timeSinceLastUpdate;
-		startY = startY + normY * timeSinceLastUpdate;
-		
-		final var xAxis = new Vec2f(1, 0);
-		final var yAxis = new Vec2f(0, 1);
-		final var dims = this.getCollisionDims();
-		
-		boolean blockY = false;
-		double blockYCoords = 0.0;
-		
-		boolean blockX = false;
-		double blockXCoords = 0.0;
-		
-		if (isMovingX) {
-			for (var t : collisionHelper.getCollidingTilesForXAxis(left)) {
-				double tsx = t.worldX * world.getTileWidth();
-				double tsy = t.worldY * world.getTileWidth();
-				double tex = tsx + world.getTileWidth();
-				double tey = tsy + world.getTileHeight();
-				
-				var tDims = new EDimension(tsx, tsy, tex, tey);
-				boolean col = CollisionHelper.overlapOnAxis(dims, tDims, xAxis);
-				
-				if (col) {
-					blockX = true;
-					blockXCoords = (left) ? tex : tsx;
-					break;
-				}
-			}
+	@Override
+	public void onKeyPress(char typedChar, int keyCode) {
+		if (keyCode >= Keyboard.KEY_0 && keyCode <= Keyboard.KEY_9) {
+			int ability = keyCode - Keyboard.KEY_1;
+			System.out.println(ability);
+			
+			abilityTracker.useAbility(ability);
 		}
-		
-		if (isMovingY) {
-			for (var t : collisionHelper.getCollidingTilesForYAxis(up)) {
-				double tsx = t.worldX * world.getTileWidth();
-				double tsy = t.worldY * world.getTileWidth();
-				double tex = tsx + world.getTileWidth();
-				double tey = tsy + world.getTileHeight();
-				
-				var tDims = new EDimension(tsx, tsy, tex, tey);
-				boolean col = CollisionHelper.overlapOnAxis(dims, tDims, yAxis);
-				
-				if (col) {
-					blockY = true;
-					blockYCoords = (up) ? tey : tsy;
-					break;
-				}
-			}
-		}
-		
-		if (blockX) {
-			if (left) startX = blockXCoords - collisionBox.startX;
-			else 	  startX = blockXCoords - collisionBox.endX;
-		}
-		else if (blockY) {
-			if (up) startY = blockYCoords - collisionBox.startY;
-			else 	startY = blockYCoords - collisionBox.endY;
-		}
-		
-		if (!allowNoClip) {
-			startX = ENumUtil.clamp(startX, -collisionBox.startX, world.getPixelWidth() - collisionBox.endX);
-			startY = ENumUtil.clamp(startY, -collisionBox.startY, world.getPixelHeight() - collisionBox.endY);
-		}
-		
-		midX = startX + (width / 2);
-		midY = startY + (height / 2);
-		
-		double valX = startX / world.getTileWidth();
-		double valY = startY / world.getTileHeight();
-		
-		worldX = (int) valX;
-		worldY = (int) valY;
 	}
 	
 	@Override
 	public void onLivingUpdate(float dt) {
+		this.abilityTracker.onGameTick(dt);
 //		System.out.println(dt);
 		
 //		if (!start) {

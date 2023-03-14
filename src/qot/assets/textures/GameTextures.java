@@ -2,6 +2,7 @@ package qot.assets.textures;
 
 import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
+import qot.assets.textures.ability.AbilityTextures;
 import qot.assets.textures.cursor.CursorTextures;
 import qot.assets.textures.doodads.DoodadTextures;
 import qot.assets.textures.editor.EditorTextures;
@@ -28,6 +29,7 @@ public class GameTextures extends TextureLoader {
 	
 	//-------------------------------
 	
+	public static AbilityTextures abilityTextures = AbilityTextures.instance();
 	public static CursorTextures cursorTextures = CursorTextures.instance();
 	public static DoodadTextures doodadTextures = DoodadTextures.instance();
 	public static EditorTextures editorTextures = EditorTextures.instance();
@@ -47,6 +49,7 @@ public class GameTextures extends TextureLoader {
 	
 	@Override
 	public void onRegister(TextureSystem sys) {
+		abilityTextures.onRegister(sys);
 		cursorTextures.onRegister(sys);
 		doodadTextures.onRegister(sys);
 		editorTextures.onRegister(sys);

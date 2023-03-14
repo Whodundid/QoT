@@ -10,6 +10,7 @@ import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
 import eutil.strings.EStringUtil;
 import eutil.sys.OSType;
+import qot.settings.QoTSettings;
 
 public class CMD_Ls extends AbstractFileCommand {
 	
@@ -38,19 +39,29 @@ public class CMD_Ls extends AbstractFileCommand {
 		
 		File theFile = null;
 		
-		String all = EStringUtil.combineAll(args, " ");
-		EArrayList<String> allArgs = new EArrayList<>(args);
-		allArgs.add(all);
+		theFile = switch (args.get(0)) {
+		case "." -> termIn.getDir();
+		case ".." -> termIn.getDir().getParentFile();
+		case "~" -> userDir;
+		case "wdir" -> QoTSettings.getEditorWorldsDir();
+		default -> null;
+		};
 		
-		for (String s : allArgs) {
-			theFile = new File(s);
-			if (!theFile.exists()) {
-				theFile = new File(termIn.getDir(), s);
+		if (theFile == null) {
+			String all = EStringUtil.combineAll(args, " ");
+			EArrayList<String> allArgs = new EArrayList<>(args);
+			allArgs.add(all);
+			
+			for (String s : allArgs) {
+				theFile = new File(s);
+				if (!theFile.exists()) {
+					theFile = new File(termIn.getDir(), s);
+				}
 			}
-		}
-		
-		if (args.get(0).equals("~")) {
-			theFile = EFileUtil.userDir();
+			
+			if (args.get(0).equals("~")) {
+				theFile = EFileUtil.userDir();
+			}
 		}
 		
 		listDir(termIn, theFile);

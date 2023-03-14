@@ -7,7 +7,7 @@ import java.nio.file.StandardCopyOption;
 
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
+import qot.settings.QoTSettings;
 
 public class CMD_Mv extends AbstractFileCommand {
 	
@@ -20,32 +20,62 @@ public class CMD_Mv extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: mv 'src' 'dest'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.size() < 2) { termIn.error("Not enough arguments!"); }
-		else if (args.size() == 2) {
-			try {
-				
-				File f = new File(termIn.getDir(), args.get(0));
-				
-				//if the source file exists
-				if (f.exists()) {
-					File dest = new File(new File(System.getProperty("user.dir")), args.get(1));
-					move(termIn, f, dest);
-				}
-				else { termIn.error("Error: Cannot find the object specified!"); }
-				
-			}
-			catch (Exception e) {
-				error(termIn, e);
+	protected void runCommand() throws Exception {
+		expectExactly(2);
+		
+		boolean isFolder = false;
+		File f = fromRelative();
+		
+		// try full path if relative didn't work
+		if (!f.exists()) f = fromFull();
+		if (!f.exists()) {
+			error("Error: Cannot find the object specified!");
+			return;
+		}
+		
+		//check if the file being moved is a directory
+		isFolder = f.isDirectory();
+		
+		if (arg(1).equals("wdir")) {
+			move(term, f, new File(QoTSettings.getEditorWorldsDir(), f.getName()));
+			return;
+		}
+		
+		//check relative path for destination			
+		File dest = toRelative();
+		
+		if (isFolder) {
+			if (!dest.exists()) dest = toFull();
+			//if full path still doesn't exist, fail
+			if (!dest.exists()) {
+				error("Error: Destination path: '" + arg(1) + "' cannot be found!");
+				return;
 			}
 		}
-		else if (args.size() > 2) { termIn.error("Too many arguments!"); }
+		else if (!dest.exists()) {
+			dest = toFull();
+			
+			//if full path still doesn't exist, assume a rename is happening
+			if (!dest.exists()) {
+				dest = toRelative();
+			}
+		}
+		// check if potentially moving a file into a directory
+		else if (dest.isDirectory()) {
+			dest = new File(dest, f.getName());
+		}
+		
+		move(term, f, dest);
 	}
 	
 	private void move(ETerminalWindow termIn, File src, File dest) {
 		try {
-			Files.move(Paths.get(src.getCanonicalPath()), Paths.get(dest.getCanonicalPath()), StandardCopyOption.REPLACE_EXISTING);
-			termIn.writeln("Moved object to: " + EColors.white + dest, EColors.green);
+			var from = Paths.get(src.getCanonicalPath());
+			var to = Paths.get(dest.getCanonicalPath());
+//			System.out.println("Moving: " + from);
+//			System.out.println("To: " + to);
+			Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
+			termIn.writeln("Moved object to: " + EColors.white + to, EColors.green);
 		}
 		catch (Exception e) {
 			termIn.error("Error: Failed to move object! " + EColors.white + e.toString());

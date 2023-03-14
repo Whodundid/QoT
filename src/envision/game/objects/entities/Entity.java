@@ -5,6 +5,8 @@ import envision.engine.inputHandlers.Mouse;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.game.objects.CollisionHelper;
 import envision.game.objects.GameObject;
+import envision.game.objects.abilities.ActiveAbilityTracker;
+import envision.game.objects.abilities.EntitySpellbook;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
 import envision.game.world.WorldRenderer;
@@ -15,6 +17,7 @@ import eutil.math.dimensions.EDimension;
 import eutil.misc.Direction;
 import eutil.misc.Rotation;
 import eutil.strings.EStringBuilder;
+import qot.abilities.Abilities;
 import qot.particles.FloatingTextEntity;
 
 public abstract class Entity extends GameObject {
@@ -98,6 +101,9 @@ public abstract class Entity extends GameObject {
 	/** I am.. SPEED */
 	public double speed = 32 * 4.5;
 	
+	protected ActiveAbilityTracker abilityTracker;
+	protected EntitySpellbook spellbook;
+	
 	//--------------
 	// Constructors
 	//--------------
@@ -112,6 +118,8 @@ public abstract class Entity extends GameObject {
 		healthBar = new EntityHealthBar(this);
 		
 		collisionHelper = new CollisionHelper(this);
+		abilityTracker = new ActiveAbilityTracker(this, 5);
+		spellbook = new EntitySpellbook(this);
 	}
 	
 	//------------------
@@ -371,6 +379,8 @@ public abstract class Entity extends GameObject {
 	public long getExperienceRewardedOnKill() { return experienceRewarded; }
 	
 	public CollisionHelper getCollisionHelper() { return collisionHelper; }
+	public ActiveAbilityTracker getAbilityTracker() { return abilityTracker; }
+	public EntitySpellbook getSpellbook() { return spellbook; }
 	
 	//---------
 	// Setters
@@ -425,6 +435,12 @@ public abstract class Entity extends GameObject {
 		magicLevel = levelIn;
 		maxMana = EntityLevel.calculateMaxMana(magicLevel);
 		mana = ENumUtil.clamp(mana, 0, maxMana);
+		
+		// TODO remove this
+		if (levelIn == 1) {
+			this.spellbook.learnAbility(Abilities.selfHeal);
+			this.abilityTracker.addAbility(Abilities.selfHeal);
+		}
 	}
 	
 	/**
@@ -468,14 +484,9 @@ public abstract class Entity extends GameObject {
 	public void setInvincible(boolean val) { invincible = val; }
 	public void setExperienceRewardedOnKill(long amount) { experienceRewarded = amount; }
 	
-	//------------------
-	// Internal Methods
-	//------------------
-	
 	/** Returns true if this entity had enough mana to use the given spell. */
-	protected boolean manaCheck(int spellCost) {
+	public boolean manaCheck(int spellCost) {
 		if (mana >= spellCost) {
-			drainMana(spellCost);
 			return true;
 		}
 		return false;

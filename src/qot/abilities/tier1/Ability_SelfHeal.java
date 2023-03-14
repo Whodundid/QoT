@@ -1,5 +1,10 @@
 package qot.abilities.tier1;
 
+import envision.game.objects.abilities.Ability;
+import envision.game.objects.abilities.AbilityTier;
+import envision.game.objects.entities.Entity;
+import qot.assets.textures.ability.AbilityTextures;
+
 /**
  * Performable ability:
  * 		Effect:
@@ -35,6 +40,82 @@ package qot.abilities.tier1;
  * 
  * @author Hunter Bragg
  */
-public class Ability_SelfHeal {
+public class Ability_SelfHeal extends Ability {
+
+	public Ability_SelfHeal() {
+		super("Self Heal", AbilityTextures.cast_heal);
+		
+		// assuming 60 game ticks per second
+		// (I need to figure out a better way to do this)
+		
+		setNumTiers(3);
+		
+		tier(0).tierManaCost(5).tierCastTime(3 * 60).tierCooldown(30 * 60).requiresLevel(1);
+		tier(1).tierManaCost(15).tierCastTime(3 * 60).tierCooldown(45 * 60).requiresLevel(15);
+		tier(2).tierManaCost(25).tierCastTime(3 * 60).tierCooldown(60 * 60).requiresLevel(25);
+	}
+
+	@Override
+	public boolean use(Entity e, int tierIn) {
+		if (!canEntityUse(e, tierIn)) return false;
+		
+		int level = e.getSpellbook().getAbilityLevel(this);
+		AbilityTier tier = tier(level - 1);
+		
+		// if the tier is somehow null, return false, this is probably a broken ability though
+		if (tier == null) {
+			System.out.println(this + " does not have tier: '" + level + "' !");
+			return false;
+		}
+		
+		int manaCost = tier.tierManaCost();
+		if (!e.manaCheck(manaCost)) return false;
+		
+		e.drainMana(manaCost);
+		
+		int maxHealth = e.getMaxHealth();
+		int amount = switch (level) {
+		case 1 -> (int) Math.ceil((double) maxHealth * 0.20);
+		case 2 -> (int) Math.ceil((double) maxHealth * 0.33);
+		case 3 -> (int) Math.ceil((double) maxHealth * 0.60);
+		default -> maxHealth;
+		};
+		e.replenishHealth(amount);
+		
+		return true;
+	}
+
+	@Override
+	public boolean canEntityUse(Entity e, int tierIn) {
+		var sb = e.getSpellbook();
+		
+		// must know ability and must have unlocked this specific tier
+		if (!sb.knowsAbility(this)) return false;
+		if (sb.getAbilityLevel(this) < tierIn) return false;
+		
+		return true;
+	}
+
+	@Override
+	public boolean canEntityUpgrade(Entity e) {
+		var sb = e.getSpellbook();
+		
+		// must know ability
+		if (!sb.knowsAbility(this)) return false;
+		
+		int tierLevel = sb.getAbilityLevel(this);
+		
+		// can't level past max tier
+		if (tierLevel >= maxTiers) return false;
+		
+		// get the next tier
+		var tier = tier(tierLevel + 1);
+		
+		// check level requirement
+		if (tier.requiresLevel() > e.getLevel()) return false;
+		//if (tier.requiresQuestCompletion())
+		
+		return true;
+	}
 	
 }

@@ -84,6 +84,8 @@ public class MapEditorScreen extends GameScreen {
 	private boolean loading = false;
 	private boolean hasBeenModified = false;
 	private boolean hasSaved = false;
+	private boolean failed = false;
+	private Exception failedException;
 	private WindowDialogueBox exitSaverBox = null;
 	private boolean cancelExitClick = false;
 	
@@ -166,61 +168,86 @@ public class MapEditorScreen extends GameScreen {
 			return;
 		}
 		
-		if (actualWorld == null || !actualWorld.isFileLoaded()) drawStringC("Failed to load!", midX, midY);
-		else {
-			tileDrawWidth = (editorWorld.getTileWidth() * actualWorld.getCameraZoom()); //pixel width of each tile
-			tileDrawHeight = (editorWorld.getTileHeight() * actualWorld.getCameraZoom()); //pixel height of each tile
-			drawAreaMidX = (Envision.getWidth() - sidePanel.width) / 2; //the middle x of the map draw area
-			drawAreaMidY = topHeader.endY + (Envision.getHeight() - topHeader.height) / 2; //the middle y of the map draw area
-			mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2)); //the left most x coordinate for map drawing
-			mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2)); //the top most y coordinate for map drawing
+		if (failed) {
+			loading = false;
+			drawStringC("Failed to load!", drawAreaMidX, drawAreaMidY);
 			
-			//converting to shorthand to reduce footprint
-			x = mapDrawStartX;
-			y = mapDrawStartY;
-			w = tileDrawWidth;
-			h = tileDrawHeight;
-			
-			//scissor(x, y, deX, deY + 1);
-			//endScissor();
-			
-			drawMap(x, y, w, h);
-			if (settings.drawEntities) renderEntities(x, y, w, h);
-			if (settings.drawRegions) drawRegions(x, y, w, h);
-			if (settings.drawCenterPositionBox) drawCenterPositionBox(x, y, w, h);
-			
-			mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
-			drawingMousePos = mouseInMap;
-			if (exitSaverBox == null) {
-				if (mouseInMap) {
-					if (sidePanel.getCurrentPanelType() == SidePanelType.TERRAIN) drawHoveredTileBox(x, y, w, h);
-					toolHandler.drawCurrentTool(x, y, w, h);
+			if (failedException != null) {
+				drawString(failedException, 100, drawAreaMidY + 40, EColors.lred);
+				
+				var st = failedException.getStackTrace();
+				for (int i = 0; i < st.length && i < 10; i++) {
+					drawString(failedException.getStackTrace()[i], 100, drawAreaMidY + 60 + (i * 20), EColors.lred);					
 				}
 			}
-			
-			//displays the world tile (world) coordinates directly at the middle of the screen
-			drawString("Px: [" + worldPixelX + "," + worldPixelY + "]", 5, Envision.getHeight() - FontRenderer.FONT_HEIGHT * 3);
-			//displays the world tile (world) coordinates directly at the middle of the screen
-			drawString("Mid: [" + midDrawX + "," + midDrawY + "]", 5, Envision.getHeight() - FontRenderer.FONT_HEIGHT * 2);
-			//displays the number of tiles that the renderer with draw out from the mid in x and y directions
-			drawString("Dist: [" + drawDistX + "," + drawDistY + "]", 5, Envision.getHeight() - FontRenderer.FONT_HEIGHT);
-			
-			if (settings.drawMapBorders) drawMapBorders(x, y, w, h);
-			if (recentlySaved) updateSaveString(drawAreaMidX, drawAreaMidY);
-		
-			drawPlayerSpawn(x, y, w, h);
-			
-			drawSelectedEntities(x, y, w, h);
-			
-			oldWorldX = midDrawX;
-			oldWorldY = midDrawY;
-			
+		}
+		else if (actualWorld == null || !actualWorld.isFileLoaded()) {
+			drawStringC("Failed to load!", midX, midY);
+			failed = true;
+		}
+		else {
+			try {
+				drawEditor(mXIn, mYIn);
+			}
+			catch (Exception e) {
+				failed = true;
+				failedException = e;
+			}
 		}
 		
 		if (exitSaverBox != null) {
 			if (containsObject(exitSaverBox)) drawRect(EColors.vdgray.opacity(80));
 			else exitSaverBox = null;
 		}
+	}
+	
+	private void drawEditor(int mXIn, int mYIn) {
+		tileDrawWidth = (editorWorld.getTileWidth() * actualWorld.getCameraZoom()); //pixel width of each tile
+		tileDrawHeight = (editorWorld.getTileHeight() * actualWorld.getCameraZoom()); //pixel height of each tile
+		drawAreaMidX = (Envision.getWidth() - sidePanel.width) / 2; //the middle x of the map draw area
+		drawAreaMidY = topHeader.endY + (Envision.getHeight() - topHeader.height) / 2; //the middle y of the map draw area
+		mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2)); //the left most x coordinate for map drawing
+		mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2)); //the top most y coordinate for map drawing
+		
+		//converting to shorthand to reduce footprint
+		x = mapDrawStartX;
+		y = mapDrawStartY;
+		w = tileDrawWidth;
+		h = tileDrawHeight;
+		
+		//scissor(x, y, deX, deY + 1);
+		//endScissor();
+		
+		drawMap(x, y, w, h);
+		if (settings.drawEntities) renderEntities(x, y, w, h);
+		if (settings.drawRegions) drawRegions(x, y, w, h);
+		if (settings.drawCenterPositionBox) drawCenterPositionBox(x, y, w, h);
+		
+		mouseInMap = checkMousePos(x, y, w, h, mXIn, mYIn);
+		drawingMousePos = mouseInMap;
+		if (exitSaverBox == null) {
+			if (mouseInMap) {
+				if (sidePanel.getCurrentPanelType() == SidePanelType.TERRAIN) drawHoveredTileBox(x, y, w, h);
+				toolHandler.drawCurrentTool(x, y, w, h);
+			}
+		}
+		
+		//displays the world tile (world) coordinates directly at the middle of the screen
+		drawString("Px: [" + worldPixelX + "," + worldPixelY + "]", 5, Envision.getHeight() - FontRenderer.FONT_HEIGHT * 3);
+		//displays the world tile (world) coordinates directly at the middle of the screen
+		drawString("Mid: [" + midDrawX + "," + midDrawY + "]", 5, Envision.getHeight() - FontRenderer.FONT_HEIGHT * 2);
+		//displays the number of tiles that the renderer with draw out from the mid in x and y directions
+		drawString("Dist: [" + drawDistX + "," + drawDistY + "]", 5, Envision.getHeight() - FontRenderer.FONT_HEIGHT);
+		
+		if (settings.drawMapBorders) drawMapBorders(x, y, w, h);
+		if (recentlySaved) updateSaveString(drawAreaMidX, drawAreaMidY);
+	
+		drawPlayerSpawn(x, y, w, h);
+		
+		drawSelectedEntities(x, y, w, h);
+		
+		oldWorldX = midDrawX;
+		oldWorldY = midDrawY;
 	}
 	
 	@Override

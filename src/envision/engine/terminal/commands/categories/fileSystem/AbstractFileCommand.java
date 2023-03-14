@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.IOException;
 
 import envision.engine.terminal.commands.TerminalCommand;
+import envision.engine.terminal.terminalUtil.FileHelper;
+import envision.engine.terminal.terminalUtil.TermArgLengthException;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public abstract class AbstractFileCommand extends TerminalCommand {
+	
+	protected FileHelper fileHelper;
 	
 	//==============
 	// Constructors
@@ -16,6 +20,7 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 	
 	protected AbstractFileCommand() {
 		setCategory("File System");
+		
 	}
 	
 	//===========
@@ -27,9 +32,32 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 		fileTabComplete(termIn, args);
 	}
 	
+	@Override
+	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+		try {
+			term = termIn;
+			argHelper = fileHelper = new FileHelper(termIn, args, runVisually);
+			runCommand();
+		}
+		catch (TermArgLengthException e) {
+			term.error(e.getMessage());
+		}
+		catch (Exception e) {
+			error(term, e);
+		}
+	}
+	
 	//=========
 	// Methods
 	//=========
+	
+	protected File fromRelative() { return fileHelper.fromRelative(); }
+	protected File fromFull() { return fileHelper.fromFull(); }
+	protected File toRelative() { return fileHelper.toRelative(); }
+	protected File toFull() { return fileHelper.toFull(); }
+	
+	protected String fromName() { return fileHelper.fromName(); }
+	protected String toName() { return fileHelper.toName(); }
 	
 	protected void fileTabComplete(ETerminalWindow termIn, EList<String> args) {
 		try {
@@ -66,7 +94,7 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 			else if (!termIn.getTab1()) {
 				EList<String> options = EList.newList();
 				
-				File home = new File(System.getProperty("user.dir"));
+				File home = termIn.getDir();
 				File f = new File(dir);
 				String all = EStringUtil.combineAll(args, " ").replace("/", "\\");
 				boolean isHome = all.startsWith("~");
@@ -157,10 +185,12 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 		boolean moreThan = false;
 		
 		for (int i = 0; i < all.length(); i++) {
-			if (all.charAt(i) != '~') continue;
+			char c = all.charAt(i);
+			if (c != '~') continue;
+			if (all.length() == 1) break;
 			
 			if (i == 0) {
-				if (i + 1 < all.length() - 1 && all.charAt(i + 1) == '/' || all.charAt(i + 1) == '\\') {
+				if (all.charAt(i + 1) == '/' || all.charAt(i + 1) == '\\') {
 					if (!found) found = true;
 					else moreThan = true; break;
 				}

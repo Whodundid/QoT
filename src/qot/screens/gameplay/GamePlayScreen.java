@@ -101,6 +101,7 @@ public class GamePlayScreen extends GameScreen {
 		
 		if (Envision.thePlayer != null) {
 			health.setBarValue(Envision.thePlayer.getHealth());
+			mana.setBarValue(Envision.thePlayer.getMana());
 			
 			if (Envision.thePlayer.isDead()) {
 				Envision.displayScreen(new DeathScreen());
@@ -114,6 +115,10 @@ public class GamePlayScreen extends GameScreen {
 		
 		//drawRect(midX, 0, midX + 1, endY, EColors.black);
 		//drawRect(0, midY, endX, midY + 1, EColors.black);
+		
+		if (Envision.thePlayer != null) {
+			Envision.thePlayer.getSpellbook().drawAbilities(this);
+		}
 	}
 	
 	@Override
@@ -159,6 +164,10 @@ public class GamePlayScreen extends GameScreen {
 		}
 		if (keyCode == Keyboard.KEY_M) {
 			world.getCamera().setFocusedObject(Envision.thePlayer);
+		}
+		
+		if (Envision.thePlayer != null) {
+			Envision.thePlayer.onKeyPress(typedChar, keyCode);
 		}
 		
 		//world.getWorldRenderer().keyPressed(typedChar, keyCode);

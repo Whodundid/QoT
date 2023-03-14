@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
 
 public class CMD_Cp extends AbstractFileCommand {
 	
@@ -19,26 +18,28 @@ public class CMD_Cp extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: cp 'src' 'dest'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.size() < 2) { termIn.error("Not enough arguments!"); }
-		else if (args.size() == 2) {
-			try {
-				
-				File f = new File(termIn.getDir(), args.get(0));
-				
-				//if the source file exists
-				if (f.exists()) {
-					File dest = new File(new File(System.getProperty("user.dir")), args.get(1));
-					move(termIn, f, dest);
-				}
-				else { termIn.error("Error: Cannot find the object specified!"); }
-				
-			}
-			catch (Exception e) {
-				error(termIn, e);
-			}
+	protected void runCommand() throws Exception {
+		expectExactly(2);
+		
+		File f = fromRelative();
+		if (!f.exists()) f = fromFull();
+		if (!f.exists()) {
+			error("Error: Cannot find the object specified!");
+			return;
 		}
-		else if (args.size() > 2) { termIn.error("Too many arguments!"); }
+		
+		boolean isDir = f.isDirectory();
+		
+		File dest = toRelative();
+		if (!dest.exists()) dest = toFull();
+		if (!dest.exists()) {
+			dest = new File(dest, f.getName());
+		}
+		
+		if (isDir) FileUtils.copyDirectory(f, dest);
+		else FileUtils.copyFileToDirectory(f, dest);
+		
+		writeln("Copied object to: " + EColors.white + dest, EColors.green);
 	}
 	
 	private void move(ETerminalWindow termIn, File src, File dest) {

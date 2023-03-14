@@ -58,7 +58,7 @@ public class TerminalRCM extends RightClickMenu {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == this) {
+		if (object == this && getGenericObject() != null) {
 			switch ((String) getGenericObject()) {
 			case "Copy": copy(); break;
 			case "Paste": paste(); break;

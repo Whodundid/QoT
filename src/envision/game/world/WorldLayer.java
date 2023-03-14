@@ -21,24 +21,24 @@ public class WorldLayer {
 	public WorldLayer(int widthIn, int heightIn) {
 		width = widthIn;
 		height = heightIn;
-		worldData = new WorldTile[width][height];
+		worldData = new WorldTile[height][width];
 	}
 	
 	public void setDimensions(int widthIn, int heightIn) {
 		width = widthIn;
 		height = heightIn;
-		worldData = new WorldTile[width][height];
+		worldData = new WorldTile[height][width];
 	}
 	
 	public WorldLayer copyLayer() {
 		WorldLayer copy = new WorldLayer(width, height);
 		
 		//copy tile data
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				var tile = getTileAt(i, j);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				var tile = getTileAt(x, y);
 				if (tile == null) continue;
-				copy.worldData[i][j] = WorldTile.copy(tile);
+				copy.worldData[y][x] = WorldTile.copy(tile);
 			}
 		}
 		
@@ -64,9 +64,9 @@ public class WorldLayer {
 	}
 	
 	public void fillWith(WorldTile t) {
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				worldData[i][j] = WorldTile.randVariant(t).setWorldPos(i, j);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				worldData[y][x] = WorldTile.randVariant(t).setWorldPos(x, y);
 			}
 		}
 	}

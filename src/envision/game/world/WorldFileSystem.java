@@ -175,6 +175,8 @@ public class WorldFileSystem {
 					String mapLine = reader.nextLine();
 					String[] lineTiles = mapLine.split(" ");
 					
+//					System.out.println("[" + i + ", " + lineTiles.length + "] " + EStringUtil.toString(lineTiles));
+					
 					for (int j = 0; j < mapWidth; j++) {
 						String tile = lineTiles[j];
 						
@@ -183,7 +185,7 @@ public class WorldFileSystem {
 						int childID = 0;
 						String[] parts = tile.split(":");
 						
-						if (!"n".equals(parts[0])) {
+						if (!"n".equals(parts[0]) && !"null".equals(parts[0])) {
 							tileID = Integer.parseInt(parts[0]);
 							if (parts.length > 1) childID = Integer.parseInt(parts[1]);
 							

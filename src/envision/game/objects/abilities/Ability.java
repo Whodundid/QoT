@@ -5,21 +5,77 @@ import envision.game.objects.entities.Entity;
 
 public abstract class Ability {
 	
-	private Entity ent;
-	private String name;
-	private GameTexture texture;
+	protected String name;
+	protected GameTexture texture;
 	
-	public Ability(String nameIn, Entity entIn) { this(nameIn, entIn, null); }
-	public Ability(String nameIn, Entity entIn, GameTexture textureIn) {
+	/**
+	 * The maximum number of times this specific ability can be upgraded.
+	 */
+	protected int maxTiers;
+	
+	/**
+	 * The requirements to unlock each tier of this ability.
+	 */
+	protected AbilityTier[] tiers;
+	
+	//==============
+	// Constructors
+	//==============
+	
+	public Ability(String nameIn) { this(nameIn, null); }
+	public Ability(String nameIn, GameTexture textureIn) {
 		name = nameIn;
-		ent = entIn;
 		texture = textureIn;
 	}
 	
-	public abstract boolean use(Entity e);
+	//===========
+	// Abstracts
+	//===========
 	
-	public Entity getEntity() { return ent; }
+	public boolean use(Entity e) { return use(e, -1); }
+	public abstract boolean use(Entity e, int tierIn);
+	
+	public abstract boolean canEntityUse(Entity e, int tierIn);
+	
+	public abstract boolean canEntityUpgrade(Entity e);
+	
+	//===========
+	// Overrides
+	//===========
+	
+	@Override
+	public String toString() {
+		return "ability:" + name;
+	}
+	
+	//=========
+	// Methods
+	//=========
+	
+	protected void setNumTiers(int tiersIn) {
+		this.maxTiers = tiersIn;
+		this.tiers = new AbilityTier[maxTiers];
+	}
+	
+	protected AbilityTier tier(int tierIn) {
+		AbilityTier t = tiers[tierIn];
+		if (t != null) return t;
+		return tiers[tierIn] = new AbilityTier();
+	}
+	
+	//=========
+	// Getters
+	//=========
+	
 	public String getAbilityName() { return name; }
 	public GameTexture getTexture() { return texture; }
+
+	public int getMaxTiers() { return maxTiers; }
+	public AbilityTier[] getAbilityTiers() { return tiers; }
+	public AbilityTier getDetailsForTier(int tier) { return tiers[tier];} 
+
+	public int getManaCostForTier(int tier) { return tiers[tier].tierManaCost(); }
+	public int getCooldownForTier(int tier) { return tiers[tier].tierCooldown(); }
+	public int getCastTimeForTier(int tier) { return tiers[tier].tierCastTime(); }
 	
 }

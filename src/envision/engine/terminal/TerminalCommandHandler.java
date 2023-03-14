@@ -44,6 +44,7 @@ import envision.engine.terminal.commands.categories.game.CMD_ReloadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_SaveWorld;
 import envision.engine.terminal.commands.categories.game.CMD_SetWorldUnderground;
 import envision.engine.terminal.commands.categories.game.CMD_SpawnEntity;
+import envision.engine.terminal.commands.categories.game.CMD_TransposeOld;
 import envision.engine.terminal.commands.categories.game.CMD_UnloadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_WorldInfo;
 import envision.engine.terminal.commands.categories.game.CMD_WorldsDir;
@@ -127,6 +128,8 @@ public class TerminalCommandHandler {
 		//findCommands().filter(c -> c.shouldRegister()).forEach(c -> registerCommand(c, termIn, runVisually));
 		
 		//define commands to register here
+		
+		registerCommand(new CMD_TransposeOld(), termIn, runVisually);
 		
 		//file system
 		registerCommand(new CMD_Ls(), termIn, runVisually);
