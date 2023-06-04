@@ -7,17 +7,17 @@ import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.editorTools.EditorTool;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2i;
 import eutil.math.ENumUtil;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 public class Tool_Region extends EditorTool {
 
 	
 	/** The point that the mouse was initially clicked. */
-	private Box2<Integer, Integer> clickPointWorld;
+	private Point2i clickPointWorld;
 	/** The most recent point that the mouse is still being dragged to. */
-	private Box2<Integer, Integer> dragPointWorld;
+	private Point2i dragPointWorld;
 	
 	private int color;
 	
@@ -32,7 +32,7 @@ public class Tool_Region extends EditorTool {
 			//draw updated region box using world draw values
 			//drawHRect()
 			
-			EDimension r = new EDimension(clickPointWorld.getA(), clickPointWorld.getB(), dragPointWorld.getA(), dragPointWorld.getB());
+			Dimension_d r = new Dimension_d(clickPointWorld.x, clickPointWorld.y, dragPointWorld.x, dragPointWorld.y);
 			double midDrawX = editor.midDrawX;
 			double midDrawY = editor.midDrawY;
 			double drawDistX = editor.drawDistX;
@@ -74,10 +74,10 @@ public class Tool_Region extends EditorTool {
 		
 		String regionName = "Region " + (totalRegions + 1);
 		
-		int sX = clickPointWorld.getA();
-		int sY = clickPointWorld.getB();
-		int eX = dragPointWorld.getA();
-		int eY = dragPointWorld.getB();
+		int sX = clickPointWorld.x;
+		int sY = clickPointWorld.y;
+		int eX = dragPointWorld.x;
+		int eY = dragPointWorld.y;
 		
 		if (eX < sX) {
 			int i = eX;

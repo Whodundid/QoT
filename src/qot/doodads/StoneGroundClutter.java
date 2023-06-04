@@ -1,12 +1,12 @@
 package qot.doodads;
 
-import envision.game.objects.entities.Entity;
+import envision.game.entities.BasicRenderedEntity;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.doodads.ground_clutter.GroundClutterTextures;
 import qot.entities.EntityList;
 
-public class StoneGroundClutter extends Entity {
+public class StoneGroundClutter extends BasicRenderedEntity {
 	
 	public StoneGroundClutter() { this(0, 0); }
 	public StoneGroundClutter(int posX, int posY) {
@@ -15,7 +15,7 @@ public class StoneGroundClutter extends Entity {
 		tex = GroundClutterTextures.stones.getRandVariant();
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
-		//setCollisionBox(0, 0, 0, 0);
+		setCollisionBox(0, 0, 0, 0);
 		invincible = true;
 	}
 	

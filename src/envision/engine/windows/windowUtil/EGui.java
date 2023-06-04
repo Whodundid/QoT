@@ -1,7 +1,7 @@
 package envision.engine.windows.windowUtil;
 
 import envision.Envision;
-import envision.engine.rendering.GLObject;
+import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.windows.windowUtil.input.KeyboardInputAcceptor;
@@ -9,21 +9,21 @@ import envision.engine.windows.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;
 import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;
-import eutil.math.dimensions.EDimension;
-import eutil.math.dimensions.EDimensionI;
+import eutil.math.dimensions.Dimension_d;
+import eutil.math.dimensions.Dimension_i;
 import eutil.misc.Rotation;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public abstract class EGui extends GLObject implements KeyboardInputAcceptor, MouseInputAcceptor {
+public abstract class EGui extends RenderingManager implements KeyboardInputAcceptor, MouseInputAcceptor {
 
 	//--------
 	// Fields
 	//--------
 	
 	public FontRenderer fontRenderer = FontRenderer.getInstance();
-	public EDimensionI res = Envision.getWindowDims();
+	public Dimension_i res = Envision.getWindowDims();
 	public double startXPos, startYPos, startWidth, startHeight;
 	public double startX, startY, endX, endY;
 	public double width, height;
@@ -42,18 +42,18 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	
 	public static void drawRect(EGui o, EColors color, int offset) {
 		drawRect(o.startX + offset,
-			     o.startY + offset,
-			     o.endX - offset,
-			     o.endY - offset,
-			     color.intVal);
+			     		  		  o.startY + offset,
+			     		  		  o.endX - offset,
+			     		  		  o.endY - offset,
+			     		  		  color.intVal);
 	}
 	
 	public static void drawRect(EGui o, int color, int offset) {
 		drawRect(o.startX + offset,
-			     o.startY + offset,
-			     o.endX - offset,
-			     o.endY - offset,
-			     color);
+			     		  		  o.startY + offset,
+			     		  		  o.endX - offset,
+			     		  		  o.endY - offset,
+			     		  		  color);
 	}
 	
 	public void drawRect(EColors color) { drawRect(color.intVal); }
@@ -94,6 +94,8 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	
 	public void scissor() { scissor(startX, startY, endX, endY); }
 	public void scissor(double offset) { scissor(startX + offset, startY + offset, endX - offset, endY - offset); }
+	
+	public static double strWidth(Object text) { return FontRenderer.strWidth(String.valueOf(text)); }
 	
 	//---------
 	// Methods
@@ -162,7 +164,7 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	
 	public Point2d getPosition() { return new Point2d(startX, startY); }
 	public Point2d getInitialPosition() { return new Point2d(startXPos, startYPos); }
-	public EDimension getDimensions() { return new EDimension(startX, startY, endX, endY); }
+	public Dimension_d getDimensions() { return new Dimension_d(startX, startY, endX, endY); }
 	
 	public Point2d getMinDims() { return new Point2d(minWidth, minHeight); }
 	public Point2d getMaxDims() { return new Point2d(maxWidth, maxHeight); }
@@ -179,7 +181,7 @@ public abstract class EGui extends GLObject implements KeyboardInputAcceptor, Mo
 	public void setInitialPosition(double xIn, double yIn) { startXPos = xIn; startYPos = yIn; }
 	public void setSize(double widthIn, double heightIn) { setDimensions(startX, startY, widthIn, heightIn); }
 	
-	public void setDimensions(EDimension dimIn) { setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
+	public void setDimensions(Dimension_d dimIn) { setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
 	public void setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
 		startX = startXIn;
 		startY = startYIn;

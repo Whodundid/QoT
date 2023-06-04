@@ -27,7 +27,8 @@ public class RockTextures extends TextureLoader {
 	public static final GameTexture
 	
 	stone			= new GameTexture(textureDir, "stone.png"),
-	rocky_stone		= new GameTexture(textureDir, "rocky_stone.png");
+	rocky_stone		= new GameTexture(textureDir, "rocky_stone.png"),
+	rough_rocky     = new GameTexture(textureDir, "rough_rocky.png");
 	
 	//-----------
 	// Overrides
@@ -37,6 +38,7 @@ public class RockTextures extends TextureLoader {
 	public void onRegister(TextureSystem sys) {
 		reg(sys, stone);
 		reg(sys, rocky_stone);
+		reg(sys, rough_rocky);
 	}
 	
 }

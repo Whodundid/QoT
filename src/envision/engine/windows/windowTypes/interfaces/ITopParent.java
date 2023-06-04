@@ -11,7 +11,7 @@ import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import eutil.datatypes.util.EList;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -262,7 +262,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 	 * positions the newly created window on the screen.
 	 */
 	private void setPos(IWindowParent<?> windowIn, IWindowObject<?> objectIn, ObjectPosition typeIn) {
-		EDimension gDim = windowIn.getDimensions();
+		Dimension_d gDim = windowIn.getDimensions();
 		double headerHeight = windowIn.hasHeader() ? windowIn.getHeader().height : 0;
 		
 		int sX = 0;
@@ -299,21 +299,21 @@ public interface ITopParent<E> extends IWindowObject<E> {
 			break;
 		case OBJECT_CENTER:
 			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
+				Dimension_d objDim = objectIn.getDimensions();
 				sX = (int) (objDim.midX - (gDim.width / 2));
 				sY = (int) (objDim.midY - (gDim.height / 2));
 			}
 			break;
 		case OBJECT_CORNER:
 			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
+				Dimension_d objDim = objectIn.getDimensions();
 				sX = (int) objDim.startX;
 				sY = (int) objDim.startY;
 			}
 			break;
 		case OBJECT_INDENT:
 			if (objectIn != null) {
-				EDimension objDim = objectIn.getDimensions();
+				Dimension_d objDim = objectIn.getDimensions();
 				sX = (int) (objDim.startX + 25);
 				sY = (int) (objDim.startY + 25);
 			}
@@ -327,7 +327,7 @@ public interface ITopParent<E> extends IWindowObject<E> {
 				sY = (int) ((Envision.getHeight() / 2) - (gDim.height / 2));
 			}
 			else if (windows.getLast() != null) {
-				EDimension objDim = windows.getLast().getDimensions();
+				Dimension_d objDim = windows.getLast().getDimensions();
 				sX = (int) (objDim.startX + 25);
 				sY = (int) (objDim.startY + 25);
 			}

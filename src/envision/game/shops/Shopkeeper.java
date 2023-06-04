@@ -1,15 +1,11 @@
 package envision.game.shops;
 
-import envision.game.objects.entities.Entity;
-
-public abstract class Shopkeeper extends Entity {
+public interface Shopkeeper {
 	
-	private Shop shop = new Shop();
+	boolean isCurrentlySelling();
+	Shop getShop();
 	
-	public Shopkeeper(String name) {
-		super(name);
-	}
-	
-	public Shop getShop() { return shop; }
+	void setCurrentlySelling(boolean val);
+	void setShop(Shop shopIn);
 	
 }

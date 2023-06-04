@@ -2,19 +2,24 @@ package envision;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.time.ZonedDateTime;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import envision.engine.events.EventHandler;
+import envision.engine.events.GameEvent;
 import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
-import envision.engine.rendering.GLObject;
 import envision.engine.rendering.GameWindow;
 import envision.engine.rendering.RenderEngine;
+import envision.engine.rendering.RenderingManager;
+import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.renderingAPI.error.ErrorReportingLevel;
 import envision.engine.rendering.renderingAPI.error.IRendererErrorReceiver;
@@ -25,21 +30,21 @@ import envision.engine.resourceLoaders.textures.TextureLoader;
 import envision.engine.screens.GameScreen;
 import envision.engine.screens.GameTopScreen;
 import envision.engine.screens.ScreenLevel;
+import envision.engine.settings.UserProfile;
+import envision.engine.settings.UserProfileRegistry;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
-import envision.game.events.EventHandler;
-import envision.game.events.GameEvent;
-import envision.game.objects.effects.sounds.SoundEngine;
-import envision.game.objects.entities.Player;
+import envision.game.effects.sounds.SoundEngine;
+import envision.game.entities.Player;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.layerSystem.LayerSystem;
 import envision_lang.EnvisionLang;
 import eutil.datatypes.points.Point2i;
 import eutil.file.FileOpener;
-import eutil.math.dimensions.EDimensionI;
+import eutil.math.dimensions.Dimension_i;
 import qot.assets.textures.GameTextures;
 import qot.assets.textures.general.GeneralTextures;
 import qot.launcher.LauncherLogger;
@@ -97,6 +102,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private static TerminalCommandHandler terminalHandler;
 	private static LayerSystem layerHandler;
 	private static EnvisionLang envisionLang;
+	
+	private static UserProfileRegistry profileRegistry = new UserProfileRegistry();
 	
 	private static TextureLoader textureLoader = new TextureLoader("");
 	
@@ -191,6 +198,11 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		
 		gameInstance.onPreEngineLoad();
 		
+		var user = new UserProfile("user");
+		profileRegistry.registerProfile(user);
+		profileRegistry.registerProfile(new UserProfile("dev", true));
+		profileRegistry.setCurrentUser(user);
+		
 		setupGLFW();
 		setupRenderingContext();
 		setupEngine();
@@ -277,6 +289,12 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	}
 	
 	private void shutdownEngine() {
+		info("Shutdown initiated at: " + ZonedDateTime.now());
+		running = false;
+	}
+	
+	private void onShutdown() {
+		info("Shutting down engine!");
 		if (gameInstance != null) {
 			gameInstance.onPreGameUnload();
 		}
@@ -289,8 +307,12 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 			gameInstance.onPostGameUnload();
 		}
 		
-		info("Stopping Game!");
-		running = false;
+		TextureSystem.getInstance().destroyAllTextures();
+		Keyboard.destroy();
+		Mouse.destroy();
+		WindowResizeListener.destroy();
+		RenderEngine.getInstance().destroy();
+		gameWindow.destroy();
 	}
 	
 	//===================
@@ -307,6 +329,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		oldTime = startTime;
 		long timer = startTime;
 		long initialTime = System.nanoTime();
+		
+		GLFW.glfwMakeContextCurrent(getGameWindow().getWindowHandle());
 		
 		while (running && !GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
 			try {
@@ -328,7 +352,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 					
 					//update inputs
 					GLFW.glfwPollEvents();
-					if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) { running = false; }
+					if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
+						running = false;
+					}
 					runGameTick(dt);
 					if (ticks == Integer.MAX_VALUE) ticks = 0;
 					else ticks++;
@@ -359,7 +385,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 			}
 		}
 		
-		shutdownEngine();
+		onShutdown();
 	}
 	
 	//=========================
@@ -367,6 +393,10 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	//=========================
 	
 	private void runGameTick(float dt) {
+		if (updateCounter >= 100000000) updateCounter = -1;
+		updateCounter++;
+		//if (updateCounter % 500 == 0 && BatchManager.isEnabled()) System.out.println(getFPS());
+		
 		//process game events
 		eventHandler.onGameTick();
 		
@@ -380,23 +410,30 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	}
 	
 	private void runRenderTick(long partialTicks) {
-		if (theWorld != null && theWorld.isLoaded() && renderWorld) {
-			theWorld.onRenderTick(partialTicks);
-		}
-		
-		if (currentScreen != null) {
-			currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
-			//currentScreen.drawString("deltaF: " + deltaF, 0, currentScreen.endY - currentScreen.midY / 2, EColors.aquamarine);
-			//currentScreen.drawString("deltaU: " + deltaU, 0, currentScreen.endY - currentScreen.midY / 2 + 25, EColors.aquamarine);
+		if (!running) return;
+		if (!BatchManager.isEnabled()) {
+			if (theWorld != null && theWorld.isLoaded() && renderWorld) {
+				theWorld.onRenderTick(partialTicks);
+			}
+			
+			if (currentScreen != null) {
+				currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
+				//currentScreen.drawString("deltaF: " + deltaF, 0, currentScreen.endY - currentScreen.midY / 2, EColors.aquamarine);
+				//currentScreen.drawString("deltaU: " + deltaU, 0, currentScreen.endY - currentScreen.midY / 2 + 25, EColors.aquamarine);
+			}
+			else {
+				RenderingManager.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
+				RenderingManager.drawString("No Screens?", 256, 256);
+			}
+			
+			topScreen.onRenderTick();
+			//renderEngine.getRenderingContext().swapBuffers();
+			renderEngine.endFrame();
 		}
 		else {
-			GLObject.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
-			GLObject.drawString("No Screens?", 256, 256);
+			renderEngine.draw(partialTicks);
+			renderEngine.endFrame();
 		}
-		
-		topScreen.onRenderTick();
-		//renderEngine.getRenderingContext().swapBuffers();
-		renderEngine.drawFrame();
 	}
 	
 	@Override
@@ -584,7 +621,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	}
 	
 	public static boolean isPaused() { return pause; }
-	public static boolean isWorldRenderPaused() { return renderWorld; }
+	public static boolean isWorldRenderPaused() { return !renderWorld; }
 	
 	public static void pause() { pause = true; }
 	public static void unpause() { pause = false; }
@@ -647,11 +684,16 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** Returns the primary Envision engine instance. */
 	public static EnvisionLang getEnvisionLang() { return envisionLang; }
 	
+	/** Returns the current user. */
+	public static UserProfile getCurrentUser() { return profileRegistry.getCurrentUser(); }
+	/** Returns the user profile registry. */
+	public static UserProfileRegistry getProfileRegistry() { return profileRegistry; }
+	
 	//================================
 	// Game Screen Dimension Wrappers
 	//================================
 	
-	public static EDimensionI getWindowDims() { return gameWindow.getWindowDims(); }
+	public static Dimension_i getWindowDims() { return gameWindow.getWindowDims(); }
 	public static Point2i getWindowPosition() { return gameWindow.getWindowPosition(); }
 	public static int getWidth() { return gameWindow.getWidth(); }
 	public static int getHeight() { return gameWindow.getHeight(); }

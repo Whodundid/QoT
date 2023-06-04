@@ -1,13 +1,18 @@
 package envision.game.world.layerSystem;
 
-import envision.game.objects.GameObject;
-import envision.game.objects.IDrawable;
-import envision.game.objects.InsertionSort;
+import envision.Envision;
+import envision.game.GameObject;
+import envision.game.component.ComponentType;
+import envision.game.component.types.RenderingComponent;
+import envision.game.entities.ComponentBasedObject;
+import envision.game.util.IDrawable;
+import envision.game.util.InsertionSort;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.ExpandableGrid;
+import eutil.datatypes.util.EList;
 
 public class WorldDrawLayer {
 	
@@ -19,9 +24,9 @@ public class WorldDrawLayer {
 	
 	private IGameWorld world;
 	private ExpandableGrid<WorldTile> worldData;
-	private EArrayList<GameObject> gameObjects;
+	private EList<GameObject> gameObjects;
 	
-	private EArrayList<IDrawable> builtLayer = new EArrayList<>();
+	private EList<IDrawable> builtLayer = new EArrayList<>();
 	private boolean built = false;
 	
 	//--------------
@@ -75,12 +80,21 @@ public class WorldDrawLayer {
 			}
 		}
 		
+		double w_left = left * world.getTileWidth();
+		double w_top = top * world.getTileHeight();
+		double w_right = right * world.getTileWidth();
+		double w_bot = bot * world.getTileHeight();
+		
 		if (layer == 1) {
 			//add all objects within the specified area
 			for (var obj : gameObjects) {
-				//if (obj.getDimensions().contains(left, top, right, bot)) {
+				if (obj == Envision.thePlayer) {
 					builtLayer.add(obj);
-				//}
+					continue;
+				}
+				if (obj.getDimensions().contains(w_left, w_top, w_right, w_bot)) {
+					builtLayer.add(obj);
+				}
 			}
 		}
 		
@@ -117,9 +131,17 @@ public class WorldDrawLayer {
 		//System.out.println(builtLayer);
 		
 		//draw each object on the layer
-		for (var obj : builtLayer) {
-			//if (layer == 1) System.out.println(obj);
-			obj.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
+		final int size = builtLayer.size();
+		for (int i = 0; i < size; i++) {
+			var obj = builtLayer.get(i);
+			if (obj instanceof ComponentBasedObject e && e.hasComponent(ComponentType.RENDERING)) {
+				RenderingComponent r = e.getComponent(ComponentType.RENDERING);
+				r.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
+			}
+			else {
+				//if (layer == 1) System.out.println(obj);
+				//obj.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);				
+			}
 		}
 	}
 	
@@ -134,8 +156,8 @@ public class WorldDrawLayer {
 	public IGameWorld getWorld() { return world; }
 	public int getLayer() { return layer; }
 	public ExpandableGrid<WorldTile> getWorldData() { return worldData; }
-	public EArrayList<GameObject> getGameObjects() { return gameObjects; }
-	public EArrayList<IDrawable> getDrawnObjects() { return builtLayer; }
+	public EList<GameObject> getGameObjects() { return gameObjects; }
+	public EList<IDrawable> getDrawnObjects() { return builtLayer; }
 	public boolean isBuilt() { return built; }
 	
 	//---------

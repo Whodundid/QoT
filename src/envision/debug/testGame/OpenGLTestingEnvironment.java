@@ -11,7 +11,7 @@ import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
 import envision.engine.rendering.Camera;
-import envision.engine.rendering.GLObject;
+import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.renderingAPI.error.ErrorReportingLevel;
@@ -21,8 +21,6 @@ import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.screens.GameScreen;
 import envision.engine.screens.GameTopScreen;
-import envision.engine.screens.ScreenLevel;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
 import qot.assets.textures.entity.EntityTextures;
 import qot.assets.textures.general.GeneralTextures;
@@ -123,12 +121,12 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 					Envision.currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
 				}
 				else {
-					GLObject.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
-					GLObject.drawString("No Screens?", 256, 256);
+					RenderingManager.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
+					RenderingManager.drawString("No Screens?", 256, 256);
 				}
 				
 				Envision.topScreen.onRenderTick();
-				Envision.renderEngine.drawFrame();
+				Envision.renderEngine.endFrame();
 				
 				sleepStart = System.currentTimeMillis();
 			}
@@ -203,7 +201,7 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 		drawRect(sx, sy, ex, ey, color.intVal);
 	}
 	private static void drawRect(double sxIn, double syIn, double exIn, double eyIn, int colorIn) {
-		GLObject.drawRect(sxIn, syIn, exIn, eyIn, colorIn);
+		RenderingManager.drawRect(sxIn, syIn, exIn, eyIn, colorIn);
 //		float sx = tdx((float) sxIn);
 //		float sy = tdy((float) syIn);
 //		float ex = tdx((float) exIn);
@@ -223,7 +221,7 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 	}
 	
 	public static void drawTexture(GameTexture texture, double sxIn, double syIn, double exIn, double eyIn, int colorIn) {
-		GLObject.drawTexture(texture, sxIn, syIn, exIn, eyIn, colorIn);
+		RenderingManager.drawTexture(texture, sxIn, syIn, exIn, eyIn, colorIn);
 		//		if (texture != null && textures.notContains(texture)) {
 //			textures.add(texture);
 //		}
@@ -260,7 +258,7 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 		drawTexture(texture, x, y, w, h, tX, tY, tW, tH, color, false);
 	}
 	public static void drawTexture(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color, boolean flip) {
-		GLObject.drawTexture(texture, x, y, w, h, tX, tY, tW, tH, color);
+		RenderingManager.drawTexture(texture, x, y, w, h, tX, tY, tW, tH, color, flip);
 		//		if (texture != null && textures.notContains(texture)) {
 //			textures.add(texture);
 //		}

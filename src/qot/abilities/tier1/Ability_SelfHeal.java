@@ -1,8 +1,8 @@
 package qot.abilities.tier1;
 
-import envision.game.objects.abilities.Ability;
-import envision.game.objects.abilities.AbilityTier;
-import envision.game.objects.entities.Entity;
+import envision.game.abilities.Ability;
+import envision.game.abilities.AbilityTier;
+import envision.game.entities.Entity;
 import qot.assets.textures.ability.AbilityTextures;
 
 /**
@@ -50,9 +50,9 @@ public class Ability_SelfHeal extends Ability {
 		
 		setNumTiers(3);
 		
-		tier(0).tierManaCost(5).tierCastTime(3 * 60).tierCooldown(30 * 60).requiresLevel(1);
-		tier(1).tierManaCost(15).tierCastTime(3 * 60).tierCooldown(45 * 60).requiresLevel(15);
-		tier(2).tierManaCost(25).tierCastTime(3 * 60).tierCooldown(60 * 60).requiresLevel(25);
+		tier(0).manaCost(5).castTime(3 * 60).cooldown(5 * 60).requiresLevel(1);
+		tier(1).manaCost(15).castTime(3 * 60).cooldown(5 * 60).requiresLevel(15);
+		tier(2).manaCost(25).castTime(3 * 60).cooldown(5 * 60).requiresLevel(25);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class Ability_SelfHeal extends Ability {
 			return false;
 		}
 		
-		int manaCost = tier.tierManaCost();
+		int manaCost = tier.manaCost();
 		if (!e.manaCheck(manaCost)) return false;
 		
 		e.drainMana(manaCost);

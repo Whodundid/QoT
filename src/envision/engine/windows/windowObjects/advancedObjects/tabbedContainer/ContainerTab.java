@@ -6,7 +6,7 @@ import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 public class ContainerTab<E> extends WindowObject<E> {
 	
@@ -139,7 +139,7 @@ public class ContainerTab<E> extends WindowObject<E> {
 	
 	public String getName() { return name; }
 	public double getTabIndex() { return tabIndex; }
-	public EDimension getTabDims() { return parentContainer.getTabDims().sub(8); }
+	public Dimension_d getTabDims() { return parentContainer.getTabDims().sub(8); }
 	
 	//---------
 	// Setters

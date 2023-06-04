@@ -1,8 +1,8 @@
 package envision.game.world;
 
-import envision.game.objects.GameObject;
-import envision.game.objects.entities.Entity;
-import envision.game.objects.entities.EntitySpawn;
+import envision.game.GameObject;
+import envision.game.entities.Entity;
+import envision.game.entities.EntitySpawn;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.util.EList;
 

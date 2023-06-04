@@ -6,7 +6,7 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	
@@ -28,7 +28,7 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 		
 		if (objectIn != null) {
 			object = objectIn;
-			EDimension dims = object.getDimensions();
+			Dimension_d dims = object.getDimensions();
 			
 			label = new WindowLabel(this, dims.endX + 10, dims.startY + 6, title, colorIn);
 			

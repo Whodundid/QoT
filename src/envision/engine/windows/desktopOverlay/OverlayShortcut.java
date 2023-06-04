@@ -4,6 +4,7 @@ import java.io.File;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
@@ -90,7 +91,7 @@ public class OverlayShortcut extends WindowObject {
 		double drawX = midX;
 		
 		//draw description text below icon
-		drawStringC(description, drawX, endY + 6, scale, scale, EColors.chalk);
+		RenderingManager.drawStringC(description, drawX, endY + 6, scale, scale, EColors.chalk);
 	}
 	
 	@Override

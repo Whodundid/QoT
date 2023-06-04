@@ -1,15 +1,13 @@
 package envision.game.world;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.game.objects.entities.EntitySpawn;
-import envision.game.world.worldTiles.VoidTile;
+import envision.game.entities.EntitySpawn;
+import envision.game.world.worldFileSystem.WorldSavingSystem;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
@@ -19,6 +17,7 @@ import eutil.math.ENumUtil;
 import eutil.misc.EByteBuilder;
 import eutil.strings.EStringUtil;
 import qot.settings.QoTSettings;
+import qot.world_tiles.VoidTile;
 
 public class WorldFileSystem {
 	
@@ -143,6 +142,8 @@ public class WorldFileSystem {
 		//ensure the file actually exists before trying to read from it
 		if (!worldFile.exists()) return false;
 		
+		theWorld.worldLayers.clear();
+		
 		//read in world file
 		try (var reader = new LineReader(worldFile)) {
 			//read name
@@ -263,8 +264,10 @@ public class WorldFileSystem {
 		return false;
 	}
 	
-	private boolean performSave(File fileIn) throws FileNotFoundException, UnsupportedEncodingException {
+	private boolean performSave(File fileIn) throws IOException {
 		createWorldDir();
+		
+		new WorldSavingSystem().saveWorld(this);
 		
 		PrintWriter writer = new PrintWriter(fileIn, "UTF-8");
 		FileOutputStream mapWriter = new FileOutputStream(new File(getDataDir(), theWorld.name + "_data"));
@@ -334,6 +337,8 @@ public class WorldFileSystem {
 	//---------
 	// Getters
 	//---------
+	
+	public GameWorld getWorld() { return theWorld; }
 	
 	/** The file path to this specific map file. */
 	public String getFilePath() { return getWorldFile().toString(); }

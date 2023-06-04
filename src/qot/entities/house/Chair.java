@@ -1,10 +1,10 @@
 package qot.entities.house;
 
-import envision.game.objects.entities.Entity;
+import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
 
-public class Chair extends Entity {
+public class Chair extends BasicRenderedEntity {
 
 	public Chair() { this(0, 0); }
 	public Chair(int x, int y) {

@@ -2,8 +2,8 @@ package envision.game.world.worldEditor.editorTools.tools;
 
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.game.objects.GameObject;
-import envision.game.objects.entities.Entity;
+import envision.game.GameObject;
+import envision.game.entities.Entity;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;

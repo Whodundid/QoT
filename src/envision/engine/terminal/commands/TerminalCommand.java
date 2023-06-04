@@ -1,6 +1,8 @@
 package envision.engine.terminal.commands;
 
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.util.List;
 
 import envision.engine.terminal.terminalUtil.ArgHelper;
 import envision.engine.terminal.terminalUtil.TermArgLengthException;
@@ -20,6 +22,7 @@ import eutil.math.ENumUtil;
  */
 public abstract class TerminalCommand {
 	
+	public static final String sep = FileSystems.getDefault().getSeparator();
 	public static final File userDir = new File(System.getProperty("user.dir"));
 	
 	public static final String ERROR_NO_ARGS = "This command does not take any arguments!";
@@ -82,7 +85,7 @@ public abstract class TerminalCommand {
 	public EList<String> getAliases() { return new EArrayList<>(); }
 	public String getHelpInfo(boolean runVisually) { return "(No help info for '" + getName() + "'!"; }
 	public String getUsage() { return "(No usage info for '" + getName() + "'!"; }
-	public void handleTabComplete(ETerminalWindow conIn, EList<String> args) {}
+	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {}
 	
 	//---------
 	// Methods
@@ -142,6 +145,7 @@ public abstract class TerminalCommand {
 	
 	public void onConfirmation(String response) {}
 	
+	protected void errorUsage(String errorReason) { errorUsage(term, errorReason); }
 	protected void errorUsage(ETerminalWindow term, String errorReason) {
 		term.errorUsage(errorReason, getUsage());
 	}
@@ -165,7 +169,7 @@ public abstract class TerminalCommand {
 		basicTabComplete(termIn, args, new EArrayList<String>(completionsIn));
 	}
 	
-	protected void basicTabComplete(ETerminalWindow termIn, EList<String> args, EList<String> completionsIn) {
+	protected void basicTabComplete(ETerminalWindow termIn, List<String> args, List<String> completionsIn) {
 		int limit = (expectedArgLength == -1) ? args.size() : ENumUtil.clamp(args.size(), 0, expectedArgLength);
 		
 		if (args.isEmpty()) {
@@ -191,6 +195,7 @@ public abstract class TerminalCommand {
 		}
 	}
 	
+	protected void error(Throwable e) { error(term, e); }
 	protected void error(ETerminalWindow termIn, Throwable e) {
 		StackTraceElement[] trace = e.getStackTrace();
 		String errLoc = (trace != null && trace[0] != null) ? "\n" + trace[0].toString() : null;
@@ -245,7 +250,7 @@ public abstract class TerminalCommand {
 	protected void resetTab() { term.resetTab(); }
 	
 	protected int getLastUsed() { return term.getLastUsed(); }
-	protected int getHisLine() { return term.getHisLine(); }
+	protected int getHistoryLine() { return term.getHistoryLine(); }
 	protected WindowTextArea<?> getTextArea() { return term.getTextArea(); }
 	protected TerminalTextField getInputField() { return term.getInputField(); }
 	protected EList<TextAreaLine> getInfoLines() { return term.getInfoLines(); }
@@ -254,6 +259,8 @@ public abstract class TerminalCommand {
 	protected String getTextTabBegin() { return term.getTextTabBegin(); }
 	protected int getTabArgStart() { return term.getTabArgStart(); }
 	protected String getTabBase() { return term.getTabBase(); }
+	protected File dir() { return term.getDir(); }
+	protected File parentDir() { return (dir().getParentFile() == null) ? dir() : dir().getParentFile(); }
 	
 	protected ETerminalWindow setDir(File dirIn) { return term.setDir(dirIn); }
 	protected ETerminalWindow setInputEnabled(boolean val) { return term.setInputEnabled(val); }

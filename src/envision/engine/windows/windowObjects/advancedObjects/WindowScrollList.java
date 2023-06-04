@@ -16,7 +16,7 @@ import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -164,7 +164,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	@Override
 	public void setPosition(double newX, double newY) {
 		if (isMoveable()) {
-			EDimension d = getDimensions();
+			Dimension_d d = getDimensions();
 			var loc = new Box2<>(d.startX, d.startY);
 			var previousLocations = new BoxList<IWindowObject<?>, Box2<Double, Double>>();
 			var objs = getCombinedChildren();
@@ -201,7 +201,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 				double eX = endX - (isVScrollDrawn() ? vScroll.width + 2 : 1);
 				double eY = endY - (isHScrollDrawn() ? hScroll.height - 4 : 1);
 				
-				EDimension bounds = new EDimension(startX + 1, startY + 1, eX, eY);
+				Dimension_d bounds = new Dimension_d(startX + 1, startY + 1, eX, eY);
 				
 				o.setBoundaryEnforcer(getDimensions());
 				for (var q : o.getCombinedChildren()) q.setBoundaryEnforcer(bounds);
@@ -311,10 +311,10 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	// Methods
 	//---------
 	
-	public EDimension getListDimensions() {
+	public Dimension_d getListDimensions() {
 		double w = (endX - (isVScrollDrawn() ? vScroll.width + 3 : 1)) - startX;
 		double h = (endY - (isHScrollDrawn() ? hScroll.height - 4 : 1)) - startY - 2;
-		return new EDimension(0, 0, w, h);
+		return new Dimension_d(0, 0, w, h);
 	}
 	
 	public void resetScrollPos() {
@@ -339,13 +339,13 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		
 		//find right
 		for (var o : aObjs) {
-			EDimension od = o.getDimensions();
+			Dimension_d od = o.getDimensions();
 			if (od.endX > right) right = od.endX;
 		}
 		
 		//find down
 		for (var o : aObjs) {
-			EDimension od = o.getDimensions();
+			Dimension_d od = o.getDimensions();
 			if (od.endY > down) down = od.endY;
 		}
 		
@@ -414,10 +414,10 @@ public class WindowScrollList<E> extends WindowObject<E> {
 				double eX = endX - (isVScrollDrawn() ? vScroll.width + 2 : 2);
 				double eY = endY - (isHScrollDrawn() ? hScroll.height - 4 : 1);
 				
-				EDimension bounds = new EDimension(startX + 1, startY + 1, eX, eY);
+				Dimension_d bounds = new Dimension_d(startX + 1, startY + 1, eX, eY);
 				
 				//apply offset to all added objects so their location is relative to this scrollList
-				EDimension dims = o.getDimensions();
+				Dimension_d dims = o.getDimensions();
 				if (useRelativeCoords) {
 					o.setDimensions(startX + dims.startX, startY + dims.startY, dims.width, dims.height);
 				}
@@ -517,18 +517,18 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	
 	protected void updateVisuals() {
 		if (isHScrollDrawn() && !isVScrollDrawn()) {
-			EDimension h = hScroll.getDimensions();
+			Dimension_d h = hScroll.getDimensions();
 			hScroll.setDimensions(h.startX, h.startY, width - 2 - (isResetDrawn() ? 4 : 0), h.height);
 		}
 		
 		if (isVScrollDrawn() && !isHScrollDrawn()) {
-			EDimension v = vScroll.getDimensions();
+			Dimension_d v = vScroll.getDimensions();
 			vScroll.setDimensions(v.startX, v.startY, v.width, height - 2 - (isResetDrawn() ? 4 : 0));
 		}
 		
 		if (isHScrollDrawn() && isVScrollDrawn()) {
-			EDimension h = hScroll.getDimensions();
-			EDimension v = vScroll.getDimensions();
+			Dimension_d h = hScroll.getDimensions();
+			Dimension_d v = vScroll.getDimensions();
 			
 			hScroll.setDimensions(h.startX, h.startY, width - 3 - vScroll.width - (isResetDrawn() ? 3 : 0), h.height);
 			vScroll.setDimensions(v.startX, v.startY, v.width, height - 2 - (isResetDrawn() ? 4 : 0));

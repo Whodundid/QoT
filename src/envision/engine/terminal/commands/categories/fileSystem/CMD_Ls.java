@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.fileSystem;
 
 import java.io.File;
 
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -24,61 +23,61 @@ public class CMD_Ls extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: ls 'dir'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand() {
 		//if empty -- ls current dir
-		if (args.isEmpty()) {
-			listDir(termIn, null);
+		if (args().isEmpty()) {
+			listDir(null);
 			return;
 		}
 		
 		//check if too many args
-		if (args.size() > 1) {
-			errorUsage(termIn, ERROR_TOO_MANY);
+		if (argLength() > 1) {
+			errorUsage(term, ERROR_TOO_MANY);
 			return;
 		}
 		
 		File theFile = null;
 		
-		theFile = switch (args.get(0)) {
-		case "." -> termIn.getDir();
-		case ".." -> termIn.getDir().getParentFile();
+		theFile = switch (firstArg()) {
+		case "." -> term.getDir();
+		case ".." -> term.getDir().getParentFile();
 		case "~" -> userDir;
 		case "wdir" -> QoTSettings.getEditorWorldsDir();
 		default -> null;
 		};
 		
 		if (theFile == null) {
-			String all = EStringUtil.combineAll(args, " ");
-			EArrayList<String> allArgs = new EArrayList<>(args);
+			String all = EStringUtil.combineAll(args(), " ");
+			EList<String> allArgs = new EArrayList<>(args());
 			allArgs.add(all);
 			
 			for (String s : allArgs) {
 				theFile = new File(s);
 				if (!theFile.exists()) {
-					theFile = new File(termIn.getDir(), s);
+					theFile = new File(dir(), s);
 				}
 			}
 			
-			if (args.get(0).equals("~")) {
+			if (firstArg().equals("~")) {
 				theFile = EFileUtil.userDir();
 			}
 		}
 		
-		listDir(termIn, theFile);
+		listDir(theFile);
 	}
 	
-	private void listDir(ETerminalWindow termIn, File dir) {
-		if (dir == null) dir = termIn.getDir();
+	private void listDir(File dir) {
+		if (dir == null) dir = dir();
 		
 		//check if actually exists
 		if (!EUtil.fileExists(dir)) {
-			termIn.error("'" + dir.getAbsolutePath() + "' is not a vaild directory!");
+			error("'" + dir.getAbsolutePath() + "' is not a vaild directory!");
 			return;
 		}
 		
 		//check if actually a directory
 		if (!dir.isDirectory()) {
-			termIn.error(dir.getName() + " is a file, not a directory!");
+			error(dir.getName() + " is a file, not a directory!");
 			return;
 		}
 		
@@ -87,22 +86,25 @@ public class CMD_Ls extends AbstractFileCommand {
 			String colorPath = EColors.mc_aqua + path;
 			boolean showHidden = hasModifier("-a");
 			
-			termIn.writeLink("Viewing Dir: " + colorPath, path, new File(path), false, EColors.yellow);
-			if (dir.list().length > 0) termIn.writeln();
+			writeLink("Viewing Dir: " + colorPath, path, new File(path), false, EColors.yellow);
+			if (dir.list().length > 0) writeln();
 			
 			if (showHidden && OSType.isWindows()) {
-				termIn.writeln(".", 0xff2265f0);
-				termIn.writeln("..", 0xff2265f0);
+				writeln(".", 0xff2265f0);
+				writeln("..", 0xff2265f0);
 			}
 			
 			for (File f : dir.listFiles()) {
 				//only show hidden files if '-a'
 				if (f.isHidden() && !showHidden) continue;
-				termIn.writeln(f.getName(), (f.isDirectory()) ? 0xff2265f0 : EColors.green.intVal);
+				
+				var name = ((f.isDirectory()) ? EColors.blue : EColors.green) + f.getName();
+				
+				writeln(name);
 			}
 		}
 		catch (Exception e) {
-			error(termIn, e);
+			error(e);
 		}
 	}
 	

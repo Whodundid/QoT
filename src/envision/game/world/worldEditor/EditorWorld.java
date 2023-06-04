@@ -2,9 +2,9 @@ package envision.game.world.worldEditor;
 
 import java.io.File;
 
-import envision.game.objects.GameObject;
-import envision.game.objects.entities.Entity;
-import envision.game.objects.entities.EntitySpawn;
+import envision.game.GameObject;
+import envision.game.entities.Entity;
+import envision.game.entities.EntitySpawn;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.Region;
@@ -13,7 +13,6 @@ import envision.game.world.WorldRenderer;
 import envision.game.world.layerSystem.LayerSystem;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
-import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.EArrayList;
@@ -21,6 +20,7 @@ import eutil.datatypes.ExpandableGrid;
 import eutil.datatypes.util.AnchorPoint;
 import eutil.datatypes.util.EList;
 import eutil.misc.Direction;
+import qot.world_tiles.VoidTile;
 
 /**
  * A game world that is used within the map editor.
@@ -115,9 +115,26 @@ public class EditorWorld implements IGameWorld {
 	public void expandWorld(Direction dir, int amount) { expandWorld(dir, amount, new VoidTile()); }
 	public void expandWorld(Direction dir, int amount, WorldTile tile) {
 		if (tile == null) tile = new VoidTile();
+		final var eoTile = EditorObject.of(tile);
+		final int layerSize = worldLayers.size();
 		
-		for (int i = 0; i < worldLayers.size(); i++) {
-			worldLayers.get(0).expand(dir, amount, EditorObject.of(tile));
+		// resize the world
+		for (int i = 0; i < layerSize; i++) {
+			worldLayers.get(0).expand(dir, amount, eoTile);
+		}
+		
+		// update tile positions
+		for (int l = 0; l < layerSize; l++) {
+			final var curLayer = worldLayers.get(l);
+			final int layerH = curLayer.getHeight();
+			final int layerW = curLayer.getWidth();
+			
+			for (int y = 0; y < layerH; y++) {
+				for (int x = 0; x < layerW; x++) {
+					final var layerTile = curLayer.get(x, y).getTile();
+					layerTile.setWorldPos(x, y);
+				}
+			}
 		}
 		
 		switch (dir) {
@@ -174,6 +191,12 @@ public class EditorWorld implements IGameWorld {
 			r.startY = sy + yOffset * this.tileHeight;
 			r.endY = ey + yOffset * this.tileHeight;
 		}
+		
+		{
+			var x = playerSpawn.getX();
+			var y = playerSpawn.getY();
+			setPlayerSpawn(x + xOffset, y + yOffset);
+		}
 	}
 	
 	@Override
@@ -183,7 +206,7 @@ public class EditorWorld implements IGameWorld {
 		entitiesInWorld.add(EditorObject.of(objIn));
 		
 		//assign entity ID
-		objIn.setObjectID(getNextEntityID());
+		objIn.setWorldID(getNextEntityID());
 		return objIn;
 	}
 	
@@ -340,7 +363,7 @@ public class EditorWorld implements IGameWorld {
 		worldName = nameIn;
 	}
 	
-	@Override public void onLoad() {}
+	@Override public void onLoad(String... args) {}
 	@Override public void setLoaded(boolean val) {}
 
 	@Override public WorldCamera getCamera() { return null; }

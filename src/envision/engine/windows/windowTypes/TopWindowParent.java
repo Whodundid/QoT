@@ -21,7 +21,7 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventRedraw;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.util.EList;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
 public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E> {
@@ -189,8 +189,8 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	@Override public void mouseExited(int mX, int mY) {}
 	@Override public boolean isMouseInside() { return false; }
 	@Override public boolean isMouseOver() { return !isMouseInsideObject(); }
-	@Override public void setBoundaryEnforcer(EDimension dimIn) {}
-	@Override public EDimension getBoundaryEnforcer() { return getDimensions(); }
+	@Override public void setBoundaryEnforcer(Dimension_d dimIn) {}
+	@Override public Dimension_d getBoundaryEnforcer() { return getDimensions(); }
 	@Override public boolean isClickable() { return false; }
 	@Override public void setClickable(boolean valIn) {}
 	
@@ -350,7 +350,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 						maximizingWindow.miniaturize();
 						
 						if (maximizingHeaderCenter) {
-							EDimension dims = maximizingWindow.getDimensions();
+							Dimension_d dims = maximizingWindow.getDimensions();
 							var header = maximizingWindow.getHeader();
 							double yPos = header != null ? header.height / 2 : 0;
 							
@@ -455,7 +455,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		
 		for (var p : getAllActiveWindows()) {
 			
-			EDimension oldDims = p.getDimensions();
+			Dimension_d oldDims = p.getDimensions();
 			
 			double newX = (oldDims.startX * newW) / oldW;
 			double newY = (oldDims.startY * newH) / oldH;

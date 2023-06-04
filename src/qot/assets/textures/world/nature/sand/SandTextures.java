@@ -28,6 +28,7 @@ public class SandTextures extends TextureLoader {
 	
 	sand			= new GameTexture(textureDir, "sand.png"),
 	red_sand		= new GameTexture(textureDir, "red_sand.png"),
+	wet_sand        = new GameTexture(textureDir, "wet_sand.png"),
 	
 	coarse_sand		= new Texture_CoarseSand();
 	
@@ -39,6 +40,7 @@ public class SandTextures extends TextureLoader {
 	public void onRegister(TextureSystem sys) {
 		reg(sys, sand);
 		reg(sys, red_sand);
+		reg(sys, wet_sand);
 		
 		reg(sys, coarse_sand);
 	}

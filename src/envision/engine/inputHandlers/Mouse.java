@@ -99,6 +99,14 @@ public class Mouse extends GLFWMouseButtonCallback {
 	// Static Methods
 	//================
 	
+	public static void destroy() {
+		if (instance != null) {
+			instance.free();
+			instance.cursorCallback.free();
+			instance.scrollCallback.free();
+		}
+	}
+	
 	public static boolean isButtonDown(int button) {
 		return GLFW.glfwGetMouseButton(Envision.getWindowHandle(), button) == 1;
 	}

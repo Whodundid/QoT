@@ -1,0 +1,32 @@
+package envision.game.component;
+
+public enum ComponentType {
+	
+	//=================
+	// Component Types
+	//=================
+
+	RENDERING("RENDERING_COMPONENT"),
+	STATS("STATS_COMPONENT"),
+	HEALTH("HEALTH_COMPONENT"),
+	MANA("MANA_COMPONENT"),
+	INVENTORY("INVENTORY_COMPONENT"),
+	SHOP("SHOP_COMPONENT"),
+	MOVEMENT("MOVEMENT_COMPONENT"),
+	COMBAT("COMBAT_COMPONENT"),
+	COLLISION("COLLISION_COMPONENT"),
+	ABILITY("ABILITY_COMPONENT"),
+	SPELL("SPELL_COMPONENT"),
+	DAMAGE_OVER_TIME("DAMAGE_OVER_TIME_COMPONENT"),
+	PARTICLE_TRAIL("PARTICLE_TRAIL_COMPONENT"),
+	TIMED_EVENT("TIMED_EVENT"),
+	
+	;
+	
+	public final String text;
+	
+	private ComponentType(String textIn) {
+		text = textIn;
+	}
+	
+}

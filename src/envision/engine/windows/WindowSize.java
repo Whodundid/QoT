@@ -37,5 +37,12 @@ public class WindowSize {
 	
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
+	
+	//================
+	// Static Getters
+	//================
+	
+	public int width() { return Envision.getWidth(); }
+	public int height() { return Envision.getHeight(); }
 
 }

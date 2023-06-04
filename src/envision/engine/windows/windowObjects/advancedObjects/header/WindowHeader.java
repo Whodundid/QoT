@@ -3,6 +3,7 @@ package envision.engine.windows.windowObjects.advancedObjects.header;
 import envision.Envision;
 import envision.debug.DebugFunctions;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.WindowParent;
@@ -15,7 +16,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.Box2;
 import eutil.math.ENumUtil;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 import qot.assets.textures.window.WindowTextures;
 
@@ -113,7 +114,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	public WindowHeader(IWindowObject<?> parentIn, boolean drawDefaultIn, int headerHeight) { this(parentIn, drawDefaultIn, headerHeight, ""); }
 	public WindowHeader(IWindowObject<?> parentIn, boolean drawDefaultIn, int headerHeight, String titleIn) {
 		if (parentIn != null) {
-			EDimension dim = parentIn.getDimensions();
+			Dimension_d dim = parentIn.getDimensions();
 			init(parentIn, dim.startX, dim.startY - headerHeight, dim.width, headerHeight);
 			
 			if (parentIn instanceof IWindowParent<?> p) window = p;
@@ -202,11 +203,11 @@ public class WindowHeader<E> extends WindowObject<E> {
 		ScreenLocation loc = ScreenLocation.OUT;
 		
 		if (mXIn <= 8 && mYIn <= 8) loc = ScreenLocation.TOP_LEFT; //top left
-		else if (mXIn <= 8 && mYIn >= (res.getHeight() - 8)) loc = ScreenLocation.BOT_LEFT; //bot left
-		else if (mXIn >= (res.getWidth() - 8) && mYIn <= 8) loc = ScreenLocation.TOP_RIGHT; //top right
-		else if (mXIn >= (res.getWidth() - 8) && mYIn >= (res.getHeight() - 8)) loc = ScreenLocation.BOT_RIGHT; //bot right
+		else if (mXIn <= 8 && mYIn >= (res.height - 8)) loc = ScreenLocation.BOT_LEFT; //bot left
+		else if (mXIn >= (res.width - 8) && mYIn <= 8) loc = ScreenLocation.TOP_RIGHT; //top right
+		else if (mXIn >= (res.width - 8) && mYIn >= (res.height - 8)) loc = ScreenLocation.BOT_RIGHT; //bot right
 		else if (mXIn <= 5) loc = ScreenLocation.LEFT; //left
-		else if (mXIn >= (res.getWidth() - 8)) loc = ScreenLocation.RIGHT; //right
+		else if (mXIn >= (res.width - 8)) loc = ScreenLocation.RIGHT; //right
 		else if (mYIn <= 8) loc = ScreenLocation.TOP; //top
 		
 		if (loc != ScreenLocation.OUT) getTopParent().setMaximizingWindow(window, loc, false);
@@ -320,7 +321,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		
 		//update position if title should be drawn centered
 		if (titleCentered) {
-			double tw = getStringWidth(tempTitle);
+			double tw = FontRenderer.strWidth(tempTitle);
 			//determine exact x position for which to center title within
 			tx = startX + (width / 2 - tw / 2) + titleOffset + 1;
 		}
@@ -342,11 +343,11 @@ public class WindowHeader<E> extends WindowObject<E> {
 	 * @param mYIn Mouse Y
 	 */
 	protected void handleMaximizeDraw(double mXIn, double mYIn) {
-		if (moving && window != null && window.isMaximizable() && ((mXIn <= 5) || (mXIn >= res.getWidth() - 5) || (mYIn <= 8))) {
+		if (moving && window != null && window.isMaximizable() && ((mXIn <= 5) || (mXIn >= res.width - 5) || (mYIn <= 8))) {
 			//TaskBar b = GameRenderer.instance.getTaskBar();
 			
-			double w = res.getWidth();
-			double h = res.getHeight();
+			double w = res.width;
+			double h = res.height;
 			
 			if (mXIn <= 5 && mYIn <= 8) { //top left
 				drawHRect(4, 4, w / 2 - 2, (h / 2) - 3, 2, EColors.lgray);

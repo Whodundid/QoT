@@ -1,14 +1,16 @@
 package envision.game.world;
 
+import java.awt.Point;
 import java.io.File;
 
-import envision.game.objects.GameObject;
-import envision.game.objects.entities.Entity;
-import envision.game.objects.entities.EntitySpawn;
+import envision.game.GameObject;
+import envision.game.entities.Entity;
+import envision.game.entities.EntitySpawn;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.worldTiles.WorldTile;
 import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.util.EList;
+import eutil.misc.Direction;
 
 public interface IGameWorld {
 	
@@ -46,7 +48,7 @@ public interface IGameWorld {
 	EnvisionProgram getStartupScript();
 	void setStartupScript(EnvisionProgram program); 
 	
-	void onLoad();
+	void onLoad(String... args);
 	void setLoaded(boolean val);
 	boolean isLoaded();
 	
@@ -57,6 +59,12 @@ public interface IGameWorld {
 	boolean isUnderground();
 	void setUnderground(boolean val);
 	
+	default double getDistance(GameObject a, GameObject b) { return -1; }
+	default double distanceTo(GameObject ent, Point point) { return -1; }
+	default EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) { return null; }
+	default EList<GameObject> getAllGameObjectsWithinDistance(GameObject obj, double maxDistance) { return null; }
+	default Direction getDirectionTo(GameObject start, GameObject dest) { return Direction.OUT; }
+	
 	default <E extends GameObject> E addObjectToWorld(E ent) { return null; }
 	default <E extends GameObject> void addObjectToWorld(E... ents) {}
 	default <E extends GameObject> void removeObjectFromWorld(E... ents) {}
@@ -64,5 +72,6 @@ public interface IGameWorld {
 	default Entity addEntity(Entity in) { return addObjectToWorld(in); }
 	default void addEntity(Entity... ents) { addObjectToWorld(ents); }
 	default void removeEntity(Entity... ents) { removeObjectFromWorld(ents); }
+	
 	
 }

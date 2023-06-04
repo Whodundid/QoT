@@ -8,6 +8,7 @@ layout(location = 3) in float in_texIndex;
 uniform mat4 u_projection;
 uniform mat4 u_view;
 uniform mat4 u_transform;
+uniform vec2 u_playerPos;
 
 out vec4 pass_color;
 out vec2 pass_texCoord;

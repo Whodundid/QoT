@@ -4,6 +4,7 @@ import java.io.File;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.rendering.RenderingManager;
 import envision.engine.windows.bundledWindows.TextEditorWindow;
 import envision.engine.windows.bundledWindows.TextureDisplayer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -149,8 +150,8 @@ public class FileExplorerWindow<E> extends ActionWindowParent<E> {
 	public void drawObject(int mXIn, int mYIn) {
 		drawDefaultBackground();
 		
-		drawLine(fileUpBtn.endX + 6, startY, fileUpBtn.endX + 6, backBtn.endY + 6, EColors.black);
-		drawLine(startX, backBtn.endY + 6, endX, backBtn.endY + 6, EColors.black);
+		RenderingManager.drawLine(fileUpBtn.endX + 6, startY, fileUpBtn.endX + 6, backBtn.endY + 6, EColors.black);
+		RenderingManager.drawLine(startX, backBtn.endY + 6, endX, backBtn.endY + 6, EColors.black);
 		
 		if (selectBtn != null) {
 			selectBtn.setEnabled(highlighted.hasOne());

@@ -3,11 +3,11 @@ package envision.engine.screens;
 import java.util.Stack;
 
 import envision.Envision;
+import envision.engine.events.GameEvent;
+import envision.engine.events.IEventListener;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
-import envision.game.events.GameEvent;
-import envision.game.events.IEventListener;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import qot.screens.main.MainMenuScreen;

@@ -9,8 +9,8 @@ import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.GameWorld;
 import envision.game.world.worldTiles.WorldTile;
-import envision.game.world.worldTiles.categories.NatureTiles;
 import eutil.colors.EColors;
+import qot.world_tiles.categories.NatureTiles;
 
 public class NewMapCreatorScreen extends GameScreen {
 

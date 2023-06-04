@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import envision.Envision;
 import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.GLObject;
+import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowObjects.utilityObjects.FocusLockBorder;
@@ -37,7 +37,7 @@ import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.points.Point2d;
 import eutil.datatypes.util.EList;
 import eutil.debug.DebugToolKit;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 import qot.assets.textures.cursor.CursorTextures;
 
@@ -363,8 +363,8 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 				if (f == null) continue;
 				
 				if (o instanceof WindowHeader<?> && (!o.equals(f) && !f.getAllChildren().contains(o))) {
-					EDimension d = o.getDimensions();
-					GLObject.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
+					Dimension_d d = o.getDimensions();
+					RenderingManager.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 				}
 			}
 		}
@@ -423,7 +423,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	public default void onMouseHover(int mX, int mY) {
 		if (properties().hoverText == null || properties().hoverText.isEmpty()) return;
 			
-		int strWidth = FontRenderer.getStringWidth(properties().hoverText);
+		int strWidth = FontRenderer.strWidth(properties().hoverText);
 		double sX = mX + 20;
 		double sY = mY - FontRenderer.FONT_HEIGHT / 2;
 		
@@ -438,9 +438,9 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		double eX = sX + strWidth + 10;
 		double eY = sY + FontRenderer.FONT_HEIGHT + 4;
 		
-		GLObject.drawRect(sX, sY, eX, eY, EColors.black);
-		GLObject.drawRect(sX + 1, sY + 1, eX - 1, eY - 1, EColors.pdgray);
-		GLObject.drawStringS(properties().hoverText, sX + 5, sY + 4, properties().hoverTextColor);
+		RenderingManager.drawRect(sX, sY, eX, eY, EColors.black);
+		RenderingManager.drawRect(sX + 1, sY + 1, eX - 1, eY - 1, EColors.pdgray);
+		RenderingManager.drawStringS(properties().hoverText, sX + 5, sY + 4, properties().hoverTextColor);
 	}
 
 	/**
@@ -569,7 +569,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//-------------------
 	
 	/** Returns the current dimensions of this object. */
-	public default EDimension getDimensions() { return instance().getDimensions(); }
+	public default Dimension_d getDimensions() { return instance().getDimensions(); }
 	/** Returns the current position of this object. */
 	public default Point2d getPosition() { return instance().getPosition(); }
 	/** Returns the position this object will relocate to when reset. */
@@ -588,7 +588,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	public default double getMaxHeight() { return instance().getMaxHeight(); }
 	
 	/** Specifies this objects position, width, and height using an EDimension object. */
-	public default void setDimensions(EDimension dimIn) { instance().setDimensions(dimIn); }
+	public default void setDimensions(Dimension_d dimIn) { instance().setDimensions(dimIn); }
 	/** Specifies this objects position, width, and height. (x, y, width, height) */
 	public default void setDimensions(double x, double y, double w, double h) { instance().setDimensions(x, y, w, h); }
 	/** Specifies the position this object will relocate to when its' position is reset. */
@@ -642,13 +642,13 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 			else o.move(newX, newY);
 		}
 		
-		EDimension d = getDimensions();
+		Dimension_d d = getDimensions();
 		//offset the original position by the specified offset
 		setDimensions(d.startX + newX, d.startY + newY, d.width, d.height);
 		
 		//also move the boundary enforcer, if there is one
 		if (isBoundaryEnforced()) {
-			EDimension b = getBoundaryEnforcer();
+			Dimension_d b = getBoundaryEnforcer();
 			getBoundaryEnforcer().setPosition(b.startX + newX, b.startY + newY);
 		}
 	}
@@ -660,7 +660,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		//make sure that there is actually a change in the cursor position
 		if (xIn == 0 && yIn == 0) return;
 
-		EDimension d = getDimensions();
+		Dimension_d d = getDimensions();
 		double minW = getMinWidth();
 		double minH = getMinHeight();
 		double maxW = getMaxWidth();
@@ -737,7 +737,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		//only move this object and its children if it is move-able
 		if (!isMoveable()) return;
 		
-		EDimension d = getDimensions();		
+		Dimension_d d = getDimensions();		
 		//the object's current position and relative clickArea for shorter code
 		var loc = new Box2<>(d.startX, d.startY);
 		
@@ -1116,7 +1116,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	public default void drawFocusLockBorder() {
 		if (willBeDrawn() && getChildren().containsNoInstanceOf(FocusLockBorder.class)) {
 			WindowHeader h = getHeader();
-			EDimension dims = getDimensions();
+			Dimension_d dims = getDimensions();
 			FocusLockBorder flb;
 			
 			if (h != null && h.isEnabled()) {
@@ -1150,9 +1150,9 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//--------------
 	
 	/** Specifies a region that this object will adhere to for mouse checks. */
-	public default void setBoundaryEnforcer(EDimension dimIn) { properties().boundaryDimension = dimIn; }
+	public default void setBoundaryEnforcer(Dimension_d dimIn) { properties().boundaryDimension = dimIn; }
 	/** Returns the boundary for which this object is bounded by. */
-	public default EDimension getBoundaryEnforcer() { return properties().boundaryDimension; }
+	public default Dimension_d getBoundaryEnforcer() { return properties().boundaryDimension; }
 	
 	/** Returns true if the mouse is on the edge of an object. */
 	public default boolean isMouseOnEdge(int mX, int mY) {
@@ -1163,7 +1163,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns the edge that the mouse is currently hovering over, if any.
 	 */
 	public default ScreenLocation getEdgeSideMouseIsOn() {
-		EDimension d = getDimensions();
+		Dimension_d d = getDimensions();
 		boolean left = false, right = false, top = false, bottom = false;
 		double rStartY = hasHeader() ? getHeader().startY : d.startY;
 		int mX = Mouse.getMx();
@@ -1211,13 +1211,13 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		//if the top renderer is being drawn and this object is not a child of the top renderer -- ignore
 		if (Envision.getTopScreen().hasFocus() && !isChildOf(Envision.getTopScreen())) return false;
 		
-		EDimension d = getDimensions();
+		Dimension_d d = getDimensions();
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();
 		
 		// check if there is a boundary enforcer limiting the overall area
 		if (isBoundaryEnforced()) {
-			EDimension b = getBoundaryEnforcer();
+			Dimension_d b = getBoundaryEnforcer();
 			return mX >= d.startX && mX >= b.startX &&
 				   mX <= d.endX && mX <= b.endX &&
 				   mY >= d.startY && mY >= b.startY &&

@@ -27,6 +27,8 @@ public class StoneFloorTextures extends TextureLoader {
 	public static final GameTexture
 	
 	dung_floor = new GameTexture(textureDir, "dung_floor.png"),
+	dark_dung_floor = new GameTexture(textureDir, "dark_dungeon_floor.png"),
+	blue_dung_tile = new GameTexture(textureDir, "blue_dungeon_tile.png"),
 	stone_pad = new GameTexture(textureDir, "stone_pad.png"),
 	
 	clay_pad = new ClayPad(),
@@ -39,6 +41,8 @@ public class StoneFloorTextures extends TextureLoader {
 	@Override
 	public void onRegister(TextureSystem sys) {
 		reg(sys, dung_floor);
+		reg(sys, dark_dung_floor);
+		reg(sys, blue_dung_tile);
 		reg(sys, stone_pad);
 		
 		reg(sys, clay_pad);

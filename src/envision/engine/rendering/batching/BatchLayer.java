@@ -61,17 +61,20 @@ public class BatchLayer {
 					if (hasTexture) {
 						// check if this batch already contains the texture or if it could be added
 						if (batch.containsTexture(texture) || batch.canAddTexture(texture)) {
-							System.out.println("Using scissor batch: " + i + ", size: " + batch.size());
+							//System.out.println("Using scissor batch: " + i + ", size: " + batch.size());
 							return batch;
+						}
+						else {
+							batch.closeBatch();
 						}
 					}
 					else {
-						System.out.println("Using scissor batch: " + i + ", size: " + batch.size());
+						//System.out.println("Using scissor batch: " + i + ", size: " + batch.size());
 						return batch;
 					}
 				}
 				else if (batch.isEmpty()) {
-					System.out.println("Creating new scissor batch: " + i + ", size: " + batch.size());
+					//System.out.println("Creating new scissor batch: " + i + ", size: " + batch.size());
 					batch.setScissorBatch(true);
 					batch.applyScissorBoundsFromGLSettings();
 					batch.setBatchLayerIndex(index);
@@ -88,6 +91,10 @@ public class BatchLayer {
 						//System.out.println("Using batch: " + i);
 						return batch;
 					}
+					// # This saved everything :')
+					else {
+						batch.closeBatch();
+					}
 				}
 				else {
 					//System.out.println("Using batch: " + i);
@@ -102,6 +109,9 @@ public class BatchLayer {
 		}
 		
 		if (batches.size() < maxBatches) {
+			for (int i = 0; i < size; i++) {
+				batches.get(i).closeBatch();
+			}
 			var newBatch = new RenderBatch(maxBatchSize, texSlots);
 			newBatch.setBatchLayer(layerNum);
 			newBatch.setBatchLayerIndex(getCurLayerIndex());

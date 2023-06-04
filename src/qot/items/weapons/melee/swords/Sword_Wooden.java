@@ -1,9 +1,7 @@
 package qot.items.weapons.melee.swords;
 
-import envision.game.objects.entities.Entity;
-import envision.game.objects.items.Weapon;
-import envision.game.world.IGameWorld;
-import envision.game.world.WorldCamera;
+import envision.game.entities.Entity;
+import envision.game.items.Weapon;
 import qot.assets.textures.item.ItemTextures;
 import qot.items.ItemList;
 
@@ -27,11 +25,6 @@ public class Sword_Wooden extends Weapon {
 	@Override
 	public Sword_Wooden copy() {
 		return new Sword_Wooden();
-	}
-
-	@Override
-	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY,
-		int distX, int distY) {
 	}
 
 	@Override

@@ -3,13 +3,16 @@ package envision.engine.rendering.fontRenderer;
 import org.lwjgl.opengl.GL11;
 
 import envision.Envision;
-import envision.engine.rendering.GLObject;
-import envision.engine.rendering.batching.BatchManager;
+import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import eutil.colors.EColors;
 import eutil.datatypes.boxes.Box2;
 
 public class FontRenderer {
+	
+	//========
+	// Fields
+	//========
 	
 	public static final double FONT_HEIGHT = 24;
 	public static final double FH = FONT_HEIGHT;
@@ -54,17 +57,6 @@ public class FontRenderer {
 	// Methods
 	//---------
 	
-	public static double drawString(Object in, double xIn, double yIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
-	public static double drawString(String in, double xIn, double yIn) { return drawString(in, xIn, yIn, 0xffffffff); }
-	
-	public static double drawString(Object in, double xIn, double yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public static double drawString(Object in, double xIn, double yIn, int colorIn) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn); }
-	
-	public static double drawString(String in, double xIn, double yIn, EColors colorIn) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public static double drawString(String in, double xIn, double yIn, int colorIn) {
-		return instance.createString(in, xIn, yIn, colorIn, 1.0, 1.0, false);
-	}
-	
 	public static double drawString(Object in, double xIn, double yIn, double scaleX, double scaleY) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff, scaleX, scaleY); }
 	public static double drawString(String in, double xIn, double yIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, 0xffffffff, scaleX, scaleY); }
 	
@@ -73,29 +65,7 @@ public class FontRenderer {
 	
 	public static double drawString(String in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
 	public static double drawString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY) {
-		return instance.createString(in, xIn, yIn, colorIn, scaleX, scaleY, false);
-	}
-	
-	public static double drawString(Object in, double xIn, double yIn, boolean batch) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff); }
-	public static double drawString(String in, double xIn, double yIn, boolean batch) { return drawString(in, xIn, yIn, 0xffffffff); }
-	
-	public static double drawString(Object in, double xIn, double yIn, EColors colorIn, boolean batch) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public static double drawString(Object in, double xIn, double yIn, int colorIn, boolean batch) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn); }
-	
-	public static double drawString(String in, double xIn, double yIn, EColors colorIn, boolean batch) { return drawString(in, xIn, yIn, colorIn.intVal); }
-	public static double drawString(String in, double xIn, double yIn, int colorIn, boolean batch) {
-		return instance.createString(in, xIn, yIn, colorIn, 1.0, 1.0, batch);
-	}
-	
-	public static double drawString(Object in, double xIn, double yIn, double scaleX, double scaleY, boolean batch) { return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff, scaleX, scaleY); }
-	public static double drawString(String in, double xIn, double yIn, double scaleX, double scaleY, boolean batch) { return drawString(in, xIn, yIn, 0xffffffff, scaleX, scaleY); }
-	
-	public static double drawString(Object in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY, boolean batch) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
-	public static double drawString(Object in, double xIn, double yIn, int colorIn, double scaleX, double scaleY, boolean batch) { return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn, scaleX, scaleY); }
-	
-	public static double drawString(String in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY, boolean batch) { return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY); }
-	public static double drawString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY, boolean batch) {
-		return instance.createString(in, xIn, yIn, colorIn, scaleX, scaleY, batch);
+		return instance.createString(in, xIn, yIn, colorIn, scaleX, scaleY);
 	}
 	
 	//---------
@@ -104,7 +74,7 @@ public class FontRenderer {
 	
 	public static GameFont getCurrentFont() { return getInstance().currentFont; }
 	
-	public static int getStringWidth(String in) { return (int) (in.length() * (getCharWidth() * getScaleSpace() / Envision.getGameScale())); }
+	public static int strWidth(String in) { return (int) (in.length() * (getCharWidth() * getScaleSpace() / Envision.getGameScale())); }
 	public static int getCharWidth() { return instance.currentFont.getWidth(); }
 	public static double getScaleW() { return instance.currentFont.getScaleW(); }
 	public static double getScaleH() { return instance.currentFont.getScaleH(); }
@@ -115,10 +85,9 @@ public class FontRenderer {
 	//---------
 	
 	public static void setCurrentFont(GameFont fontIn) {
-		if (fontIn != null) {
-			if (fontIn.created()) instance.currentFont = fontIn;
-			else Envision.error("Font '" + fontIn.getFontFile() + "' failed to load!");
-		}
+		if (fontIn == null) return;
+		if (fontIn.created()) instance.currentFont = fontIn;
+		else Envision.error("Font '" + fontIn.getFontFile() + "' failed to load!");
 	}
 	
 	//------------------
@@ -126,12 +95,7 @@ public class FontRenderer {
 	//------------------
 	
 	private double createString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY) {
-		return createString(in, xIn, yIn, colorIn, scaleX, scaleY, false);
-	}
-	
-	private double createString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY, boolean batch) {
 		if (in == null || in.isEmpty()) return 0.0;
-		//System.out.println("Draw String: '" + in + "'" + " : " + Envision.getRenderEngine().getBatchManager().getCurLayer());
 		
 		double sX = xIn;
 		for (int i = 0; i < in.length(); i++) {
@@ -143,24 +107,29 @@ public class FontRenderer {
 			int xPos = loc.getA() * w;
 			int yPos = loc.getB() * h;
 			
-			drawChar(sX, yIn, xPos, yPos, colorIn, scaleX, scaleY, batch);
+			drawChar(sX, yIn, xPos, yPos, colorIn, scaleX, scaleY);
 			sX += (w * currentFont.getScaleSpace() / Envision.getGameScale()) * scaleX;
 		}
 		
 		return sX;
 	}
 	
-	private void drawChar(double posX, double posY, int tX, int tY, int color, double scaleX, double scaleY, boolean batch) {
-		double w = currentFont.getWidth();
-		double h = currentFont.getHeight();
-		double sw = currentFont.getScaleW() * scaleX;
-		double sh = currentFont.getScaleH() * scaleY;
-		double draw_w = w * sw;
-		double draw_h = h * sh;
+	private void drawChar(double posX, double posY, int tX, int tY, int color, double scaleX, double scaleY) {
+		final double w = currentFont.getWidth();
+		final double h = currentFont.getHeight();
+		final double sw = currentFont.getScaleW() * scaleX;
+		final double sh = currentFont.getScaleH() * scaleY;
+		final double draw_w = w * sw;
+		final double draw_h = h * sh;
 		
-		if (batch) BatchManager.drawTexture(currentFont.getFontTexture(), posX, posY, draw_w, draw_h, tX, tY, w, h, color, false);
-		else GLObject.drawTexture(currentFont.getFontTexture(), posX, posY, draw_w, draw_h, tX, tY, w, h, color);
+		final var font = currentFont.getFontTexture();
+		
+		RenderingManager.drawTexture(font, posX, posY, draw_w, draw_h, tX, tY, w, h, color, false);
 	}
+	
+	//================
+	// Helper Methods
+	//================
 	
 	public String trimToWidth(String in, int width) { return trimToWidth(in, width, true); }
 	public String trimToWidth(String in, int width, boolean reverse) {
@@ -169,8 +138,8 @@ public class FontRenderer {
 		for (int i = (reverse) ? in.length() - 1 : 0; i < in.length() && curLen < width; i += (reverse) ? -1 : 1) {
 			char c = in.charAt(i);
 			int w = getCharWidth();
-			if (reverse) { s = c + s; }
-			else { s += c; }
+			if (reverse) s = c + s;
+			else s += c;
 			curLen += w;
 		}
 		return s;

@@ -6,7 +6,7 @@ import envision.engine.windows.windowUtil.FutureTaskManager;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEventHandler;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 /**
  * The set of all properties that each and every WindowObject have.
@@ -44,7 +44,7 @@ public class WindowObjectProperties<E> {
 	public EList<IWindowObject<?>> childrenToBeAdded = EList.newList();
 	
 	/** Specifies a region for which this object is interactably restricted by beyond its normal dimensions. */
-	public EDimension boundaryDimension;
+	public Dimension_d boundaryDimension;
 	
 	/** The text that is drawn is the mouse is hovering over this object. */
 	public String hoverText = null;

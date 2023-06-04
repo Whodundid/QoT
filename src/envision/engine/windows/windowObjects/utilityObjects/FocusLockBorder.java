@@ -2,7 +2,7 @@ package envision.engine.windows.windowObjects.utilityObjects;
 
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 //Author: Hunter Bragg
 
@@ -25,7 +25,7 @@ public class FocusLockBorder extends WindowObject {
 	
 	public FocusLockBorder(IWindowObject<?> parentIn) {
 		if (parentIn != null) {
-			EDimension dim = parentIn.getDimensions();
+			Dimension_d dim = parentIn.getDimensions();
 			init(parentIn, dim.startX, dim.startY, dim.width, dim.height);
 			startTime = System.currentTimeMillis();
 			//mc.getSoundHandler().playSound(PositionedSoundRecord.create(EMCResources.buttonSound, 1.0F));

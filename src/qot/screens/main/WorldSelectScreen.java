@@ -72,8 +72,6 @@ public class WorldSelectScreen extends GameScreen {
 		}
 	}
 	
-	@Override public void onScreenClosed() {}
-	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == defaultWorld) loadDefault();
@@ -85,13 +83,9 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	private void loadDefault() {
-		File f = new File(QoTSettings.getEditorWorldsDir(), "new.twld");
+		File f = new File(QoTSettings.getEditorWorldsDir(), "new");
 		if (f.exists()) {
-			Envision.setPlayer(new QoT_Player("Test"));
-			Envision.loadWorld(new GameWorld(f));
-			//w.addEntity(p);
-			Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
-			//Game.displayScreen(new WorldRenderTest(new File("test.twld")), this);
+			loadWorld(f);
 		}
 	}
 	
@@ -106,10 +100,8 @@ public class WorldSelectScreen extends GameScreen {
 		String last = QoTSettings.lastEditorMap.get();
 		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
 		else {
-			Envision.setPlayer(new QoT_Player("Test"));
 			File worldFile = new File(QoTSettings.getEditorWorldsDir(), last);
-			Envision.loadWorld(new GameWorld(worldFile));
-			Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			loadWorld(worldFile);
 		}
 	}
 	
@@ -117,10 +109,8 @@ public class WorldSelectScreen extends GameScreen {
 		String last = QoTSettings.lastMap.get().replace(".twld", "");
 		if (last.isBlank() || last.isEmpty()) error = "There is no last game map!";
 		else {
-			Envision.setPlayer(new QoT_Player("Test"));
 			File worldFile = new File(QoTSettings.getEditorWorldsDir(), last);
-			Envision.loadWorld(new GameWorld(worldFile));
-			Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			loadWorld(worldFile);
 		}
 	}
 	
@@ -131,14 +121,25 @@ public class WorldSelectScreen extends GameScreen {
 		
 		if (f != null && f.exists()) {
 			explorer.close();
-			QoTSettings.lastMap.set(f.getName().replace(".twld", ""));
-			QoTSettings.saveConfig();
-			
-			Envision.setPlayer(new QoT_Player("Test"));
-			Envision.loadWorld(new GameWorld(f));
-			
-			Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+			loadWorld(f);
 		}
+	}
+	
+	private void loadWorld(File worldFile) {
+		if (worldFile == null) {
+			System.out.println("Tried to load 'null' world!");
+			return;
+		}
+		
+		Envision.setPlayer(new QoT_Player("Test"));
+		var world = new GameWorld(worldFile);
+		
+		QoTSettings.lastMap.set(worldFile.getName().replace(".twld", ""));
+		QoTSettings.saveConfig();
+		
+		Envision.loadWorld(world);
+		world.setCameraZoom(3.5D);
+		Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
 	}
 	
 }

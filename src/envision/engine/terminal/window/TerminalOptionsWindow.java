@@ -1,5 +1,6 @@
 package envision.engine.terminal.window;
 
+import envision.engine.rendering.RenderingManager;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
 import envision.engine.windows.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;
@@ -44,9 +45,9 @@ public class TerminalOptionsWindow extends WindowParent {
 			@Override
 			public void drawObject(int mXIn, int mYIn) {
 				super.drawObject(mXIn, mYIn);
-				drawHRect(backColor.startX - 1, backColor.startY - 1, backColor.endX + 1, backColor.endY + 1, 1, EColors.black);
-				drawHRect(backColor.startX, backColor.startY, backColor.endX, backColor.endY, 1, EColors.lgray);
-				drawHRect(backColor.startX + 1, backColor.startY + 1, backColor.endX - 1, backColor.endY - 1, 1, EColors.black);
+				RenderingManager.drawHRect(backColor.startX - 1, backColor.startY - 1, backColor.endX + 1, backColor.endY + 1, 1, EColors.black);
+				RenderingManager.drawHRect(backColor.startX, backColor.startY, backColor.endX, backColor.endY, 1, EColors.lgray);
+				RenderingManager.drawHRect(backColor.startX + 1, backColor.startY + 1, backColor.endX - 1, backColor.endY - 1, 1, EColors.black);
 			}
 		};
 		

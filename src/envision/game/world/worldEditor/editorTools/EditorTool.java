@@ -1,24 +1,24 @@
 package envision.game.world.worldEditor.editorTools;
 
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.GLObject;
-import envision.game.objects.GameObject;
-import envision.game.objects.entities.Entity;
+import envision.engine.rendering.RenderingManager;
+import envision.game.GameObject;
+import envision.game.entities.Entity;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.MapEditorSettings;
 import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
 import envision.game.world.worldEditor.editorTools.ToolHandler.ToolEvent;
 import envision.game.world.worldTiles.WorldTile;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2i;
 
-public abstract class EditorTool extends GLObject {
+public abstract class EditorTool extends RenderingManager {
 	
 	protected MapEditorScreen editor;
 	protected MapEditorSettings settings;
 	protected boolean isSelected = false;
-	protected Box2<Integer, Integer> pressPoint = new Box2(-1, -1);
-	protected Box2<Integer, Integer> oldPoint = new Box2(-1, -1);
+	protected Point2i pressPoint = new Point2i(-1, -1);
+	protected Point2i oldPoint = new Point2i(-1, -1);
 	protected int button = -1;
 	protected boolean pressed = false;
 	protected int wx, wy;
@@ -41,8 +41,10 @@ public abstract class EditorTool extends GLObject {
 	
 	protected WorldTile getTile() { return editor.getActualWorld().getTileAt(wx, wy); }
 	protected WorldTile getTile(int x, int y) { return editor.getActualWorld().getTileAt(x, y); }
-	protected Box2<Integer, Integer> getHoverTileCoords() { return editor.getHoverTileCoords(); }
-	protected Box2<Integer, Integer> getHoverPixelCoords() { return editor.getHoverPixelCoords(); }
+	public int getWorldWidth() { return editor.getActualWorld().getWidth(); }
+	public int getWorldHeight() { return editor.getActualWorld().getHeight(); }
+	protected Point2i getHoverTileCoords() { return editor.getHoverTileCoords(); }
+	protected Point2i getHoverPixelCoords() { return editor.getHoverPixelCoords(); }
 	
 	protected void addObjectToWorld(GameObject obj) {
 		// logic to add object to world ~

@@ -153,10 +153,10 @@ public abstract class ShaderProgram {
 	}
 
 	public void disableAttribs() {
+		GL20.glDisableVertexAttribArray(4);
 		GL20.glDisableVertexAttribArray(3);
 		GL20.glDisableVertexAttribArray(2);
 		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(0);
 	}
 	
 //	public void loadTransform(Matrix4f transform) { setUniform(uniform_transform, transform); }

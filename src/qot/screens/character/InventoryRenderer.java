@@ -7,9 +7,9 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
-import envision.game.objects.entities.Entity;
-import envision.game.objects.entities.EntityInventory;
-import envision.game.objects.items.Item;
+import envision.game.entities.Entity;
+import envision.game.entities.EntityInventory;
+import envision.game.items.Item;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -70,7 +70,7 @@ public class InventoryRenderer extends WindowObject {
 			
 			if (item != null) {
 				String name = item.getName();
-				drawString(name, midX - FontRenderer.getStringWidth(name) / 2, startY - 40);
+				drawString(name, midX - FontRenderer.strWidth(name) / 2, startY - 40);
 			}
 		}
 		

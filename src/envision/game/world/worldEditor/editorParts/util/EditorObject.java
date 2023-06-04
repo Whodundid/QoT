@@ -1,11 +1,9 @@
 package envision.game.world.worldEditor.editorParts.util;
 
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.game.objects.GameObject;
-import envision.game.objects.IDrawable;
-import envision.game.objects.entities.Entity;
-import envision.game.world.IGameWorld;
-import envision.game.world.WorldCamera;
+import envision.game.GameObject;
+import envision.game.entities.Entity;
+import envision.game.util.IDrawable;
 import envision.game.world.worldTiles.WorldTile;
 
 /**
@@ -34,6 +32,15 @@ public class EditorObject implements IDrawable {
 	protected EditorObject(GameObject objectIn, EditorObjectType typeIn) {
 		theObject = objectIn;
 		type = typeIn;
+	}
+	
+	//===========
+	// Overrides
+	//===========
+	
+	@Override
+	public String toString() {
+		return "ED[" + String.valueOf(theObject) + "]";
 	}
 	
 	//---------
@@ -75,10 +82,5 @@ public class EditorObject implements IDrawable {
 	public double getSortPoint() {
 		return theObject.getSortPoint();
 	}
-	
-	@Override
-	public void draw(
-		IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX,
-		int distY) {}
 	
 }

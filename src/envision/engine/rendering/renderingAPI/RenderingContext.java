@@ -17,6 +17,8 @@ public abstract class RenderingContext {
 	public abstract void drawFrame();
 	public abstract void swapBuffers();
 	
+	public abstract void destroy();
+	
 	public abstract void clearErrors();
 	public abstract boolean checkErrors();
 	

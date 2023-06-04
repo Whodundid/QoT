@@ -67,12 +67,12 @@ public class TextureDisplayer extends WindowParent {
 	public void initChildren() {
 		defaultHeader(this);
 		
-		double w = ENumUtil.clamp((width - 10 - (width / 6)) / 2, 50, 100);
+		double w = ENumUtil.clamp((width - 10 - (width / 6)) / 2, 150, 250);
 		
-		imageBox = new WindowImageBox(this, startX + 5, startY + 5, width - 10, navigationDrawn ? height - 30 : height - 10);
-		previous = new WindowButton(this, midX - (width / 40) - w, imageBox.endY + 4, w, 16, "Previous");
-		next = new WindowButton(this, midX + (width / 40), imageBox.endY + 4, w, 16, "Next");
-		open = new WindowButton(this, midX - 8, imageBox.endY + 4, 16, 16);
+		imageBox = new WindowImageBox(this, startX + 5, startY + 5, width - 10, navigationDrawn ? height - 45 : height - 10);
+		previous = new WindowButton(this, midX - (width / 40) - w, imageBox.endY + 4, w, 30, "Previous");
+		next = new WindowButton(this, midX + (width / 40), imageBox.endY + 4, w, 30, "Next");
+		open = new WindowButton(this, midX - 15, imageBox.endY + 4, 30, 30);
 		open.setTextures(WindowTextures.plus, WindowTextures.plus_sel);
 		
 		open.setHoverText("Open on Computer");

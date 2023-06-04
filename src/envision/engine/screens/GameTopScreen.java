@@ -3,22 +3,15 @@ package envision.engine.screens;
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.GLObject;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.engine.windows.bundledWindows.CalculatorWindow;
-import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.engine.windows.desktopOverlay.DesktopRCM;
-import envision.engine.windows.desktopOverlay.OverlayShortcut;
 import envision.engine.windows.desktopOverlay.TaskBar;
 import envision.engine.windows.windowTypes.TopWindowParent;
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.dimensions.EDimension;
-import qot.assets.textures.taskbar.TaskBarTextures;
-import qot.assets.textures.window.WindowTextures;
+import eutil.math.dimensions.Dimension_d;
 import qot.settings.QoTSettings;
 
 /** The renderer that is overlaid onto every other one. (Need a better name). */
@@ -125,8 +118,8 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 				if (focusLockObject != null && !o.equals(focusLockObject)) {
 					if (o.isVisible()) {
 						drawRect(o.getDimensions(), 0x77000000);
-						EDimension d = o.getDimensions();
-						GLObject.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
+						Dimension_d d = o.getDimensions();
+						drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 					}
 				}
 			}
@@ -145,7 +138,7 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 		//draw game fps
 		if (QoTSettings.drawFPS.get()) {
 			String s = "FPS: " + Envision.getFPS();
-			int s_width = FontRenderer.getStringWidth(s);
+			int s_width = FontRenderer.strWidth(s);
 			drawString(s, Envision.getWidth() - 10 - s_width, 10);
 		}
 	}

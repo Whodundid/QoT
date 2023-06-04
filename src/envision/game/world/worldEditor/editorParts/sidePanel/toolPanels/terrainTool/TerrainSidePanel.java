@@ -12,10 +12,10 @@ import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.editorParts.toolBox.ToolCategory;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
 import envision.game.world.worldEditor.editorTools.EditorToolType;
-import envision.game.world.worldTiles.GlobalTileList;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import qot.world_tiles.GlobalTileList;
 
 public class TerrainSidePanel extends PaletteSidePanel {
 	

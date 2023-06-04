@@ -131,7 +131,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 			case Keyboard.KEY_ENTER: //enter
 				if (parentTextArea.isEditable()) {
 					parentTextArea.createNewLineAfter(this);
-					setDimensions(startX, startY, getStringWidth(text), height);
+					setDimensions(startX, startY, strWidth(text), height);
 				}
 				break;
 			case Keyboard.KEY_UP: //up
@@ -146,18 +146,18 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 					if (getText().isEmpty() || cursorPosition == 0) {
 						TextAreaLine l = parentTextArea.deleteLineAndAddPrevious(this);
 						if (l != null) {
-							l.setDimensions(l.startX, l.startY, getStringWidth(l.getText()), l.height);
+							l.setDimensions(l.startX, l.startY, FontRenderer.strWidth(l.getText()), l.height);
 						}
 					}
 					else if (Keyboard.isCtrlDown()) {
 						if (isEnabled()) {
 							deleteWords(-1);
-							setDimensions(startX, startY, getStringWidth(text), height);
+							setDimensions(startX, startY, FontRenderer.strWidth(text), height);
 						}
 					}
 					else if (isEnabled()) {
 						deleteFromCursor(-1);
-						setDimensions(startX, startY, getStringWidth(text), height);
+						setDimensions(startX, startY, FontRenderer.strWidth(text), height);
 					}
 					
 					startTextTimer();
@@ -209,7 +209,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 						if (Keyboard.isTypable(typedChar, keyCode)) {
 							typedChar = (Keyboard.isShiftDown()) ? Keyboard.getUppercase(keyCode) : typedChar;
 							writeText(Character.toString(typedChar));
-							setDimensions(startX, startY, getStringWidth(text), height);
+							setDimensions(startX, startY, FontRenderer.strWidth(text), height);
 							startTextTimer();
 						}
 					}
@@ -378,7 +378,11 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 		selectionEnd = val ? text.length() : 0;
 	}
 	
-	public void setLineNumber(int numberIn) { lineNumber = numberIn; lineNumberWidth = getStringWidth(String.valueOf(lineNumber)); }
+	public void setLineNumber(int numberIn) {
+		lineNumber = numberIn;
+		lineNumberWidth = FontRenderer.strWidth(String.valueOf(lineNumber));
+	}
+	
 	public void setLineNumberColor(EColors colorIn) { lineNumberColor = colorIn.intVal; }
 	public void setLineNumberColor(int colorIn) { lineNumberColor = colorIn; }
 	public void setDrawnLineNumber(int numberIn) { drawnLineNumber = numberIn; }
@@ -489,8 +493,8 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 					end = selStart;
 				}
 				
-				double xStart = startX + parentTextArea.getLineNumberOffset() + getStringWidth(text.substring(0, start));
-				double xEnd = xStart + getStringWidth(text.substring(start, end));
+				double xStart = startX + parentTextArea.getLineNumberOffset() + FontRenderer.strWidth(text.substring(0, start));
+				double xEnd = xStart + FontRenderer.strWidth(text.substring(start, end));
 				
 				//fix highlight selection
 				if (selStart > selEnd) {
@@ -504,7 +508,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 				drawCursorVertical(xStart, startY + 1, xEnd - 1, startY + 1 + FontRenderer.FONT_HEIGHT);
 			}
 			else if ((textRecentlyEntered || drawCursor) && hasFocus()) { //draw vertical cursor
-				int textCursorPosLength = getStringWidth(text.substring(0, cursorPosition));
+				int textCursorPosLength = FontRenderer.strWidth(text.substring(0, cursorPosition));
 				double sX = startX + parentTextArea.getLineNumberOffset() + textCursorPosLength;
 				drawRect(sX - 1, startY + 1, sX, endY, 0xffffffff);
 			}

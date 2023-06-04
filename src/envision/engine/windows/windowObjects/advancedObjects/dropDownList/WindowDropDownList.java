@@ -1,6 +1,7 @@
 package envision.engine.windows.windowObjects.advancedObjects.dropDownList;
 
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
@@ -203,7 +204,7 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 				if (displayString.length() > longestString.length()) { longestString = displayString; }
 			}
 			
-			width = getStringWidth(longestString) + 10;
+			width = FontRenderer.strWidth(longestString) + 10;
 			double h = height;
 			
 			if (alwaysOpen) {

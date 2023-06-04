@@ -199,15 +199,15 @@ public class StaticTopParent extends EGui {
 			
 			if (ho != null) out = ho.getClass().getName();
 			
-			int longestX = getStringWidth(topParent);
+			double longestX = strWidth(topParent);
 			
-			if (getStringWidth(focusedObject) > longestX) longestX = getStringWidth(focusedObject);
-			if (getStringWidth(focusLockObject) > longestX) longestX = getStringWidth(focusLockObject);
-			//if (stringWidth(objects) > longestX) { longestX = stringWidth(objects); }
-			if (getStringWidth(modifyType) > longestX) longestX = getStringWidth(modifyType);
-			if (getStringWidth(underMouse) > longestX) longestX = getStringWidth(underMouse);
-			if (getStringWidth(lastClicked) > longestX) longestX = getStringWidth(lastClicked);
-			if (getStringWidth(mousePos) > longestX) longestX = getStringWidth(mousePos);
+			if (strWidth(focusedObject) > longestX) 		longestX = strWidth(focusedObject);
+			if (strWidth(focusLockObject) > longestX) 	longestX = strWidth(focusLockObject);
+			//if (stringWidth(objects) > longestX)	 	longestX = stringWidth(objects);
+			if (strWidth(modifyType) > longestX) 			longestX = strWidth(modifyType);
+			if (strWidth(underMouse) > longestX) 			longestX = strWidth(underMouse);
+			if (strWidth(lastClicked) > longestX) 		longestX = strWidth(lastClicked);
+			if (strWidth(mousePos) > longestX) 			longestX = strWidth(mousePos);
 			
 			longestX += 5;
 			

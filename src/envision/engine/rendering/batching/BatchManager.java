@@ -1,15 +1,23 @@
 package envision.engine.rendering.batching;
 
 import envision.Envision;
-import envision.engine.rendering.fontRenderer.EStringOutputFormatter;
 import envision.engine.rendering.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.misc.Rotation;
 
+// order
+// 1. world map and entities horizontal layer by layer
+// 2. game hud
+// 3. top overlay
+// 4. debug text ?
+
 //https://www.youtube.com/watch?v=oDh80Hmv7jM
 public class BatchManager implements IBatchManager {
+	
+	// 255.0F but in decimal form
+	private static final float F_255 = 0.0039215686274509803921568627451f;
 	
 	public int maxLayers;
 	public BatchLayer[] availableLayers;
@@ -17,13 +25,16 @@ public class BatchManager implements IBatchManager {
 	protected int maxBatchSize;
 	protected int batchTexSlots;
 	protected BatchLayer curLayer;
+	protected boolean isEnabled = false;
+	
+	private int usedLayers = 1;
 	
 	//==============
 	// Constructors
 	//==============
 	
 	public BatchManager() {
-		this(100, 500, 16);
+		this(10, 500, 32);
 	}
 	
 	public BatchManager(int maxLayersIn, int maxBatchSizeIn, int texSlotsIn) {
@@ -38,13 +49,19 @@ public class BatchManager implements IBatchManager {
 		}
 	}
 	
-	public static void startBatch() { Envision.getRenderEngine().getBatchManager().startBatch_i(); }
-	public static void endBatch() { Envision.getRenderEngine().getBatchManager().endBatch_i(); }
+	private static BatchManager instance() { return Envision.getRenderEngine().getBatchManager(); }
+	
+	public static void startBatch() { instance().startBatch_i(); }
+	public static void endBatch() { instance().endBatch_i(); }
+	public static boolean isEnabled() { return instance().isEnabled; }
+	public static void enable() { instance().isEnabled = true; }
+	public static void disable() { instance().isEnabled = false; }
 	
 	protected void startBatch_i() {
 		var layer = getUnusedBatch();
 		curLayer = layer;
 		batchLayerStack.push(layer);
+		usedLayers += 1;
 	}
 	
 	protected void endBatch_i() {
@@ -54,7 +71,7 @@ public class BatchManager implements IBatchManager {
 		if (layer != null) layer.closeLayer();
 	}
 	
-	public BatchLayer getUnusedBatch() {
+	protected BatchLayer getUnusedBatch() {
 		for (int i = 0; i < availableLayers.length; i++) {
 			var batch = availableLayers[i];
 			if (!batch.isClosed && batch.isEmpty()) {
@@ -74,21 +91,21 @@ public class BatchManager implements IBatchManager {
 	 * 
 	 * @return The layer index that was just pushed onto the batch layer stack.
 	 */
-//	public int pushLayer() { return pushLayer(null); }
-//	public int pushLayer(String layerName) {
-//		if (batchLayerStack.size() >= maxLayers) {
-//			throw new RuntimeException("Out of room in batch layer stack!");
-//		}
-//		
-//		BatchLayer newLayer = availableLayers[batchLayerStack.size()];
-//		if (layerName == null) layerName = "";
-//		newLayer.setLayerName(layerName);
-//		batchLayerStack.push(newLayer);
-//		return batchLayerStack.size() - 1;
-//	}
-//	
+	public int pushLayer() { return pushLayer(null); }
+	public int pushLayer(String layerName) {
+		if (batchLayerStack.size() >= maxLayers) {
+			throw new RuntimeException("Out of room in batch layer stack!");
+		}
+		
+		BatchLayer newLayer = availableLayers[batchLayerStack.size()];
+		if (layerName == null) layerName = "";
+		newLayer.setLayerName(layerName);
+		batchLayerStack.push(newLayer);
+		return batchLayerStack.size() - 1;
+	}
+	
 	public static void pushLayerIndex() {
-		Envision.getRenderEngine().getBatchManager().pushLayerIndex_i();
+		instance().pushLayerIndex_i();
 	}
 	
 	public void pushLayerIndex_i() {
@@ -115,7 +132,7 @@ public class BatchManager implements IBatchManager {
 //	}
 //	
 	public static void popLayerIndex() {
-		Envision.getRenderEngine().getBatchManager().popLayerIndex_i();
+		instance().popLayerIndex_i();
 	}
 	
 	public void popLayerIndex_i() {
@@ -127,153 +144,11 @@ public class BatchManager implements IBatchManager {
 	// Methods
 	//=========
 	
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawString(Object o, double x, double y) { return drawString(toStr(o), x, y, EColors.white.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawString(Object o, double x, double y, EColors colorIn) { return drawString(toStr(o), x, y, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredString(Object o, double x, double y, EColors colorIn) { return drawCenteredString(toStr(o), x, y, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringWithShadow(Object o, double x, double y, EColors colorIn) { return drawStringWithShadow(toStr(o), x, y, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredStringWithShadow(Object o, double x, double y, EColors colorIn) { return drawCenteredStringWithShadow(toStr(o), x, y, colorIn.intVal); }
-	
-	
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawString(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, 1.0, 1.0, color, false, false, true); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredString(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, 1.0, 1.0, color, true, false, true); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringWithShadow(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, 1.0, 1.0, color, false, true, true); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredStringWithShadow(Object o, double x, double y, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, 1.0, 1.0, color, true, true, true); }
-	
-	
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawString(Object o, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, scaleX, scaleY, color, false, false, true); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredString(Object o, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, scaleX, scaleY, color, true, false, true); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringWithShadow(Object o, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, scaleX, scaleY, color, false, true, true); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawCenteredStringWithShadow(Object o, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(toStr(o), x, y, scaleX, scaleY, color, true, true, true); }
-	
-	
-	/** Draws a String at the specified position. */
-	public static double drawString(String text, double x, double y) { return drawString(text, x, y, EColors.white.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawString(String text, double x, double y, EColors colorIn) { return drawString(text, x, y, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawCenteredString(String text, double x, double y, EColors colorIn) { return drawCenteredString(text, x, y, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringWithShadow(String text, double x, double y, EColors colorIn) { return drawStringWithShadow(text, x, y, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawCenteredStringWithShadow(String text, double x, double y, EColors colorIn) { return drawCenteredStringWithShadow(text, x, y, colorIn.intVal); }
-	
-	
-	/** Draws a String at the specified position. */
-	public static double drawString(String text, double x, double y, double scaleX, double scaleY) { return drawString(text, x, y, scaleX, scaleY, EColors.white.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawString(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawString(text, x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawCenteredString(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawCenteredString(text, x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringWithShadow(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringWithShadow(text, x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawCenteredStringWithShadow(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawCenteredStringWithShadow(text, x, y, scaleX, scaleY, colorIn.intVal); }
-	
-	
-	/** Draws a String at the specified position. */
-	public static double drawString(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, 1.0, 1.0, color, false, false, true); }
-	/** Draws a String at the specified position. */
-	public static double drawCenteredString(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, 1.0, 1.0, color, true, false, true); }
-	/** Draws a String at the specified position. */
-	public static double drawStringWithShadow(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, 1.0, 1.0, color, false, true, true); }
-	/** Draws a String at the specified position. */
-	public static double drawCenteredStringWithShadow(String text, double x, double y, int color) { return EStringOutputFormatter.drawString(text, x, y, 1.0, 1.0, color, true, true, true); }
-	
-	
-	/** Draws a String at the specified position. */
-	public static double drawString(String text, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(text, x, y, scaleX, scaleY, color, false, false, true); }
-	/** Draws a String at the specified position. */
-	public static double drawCenteredString(String text, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(text, x, y, scaleX, scaleY, color, true, false, true); }
-	/** Draws a String at the specified position. */
-	public static double drawStringWithShadow(String text, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(text, x, y, scaleX, scaleY, color, false, true, true); }
-	/** Draws a String at the specified position. */
-	public static double drawCenteredStringWithShadow(String text, double x, double y, double scaleX, double scaleY, int color) { return EStringOutputFormatter.drawString(text, x, y, scaleX, scaleY, color, true, true, true); }
-	
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringC(Object o, double x, double y) { return drawStringC(toStr(o), x, y, EColors.white); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringC(Object o, double x, double y, EColors colorIn) { return drawStringC(toStr(o), x, y, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringS(Object o, double x, double y, EColors colorIn) { return drawStringS(toStr(o), x, y, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringCS(Object o, double x, double y, EColors colorIn) { return drawStringCS(toStr(o), x, y, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringC(Object o, double x, double y, int color) { return drawCenteredString(toStr(o), x, y, color); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringS(Object o, double x, double y, int color) { return drawStringWithShadow(toStr(o), x, y, color); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringCS(Object o, double x, double y, int color) { return drawCenteredStringWithShadow(toStr(o), x, y, color); }
-	
-	
-	/** Draws a String at the specified position. */
-	public static double drawStringC(String text, double x, double y, EColors colorIn) { return drawStringC(text, x, y, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringS(String text, double x, double y, EColors colorIn) { return drawStringS(text, x, y, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringCS(String text, double x, double y, EColors colorIn) { return drawStringCS(text, x, y, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringC(String text, double x, double y, int color) { return drawCenteredString(text, x, y, color); }
-	/** Draws a String at the specified position. */
-	public static double drawStringS(String text, double x, double y, int color) { return drawStringWithShadow(text, x, y, color); }
-	/** Draws a String at the specified position. */
-	public static double drawStringCS(String text, double x, double y, int color) { return drawCenteredStringWithShadow(text, x, y, color); }
-	
-	
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringC(Object o, double x, double y, double scaleX, double scaleY) { return drawStringC(toStr(o), x, y, scaleX, scaleY, EColors.white); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringC(Object o, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringC(toStr(o), x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringS(Object o, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringS(toStr(o), x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringCS(Object o, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringCS(toStr(o), x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringC(Object o, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredString(toStr(o), x, y, scaleX, scaleY, color); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringS(Object o, double x, double y, double scaleX, double scaleY, int color) { return drawStringWithShadow(toStr(o), x, y, scaleX, scaleY, color); }
-	/** Draws the toString representation of an object at the specified position. */
-	public static double drawStringCS(Object o, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredStringWithShadow(toStr(o), x, y, scaleX, scaleY, color); }
-	
-	
-	/** Draws a String at the specified position. */
-	public static double drawStringC(String text, double x, double y, double scaleX, double scaleY) { return drawStringC(text, x, y, scaleX, scaleY, EColors.white.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringS(String text, double x, double y, double scaleX, double scaleY) { return drawStringS(text, x, y, scaleX, scaleY, EColors.white.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringC(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringC(text, x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringS(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringS(text, x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringCS(String text, double x, double y, double scaleX, double scaleY, EColors colorIn) { return drawStringCS(text, x, y, scaleX, scaleY, colorIn.intVal); }
-	/** Draws a String at the specified position. */
-	public static double drawStringC(String text, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredString(text, x, y, scaleX, scaleY, color); }
-	/** Draws a String at the specified position. */
-	public static double drawStringS(String text, double x, double y, double scaleX, double scaleY, int color) { return drawStringWithShadow(text, x, y, scaleX, scaleY, color); }
-	/** Draws a String at the specified position. */
-	public static double drawStringCS(String text, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredStringWithShadow(text, x, y, scaleX, scaleY, color); }
-	
-	/** Returns a 'toString' representation of the given object. Accounts for null objets as well. */
-	private static String toStr(Object in) { return (in != null) ? in.toString() : "null"; }
-	
-	
 	public static void drawRect(double sx, double sy, double ex, double ey, EColors color) {
-		Envision.getRenderEngine().getBatchManager().drawRect_i(sx, sy, ex, ey, color.intVal);
+		instance().drawRect_i(sx, sy, ex, ey, color.intVal);
 	}
 	public static void drawRect(double sxIn, double syIn, double exIn, double eyIn, int colorIn) {
-		Envision.getRenderEngine().getBatchManager().drawRect_batch(sxIn, syIn, exIn, eyIn, colorIn);
+		instance().drawRect_batch(sxIn, syIn, exIn, eyIn, colorIn);
 	}
 	
 	protected void drawRect_i(double sx, double sy, double ex, double ey, EColors color) { drawRect_i(sx, sy, ex, ey, color.intVal); }
@@ -290,10 +165,10 @@ public class BatchManager implements IBatchManager {
 		float ex = (float) exIn;
 		float ey = (float) eyIn;
 		
-		float r = (colorIn >> 16 & 255) / 255.0F;
-		float g = (colorIn >> 8 & 255) / 255.0F;
-		float b = (colorIn & 255) / 255.0F;
-		float f = (colorIn >> 24 & 255) / 255.0F;
+		float r = (colorIn >> 16 & 255) * F_255;
+		float g = (colorIn >> 8 & 255) * F_255;
+		float b = (colorIn & 255) * F_255;
+		float f = (colorIn >> 24 & 255) * F_255;
 		
 		curBatch.vert(sx, sy, r, g, b, f);
 		curBatch.vert(sx, ey, r, g, b, f);
@@ -310,22 +185,22 @@ public class BatchManager implements IBatchManager {
 	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, boolean flip, int color) { drawTexture(tex, x, y, w, h, flip, Rotation.UP, color); }
 	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, boolean flip, Rotation rotation) { drawTexture(tex, x, y, w, h, flip, rotation, 0xffffffff); }
 	public static void drawTexture(GameTexture tex, double x, double y, double w, double h, boolean flip, Rotation rotation, int color) {
-		Envision.getRenderEngine().getBatchManager().drawTexture_i(tex, x, y, w, h, flip, rotation, color);
+		instance().drawTexture_i(tex, x, y, w, h, flip, rotation, color);
 	}
 	
-	protected void drawTexture_i(GameTexture tex, double x, double y, double w, double h) { drawTexture_i(tex, x, y, w, h, false, Rotation.UP, 0xffffffff); }
-	protected void drawTexture_i(GameTexture tex, double x, double y, double w, double h, int color) { drawTexture_i(tex, x, y, w, h, false, Rotation.UP, color); }
-	protected void drawTexture_i(GameTexture tex, double x, double y, double w, double h, Rotation rotation) { drawTexture_i(tex, x, y, w, h, false, rotation, 0xffffffff); }
-	protected void drawTexture_i(GameTexture tex, double x, double y, double w, double h, boolean flip) { drawTexture_i(tex, x, y, w, h, flip, Rotation.UP, 0xffffffff); }
-	protected void drawTexture_i(GameTexture tex, double x, double y, double w, double h, boolean flip, int color) { drawTexture_i(tex, x, y, w, h, flip, Rotation.UP, color); }
-	protected void drawTexture_i(GameTexture tex, double x, double y, double w, double h, boolean flip, Rotation rotation) { drawTexture_i(tex, x, y, w, h, flip, rotation, 0xffffffff); }
-	protected void drawTexture_i(GameTexture tex, double x, double y, double w, double h, boolean flip, Rotation rotation, int color) {
-		RenderBatch curBatch = getCurLayerBatch(tex);
+	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h) { drawTexture_i(texture, x, y, w, h, false, Rotation.UP, 0xffffffff); }
+	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, int color) { drawTexture_i(texture, x, y, w, h, false, Rotation.UP, color); }
+	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, Rotation rotation) { drawTexture_i(texture, x, y, w, h, false, rotation, 0xffffffff); }
+	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, boolean flip) { drawTexture_i(texture, x, y, w, h, flip, Rotation.UP, 0xffffffff); }
+	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, boolean flip, int color) { drawTexture_i(texture, x, y, w, h, flip, Rotation.UP, color); }
+	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, boolean flip, Rotation rotation) { drawTexture_i(texture, x, y, w, h, flip, rotation, 0xffffffff); }
+	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, boolean flip, Rotation rotation, int color) {
+		RenderBatch curBatch = getCurLayerBatch(texture);
 		if (curBatch == null) {
 			return;
 		}
 		
-		int texID = curBatch.addTexture(tex);
+		int texID = curBatch.addTexture(texture);
 		if (texID == -1) {
 			return;
 		}
@@ -335,37 +210,68 @@ public class BatchManager implements IBatchManager {
 		float ex = (float) (x + w);
 		float ey = (float) (y + h);
 		
-		float r = (color >> 16 & 255) / 255.0F;
-		float g = (color >> 8 & 255) / 255.0F;
-		float b = (color & 255) / 255.0F;
-		float f = (color >> 24 & 255) / 255.0F;
+		float r = (color >> 16 & 255) * F_255;
+		float g = (color >> 8 & 255) * F_255;
+		float b = (color & 255) * F_255;
+		float f = (color >> 24 & 255) * F_255;
 		
-		curBatch.vert(sx, sy, 0f, r, g, b, f, 0f, 0f, (float) texID);
-		curBatch.vert(sx, ey, 0f, r, g, b, f, 0f, 1f, (float) texID);
-		curBatch.vert(ex, ey, 0f, r, g, b, f, 1f, 1f, (float) texID);
-		curBatch.vert(ex, sy, 0f, r, g, b, f, 1f, 0f, (float) texID);
+		float tu1 = 0f, tv1 = 0f;
+		float tu2 = 0f, tv2 = 0f;
+		float tu3 = 0f, tv3 = 0f;
+		float tu4 = 0f, tv4 = 0f;
+		
+		switch (rotation) {
+		case UP:
+			tu1 = flip ? 1f : 0f; tv1 = 0f;
+			tu2 = flip ? 1f : 0f; tv2 = 1f;
+			tu3 = flip ? 0f : 1f; tv3 = 1f;
+			tu4 = flip ? 0f : 1f; tv4 = 0f;
+			break;
+		case LEFT:
+			tu1 = flip ? 0f : 1f; tv1 = 0f;
+			tu2 = flip ? 1f : 0f; tv2 = 0f;
+			tu3 = flip ? 1f : 0f; tv3 = 1f;
+			tu4 = flip ? 0f : 1f; tv4 = 1f;
+			break;
+		case RIGHT:
+			tu1 = flip ? 0f : 1f; tv1 = 1f;
+			tu2 = flip ? 1f : 0f; tv2 = 1f;
+			tu3 = flip ? 1f : 0f; tv3 = 0f;
+			tu4 = flip ? 0f : 1f; tv4 = 0f;
+			break;
+		case DOWN:
+			tu1 = flip ? 0f : 1f; tv1 = 1f;
+			tu2 = flip ? 0f : 1f; tv2 = 0f;
+			tu3 = flip ? 1f : 0f; tv3 = 0f;
+			tu4 = flip ? 1f : 0f; tv4 = 1f;
+			break;
+		}
+		
+		float tID = (float) texID;
+		
+		curBatch.vert(sx, sy, 0f, r, g, b, f, tu1, tv1, tID);
+		curBatch.vert(sx, ey, 0f, r, g, b, f, tu2, tv2, tID);
+		curBatch.vert(ex, ey, 0f, r, g, b, f, tu3, tv3, tID);
+		curBatch.vert(ex, sy, 0f, r, g, b, f, tu4, tv4, tID);
 		
 		curBatch.totalElements++;
 	}
 	
 	public static void drawTexture(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, EColors color) {
-		Envision.getRenderEngine().getBatchManager().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color.intVal, false);
+		instance().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color.intVal, false);
 	}
-	
 	public static void drawTexture(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, EColors color, boolean flip) {
-		Envision.getRenderEngine().getBatchManager().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color.intVal, flip);
+		instance().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color.intVal, flip);
 	}
-	
 	public static void drawTexture(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color) {
-		Envision.getRenderEngine().getBatchManager().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color, false);
+		instance().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color, false);
 	}
-	
 	public static void drawTexture(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color, boolean flip) {
-		Envision.getRenderEngine().getBatchManager().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color, flip);
+		instance().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color, flip);
 	}
 	
 	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color) {
-		drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color, false);
+		drawTexture_batch(texture, x, y, w, h, tX, tY, tW, tH, color, false);
 	}
 	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color, boolean flip) {
 		drawTexture_batch(texture, x, y, w, h, tX, tY, tW, tH, color, flip);
@@ -387,10 +293,10 @@ public class BatchManager implements IBatchManager {
 		float wVal = (float) (tW / (float) texture.getWidth());
 		float hVal = (float) (tH / (float) texture.getHeight());
 		
-		float r = (color >> 16 & 255) / 255.0F;
-		float g = (color >> 8 & 255) / 255.0F;
-		float b = (color & 255) / 255.0F;
-		float f = (color >> 24 & 255) / 255.0F;
+		float r = (color >> 16 & 255) * F_255;
+		float g = (color >> 8 & 255) * F_255;
+		float b = (color & 255) * F_255;
+		float f = (color >> 24 & 255) * F_255;
 		
 		//garbage duct-tape font bottom fix
 		hVal -= 0.005f;
@@ -410,10 +316,12 @@ public class BatchManager implements IBatchManager {
 		float draw_tex = (flip) ? tsx : tex;
 		float draw_tey = (flip) ? tey : tey;
 		
-		curBatch.vert(sx, sy, 0f, r, g, b, f, draw_tsx, draw_tsy, (float) texID);
-		curBatch.vert(sx, ey, 0f, r, g, b, f, draw_tsx, draw_tey, (float) texID);
-		curBatch.vert(ex, ey, 0f, r, g, b, f, draw_tex, draw_tey, (float) texID);
-		curBatch.vert(ex, sy, 0f, r, g, b, f, draw_tex, draw_tsy, (float) texID);
+		float tID = (float) texID;
+		
+		curBatch.vert(sx, sy, 0f, r, g, b, f, draw_tsx, draw_tsy, tID);
+		curBatch.vert(sx, ey, 0f, r, g, b, f, draw_tsx, draw_tey, tID);
+		curBatch.vert(ex, ey, 0f, r, g, b, f, draw_tex, draw_tey, tID);
+		curBatch.vert(ex, sy, 0f, r, g, b, f, draw_tex, draw_tsy, tID);
 		
 		curBatch.totalElements++;
 	}
@@ -434,8 +342,30 @@ public class BatchManager implements IBatchManager {
 		return curLayer.getWorkingBatch(texture);
 	}
 	
+	/**
+	 * Draws the contents of the current layers that have content in them and
+	 * then finally closes them.
+	 * <p>
+	 * NOTE: This method does not reset layer data and is intended to be used
+	 * in between frame draws.
+	 */
+	public static void drawCurrentLayers() {
+		instance().drawCurrentLayers_i();
+	}
+	
+	public void drawCurrentLayers_i() {
+		final int size = availableLayers.length;
+		for (int i = 0; i < size; i++) {
+			var layer = availableLayers[i];
+			if (layer.isEmpty() || layer.isClosed) continue;
+			
+			layer.drawLayer();
+			layer.closeLayer();
+		}
+	}
+	
 	public static void draw() {
-		Envision.getRenderEngine().getBatchManager().draw_i();
+		instance().draw_i();
 	}
 	
 	protected void draw_i() {
@@ -445,8 +375,8 @@ public class BatchManager implements IBatchManager {
 	
 	private void drawAll() {
 		//Collections.sort(batchLayerStack, (a, b) -> Integer.compare(a.layerNum, b.layerNum));
-		
-		int size = availableLayers.length;
+		//System.out.println("USED LAYERS: " + usedLayers);
+		final int size = availableLayers.length;
 		for (int i = 0; i < size; i++) {
 			var layer = availableLayers[i];
 			if (layer.isEmpty()) continue;
@@ -457,9 +387,11 @@ public class BatchManager implements IBatchManager {
 	
 	private void resetAllBatches() {
 		for (int i = 0; i < maxLayers; i++) {
+			//System.out.println("layer: " + i);
 			var layer = availableLayers[i];
 			layer.resetLayer();
 		}
+		usedLayers = 1;
 	}
 	
 	//private void openBatchLayer(int layer) { batchLayerStack.get(layer).openLayer(); }

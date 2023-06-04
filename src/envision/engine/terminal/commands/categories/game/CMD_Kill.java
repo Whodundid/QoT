@@ -36,7 +36,7 @@ public class CMD_Kill extends TerminalCommand {
 		
 		int id = Integer.parseInt(args.get(0));
 		for (var e : entities) {
-			if (e.getObjectID() == id) {
+			if (e.getWorldID() == id) {
 				Envision.theWorld.removeEntity(e);
 				termIn.writeln("Killed entity! " + id, EColors.lgreen);
 				break;

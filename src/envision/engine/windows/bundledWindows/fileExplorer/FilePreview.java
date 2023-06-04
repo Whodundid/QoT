@@ -1,14 +1,14 @@
 package envision.engine.windows.bundledWindows.fileExplorer;
 
-import eutil.colors.EColors;
-
 import java.io.File;
 
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.terminal.terminalUtil.FileType;
 import envision.engine.windows.windowTypes.WindowObject;
+import eutil.colors.EColors;
 
 public class FilePreview<E extends File> extends WindowObject<E> {
 	
@@ -45,8 +45,8 @@ public class FilePreview<E extends File> extends WindowObject<E> {
 	public void drawObject(int mXIn, int mYIn) {
 		super.drawObject(mXIn, mYIn);
 		
-		drawTexture(texture, startX, midY - texture.getWidth() / 2, 40, 40);
-		drawString(thePath.getName(), startX + 50, midY - FontRenderer.FONT_HEIGHT / 2);
+		RenderingManager.drawTexture(texture, startX, midY - texture.getWidth() / 2, 40, 40);
+		RenderingManager.drawString(thePath.getName(), startX + 50, midY - FontRenderer.FONT_HEIGHT / 2);
 		
 		//draw transparent highlight overlay
 		if (isHighlighted) {

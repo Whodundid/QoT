@@ -1,6 +1,6 @@
 package qot.screens.gameplay.combat;
 
-import envision.game.objects.entities.Entity;
+import envision.game.entities.Entity;
 
 /**
  * Used to keep track of all entities on one team.

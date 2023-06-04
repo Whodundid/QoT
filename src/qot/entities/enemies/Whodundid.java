@@ -1,9 +1,9 @@
 package qot.entities.enemies;
 
 import envision.Envision;
-import envision.game.objects.entities.Enemy;
+import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
@@ -47,8 +47,8 @@ public class Whodundid extends Enemy {
 		
 		if (Envision.thePlayer == null) return;
 		
-		EDimension testDim = getCollisionDims();
-		EDimension pDims = Envision.thePlayer.getCollisionDims();
+		Dimension_d testDim = getCollisionDims();
+		Dimension_d pDims = Envision.thePlayer.getCollisionDims();
 		
 		if (testDim.partiallyContains(pDims)) {
 			if (hit) {

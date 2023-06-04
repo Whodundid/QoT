@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryUtil;
 
 import envision.Envision;
 import envision.engine.inputHandlers.WindowResizeListener;
@@ -86,7 +87,15 @@ public class OpenGLContext extends RenderingContext {
 	
 	@Override
 	public void drawFrame() {
-		batchManager.draw();
+		BatchManager.draw();
+	}
+
+	@Override
+	public void destroy() {
+		GLFW.glfwMakeContextCurrent(MemoryUtil.NULL);
+		GL.destroy();
+		GL_ErrorReporter.destroy();
+		Shaders.destroy();
 	}
 	
 }

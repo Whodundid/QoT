@@ -63,7 +63,7 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 		drawRect(startX + widthRatio - (widthRatio / 2), endY - (heightRatio / 8), startX + widthRatio + (widthRatio / 2), endY - (heightRatio / 8) + 3, EColors.black); //base
 		drawRect(startX + 3, startY + 3, endX - 3, startY + heightRatio - 3, 0xffC9FFFF); //screen
 		
-		drawStringS("Select a location to draw " + drawName + ".", midX - getStringWidth("Select a location to draw " + drawName + ".") / 2, startY - heightRatio / 5 - 12, 0xb2b2b2);
+		drawStringS("Select a location to draw " + drawName + ".", midX - strWidth("Select a location to draw " + drawName + ".") / 2, startY - heightRatio / 5 - 12, 0xb2b2b2);
 		String msg = "";
 		switch (obj.getScreenLocation()) {
 		case BOT_LEFT: msg = "Bottom Left"; bLeft.drawRect(EColors.lred, -1); break;
@@ -75,8 +75,8 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 		default: msg = "Center"; break;
 		}
 		
-		drawStringS("Current Location: ", midX - getStringWidth("Current Location: " + msg) / 2, startY - heightRatio / 5, 0xffd800);
-		drawStringS(msg, midX - getStringWidth("Current Location: " + msg) / 2 + getStringWidth("Current Location: "), startY - heightRatio / 5, 0x00ff00);
+		drawStringS("Current Location: ", midX - strWidth("Current Location: " + msg) / 2, startY - heightRatio / 5, 0xffd800);
+		drawStringS(msg, midX - strWidth("Current Location: " + msg) / 2 + strWidth("Current Location: "), startY - heightRatio / 5, 0x00ff00);
 		
 		super.drawObject(mX, mY);
 	}

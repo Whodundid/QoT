@@ -9,7 +9,7 @@ import envision.engine.windows.windowObjects.actionObjects.WindowCheckBox;
 import envision.engine.windows.windowObjects.actionObjects.WindowSlider;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.objects.effects.sounds.SoundEngine;
+import envision.game.effects.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import qot.settings.QoTSettings;
@@ -50,7 +50,7 @@ public class OptionsScreen extends GameScreen {
 		
 		boolean fs = QoTSettings.fullscreen.get();
 		String fText = (fs) ? "Disable FullScreen" : "Enable FullScreen";
-		double fsW = FontRenderer.getStringWidth("Disable FullScreen") + 40;
+		double fsW = FontRenderer.strWidth("Disable FullScreen") + 40;
 		fullscreen = new WindowButton(this, upsInput.startX, upsInput.endY + 20, fsW, 35, fText);
 		
 		boolean vS = QoTSettings.vsync.get();

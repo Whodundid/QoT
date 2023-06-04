@@ -1,10 +1,12 @@
 package envision.engine.rendering;
 
 import envision.Envision;
+import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.renderingAPI.RendererContextType;
 import envision.engine.rendering.renderingAPI.RenderingContext;
 import envision.engine.rendering.renderingAPI.opengl.OpenGLContext;
+import qot.assets.textures.general.GeneralTextures;
 
 public class RenderEngine {
 	
@@ -60,12 +62,60 @@ public class RenderEngine {
 		init = true;
 	}
 	
+//	protected void setupBatches() {
+//		BatchManager batchMan = getBatchManager();
+//		
+//		batchMan.pushLayerIndex();
+//	}
+	
+	public void destroy() {
+		if (renderingContext != null) {
+			renderingContext.destroy();
+			renderingContext = null;
+		}
+	}
 	
 	//================
 	// Internal Ticks
 	//================
 	
-	public void drawFrame() {
+	public void draw(long partialTicks) {
+		
+		//-----------------------------------------
+		
+		// draw map and entities
+		if (Envision.theWorld != null && Envision.theWorld.isLoaded() && !Envision.isWorldRenderPaused()) {
+			BatchManager.startBatch();
+			Envision.theWorld.getWorldRenderer().onRenderTick(partialTicks);
+			BatchManager.endBatch();
+		}
+		
+		//-----------------------------------------
+		
+		// draw current game screen
+		BatchManager.startBatch();
+		if (Envision.currentScreen != null) {
+			Envision.currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
+		}
+		// if there wasn't a screen, draw the 'no screens' stuff
+		else {
+			RenderingManager.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
+			RenderingManager.drawString("No Screens?", 256, 256);
+		}
+		BatchManager.endBatch();
+		
+		//-----------------------------------------
+		
+		// draw top overlay
+		BatchManager.startBatch();
+		Envision.topScreen.onRenderTick();
+		BatchManager.endBatch();
+		
+		//-----------------------------------------
+		
+	}
+	
+	public void endFrame() {
 		renderingContext.drawFrame();
 		renderingContext.swapBuffers();
 	}

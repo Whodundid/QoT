@@ -8,8 +8,8 @@ import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.game.objects.entities.Entity;
-import envision.game.objects.entities.EntityLevel;
+import envision.game.entities.Entity;
+import envision.game.entities.EntityLevel;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import qot.assets.textures.window.WindowTextures;
@@ -115,6 +115,8 @@ public class CharacterScreen extends GameScreen {
 				IWindowObject.setVisible(false, upHealth, upStrength, upMana);
 			}
 		}
+		
+		drawString("Damage per hit: " + EColors.lred + theEntity.getBaseMeleeDamage(), 50, midY + dH / 2);
 	}
 	
 	private void drawChar() {

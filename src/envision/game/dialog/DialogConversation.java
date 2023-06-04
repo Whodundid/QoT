@@ -1,6 +1,6 @@
 package envision.game.dialog;
 
-import envision.game.objects.entities.Entity;
+import envision.game.entities.Entity;
 import eutil.datatypes.util.EList;
 
 public class DialogConversation {

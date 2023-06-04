@@ -40,7 +40,9 @@ public class EntityTextures extends TextureLoader {
 	
 	whobro_blink0 = new GameTexture(textureDir + "whodundidsbrother\\", "whobro_blink0.png"),
 	whobro_blink1 = new GameTexture(textureDir + "whodundidsbrother\\", "whobro_blink1.png"),
-	whobro_blink2 = new GameTexture(textureDir + "whodundidsbrother\\", "whobro_blink2.png");
+	whobro_blink2 = new GameTexture(textureDir + "whodundidsbrother\\", "whobro_blink2.png"),
+	
+	fireBall_projectile = new GameTexture(textureDir + "../projectiles/", "fireball.png");
 	
 	//-----------
 	// Overrides
@@ -62,6 +64,8 @@ public class EntityTextures extends TextureLoader {
 		reg(sys, whobro_blink0);
 		reg(sys, whobro_blink1);
 		reg(sys, whobro_blink2);
+		
+		reg(sys, fireBall_projectile);
 	}
 	
 }

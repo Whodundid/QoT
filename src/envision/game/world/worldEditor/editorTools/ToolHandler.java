@@ -73,7 +73,7 @@ public class ToolHandler {
 		switch (editor.getSettings().getCurrentTool()) {
 		case SELECTOR: selectorTool.drawTool(x, y, w, h); break;
 		case ADD_REGION: regionTool.drawTool(x, y, w, h); break;
-		case BRUSH: break;
+		case BRUSH: brushTool.drawTool(x, y, w, h); break;
 		case ERASER: break; //always press
 		case EYEDROPPER: break; //always press
 		case LINE: break;
@@ -123,7 +123,7 @@ public class ToolHandler {
 		switch (toolIn) {
 		case SELECTOR: selectorTool.distributeEvent(event, button); break;
 		case ADD_REGION: regionTool.distributeEvent(event, button); break;
-		case BRUSH: break;
+		case BRUSH: brushTool.distributeEvent(event, button); break;
 		case ERASER: eraserTool.distributeEvent(event, button); break; //always press
 		case EYEDROPPER: eyeDropperTool.distributeEvent(event, button); break; //always press
 		case LINE: break;

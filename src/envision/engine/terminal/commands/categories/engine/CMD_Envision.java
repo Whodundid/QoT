@@ -3,7 +3,7 @@ package envision.engine.terminal.commands.categories.engine;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision_lang.EnvisionLang;
-import envision_lang._launch.EnvisionLaunchSettings;
+import envision_lang._launch.EnvisionEnvironmnetSettings;
 import envision_lang._launch.EnvisionProgram;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
@@ -44,7 +44,7 @@ public class CMD_Envision extends TerminalCommand {
 			for (int i = 0; i < modifiers.size(); i++) {
 				toParse.add(modifiers.get(i));
 			}
-			var launchArgs = EnvisionLaunchSettings.of(toParse);
+			var launchArgs = EnvisionEnvironmnetSettings.of(toParse);
 			program.setLaunchArgs(launchArgs);
 		}
 		

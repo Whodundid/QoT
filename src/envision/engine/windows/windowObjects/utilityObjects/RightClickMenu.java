@@ -24,7 +24,7 @@ public class RightClickMenu extends ActionWindowParent {
 	
 	protected BoxList<String, WindowButton<?>> options = new BoxList<>();
 	//public WindowLabel<?> title;
-	public String title;
+	public String title = "";
 	public boolean useTitle = false;
 	protected boolean dontCloseOnPress = false;
 	public int optionHeight = 40;
@@ -264,20 +264,20 @@ public class RightClickMenu extends ActionWindowParent {
 		double sY = startY;
 		
 		for (var s : options.getAVals()) {
-			int w = getStringWidth(s);
+			int w = FontRenderer.strWidth(s);
 			if (w > longestOption) longestOption = w;
 		}
 		
 		if (useTitle) {
-			int len = getStringWidth(title);
+			int len = FontRenderer.strWidth(title);
 			if (len > longestOption) longestOption = len;
 		}
 		
 		newWidth = longestOption + 60;
 		
 		double testHeight = startY + newHeight;
-		if (testHeight > res.getHeight()) {
-			double diff = testHeight - res.getHeight();
+		if (testHeight > res.height) {
+			double diff = testHeight - res.height;
 			sY -= diff;
 		}
 		

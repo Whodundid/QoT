@@ -1,7 +1,7 @@
 package qot.particles;
 
 import envision.Envision;
-import envision.game.objects.effects.particles.Particle;
+import envision.game.effects.particles.Particle;
 import eutil.colors.EColors;
 
 public class PointerPress extends Particle {

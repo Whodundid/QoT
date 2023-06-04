@@ -2,7 +2,7 @@ package qot.screens.character;
 
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.WindowObject;
-import envision.game.objects.items.Item;
+import envision.game.items.Item;
 import eutil.colors.EColors;
 
 public class InventorySlot extends WindowObject {

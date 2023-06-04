@@ -1,9 +1,9 @@
 package envision.game.world.dungeonBuilder;
 
 public enum DungeonSize {
-	SMALL(45, 45),
-	MEDIUM(60, 60),
-	LARGE(75, 75),
+	SMALL(50, 45),
+	MEDIUM(100, 100),
+	LARGE(200, 200),
 	;
 	
 	public final int width;

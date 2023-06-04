@@ -10,7 +10,7 @@ import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.objects.effects.sounds.SoundEngine;
+import envision.game.effects.sounds.SoundEngine;
 import envision.game.world.GameWorld;
 import envision.game.world.worldEditor.MapMenuScreen;
 import eutil.colors.EColors;
@@ -235,10 +235,11 @@ public class MainMenuScreen extends GameScreen {
 		}
 		
 		opacity = ENumUtil.clamp(opacity, 0, 255);
+		final var color = EColors.lgray.opacity(opacity);
 		
 		for (int i = 0; i < numY; i++) {
 			for (int j = 0; j < numX; j++) {
-				drawTexture(tex, tW * j, tH * i, tW, tH, EColors.lgray.opacity(opacity));
+				drawTexture(tex, tW * j, tH * i, tW, tH, color);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 package envision.game.world.dungeonBuilder;
 
-import envision.game.objects.entities.EntitySpawn;
+import envision.game.entities.EntitySpawn;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.EArrayList;
 import eutil.misc.Direction;

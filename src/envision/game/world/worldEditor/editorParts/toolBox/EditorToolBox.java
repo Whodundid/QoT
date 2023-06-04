@@ -3,6 +3,7 @@ package envision.game.world.worldEditor.editorParts.toolBox;
 import static envision.game.world.worldEditor.editorTools.EditorToolType.*;
 
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowObjects.actionObjects.WindowSlider;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowObjects.basicObjects.WindowRect;
 import envision.engine.windows.windowTypes.WindowObject;
@@ -12,7 +13,7 @@ import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorTools.EditorToolType;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class EditorToolBox extends WindowObject {
 	
@@ -20,7 +21,7 @@ public class EditorToolBox extends WindowObject {
 	
 	MapEditorScreen editor;
 	//EArrayList<ToolCategory> tools = new EArrayList();
-	EArrayList<WindowButton<EditorToolType>> toolButtons = new EArrayList();
+	EList<WindowButton<EditorToolType>> toolButtons = EList.newList();
 	
 	/** The physical square size of each tool button. */
 	int toolSize = 40;
@@ -29,10 +30,20 @@ public class EditorToolBox extends WindowObject {
 	/** The maximum number of tools displayed on each row. */
 	int rowWidth = 2;
 	
+	WindowSlider sizeSlider;
+	
+	//==============
+	// Constructors
+	//==============
+	
 	public EditorToolBox(MapEditorScreen in) {
 		editor = in;
 		init(in, 5, editor.getTopHeader().endY + 15);
 	}
+	
+	//===========
+	// Overrides
+	//===========
 	
 	@Override
 	public void initChildren() {
@@ -93,10 +104,10 @@ public class EditorToolBox extends WindowObject {
 		double curY = startY + 2;
 		for (int c = 0; c < categories.length; c++) {
 			ToolCategory cat = categories[c];
-			if (cat == null) { continue; }
+			if (cat == null) continue;
 			int rows = (int) (Math.ceil((double) cat.getTypes().size() / (double) rowWidth));
 			
-			EArrayList<WindowButton<EditorToolType>> buttons = cat.buildButtons(this);
+			EList<WindowButton<EditorToolType>> buttons = cat.buildButtons(this);
 			
 			for (int i = 0; i < buttons.size(); i++) {
 				WindowButton<EditorToolType> button = buttons.get(i);

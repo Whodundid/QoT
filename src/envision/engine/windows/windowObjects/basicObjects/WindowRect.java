@@ -2,7 +2,7 @@ package envision.engine.windows.windowObjects.basicObjects;
 
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 //Author: Hunter Bragg
 
@@ -23,10 +23,10 @@ public class WindowRect<E> extends WindowShape<E> {
 		color = colorIn;
 	}
 	
-	public WindowRect(IWindowObject<?> parentIn, EDimension dims) { this(parentIn, dims, true, EColors.black.intVal); }
-	public WindowRect(IWindowObject<?> parentIn, EDimension dims, boolean filledIn) { this(parentIn, dims, filledIn, EColors.black.intVal); }
-	public WindowRect(IWindowObject<?> parentIn, EDimension dims, boolean filledIn, EColors colorIn) { this(parentIn, dims, filledIn, colorIn.intVal); }
-	public WindowRect(IWindowObject<?> parentIn, EDimension dims, boolean filledIn, int colorIn) {
+	public WindowRect(IWindowObject<?> parentIn, Dimension_d dims) { this(parentIn, dims, true, EColors.black.intVal); }
+	public WindowRect(IWindowObject<?> parentIn, Dimension_d dims, boolean filledIn) { this(parentIn, dims, filledIn, EColors.black.intVal); }
+	public WindowRect(IWindowObject<?> parentIn, Dimension_d dims, boolean filledIn, EColors colorIn) { this(parentIn, dims, filledIn, colorIn.intVal); }
+	public WindowRect(IWindowObject<?> parentIn, Dimension_d dims, boolean filledIn, int colorIn) {
 		init(parentIn, dims.startX, dims.startY, dims.endX, dims.endY);
 		filled = filledIn;
 		color = colorIn;

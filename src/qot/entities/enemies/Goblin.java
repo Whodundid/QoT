@@ -1,9 +1,9 @@
 package qot.entities.enemies;
 
 import envision.Envision;
-import envision.game.objects.entities.Enemy;
+import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
@@ -62,8 +62,8 @@ public class Goblin extends Enemy {
 			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
 			//headText = (int) distToPlayer + " : " + dirToPlayer;
 			
-			EDimension testDim = getCollisionDims();
-			EDimension pDims = Envision.thePlayer.getCollisionDims();
+			Dimension_d testDim = getCollisionDims();
+			Dimension_d pDims = Envision.thePlayer.getCollisionDims();
 			
 			headText = "" + getHealth();
 			if (testDim.partiallyContains(pDims)) {

@@ -1,28 +1,32 @@
 package envision.game.shops;
 
-import java.util.ArrayList;
-
-import envision.game.objects.items.Item;
-import qot.items.potions.healing.Healing_Lesser;
+import envision.game.entities.Entity;
+import envision.game.items.Item;
+import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class Shop {
 	
-	ArrayList<Item> shopInventory = new ArrayList();
-	Item lesserHealingPotion = new Healing_Lesser();
+	private int inventorySize = 6;
+	private EList<Item> shopInventory = new EArrayList<>();
+	private Shopkeeper shopkeeper;
 	
-	public Shop() {
-		
-	}
-	
-	public void buyItem() {
-		
-	}
-	
-	public void sellItem() {
-		
-	}
-	
+	//==============
 	// Shop Methods
+	//==============
+	
+	public ShopTransactionResult buyItemAtSlot(Entity buyingEntity, int slot) {
+		//if (buyingEntity == null) return fail_buy("The entity trying to buy is null!");
+		//if (!checkSlot(slot)) return fail_buy("The given item slot is out of range!");
+		
+		//return fail_buy("No item selected!");
+		return null;
+	}
+	
+	public ShopTransactionResult sellItem(Item toSell) {
+		//return fail_sell(toSell, "Generic failure reason!");
+		return null;
+	}
 	
 	public void addItem(Item in) {
 		if (in != null) {
@@ -30,11 +34,18 @@ public class Shop {
 		}
 	}
 	
-	//... means array
 	public void storeItems(Item... in) {
 		for (Item i : in) {
 			addItem(i);
 		}
+	}
+	
+	/**
+	 * Internal check to see if the given item slot is actually in this shop
+	 * inventory's range.
+	 */
+	private boolean checkSlot(int slot) {
+		return slot >= 0 && slot < inventorySize;
 	}
 	
 	public Item getItem(String nameIn) {
@@ -60,7 +71,10 @@ public class Shop {
 		return theItem;
 	}
 	
-	public ArrayList<Item> getItems() {
+	public EList<Item> getItems() {
 		return shopInventory;
 	}
+	
+	//fail_buy(Entity buyer) { return ShopTransactionResult.base(buyer, this)
+	
 }

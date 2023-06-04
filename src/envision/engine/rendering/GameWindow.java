@@ -9,8 +9,8 @@ import org.lwjgl.system.MemoryStack;
 
 import envision.engine.windows.WindowSize;
 import eutil.datatypes.points.Point2i;
-import eutil.math.dimensions.EDimension;
-import eutil.math.dimensions.EDimensionI;
+import eutil.math.dimensions.Dimension_d;
+import eutil.math.dimensions.Dimension_i;
 
 public class GameWindow {
 	
@@ -23,7 +23,7 @@ public class GameWindow {
 	/** An index referring to the specific computer monitor this window is being drawn on. */
 	private int monitorIndex;
 	/** The most recently known dimensions of this game window on screen. */
-	private EDimension windowDims = new EDimension();
+	private Dimension_d windowDims = new Dimension_d();
 	/** The title of the window. */
 	private String windowTitle;
 	
@@ -109,9 +109,14 @@ public class GameWindow {
 	public int getY() { return (int) getWindowPosition().y; }
 	
 	/** Returns the screen dimensions of where this window is located on the screen. */
-	public EDimensionI getWindowDims() {
+	public Dimension_i getWindowDims() {
 		Point2i pos = getWindowPosition();
-		return new EDimensionI(pos.x, pos.y, pos.x + width, pos.y + height);
+		return new Dimension_i(pos.x, pos.y, pos.x + width, pos.y + height);
+	}
+	
+	public void destroy() {
+		GLFW.glfwDestroyWindow(windowHandle);
+		GLFW.glfwTerminate();
 	}
 	
 	public long getWindowHandle() { return windowHandle; }

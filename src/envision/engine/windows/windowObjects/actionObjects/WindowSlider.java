@@ -1,14 +1,14 @@
 package envision.engine.windows.windowObjects.actionObjects;
 
-import eutil.datatypes.boxes.Box2;
-import eutil.math.ENumUtil;
-
 import java.text.DecimalFormat;
 
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
+import eutil.datatypes.points.Point2i;
+import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
@@ -34,7 +34,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 	private double thumbEndX = 0, thumbEndY = 0;
 	public double defaultVal = 0;
 	protected boolean continuouslyRunAction = true;
-	protected Box2<Integer, Integer> mousePos = new Box2<>(0, 0);
+	protected Point2i mousePos = new Point2i();
 	
 	//--------------
 	// Constructors
@@ -64,9 +64,9 @@ public class WindowSlider<E> extends ActionObject<E> {
 	
 	@Override
 	public void drawObject(int mX, int mY) {
-		if (isSliding && mousePos != null && mousePos.getA() != null && mousePos.getB() != null) {
-			if (vertical) { moveThumb(0, mY - mousePos.getB()); }
-			else { moveThumb(mX - mousePos.getA(), 0); }
+		if (isSliding && mousePos != null) {
+			if (vertical) moveThumb(0, mY - mousePos.y);
+			else moveThumb(mX - mousePos.x, 0);
 			mousePos.set(mX, mY);
 		}
 		
@@ -81,14 +81,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 		}
 		
 		if (drawDisplayString && displayValue != null && !displayValue.isEmpty()) {
-			if (vertical && getStringWidth(displayValue) > width) {
-				//GlStateManager.pushMatrix();
-				//double xPos = midX;
-				//double yPos = midY;
-				//GlStateManager.translate(xPos, yPos, 0);
-				//GlStateManager.rotate(90f, 0f, 0f, 45f);
-				//GlStateManager.translate(-xPos, -yPos, 0);
-				
+			if (vertical && FontRenderer.strWidth(displayValue) > width) {
 				drawStringC(displayValue, midX, midY - 8, displayValueColor);
 			}
 			else {

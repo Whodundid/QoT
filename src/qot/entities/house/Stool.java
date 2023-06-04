@@ -1,10 +1,10 @@
 package qot.entities.house;
 
-import envision.game.objects.entities.Entity;
+import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
 
-public class Stool extends Entity {
+public class Stool extends BasicRenderedEntity {
 
 	public Stool() { this(0, 0); }
 	public Stool(int x, int y) {

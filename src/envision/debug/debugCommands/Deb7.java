@@ -1,9 +1,9 @@
 package envision.debug.debugCommands;
 
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.game.objects.IDrawable;
-import envision.game.objects.InsertionSort;
-import envision.game.objects.entities.EntityLevel;
+import envision.game.entities.EntityLevel;
+import envision.game.util.IDrawable;
+import envision.game.util.InsertionSort;
 import eutil.datatypes.EArrayList;
 
 @SuppressWarnings("unused")

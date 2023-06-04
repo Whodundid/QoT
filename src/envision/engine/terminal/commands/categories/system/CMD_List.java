@@ -25,7 +25,7 @@ public class CMD_List extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "list"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("l"); }
+	@Override public EList<String> getAliases() { return new EArrayList<>(); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to list various things. (mods, players, etc.)"; }
 	@Override public String getUsage() { return "ex: list screens"; }
 	

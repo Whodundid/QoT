@@ -6,6 +6,7 @@ import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
@@ -16,7 +17,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	// Fields
 	//--------
 	
-	private EArrayList<GameTexture> images = new EArrayList();
+	private EList<GameTexture> images = new EArrayList<>();
 	private int borderColor = EColors.black.c();
 	private int backgroundColor = EColors.vdgray.c();
 	private boolean drawImage = true;
@@ -131,7 +132,7 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	// Getters
 	//---------
 	
-	public EArrayList<GameTexture> getImages() { return images; }
+	public EList<GameTexture> getImages() { return images; }
 	public int getBorderColor() { return borderColor; }
 	public int getBackgroundColor() { return backgroundColor; }
 	public long getUpdateInterval() { return updateInterval; }

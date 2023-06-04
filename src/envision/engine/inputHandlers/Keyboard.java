@@ -124,6 +124,13 @@ public class Keyboard extends GLFWKeyCallback {
 	// Static Methods
 	//----------------
 	
+	public static void destroy() {
+		if (instance != null) {
+			instance.free();
+			instance = null;
+		}
+	}
+	
 	/**
 	 * Returns true if the given key is pressed.
 	 * 

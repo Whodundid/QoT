@@ -11,7 +11,7 @@ import envision.game.world.worldEditor.editorParts.sidePanel.toolPanels.scriptTo
 import envision.game.world.worldEditor.editorParts.sidePanel.toolPanels.terrainTool.TerrainSidePanel;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 public class EditorSidePanel extends WindowObject {
 	
@@ -30,7 +30,7 @@ public class EditorSidePanel extends WindowObject {
 	
 	protected MapEditorScreen editor;
 	protected EditorMiniMap miniMap;
-	protected EDimension panelDims;
+	protected Dimension_d panelDims;
 	
 	protected SidePanel currentPanel = null, lastPanel = null;
 	
@@ -51,7 +51,7 @@ public class EditorSidePanel extends WindowObject {
 		int py = (int) miniMap.endY + 5;
 		
 		//apply panelDims
-		panelDims = new EDimension(sx + 5, py, Envision.getWidth() - 5, Envision.getHeight() - 5);
+		panelDims = new Dimension_d(sx + 5, py, Envision.getWidth() - 5, Envision.getHeight() - 5);
 		
 		terrainTool = new TerrainSidePanel(this, in);
 		assetTool = new AssetSidePanel(this, in);
@@ -96,7 +96,7 @@ public class EditorSidePanel extends WindowObject {
 	
 	public SidePanelType getCurrentPanelType() { return (currentPanel != null) ? currentPanel.type : SidePanelType.NONE; }
 	public MapEditorScreen getEditor() { return editor; }
-	public EDimension getPanelDims() { return panelDims; }
+	public Dimension_d getPanelDims() { return panelDims; }
 	public EditorMiniMap getMiniMap() { return miniMap; }
 	
 	//---------

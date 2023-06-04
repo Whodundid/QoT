@@ -6,7 +6,7 @@ import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.ActionWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
@@ -25,7 +25,7 @@ public class WindowDialogueBox extends ActionWindowParent {
 	
 	public int messageColor = 0xffffffff, titleColor = 0xffffffff;
 	public String message = "", title = "";
-	protected EArrayList<String> wordWrappedLines;
+	protected EList<String> wordWrappedLines;
 	protected IWindowObject<?> defaultObject;
 	protected WindowButton yes, no, okButton;
 	protected DialogBoxTypes type;

@@ -447,7 +447,8 @@ public class QoTInstaller {
 			}
 			
 			//begin the attempt to extract data from development dir
-			return verifyDevDir(dir, new File(toDir, fromPath));
+			var fromDir = new File(toDir, fromPath);
+			return verifyDevDir(dir, fromDir);
 		}
 	}
 	
@@ -532,6 +533,10 @@ public class QoTInstaller {
 	 *                     directory
 	 */
 	private static boolean verifyDevDir(File fromDir, File toDir) throws IOException {
+		if (fromDir == null) {
+			System.err.println("QoTInstaller: 'verifyDevDir': fromDir is somehow null!");
+			return false;
+		}
 		for (File f : fromDir.listFiles()) {
 			if (f.isDirectory()) {
 				var sub = new File(toDir.getAbsolutePath() + "\\" + f.getName());
@@ -640,8 +645,8 @@ public class QoTInstaller {
 			//try { verified &= verifyDir("shaders", resourcesDir); }
 			//catch (Exception e) { e.printStackTrace(); throw e; }
 			//verify bundled maps in install dir
-			try { verified &= verifyDir("editorWorlds", dir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
+			//try { verified &= verifyDir("editorWorlds", dir); }
+			//catch (Exception e) { e.printStackTrace(); throw e; }
 			try { verified &= verifyDir("menuWorlds", dir); }
 			catch (Exception e) { e.printStackTrace(); throw e; }
 		}

@@ -1,5 +1,6 @@
 package envision.engine.windows.windowObjects.basicObjects;
 
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 
@@ -77,7 +78,7 @@ public class WindowContainer<E> extends WindowObject<E> {
 	// Setters
 	//---------
 	
-	public void setTitle(String stringIn) { title = stringIn; titleWidth = getStringWidth(stringIn); }
+	public void setTitle(String stringIn) { title = stringIn; titleWidth = FontRenderer.strWidth(stringIn); }
 	public void setTitleColor(int colorIn) { titleColor = colorIn; }
 	public void setBorderColor(int colorIn) { borderColor = colorIn; }
 	public void setBackgroundColor(int colorIn) { backgroundColor = colorIn; }

@@ -14,6 +14,7 @@ import envision.engine.terminal.commands.categories.engine.CMD_Envision;
 import envision.engine.terminal.commands.categories.engine.CMD_FPS;
 import envision.engine.terminal.commands.categories.engine.CMD_Help;
 import envision.engine.terminal.commands.categories.engine.CMD_ReloadTextures;
+import envision.engine.terminal.commands.categories.engine.CMD_RenderSettings;
 import envision.engine.terminal.commands.categories.engine.CMD_SetVolume;
 import envision.engine.terminal.commands.categories.engine.CMD_Shutdown;
 import envision.engine.terminal.commands.categories.engine.CMD_TPS;
@@ -22,7 +23,9 @@ import envision.engine.terminal.commands.categories.fileSystem.CMD_Cat;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Cd;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Cp;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Edit;
+import envision.engine.terminal.commands.categories.fileSystem.CMD_Files;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Head;
+import envision.engine.terminal.commands.categories.fileSystem.CMD_L;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Ls;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Lsblk;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_MkDir;
@@ -33,6 +36,7 @@ import envision.engine.terminal.commands.categories.fileSystem.CMD_Rm;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_RmDir;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Tail;
 import envision.engine.terminal.commands.categories.game.CMD_CreateDungeon;
+import envision.engine.terminal.commands.categories.game.CMD_GiveItem;
 import envision.engine.terminal.commands.categories.game.CMD_God;
 import envision.engine.terminal.commands.categories.game.CMD_Kill;
 import envision.engine.terminal.commands.categories.game.CMD_ListEntities;
@@ -43,7 +47,9 @@ import envision.engine.terminal.commands.categories.game.CMD_PlaySong;
 import envision.engine.terminal.commands.categories.game.CMD_ReloadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_SaveWorld;
 import envision.engine.terminal.commands.categories.game.CMD_SetWorldUnderground;
+import envision.engine.terminal.commands.categories.game.CMD_SetXP;
 import envision.engine.terminal.commands.categories.game.CMD_SpawnEntity;
+import envision.engine.terminal.commands.categories.game.CMD_Speed;
 import envision.engine.terminal.commands.categories.game.CMD_TransposeOld;
 import envision.engine.terminal.commands.categories.game.CMD_UnloadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_WorldInfo;
@@ -57,6 +63,7 @@ import envision.engine.terminal.commands.categories.system.CMD_JavaTrace;
 import envision.engine.terminal.commands.categories.system.CMD_List;
 import envision.engine.terminal.commands.categories.system.CMD_ReregisterCommands;
 import envision.engine.terminal.commands.categories.system.CMD_Runtime;
+import envision.engine.terminal.commands.categories.system.CMD_SU;
 import envision.engine.terminal.commands.categories.system.CMD_System;
 import envision.engine.terminal.commands.categories.system.CMD_WhoAmI;
 import envision.engine.terminal.commands.categories.windows.CMD_ClearObjects;
@@ -132,6 +139,8 @@ public class TerminalCommandHandler {
 		registerCommand(new CMD_TransposeOld(), termIn, runVisually);
 		
 		//file system
+		registerCommand(new CMD_Files(), termIn, runVisually);
+		registerCommand(new CMD_L(), termIn, runVisually);
 		registerCommand(new CMD_Ls(), termIn, runVisually);
 		registerCommand(new CMD_Cd(), termIn, runVisually);
 		registerCommand(new CMD_Pwd(), termIn, runVisually);
@@ -167,6 +176,9 @@ public class TerminalCommandHandler {
 		registerCommand(new CMD_ReloadWorld(), termIn, runVisually);
 		registerCommand(new CMD_Config(), termIn, runVisually);
 		registerCommand(new CMD_God(), termIn, runVisually);
+		registerCommand(new CMD_Speed(), termIn, runVisually);
+		registerCommand(new CMD_SetXP(), termIn, runVisually);
+		registerCommand(new CMD_GiveItem(), termIn, runVisually);
 		
 		//system
 		registerCommand(new CMD_Calculator(), termIn, runVisually);
@@ -191,6 +203,8 @@ public class TerminalCommandHandler {
 		registerCommand(new CMD_System(), termIn, runVisually);
 		registerCommand(new CMD_Version(), termIn, runVisually);
 		registerCommand(new CMD_WhoAmI(), termIn, runVisually);
+		registerCommand(new CMD_RenderSettings(), termIn, runVisually);
+		registerCommand(new CMD_SU(), termIn, runVisually);
 		
 		//windows
 		registerCommand(new CMD_CloseWindow(), termIn, runVisually);

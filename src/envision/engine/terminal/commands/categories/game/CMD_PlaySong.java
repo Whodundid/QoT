@@ -2,8 +2,8 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.game.objects.effects.sounds.Audio;
-import envision.game.objects.effects.sounds.SoundEngine;
+import envision.game.effects.sounds.Audio;
+import envision.game.effects.sounds.SoundEngine;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;

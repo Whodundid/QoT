@@ -3,16 +3,18 @@ package qot.launcher;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eutil.date.EDateTime;
 import eutil.strings.EStringUtil;
 
 public class LauncherLogger {
 	
-	private static final Logger logger = Logger.getLogger("Launcher");
+	private static final Logger logger = LoggerFactory.getLogger("Launcher");
 	
 	private static File logFile = null;
 

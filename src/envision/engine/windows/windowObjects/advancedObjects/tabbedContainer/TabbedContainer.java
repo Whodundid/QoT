@@ -6,7 +6,7 @@ import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 public class TabbedContainer extends WindowObject {
 	
@@ -181,8 +181,8 @@ public class TabbedContainer extends WindowObject {
 	public double getMinTabWidth() { return minTabWidth; }
 	public double getMaxTabWidth() { return maxTabWidth; }
 	
-	public EDimension getTabDims() {
-		return new EDimension(startX + 1, startY + 2 + tabHeight, endX - 1, endY - 1);
+	public Dimension_d getTabDims() {
+		return new Dimension_d(startX + 1, startY + 2 + tabHeight, endX - 1, endY - 1);
 	}
 	
 	//---------

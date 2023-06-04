@@ -4,7 +4,7 @@ import static envision.game.world.worldEditor.editorTools.EditorToolType.*;
 
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.objects.GameObject;
+import envision.game.GameObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.MapEditorSettings;
 import envision.game.world.worldEditor.editorParts.sidePanel.EditorSidePanel;

@@ -4,15 +4,16 @@ import java.io.File;
 import java.util.Scanner;
 
 import envision.Envision;
-import envision.game.events.eventTypes.entity.EntityEnteredRegionEvent;
-import envision.game.events.eventTypes.entity.EntityExitedRegionEvent;
-import envision.game.objects.GameObject;
-import envision.game.objects.entities.Entity;
+import envision.engine.events.eventTypes.entity.EntityEnteredRegionEvent;
+import envision.engine.events.eventTypes.entity.EntityExitedRegionEvent;
+import envision.game.GameObject;
+import envision.game.entities.Entity;
+import envision_lang._launch.EnvisionProgram;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
-import eutil.math.dimensions.EDimension;
-import eutil.math.dimensions.EDimensionI;
+import eutil.math.dimensions.Dimension_d;
+import eutil.math.dimensions.Dimension_i;
 import qot.settings.QoTSettings;
 
 public class Region extends GameObject {
@@ -25,6 +26,7 @@ public class Region extends GameObject {
 	protected int regionColor;
 	protected boolean onlyRenderInEditor = true;
 	protected EList<Entity> entitiesInside = new EArrayList<>();
+	protected EnvisionProgram regionScript;
 	
 	public Region(IGameWorld worldIn, String nameIn) { this(worldIn, nameIn, 0, 0, 0, 0, 0xff55ff55); }
 	public Region(IGameWorld worldIn, String nameIn, EColors colorIn) { this(worldIn, nameIn, 0, 0, 0, 0, colorIn.intVal); }
@@ -38,13 +40,7 @@ public class Region extends GameObject {
 		regionColor = colorIn;
 	}
 	
-	@Override
-	public String toString() { return toSaveString(); }
-	
-	@Override
-	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
-		
-	}
+	@Override public String toString() { return toSaveString(); }
 	
 	public void updateRegion(float dt) {
 		//check to see if the entities that are said to be inside are still actually inside
@@ -53,7 +49,7 @@ public class Region extends GameObject {
 			var ent = it.next();
 			if (ent == null) it.remove();
 			
-			EDimension entDims = ent.getCollisionDims();
+			Dimension_d entDims = ent.getCollisionDims();
 			if (!getRegionDimensions().partiallyContains(entDims)) {
 				onEntityExited(ent, ent.startX, ent.startY);
 				it.remove();
@@ -73,8 +69,8 @@ public class Region extends GameObject {
 		midY = startY + height / 2;
 	}
 	
-	public EDimensionI getRegionDimensions() {
-		return new EDimensionI(startX, startY, endX, endY);
+	public Dimension_i getRegionDimensions() {
+		return new Dimension_i(startX, startY, endX, endY);
 	}
 	
 	public void moveRegion(int x, int y) {
@@ -94,7 +90,7 @@ public class Region extends GameObject {
 		
 		//TODO: Remove this
 		if (in == Envision.thePlayer) {
-			if (world.getWorldName().equals("new")) {
+			//if (world.getWorldName().equals("new")) {
 				if (name.equals("Cave")) {
 					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")));
 					Envision.theWorld.setUnderground(true);
@@ -102,14 +98,18 @@ public class Region extends GameObject {
 				else if (name.equals("MountainPass")) {
 					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")));
 				}
-			}
-			else if (world.getWorldName().equals("cave")) {
+				else if (name.equals("Mine")) {
+					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountain_dung/mountain_dung.twld")));
+				}
+			//}
+			else if (name.equals("exitCave")) {
 				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
 			}
-			else if (world.getWorldName().equals("mountains")) {
-				if (name.equals("Valley")) {
-					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
-				}
+			else if (name.equals("Valley")) {
+				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+			}
+			else if (name.equals("cave_entrance")) {
+				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")));
 			}
 		}
 	}

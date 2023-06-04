@@ -157,8 +157,8 @@ public class WindowDropDown extends WindowDropDownList {
 				double hh = (h != null) ? h.height : 0;
 				double bh = (b != null) ? b.height : 0;
 				double oH = hh + bh;
-				double maxW = ENumUtil.clamp(p.width, 0, res.getWidth() - 40);
-				double maxH = ENumUtil.clamp(p.height, 0, res.getHeight() - 40 - oH);
+				double maxW = ENumUtil.clamp(p.width, 0, res.width - 40);
+				double maxH = ENumUtil.clamp(p.height, 0, res.height - 40 - oH);
 				
 				p.setSize(maxW, maxH);
 				p.centerObjectWithSize(maxW, maxH);

@@ -5,7 +5,7 @@ import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.objects.effects.sounds.SoundEngine;
+import envision.game.effects.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
 import qot.assets.sounds.Songs;

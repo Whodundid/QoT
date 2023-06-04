@@ -37,9 +37,15 @@ public class NatureTextures extends TextureLoader {
 	
 	public static final GameTexture
 	
-	dirt			= new GameTexture(textureDir, "dirt.png"),
-	cracked_dirt	= new GameTexture(textureDir, "cracked_dirt.png"),
-	mud				= new GameTexture(textureDir, "mud.png");
+	dirt 				= new GameTexture(textureDir, "dirt.png"),
+	cracked_dirt 		= new GameTexture(textureDir, "cracked_dirt.png"),
+	mud 				= new GameTexture(textureDir, "mud.png"),
+	coarse_dirt			= new GameTexture(textureDir, "coarse_dirt.png"),
+	icy_snow 			= new GameTexture(textureDir, "icy_snow.png"),
+	rocky_dirt 			= new GameTexture(textureDir, "rocky_dirt.png"),
+	sandy_dirt 			= new GameTexture(textureDir, "sandy_dirt.png"),
+	smooth_dirt			= new GameTexture(textureDir, "smooth_dirt.png"),
+	dry_cracked_dirt 	= new GameTexture(textureDir, "dry_cracked_dirt.png");
 	
 	//-----------
 	// Overrides
@@ -55,6 +61,13 @@ public class NatureTextures extends TextureLoader {
 		reg(sys, dirt);
 		reg(sys, cracked_dirt);
 		reg(sys, mud);
+		reg(sys, coarse_dirt);
+		reg(sys, icy_snow);
+		reg(sys, rocky_dirt);
+		reg(sys, sandy_dirt);
+		reg(sys, smooth_dirt);
+		reg(sys, dry_cracked_dirt);
+		
 	}
 	
 }

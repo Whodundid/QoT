@@ -3,7 +3,7 @@ package envision.engine.scripting.envisionMappings.qot_package.methods;
 import java.io.File;
 
 import envision.Envision;
-import envision.game.objects.entities.Player;
+import envision.game.entities.Player;
 import envision.game.world.GameWorld;
 import envision_lang.interpreter.EnvisionInterpreter;
 import envision_lang.lang.EnvisionObject;

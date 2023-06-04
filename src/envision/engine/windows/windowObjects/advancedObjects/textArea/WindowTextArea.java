@@ -3,6 +3,7 @@ package envision.engine.windows.windowObjects.advancedObjects.textArea;
 import java.util.Iterator;
 
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
@@ -96,7 +97,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 					drawRect(sX, startY + 1, sX + 1, eY, lineNumberSeparatorColor);
 					
 					for (var l : textDocument) {
-						double nX = startX + getLineNumberOffset() - getStringWidth(String.valueOf(l.getLineNumber())) - 3;
+						double nX = startX + getLineNumberOffset() - strWidth(String.valueOf(l.getLineNumber())) - 3;
 						drawString(l.getLineNumber(), nX, l.startY + 2, l.lineNumberColor);
 					}
 				}
@@ -107,10 +108,10 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				
 				//draw non list contents as normal (non scissored)
 				for (var o : getChildren()) {
-					if (o.willBeDrawn() && listContents.notContains(o)) {
-						if (!o.hasFirstDraw()) o.onFirstDraw_i();
-	    	        	o.drawObject_i(mXIn, mYIn);
-	    			}
+					if (!o.willBeDrawn() || listContents.contains(o)) continue;
+					
+					if (!o.hasFirstDraw()) o.onFirstDraw_i();
+	    	        o.drawObject_i(mXIn, mYIn);
 				}
 			}
 		}
@@ -215,7 +216,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	public TextAreaLine<E> addTextLine(TextAreaLine<E> lineIn, int offset, boolean moveDown) {
 		//int moveArg = moveDown ? 1 : 0;
 		//EDimension ld = getListDimensions();
-		lineIn.setDimensions(3, (textDocument.size() * 24) + offset, getStringWidth(lineIn.getText()), 24);
+		lineIn.setDimensions(3, (textDocument.size() * 24) + offset, FontRenderer.strWidth(lineIn.getText()), 24);
 		textDocument.add(lineIn);
 		addObjectToList(lineIn);
 		
@@ -395,10 +396,13 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	// Getters
 	//---------
 	
+	public int getLineNumberOffset() {
+		return hasLineNumbers() ? (6 + String.valueOf(textDocument.size()).length() * FontRenderer.strWidth("0")) : 2;
+	}
+
 	public int getLineHeight() { return lineHeight; }
 	public int getLineCount() { return ((int) height - 2) / 10; }
 	public boolean hasLineNumbers() { return drawLineNumbers; }
-	public int getLineNumberOffset() { return hasLineNumbers() ? (6 + String.valueOf(textDocument.size()).length() * getStringWidth("0")) : 2; }
 	public boolean getDrawLineHighlight() { return drawLineHighlight; }
 	public boolean isEditable() { return editable; }
 	public TextAreaLine<E> getCurrentLine() { return currentLine; }
@@ -417,7 +421,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	
 	public int getLongestLineLength() {
 		longestLine = getLongestTextLine();
-		return longestLine != null ? getStringWidth(longestLine.getText()) : - 1;
+		return longestLine != null ? FontRenderer.strWidth(longestLine.getText()) : - 1;
 	}
 	
 	public TextAreaLine<E> getTextLine(int numIn) {
@@ -467,7 +471,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 		TextAreaLine<E> longest = null;
 		int longestLen = 0;
 		for (var l : textDocument) {
-			int len = getStringWidth(l.getText());
+			int len = FontRenderer.strWidth(l.getText());
 			if (len > longestLen) {
 				longest = l;
 				longestLen = len;

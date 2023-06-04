@@ -2,21 +2,15 @@ package qot.entities.player;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
-import envision.game.objects.entities.Entity;
-import envision.game.objects.entities.Player;
-import envision.game.objects.entities.PlayerStats;
+import envision.game.entities.Entity;
+import envision.game.entities.Player;
+import envision.game.entities.PlayerStats;
 import envision.game.world.GameWorld;
-import envision.game.world.IGameWorld;
-import envision.game.world.WorldCamera;
-import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
-import eutil.math.dimensions.EDimension;
-import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
-import qot.assets.textures.item.ItemTextures;
-import qot.entities.enemies.Thyrah;
+import qot.entities.enemies.dragon.Thyrah;
 import qot.items.Items;
 
 public class QoT_Player extends Player {
@@ -48,66 +42,13 @@ public class QoT_Player extends Player {
 		setCollisionBox(midX - 8, endY - 10, midX + 8, endY);
 		tex = EntityTextures.player;
 		timeUntilNextAttack = 175l;
+
+		addComponent(new PlayerRenderer(this));
 	}
 	
 	//----------------
 	// Player Getters
 	//----------------
-	
-	@Override
-	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
-		super.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
-	}
-	
-	@Override
-	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
-		boolean flip = facing == Rotation.RIGHT || facing == Rotation.DOWN;
-		
-		drawTexture(tex, x, y, w, h, flip, brightness);
-		//healthBar.setDimensions(x, y - 7, w, 7);
-		//healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
-		
-		if ((recentlyAttacked || healthChanged) && !invincible && (health < maxHealth)) {
-//			EDimension draw = new EDimension(x + 20, y - 7, x + w - 20, y);
-//			
-//			var cur = health;
-//			var percent = (double) cur / (double) maxHealth;
-//			var pw = (draw.width * percent);
-//			
-//			drawRect(draw.add(1), EColors.black);
-//			var end = (this == Envision.thePlayer) ? 4 : 1;
-//			drawRect(draw.startX, draw.startY, draw.startX + pw, draw.endY - end, EColors.mc_darkred);
-			
-			//healthBar.keepDrawing();
-		}
-		
-		drawStringC(headText, x + w/2, y - h/4);
-		//drawStringC(recentlyAttacked + ":" + recentlyHit + ":" + mouseOver, x + w/2, y - h/2, 0.5, 0.5);
-		
-		//draw sword *crapily*
-		if (attacking) {
-			if (System.currentTimeMillis() - attackStart <= 100) {
-				double drawX = x + w / 2 - ItemTextures.iron_sword.getWidth();
-				double drawY = y + h / 2 - ItemTextures.iron_sword.getHeight() / 2;
-				drawTexture(ItemTextures.iron_sword, drawX, drawY, 64, 64);
-			}
-			
-			if ((System.currentTimeMillis() - attackStart) >= timeUntilNextAttack) {
-				attacking = false;
-			}
-		}
-		
-		//draw cooldown bar
-		if (System.currentTimeMillis() - attackStart < timeUntilNextAttack) {
-			EDimension draw = new EDimension(x, y - 3, x + w, y - 1);
-			
-			var cur = System.currentTimeMillis() - attackStart;
-			var percent = (double) cur / (double) timeUntilNextAttack / 2;
-			var pw = (draw.width * percent);
-			
-			drawRect(draw.startX + pw, draw.startY, draw.endX - pw, draw.endY, EColors.mc_gold.opacity(180));
-		}
-	}
 	
 	@Override
 	public void onMousePress(int mXIn, int mYIn, int button) {
@@ -129,11 +70,11 @@ public class QoT_Player extends Player {
 				e.drainHealth(damage);
 				//addObject(new DamageSplash(e.startX + e.midX, e.startY + e.midY, damage));
 				if (e.isDead()) {
-					if (e instanceof Thyrah) getInventory().addItem(Items.random());
-					else if (ERandomUtil.roll(5, 0, 10)) getInventory().addItem(Items.random());
+					if (e instanceof Thyrah) giveItem(Items.random());
+					else if (ERandomUtil.roll(5, 0, 10)) giveItem(Items.random());
 					
 					getStats().addKilled(1);
-					Envision.theWorld.getEntitiesInWorld().remove(e);
+					Envision.theWorld.removeEntity(e);
 					addXP(e.getExperienceRewardedOnKill());
 				}
 			}
@@ -144,33 +85,13 @@ public class QoT_Player extends Player {
 	public void onKeyPress(char typedChar, int keyCode) {
 		if (keyCode >= Keyboard.KEY_0 && keyCode <= Keyboard.KEY_9) {
 			int ability = keyCode - Keyboard.KEY_1;
-			System.out.println(ability);
-			
 			abilityTracker.useAbility(ability);
 		}
 	}
 	
 	@Override
 	public void onLivingUpdate(float dt) {
-		this.abilityTracker.onGameTick(dt);
-//		System.out.println(dt);
-		
-//		if (!start) {
-//			oldTime = System.currentTimeMillis();
-//			curTime = oldTime;
-//			
-//			start = true;
-//		}
-//
-//		oldTime = curTime;
-//		curTime = System.currentTimeMillis();
-//		
-//		dt = curTime - oldTime;
-//		dt /= 1000.0f;
-//		
-//		if (dt > 0.015f) dt = 0.015f;
-		
-		//setHeadText("[", (int) (startX + collisionBox.startX), ", ", (int) (startY + collisionBox.startY), "]");
+		abilityTracker.onGameTick(dt);
 	}
 	
 	@Override

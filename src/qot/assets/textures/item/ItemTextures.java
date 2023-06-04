@@ -31,7 +31,10 @@ public class ItemTextures extends TextureLoader {
 	iron_sword = new GameTexture(textureDir, "iron_sword.png"),
 	wooden_stick = new GameTexture(textureDir, "wooden_stick.png"),
 	lesser_healing = new GameTexture(textureDir, "lesser_healing.png"),
-	lesser_mana = new GameTexture(textureDir, "lesser_mana.png");
+	lesser_mana = new GameTexture(textureDir, "lesser_mana.png"),
+	major_healing = new GameTexture(textureDir, "major_healing.png"),
+	major_mana = new GameTexture(textureDir, "major_mana.png"),
+	boots_of_speed = new GameTexture(textureDir, "boots_of_speed.png");
 	
 	//-----------
 	// Overrides
@@ -44,6 +47,9 @@ public class ItemTextures extends TextureLoader {
 		reg(sys, dragon_shield);
 		reg(sys, lesser_healing);
 		reg(sys, lesser_mana);
+		reg(sys, major_healing);
+		reg(sys, major_mana);
+		reg(sys, boots_of_speed);
 	}
 	
 }

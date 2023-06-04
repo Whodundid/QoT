@@ -18,13 +18,14 @@ public class MapEditorSettings {
 	protected EditorObject primaryPalette, secondaryPalette;
 	
 	public boolean drawCenterPositionBox = false;
-	public boolean drawMapBorders = false;
+	public boolean drawMapBorders = true;
 	public boolean drawEntities = true;
 	public boolean drawRegions = true;
-	public boolean drawEntityHitBoxes = false;
+	public boolean drawEntityOutlines = false;
 	public boolean drawWallBox = false;
 	public boolean drawFlatWalls = false;
 	public boolean drawTileGrid = false;
+	public boolean drawEntityHitBoxes = false;
 	
 	public EditorToolType currentTool;
 	

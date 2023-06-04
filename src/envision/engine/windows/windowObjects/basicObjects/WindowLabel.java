@@ -33,7 +33,7 @@ public class WindowLabel<E> extends WindowObject<E> {
 	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn) { this(parentIn, xPos, yPos, stringIn, 0xffffffff); }
 	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn, EColors colorIn) { this(parentIn, xPos, yPos, stringIn, colorIn.c()); }
 	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn, int colorIn) {
-		init(parentIn, xPos, yPos, getStringWidth(stringIn), FontRenderer.FONT_HEIGHT);
+		init(parentIn, xPos, yPos, FontRenderer.strWidth(stringIn), FontRenderer.FONT_HEIGHT);
 		displayString = stringIn;
 		displayStringColor = colorIn;
 	}
@@ -119,7 +119,7 @@ public class WindowLabel<E> extends WindowObject<E> {
 			
 			int longest = 0;
 			for (String s : wordWrappedLines) {
-				int len = getStringWidth(s);
+				int len = FontRenderer.strWidth(s);
 				if (len > longest) longest = len;
 			}
 			
@@ -129,7 +129,7 @@ public class WindowLabel<E> extends WindowObject<E> {
 			setSize(w, h);
 		}
 		else {
-			setSize(getStringWidth(displayString), FontRenderer.FONT_HEIGHT);
+			setSize(FontRenderer.strWidth(displayString), FontRenderer.FONT_HEIGHT);
 		}
 	}
 	

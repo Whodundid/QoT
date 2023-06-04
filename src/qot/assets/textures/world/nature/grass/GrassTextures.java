@@ -26,13 +26,14 @@ public class GrassTextures extends TextureLoader {
 	
 	public static final GameTexture
 	
-	dark_grass		= new GameTexture(textureDir, "dark_grass.png"),
+	dark_grass		 = new GameTexture(textureDir, "dark_grass.png"),
 	
-	grass			= new Grass(),
-	biome_grass		= new BiomeGrass(),
-	dry_grass		= new DryGrass(),
-	leafy_grass		= new LeafyGrass(),
-	light_grass		= new LightGrass();
+	grass			 = new Grass(),
+	biome_grass		 = new BiomeGrass(),
+	dry_grass		 = new DryGrass(),
+	leafy_grass		 = new LeafyGrass(),
+	light_grass		 = new LightGrass(),
+	dry_plains_grass = new GameTexture(textureDir, "dry_plains_grass.png");
 	
 	//-----------
 	// Overrides
@@ -47,6 +48,7 @@ public class GrassTextures extends TextureLoader {
 		reg(sys, dry_grass);
 		reg(sys, leafy_grass);
 		reg(sys, light_grass);
+		reg(sys, dry_plains_grass);
 	}
 	
 }

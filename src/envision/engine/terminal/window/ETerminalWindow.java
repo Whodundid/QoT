@@ -1,8 +1,13 @@
 package envision.engine.terminal.window;
 
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Paths;
+import java.util.List;
 
 import envision.Envision;
+import envision.engine.rendering.RenderingManager;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.termParts.TerminalTextField;
@@ -31,6 +36,8 @@ import qot.assets.textures.taskbar.TaskBarTextures;
 //Author: Hunter Bragg
 
 public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConsoleOutputReceiver {
+	
+	public static final String sep = FileSystems.getDefault().getSeparator();
 	
 	protected TerminalTextField inputField;
 	protected WindowTextArea<?> history;
@@ -181,7 +188,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 			header.setTitle("Terminal " + EColors.yellow + dirS);
 		}
 		
-		drawRect(startX, startY, endX, endY, 0xff000000);
+		RenderingManager.drawRect(startX, startY, endX, endY, 0xff000000);
 	}
 	
 	@Override
@@ -307,7 +314,12 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 			else {
 				boolean isClear = EStringUtil.equalsAny(cmd, "clear", "clr", "cls");
 				
-				if (!isClear) writeln("> " + cmd, 0xffffffff);
+				if (!isClear) {
+					final String dirS = sep + Paths.get(System.getProperty("user.dir")).relativize(dir.getCanonicalFile().toPath());
+					final var user = Envision.getCurrentUser();
+					final String dev = (user.isDev()) ? "#" : "$";
+					writeln(user + ":" + dirS + dev + " " + cmd, 0xffffffff);
+				}
 				
 				TerminalCommandHandler.cmdHistory.add(cmd);
 				TerminalCommandHandler.getInstance().executeCommand(this, cmd, false);
@@ -490,7 +502,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 	}
 	
 	public ETerminalWindow buildTabCompletions(String... dataIn) { return buildTabCompletions(EList.of(dataIn)); }
-	public ETerminalWindow buildTabCompletions(EList<String> dataIn) {
+	public ETerminalWindow buildTabCompletions(List<String> dataIn) {
 		clearTabCompletions();
 		
 		if (dataIn.isEmpty()) return this;
@@ -508,7 +520,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 		int longestLen = 0;
 		
 		for (String s : dataIn) {
-			int len = getStringWidth(s);
+			int len = FontRenderer.strWidth(s);
 			if (len > longest) {
 				longest = len;
 				longestLen = s.length();
@@ -517,7 +529,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 		
 		//determine the maximum number of auto complete options that can fit on one line
 		for (int i = 1; i < dataIn.size() + 1; i++) {
-			textWidth += longest + getStringWidth(EStringUtil.repeatString(" ", spaceAmount));
+			textWidth += longest + FontRenderer.strWidth(EStringUtil.repeatString(" ", spaceAmount));
 			if (textWidth < width) {
 				maxData = i;
 			}
@@ -678,7 +690,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 	//=========
 	
 	public int getLastUsed() { return lastUsed; }
-	public int getHisLine() { return historyLine; }
+	public int getHistoryLine() { return historyLine; }
 	public WindowTextArea<?> getTextArea() { return history; }
 	public TerminalTextField getInputField() { return inputField; }
 	public File getDir() { return dir; }

@@ -12,7 +12,7 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 
 //Author: Hunter Bragg
 
@@ -175,7 +175,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		//drawRect(0xff3b3b3b, 1);
 		
 		if (colorDisplay != null) {
-			EDimension cDim = colorDisplay.getDimensions();
+			Dimension_d cDim = colorDisplay.getDimensions();
 			drawRect(cDim.startX - 1, cDim.startY - 1, cDim.endX + 1, cDim.endY + 1, 0xff000000);
 		}
 	}

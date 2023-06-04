@@ -2,7 +2,7 @@ package envision.game.world;
 
 import java.util.Objects;
 
-import envision.game.objects.GameObject;
+import envision.game.GameObject;
 import eutil.datatypes.boxes.Box2;
 import eutil.math.ENumUtil;
 

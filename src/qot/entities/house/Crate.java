@@ -1,10 +1,10 @@
 package qot.entities.house;
 
-import envision.game.objects.entities.Entity;
+import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
 
-public class Crate extends Entity {
+public class Crate extends BasicRenderedEntity {
 
 	public Crate() { this(0, 0); }
 	public Crate(int x, int y) {

@@ -5,13 +5,14 @@ import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.objects.entities.Entity;
+import envision.game.entities.Entity;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class CombatScreen extends GameScreen {
 	
-	EArrayList<WindowObject> createdObjects = new EArrayList();
+	EList<WindowObject> createdObjects = new EArrayList<>();
 	Entity a, b;
 	
 	WindowButton run;

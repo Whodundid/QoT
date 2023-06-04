@@ -1,12 +1,11 @@
 package envision.engine.windows.windowTypes.interfaces;
 
-import eutil.datatypes.EArrayList;
-import eutil.math.dimensions.EDimension;
-import eutil.misc.ScreenLocation;
-
 import java.util.Stack;
 
 import envision.engine.rendering.textureSystem.GameTexture;
+import eutil.datatypes.util.EList;
+import eutil.math.dimensions.Dimension_d;
+import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
@@ -97,9 +96,9 @@ public interface IWindowParent<E> extends IWindowObject<E> {
 	public void miniaturize();
 	
 	/** Returns the original dimensions for this object before it was maximized. */
-	public EDimension getPreMax();
+	public Dimension_d getPreMax();
 	/** Specifies the dimensions this object had before it was maximized. */
-	public void setPreMax(EDimension dimIn);
+	public void setPreMax(Dimension_d dimIn);
 	
 	//-------------------------
 	// Special Argument Checks
@@ -126,7 +125,7 @@ public interface IWindowParent<E> extends IWindowObject<E> {
 	//----------------
 	
 	/** Returns a list of Strings this window can be referenced as within the EMC Terminal. */
-	public EArrayList<String> getAliases();
+	public EList<String> getAliases();
 	
 	//--------------
 	// Window Debug

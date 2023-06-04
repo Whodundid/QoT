@@ -14,7 +14,8 @@ import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import eutil.math.dimensions.EDimension;
+import eutil.datatypes.util.EList;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -51,8 +52,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected Stack<IWindowParent<?>> WindowHistory = new Stack();
 	protected EArrayList<String> aliases = new EArrayList();
 	protected GameTexture windowIcon = null;
-	protected EDimension preMaxFull = new EDimension();
-	protected EDimension preMaxSide = new EDimension();
+	protected Dimension_d preMaxFull = new Dimension_d();
+	protected Dimension_d preMaxSide = new Dimension_d();
 	protected boolean showInTaskBar = true;
 	protected long initTime = 0l;
 	protected long windowPID = -1;
@@ -93,7 +94,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		__INIT__();
 		init(parentIn, xIn, yIn, widthIn, heightIn);
 		pullHistoryFrom(oldGuiIn);
-		preMaxFull = new EDimension(xIn, yIn, widthIn, heightIn);
+		preMaxFull = new Dimension_d(xIn, yIn, widthIn, heightIn);
 	}
 	
 	private void __INIT__() {
@@ -128,17 +129,17 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 				if (time.length() > 6) time = time.substring(time.length() - 6);
 				
 				if (DebugFunctions.drawWindowPID) {
-					pos = getStringWidth("ID: " + EColors.yellow + getObjectID());
+					pos = FontRenderer.strWidth("ID: " + EColors.yellow + getObjectID());
 					draw = EColors.mc_aqua + "ID: " + EColors.yellow + getObjectID();
 					
 					if (DebugFunctions.drawWindowInit) {
 						half = pos + 6;
-						pos += getStringWidth(EColors.mc_aqua + "  InitTime: " + EColors.yellow + time);
+						pos += FontRenderer.strWidth(EColors.mc_aqua + "  InitTime: " + EColors.yellow + time);
 						draw += EColors.mc_aqua + "  InitTime: " + EColors.yellow + time;
 					}
 				}
 				else if (DebugFunctions.drawWindowInit) {
-					pos = getStringWidth("InitTime: " + EColors.yellow + time);
+					pos = FontRenderer.strWidth("InitTime: " + EColors.yellow + time);
 					draw += "InitTime: " + EColors.yellow + time;
 				}
 				
@@ -149,7 +150,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 				
 				if (DebugFunctions.drawWindowDimensions) {
 					String dims = "[" + (int) startX + ", " + (int) startY + ", " + width + " " + height + "]";
-					int eX = getStringWidth(dims);
+					int eX = FontRenderer.strWidth(dims);
 					
 					drawRect(startX + pos + 5, y - 1, startX + pos + eX + 9, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
 					drawRect(startX + pos + 5, y, startX + pos + eX + 8, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
@@ -231,7 +232,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	
 	@Override
 	public void maximize() {
-		EDimension screen = getTopParent().getDimensions();
+		Dimension_d screen = getTopParent().getDimensions();
 		boolean hasTaskBar = Envision.getTopScreen().getTaskBar() != null;
 		
 		double sw = screen.width;
@@ -279,7 +280,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		//double tb = (bar != null) ? bar.height : 0;
 		double tb = 0;
 		
-		EDimension dims = getDimensions();
+		Dimension_d dims = getDimensions();
 		double headerHeight = hasHeader() ? getHeader().height : 0;
 		double sX = dims.startX;
 		double sY = dims.startY;
@@ -288,15 +289,15 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		
 		sX = sX < 0 ? 4 : sX;
 		sY = (sY - headerHeight) < 2 ? tb + 4 + headerHeight : sY;
-		sX = sX + w > res.getWidth() ? -4 + sX - (sX + w - res.getWidth()) : sX;
-		sY = sY + h > res.getHeight() ? -4 + sY - (sY + h - res.getHeight()) : sY;
+		sX = sX + w > res.width ? -4 + sX - (sX + w - res.width) : sX;
+		sY = sY + h > res.height ? -4 + sY - (sY + h - res.height) : sY;
 		setDimensions(sX, sY, w, h);
 		
 		reInitChildren();
 	}
 	
-	@Override public EDimension getPreMax() { return preMaxFull; }
-	@Override public void setPreMax(EDimension dimIn) { preMaxFull = new EDimension(dimIn); }
+	@Override public Dimension_d getPreMax() { return preMaxFull; }
+	@Override public void setPreMax(Dimension_d dimIn) { preMaxFull = new Dimension_d(dimIn); }
 	
 	@Override public boolean isDevWindow() { return false; }
 	@Override public boolean isDebugWindow() { return false; }
@@ -325,7 +326,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	@Override public boolean isHighlighted() { return highlighted; }
 	@Override public void setHighlighted(boolean val) { highlighted = val; }
 	
-	@Override public EArrayList<String> getAliases() { return aliases; }
+	@Override public EList<String> getAliases() { return aliases; }
 	@Override public GameTexture getWindowIcon() { return windowIcon; }
 	@Override public boolean showInTaskBar() { return showInTaskBar; }
 	

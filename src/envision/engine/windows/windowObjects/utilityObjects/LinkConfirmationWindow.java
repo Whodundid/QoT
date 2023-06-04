@@ -1,6 +1,7 @@
 package envision.engine.windows.windowObjects.utilityObjects;
 
 import envision.Envision;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
@@ -39,20 +40,20 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 		String warning = "Warning";
 		
 		int longestString = 0;
-		longestString = getStringWidth(prompt);
-		int linkLength = getStringWidth(link);
+		longestString = FontRenderer.strWidth(prompt);
+		int linkLength = FontRenderer.strWidth(link);
 		if (linkLength > longestString) { longestString = linkLength; }
-		int copyLength = getStringWidth("Copy") + 8;
+		int copyLength = FontRenderer.strWidth("Copy") + 8;
 		int buttonLength = copyLength + 232; //length of all buttons and gaps inbetween
 		if (buttonLength > longestString) { longestString = buttonLength; }
 		
-		double x = res.getWidth() / 2 - longestString / 2 - 15;
-		double y = res.getHeight() / 2 - 60;
+		double x = res.width / 2 - longestString / 2 - 15;
+		double y = res.height / 2 - 60;
 		double w = longestString > 400 ? 400 : longestString + 30;
 		
-		WindowLabel promptLabel = new WindowLabel(this, res.getWidth() / 2, y + 18, prompt);
-		WindowLabel linkLabel = new WindowLabel(this, res.getWidth() / 2, y + 33, link);
-		WindowLabel warningLabel = new WindowLabel(this, res.getWidth() / 2, y + 38 + linkLabel.getTextHeight(), warning);
+		WindowLabel promptLabel = new WindowLabel(this, res.width / 2, y + 18, prompt);
+		WindowLabel linkLabel = new WindowLabel(this, res.width / 2, y + 33, link);
+		WindowLabel warningLabel = new WindowLabel(this, res.width / 2, y + 38 + linkLabel.getTextHeight(), warning);
 		
 		promptLabel.setDrawCentered(true);
 		promptLabel.setColor(0xffffbb00);

@@ -2,7 +2,7 @@ package envision.engine.windows.windowObjects.basicObjects;
 
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2d;
 
 public class WindowEllipse<E> extends WindowShape<E> {
 	
@@ -43,14 +43,14 @@ public class WindowEllipse<E> extends WindowShape<E> {
 	// Getters
 	//---------
 	
-	public Box2<Double, Double> getCenter() { return new Box2<>(cX, cY); }
+	public Point2d getCenter() { return new Point2d(cX, cY); }
 	
 	//---------
 	// Setters
 	//---------
 	
-	public void setCenter(Box2<Double, Double> in) {
-		setCenter(in.getA(), in.getB());
+	public void setCenter(Point2d in) {
+		setCenter(in.x, in.y);
 	}
 	
 	public void setCenter(Number x, Number y) {

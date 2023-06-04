@@ -14,11 +14,14 @@ import org.lwjgl.opengl.GLDebugMessageAMDCallback;
 import org.lwjgl.opengl.GLDebugMessageARBCallback;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.opengl.KHRDebug;
+import org.lwjgl.system.Callback;
 
 import envision.engine.rendering.renderingAPI.error.ErrorReportingLevel;
 import envision.engine.rendering.renderingAPI.error.RendererErrorReporter;
 
 public class GL_ErrorReporter {
+	
+	private static Callback theCallback;
 	
 	//--------------
 	// Constructors
@@ -35,11 +38,10 @@ public class GL_ErrorReporter {
 		
 		if (caps.OpenGL43) {
 			apiLog("[GL] Using OpenGL 4.3 for error logging.");
-			GLDebugMessageCallback proc = GLDebugMessageCallback
-				.create((source, type, id, severity, length, message, userParam) -> {
-					GL_ErrorReporter.onCallbackGL43(source, type, id, severity, length, message, userParam);
-				});
-			glDebugMessageCallback(proc, NULL);
+			theCallback = GLDebugMessageCallback.create((source, type, id, severity, length, message, userParam) -> {
+				GL_ErrorReporter.onCallbackGL43(source, type, id, severity, length, message, userParam);
+			});
+			glDebugMessageCallback((GLDebugMessageCallback) theCallback, NULL);
 			if ((glGetInteger(GL_CONTEXT_FLAGS) & GL_CONTEXT_FLAG_DEBUG_BIT) == 0) {
 				apiLog("[GL] Warning: A non-debug context may not produce any debug output.");
 				glEnable(GL_DEBUG_OUTPUT);
@@ -49,11 +51,10 @@ public class GL_ErrorReporter {
 		
 		if (caps.GL_KHR_debug) {
 			apiLog("[GL] Using KHR_debug for error logging.");
-			GLDebugMessageCallback proc = GLDebugMessageCallback
-				.create((source, type, id, severity, length, message, userParam) -> {
-					GL_ErrorReporter.onCallbackKHR(source, type, id, severity, length, message, userParam);
-				});
-			KHRDebug.glDebugMessageCallback(proc, NULL);
+			theCallback = GLDebugMessageCallback.create((source, type, id, severity, length, message, userParam) -> {
+				GL_ErrorReporter.onCallbackKHR(source, type, id, severity, length, message, userParam);
+			});
+			KHRDebug.glDebugMessageCallback((GLDebugMessageCallback) theCallback, NULL);
 			if (caps.OpenGL30 && (glGetInteger(GL_CONTEXT_FLAGS) & GL_CONTEXT_FLAG_DEBUG_BIT) == 0) {
 				apiLog("[GL] Warning: A non-debug context may not produce any debug output.");
 				glEnable(GL_DEBUG_OUTPUT);
@@ -63,25 +64,30 @@ public class GL_ErrorReporter {
 		
 		if (caps.GL_ARB_debug_output) {
 			apiLog("[GL] Using ARB_debug_output for error logging.");
-			GLDebugMessageARBCallback proc = GLDebugMessageARBCallback
-				.create((source, type, id, severity, length, message, userParam) -> {
-					GL_ErrorReporter.onCallbackARB(source, type, id, severity, length, message, userParam);
-				});
-			glDebugMessageCallbackARB(proc, NULL);
+			theCallback = GLDebugMessageARBCallback.create((source, type, id, severity, length, message, userParam) -> {
+				GL_ErrorReporter.onCallbackARB(source, type, id, severity, length, message, userParam);
+			});
+			glDebugMessageCallbackARB((GLDebugMessageARBCallback) theCallback, NULL);
 			return;
 		}
 		
 		if (caps.GL_AMD_debug_output) {
 			apiLog("[GL] Using AMD_debug_output for error logging.");
-			GLDebugMessageAMDCallback proc = GLDebugMessageAMDCallback
-				.create((id, category, severity, length, message, userParam) -> {
-					GL_ErrorReporter.onCallbackAMD(id, category, severity, length, message, userParam);
-				});
-			glDebugMessageCallbackAMD(proc, NULL);
+			theCallback = GLDebugMessageAMDCallback.create((id, category, severity, length, message, userParam) -> {
+				GL_ErrorReporter.onCallbackAMD(id, category, severity, length, message, userParam);
+			});
+			glDebugMessageCallbackAMD((GLDebugMessageAMDCallback) theCallback, NULL);
 			return;
 		}
 		
 		apiLog("[GL] No debug output implementation is available.");
+	}
+	
+	public static void destroy() {
+		if (theCallback != null) {
+			theCallback.free();
+			theCallback = null;
+		}
 	}
 	
 	//-------------------

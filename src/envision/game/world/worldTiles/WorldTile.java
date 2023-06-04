@@ -1,17 +1,15 @@
 package envision.game.world.worldTiles;
 
 import envision.Envision;
-import envision.debug.DebugSettings;
-import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.game.objects.GameObject;
-import envision.game.objects.entities.Entity;
-import envision.game.world.IGameWorld;
-import envision.game.world.WorldCamera;
+import envision.game.entities.ComponentBasedObject;
+import envision.game.entities.Entity;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
+import qot.world_tiles.GlobalTileList;
+import qot.world_tiles.TileIDs;
 
-public abstract class WorldTile extends GameObject implements Comparable<WorldTile> {
+public abstract class WorldTile extends ComponentBasedObject implements Comparable<WorldTile> {
 	
 	//--------
 	// Fields
@@ -127,6 +125,8 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	protected WorldTile(TileIDs idIn) {
 		id = idIn;
 		name = id.name;
+		
+		addComponent(new WorldTileRenderer(this));
 	}
 	
 	//-----------
@@ -169,180 +169,6 @@ public abstract class WorldTile extends GameObject implements Comparable<WorldTi
 	 * @param button The mouse button clicking
 	 */
 	public void onTileClicked(Entity entity, int button) {}
-	
-	/**
-	 * Called from the WorldRenderer whenever the tile is about to be rendered.
-	 * 
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param w
-	 * @param h
-	 * @param brightness
-	 */
-	@SuppressWarnings("unused")
-	@Override
-	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
-		//ignore if there is no texture
-		if (!hasTexture()) return;
-		
-		double zoom = camera.getZoom();
-		
-		//pixel width of each tile
-		double w = (int) (world.getTileWidth() * zoom);
-		//pixel height of each tile
-		double h = (int) (world.getTileHeight() * zoom);
-		
-		//the left most x coordinate for map drawing
-		double x = (int) (midX - (distX * w) - (w / 2));
-		//the top most y coordinate for map drawing
-		double y = (int) (midY - (distY * h) - (h / 2));
-		
-		double tileOffsetX = (startX % world.getTileWidth()) * zoom;
-		double tileOffsetY = (startY % world.getTileWidth()) * zoom;
-		
-		//transform the world coordinates of the tile to screen x/y coordinates
-		double drawX = (worldX * w) + x;
-		double drawY = (worldY * h) + y;
-		
-		//translate to the middle drawn world tile
-		drawX += (distX - midDrawX) * w;
-		drawY += (distY - midDrawY) * h;
-		
-		drawX += tileOffsetX;
-		drawY += tileOffsetY;
-		drawX -= camera.getOffsetX();
-		drawY -= camera.getOffsetY();
-		
-		//calculate the entity's draw width and height based off of actual dims and zoom
-		double drawW = width * zoom;
-		double drawH = height * zoom;
-		
-		//apply the player's (CAMERA'S) offset to the drawn tile
-		//dX -= offsetX;
-		//dY -= offsetY;
-		
-		drawTile(world, drawX, drawY, w, h, calcBrightness(worldX, worldY), false);
-	}
-	
-	public void drawTile(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
-		double wh = h * wallHeight; //wh == 'wallHeight'
-		
-		WorldTile tb = null; // tb == 'tileBelow'
-		WorldTile ta = null; // ta == 'tileAbove'
-		
-		Rotation rot = (rotation != null) ? rotation : Rotation.UP;
-		
-		if ((worldY - 1) >= 0) ta = world.getTileAt(worldX, worldY - 1);
-		if ((worldY + 1) < world.getHeight()) tb = world.getTileAt(worldX, worldY + 1);
-		
-		if (isWall && DebugSettings.drawFlatWalls) {
-			drawTexture(tex, x, y, w, h, drawFlipped, rot, brightness);
-			
-			//draw bottom of map edge or if right above a tile with no texture/void
-			if (!DebugSettings.drawFlatWalls && (tb == null || !tb.hasTexture())) {
-				drawTexture(tex, x, y + h, w, h / 2, drawFlipped, rot, EColors.changeBrightness(brightness, 145));
-			}
-		}
-		else if (isWall) {
-			//determine tile brightness
-			int tileBrightness = brightness;
-			int wallBrightness = brightness;
-			
-			if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
-			
-			//check if the tile directly above is a wall
-			//if so - don't draw wall side
-			if (wh >= 0) {
-				//draw main texture slightly above main location
-				drawTexture(tex, x, y - wh, w, h, drawFlipped, rot, tileBrightness);
-				
-				GameTexture side = (sideTex != null) ? sideTex : tex;
-				
-				double yPos = y + h - wh;
-				wallBrightness = EColors.changeBrightness(brightness, 145);
-				
-				//draw wall side slightly below
-				drawTexture(side, x, yPos, w, wh, drawFlipped, rot, wallBrightness);
-				
-				//draw bottom of map edge or if right above a tile with no texture/void
-				if ((tb == null || !tb.hasTexture())) {
-					drawTexture(tex, x, y + h, w, h / 2, drawFlipped, rot, EColors.changeBrightness(brightness, 145));
-				}
-			}
-			else {
-				wh = -wh;
-				double yPos = y + wh;
-				
-				//draw main texture slightly below main location
-				drawTexture(tex, x, yPos, w, h, drawFlipped, rot, tileBrightness);
-				
-				//I don't want to draw if ta is null
-				//but
-				//I also don't want to draw if ta is a wall and has the same wall height as this one
-				
-				if (ta != null && (!ta.isWall || ((h * ta.wallHeight) != -wh))) {
-					GameTexture side = (sideTex != null) ? sideTex : tex;
-					
-					wallBrightness = EColors.changeBrightness(brightness, 145);
-					side = (ta.sideTex != null) ? ta.sideTex : ta.tex;
-					
-					double sideWallY = yPos - wh;
-					
-					//THIS IS NOT QUITE RIGHT -- the yPos needs to take into account whether or
-					//not the tile above is a wall and if so what height the wall is at and then
-					//size the wh accordingly to fit the area in between the ta's end wh and this
-					//tiles yPos
-					
-					//if (ta.isWall) {
-					//	if (ta.wallHeight < 0)
-					//}
-					
-					//draw wall side slightly above
-					drawTexture(side, x, sideWallY, w, wh, drawFlipped, rot, wallBrightness);
-				}
-				
-				//draw bottom of map edge or if right above a tile with no texture/void
-				if (tb == null || !tb.hasTexture()) {
-					drawTexture(tex, x, yPos + h, w, (h / 2) - wh, drawFlipped, rot, EColors.changeBrightness(brightness, 145));
-				}
-			}
-		}
-		else {
-			drawTexture(tex, x, y, w, h, drawFlipped, rot, brightness);
-			
-			//draw bottom of map edge or if right above a tile with no texture/void
-			if (!DebugSettings.drawFlatWalls && (tb == null || !tb.hasTexture())) {
-				var side = (sideTex != null) ? sideTex : tex;
-				drawTexture(side, x, y + h, w, h / 2, drawFlipped, rot, EColors.changeBrightness(brightness, 145));
-			}
-		}
-		
-		if (mouseOver) {
-			if (isWall) {
-				drawHRect(x, y - wh, x + w, y - wh + h, 1, EColors.chalk);
-				drawHRect(x, y + h - wh - 1, x + w, y + h, 1, EColors.chalk);
-			}
-			else {
-				drawHRect(x, y, x + w, y + h, 1, EColors.chalk);
-			}
-		}
-		
-		if (DebugSettings.drawTileGrid) {
-			drawRect(x, y, x + w, y + 1, EColors.vdgray);
-			drawRect(x, y, x + 1, y + h, EColors.vdgray);
-		}
-		
-		if (Envision.isDebugMode() && DebugSettings.drawTileInfo) {
-			String tText = "[" + worldX + "," + worldY + "] " + this;
-			String taText = (ta != null) ? "[" + ta.worldX + "," + ta.worldY + "] " + ta.getName(): "null";
-			String tbText = (tb != null) ? "[" + tb.worldX + "," + tb.worldY + "] " + tb.getName(): "null";
-			
-			drawString(tText, x, y, 0.7, 0.7, EColors.yellow);
-			drawString(taText, x, y + FontRenderer.FONT_HEIGHT, 0.7, 0.7, EColors.green);
-			drawString(tbText, x, y + FontRenderer.FONT_HEIGHT * 2, 0.7, 0.7, EColors.red);
-		}
-	}
 	
 	//---------
 	// Getters

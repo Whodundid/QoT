@@ -1,30 +1,24 @@
-#version 450 core
+#version 460 core
 
-layout(location = 0) in vec3 in_position;
-layout(location = 1) in vec4 in_color;
-layout(location = 2) in vec2 in_texCoord;
-layout(location = 3) in float in_texIndex;
+layout (location = 0) out vec4 out_color;
 
-uniform mat4 u_projection;
-uniform mat4 u_view;
-uniform mat4 u_transform;
+in vec4 pass_color;
+in vec2 pass_texCoord;
+in float pass_texIndex;
 
-out vec4 pass_color;
-out vec2 pass_texCoord;
-out float pass_texIndex;
-
-out float debugX;
-out float debugY;
-out float debugZ;
+uniform sampler2D texSamplers[16];
 
 void main(void) {
-	gl_Position = u_projection * u_view * vec4(in_position, 1.0);
+	int index = int(pass_texIndex);
 	
-	debugX = gl_Position.x;
-	debugY = gl_Position.y;
-	debugZ = gl_Position.z;
-	
-	pass_color = in_color;
-	pass_texCoord = in_texCoord;
-	pass_texIndex = in_texIndex;
+	// render the color if index if zero
+	if (index == 0) {
+		out_color = pass_color;	
+	}
+	else {
+		//offset indexes by 1 to account for array start position
+		index = index - 1;
+		//multiply texture color by passed color for texture lighting
+		out_color = pass_color * texture(texSamplers[index], pass_texCoord);
+	}
 }

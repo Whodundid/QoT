@@ -9,6 +9,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
+import eutil.datatypes.util.EList;
 
 public class WindowTextBox<E> extends WindowObject<E> {
 	
@@ -57,8 +58,8 @@ public class WindowTextBox<E> extends WindowObject<E> {
 		
 		double scissorX = maxWidth > 0 ? 0 : startX;
 		double scissorY = maxHeight > 0 ? 0 : startY;
-		double scissorW = maxWidth > 0 ? res.getWidth() : startX + maxWidth + border;
-		double scissorH = maxHeight > 0 ? res.getHeight() : startY + maxHeight + border;
+		double scissorW = maxWidth > 0 ? res.width : startX + maxWidth + border;
+		double scissorH = maxHeight > 0 ? res.height : startY + maxHeight + border;
 		
 		scissor(scissorX, scissorY, scissorW, scissorH);
 		
@@ -103,10 +104,10 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	// Internal Methods
 	//------------------
 	
-	private EArrayList<Box2<String, Integer>> parseLine(String lineIn, int colorIn) {
+	private EList<Box2<String, Integer>> parseLine(String lineIn, int colorIn) {
 		if (lineIn != null) {
 			
-			EArrayList<String> newLineCheck = new EArrayList<>();
+			EList<String> newLineCheck = new EArrayList<>();
 			
 			//check for new line characters
 			int pos = 0;
@@ -118,16 +119,16 @@ public class WindowTextBox<E> extends WindowObject<E> {
 				}
 			}
 			
-			EArrayList<String> widthAdjusted = new EArrayList<>();
+			EList<String> widthAdjusted = new EArrayList<>();
 			
 			for (String s : newLineCheck) {
 				widthAdjusted.addAll(EStringOutputFormatter.createWordWrapString(s, (int) maxWidth));
 			}
 			
-			EArrayList<Box2<String, Integer>> createdLines = new EArrayList<>();
+			EList<Box2<String, Integer>> createdLines = new EArrayList<>();
 			
 			for (String s : widthAdjusted) {
-				createdLines.add(new Box2<String, Integer>(s, colorIn));
+				createdLines.add(new Box2<>(s, colorIn));
 			}
 			
 			return createdLines;
@@ -141,7 +142,7 @@ public class WindowTextBox<E> extends WindowObject<E> {
 			int longest = 0;
 			for (var box : lines) {
 				String s = box.getA();
-				int len = getStringWidth(s);
+				int len = FontRenderer.strWidth(s);
 				if (len > longest) longest = len;
 			}
 			
@@ -197,7 +198,7 @@ public class WindowTextBox<E> extends WindowObject<E> {
 			for (var box : linesIn) {
 				String s = box.getA();
 				if (s != null) {
-					int len = getStringWidth(s);
+					int len = FontRenderer.strWidth(s);
 					if (len > longest) longest = len;
 				}
 			}

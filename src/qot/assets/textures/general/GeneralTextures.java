@@ -28,7 +28,11 @@ public class GeneralTextures extends TextureLoader {
 	public static final GameTexture
 	
 	logo = new GameTexture(textureDir, "qot_logo.png"),
-	noscreens = new GameTexture(textureDir, "noscreens.jpg");
+	noscreens = new GameTexture(textureDir, "noscreens.jpg"),
+	hunt_stillwater = new GameTexture(textureDir, "hunt_stillwater.png"),
+	hunt_lawson = new GameTexture(textureDir, "hunt_lawson.png"),
+	hunt_desalle = new GameTexture(textureDir, "hunt_desalle.png")
+	;
 	
 	//-----------
 	// Overrides
@@ -38,6 +42,9 @@ public class GeneralTextures extends TextureLoader {
 	public void onRegister(TextureSystem sys) {
 		reg(sys, logo);
 		reg(sys, noscreens);
+		reg(sys, hunt_stillwater);
+		reg(sys, hunt_lawson);
+		reg(sys, hunt_desalle);
 	}
 	
 }

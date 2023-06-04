@@ -4,22 +4,22 @@ import java.awt.Point;
 import java.io.File;
 
 import envision.Envision;
-import envision.game.events.eventTypes.world.WorldAddedEntityEvent;
-import envision.game.objects.GameObject;
-import envision.game.objects.entities.Entity;
-import envision.game.objects.entities.EntitySpawn;
+import envision.engine.events.eventTypes.world.WorldAddedEntityEvent;
+import envision.game.GameObject;
+import envision.game.entities.Entity;
+import envision.game.entities.EntitySpawn;
 import envision.game.world.layerSystem.LayerSystem;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
-import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.debug.Inefficient;
 import eutil.math.ENumUtil;
-import eutil.math.dimensions.EDimension;
-import eutil.math.dimensions.EDimensionI;
+import eutil.math.dimensions.Dimension_d;
+import eutil.math.dimensions.Dimension_i;
 import eutil.misc.Direction;
+import qot.world_tiles.VoidTile;
 
 public class GameWorld implements IGameWorld {
 	
@@ -56,8 +56,10 @@ public class GameWorld implements IGameWorld {
 	
 	/** The current time of day measured in game ticks. */
 	protected long timeOfDay = 0l;
-	/** The full length of one day measured in game ticks.
-	 *  Default is 10 min based on 60 tps. */
+	/**
+	 * The full length of one day measured in game ticks. Default is 10 min
+	 * based on 60 tps.
+	 */
 	protected long lengthOfDay = 36000l;
 	
 	protected final WorldFileSystem worldFileSystem;
@@ -165,7 +167,7 @@ public class GameWorld implements IGameWorld {
 	//---------
 	
 	@Override
-	public void onLoad() {
+	public void onLoad(String... args) {
 		if (worldLoadScript != null) {
 			try {
 				//Envision.envision.runProgram(worldLoadScript);
@@ -264,13 +266,13 @@ public class GameWorld implements IGameWorld {
 		//this is not efficient. :')
 		
 		for (Region r : regionData) {
-			EDimensionI rDims = r.getRegionDimensions();
+			Dimension_i rDims = r.getRegionDimensions();
 			//re-evaluate current region data
 			r.updateRegion(dt);
 			
 			//check if any entities are in a region or are entering or exiting one
 			for (Entity ent : entityData) {
-				EDimension entDims = ent.getCollisionDims();
+				Dimension_d entDims = ent.getCollisionDims();
 				
 				if (rDims.partiallyContains(entDims)) {
 					//check if 'r' already contains the entity
@@ -297,8 +299,10 @@ public class GameWorld implements IGameWorld {
 		entityData.add(ent);
 		
 		//assign entity ID
-		ent.setObjectID(getNextEntityID());
+		ent.setWorldID(getNextEntityID());
 		Envision.getEventHandler().postEvent(new WorldAddedEntityEvent(this, ent));
+		
+		ent.setWorldPos(ent.worldX, ent.worldY);
 		
 		//check if player
 		if (ent == Envision.thePlayer) {
@@ -330,18 +334,75 @@ public class GameWorld implements IGameWorld {
 	 * @param b
 	 * @return
 	 */
+	@Override
 	public double getDistance(GameObject a, GameObject b) {
 		if (a == null || b == null) return -1;
 		if (!worldObjects.containsEach(a, b)) return -1;
 		
-		return ENumUtil.distance(a.midX, a.midY, b.midX, b.midY);
+		//var ax = a.midX + a.collisionBox.midX;
+		//var ay = a.midY + a.collisionBox.midY;
+		//var bx = b.midX + b.collisionBox.midX;
+		//var by = b.midY + b.collisionBox.midY;
+		
+		var ax = a.midX;
+		var ay = a.midY;
+		var bx = b.midX;
+		var by = b.midY;
+		
+		return ENumUtil.distance(ax, ay, bx, by);
 	}
 	
+	@Override
 	public double distanceTo(GameObject ent, Point point) {
 		if (ent == null || point == null) return -1;
 		if (!worldObjects.contains(ent)) return -1;
 		
 		return ENumUtil.distance(ent.midX, ent.midY, point.x, point.y);
+	}
+	
+	@Override
+	public EList<GameObject> getAllGameObjectsWithinDistance(GameObject obj, double maxDistance) {
+		if (!worldObjects.contains(obj)) return null;
+		if (maxDistance <= 0) return null;
+		
+		int arrLen = worldObjects.size() / 4;
+		if (arrLen <= 10) arrLen = 10;
+		EList<GameObject> r = new EArrayList<>(arrLen);
+		
+		final int size = worldObjects.size();
+		for (int i = 0; i < size; i++) {
+			final GameObject o = worldObjects.get(i);
+			final double dist = ENumUtil.distance(o.midX, o.midY, obj.midX, obj.midY);
+			
+			if (dist < maxDistance) r.add(o);
+		}
+		
+		return r;
+	}
+	
+	@Override
+	public EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) {
+		if (!worldObjects.contains(obj)) return null;
+		if (maxDistance <= 0) return null;
+		
+		int arrLen = worldObjects.size() / 4;
+		if (arrLen <= 10) arrLen = 10;
+		EList<Entity> r = new EArrayList<>(arrLen);
+		
+		var list = worldObjects.stream()
+							   .filter(o -> o instanceof Entity)
+							   .map(o -> (Entity) o)
+							   .collect(EList.toEList());
+		
+		final int size = list.size();
+		for (int i = 0; i < size; i++) {
+			final Entity o = list.get(i);
+			final double dist = ENumUtil.distance(o.midX, o.midY, obj.midX, obj.midY);
+			
+			if (dist < maxDistance) r.add(o);
+		}
+		
+		return r;
 	}
 	
 	public Direction getDirectionTo(GameObject start, GameObject dest) {

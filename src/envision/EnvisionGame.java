@@ -1,8 +1,8 @@
 package envision;
 
+import envision.engine.events.GameEvent;
+import envision.engine.events.IEventListener;
 import envision.engine.terminal.TerminalCommandHandler;
-import envision.game.events.GameEvent;
-import envision.game.events.IEventListener;
 
 public interface EnvisionGame extends IEventListener {
 	

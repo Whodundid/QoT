@@ -1,5 +1,6 @@
 package envision.engine.rendering.batching;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
@@ -8,12 +9,15 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL46;
 
 import envision.Envision;
+import envision.engine.rendering.Camera;
 import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.shaders.ShaderProgram;
 import envision.engine.rendering.shaders.Shaders;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import eutil.datatypes.util.EList;
+import eutil.math.vectors.Vec2f;
+import eutil.math.vectors.Vec4f;
 
 public class RenderBatch {
 	
@@ -34,14 +38,14 @@ public class RenderBatch {
 	int maxBatchSize;
 	float[] vertices;
 	
-	static final int VERTEX_SIZE = 10;
-	static final int posOffset = 0;
-	static final int colorOffset = 12;
-	static final int texCoordOffset = 28;
-	static final int texIdOffset = 36;
+	static final int VERTEX_SIZE = 12;
+	static final int POS_OFFSET = 0;
+	static final int COLOR_OFFSET = 12;
+	static final int TEX_COORD_OFFSET = 28;
+	static final int TEX_ID_OFFSET = 36;
 	
 	public RenderBatch() { this(100, 16, Shaders.basic); }
-	public RenderBatch(int maxIn, int texSlotsIn) { this(maxIn, 2, Shaders.basic); }
+	public RenderBatch(int maxIn, int texSlotsIn) { this(maxIn, 16, Shaders.basic); }
 	public RenderBatch(int maxIn, int texSlotsIn, ShaderProgram shaderIn) {
 		maxBatchSize = maxIn;
 		texSlots = new int[texSlotsIn];
@@ -89,25 +93,25 @@ public class RenderBatch {
 		
 		// setup VBO
 		
-		//we use 10 * Float.BYTES as our stride here so that we can fit all of the following bytes in one vertex buffer
+		//we use 12 * Float.BYTES as our stride here so that we can fit all of the following bytes in one vertex buffer
 		// position (x, y, z) 		color (r, g, b, a) 				texture coord (tx, ty)		texture ID (tid)
-		// -1.5f, -0.5f, 0.0f, 		0.18f, 0.6f, 0.96f, 1.0f, 		0.0f, 0.f,					0f
+		// -1.5f, -0.5f, 0.0f, 		0.18f, 0.6f, 0.96f, 1.0f, 		0.0f, 0.0f,					0f
 		
-		int stride = 10 * Float.BYTES;
+		int stride = VERTEX_SIZE * Float.BYTES;
 		
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, stride, 0);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, stride, POS_OFFSET);
 		GL20.glEnableVertexAttribArray(0);
 		//12 because we are looking at the index of the first position float (x) at index (0)
 		
-		GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, stride, 12);
+		GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, stride, COLOR_OFFSET);
 		GL20.glEnableVertexAttribArray(1);
 		//12 because we are looking at the index of the first color float (r) at index (3)
 		
-		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, stride, 28);
+		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, stride, TEX_COORD_OFFSET);
 		GL20.glEnableVertexAttribArray(2);
 		//28 because we are looking at the index of the first texture float (tx) at index (7)
 		
-		GL20.glVertexAttribPointer(3, 1, GL11.GL_FLOAT, false, stride, 36);
+		GL20.glVertexAttribPointer(3, 1, GL11.GL_FLOAT, false, stride, TEX_ID_OFFSET);
 		GL20.glEnableVertexAttribArray(3);
 		//36 because we are looking at the index of the starting point of (tid) at index (9)
 	}
@@ -197,14 +201,15 @@ public class RenderBatch {
 	// Internal Methods
 	//==================
 	
+	
 	void vert(float x, float y, float r, float g, float b, float f) {
 		vert(x, y, 0.0f, r, g, b, f, 0.0f, 0.0f, 0.0f);
 	}
 	void vert(float x, float y, float z, float r, float g, float b, float f) {
-		vert(x, y, z, r, g, b, f, 0.0f, 0.0f, 0.0f);
+		vert(x, y, 0.0f, r, g, b, f, 0.0f, 0.0f, 0.0f);
 	}
 	void vert(float x, float y, float r, float g, float b, float f, float tx, float ty, float tid) {
-		vert(x, y, 0.0f, r, g, b, f, tx, ty, tid);
+		vert(x, y, 0.0f, r, g, b, f, 0.0f, 0.0f, 0.0f);
 	}
 	void vert(float x, float y, float z, float r, float g, float b, float f, float tx, float ty, float tid) {
 		int v = nextVertOffset;
@@ -220,11 +225,11 @@ public class RenderBatch {
 		vertices[v + 6] = f;
 		// texture coords
 		vertices[v + 7] = tx;
-		vertices[v + 8] = ty;
+		vertices[v + 8] = ty - 0.00001f;
 		// texture id
 		vertices[v + 9] = tid;
 		
-		nextVertOffset += 10;
+		nextVertOffset += VERTEX_SIZE;
 	}
 	
 	/**
@@ -249,9 +254,36 @@ public class RenderBatch {
 			GL46.glActiveTexture(GL13.GL_TEXTURE0 + i);
 			TextureSystem.getInstance().bind(textures.get(i));
 		}
+		
+		Camera cam = Envision.getRenderEngine().getCamera();
+		var player = Envision.thePlayer;
+		var world = Envision.theWorld;
+		boolean underground = (world != null) ? world.isUnderground() : false;
+		
+		Matrix4f u_projection = cam.getProjection();
+		Matrix4f u_view = cam.getView();
+		Vec2f playerPos = new Vec2f(); // default to (0, 0)
+		
+		float tileSize = (world != null) ? world.getTileWidth() : 32.0f;
+		float camZoom = (float) ((world != null) ? world.getCameraZoom() : 1.0f);
+		float lightDist = 100000f; // really high because baller~
+		float viewDist = 1000f; // the number of tiles that the entity can see out from it
+		
+		if (player != null) {
+			playerPos.set(Envision.getWidth() >> 1, Envision.getHeight() >> 1);
+			if (Envision.isPaused()) viewDist = 1000f;
+			else viewDist = 7.5f;
+		}
+		
+		if (underground) lightDist = viewDist * tileSize * camZoom;
+		
 		shader.setUniform("texSamplers", texSlots);
-		shader.setUniform("u_projection", Envision.getRenderEngine().getCamera().getProjection());
-		shader.setUniform("u_view", Envision.getRenderEngine().getCamera().getView());
+		shader.setUniform("u_projection", u_projection);
+		shader.setUniform("u_view", u_view);
+		shader.setUniform("u_playerPos", playerPos);
+		shader.setUniform("u_lightDist", lightDist);
+		shader.setUniform("u_bezierVals", new Vec4f(0.0, 0.1, 0.5, 1.0));
+		shader.setUniform("u_underground", underground == true ? 1 : 0);
 		
 		uploadToVBO();
 		
@@ -273,8 +305,8 @@ public class RenderBatch {
 			TextureSystem.getInstance().unbind(textures.get(i));
 		}
 		
-//		GLSettings.disableAlpha();
-//		GLSettings.disableBlend();
+		GLSettings.disableAlpha();
+		GLSettings.disableBlend();
 		
 		GL46.glBindVertexArray(0);
 		

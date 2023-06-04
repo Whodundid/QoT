@@ -6,7 +6,7 @@ import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import eutil.datatypes.boxes.Box2;
 import eutil.math.ENumUtil;
-import eutil.math.dimensions.EDimension;
+import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -58,7 +58,7 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	}
 	
 	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn, ScreenLocation sideIn, double thicknessIn) {
-		EDimension dim = parentIn.getDimensions();
+		Dimension_d dim = parentIn.getDimensions();
 		
 		scrollBarThickness = thicknessIn;
 		

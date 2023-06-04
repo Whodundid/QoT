@@ -1,9 +1,7 @@
 package qot.items.potions.healing;
 
-import envision.game.objects.entities.Entity;
-import envision.game.objects.items.Potion;
-import envision.game.world.IGameWorld;
-import envision.game.world.WorldCamera;
+import envision.game.entities.Entity;
+import envision.game.items.Potion;
 import qot.assets.textures.item.ItemTextures;
 import qot.items.ItemList;
 
@@ -26,11 +24,6 @@ public class Healing_Lesser extends Potion {
 	@Override
 	public Healing_Lesser copy() {
 		return new Healing_Lesser();
-	}
-
-	@Override
-	public void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY,
-		int distX, int distY) {
 	}
 
 	@Override

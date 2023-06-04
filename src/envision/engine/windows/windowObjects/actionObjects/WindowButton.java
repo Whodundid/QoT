@@ -115,7 +115,7 @@ public class WindowButton<E> extends ActionObject<E> {
 			else if (btnTexture != null) {
 				
 				//if (stretchTextures) {
-					drawTexture(curTexture, startX, startY, width, height);
+				drawTexture(curTexture, startX, startY, width, height);
 				//}
 				/*
 				else {

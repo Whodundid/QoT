@@ -55,6 +55,10 @@ public class WindowResizeListener extends GLFWWindowSizeCallback {
 		return this;
 	}
 	
+	public static void destroy() {
+		if (instance != null) instance.free();
+	}
+	
 	//================
 	// Static Getters
 	//================

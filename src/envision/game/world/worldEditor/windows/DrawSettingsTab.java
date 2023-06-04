@@ -26,7 +26,8 @@ public class DrawSettingsTab extends ContainerTab {
 	private WindowButton incDistX, decDistX;
 	private WindowButton incDistY, decDistY;
 	private WindowCheckBox drawMapBorders, drawCenterPosition, drawEntities, drawRegions;
-	private WindowCheckBox drawEntityHitBoxes, drawWallBox, drawFlatWalls, drawTileGrid;
+	private WindowCheckBox drawEntityOutlines, drawEntityHitBoxes, drawWallBox, drawFlatWalls;
+	private WindowCheckBox drawTileGrid;
 	
 	//--------------
 	// Constructors
@@ -67,46 +68,55 @@ public class DrawSettingsTab extends ContainerTab {
 		list.addObjectToList(distY, incDistY, decDistY);
 		
 		{
-			var checkX = 340;
-			var gap = 5;
+			final int checkX = 340;
+			final int gap = 5;
 			
 			drawMapBorders = new WindowCheckBox(list, checkX, 20, 50, 50);
 			drawCenterPosition = new WindowCheckBox(list, checkX, drawMapBorders.endY + gap, 50, 50);
 			drawEntities = new WindowCheckBox(list, checkX, drawCenterPosition.endY + gap, 50, 50);
 			drawRegions = new WindowCheckBox(list, checkX, drawEntities.endY + gap, 50, 50);
-			drawEntityHitBoxes = new WindowCheckBox(list, checkX, drawRegions.endY + gap, 50, 50);
+			drawEntityOutlines = new WindowCheckBox(list, checkX, drawRegions.endY + gap, 50, 50);
+			drawEntityHitBoxes = new WindowCheckBox(list, checkX, drawEntityOutlines.endY + gap, 50, 50);
 			drawWallBox = new WindowCheckBox(list, checkX, drawEntityHitBoxes.endY + gap, 50, 50);
 			drawFlatWalls = new WindowCheckBox(list, checkX, drawWallBox.endY + gap, 50, 50);
 			drawTileGrid = new WindowCheckBox(list, checkX, drawFlatWalls.endY + gap, 50, 50);
 			
-			var drawMapBordersLbl = new WindowLabel(list, drawMapBorders.endX + 20, drawMapBorders.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Map Borders");
-			var drawCenterPositionLbl = new WindowLabel(list, drawCenterPosition.endX + 20, drawCenterPosition.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Screen Mid");
-			var drawEntitiesLbl = new WindowLabel(list, drawEntities.endX + 20, drawEntities.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Entities");
-			var drawRegionsLbl = new WindowLabel(list, drawRegions.endX + 20, drawRegions.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Regions");
-			var drawEntityHitBoxesLbl = new WindowLabel(list, drawEntityHitBoxes.endX + 20, drawEntityHitBoxes.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Entity Outlines");
-			var drawWallBoxLbl = new WindowLabel(list, drawWallBox.endX + 20, drawWallBox.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Wall Box");
-			var drawFlatWallsLbl = new WindowLabel(list, drawFlatWalls.endX + 20, drawFlatWalls.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Flat Walls");
-			var drawTileGridLbl = new WindowLabel(list, drawTileGrid.endX + 20, drawTileGrid.midY - FontRenderer.FONT_HEIGHT / 2, "Draw Tile Grid");
+			final double mfh = FontRenderer.FONT_HEIGHT / 2; // mid font height
 			
-			drawMapBorders.setIsChecked(editor.getSettings().drawMapBorders);
-			drawCenterPosition.setIsChecked(editor.getSettings().drawCenterPositionBox);
-			drawEntities.setIsChecked(editor.getSettings().drawEntities);
-			drawRegions.setIsChecked(editor.getSettings().drawRegions);
-			drawEntityHitBoxes.setIsChecked(editor.getSettings().drawEntityHitBoxes);
-			drawWallBox.setIsChecked(editor.getSettings().drawWallBox);
-			drawFlatWalls.setIsChecked(editor.getSettings().drawFlatWalls);
-			drawTileGrid.setIsChecked(editor.getSettings().drawTileGrid);
+			var drawMapBordersLbl = new WindowLabel(list, drawMapBorders.endX + 20, drawMapBorders.midY - mfh, "Draw Map Borders");
+			var drawCenterPositionLbl = new WindowLabel(list, drawCenterPosition.endX + 20, drawCenterPosition.midY - mfh, "Draw Screen Mid");
+			var drawEntitiesLbl = new WindowLabel(list, drawEntities.endX + 20, drawEntities.midY - mfh, "Draw Entities");
+			var drawRegionsLbl = new WindowLabel(list, drawRegions.endX + 20, drawRegions.midY - mfh, "Draw Regions");
+			var drawEntityOutlinesLbl = new WindowLabel(list, drawEntityOutlines.endX + 20, drawEntityOutlines.midY - mfh, "Draw Entity Outlines");
+			var drawEntityHitBoxesLbl = new WindowLabel(list, drawEntityHitBoxes.endX + 20, drawEntityHitBoxes.midY - mfh, "Draw Entity Hitboxes");
+			var drawWallBoxLbl = new WindowLabel(list, drawWallBox.endX + 20, drawWallBox.midY - mfh, "Draw Wall Box");
+			var drawFlatWallsLbl = new WindowLabel(list, drawFlatWalls.endX + 20, drawFlatWalls.midY - mfh, "Draw Flat Walls");
+			var drawTileGridLbl = new WindowLabel(list, drawTileGrid.endX + 20, drawTileGrid.midY - mfh, "Draw Tile Grid");
+			
+			final var settings = editor.getSettings();
+			
+			drawMapBorders.setIsChecked(settings.drawMapBorders);
+			drawCenterPosition.setIsChecked(settings.drawCenterPositionBox);
+			drawEntities.setIsChecked(settings.drawEntities);
+			drawRegions.setIsChecked(settings.drawRegions);
+			drawEntityOutlines.setIsChecked(settings.drawEntityOutlines);
+			drawEntityHitBoxes.setIsChecked(settings.drawEntityHitBoxes);
+			drawWallBox.setIsChecked(settings.drawWallBox);
+			drawFlatWalls.setIsChecked(settings.drawFlatWalls);
+			drawTileGrid.setIsChecked(settings.drawTileGrid);
 			
 			list.addObjectToList(drawMapBorders, drawCenterPosition, drawEntities, drawRegions);
-			list.addObjectToList(drawEntityHitBoxes, drawWallBox, drawFlatWalls, drawTileGrid);
+			list.addObjectToList(drawEntityOutlines, drawEntityHitBoxes, drawWallBox, drawFlatWalls);
+			list.addObjectToList(drawTileGrid);
 			list.addObjectToList(drawMapBordersLbl, drawCenterPositionLbl, drawEntitiesLbl, drawRegionsLbl);
-			list.addObjectToList(drawEntityHitBoxesLbl, drawWallBoxLbl, drawFlatWallsLbl, drawTileGridLbl);
+			list.addObjectToList(drawEntityOutlinesLbl, drawEntityHitBoxesLbl, drawWallBoxLbl, drawFlatWallsLbl);
+			list.addObjectToList(drawTileGridLbl);
 		}
 		
 		IActionObject.setActionReceiver(this, incDistX, incDistY, decDistX, decDistY);
 		IActionObject.setActionReceiver(this, drawMapBorders, drawCenterPosition, drawEntities);
-		IActionObject.setActionReceiver(this, drawRegions, drawEntityHitBoxes, drawWallBox);
-		IActionObject.setActionReceiver(this, drawFlatWalls, drawTileGrid);
+		IActionObject.setActionReceiver(this, drawRegions, drawEntityOutlines, drawEntityHitBoxes);
+		IActionObject.setActionReceiver(this, drawWallBox, drawFlatWalls, drawTileGrid);
 		
 		list.fitItemsInList();
 		
@@ -142,23 +152,27 @@ public class DrawSettingsTab extends ContainerTab {
 		if (object == drawCenterPosition) s.drawCenterPositionBox = !s.drawCenterPositionBox;
 		if (object == drawEntities) s.drawEntities = !s.drawEntities;
 		if (object == drawRegions) s.drawRegions = !s.drawRegions;
+		if (object == drawEntityOutlines) s.drawEntityOutlines = !s.drawEntityOutlines;
 		if (object == drawEntityHitBoxes) s.drawEntityHitBoxes = !s.drawEntityHitBoxes;
 		if (object == drawWallBox) s.drawWallBox = !s.drawWallBox;
+		if (object == drawFlatWalls) s.drawFlatWalls = !s.drawFlatWalls;
+		if (object == drawTileGrid) s.drawTileGrid = !s.drawTileGrid;
 		
-		if (object == drawFlatWalls) {
-			s.drawFlatWalls = !s.drawFlatWalls;
-			s.drawTileGrid = false;
-		}
-		
-		if (object == drawTileGrid) {
-			s.drawTileGrid = !s.drawTileGrid;
-			if (s.drawTileGrid) s.drawFlatWalls = true;
-		}
+//		if (object == drawFlatWalls) {
+//			s.drawFlatWalls = !s.drawFlatWalls;
+//			s.drawTileGrid = false;
+//		}
+//		
+//		if (object == drawTileGrid) {
+//			s.drawTileGrid = !s.drawTileGrid;
+//			if (s.drawTileGrid) s.drawFlatWalls = true;
+//		}
 		
 		drawMapBorders.setIsChecked(s.drawMapBorders);
 		drawCenterPosition.setIsChecked(s.drawCenterPositionBox);
 		drawEntities.setIsChecked(s.drawEntities);
 		drawRegions.setIsChecked(s.drawRegions);
+		drawEntityOutlines.setIsChecked(s.drawEntityOutlines);
 		drawEntityHitBoxes.setIsChecked(s.drawEntityHitBoxes);
 		drawWallBox.setIsChecked(s.drawWallBox);
 		drawFlatWalls.setIsChecked(s.drawFlatWalls);

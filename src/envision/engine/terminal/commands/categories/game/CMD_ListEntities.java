@@ -27,11 +27,11 @@ public class CMD_ListEntities extends TerminalCommand {
 		}
 		
 		var entities = Envision.theWorld.getEntitiesInWorld();
-		entities.sort((a, b) -> Long.compare(a.getObjectID(), b.getObjectID()));
+		entities.sort((a, b) -> Long.compare(a.getWorldID(), b.getWorldID()));
 		
 		termIn.writeln("Listing all Entities in world", EColors.orange);
 		for (var e : entities) {
-			termIn.writeln("  " + EColors.lgreen + e.getName() + EColors.white + " : " + EColors.lgray + e.getObjectID());
+			termIn.writeln("  " + EColors.lgreen + e.getName() + EColors.white + " : " + EColors.lgray + e.getWorldID());
 		}
 	}
 	
