@@ -10,7 +10,7 @@ public class FixedFragment extends FragmentShader {
 	//--------------
 	
 	public FixedFragment() {
-		super("FixedFragment", "resources/shaders/fixedFragment.glsl");
+		super("FixedFragment", "src/main/resources/shaders/fixedFragment.glsl");
 	}
 	
 }

@@ -3,6 +3,7 @@ package qot.launcher;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
 
 import eutil.file.LineReader;
 import eutil.strings.EStringUtil;
@@ -23,9 +24,13 @@ public class LauncherDir {
 	// Settings File - Launcher Options
 	//----------------------------------
 	
+	public static final String SEPARATOR = FileSystems.getDefault().getSeparator();
+	
 	private static final String INSTALL_PATH_SETTING = "INSTALL_PATH: ";
 	private static final String LAUNCHER_LOG_LEVEL = "LAUNCHER_LOG_LEVEL [ALL, ONLY_ERRORS]: ";
 	private static final String RUN_LAUNCHER_SETTING = "RUN_LAUNCHER: ";
+	
+	public static final String SETTINGS_FILE_NAME = "settings.ini";
 
 	//---------------
 	// Static Fields
@@ -62,7 +67,7 @@ public class LauncherDir {
 		try {
 			String dir = QoTInstaller.getDefaultInstallDir();
 			//System.out.println("LauncherDir: installing launcher dir to: '" + dir + "'");
-			launcherDir = new File(dir + "\\QoT Launcher");
+			launcherDir = new File(dir + SEPARATOR + "QoT Launcher");
 			
 			//check if launcher directory already exists
 			if (!launcherDir.exists() && !launcherDir.mkdirs()) {
@@ -77,7 +82,7 @@ public class LauncherDir {
 		
 		//check if launcher settings file exists and create default if not
 		try {
-			launcherSettingsFile = new File(launcherDir, "settings.txt");
+			launcherSettingsFile = new File(launcherDir, SETTINGS_FILE_NAME);
 			//System.out.println("LauncherDir: Checking for settings file: '" + launcherSettingsFile + "'");
 			
 			//create default launcher settings file
@@ -111,7 +116,7 @@ public class LauncherDir {
 	 */
 	static void updateLauncherSettingsFile(LauncherSettings settings) throws Exception {
 		//create settings file for which to store launcher specific setting in
-		launcherSettingsFile = new File(launcherDir, "settings.ini");
+		launcherSettingsFile = new File(launcherDir, SETTINGS_FILE_NAME);
 		
 		try (var writer = new FileWriter(launcherSettingsFile, Charset.forName("UTF-8"))) {
 			String version = "# QoT Version: " + QoT.version;

@@ -10,7 +10,7 @@ public class FixedVertex extends VertexShader {
 	//--------------
 	
 	public FixedVertex() {
-		super("FixedVertex", "resources/shaders/fixedVertex.glsl");
+		super("FixedVertex", "src/main/resources/shaders/fixedVertex.glsl");
 	}
 	
 }

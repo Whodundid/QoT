@@ -1,9 +1,10 @@
 package envision.engine.rendering.shaders.util;
 
 import java.io.File;
-import java.util.Scanner;
 
 import org.lwjgl.opengl.GL46;
+
+import eutil.file.LineReader;
 
 public class FragmentShader {
 	
@@ -31,7 +32,7 @@ public class FragmentShader {
 	
 	/** Attempts to build this fragment shader from the provided fragment shader glsl program. */
 	private void build() {
-		try (Scanner reader = new Scanner(programPath)) {
+		try (var reader = new LineReader(programPath)) {
 			while (reader.hasNextLine()) {
 				program += reader.nextLine() + "\n";
 			}
