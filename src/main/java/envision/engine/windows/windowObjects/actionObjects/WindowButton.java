@@ -6,10 +6,12 @@ import org.lwjgl.glfw.GLFW;
 
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.settings.config.ConfigSetting;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
+import qot.settings.QoTSettings;
 
 //Author: Hunter Bragg
 
@@ -75,6 +77,11 @@ public class WindowButton<E> extends ActionObject<E> {
 		init(parentIn, posX, posY, width, height);
 		displayString = displayStringIn;
 	}
+	
+    public WindowButton(IWindowObject<?> parentIn, double posX, double posY, double width, double height, ConfigSetting<Boolean> settingIn) {
+        this(parentIn, posX, posY, width, height, "");
+        setTrueFalseButton(true, settingIn);
+    }
 	
 	//-----------
 	// Overrides
@@ -187,21 +194,38 @@ public class WindowButton<E> extends ActionObject<E> {
 	// Methods
 	//---------
 	
-	public void updateTrueFalseDisplay() {
-		if (trueFalseButton) {
-			String cur = getString();
-			boolean val = cur.equals("False");
-			setString(val ? "True" : "False");
-			setStringColor(val ? 0x55ff55 : 0xff5555);
-		}
-	}
-	
-	public void updateTrueFalseDisplay(boolean val) {
-		if (trueFalseButton) {
-			setString(val ? "True" : "False");
-			setStringColor(val ? 0x55ff55 : 0xff5555);
-		}
-	}
+    public void toggleTrueFalseDisplay() {
+        if (trueFalseButton) {
+            String cur = getString();
+            boolean val = cur.equals("False");
+            setString(val ? "True" : "False");
+            setStringColor(val ? 0xff55ff55 : 0xffff5555);
+        }
+    }
+    
+    public void toggleTrueFalseDisplay(boolean val) {
+        if (trueFalseButton) {
+            setString(val ? "True" : "False");
+            setStringColor(val ? 0xff55ff55 : 0xffff5555);
+        }
+    }
+    
+    public void toggleTrueFalseDisplay(boolean val, boolean updateConfig) {
+        if (trueFalseButton) {
+            setString(val ? "True" : "False");
+            setStringColor(val ? 0xff55ff55 : 0xffff5555);
+            if (updateConfig) QoTSettings.saveConfig();
+        }
+    }
+    
+    public void toggleTrueFalseDisplay(ConfigSetting<Boolean> setting, boolean updateConfig) {
+        if (trueFalseButton) {
+            boolean val = setting.toggle();
+            setString(val ? "True" : "False");
+            setStringColor(val ? 0xff55ff55 : 0xffff5555);
+            if (updateConfig) QoTSettings.saveConfig();
+        }
+    }
 	
 	public void setDrawStringCentered(boolean val) { drawCentered = val; }
 	public void setDrawStringShadowed(boolean val) { drawShadowed = val; }
@@ -284,7 +308,8 @@ public class WindowButton<E> extends ActionObject<E> {
 	public void setBackgroundHoverColor(int colorIn) { backgroundHoverColor = colorIn; }
 	public void setBackgroundHoverColor(EColors colorIn) { if (colorIn != null) { backgroundHoverColor = colorIn.intVal; } }
 	public void setTrueFalseButton(boolean val) { setTrueFalseButton(val, false); }
-	public void setTrueFalseButton(boolean val, boolean initial) { trueFalseButton = val; updateTrueFalseDisplay(initial); }
+	public void setTrueFalseButton(boolean val, boolean initial) { trueFalseButton = val; toggleTrueFalseDisplay(initial); }
+	public void setTrueFalseButton(boolean val, ConfigSetting<Boolean> settingIn) { setTrueFalseButton(val, settingIn != null ? settingIn.get() : false); }
 	public void setDrawString(boolean val) { drawString = val; }
 	public void setDrawDisabledColor(boolean val) { drawDisabledColor = val; }
 	public void setDrawStretched(boolean val) { stretchTextures = val; }

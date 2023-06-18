@@ -1,28 +1,41 @@
 package envision.engine.terminal.window;
 
+import envision.Envision;
 import envision.engine.rendering.RenderingManager;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowObjects.actionObjects.WindowSlider;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
 import envision.engine.windows.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;
 import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.misc.ScreenLocation;
+import qot.assets.textures.window.WindowTextures;
+import qot.settings.QoTSettings;
 
 public class TerminalOptionsWindow extends WindowParent {
 
 	WindowScrollList settings;
 	WindowButton drawLineNumbers, backColor, maxLines;
+	WindowSlider opacitySlider;
 	
 	public TerminalOptionsWindow() {
 		aliases.add("termoptions", "toptions");
+		windowIcon = WindowTextures.settings;
+	}
+	
+	@Override
+	public boolean isDebugWindow() {
+	    return true;
 	}
 	
 	@Override
 	public void initWindow() {
-		setSize(190, 110);
-		setMinDims(75, 75);
+		setSize(490, 340);
+		setMinDims(490, 340);
 		setResizeable(true);
 		setObjectName("Terminal Settings");
 	}
@@ -40,8 +53,8 @@ public class TerminalOptionsWindow extends WindowParent {
 		settings.addObjectToList(false, visual);
 		
 		//buttons
-		//drawLineNumbers = new WindowButton(settings, startX + 12, visual.endY + 8, 60, 20, CoreApp.termLineNumbers);
-		backColor = new WindowButton(settings, startX + 13, drawLineNumbers.endY + 10, 20, 20) {
+		drawLineNumbers = new WindowButton(settings, startX + 12, visual.endY + 20, 130, 30, QoTSettings.termLineNumbers);
+		backColor = new WindowButton(settings, startX + 13, drawLineNumbers.endY + 15, 20, 20) {
 			@Override
 			public void drawObject(int mXIn, int mYIn) {
 				super.drawObject(mXIn, mYIn);
@@ -51,22 +64,29 @@ public class TerminalOptionsWindow extends WindowParent {
 			}
 		};
 		
+		final var fh = FontRenderer.FONT_HEIGHT * 0.4;
+		var opacityLbl = new WindowLabel(settings, startX + 12, backColor.endY + 35, "Terminal background opacity", EColors.lgray);
+		
+		opacitySlider = new WindowSlider(settings, startX + 12, opacityLbl.endY + 5, 250, 30, 0, 255, false);
+		opacitySlider.setUseIntegers(true);
+		opacitySlider.setSliderValue(QoTSettings.termOpacity.get());
+		
 		backColor.setDrawBackground(true);
-		//backColor.setBackgroundColor(CoreApp.termBackground.get());
+		backColor.setBackgroundColor(QoTSettings.termBackground.get());
 		backColor.setTextures(null, null);
 		
-		IActionObject.setActionReceiver(this, drawLineNumbers, backColor);
+		IActionObject.setActionReceiver(this, drawLineNumbers, backColor, opacitySlider);
 		
 		//labels
-		WindowLabel numberLabel = new WindowLabel(settings, drawLineNumbers.endX + 10, drawLineNumbers.midY - 4, "Draw line numbers", EColors.lgray);
-		WindowLabel background = new WindowLabel(settings, backColor.endX + 10, backColor.midY - 4, "Terminal background color", EColors.lgray);
+		WindowLabel numberLabel = new WindowLabel(settings, drawLineNumbers.endX + 20, drawLineNumbers.midY - fh, "Draw line numbers", EColors.lgray);
+		WindowLabel background = new WindowLabel(settings, backColor.endX + 20, backColor.midY - fh, "Terminal background color", EColors.lgray);
 		
-		numberLabel.setHoverText("Displays the current line number in termainls");
-		background.setHoverText("Sets the background color in terminals");
+		IWindowObject.setHoverText("Displays line numbers in terminals", numberLabel, drawLineNumbers);
+		IWindowObject.setHoverText("Sets the background color in terminals", background, backColor);
 		
 		//add to list
-		settings.addObjectToList(false, drawLineNumbers, backColor);
-		settings.addObjectToList(false, numberLabel, background);
+		settings.addObjectToList(false, drawLineNumbers, backColor, opacitySlider);
+		settings.addObjectToList(false, numberLabel, background, opacityLbl);
 		
 		settings.fitItemsInList();
 		
@@ -99,33 +119,47 @@ public class TerminalOptionsWindow extends WindowParent {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == drawLineNumbers) { lineNumbers(); }
-		if (object == backColor) { changeColor(); }
+		if (object == drawLineNumbers) lineNumbers();
+		if (object == backColor) changeColor();
+		if (object == opacitySlider) changeOpacity();
 		
-		if (object instanceof ColorPickerSimple) {
-			if (args.length > 0) {
-				try {
-					int val = (int) args[0];
-					//CoreApp.termBackground.set(val);
-					backColor.setBackgroundColor(val);
-					//CoreApp.instance().getConfig().saveMainConfig();
-				}
-				catch (Exception e) { e.printStackTrace(); }
-			}
+		if (args.length > 0 && object instanceof ColorPickerSimple) {
+		    try {
+                int val = (int) args[0];
+                QoTSettings.termBackground.set(val);
+                backColor.setBackgroundColor(val);
+                QoTSettings.saveConfig();
+                Envision.getTopScreen().reloadAllWindowInstances(ETerminalWindow.class);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
 		}
 	}
 	
-	@Override public boolean isDebugWindow() { return true; }
-	
 	private void lineNumbers() {
-		//CoreApp.termLineNumbers.set(!CoreApp.termLineNumbers.get());
-		//drawLineNumbers.toggleTrueFalse(CoreApp.termLineNumbers, CoreApp.instance(), true);
+	    drawLineNumbers.toggleTrueFalseDisplay(QoTSettings.termLineNumbers, true);
 		
-		//EnhancedMC.reloadAllWindowInstances(ETerminal.class);
+	    Envision.getTopScreen().reloadAllWindowInstances(ETerminalWindow.class);
 	}
 	
 	private void changeColor() {
-		//EnhancedMC.displayWindow(new ColorPickerSimple(this));
+		Envision.getTopScreen().displayWindow(new ColorPickerSimple(this, QoTSettings.termBackground.get()));
+	}
+	
+	private void changeOpacity() {
+	    QoTSettings.termOpacity.set((int) opacitySlider.getSliderValue());
+	    QoTSettings.saveConfig();
+	    
+	    final var background = QoTSettings.termBackground.get();
+	    final var opacity = QoTSettings.termOpacity.get();
+	    
+	    var terms = Envision.getTopScreen().getAllWindowInstances(ETerminalWindow.class);;
+	    for (var t : terms) {
+	        var c = EColors.changeOpacity(background, opacity);
+	        t.history.setBackgroundColor(c);
+	        t.inputField.setBackgroundColor(c);
+	    }
 	}
 	
 }

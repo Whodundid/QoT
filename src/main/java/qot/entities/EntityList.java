@@ -13,6 +13,7 @@ import qot.doodads.PineTree2;
 import qot.doodads.SticksGroundClutter;
 import qot.doodads.StoneGroundClutter;
 import qot.doodads.WeedsGroundClutter;
+import qot.entities.buildings.Spawner;
 import qot.entities.enemies.Goblin;
 import qot.entities.enemies.TrollBoar;
 import qot.entities.enemies.Whodundid;
@@ -53,6 +54,8 @@ public enum EntityList {
 	STICKS(20),
 	
 	Archer(21),
+	
+	Spawner(22),
 	;
 	
 	public final int ID;
@@ -99,6 +102,7 @@ public enum EntityList {
 		case STICKS: return new SticksGroundClutter();
 		
 		case Archer: return new Archer();
+		case Spawner: return new Spawner();
 		default: return null;
 		}
 	}

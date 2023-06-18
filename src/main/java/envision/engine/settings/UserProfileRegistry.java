@@ -93,7 +93,7 @@ public class UserProfileRegistry {
 		}
 		
 		currentUser = user;
-		return new Box2<>(true, "Successfully switched to: " + user);
+		return new Box2<>(true, "Switched to: " + user);
 	}
 	
 	public List<String> getRegisteredProfileNames() { return profiles.values().stream().map(p -> p.getName()).toList(); }

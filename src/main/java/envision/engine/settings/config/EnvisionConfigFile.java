@@ -96,7 +96,11 @@ public class EnvisionConfigFile {
 		}
 	}
 	
-	protected <Val> void setConfigVal(ConfigSetting<Val> settingIn) { setConfigVal(settingIn, settingIn.getDefault()); }
+	protected <Val> void setConfigVal(ConfigSetting<Val> settingIn) {
+	    var d = settingIn.getDefault();
+	    setConfigVal(settingIn, d);
+	}
+	
 	protected <Val> void setConfigVal(ConfigSetting<Val> settingIn, Val defaultVal) {
 		if (settingIn != null) {
 			Val get = null;
@@ -305,7 +309,10 @@ public class EnvisionConfigFile {
 		try {
 			if (load()) {
 				if (settings != null) {
-					EUtil.filterForEach(settings, s -> !s.getIgnoreConfigRead(), s -> setConfigVal(s));
+				    var filtered = settings.filter(s -> !s.getIgnoreConfigRead());
+				    for (var s : filtered) {
+				        setConfigVal(s);
+				    }
 				}
 				return true;
 			}

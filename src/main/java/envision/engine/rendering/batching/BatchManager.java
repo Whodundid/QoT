@@ -1,10 +1,13 @@
 package envision.engine.rendering.batching;
 
 import envision.Envision;
+import envision.engine.rendering.GLModes;
+import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
+import eutil.debug.Inefficient;
 import eutil.misc.Rotation;
 
 // order
@@ -143,6 +146,76 @@ public class BatchManager implements IBatchManager {
 	//=========
 	// Methods
 	//=========
+	
+	public static void drawLine(double startX, double startY, double endX, double endY, int thickness, int color) {
+		instance().drawLine_batch(startX, startY, endX, endY, thickness, color);
+	}
+	
+	@Inefficient(reason="Not great -- doesn't really probably account for line thickness right now..")
+	private void drawLine_batch(double sX, double sY, double eX, double eY, int thickness, int color) {
+		RenderBatch curBatch = getCurLayerBatch();
+		if (curBatch == null) {
+			return;
+		}
+		
+		float sx = (float) sX;
+		float sy = (float) sY;
+		float ex = (float) eX;
+		float ey = (float) eY;
+		
+		//float dx = ex - sx;
+		//float dy = ey - sy;
+		//System.out.println("(" + sX + ", " + sY + ") : (" + eX + ", " + eY + ") [" + dx + ", " + dy + "] " + thickness);
+		
+		float r = (color >> 16 & 255) * F_255;
+		float g = (color >> 8 & 255) * F_255;
+		float b = (color & 255) * F_255;
+		float f = (color >> 24 & 255) * F_255;
+		
+		float tx = (float) thickness;
+		float ty = (float) thickness;
+		
+		curBatch.vert(sx - tx, sy + ty, r, g, b, f);
+		curBatch.vert(sx, sy, r, g, b, f);
+		curBatch.vert(ex + tx, ey - ty, r, g, b, f);
+		curBatch.vert(ex, ey, r, g, b, f);
+		
+		curBatch.totalElements++;
+	}
+	
+	/** Draws a solid ellipse expanding out from the center. */
+	public static void drawFilledEllipse(double posX, double posY, double radiusX, double radiusY, int detail, int color) {
+		instance().drawFilledEllipse_batch(posX, posY, radiusX, radiusY, detail, color);
+	}
+	
+	/** Draws a solid ellipse expanding out from the center. */
+	private void drawFilledEllipse_batch(double posX, double posY, double radiusX, double radiusY, int detail, int color) {
+		RenderBatch curBatch = getCurLayerBatch();
+		if (curBatch == null) {
+			return;
+		}
+		
+		float r = (color >> 16 & 255) * F_255;
+		float g = (color >> 8 & 255) * F_255;
+		float b = (color & 255) * F_255;
+		float f = (color >> 24 & 255) * F_255;
+		
+		float posx = (float) posX;
+		float posy = (float) posY;
+		double detailD = (double) detail;
+		
+		//define points
+		curBatch.vert(posx, posy, r, g, b, f);
+		
+		for (int i = 0; i < detail + 1; i++) {
+			float theta = (float) (2.0D * Math.PI * (double) i / detailD);
+			float x = (float) (radiusX * Math.cos(theta));
+			float y = (float) (radiusY * Math.sin(theta));
+			curBatch.vert(x + posx, y + posy, r, g, b, f);
+		}
+		
+		curBatch.totalElements++;
+	}
 	
 	public static void drawRect(double sx, double sy, double ex, double ey, EColors color) {
 		instance().drawRect_i(sx, sy, ex, ey, color.intVal);

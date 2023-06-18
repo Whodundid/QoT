@@ -76,6 +76,10 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 		onLivingUpdate(dt);
 	}
 	
+	public void onRenderTick(float dt) {
+		
+	}
+	
 	/** Can be overridden in child classes to denote specific entity behavior. */
 	public void onLivingUpdate(float dt) {}
 	

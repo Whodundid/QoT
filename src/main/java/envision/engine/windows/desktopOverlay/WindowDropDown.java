@@ -44,68 +44,67 @@ public class WindowDropDown extends WindowDropDownList {
 	public void drawObject(int mXIn, int mYIn) {
 		super.drawObject(mXIn, mYIn);
 		
-		if (rcm == null) {
-			var entry = getHoveringEntry(mXIn, mYIn);
-			if (entry != null) {
-				if (entry != last) {
-					last = entry;
-					var windows = Envision.getTopScreen().getAllActiveWindows();
-					Envision.getTopScreen().revealHiddenObjects();
-					
-					for (var w : windows) {
-						w.setDrawWhenMinimized(true);
-					}
-					
-					if (entry.getEntryObject() instanceof IWindowParent<?> p) {
-						for (var w : windows) {
-							if (w != p) {
-								w.setHidden(true);
-								w.setDrawWhenMinimized(false);
-							}
-						}
-					}
-				} //if entry != last
+		if (rcm != null) return;
+		
+		var entry = getHoveringEntry(mXIn, mYIn);
+		if (entry == null || entry == last) return;
+		
+		last = entry;
+		var windows = Envision.getTopScreen().getAllActiveWindows();
+		Envision.getTopScreen().revealHiddenObjects();
+		
+		for (var w : windows) {
+			w.setDrawWhenMinimized(true);
+		}
+		
+		if (entry.getEntryObject() instanceof IWindowParent<?> p) {
+			for (var w : windows) {
+				if (w == p) continue;
+				
+				w.setHidden(true);
+				w.setDrawWhenMinimized(false);
 			}
-		} //rcm == null
+		}
 		
 	}
 	
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
+		if (button == 1) {
+			openRCM(mXIn, mYIn);
+			return;
+		}
+		
 		if (button == 0) {
 			DropDownListEntry entry = getHoveringEntry(mXIn, mYIn);
-			if (entry != null) {
-				if (entry.getEntryObject() instanceof WindowParent) {
-					WindowParent p = (WindowParent) entry.getEntryObject();
-					parentButton.performAction(p);
-					parentButton.destroyList();
-					if (rcm != null) { rcm.close(); rcm = null; }
+			if (entry == null) return;
+			
+			if (entry.getEntryObject() instanceof WindowParent p) {
+				parentButton.performAction(p);
+				parentButton.destroyList();
+				
+				if (rcm != null) {
+					rcm.close();
+					rcm = null;
 				}
 			}
 		}
-		else if (button == 1) {
-			openRCM(mXIn, mYIn);
-		}
-		
 	}
 	
 	@Override
 	public void onFocusGained(EventFocus eventIn) {
-		if (eventIn.getFocusType().equals(FocusType.MOUSE_PRESS)) {
-			if (eventIn.getActionCode() == 0) {
-				DropDownListEntry entry = getHoveringEntry(eventIn.getMX(), eventIn.getMY());
-				if (entry != null) {
-					if (entry.getEntryObject() instanceof WindowParent) {
-						WindowParent p = (WindowParent) entry.getEntryObject();
-						parentButton.destroyList();
-						parentButton.performAction(p);
-					}
-				}
+		if (FocusType.MOUSE_PRESS.notEquals(eventIn.getFocusType())) return;
+		
+		if (eventIn.getActionCode() == 0) {
+			DropDownListEntry entry = getHoveringEntry(eventIn.getMousePoint());
+			if (entry.getEntryObject() instanceof WindowParent p) {
+				parentButton.destroyList();
+				parentButton.performAction(p);
 			}
-			else if (eventIn.getActionCode() == 1) {
-				openRCM(eventIn.getMX(), eventIn.getMY());
-			} //mouse 1
 		}
+		else if (eventIn.getActionCode() == 1) {
+			openRCM(eventIn.getMX(), eventIn.getMY());
+		} //mouse 1
 	}
 		
 	@Override

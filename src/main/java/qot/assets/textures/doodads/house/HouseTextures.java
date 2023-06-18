@@ -26,6 +26,7 @@ public class HouseTextures extends TextureLoader {
 	
 	public static final GameTexture
 	
+	anvil = new GameTexture(textureDir, "anvil.png"),
 	barrel = new GameTexture(textureDir, "barrel.png"),
 	chair = new GameTexture(textureDir, "chair.png"),
 	counter_food = new GameTexture(textureDir, "count_food.png"),
@@ -43,6 +44,7 @@ public class HouseTextures extends TextureLoader {
 	
 	@Override
 	public void onRegister(TextureSystem sys) {
+		reg(sys, anvil);
 		reg(sys, barrel);
 		reg(sys, chair);
 		reg(sys, counter_food);

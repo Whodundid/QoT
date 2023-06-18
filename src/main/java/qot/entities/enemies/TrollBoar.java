@@ -6,6 +6,7 @@ import eutil.datatypes.points.Point2i;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
+import qot.entities.EntityList;
 
 public class TrollBoar extends Enemy {
 	
@@ -148,6 +149,8 @@ public class TrollBoar extends Enemy {
 	
 	private void provideSpeedAura() {
 		 var closeEntities = world.getAllEntitiesWithinDistance(this, 50);
+		 if (closeEntities == null) return;
+		 
 		 closeEntities = closeEntities.filter(e -> e instanceof Enemy);
 		 
 		 for (var e : closeEntities) {
@@ -158,7 +161,7 @@ public class TrollBoar extends Enemy {
 	
 	@Override
 	public int getInternalSaveID() {
-		return 3;
+		return EntityList.TROLLBOAR.ID;
 	}
 	
 }

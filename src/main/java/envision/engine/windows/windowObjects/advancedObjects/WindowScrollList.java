@@ -81,7 +81,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	@Override
 	public void drawObject_i(int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
-		drawRect(startX, startY, endX, endY, borderColor);
+		drawHRect(borderColor);
 		
 		vScroll.setVisible(isVScrollDrawn());
 		hScroll.setVisible(isHScrollDrawn());

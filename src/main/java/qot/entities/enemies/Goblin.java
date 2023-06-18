@@ -7,6 +7,7 @@ import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
+import qot.entities.EntityList;
 
 public class Goblin extends Enemy {
 	
@@ -94,7 +95,7 @@ public class Goblin extends Enemy {
 	
 	@Override
 	public int getInternalSaveID() {
-		return 1;
+		return EntityList.GOBLIN.ID;
 	}
 	
 }

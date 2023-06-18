@@ -9,6 +9,7 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.points.Point2i;
 
 //Author: Hunter Bragg
 
@@ -219,6 +220,7 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	// Getters
 	//---------
 	
+	public DropDownListEntry<E> getHoveringEntry(Point2i point) { return getHoveringEntry(point.x, point.y); }
 	public DropDownListEntry<E> getHoveringEntry(int mXIn, int mYIn) {
 		if (isMouseInside()) {
 			

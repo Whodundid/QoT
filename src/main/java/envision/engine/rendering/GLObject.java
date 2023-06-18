@@ -198,9 +198,9 @@ public interface GLObject {
 	
 	
 	/** Draws a horizontal line with a thickness of 1. */
-	static void drawHorizontalLine(double startX, double endX, double y, EColors color) { drawHorizontalLine(startX, endX, y, color.intVal); }
+	static void drawHorizontalLine(double startX, double endX, double y, int thickness, EColors color) { drawHorizontalLine(startX, endX, y, thickness, color.intVal); }
 	/** Draws a horizontal line with a thickness of 1. */
-	static void drawHorizontalLine(double startX, double endX, double y, int color) {
+	static void drawHorizontalLine(double startX, double endX, double y, int thickness, int color) {
 		//correct dimensions (if necessary)
 		if (endX < startX) {
 			double i = startX;
@@ -209,14 +209,14 @@ public interface GLObject {
 		}
 		
 		//draw
-		drawRect(startX, y, endX + 1, y + 1, color);
+		drawRect(startX, y, endX + thickness, y + thickness, color);
 	}
 	
 	
 	/** Draws a vertical line with a thickness of 1. */
-	static void drawVerticalLine(double x, double startY, double endY, EColors color) { drawVerticalLine(x, startY, endY, color.intVal); }
+	static void drawVerticalLine(double x, double startY, double endY, int thickness, EColors color) { drawVerticalLine(x, startY, endY, thickness, color.intVal); }
 	/** Draws a vertical line with a thickness of 1. */
-	static void drawVerticalLine(double x, double startY, double endY, int color) {
+	static void drawVerticalLine(double x, double startY, double endY, int thickness, int color) {
 		//correct dimensions (if necessary)
 		if (endY < startY) {
 			double i = startY;
@@ -225,7 +225,7 @@ public interface GLObject {
 		}
 		
 		//draw
-		drawRect(x, startY + 1, x + 1, endY, color);
+		drawRect(x, startY + thickness, x + thickness, endY, color);
 	}
 	
 	

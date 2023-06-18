@@ -75,4 +75,14 @@ public enum TileIDs {
 		return tileID + ":" + name;
 	}
 	
+	public static TileIDs getIdFrom(int id) {
+		final var vals = values();
+		if (id < 0 || id > vals.length) return null;
+		for (int i = 0; i < vals.length; i++) {
+			var tid = vals[i];
+			if (tid.tileID == id) return tid;
+		}
+		return null;
+	}
+	
 }

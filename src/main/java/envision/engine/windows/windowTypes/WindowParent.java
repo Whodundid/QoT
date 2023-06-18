@@ -122,40 +122,49 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 			if (!isMaximized()) {
 				double y = hasHeader() ? getHeader().startY - FontRenderer.FONT_HEIGHT : startY - FontRenderer.FONT_HEIGHT;
 				int pos = 0;
-				int half = -1;
+				//int half = -1;
 				String draw = "";
 				String time = String.valueOf(initTime);
 				
 				if (time.length() > 6) time = time.substring(time.length() - 6);
 				
 				if (DebugFunctions.drawWindowPID) {
-					pos = FontRenderer.strWidth("ID: " + EColors.yellow + getObjectID());
+					pos = FontRenderer.strWidth("ID: " + getObjectID());
 					draw = EColors.mc_aqua + "ID: " + EColors.yellow + getObjectID();
-					
-					if (DebugFunctions.drawWindowInit) {
-						half = pos + 6;
-						pos += FontRenderer.strWidth(EColors.mc_aqua + "  InitTime: " + EColors.yellow + time);
-						draw += EColors.mc_aqua + "  InitTime: " + EColors.yellow + time;
-					}
-				}
-				else if (DebugFunctions.drawWindowInit) {
-					pos = FontRenderer.strWidth("InitTime: " + EColors.yellow + time);
-					draw += "InitTime: " + EColors.yellow + time;
+					drawRect(startX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+	                drawRect(startX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+	                pos += 13;
+	                draw += " ";
 				}
 				
-				drawRect(startX, y - 1, startX + pos + 5, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
-				drawRect(startX + 1, y, startX + pos + 4, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
-				if (half > 0) drawRect(startX + half, y, startX + half + 1, y + FontRenderer.FONT_HEIGHT, EColors.black);
-				drawString(draw, startX + 3, y + 2);
+				if (DebugFunctions.drawWindowInit) {
+				    var sX = startX + pos;
+					pos += (int) strWidth("InitTime: " + time);
+					draw += EColors.mc_aqua + "InitTime: " + EColors.yellow + time;
+					drawRect(sX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+	                drawRect(sX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+	                pos += 13;
+                    draw += " ";
+				}
+				
+//				drawRect(startX, y - 1, startX + pos + 5, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+//				drawRect(startX + 1, y, startX + pos + 4, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+//				if (half > 0) drawRect(startX + half, y, startX + half + 1, y + FontRenderer.FONT_HEIGHT, EColors.black);
 				
 				if (DebugFunctions.drawWindowDimensions) {
-					String dims = "[" + (int) startX + ", " + (int) startY + ", " + width + " " + height + "]";
+					String dims = "[" + (int) startX + ", " + (int) startY + ", " + (int) width + " " + (int) height + "]";
 					int eX = FontRenderer.strWidth(dims);
+					var sX = startX + pos;
+					pos += eX;
+					draw += EColors.seafoam + dims;
 					
-					drawRect(startX + pos + 5, y - 1, startX + pos + eX + 9, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
-					drawRect(startX + pos + 5, y, startX + pos + eX + 8, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
-					drawString(dims, startX + pos + 7, y + 1, EColors.seafoam);
+					drawRect(sX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+					drawRect(sX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+	                pos += 13;
+	                draw += " ";
 				}
+				
+				drawString(draw, startX + 3, y + 3);
 			}
 		}
 	}
@@ -171,15 +180,6 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		if (getTopParent() == Envision.getTopScreen()) {
 			//update the taskbar
 			TaskBar.windowClosed(this);
-			
-			//get all active windows on the top renderer
-			var windows = Envision.getTopScreen().getAllActiveWindows();
-			
-			//check if this is the only window on the top renderer
-			//if so, close the top renderer when closing the window
-			if (windows.size() == 1 && windows.getFirst() == this) {
-				Envision.getTopScreen().setFocused(false);
-			}
 		}
 		
 		super.close();

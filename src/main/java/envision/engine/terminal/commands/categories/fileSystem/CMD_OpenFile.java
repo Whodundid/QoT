@@ -7,14 +7,14 @@ import java.io.IOException;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 
-import envision.engine.terminal.window.ETerminalWindow;
+import org.apache.commons.io.FilenameUtils;
+
 import envision.engine.windows.bundledWindows.TextEditorWindow;
 import envision.engine.windows.bundledWindows.TextureDisplayer;
 import envision.engine.windows.windowUtil.ObjectPosition;
+import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
-import eutil.strings.EStringUtil;
 
 public class CMD_OpenFile extends AbstractFileCommand {
 	
@@ -28,132 +28,84 @@ public class CMD_OpenFile extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: open 'file'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			termIn.error("Not enough arguments!");
-			termIn.info(getUsage());
+	public void runCommand() throws Exception {
+		expectExactly(1);
+		
+		boolean openA = hasModifier("-a");
+		
+		String toOpen = firstArg();
+		File theFileToOpen = parseFilePath(dir(), toOpen);
+		
+		determineFileType(theFileToOpen, openA);
+	}
+	
+	private void determineFileType(File path, boolean openA) throws IOException {
+		if (!path.isDirectory()) {
+			open(path, openA);
+			return;
 		}
-		else if (args.size() >= 1) {
-			try {
-				//boolean openA = args.getLast().equals("-a");
-				boolean openA = hasModifier("-a");
-				String all = "";
-				
-				if (openA) { all = EStringUtil.combineAll(args.subList(0, args.size() - 1), " "); }
-				else { all = EStringUtil.combineAll(args, " "); }
-				
-				File f = new File(termIn.getDir(), all);
-				
-				if (all.startsWith("..")) { f = new File(termIn.getDir(), args.get(0)); }
-				if (args.get(0).equals("~")) { f = new File(System.getProperty("user.dir")); }
-				
-				if (f.exists()) { check(termIn, f, openA); }
-				else {
-					f = new File(all);
-					
-					if (f.exists()) { check(termIn, f, openA); }
-					else {
-						if (args.get(0).startsWith("..")) { f = new File(termIn.getDir(), args.get(0)); }
-						else { f = new File(args.get(0)); }
-						
-						if (f.exists()) { check(termIn, f, openA); }
-						else {
-							f = new File(termIn.getDir(), args.get(0));
-							
-							if (f.exists()) { check(termIn, f, openA); }
-							else {
-								try {
-									open(termIn, f, openA);
-								}
-								catch (Exception e) {
-									termIn.error("'" + args.get(0) + "' is not a vaild file!");
-									error(termIn, e);
-								}
-							} //else
-						}
-					} //else
-				}
-				
-			}
-			catch (Exception e) { error(termIn, e); }
+		
+		String link = path.getCanonicalPath();
+		String colorPath = "" + EColors.mc_aqua + link;
+		
+		if (openA) {
+			writeLink("Opening Dir: " + colorPath, link, new File(link), false, EColors.yellow);
+			FileOpener.openFile(path);
+		}
+		else {
+			setDir(new File(path.getCanonicalPath()));
+			writeLink("Current Dir: " + colorPath, link, new File(link), false, EColors.yellow);
 		}
 	}
 	
-	private void check(ETerminalWindow termIn, File path, boolean openA) {
-		if (path.isDirectory()) {
-			try {
-				String link = path.getCanonicalPath();
-				String colorPath = "" + EColors.mc_aqua + link;
-				
-				if (openA) {
-					termIn.writeLink("Opening Dir: " + colorPath, link, new File(link), false, EColors.yellow);
-					FileOpener.openFile(path);
-				}
-				else {
-					termIn.setDir(new File(path.getCanonicalPath()));
-					termIn.writeLink("Current Dir: " + colorPath, link, new File(link), false, EColors.yellow);
-				}
-			}
-			catch (IOException e) { error(termIn, e); }
+	private void open(File dir, boolean openA) throws IOException {
+		if (!dir.exists()) {
+			error("No file/directory with that name found in the current directory!");
+			return;
 		}
-		else { open(termIn, path, openA); }
-	}
-	
-	private void open(ETerminalWindow termIn, File dir, boolean openA) {
-		try {
-			if (dir.exists()) {
-				if (openA) {
-					termIn.writeln("Opening the file on computer...", EColors.lgreen);
-					FileOpener.openFile(dir);
-				}
-				else {
-					String path = dir.getAbsolutePath().trim();
-					
-					if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".gif") || path.endsWith(".tga") || path.endsWith(".bmp")) {
-						try {
-							BufferedImage img = ImageIO.read(dir);
-							if (img != null) {
-								termIn.writeln("Opening...", EColors.green);
-								termIn.getTopParent().displayWindow(new TextureDisplayer(dir), ObjectPosition.SCREEN_CENTER);
-							}
-						}
-						catch (IIOException e) {
-							File[] files = dir.listFiles();
-							
-							termIn.writeln("File Directory: " + EColors.mc_aqua + dir + "\n", EColors.yellow);
-							
-							for (File f : files) {
-								boolean d = f.isDirectory();
-								termIn.writeln(f + (d ? "\\" : ""), d ? 0xff2265f0 : EColors.green.intVal);
-							}
-							
-							error(termIn, e);
-						}
-					}
-					else if (path.endsWith(".txt") || path.endsWith(".cfg")) {
-						if (path != null) {
-							termIn.info("Opening edit window..");
-							
-							TextEditorWindow window = new TextEditorWindow(dir);
-							window.setFocusedObjectOnClose(termIn);
-							
-							termIn.getTopParent().displayWindow(window, ObjectPosition.SCREEN_CENTER);
-							
-							window.setFocusToLineIfEmpty();
-						}
-					}
-					else if (dir.canExecute()) {
-						try {
-							FileOpener.openFile(dir);
-						}
-						catch (Exception e) { error(termIn, e); }
-					}
+		
+		if (openA) {
+			writeln("Opening the file on computer...", EColors.lgreen);
+			FileOpener.openFile(dir);
+			return;
+		}
+		
+		String path = dir.getCanonicalPath().trim();
+		String extenstion = FilenameUtils.getExtension(path);
+		
+		if (EUtil.anyMatch(extenstion, "png", "jpg", "gif", "tga", "bmp")) {
+			try {
+				BufferedImage img = ImageIO.read(dir);
+				if (img != null) {
+					writeln("Opening...", EColors.green);
+					term().getTopParent().displayWindow(new TextureDisplayer(dir), ObjectPosition.SCREEN_CENTER);
 				}
 			}
-			else { termIn.error("No file/directory with that name found in the current directory!"); }
+			catch (IIOException e) {
+				File[] files = dir.listFiles();
+				
+				writeln("File Directory: " + EColors.mc_aqua + dir + "\n", EColors.yellow);
+				
+				for (File f : files) {
+					boolean d = f.isDirectory();
+					writeln(f + (d ? "\\" : ""), d ? 0xff2265f0 : EColors.green.intVal);
+				}
+				
+				error(e);
+			}
+		}
+		else if (EUtil.anyMatch(extenstion, "txt", "cfg")) {
+			info("Opening edit window..");
 			
+			TextEditorWindow window = new TextEditorWindow(dir);
+			
+			window.setFocusedObjectOnClose(term());
+			term().getTopParent().displayWindow(window, ObjectPosition.SCREEN_CENTER);
+			window.setFocusToLineIfEmpty();
 		}
-		catch (Exception e) { error(termIn, e); }
+		else if (dir.canExecute()) {
+			FileOpener.openFile(dir);
+		}
 	}
 
 }

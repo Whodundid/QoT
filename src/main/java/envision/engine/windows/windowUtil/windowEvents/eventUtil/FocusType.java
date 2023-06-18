@@ -1,8 +1,11 @@
 package envision.engine.windows.windowUtil.windowEvents.eventUtil;
 
+import eutil.misc.IEnumHelper;
+
 //Author: Hunter Bragg
 
-public enum FocusType {
+public enum FocusType implements IEnumHelper<FocusType> {
+	
 	GAINED,
 	LOST,
 	TRANSFER,
@@ -10,4 +13,5 @@ public enum FocusType {
 	KEY_PRESS,
 	DEFAULT_FOCUS_OBJECT,
 	NONE;
+	
 }

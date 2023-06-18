@@ -61,7 +61,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 		scissor();
 		
 		if (getEnableBackgroundDrawing()) {
-			drawRect(borderColor);
+			drawHRect(borderColor);
 			drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor);
 		}
 		

@@ -38,11 +38,11 @@ public class RenderBatch {
 	int maxBatchSize;
 	float[] vertices;
 	
-	static final int VERTEX_SIZE = 12;
+	static final int VERTEX_SIZE = 10;
 	static final int POS_OFFSET = 0;
-	static final int COLOR_OFFSET = 12;
-	static final int TEX_COORD_OFFSET = 28;
-	static final int TEX_ID_OFFSET = 36;
+	static final int COLOR_OFFSET = 3;
+	static final int TEX_COORD_OFFSET = 7;
+	static final int TEX_ID_OFFSET = 9;
 	
 	public RenderBatch() { this(100, 16, Shaders.basic); }
 	public RenderBatch(int maxIn, int texSlotsIn) { this(maxIn, 16, Shaders.basic); }
@@ -99,19 +99,19 @@ public class RenderBatch {
 		
 		int stride = VERTEX_SIZE * Float.BYTES;
 		
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, stride, POS_OFFSET);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, stride, POS_OFFSET * Float.BYTES);
 		GL20.glEnableVertexAttribArray(0);
 		//12 because we are looking at the index of the first position float (x) at index (0)
 		
-		GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, stride, COLOR_OFFSET);
+		GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, stride, COLOR_OFFSET * Float.BYTES);
 		GL20.glEnableVertexAttribArray(1);
 		//12 because we are looking at the index of the first color float (r) at index (3)
 		
-		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, stride, TEX_COORD_OFFSET);
+		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, stride, TEX_COORD_OFFSET * Float.BYTES);
 		GL20.glEnableVertexAttribArray(2);
 		//28 because we are looking at the index of the first texture float (tx) at index (7)
 		
-		GL20.glVertexAttribPointer(3, 1, GL11.GL_FLOAT, false, stride, TEX_ID_OFFSET);
+		GL20.glVertexAttribPointer(3, 1, GL11.GL_FLOAT, false, stride, TEX_ID_OFFSET * Float.BYTES);
 		GL20.glEnableVertexAttribArray(3);
 		//36 because we are looking at the index of the starting point of (tid) at index (9)
 	}

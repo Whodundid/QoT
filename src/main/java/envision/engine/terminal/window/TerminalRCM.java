@@ -1,10 +1,12 @@
 package envision.engine.terminal.window;
 
+import envision.engine.inputHandlers.Keyboard;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.window.termParts.TerminalTextField;
 import envision.engine.terminal.window.termParts.TerminalTextLine;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import qot.assets.textures.window.WindowTextures;
 
 public class TerminalRCM extends RightClickMenu {
 
@@ -18,10 +20,10 @@ public class TerminalRCM extends RightClickMenu {
 		build();
 		
 		//addOption("Search text..");
+		if (Keyboard.getClipboard() != null) addOption("Paste");
 		addOption("Clear");
 		addOption("Clear History");
-		addOption("Paste");
-		//addOption("Options", EMCResources.guiSettingsButton);
+		addOption("Options", WindowTextures.settings);
 	}
 	
 	public TerminalRCM(TerminalTextLine lineIn) {
@@ -49,17 +51,21 @@ public class TerminalRCM extends RightClickMenu {
 		//addOption("Options", EMCResources.guiSettingsButton);
 	}
 	
-	private void build() {
-		setRunActionOnPress(true);
-		setActionReceiver(this);
-		
-		setTitle("Terminal");
+	//===========
+	// Overrides
+	//===========
+	
+	@Override
+	public boolean isDebugWindow() {
+		return true;
 	}
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == this && getGenericObject() != null) {
-			switch ((String) getGenericObject()) {
+		if (object != this || args.length == 0) return;
+		
+		if (args[0] instanceof String s) {
+			switch (s) {
 			case "Copy": copy(); break;
 			case "Paste": paste(); break;
 			case "Search text..": search(); break;
@@ -70,28 +76,43 @@ public class TerminalRCM extends RightClickMenu {
 		}
 	}
 	
+	//===================
+	// Internal Builders
+	//===================
+	
+	private void build() {
+		setRunActionOnPress(true);
+		setActionReceiver(this);
+		
+		setTitle("Terminal");
+	}
+	
 	private void copy() {
 		//if it was for a textfield
 		if (inputField != null) {
 			String text = inputField.getText();
 			//text = EChatUtil.removeFormattingCodes(text);
 			text = text.trim();
-			//GuiScreen.setClipboardString(text);
+			Keyboard.setClipboard(text);
 		}
 		//if it was for a textline
 		else if (line != null) {
 			String text = line.getText();
-			if (text.startsWith("> ")) { text = text.substring(2); }
+			if (text.startsWith("> ")) text = text.substring(2);
 			//text = EChatUtil.removeFormattingCodes(text);
 			text = text.trim();
-			//GuiScreen.setClipboardString(text);
+			Keyboard.setClipboard(text);
 		}
 	}
 	
 	private void paste() {
-		//if (term != null && term.getInputField() != null && GuiScreen.getClipboardString() != null) {
-		//	term.getInputField().writeText(GuiScreen.getClipboardString());
-		//}
+		if (term == null) return;
+		if (term.getInputField() == null) return;
+		
+		String toPaste = Keyboard.getClipboard();
+		if (toPaste == null) return;
+		
+		term.getInputField().writeText(toPaste);
 	}
 	
 	private void search() {
@@ -99,7 +120,6 @@ public class TerminalRCM extends RightClickMenu {
 	}
 	
 	private void clear() {
-		term.clear();
 		term.clear();
 	}
 	
@@ -112,5 +132,4 @@ public class TerminalRCM extends RightClickMenu {
 		getTopParent().displayWindow(new TerminalOptionsWindow());
 	}
 	
-	@Override public boolean isDebugWindow() { return true; }
 }

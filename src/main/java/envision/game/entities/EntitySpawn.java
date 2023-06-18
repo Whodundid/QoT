@@ -1,8 +1,8 @@
 package envision.game.entities;
 
 import envision.game.items.Item;
-import envision.game.world.GameWorld;
-import eutil.datatypes.EArrayList;
+import envision.game.world.IGameWorld;
+import eutil.datatypes.util.EList;
 import eutil.misc.Rotation;
 import qot.entities.EntityList;
 
@@ -14,7 +14,7 @@ public class EntitySpawn {
 	
 	private int x, y;
 	private int type;
-	private EArrayList<Item> spawnItems = new EArrayList();
+	private EList<Item> spawnItems = EList.newList();
 	private int initHealth = -1;
 	private int initMana = -1;
 	private Rotation initFacing = Rotation.LEFT;
@@ -57,16 +57,16 @@ public class EntitySpawn {
 		return spawn;
 	}
 	
-	public void spawnEntity(GameWorld world) {
+	public Entity spawnEntity(IGameWorld world) {
 		Entity ent = getEntity(world);
 		
 		if (initHealth != -1) ent.setHealth(initHealth);
 		if (initMana != -1) ent.setMana(initMana);
 		
-		world.addEntity(ent);
+		return world.addEntity(ent);
 	}
 	
-	public Entity getEntity(GameWorld world) {
+	public Entity getEntity(IGameWorld world) {
 		var ent = EntityList.getEntity(type);
 		ent.world = world;
 		ent.setWorldPos(x, y);
@@ -81,7 +81,7 @@ public class EntitySpawn {
 	public int getX() { return x; }
 	public int getY() { return y; }
 	public int getType() { return type; }
-	public EArrayList<Item> getItems() { return spawnItems; }
+	public EList<Item> getItems() { return spawnItems; }
 	public int getHealth() { return initHealth; }
 	public int getMana() { return initMana; }
 	public Rotation getFacing() { return initFacing; }
@@ -89,7 +89,7 @@ public class EntitySpawn {
 	public void setInitHealth(int val) { initHealth = val; }
 	public void setInitMana(int val) { initMana = val; }
 	public void setInitFacing(Rotation dir) { initFacing = dir; }
-	public void setItems(EArrayList<Item> itemsIn) { spawnItems.addAll(itemsIn); spawnItems.purgeNulls(); }
+	public void setItems(EList<Item> itemsIn) { spawnItems.addAll(itemsIn); spawnItems.purgeNulls(); }
 	public void setPosition(int x, int y) { this.x = x; this.y = y; }
 	
 	public String toSaveString() {

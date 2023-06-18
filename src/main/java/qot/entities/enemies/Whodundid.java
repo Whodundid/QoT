@@ -7,6 +7,7 @@ import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
+import qot.entities.EntityList;
 
 public class Whodundid extends Enemy {
 	
@@ -78,7 +79,7 @@ public class Whodundid extends Enemy {
 	
 	@Override
 	public int getInternalSaveID() {
-		return 2;
+		return EntityList.WHODUNDID.ID;
 	}
 	
 }

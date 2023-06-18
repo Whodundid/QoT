@@ -41,7 +41,7 @@ public class CMD_Ls extends AbstractFileCommand {
 		theFile = switch (firstArg()) {
 		case "." -> term.getDir();
 		case ".." -> term.getDir().getParentFile();
-		case "~" -> userDir;
+		case "~" -> USER_DIR;
 		case "wdir" -> QoTSettings.getEditorWorldsDir();
 		default -> null;
 		};

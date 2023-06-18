@@ -21,6 +21,34 @@ public abstract class ComponentBasedObject extends GameObject {
 		ecs = new EntityComponentSystem();
 	}
 	
+	//===========
+	// Overrides
+	//===========
+	
+	@Override
+	public void onGameTick(float deltaTime) {
+		super.onGameTick(deltaTime);
+		ecs.onGameTick(deltaTime);
+	}
+	
+	@Override
+	public void onRenderTick(float deltaTime) {
+		super.onRenderTick(deltaTime);
+		ecs.onRenderTick(deltaTime);
+	}
+	
+	//=========
+	// Methods
+	//=========
+	
+	/**
+	 * Used by components to notify the object when an event related to some
+	 * specific component has occurred.
+	 */
+	public void onComponentEvent(EntityComponent theComponent, String id, Object... args) {
+		// do nothing by default;
+	}
+	
 	//==================
 	// Wrapped From ECS
 	//==================

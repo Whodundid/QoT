@@ -6,7 +6,10 @@ import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
+import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
+import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.datatypes.points.Point2i;
 import eutil.math.ENumUtil;
 
@@ -56,6 +59,7 @@ public class WindowSlider<E> extends ActionObject<E> {
 		thumbSize = vertical ? height / 9 : width / 9;
 		
 		setSliderValue(defaultVal);
+		getTopParent().registerListener(this);
 	}
 	
 	//-----------
@@ -88,7 +92,6 @@ public class WindowSlider<E> extends ActionObject<E> {
 				drawStringC(displayValue, midX, midY - 8, displayValueColor);
 			}
 		}
-		
 	}
 	
 	@Override
@@ -143,7 +146,22 @@ public class WindowSlider<E> extends ActionObject<E> {
 	public void onFocusLost(EventFocus eventIn) {
 		isSliding = false;
 	}
-		
+	
+	@Override
+	public void close(boolean recursive) {
+	    getTopParent().unregisterListener(this);
+	    super.close(recursive);
+	}
+	
+	@Override
+	public void onEvent(ObjectEvent e) {
+	    if (e instanceof EventMouse m) {
+	        if (m.getMouseType() == MouseType.RELEASED) {
+	            isSliding = false;
+	        }
+	    }
+	}
+	
 	//------------------
 	// Internal Methods
 	//------------------

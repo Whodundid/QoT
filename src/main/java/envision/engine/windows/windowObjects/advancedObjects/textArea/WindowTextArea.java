@@ -29,7 +29,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	protected boolean drawLineHighlight = true;
 	protected boolean drawLineNumberSeparator = true;
 	protected int maxWidth = Integer.MAX_VALUE;
-	protected int lineHeight = 10;
+	protected int lineHeight = 24;
 	protected int lineNumberSeparatorColor = 0xff000000;
 	
 	//--------------
@@ -59,7 +59,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	@Override
 	public void drawObject_i(int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
-		drawRect(startX, startY, endX, endY, borderColor);
+		drawHRect(borderColor);
 		
 		vScroll.setVisible(isVScrollDrawn());
 		hScroll.setVisible(isHScrollDrawn());

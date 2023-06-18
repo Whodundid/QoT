@@ -78,92 +78,133 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 	}
 	
 	protected void fileTabComplete(ETerminalWindow termIn, String dir, EList<String> args) {
-		try {
-			if (args.isEmpty()) {
-				File f = new File(dir);
+		// the dir to start trying to parse a tab complete from -- can change based on given path
+		File tabCompleteDir = new File(dir);
+		
+		if (args.isEmpty()) {
+			EList<String> options = EList.newList();
+			
+			for (File file : tabCompleteDir.listFiles()) {
+				options.add(file.getName());
+			}
+			
+			termIn.buildTabCompletions(options);
+			if (!termIn.getTab1()) termIn.setTextTabBeing("");
+			return;
+		}
+		
+		// exit out if they've already pressed tab once (we don't need to build new results)
+		if (termIn.getTab1()) return;
+		
+		EList<String> options = EList.newList();
+		
+		String inputPath = args.getLast().replace("\\", SEPARATOR).replace("/", SEPARATOR);
+		boolean isHome = inputPath.startsWith("~" + SEPARATOR);
+		
+		//search for name complete
+		if (!inputPath.endsWith("/") && !inputPath.endsWith("\\")) {
+			File testPath = new File(args.get(termIn.getCurrentArg() - 1));
+			String search = "";
+			
+			if (testPath.exists()) {
+				tabCompleteDir = testPath;
+				termIn.setTextTabBeing(args.get(0));
+			}
+			else {
+				int pos = EStringUtil.findStartingIndex(inputPath, "\\", true);
 				
-				EList<String> options = EList.newList();
+				if (pos >= 0) {
+					String path = inputPath.substring(isHome ? 1 : 0, pos + 1);
+					termIn.setTabBase(EStringUtil.subStringToSpace(path, 0, true));
+					tabCompleteDir = new File(path);
+					
+					if (!tabCompleteDir.exists()) {
+						tabCompleteDir = new File(termIn.getDir(), path);
+					}
+					
+					termIn.setTextTabBeing(path);
+					termIn.setTab1(false);
+				}
+			}
+			
+			search = !termIn.getTab1() ? EStringUtil.subStringToString(inputPath, 0, "\\", true) : termIn.getTextTabBegin();
+			
+			for (File file : tabCompleteDir.listFiles()) {
+				String fName = file.getName();
+				String check = search;
 				
-				for (File file : f.listFiles()) {
+				if (fName.startsWith(check)) {
 					options.add(file.getName());
 				}
-				
-				termIn.buildTabCompletions(options);
-				if (!termIn.getTab1()) termIn.setTextTabBeing("");
-			}
-			else if (!termIn.getTab1()) {
-				EList<String> options = EList.newList();
-				
-				File home = termIn.getDir();
-				File f = new File(dir);
-				String all = EStringUtil.combineAll(args, " ").replace("/", "\\");
-				boolean isHome = all.startsWith("~");
-				
-				if (!all.endsWith("/") && !all.endsWith("\\")) { //search for name complete
-					
-					File testPath = new File(args.get(termIn.getCurrentArg() - 1));
-					String search = "";
-					
-					if (testPath.exists()) {
-						f = testPath;
-						termIn.setTextTabBeing(args.get(0));
-					}
-					else {
-						int pos = EStringUtil.findStartingIndex(all, "\\", true);
-						if (pos >= 0) {
-							String path = all.substring(isHome ? 1 : 0, pos + 1);
-							termIn.setTabBase(EStringUtil.subStringToSpace(path, 0, true));
-							f = new File(path);
-							if (!f.exists()) { f = new File(termIn.getDir(), path); }
-							termIn.setTextTabBeing(path);
-							termIn.setTab1(false);
-						}
-					}
-					
-					search = !termIn.getTab1() ? EStringUtil.subStringToString(all, 0, "\\", true) : termIn.getTextTabBegin();
-					
-					if (f != null && f.listFiles() != null) {
-						for (File file : f.listFiles()) {
-							String fName = file.getName().toLowerCase();
-							String check = search.toLowerCase();
-							
-							if (fName.startsWith(check)) {
-								options.add(file.getName());
-							}
-						}
-					}
-				}
-				else { //search for directory complete
-					boolean isDrive = false;
-					for (File driveLetter : File.listRoots()) {
-						if (all.toLowerCase().equals(driveLetter.toString().toLowerCase())) {
-							isDrive = true;
-							break;
-						}
-					}
-					
-					all = all.substring(isHome ? 1 : 0, isDrive ? all.length() : all.length() - 1);
-					
-					if (isHome) { f = new File(home, all); }
-					else { f = new File(all); }
-					
-					if (!f.exists()) { f = new File(termIn.getDir(), all); }
-					termIn.setTabBase(EStringUtil.subStringToSpace(all, 0, true) + (isDrive ? "" : "\\"));
-					
-					if (f != null && f.listFiles() != null) {
-						for (File file : f.listFiles()) {
-							options.add(file.getName());
-						}
-					}
-				}
-				
-				termIn.buildTabCompletions(options);
-				if (!termIn.getTab1()) termIn.setTextTabBeing(args.get(0));
 			}
 		}
-		catch (Exception e) {
-			error(termIn, e);
+		//search for directory complete
+		else {
+			tabCompleteDir = parseFilePath(termIn.getDir(), inputPath);
+			
+			String tabBase = EStringUtil.subStringToSpace(inputPath, 0, true);
+			termIn.setTabBase(tabBase);
+			
+			for (File file : tabCompleteDir.listFiles()) {
+				options.add(file.getName());
+			}
 		}
+		
+		// finally build the tab completions
+		termIn.buildTabCompletions(options);
+		
+		if (!termIn.getTab1()) {
+			termIn.setTextTabBeing(args.get(0));
+		}
+	}
+	
+	//===============================================================================================
+	
+	protected File parseFilePath(final File currentDir, final String pathIn) {
+		// prevent null paths from being evaluated
+		if (pathIn == null) return null;
+		// assume empty paths are referring to local dir
+		if (pathIn.isBlank()) return currentDir;
+		
+		// get all separators on the same page
+		pathIn.replace("\\", SEPARATOR).replace("/", SEPARATOR);
+		
+		final File dir = currentDir;
+		final File parentDir = currentDir.getParentFile();
+		
+		// try the simple replacement ones first
+		switch (pathIn) {
+		case ".": return dir;
+		case "..": return parentDir;
+		case "~": return USER_DIR;
+		case "/", "\\": return ROOT_DIR;
+		default: break;
+		}
+		
+		String parsedPath = null;
+		
+		// if dir starts with a '.' replace with 'dir'
+		if (pathIn.startsWith("." + SEPARATOR)) parsedPath = dir + pathIn.substring(2);
+		// if dir starts with a '..' replace with 'parentDir'
+		else if (pathIn.startsWith(".." + SEPARATOR)) parsedPath = parentDir + pathIn.substring(3);
+		// replace '~' with starting user dir
+		else if (pathIn.startsWith("~" + SEPARATOR)) parsedPath = USER_DIR + pathIn.substring(2);
+		
+		// check if we found a match
+		if (parsedPath != null) {
+			return new File(parsedPath);
+		}
+		
+		// check if it could be a drive root
+		final String allLower = pathIn.toLowerCase();
+		for (File driveLetter : File.listRoots()) {
+			final var driveLower = String.valueOf(driveLetter).toLowerCase();
+			if (allLower.equals(driveLower)) {
+				return driveLetter;
+			}
+		}
+		
+		return new File(currentDir, pathIn);
 	}
 	
 	protected boolean deleteRecursively(ETerminalWindow termIn, File path) {

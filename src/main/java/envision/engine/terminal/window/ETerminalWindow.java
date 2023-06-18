@@ -2,11 +2,9 @@ package envision.engine.terminal.window;
 
 import java.io.File;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
 import java.util.List;
 
 import envision.Envision;
-import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.TerminalCommand;
@@ -17,6 +15,7 @@ import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowText
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
@@ -32,6 +31,7 @@ import eutil.misc.ScreenLocation;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
 import qot.assets.textures.taskbar.TaskBarTextures;
+import qot.settings.QoTSettings;
 
 //Author: Hunter Bragg
 
@@ -127,14 +127,19 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 			}
 		};
 		
-		inputField.setBackgroundColor(EColors.black);
+		final var lineNumbers = QoTSettings.termLineNumbers.get();
+		final var background = QoTSettings.termBackground.get();
+		final var opacity = QoTSettings.termOpacity.get();
+		final var c = EColors.changeOpacity(background, opacity);
+		
+		inputField.setBackgroundColor(c);
 		inputField.setBorderColor(0xff222222);
 		inputField.setTextColor(EColors.lgray);
 		inputField.setMaxStringLength(255);
 		
-		history.setBackgroundColor(0xff000000);
+		history.setBackgroundColor(c);
 		history.setBorderColor(0xff222222);
-		//history.setDrawLineNumbers(CoreApp.termLineNumbers.get());
+		history.setDrawLineNumbers(lineNumbers);
 		history.setLineNumberSeparatorColor(EColors.vdgray);
 		history.setResetDrawn(false);
 		
@@ -188,7 +193,11 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 			header.setTitle("Terminal " + EColors.yellow + dirS);
 		}
 		
-		RenderingManager.drawRect(startX, startY, endX, endY, 0xff000000);
+		var opacity = QoTSettings.termOpacity.get();
+		var c = EColors.changeOpacity(0xff000000, opacity);
+		drawRect(startX, inputField.startY - 1, endX, inputField.startY, EColors.black);
+        drawHRect(EColors.black);
+        drawRect(c, 1);
 	}
 	
 	@Override
@@ -199,8 +208,8 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
-		//if (button == 1) getTopParent().displayWindow(new TerminalRCM(this), ObjectPosition.CURSOR_CORNER);
-		//else inputField.requestFocus();
+		if (button == 1) getTopParent().displayWindow(new TerminalRCM(this), ObjectPosition.CURSOR_CORNER);
+		else inputField.requestFocus();
 	}
 	
 	@Override
@@ -315,10 +324,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 				boolean isClear = EStringUtil.equalsAny(cmd, "clear", "clr", "cls");
 				
 				if (!isClear) {
-					final String dirS = sep + Paths.get(System.getProperty("user.dir")).relativize(dir.getCanonicalFile().toPath());
-					final var user = Envision.getCurrentUser();
-					final String dev = (user.isDev()) ? "#" : "$";
-					writeln(user + ":" + dirS + dev + " " + cmd, 0xffffffff);
+					writeln("> " + cmd, 0xffffffff);
 				}
 				
 				TerminalCommandHandler.cmdHistory.add(cmd);

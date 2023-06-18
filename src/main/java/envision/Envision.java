@@ -16,6 +16,8 @@ import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
+import envision.engine.notifications.NotificationHandler;
+import envision.engine.notifications.util.NotificationType;
 import envision.engine.rendering.GameWindow;
 import envision.engine.rendering.RenderEngine;
 import envision.engine.rendering.RenderingManager;
@@ -102,6 +104,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private static TerminalCommandHandler terminalHandler;
 	private static LayerSystem layerHandler;
 	private static EnvisionLang envisionLang;
+	private static final NotificationHandler notificationHandler = NotificationHandler.getInstance();
+	public static final NotificationType envisionNotifaction = new NotificationType("envision", "General", "Envision", "Notifications received on general Envision events.");
 	
 	private static UserProfileRegistry profileRegistry = new UserProfileRegistry();
 	
@@ -235,6 +239,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		
 		renderEngine = RenderEngine.getInstance();
 		renderEngine.init(gameWindow.getWindowHandle());
+		
+		if (QoTSettings.batchRendering.get()) BatchManager.enable();
+		else BatchManager.disable();
 		
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		
@@ -662,6 +669,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		eventHandler.postEvent(event);
 		return eventHandler;
 	}
+	
+	/** Returns Envision's notification handler instance. */
+	public static NotificationHandler getNotificationHandler() { return notificationHandler; }
 	
 	/** Returns the engine's rendering engine. */
 	public static RenderEngine getRenderEngine() { return renderEngine; }

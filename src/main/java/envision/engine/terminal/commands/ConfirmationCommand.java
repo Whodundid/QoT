@@ -7,7 +7,7 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 
 	protected boolean responseReceived = false;
 	protected boolean confirmed = false;
-	protected String confirmString = "Do you want to continue? (Y, N)";
+	protected String confirmString = "Do you want to continue? (Yes, No)";
 	protected String yes = "y", no = "n";
 	
 	protected ConfirmationCommand() {}
@@ -16,7 +16,8 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 	public void onConfirmation(String response) {
 		if (response != null) {
 			responseReceived = true;
-			confirmed = response.equalsIgnoreCase(yes);
+			String firstYes = (yes != null && yes.length() > 1) ? yes.substring(1, yes.length() - 1) : no;
+			confirmed = response.equalsIgnoreCase(yes) || response.startsWith(firstYes);
 		}
 	}
 	
@@ -27,7 +28,9 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 			responseReceived = false;
 			confirmed = false;
 		}
-		else { termIn.setRequiresCommandConfirmation(this, confirmString + " (" + yes + ", " + no + ")", args, runVisually); }
+		else {
+		    termIn.setRequiresCommandConfirmation(this, confirmString + " (" + yes + ", " + no + ")", args, runVisually);
+		}
 		return false;
 	}
 	

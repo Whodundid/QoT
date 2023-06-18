@@ -93,26 +93,40 @@ public class RenderingManager {
 	public static void drawLine(double startX, double startY, double endX, double endY, int thickness, EColors color) { drawLine(startX, startY, endX, endY, thickness, color.intVal); }
 	/** Draws a line from point a to b with a variable thickness. */
 	public static void drawLine(double startX, double startY, double endX, double endY, int thickness, int color) {
-		if (BatchManager.isEnabled()) {}
+		if (BatchManager.isEnabled()) BatchManager.drawLine(startX, startY, endX, endY, thickness, color);
 		else GLObject.drawLine(startX, startY, endX, endY, thickness, color);
 	}
 	
 	
 	/** Draws a horizontal line with a thickness of 1. */
-	public static void drawHorizontalLine(double startX, double endX, double y, EColors color) { drawHorizontalLine(startX, endX, y, color.intVal); }
+	public static void drawHorizontalLine(double startX, double endX, double y, int thickness, EColors color) { drawHorizontalLine(startX, endX, y, thickness, color.intVal); }
 	/** Draws a horizontal line with a thickness of 1. */
-	public static void drawHorizontalLine(double startX, double endX, double y, int color) {
-		if (BatchManager.isEnabled()) {}
-		else GLObject.drawHorizontalLine(startX, endX, y, color);
+	public static void drawHorizontalLine(double startX, double endX, double y, int thickness, int color) {
+		//correct dimensions (if necessary)
+		if (endX < startX) {
+			double i = startX;
+			startX = endX;
+			endX = i;
+		}
+		
+		if (BatchManager.isEnabled()) BatchManager.drawRect(startX, y, endX + thickness, y + thickness, color);
+		else GLObject.drawHorizontalLine(startX, endX, y, thickness, color);
 	}
 	
 	
 	/** Draws a vertical line with a thickness of 1. */
-	public static void drawVerticalLine(double x, double startY, double endY, EColors color) { drawVerticalLine(x, startY, endY, color.intVal); }
+	public static void drawVerticalLine(double x, double startY, double endY, int thickness, EColors color) { drawVerticalLine(x, startY, endY, thickness, color.intVal); }
 	/** Draws a vertical line with a thickness of 1. */
-	public static void drawVerticalLine(double x, double startY, double endY, int color) {
-		if (BatchManager.isEnabled()) {}
-		else GLObject.drawVerticalLine(x, startY, endY, color);
+	public static void drawVerticalLine(double x, double startY, double endY, int thickness, int color) {
+		//correct dimensions (if necessary)
+		if (endY < startY) {
+			double i = startY;
+			startY = endY;
+			endY = i;
+		}
+		
+		if (BatchManager.isEnabled()) BatchManager.drawRect(x, startY + thickness, x + thickness, endY, color);
+		else GLObject.drawVerticalLine(x, startY, endY, thickness, color);
 	}
 	
 	
@@ -141,7 +155,9 @@ public class RenderingManager {
 	public static void drawFilledEllipse(double posX, double posY, double radiusX, double radiusY, int detail, EColors color) { drawFilledEllipse(posX, posY, radiusX, radiusY, detail, color.intVal); }
 	/** Draws a solid ellipse expanding out from the center. */
 	public static void drawFilledEllipse(double posX, double posY, double radiusX, double radiusY, int detail, int color) {
-		if (BatchManager.isEnabled()) {}
+		if (BatchManager.isEnabled()) {
+			//BatchManager.drawFilledEllipse(posX, posY, radiusX, radiusY, detail, color);
+		}
 		else GLObject.drawFilledEllipse(posX, posY, radiusX, radiusY, detail, color);
 	}
 	

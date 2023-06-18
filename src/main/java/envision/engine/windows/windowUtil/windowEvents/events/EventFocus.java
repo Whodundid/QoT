@@ -4,6 +4,7 @@ import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.EventType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
+import eutil.datatypes.points.Point2i;
 
 //Author: Hunter Bragg
 
@@ -48,6 +49,7 @@ public class EventFocus extends ObjectEvent {
 	public IWindowObject<?> getFocusObject() { return eventObject; }
 	public FocusType getFocusType() { return type; }
 	public int getActionCode() { return actionCode; }
+	public Point2i getMousePoint() { return new Point2i(mX, mY); }
 	public int getMX() { return mX; }
 	public int getMY() { return mY; }
 	

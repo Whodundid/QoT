@@ -15,6 +15,7 @@ import qot.doodads.PineTree2;
 import qot.doodads.SticksGroundClutter;
 import qot.doodads.StoneGroundClutter;
 import qot.doodads.WeedsGroundClutter;
+import qot.entities.buildings.Spawner;
 import qot.entities.enemies.Goblin;
 import qot.entities.enemies.TrollBoar;
 import qot.entities.enemies.Whodundid;
@@ -60,6 +61,7 @@ public class GlobalAssetList {
 		assets.add(new SticksGroundClutter());
 		
 		assets.add(new Archer());
+		assets.add(new Spawner());
 	}
 	
 	public static EList<GameObject> getAssets() {

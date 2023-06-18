@@ -22,8 +22,9 @@ import eutil.math.ENumUtil;
  */
 public abstract class TerminalCommand {
 	
-	public static final String sep = FileSystems.getDefault().getSeparator();
-	public static final File userDir = new File(System.getProperty("user.dir"));
+	public static final String SEPARATOR = FileSystems.getDefault().getSeparator();
+	public static final File USER_DIR = new File(System.getProperty("user.dir"));
+	public static final File ROOT_DIR = new File(System.getenv("SystemDrive"));
 	
 	public static final String ERROR_NO_ARGS = "This command does not take any arguments!";
 	public static final String ERROR_TOO_MANY = "Too many arguments!";
@@ -170,28 +171,28 @@ public abstract class TerminalCommand {
 	}
 	
 	protected void basicTabComplete(ETerminalWindow termIn, List<String> args, List<String> completionsIn) {
-		int limit = (expectedArgLength == -1) ? args.size() : ENumUtil.clamp(args.size(), 0, expectedArgLength);
-		
 		if (args.isEmpty()) {
 			termIn.buildTabCompletions(completionsIn);
+			return;
 		}
-		else if (args.size() == limit) {
-			if (!termIn.getTab1()) {
-				int arg = termIn.getCurrentArg() - 1;
-				try {
-					String input = args.get(arg);
-				
-					EArrayList<String> options = new EArrayList();
-				
-					for (String s : completionsIn) {
-						if (s.startsWith(input)) { options.add(s); }
-					}
-				
-					termIn.buildTabCompletions(options);
-				}
-				catch (IndexOutOfBoundsException e) {}
-				catch (Exception e) { e.printStackTrace(); }
-			}
+		
+		int limit = (expectedArgLength == -1) ? args.size() : ENumUtil.clamp(args.size(), 0, expectedArgLength);
+		
+		if (args.size() == limit && !termIn.getTab1()) {
+		    int arg = termIn.getCurrentArg() - 1;
+	        try {
+	            String input = args.get(arg);
+	        
+	            EList<String> options = EList.newList();
+	        
+	            for (String s : completionsIn) {
+	                if (s.startsWith(input)) options.add(s);
+	            }
+	        
+	            termIn.buildTabCompletions(options);
+	        }
+	        catch (IndexOutOfBoundsException e) {}
+	        catch (Exception e) { e.printStackTrace(); }
 		}
 	}
 	
@@ -225,19 +226,19 @@ public abstract class TerminalCommand {
 	private void checkAtLeast(int amount, String message) {
 		if (argLength() >= amount) return;
 		if (message != null) throw new TermArgLengthException(message);
-		throw new TermArgLengthException(String.format(ERROR_EXPECTED_AT_LEAST, argLength()));
+		throw new TermArgLengthException(String.format(ERROR_EXPECTED_AT_LEAST, amount));
 	}
 	
 	private void checkNoMoreThan(int amount, String message) {
 		if (argLength() <= amount) return;
 		if (message != null) throw new TermArgLengthException(message);
-		throw new TermArgLengthException(String.format(ERROR_EXPECTED_NO_MORE_THAN, argLength()));
+		throw new TermArgLengthException(String.format(ERROR_EXPECTED_NO_MORE_THAN, amount));
 	}
 	
 	private void checkExact(int amount, String message) {
 		if (argLength() == amount) return;
 		if (message != null) throw new TermArgLengthException(message);
-		throw new TermArgLengthException(String.format(ERROR_EXPECTED_EXACT_ARGUMENTS, argLength()));
+		throw new TermArgLengthException(String.format(ERROR_EXPECTED_EXACT_ARGUMENTS, amount));
 	}
 	
 	//==================

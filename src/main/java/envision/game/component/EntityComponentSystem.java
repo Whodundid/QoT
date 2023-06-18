@@ -12,13 +12,43 @@ public class EntityComponentSystem {
 	
 	private EList<EntityComponent> components = EList.newList();
 	
+	// separated lists for faster, no-filter-needed, tick updates
+	
+	private EList<EntityComponent> gameTickListeners = EList.newList();
+	private EList<EntityComponent> renderTickListeners = EList.newList();
+	
+	//=======
+	// Hooks
+	//=======
+	
+	public void onGameTick(float deltaTime) {
+		synchronized (gameTickListeners) {
+			final int size = gameTickListeners.size();
+			for (int i = 0; i < size; i++) {
+				gameTickListeners.get(i).onGameTick(deltaTime);
+			}
+		}
+	}
+	
+	public void onRenderTick(float deltaTime) {
+		synchronized (renderTickListeners) {
+			final int size = renderTickListeners.size();
+			for (int i = 0; i < size; i++) {
+				renderTickListeners.get(i).onRenderTick(deltaTime);
+			}
+		}
+	}
+	
 	//=========
 	// Methods
 	//=========
 	
 	public boolean addComponent(EntityComponent component) {
 		Objects.requireNonNull(component);
-		return components.add(component);
+		boolean r = components.add(component);
+		if (r && component.respondsToGameTick) gameTickListeners.add(component);
+		if (r && component.respondsToRenderTick) renderTickListeners.add(component);
+		return r;
 	}
 	
 	public boolean removeComponent(EntityComponent component) {
@@ -33,7 +63,9 @@ public class EntityComponentSystem {
 	public boolean removeComponent(String componentName) {
 		int index = getComponentIndex(componentName);
 		if (index == -1) return false;
-		components.remove(index);
+		var c = components.remove(index);
+		synchronized (gameTickListeners) { gameTickListeners.remove(c); }
+		synchronized (renderTickListeners) { renderTickListeners.remove(c); }
 		return true;
 	}
 	
@@ -57,7 +89,7 @@ public class EntityComponentSystem {
 		final int size = components.size();
 		for (int i = 0; i < size; i++) {
 			var c = components.get(i);
-			if (c.getComponentName().equals(componentName)) return (E) c;
+			if (c.componentName.equals(componentName)) return (E) c;
 		}
 		return null;
 	}
@@ -84,7 +116,7 @@ public class EntityComponentSystem {
 		final int size = components.size();
 		for (int i = 0; i < size; i++) {
 			var c = components.get(i);
-			if (c.getComponentName().equals(componentName)) return i;
+			if (c.componentName.equals(componentName)) return i;
 		}
 		return -1;
 	}
