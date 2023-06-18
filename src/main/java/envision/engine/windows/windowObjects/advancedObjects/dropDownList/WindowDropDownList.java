@@ -8,8 +8,8 @@ import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.points.Point2i;
+import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
 
@@ -19,9 +19,9 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	// Fields
 	//--------
 	
-	private EArrayList<DropDownListEntry<E>> listContents = new EArrayList();
+	private EList<DropDownListEntry<E>> listContents = EList.newList();
 	private DropDownListEntry<E> selectedEntry;
-	private double entryHeight = 17;
+	private double entryHeight = 30;
 	private boolean listOpen = false;
 	private boolean fixedWidth = false;
 	private boolean globalAction = false;
@@ -36,7 +36,10 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y) { init(parentIn, x, y, 75, entryHeight); }
+	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y) {
+	    init(parentIn, x, y, 75, entryHeight);
+	}
+	
 	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y, double entryHeightIn) { this(parentIn, x, y, entryHeightIn, false); }
 	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
 		init(parentIn, x, y, width, entryHeightIn);
@@ -83,7 +86,8 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 					}
 				}
 				
-				drawString(entry, startX + 5, yPos + (entryHeight / 3), entry.getColor());
+				final var fh = FontRenderer.FONT_HEIGHT * 0.4;
+				drawString(entry, startX + 5, yPos + (entryHeight / 2) - fh, entry.getColor());
 			}
 			
 			double endPos = startY + (listContents.size() * entryHeight) + entryHeight + offset;
@@ -197,23 +201,26 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	}
 	
 	private void adjustWidth() {
-		if (!fixedWidth) {
-			
-			String longestString = "";
-			for (DropDownListEntry e : listContents) {
-				String displayString = e.getText();
-				if (displayString.length() > longestString.length()) { longestString = displayString; }
-			}
-			
-			width = FontRenderer.strWidth(longestString) + 10;
-			double h = height;
-			
-			if (alwaysOpen) {
-				h = startY + ((listContents.size() - 1) * entryHeight) - 2;
-			}
-			
-			setDimensions(startX, startY, width, h);
-		}
+	    if (fixedWidth) return;
+	    
+	    String longestString = "";
+        for (DropDownListEntry e : listContents) {
+            String displayString = e.getText();
+            if (displayString.length() > longestString.length()) {
+                longestString = displayString;
+            }
+        }
+        
+        width = FontRenderer.strWidth(longestString) + 10;
+        double h = height;
+        
+        // this will adjust the drop down list's height to be
+        // as tall as there are displayed entries
+        if (alwaysOpen) {
+            h = listContents.size() * entryHeight;
+        }
+        
+        setDimensions(startX, startY, width, h);
 	}
 	
 	//---------
@@ -222,23 +229,22 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	
 	public DropDownListEntry<E> getHoveringEntry(Point2i point) { return getHoveringEntry(point.x, point.y); }
 	public DropDownListEntry<E> getHoveringEntry(int mXIn, int mYIn) {
-		if (isMouseInside()) {
-			
-			double offset = drawTop ? entryHeight : 0;
-			
-			if (Mouse.getMy() >= startY + offset) {
-				int relClickPosY = (int) (Mouse.getMy() - (startY + offset));
-				int selectedPos = (int) (relClickPosY / entryHeight);
-				if (selectedPos <= listContents.size() - 1) {
-					return listContents.get(selectedPos);
-				}
-			}
-			
-		}
-		return null;
+	    if (!isMouseInside()) return null;
+	    
+	    double offset = drawTop ? entryHeight : 0;
+        
+        if (Mouse.getMy() >= startY + offset) {
+            int relClickPosY = (int) (Mouse.getMy() - (startY + offset));
+            int selectedPos = (int) (relClickPosY / entryHeight);
+            if (selectedPos <= listContents.size() - 1) {
+                return listContents.get(selectedPos);
+            }
+        }
+        
+        return null;
 	}
 	
-	public EArrayList<DropDownListEntry<E>> getEntries() { return listContents; }
+	public EList<DropDownListEntry<E>> getEntries() { return listContents; }
 	public DropDownListEntry<E> getSelectedEntry() { return selectedEntry; }
 	public DropDownListEntry<E> getEntryFromObject(E objIn) {
 		for (var e : listContents) {

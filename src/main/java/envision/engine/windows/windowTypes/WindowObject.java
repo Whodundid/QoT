@@ -48,7 +48,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 		startYPos = yIn.doubleValue();
 		startWidth = widthIn.doubleValue();
 		startHeight = heightIn.doubleValue();
-		setDimensions(xIn.doubleValue(), yIn.doubleValue(), widthIn.doubleValue(), heightIn.doubleValue());
+		setDimensions(startXPos, startYPos, startWidth, startHeight);
 		res = Envision.getWindowDims();
 	}
 	

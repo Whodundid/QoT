@@ -13,7 +13,7 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.misc.ScreenLocation;
-import qot.assets.textures.window.WindowTextures;
+import qot.assets.textures.taskbar.TaskBarTextures;
 import qot.settings.QoTSettings;
 
 public class TerminalOptionsWindow extends WindowParent {
@@ -24,7 +24,7 @@ public class TerminalOptionsWindow extends WindowParent {
 	
 	public TerminalOptionsWindow() {
 		aliases.add("termoptions", "toptions");
-		windowIcon = WindowTextures.settings;
+		windowIcon = TaskBarTextures.settings;
 	}
 	
 	@Override

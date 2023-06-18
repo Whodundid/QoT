@@ -219,7 +219,7 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 	}
 	
 	private void createList() {
-		dropDown = new WindowDropDown(this, startX, endY, 20, false);
+		dropDown = new WindowDropDown(this, startX, endY, 30, false);
 		
 		var windows = getWindows();
 		

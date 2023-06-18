@@ -439,8 +439,8 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		double eY = sY + FontRenderer.FONT_HEIGHT + 4;
 		
 		RenderingManager.drawRect(sX, sY, eX, eY, EColors.black);
-		RenderingManager.drawRect(sX + 1, sY + 1, eX - 1, eY - 1, EColors.pdgray);
-		RenderingManager.drawStringS(properties().hoverText, sX + 5, sY + 4, properties().hoverTextColor);
+		RenderingManager.drawRect(sX + 1, sY + 1, eX - 1, eY - 1, EColors.vdgray);
+		RenderingManager.drawString(properties().hoverText, sX + 5, sY + 4, properties().hoverTextColor);
 	}
 
 	/**

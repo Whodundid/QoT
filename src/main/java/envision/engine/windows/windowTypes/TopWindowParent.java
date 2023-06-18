@@ -385,7 +385,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		if (o != null) {
 			if (oldMousePos.compare(mX, mY)) {
 				mouseHoverTime = (System.currentTimeMillis() - hoverRefTime);
-				if (mouseHoverTime >= 1000) {
+				if (mouseHoverTime >= 300) {
 					setHoveringObject(o);
 				}
 			}

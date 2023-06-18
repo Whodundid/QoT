@@ -65,7 +65,6 @@ public class WindowDropDown extends WindowDropDownList {
 				w.setDrawWhenMinimized(false);
 			}
 		}
-		
 	}
 	
 	@Override
@@ -97,7 +96,7 @@ public class WindowDropDown extends WindowDropDownList {
 		
 		if (eventIn.getActionCode() == 0) {
 			DropDownListEntry entry = getHoveringEntry(eventIn.getMousePoint());
-			if (entry.getEntryObject() instanceof WindowParent p) {
+			if (entry != null && entry.getEntryObject() instanceof WindowParent p) {
 				parentButton.destroyList();
 				parentButton.performAction(p);
 			}
@@ -109,20 +108,20 @@ public class WindowDropDown extends WindowDropDownList {
 		
 	@Override
 	public void mouseExited(int mXIn, int mYIn) {
-		if (rcm == null) {
-			if (!parentButton.isMouseInside(mXIn, mYIn)) {
-				parentButton.destroyList();
-			}
-			else {
-				Envision.getTopScreen().revealHiddenObjects();
-				
-				for (var w : Envision.getTopScreen().getAllActiveWindows()) {
-					w.setDrawWhenMinimized(false);
-				}
-				
-				last = null;
-			}
-		}
+	    if (rcm != null) return;
+	    
+	    if (!parentButton.isMouseInside(mXIn, mYIn)) {
+            parentButton.destroyList();
+        }
+        else {
+            Envision.getTopScreen().revealHiddenObjects();
+            
+            for (var w : Envision.getTopScreen().getAllActiveWindows()) {
+                w.setDrawWhenMinimized(false);
+            }
+            
+            last = null;
+        }
 	}
 	
 	@Override
