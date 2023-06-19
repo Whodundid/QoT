@@ -21,16 +21,16 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
     - name: Update Version Number
       env:
         CI_COMMIT_AUTHOR: CICD-Boy
       shell: bash
       run: |
         sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" src/main/java/envision/Envision.java
-        echo 'BANANA'
-        cat src/main/java/envision/Envision.java
-        git diff
         git add src/main/java/envision/Envision.java
+        git diff
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "CICD-Boy@placeholder.com"
         git commit -m "updating version string : `date +'%b %d, %Y - %H:%M:%S'`"
