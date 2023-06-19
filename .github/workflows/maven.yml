@@ -24,7 +24,11 @@ jobs:
     - name: Update Version Number
       working-directory: ${{env.working-directory}}
       run: |
+        echo '${{ env.CI_COMMIT_AUTHOR }}'
         sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" src/main/java/envision/Envision.java
+        git config --global user.email "${{ env.CI_COMMIT_AUTHOR }}"
+        git commit -a -m "updating version string : `date +'%b %d, %Y - %H:%M:%S'`"
+        git push
     - name: Set up JDK 18
       uses: actions/setup-java@v3
       with:
