@@ -21,9 +21,9 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Update Version Number
+      working-directory: ${{env.working-directory}}
       run: |
-        ll
-        sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" QoT/src/main/java/envision/Envision.java
+        sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" src/main/java/envision/Envision.java
 
   build:
     runs-on: self-hosted
