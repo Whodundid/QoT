@@ -25,10 +25,12 @@ jobs:
     - uses: actions/checkout@v3
     - name: Update Version Number
       run: |
-        sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" src/main/java/envision/Envision.java
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "CICD-Boy@placeholder.com"
+        sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" src/main/java/envision/Envision.java
         git status
+        git diff
+        git add *
         git commit -a -m "updating version string : `date +'%b %d, %Y - %H:%M:%S'`"
         git push
     - name: Set up JDK 18
