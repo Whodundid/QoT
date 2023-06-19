@@ -2,8 +2,6 @@ package envision.game.component.types;
 
 import envision.game.entities.ComponentBasedObject;
 import eutil.random.ERandomUtil;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * A more specific type of TimedEventComponent that triggers a timed event
@@ -19,13 +17,13 @@ import lombok.Setter;
 public class RandomTimeEventComponent extends TimeEventComponent {
 	
 	/** The minimum interval between each time event. Begins after the initial delay is over. */
-	protected @Getter @Setter int minTickInterval;
+	protected int minTickInterval;
 	/** The minimum interval between each time event. Begins after the initial delay is over. */
-	protected @Getter @Setter int maxTickInterval;
+	protected int maxTickInterval;
 	/** The current, randomly decided, interval for this timer. */
-	protected @Getter @Setter int currentInterval;
+	protected int currentInterval;
 	/** A specified number of ticks that must pass before time intervals are measured. */
-	protected @Getter int startDelay;
+	protected int startDelay;
 	
 	//==============
 	// Constructors
@@ -127,5 +125,22 @@ public class RandomTimeEventComponent extends TimeEventComponent {
 	public int generateRandomInterval(int min, int max) {
 		return ERandomUtil.getRoll(min, max);
 	}
+	
+	//=========
+	// Getters
+	//=========
+	
+	public int getMinTickInterval() { return minTickInterval; }
+	public int getMaxTickInterval() { return maxTickInterval; }
+	public int getCurrentInterval() { return currentInterval; }
+	public int getStartDelay() { return startDelay; }
+	
+	//=========
+	// Setters
+	//=========
+	
+	public void setMinTickInterval(int interval) { minTickInterval = interval; }
+	public void setMaxTickInterval(int interval) { maxTickInterval = interval; }
+	public void setCurrentInterval(int interval) { currentInterval = interval; }
 	
 }

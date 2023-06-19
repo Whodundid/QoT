@@ -5,18 +5,17 @@ import java.util.UUID;
 import envision.game.component.ComponentType;
 import envision.game.component.EntityComponent;
 import envision.game.entities.ComponentBasedObject;
-import lombok.Getter;
 
 public abstract class TimeEventComponent extends EntityComponent {
 	
 	/** The tick that this timer started counting on. -1 by default to indicate no started. */
-	protected @Getter int startTick = -1;
+	protected int startTick = -1;
 	/** The internal current tick that this timer is currently on. */
-	protected @Getter int currentTick;
+	protected int currentTick;
 	/** The tick on which this timer's last timer event was triggered on. */
-	protected @Getter int lastEventTick;
+	protected int lastEventTick;
 	/** Indicates whether or not this timing component is currently counting. */
-	protected @Getter boolean isPaused = false;
+	protected boolean isPaused = false;
 	
 	//==============
 	// Constructors
@@ -61,5 +60,14 @@ public abstract class TimeEventComponent extends EntityComponent {
 	public void setPaused(boolean val) {
 		isPaused = val;
 	}
+	
+	//=========
+	// Getters
+	//=========
+	
+	public int getStartTick() { return startTick; }
+	public int getCurrentTick() { return currentTick; }
+	public int getLastEventTick() { return lastEventTick; }
+	public boolean isPaused() { return isPaused; }
 	
 }

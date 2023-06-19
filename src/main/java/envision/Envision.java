@@ -65,7 +65,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	// Fields
 	//========
 	
-	public static final String version = "Feb 20, 2023";
+	public static final String version = "Jun 18, 2023";
 	private static boolean gameCreated = false;
 	public static long updateCounter = 0;
 	

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import envision.game.entities.ComponentBasedObject;
-import lombok.Getter;
 
 public abstract class EntityComponent {
 	
@@ -14,11 +13,11 @@ public abstract class EntityComponent {
 	// Fields
 	//========
 	
-	protected @Getter final ComponentBasedObject theObject;
-	protected @Getter final String componentName;
-	protected @Getter final String componentID;
-	protected @Getter final boolean respondsToGameTick;
-	protected @Getter final boolean respondsToRenderTick;
+	protected final ComponentBasedObject theObject;
+	protected final String componentName;
+	protected final String componentID;
+	protected final boolean respondsToGameTick;
+	protected final boolean respondsToRenderTick;
 	protected final Map<String, Method> functions = new HashMap<>();
 	
 	//==============
@@ -112,5 +111,15 @@ public abstract class EntityComponent {
 			return null;
 		}
 	}
+	
+	//=========
+	// Getters
+	//=========
+	
+	public ComponentBasedObject getBaseObject() { return theObject; }
+	public String getComponentName() { return componentName; }
+	public String getComponentID() { return componentID; }
+	public boolean respondsToGameTick() { return respondsToGameTick; }
+	public boolean respondsToRenderTick() { return respondsToRenderTick; }
 	
 }

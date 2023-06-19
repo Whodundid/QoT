@@ -1,8 +1,6 @@
 package envision.game.component.types;
 
 import envision.game.entities.ComponentBasedObject;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * A more specific type of TimedEventComponent that triggers a timed event on a fixed interval.
@@ -14,9 +12,9 @@ import lombok.Setter;
 public class FixedTimeEventComponent extends TimeEventComponent {
 	
 	/** The interval between each time event. Begins after the initial delay is over. */
-	protected @Getter @Setter int tickInterval;
+	protected int tickInterval;
 	/** A specified number of ticks that must pass before time intervals are measured. */
-	protected @Getter int startDelay;
+	protected int startDelay;
 	
 	//==============
 	// Constructors
@@ -96,5 +94,19 @@ public class FixedTimeEventComponent extends TimeEventComponent {
 			onEvent();
 		}
 	}
+	
+	//=========
+	// Getters
+	//=========
+	
+	public int getTickInterval() { return tickInterval; }
+	public int getStartDelay() { return startDelay; }
+	
+	//=========
+	// Setters
+	//=========
+	
+	public void setTickInterval(int intervalIn) { tickInterval = intervalIn; }
+	
 	
 }
