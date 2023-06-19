@@ -17,12 +17,33 @@ on:
       - '*'
 
 jobs:
-  build:
+  setup:
     runs-on: self-hosted
+    steps:
+    - name: Set up JDK 18
+      uses: actions/setup-java@v3
+      with:
+        java-version: '18'
+        distribution: 'temurin'
+        cache: maven
+
+  tests:
+    runs-on: self-hosted
+    needs: setup
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run Tests
+      run: mvn -B --batch-mode test --file pom.xml
+     
+  deploy:
+    runs-on: self-hosted
+    needs: tests
+    if: github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 2
+        
     - name: Update Version Number
       continue-on-error: true
       env:
@@ -36,12 +57,7 @@ jobs:
         git config --global user.email "CICD-Boy@placeholder.com"
         git commit -a -m "updating version string : `date +'%b %d, %Y - %H:%M:%S'`"
         git push
-    - name: Set up JDK 18
-      uses: actions/setup-java@v3
-      with:
-        java-version: '18'
-        distribution: 'temurin'
-        cache: maven
+        
     - name: Deploy
       run: mvn -B --batch-mode deploy --file pom.xml
       env:
