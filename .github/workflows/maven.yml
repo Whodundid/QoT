@@ -19,11 +19,12 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-    env:
-      CI_COMMIT_AUTHOR: CICD-Boy
     steps:
     - uses: actions/checkout@v3
     - name: Update Version Number
+      env:
+        CI_COMMIT_AUTHOR: CICD-Boy
+      shell: bash
       run: |
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "CICD-Boy@placeholder.com"
