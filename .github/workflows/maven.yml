@@ -27,6 +27,8 @@ jobs:
       shell: bash
       run: |
         sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" src/main/java/envision/Envision.java
+        echo 'BANANA'
+        cat src/main/java/envision/Envision.java
         git diff
         git add src/main/java/envision/Envision.java
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
