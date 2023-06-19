@@ -18,11 +18,10 @@ on:
 
 jobs:
   update:
-  runs-on: self-hosted
-	steps:
-	- name: Update Version Number
-	  run: |
-	    sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" QoT/src/main/java/envision/Envision.java
+    runs-on: self-hosted
+    steps:
+    - name: Update Version Number
+      run: sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y')\";|g" QoT/src/main/java/envision/Envision.java
 
   build:
     runs-on: self-hosted
