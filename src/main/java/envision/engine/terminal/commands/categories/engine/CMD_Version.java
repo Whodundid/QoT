@@ -22,7 +22,7 @@ public class CMD_Version extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		termIn.writeln(Envision.version);
+		termIn.writeln(Envision.VERSION_DATE);
 	}
 	
 }

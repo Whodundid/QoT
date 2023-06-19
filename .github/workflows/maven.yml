@@ -29,7 +29,9 @@ jobs:
         CI_COMMIT_AUTHOR: CICD-Boy
       shell: bash
       run: |
-        sed -i "s|^[ \t]*public static final String version.*|\tpublic static final String version = \"$(date '+%b %d, %Y - %H:%M:%S')\";|g" src/main/java/envision/Envision.java
+        sed -i "s|^[ \t]*public static final String VERSION_DATE.*|\tpublic static final String VERSION_DATE = \"$(date '+%b %d, %Y - %H:%M:%S')\";|g" src/main/java/envision/Envision.java
+        perl -e 's{VERSION_BUILD = (\d+);}{$n=$n+1; "VERSION_BUILD = $n;"}e' src/main/java/envision/Envision.java
+        
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "CICD-Boy@placeholder.com"
         git commit -a -m "updating version string : `date +'%b %d, %Y - %H:%M:%S'`"
