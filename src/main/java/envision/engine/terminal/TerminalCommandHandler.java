@@ -205,6 +205,7 @@ public class TerminalCommandHandler {
 		registerCommand(new CMD_WhoAmI(), termIn, runVisually);
 		registerCommand(new CMD_RenderSettings(), termIn, runVisually);
 		registerCommand(new CMD_SU(), termIn, runVisually);
+		//registerCommand(new CMD_SSH(), termIn, runVisually);
 		
 		//windows
 		registerCommand(new CMD_CloseWindow(), termIn, runVisually);

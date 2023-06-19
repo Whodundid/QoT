@@ -3,6 +3,7 @@ package envision.engine.terminal.commands.categories.engine;
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
+import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
@@ -22,7 +23,9 @@ public class CMD_Version extends TerminalCommand {
 	
 	@Override
 	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		termIn.writeln(Envision.VERSION_DATE);
+		termIn.writeln(EColors.seafoam, "Envision Game Engine");
+		termIn.writeln(EColors.yellow, "Build Date: ", EColors.skyblue, Envision.VERSION_DATE);
+		termIn.writeln(EColors.yellow, "Build Num: ", EColors.mc_lightpurple, Envision.VERSION_BUILD);
 	}
 	
 }
