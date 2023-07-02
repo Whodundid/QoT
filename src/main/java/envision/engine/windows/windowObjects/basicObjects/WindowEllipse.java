@@ -4,7 +4,7 @@ import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.points.Point2d;
 
-public class WindowEllipse<E> extends WindowShape<E> {
+public class WindowEllipse extends WindowShape {
 	
 	//--------
 	// Fields
@@ -16,12 +16,12 @@ public class WindowEllipse<E> extends WindowShape<E> {
 	// Constructors
 	//--------------
 	
-	public WindowEllipse(IWindowObject<?> parentIn, double x, double y, double radiusX, double radiusY) { this(parentIn, x, y, radiusX, radiusY, true, 0xffffffff); }
-	public WindowEllipse(IWindowObject<?> parentIn, double x, double y, double radiusX, double radiusY, EColors colorIn) { this(parentIn, x, y, radiusX, radiusY, true, colorIn.intVal); }
-	public WindowEllipse(IWindowObject<?> parentIn, double x, double y, double radiusX, double radiusY, int colorIn) { this(parentIn, x, y, radiusX, radiusY, true, colorIn); }
-	public WindowEllipse(IWindowObject<?> parentIn, double x, double y, double radiusX, double radiusY, boolean filledIn) { this(parentIn, x, y, radiusX, radiusY, filledIn, 0xffffffff); }
-	public WindowEllipse(IWindowObject<?> parentIn, double x, double y, double radiusX, double radiusY, boolean filledIn, EColors colorIn) { this(parentIn, x, y, radiusX, radiusY, filledIn, colorIn.intVal); }
-	public WindowEllipse(IWindowObject<?> parentIn, double x, double y, double radiusX, double radiusY, boolean filledIn, int colorIn) {
+	public WindowEllipse(IWindowObject parentIn, double x, double y, double radiusX, double radiusY) { this(parentIn, x, y, radiusX, radiusY, true, 0xffffffff); }
+	public WindowEllipse(IWindowObject parentIn, double x, double y, double radiusX, double radiusY, EColors colorIn) { this(parentIn, x, y, radiusX, radiusY, true, colorIn.intVal); }
+	public WindowEllipse(IWindowObject parentIn, double x, double y, double radiusX, double radiusY, int colorIn) { this(parentIn, x, y, radiusX, radiusY, true, colorIn); }
+	public WindowEllipse(IWindowObject parentIn, double x, double y, double radiusX, double radiusY, boolean filledIn) { this(parentIn, x, y, radiusX, radiusY, filledIn, 0xffffffff); }
+	public WindowEllipse(IWindowObject parentIn, double x, double y, double radiusX, double radiusY, boolean filledIn, EColors colorIn) { this(parentIn, x, y, radiusX, radiusY, filledIn, colorIn.intVal); }
+	public WindowEllipse(IWindowObject parentIn, double x, double y, double radiusX, double radiusY, boolean filledIn, int colorIn) {
 		init(parentIn, x, y, radiusX * 2, radiusY * 2);
 		cX = x;
 		cY = y;

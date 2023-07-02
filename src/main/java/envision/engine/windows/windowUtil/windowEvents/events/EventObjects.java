@@ -14,13 +14,13 @@ public class EventObjects extends ObjectEvent {
 	//--------
 	
 	private final ObjectEventType type;
-	private final IWindowObject<?> targetObject;
+	private final IWindowObject targetObject;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public EventObjects(IWindowObject<?> parentIn, IWindowObject<?> targetObjectIn, ObjectEventType typeIn) {
+	public EventObjects(IWindowObject parentIn, IWindowObject targetObjectIn, ObjectEventType typeIn) {
 		super(parentIn, EventType.OBJECT);
 		targetObject = targetObjectIn;
 		type = typeIn;
@@ -31,6 +31,6 @@ public class EventObjects extends ObjectEvent {
 	//---------
 	
 	public ObjectEventType getObjectEventType() { return type; }
-	public IWindowObject<?> getTargetObject() { return targetObject; }
+	public IWindowObject getTargetObject() { return targetObject; }
 	
 }

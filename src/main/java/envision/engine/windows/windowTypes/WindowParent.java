@@ -6,21 +6,20 @@ import envision.Envision;
 import envision.debug.DebugFunctions;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.desktopOverlay.TaskBar;
+import envision.engine.windows.developerDesktop.taskbar.TaskBar;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>, Comparable<WindowParent<?>> {
+public class WindowParent extends WindowObject implements IWindowParent, Comparable<WindowParent> {
 
 	//----------------
 	// Static Methods
@@ -36,8 +35,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	// Fields
 	//--------
 	
-	public WindowParent<E> windowInstance;
-	protected WindowHeader<?> header;
+	public WindowParent windowInstance;
+	protected WindowHeader header;
 	protected int windowZLevel = 0;
 	protected boolean moveWithParent = false;
 	protected boolean pinned = false;
@@ -49,8 +48,8 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	protected boolean drawMinimized = false;
 	protected boolean drawDefaultBackground = false;
 	protected boolean highlighted = false;
-	protected Stack<IWindowParent<?>> WindowHistory = new Stack();
-	protected EArrayList<String> aliases = new EArrayList();
+	protected Stack<IWindowParent> WindowHistory = new Stack();
+	protected EList<String> aliases = EList.newList();
 	protected GameTexture windowIcon = null;
 	protected Dimension_d preMaxFull = new Dimension_d();
 	protected Dimension_d preMaxSide = new Dimension_d();
@@ -65,9 +64,9 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	/** By default, set the parent to the QoT top overlay. */
 	
 	public WindowParent() { this(Envision.getActiveTopParent(), null); }
-	public WindowParent(IWindowParent<?> oldGuiIn) { this(Envision.getActiveTopParent(), oldGuiIn); }
-	public WindowParent(IWindowObject<?> parentIn) { this(parentIn, null); }
-	public WindowParent(IWindowObject<?> parentIn, IWindowParent<?> oldGuiIn) {
+	public WindowParent(IWindowParent oldGuiIn) { this(Envision.getActiveTopParent(), oldGuiIn); }
+	public WindowParent(IWindowObject parentIn) { this(parentIn, null); }
+	public WindowParent(IWindowObject parentIn, IWindowParent oldGuiIn) {
 		__INIT__();
 		initDefaultPos(parentIn);
 		pullHistoryFrom(oldGuiIn);
@@ -77,20 +76,20 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 		__INIT__();
 	}
 	
-	public WindowParent(int xPos, int yPos, IWindowParent<?> oldGuiIn) {
+	public WindowParent(int xPos, int yPos, IWindowParent oldGuiIn) {
 		__INIT__();
 		pullHistoryFrom(oldGuiIn);
 	}
 	
-	public WindowParent(IWindowObject<?> parentIn, int xPos, int yPos) { this(parentIn, xPos, yPos, null); }
-	public WindowParent(IWindowObject<?> parentIn, int xPos, int yPos, IWindowParent<?> oldGuiIn) {
+	public WindowParent(IWindowObject parentIn, int xPos, int yPos) { this(parentIn, xPos, yPos, null); }
+	public WindowParent(IWindowObject parentIn, int xPos, int yPos, IWindowParent oldGuiIn) {
 		__INIT__();
 		initDefaultDims(parentIn, xPos, yPos);
 		pullHistoryFrom(oldGuiIn);
 	}
 	
-	public WindowParent(IWindowObject<?> parentIn, int xIn, int yIn, int widthIn, int heightIn) { this(parentIn, xIn, yIn, widthIn, heightIn, null); }
-	public WindowParent(IWindowObject<?> parentIn, int xIn, int yIn, int widthIn, int heightIn, IWindowParent<?> oldGuiIn) {
+	public WindowParent(IWindowObject parentIn, int xIn, int yIn, int widthIn, int heightIn) { this(parentIn, xIn, yIn, widthIn, heightIn, null); }
+	public WindowParent(IWindowObject parentIn, int xIn, int yIn, int widthIn, int heightIn, IWindowParent oldGuiIn) {
 		__INIT__();
 		init(parentIn, xIn, yIn, widthIn, heightIn);
 		pullHistoryFrom(oldGuiIn);
@@ -108,7 +107,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	//-----------
 	
 	@Override
-	public int compareTo(WindowParent<?> p) {
+	public int compareTo(WindowParent p) {
 		return Long.compare(initTime, p.getInitTime());
 	}
 	
@@ -304,12 +303,12 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	@Override public boolean showInLists() { return true; }
 	
 	@Override
-	public Stack<IWindowParent<?>> getWindowHistory() {
+	public Stack<IWindowParent> getWindowHistory() {
 		return WindowHistory;
 	}
 	
 	@Override
-	public void setWindowHistory(Stack<IWindowParent<?>> historyIn) {
+	public void setWindowHistory(Stack<IWindowParent> historyIn) {
 		WindowHistory = historyIn;
 		if (header != null) header.updateButtonVisibility();
 	}
@@ -345,21 +344,21 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	
 	protected void defaultDims() { setDimensions(startX, startY, defaultWidth, defaultHeight); }
 	protected void defaultHeader() { setHeader(new WindowHeader(this)); }
-	protected void defaultHeader(IWindowParent<?> in) { setHeader(new WindowHeader(in)); }
+	protected void defaultHeader(IWindowParent in) { setHeader(new WindowHeader(in)); }
 	
-	private void initDefaultPos(IWindowObject<?> parentIn) {
+	private void initDefaultPos(IWindowObject parentIn) {
 		init(parentIn);
 		windowInstance = this;
 	}
 	
-	private void initDefaultDims(IWindowObject<?> parentIn, int xPos, int yPos) {
+	private void initDefaultDims(IWindowObject parentIn, int xPos, int yPos) {
 		init(parentIn, xPos, yPos, defaultWidth, defaultHeight);
 		windowInstance = this;
 	}
 	
-	private void pullHistoryFrom(IWindowParent<?> objectIn) {
+	private void pullHistoryFrom(IWindowParent objectIn) {
 		if (objectIn != null) {
-			if (objectIn instanceof WindowParent<?> wp) {
+			if (objectIn instanceof WindowParent wp) {
 				WindowHistory = wp.getWindowHistory();
 				WindowHistory.push(objectIn);
 			}
@@ -417,7 +416,7 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	//---------
 	
 	public boolean movesWithParent() { return moveWithParent; }
-	public long getWindowID() { return windowPID; }
+	@Override public long getWindowID() { return windowPID; }
 	
 	//---------
 	// Setters
@@ -426,12 +425,20 @@ public class WindowParent<E> extends WindowObject<E> implements IWindowParent<E>
 	public void setDrawDefaultBackground(boolean val) { drawDefaultBackground = val; }
 	public void setMoveWithParent(boolean val) { moveWithParent = val; }
 	
-	public WindowParent<E> setHeader(WindowHeader<?> headerIn) {
+	public WindowParent setHeader(WindowHeader headerIn) {
 		if (header != null) removeObject();
 		header = headerIn;
 		if (header != null) header.updateButtonVisibility();
 		addObject(header);
 		return this;
 	}
+	
+	public void showOnCurrent() { showOnCurrent(ObjectPosition.SCREEN_CENTER); }
+	public void showOnCurrent(ObjectPosition position) {
+	    Envision.getActiveTopParent().displayWindow(this, position);
+	}
+	
+	public void showOnTop() { showOnTop(ObjectPosition.SCREEN_CENTER); }
+	public void showOnTop(ObjectPosition position) { Envision.getTopScreen().displayWindow(this, position); }
 	
 }

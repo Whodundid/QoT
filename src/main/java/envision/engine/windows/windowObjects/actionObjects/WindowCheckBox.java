@@ -6,7 +6,7 @@ import eutil.colors.EColors;
 
 //Author: Hunter Bragg
 
-public class WindowCheckBox<E> extends ActionObject<E> {
+public class WindowCheckBox extends ActionObject {
 	
 	//--------
 	// Fields
@@ -19,8 +19,8 @@ public class WindowCheckBox<E> extends ActionObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowCheckBox(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, false); }
-	public WindowCheckBox(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn, boolean checkedIn) {
+	public WindowCheckBox(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, false); }
+	public WindowCheckBox(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn, boolean checkedIn) {
 		init(objIn, xIn, yIn, widthIn, heightIn);
 		checked = checkedIn;
 	}

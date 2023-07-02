@@ -25,8 +25,9 @@ public class CMD_Speed extends TerminalCommand {
 		expectAtLeast(1);
 		
 		//toggle
-		Envision.thePlayer.speed = ENumUtil.parseDouble(arg(0), 32.0 * 4.5);
-		writeln("Set player speed to: '", Envision.thePlayer.speed, "' !");
+		double s = ENumUtil.parseDouble(arg(0), 32.0 * 4.5);
+		Envision.thePlayer.setSpeed(s);
+		writeln("Set player speed to: '", Envision.thePlayer.getSpeed() * 1000, "' !");
 	}
 	
 }

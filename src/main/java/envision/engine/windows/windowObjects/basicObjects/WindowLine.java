@@ -4,7 +4,7 @@ import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 
-public class WindowLine<E> extends WindowObject<E> {
+public class WindowLine extends WindowObject {
 	
 	//--------
 	// Fields
@@ -17,9 +17,9 @@ public class WindowLine<E> extends WindowObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowLine(IWindowObject<?> parentIn, double x1, double y1, double x2, double y2) { this(parentIn, x1, y1, x2, y2, 0xff000000); }
-	public WindowLine(IWindowObject<?> parentIn, double x1, double y1, double x2, double y2, EColors colorIn) { this(parentIn, x1, y1, x2, y2, colorIn.intVal); }
-	public WindowLine(IWindowObject<?> parentIn, double x1, double y1, double x2, double y2, int colorIn) {
+	public WindowLine(IWindowObject parentIn, double x1, double y1, double x2, double y2) { this(parentIn, x1, y1, x2, y2, 0xff000000); }
+	public WindowLine(IWindowObject parentIn, double x1, double y1, double x2, double y2, EColors colorIn) { this(parentIn, x1, y1, x2, y2, colorIn.intVal); }
+	public WindowLine(IWindowObject parentIn, double x1, double y1, double x2, double y2, int colorIn) {
 		
 		if (x1 > x2) {
 			double temp = x1;

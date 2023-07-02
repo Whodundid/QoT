@@ -21,7 +21,7 @@ public class Goblin extends Enemy {
 		setBaseMeleeDamage(1);
 		setMaxHealth(10);
 		setHealth(10);
-		speed = 32 * 3;
+		setSpeed(32 * 3);
 		
 		init(posX, posY, 64, 64);
 		tex = EntityTextures.goblin;

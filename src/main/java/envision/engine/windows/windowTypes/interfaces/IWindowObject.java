@@ -44,27 +44,31 @@ import qot.assets.textures.cursor.CursorTextures;
 //Author: Hunter Bragg
 
 /** An interface outlining the behavior for all WindowObjects. */
-public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAcceptor {
+public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor {
 	
 	//-------------------
 	// Object Properties
 	//-------------------
 	
 	/** Returns the current properties of this object. */
-	public WindowObjectProperties<E> properties();
+	public WindowObjectProperties properties();
 	/** Returns the underlying object instance. */
-	public default WindowObject<E> instance() { return properties().instance; }
+	public default WindowObject instance() { return properties().instance; }
 	
 	//------
 	// Init
 	//------
 
+	/** Internal event that happens right before initialization. */
+	public default void onPreInit() {}
 	/**
 	 * Event fired from the top parent upon being fully added to the
 	 * parent so that this object can safely initialize all of it's own
 	 * children.
 	 */
 	public default void initChildren() {}
+	/** Internal event that happens after initialization has occurred. */
+	public default void onPostInit() {}
 	/** Internal event that happens before children are reinitialized. */
 	public default void preReInit() {}
 	/** Internal event that happens after children are reinitialized. */
@@ -72,7 +76,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	
 	/** Removes all children and re-runs the initChildren method. */
 	public default void reInitChildren() {
-		properties().isChildInit = false;
+		properties().areChildrenInit = false;
 		var p = getTopParent();
 		var children = getAllChildren();
 		if (!(p.getModifyType() == ObjectModifyType.RESIZE)) {
@@ -86,7 +90,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		properties().childrenToBeAdded.clear();
 		initChildren();
 		postReInit();
-		properties().isChildInit = true;
+		properties().areChildrenInit = true;
 	}
 	
 	//-------------------------
@@ -136,9 +140,9 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//-----------------------
 	
 	/** Tracked state of whether or not this object has been initialized. */
-	public default boolean isInit() { return properties().isInit; }
+	public default boolean isInitialized() { return properties().isInitialized; }
 	/** Tracked state of whether or not this object has had its children initialized. */
-	public default boolean isChildInit() { return properties().isChildInit; }
+	public default boolean areChildrenInit() { return properties().areChildrenInit; }
 	/** Tracked state of whether or not this object has been drawn at least once. */
 	public default boolean hasFirstDraw() { return properties().hasFirstDraw; }
 	/** Tracked state of whether or not this object has received focus at least once. */
@@ -212,10 +216,11 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * internal object properties will not be set unless manually set.
 	 */
 	public default void onInit_i() {
-		properties().isInit = true;
+		properties().isInitialized = true;
 		var ftm = getFutureTaskManager();
 		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_INIT);
 		onInit();
+		onPostInit();
 	}
 	
 	/**
@@ -229,7 +234,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * internal object properties will not be set unless manually set.
 	 */
 	public default void onChildrenInit_i() {
-		properties().isChildInit = true;
+		properties().areChildrenInit = true;
 		var ftm = getFutureTaskManager();
 		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_CHILDREN_INIT);
 		onChildrenInit();
@@ -362,7 +367,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 				var f = top.getFocusLockObject();
 				if (f == null) continue;
 				
-				if (o instanceof WindowHeader<?> && (!o.equals(f) && !f.getAllChildren().contains(o))) {
+				if (o instanceof WindowHeader && (!o.equals(f) && !f.getAllChildren().contains(o))) {
 					Dimension_d d = o.getDimensions();
 					RenderingManager.drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
 				}
@@ -382,7 +387,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 */
 	public default void updateCursorImage() {
 		//make sure that the window isn't maximized
-		if (this instanceof IWindowParent<?> p && p.getMaximizedPosition() == ScreenLocation.TOP) {
+		if (this instanceof IWindowParent p && p.getMaximizedPosition() == ScreenLocation.TOP) {
 			CursorHelper.reset();
 			return;
 		}
@@ -557,9 +562,9 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Returns true if this object has a header. */
 	public default boolean hasHeader() { return getHeader() != null; }
 	/** If this object has a header, returns the header object, otherwise returns null. */
-	public default WindowHeader<?> getHeader() {
+	public default WindowHeader getHeader() {
 		for (var o : getCombinedChildren()) {
-			if (o instanceof WindowHeader<?> h) return h;
+			if (o instanceof WindowHeader h) return h;
 		}
 		return null;
 	}
@@ -636,7 +641,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		//get all of the children in the object that aren't locked in place
 		for (var o : getCombinedChildren().filter(o -> o.isMoveable())) {
 			//only move the window if it moves with the parent
-			if (o instanceof WindowParent<?> p) {
+			if (o instanceof WindowParent p) {
 				if (p.movesWithParent()) o.move(newX, newY);
 			}
 			else o.move(newX, newY);
@@ -742,7 +747,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		var loc = new Box2<>(d.startX, d.startY);
 		
 		//holder to store each object and their relative child locations
-		BoxList<IWindowObject<?>, Point2d> previousLocations = new BoxList<>();
+		BoxList<IWindowObject, Point2d> previousLocations = new BoxList<>();
 		
 		//grab all immediate objects
 		var objs = getCombinedChildren();
@@ -784,17 +789,17 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//----------
 
 	/** Returns a list of all objects that are directly children of this object. */
-	public default EList<IWindowObject<?>> getChildren() { return properties().children; }
+	public default EList<IWindowObject> getChildren() { return properties().children; }
 	/** Returns a list of all objects that are going to be added on the next draw cycle */
-	public default EList<IWindowObject<?>> getAddingChildren() { return properties().childrenToBeAdded; }
+	public default EList<IWindowObject> getAddingChildren() { return properties().childrenToBeAdded; }
 	/** Returns a list of all objects that are going to be removed on the next draw cycle */
-	public default EList<IWindowObject<?>> getRemovingChildren() { return properties().childrenToBeRemoved; }
+	public default EList<IWindowObject> getRemovingChildren() { return properties().childrenToBeRemoved; }
 
 	/** Returns a list of all children that descend from this parent. */
-	public default EList<IWindowObject<?>> getAllChildren() {
-		EList<IWindowObject<?>> foundObjs = EList.newList();
-		EList<IWindowObject<?>> objsWithChildren = EList.newList();
-		EList<IWindowObject<?>> workList = EList.newList();
+	public default EList<IWindowObject> getAllChildren() {
+		EList<IWindowObject> foundObjs = EList.newList();
+		EList<IWindowObject> objsWithChildren = EList.newList();
+		EList<IWindowObject> workList = EList.newList();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
 		getChildren().forEach(o -> {
@@ -823,12 +828,12 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	}
 	
 	/** Returns a list of all children that descend from this parent. */
-	public default EList<IWindowObject<?>> getAllVisibleChildren() {
+	public default EList<IWindowObject> getAllVisibleChildren() {
 		if (!willBeDrawn()) return EList.newList();
 		
-		EList<IWindowObject<?>> foundObjs = EList.newList();
-		EList<IWindowObject<?>> objsWithChildren = EList.newList();
-		EList<IWindowObject<?>> workList = EList.newList();
+		EList<IWindowObject> foundObjs = EList.newList();
+		EList<IWindowObject> objsWithChildren = EList.newList();
+		EList<IWindowObject> workList = EList.newList();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
 		getChildren().forEach(o -> {
@@ -860,7 +865,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns a list of all children from 'getAllChildren()' that are
 	 * currently under the mouse.
 	 */
-	public default EList<IWindowObject<?>> getAllChildrenUnderMouse() {
+	public default EList<IWindowObject> getAllChildrenUnderMouse() {
 		//only add objects if they are visible and if the cursor is over them.
 		return getAllVisibleChildren().filterNull(o -> o.isMouseInside());
 	}
@@ -869,7 +874,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns true if the specified object is a child of the parent or is
 	 * being added to the parent.
 	 */
-	public default boolean containsObject(IWindowObject<?> object) {
+	public default boolean containsObject(IWindowObject object) {
 		return getCombinedChildren().contains(object);
 	}
 	
@@ -880,7 +885,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	}
 	
 	/** Checks if this object is a child of the specified object. */
-	public default boolean isChildOf(IWindowObject<?> parent) {
+	public default boolean isChildOf(IWindowObject parent) {
 		//prevent checking if there is nothing to check against
 		if (parent == null) return false;
 		
@@ -908,7 +913,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * 
 	 * @param objs The objects to add as children
 	 */
-	public default void addObject(IWindowObject<?>... objs) {
+	public default void addObject(IWindowObject... objs) {
 		for (var o : objs) {
 			//prevent null additions
 			if (o == null) continue;
@@ -927,12 +932,13 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 				o.properties().isBeingAdded = true;
 				
 				//prevent multiple headers being added
-				if (o instanceof WindowHeader<?> && hasHeader()) continue;
+				if (o instanceof WindowHeader && hasHeader()) continue;
 				//if it's a window, do it's init
-				if (o instanceof WindowParent<?> p && !o.isInit()) p.initWindow();
+				if (o instanceof WindowParent p && !o.isInitialized()) p.initWindow();
 				
 				//initialize all of the children's children
 				o.setParent(this);
+				o.onPreInit();
 				o.initChildren();
 				o.onChildrenInit_i();
 				
@@ -955,7 +961,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * not contain the specified child, no action is performed. The object
 	 * is removed before the next draw cycle.
 	 */
-	public default void removeObject(IWindowObject<?>... objs) {
+	public default void removeObject(IWindowObject... objs) {
 		EUtil.filterNullForEach(objs, o -> o.properties().isBeingRemoved = true);
 		getRemovingChildren().add(objs);
 	}
@@ -964,7 +970,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns a list combining the objects currently within within this
 	 * object as well as the ones being added.
 	 */
-	public default EList<IWindowObject<?>> getCombinedChildren() {
+	public default EList<IWindowObject> getCombinedChildren() {
 		return EList.combineLists(getChildren(), getAddingChildren());
 	}
 	
@@ -973,34 +979,34 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//---------
 	
 	/** Returns this object's direct parent object. */
-	public default IWindowObject<?> getParent() { return properties().parent; }
+	public default IWindowObject getParent() { return properties().parent; }
 	/** Sets this object's parent. */
-	public default void setParent(IWindowObject<?> parentIn) { properties().parent = parentIn; }
+	public default void setParent(IWindowObject parentIn) { properties().parent = parentIn; }
 	
 	/** Returns the top most parent object in the parent chain. */
-	public default ITopParent<?> getTopParent() {
+	public default ITopParent getTopParent() {
 		var parentObj = getParent();
 		//recursively check through the object's parent lineage to see if that parent is a topParentdw
 		while (parentObj != null) {
-			if (parentObj instanceof ITopParent<?> top) return top;
+			if (parentObj instanceof ITopParent top) return top;
 			//break if the parent is itself
 			if (parentObj == parentObj.getParent()) break;
 			parentObj = parentObj.getParent();
 		}
-		return (this instanceof ITopParent<?> t) ? t : null;
+		return (this instanceof ITopParent t) ? t : null;
 	}
 	
 	/** Returns the first instance of a WindowParent in the parent chain. */
-	public default IWindowParent<?> getWindowParent() {
+	public default IWindowParent getWindowParent() {
 		var parentObj = getParent();
 		//recursively check through the object's parent lineage to see if that parent is a window
-		while (parentObj != null && !(parentObj instanceof ITopParent<?>)) {
-			if (parentObj instanceof IWindowParent<?> p) return p;
+		while (parentObj != null && !(parentObj instanceof ITopParent)) {
+			if (parentObj instanceof IWindowParent p) return p;
 			//break if the parent is itself
 			if (parentObj == parentObj.getParent()) break;
 			parentObj = parentObj.getParent();
 		}
-		return (this instanceof IWindowParent<?> p) ? p : null;
+		return (this instanceof IWindowParent p) ? p : null;
 	}
 	
 	//-------
@@ -1011,7 +1017,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Returns the object that will receive focus by default when the base
 	 * object has focus transfered to it.
 	 */
-	public default IWindowObject<?> getDefaultFocusObject() {
+	public default IWindowObject getDefaultFocusObject() {
 		return properties().defaultFocusObject;
 	}
 	
@@ -1020,7 +1026,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * receives focus, the top parent will attempt to transfer focus to
 	 * the specified default focus object.
 	 */
-	public default void setDefaultFocusObject(IWindowObject<?> objectIn) {
+	public default void setDefaultFocusObject(IWindowObject objectIn) {
 		properties().defaultFocusObject = objectIn;
 	}
 	
@@ -1096,7 +1102,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * Signals the top parent to transfer focus from this object to the
 	 * object specified on the next draw cycle.
 	 */
-	public default void transferFocus(IWindowObject<?> objIn) {
+	public default void transferFocus(IWindowObject objIn) {
 		var t = getTopParent();
 		
 		if (t.doesFocusLockExist() && getTopParent().getFocusLockObject().equals(this)) {
@@ -1281,13 +1287,13 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	}
 	
 	/** Register an object that listens to this object's events. */
-	public default void registerListener(IWindowObject<?> objIn) {
+	public default void registerListener(IWindowObject objIn) {
 		var handler = properties().eventHandler;
 		if (handler != null) handler.registerObject(objIn);
 	}
 	
 	/** Unregister a listener Object. */
-	public default void unregisterListener(IWindowObject<?> objIn) {
+	public default void unregisterListener(IWindowObject objIn) {
 		var handler = properties().eventHandler;
 		if (handler != null) handler.unregisterObject(objIn);
 	}
@@ -1306,7 +1312,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	//--------
 	
 	/** Event called whenever a child IActionObject's action is triggered. */
-	public default void actionPerformed(IActionObject<?> object, Object... args) {
+	public default void actionPerformed(IActionObject object, Object... args) {
 		postEvent(new EventAction(this, object, args));
 	}
 	
@@ -1319,7 +1325,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	/** Sets this object to close when the hud closes. */
 	public default void setClosesWithHud(boolean val) { properties().closesWithHud = true; }
 	/** Upon closing, this object will attempt to transfer it's focus to the specified object if possible. */
-	public default void setFocusedObjectOnClose(IWindowObject<?> objIn) { properties().focusObjectOnClose = objIn; }
+	public default void setFocusedObjectOnClose(IWindowObject objIn) { properties().focusObjectOnClose = objIn; }
 	
 	/**
 	 * Removes this object and all of it's children from the immediate a
@@ -1355,15 +1361,6 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 		onClosed_i();
 	}
 	
-	//------------------
-	// Parameter Object
-	//------------------
-	
-	/** Returns the object or argument currently stored. */
-	public default E getGenericObject() { return properties().genericObject; }
-	/** Stores some object or argument to be preserved for future use. */
-	public default void setGenericObject(E objIn) { properties().genericObject = objIn; }
-	
 	//-------------
 	// Debug Stuff
 	//-------------
@@ -1378,17 +1375,17 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	// Static Methods
 	//----------------
 	
-	public static void setMoveable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setMoveable(val), objs); }
-	public static void setResizeable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setResizeable(val), objs); }
-	public static void setCloseable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setCloseable(val), objs); }
-	public static void setClickable(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setClickable(val), objs); }
-	public static void setHidden(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setHidden(val), objs); }
-	public static void setEnabled(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setEnabled(val), objs); }
-	public static void setVisible(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setVisible(val), objs); }
-	public static void setPersistent(boolean val, IWindowObject<?>... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
-	public static void setHoverText(String text, IWindowObject<?>... objs) { setVal(o -> o.setHoverText(text), objs); }
+	public static void setMoveable(boolean val, IWindowObject... objs) { setVal(o -> o.setMoveable(val), objs); }
+	public static void setResizeable(boolean val, IWindowObject... objs) { setVal(o -> o.setResizeable(val), objs); }
+	public static void setCloseable(boolean val, IWindowObject... objs) { setVal(o -> o.setCloseable(val), objs); }
+	public static void setClickable(boolean val, IWindowObject... objs) { setVal(o -> o.setClickable(val), objs); }
+	public static void setHidden(boolean val, IWindowObject... objs) { setVal(o -> o.setHidden(val), objs); }
+	public static void setEnabled(boolean val, IWindowObject... objs) { setVal(o -> o.setEnabled(val), objs); }
+	public static void setVisible(boolean val, IWindowObject... objs) { setVal(o -> o.setVisible(val), objs); }
+	public static void setPersistent(boolean val, IWindowObject... objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
+	public static void setHoverText(String text, IWindowObject... objs) { setVal(o -> o.setHoverText(text), objs); }
 	
-	public static void setVal(Consumer<? super IWindowObject<?>> action, IWindowObject<?>... objs) {
+	public static void setVal(Consumer<? super IWindowObject> action, IWindowObject... objs) {
 		EUtil.filterNullForEachA(action, objs);
 	}
 	
@@ -1398,7 +1395,7 @@ public interface IWindowObject<E> extends KeyboardInputAcceptor, MouseInputAccep
 	 * @param obj The object to check for movement on
 	 * @return True if moving
 	 */
-	public static boolean isObjectMoving(IWindowObject<?> obj) {
+	public static boolean isObjectMoving(IWindowObject obj) {
 		if (obj == null) return false;
 		var top = obj.getTopParent();
 		return top.getModifyingObject() == obj && top.getModifyType() == ObjectModifyType.MOVE;

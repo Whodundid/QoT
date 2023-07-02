@@ -4,7 +4,6 @@ import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;
 
@@ -14,7 +13,7 @@ public class TabbedContainer extends WindowObject {
 	// Fields
 	//--------
 	
-	private EList<ContainerTab> tabs = new EArrayList<>();
+	private EList<ContainerTab> tabs = EList.newList();
 	private ContainerTab selectedTab = null;
 	
 	protected double tabHeight = 32; //Default height is 28 pixels
@@ -31,7 +30,7 @@ public class TabbedContainer extends WindowObject {
 	//--------------
 	
 	protected TabbedContainer() {}
-	public TabbedContainer(IWindowObject<?> parent, double x, double y, double w, double h) {
+	public TabbedContainer(IWindowObject parent, double x, double y, double w, double h) {
 		init(parent, x, y, w, h);
 	}
 	

@@ -66,8 +66,8 @@ public class EditorToolBox extends WindowObject {
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
-		if (object instanceof WindowButton && object.getGenericObject() instanceof EditorToolType) {
-			EditorToolType t = (EditorToolType) object.getGenericObject();
+		if (object instanceof WindowButton<?> b && b.getGenericObject() instanceof EditorToolType) {
+			EditorToolType t = (EditorToolType) b.getGenericObject();
 			editor.getSettings().setCurrentTool(t);
 		}
 	}

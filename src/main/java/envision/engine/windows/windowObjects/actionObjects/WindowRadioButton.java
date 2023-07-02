@@ -6,7 +6,7 @@ import eutil.colors.EColors;
 
 //Author: Hunter Bragg
 
-public class WindowRadioButton<E> extends ActionObject<E> {
+public class WindowRadioButton extends ActionObject {
 
 	//--------
 	// Fields
@@ -19,8 +19,8 @@ public class WindowRadioButton<E> extends ActionObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowRadioButton(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, false); }
-	public WindowRadioButton(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn, boolean checkedIn) {
+	public WindowRadioButton(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, false); }
+	public WindowRadioButton(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn, boolean checkedIn) {
 		init(objIn, xIn, yIn, widthIn, heightIn);
 		checked = checkedIn;
 	}

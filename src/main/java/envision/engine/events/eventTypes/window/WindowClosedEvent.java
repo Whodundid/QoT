@@ -5,13 +5,13 @@ import envision.engine.windows.windowTypes.WindowParent;
 
 public class WindowClosedEvent extends WindowEvent {
 
-	private final WindowParent<?> window;
+	private final WindowParent window;
 	
-	public WindowClosedEvent(WindowParent<?> windowIn) {
+	public WindowClosedEvent(WindowParent windowIn) {
 		super(EventType.WINDOW_CLOSED, true);
 		window = windowIn;
 	}
 	
-	public WindowParent<?> getWindow() { return window; }
+	public WindowParent getWindow() { return window; }
 	
 }

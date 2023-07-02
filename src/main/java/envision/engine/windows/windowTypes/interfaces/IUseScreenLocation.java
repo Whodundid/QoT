@@ -1,6 +1,6 @@
 package envision.engine.windows.windowTypes.interfaces;
 
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2d;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -9,8 +9,8 @@ public interface IUseScreenLocation {
 	
 	public void setLocation(ScreenLocation locIn);
 	public void setLocation(double xIn, double yIn);
-	public Box2<Double, Double> getLocation();
+	public Point2d getLocation();
 	public ScreenLocation getScreenLocation();
-	public IWindowParent<?> getScreenLocationGui();
+	public IWindowParent getScreenLocationGui();
 	
 }

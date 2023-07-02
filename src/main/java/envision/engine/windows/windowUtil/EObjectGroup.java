@@ -1,10 +1,8 @@
 package envision.engine.windows.windowUtil;
 
-import java.util.List;
-
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
 
@@ -14,15 +12,15 @@ public class EObjectGroup {
 	// Fields
 	//--------
 	
-	private EArrayList<IWindowObject<?>> objects = new EArrayList();
-	private IWindowObject<?> groupParent;
+	private EList<IWindowObject> objects = EList.newList();
+	private IWindowObject groupParent;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
 	public EObjectGroup() {}
-	public EObjectGroup(IWindowObject<?> parentIn) {
+	public EObjectGroup(IWindowObject parentIn) {
 		objects.add(parentIn);
 		groupParent = parentIn;
 	}
@@ -32,7 +30,7 @@ public class EObjectGroup {
 	//---------
 	
 	/** does not accept duplicates */
-	public EObjectGroup addObject(IWindowObject<?>... objectIn) {
+	public EObjectGroup addObject(IWindowObject... objectIn) {
 		if (objectIn != null) {
 			for (var o : objectIn) {
 				objects.addNullContains(o);
@@ -41,7 +39,7 @@ public class EObjectGroup {
 		return this;
 	}
 	
-	public EObjectGroup addObjects(List<IWindowObject<?>> objectsIn) {
+	public EObjectGroup addObjects(EList<IWindowObject> objectsIn) {
 		if (objectsIn != null) {
 			for (var o : objectsIn) {
 				objects.addIfNotContains(o);
@@ -50,7 +48,7 @@ public class EObjectGroup {
 		return this;
 	}
 	
-	public EObjectGroup removeObject(IWindowObject<?>... objectIn) {
+	public EObjectGroup removeObject(IWindowObject... objectIn) {
 		var it = objects.iterator();
 		while (it.hasNext()) {
 			for (var o : objectIn) {
@@ -87,13 +85,13 @@ public class EObjectGroup {
 	// Getters
 	//---------
 	
-	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
-	public IWindowObject<?> getGroupParent() { return groupParent; }
+	public EList<IWindowObject> getObjects() { return objects; }
+	public IWindowObject getGroupParent() { return groupParent; }
 	
 	//---------
 	// Setters
 	//---------
 	
-	public EObjectGroup setGroupParent(IWindowObject<?> parentIn) { groupParent = parentIn; return this; }
+	public EObjectGroup setGroupParent(IWindowObject parentIn) { groupParent = parentIn; return this; }
 	
 }

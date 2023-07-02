@@ -2,7 +2,7 @@ package envision.engine.terminal.commands.categories.windows;
 
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.engine.windows.windowTypes.WindowParent;
+import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
@@ -25,9 +25,9 @@ public class CMD_CloseWindow extends TerminalCommand {
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
-				EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+				EList<IWindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 				
-				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getWindowID() == pid);
+				IWindowParent theWindow = EUtil.getFirst(windows, w -> w.getWindowID() == pid);
 				if (EUtil.nullDo(theWindow, w -> w.close())) {
 					termIn.writeln("Window: '" + theWindow.getObjectName() + " ; " + theWindow.getObjectID() + "' closed", EColors.green);
 				}
@@ -37,10 +37,10 @@ public class CMD_CloseWindow extends TerminalCommand {
 			catch (Exception e) {
 				try {
 					String name = EStringUtil.combineAll(args, " ").toLowerCase().trim();
-					EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+					EList<IWindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 					
 					if (name.equals("all") ) {
-						for (WindowParent p : windows) {
+						for (IWindowParent p : windows) {
 							if (p != termIn) {
 								p.close();
 								termIn.writeln("Window: '" + p.getObjectName() + " ; " + p.getObjectID() + "' closed", EColors.green);
@@ -48,14 +48,14 @@ public class CMD_CloseWindow extends TerminalCommand {
 						}
 					}
 					else if (name.equals("all+")) {
-						for (WindowParent p : windows) {
+						for (IWindowParent p : windows) {
 							p.close();
 						}
 						termIn.getTopParent().displayWindow(null);
 					}
 					else {
-						WindowParent theWindow = null;
-						for (WindowParent p : windows) {
+						IWindowParent theWindow = null;
+						for (IWindowParent p : windows) {
 							if (p.getObjectName().toLowerCase().equals(name)) {
 								theWindow = p;
 								break;

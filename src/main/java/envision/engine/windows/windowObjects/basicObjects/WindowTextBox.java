@@ -11,7 +11,7 @@ import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 
-public class WindowTextBox<E> extends WindowObject<E> {
+public class WindowTextBox extends WindowObject {
 	
 	//--------
 	// Fields
@@ -31,8 +31,8 @@ public class WindowTextBox<E> extends WindowObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowTextBox(IWindowObject<?> parent, double x, double y) { this(parent, x, y, null); }
-	public WindowTextBox(IWindowObject<?> parent, double x, double y, EArrayList<String> linesIn) {
+	public WindowTextBox(IWindowObject parent, double x, double y) { this(parent, x, y, null); }
+	public WindowTextBox(IWindowObject parent, double x, double y, EArrayList<String> linesIn) {
 		init(parent);
 		xPos = x;
 		yPos = y;

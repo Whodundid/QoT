@@ -1,4 +1,4 @@
-package envision.game.entities;
+package envision.game.entities.util;
 
 /**
  * A specialized interface used for indicating that the given object

@@ -6,7 +6,7 @@ import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 
 //Author: Hunter Bragg
 
-public class WindowContainer<E> extends WindowObject<E> {
+public class WindowContainer extends WindowObject {
 	
 	//--------
 	// Fields
@@ -32,11 +32,11 @@ public class WindowContainer<E> extends WindowObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowContainer(IWindowObject<?> parentIn, double xIn, double yIn, double widthIn, double heightIn) {
+	public WindowContainer(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn) {
 		this(parentIn, xIn, yIn, widthIn, heightIn, true);
 	}
 	
-	public WindowContainer(IWindowObject<?> parentIn, double xIn, double yIn, double widthIn, double heightIn, boolean drawTitleIn) {
+	public WindowContainer(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn, boolean drawTitleIn) {
 		init(parentIn, xIn, yIn, widthIn, heightIn);
 		drawTitle = drawTitleIn;
 	}

@@ -1,4 +1,4 @@
-package envision.game.entities;
+package envision.game.entities.util;
 
 /**
  * A static helper class which helps to keep track of experience and

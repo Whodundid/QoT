@@ -1,4 +1,4 @@
-package envision.engine.windows.desktopOverlay;
+package envision.engine.windows.developerDesktop.taskbar;
 
 import envision.Envision;
 import envision.engine.rendering.textureSystem.GameTexture;
@@ -8,18 +8,18 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import qot.assets.textures.taskbar.TaskBarTextures;
 import qot.assets.textures.window.WindowTextures;
 
-public class TaskBarButton<E> extends WindowButton<E> implements Comparable<TaskBarButton<?>> {
+public class TaskBarButton extends WindowButton implements Comparable<TaskBarButton> {
 	
 	//--------
 	// Fields
 	//--------
 	
-	private TaskBar<?> parentBar;
+	private TaskBar parentBar;
 	private IWindowParent base;
 	private boolean pressed = false;
 	private int total = 0;
@@ -33,7 +33,7 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 	// Constructors
 	//--------------
 	
-	public TaskBarButton(TaskBar<?> barIn, IWindowParent<?> baseIn) {
+	public TaskBarButton(TaskBar barIn, IWindowParent baseIn) {
 		super(barIn);
 		parentBar = barIn;
 		base = baseIn;
@@ -56,7 +56,7 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 	//-----------
 	
 	@Override
-	public int compareTo(TaskBarButton<?> b) {
+	public int compareTo(TaskBarButton b) {
 		return Long.compare(getEarliest(), b.getEarliest());
 	}
 	
@@ -116,7 +116,7 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		if (isEnabled() && willBeDrawn()) {
 			pressedButton = button;
-			if (runActionOnPress) onPress(button);
+			if (runActionOnPress) press(button);
 			else if (button == 0) {
 				playPressSound();
 				
@@ -237,8 +237,8 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 	// Getters
 	//---------
 	
-	public IWindowParent<?> getWindowType() { return base; }
-	public TaskBarButton<?> setPinned(boolean val) { pinned = val; return this; }
+	public IWindowParent getWindowType() { return base; }
+	public TaskBarButton setPinned(boolean val) { pinned = val; return this; }
 	public boolean isPinned() { return pinned; }
 	public long getEarliest() { return earliest; }
 	
@@ -246,8 +246,8 @@ public class TaskBarButton<E> extends WindowButton<E> implements Comparable<Task
 	 * Returns a list of all current window instances of the same type
 	 * that this button represents.
 	 */
-	public EArrayList<IWindowParent<?>> getWindows() {
-		return (EArrayList<IWindowParent<?>>) Envision.getTopScreen().getAllWindowInstances(base.getClass());
+	public EList<IWindowParent> getWindows() {
+		return (EList<IWindowParent>) Envision.getTopScreen().getAllWindowInstances(base.getClass());
 	}
 	
 	/** Returns the total number of window instances that this button represents. */

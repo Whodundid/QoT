@@ -13,8 +13,8 @@ import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.EObjectGroup;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2i;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
@@ -28,9 +28,9 @@ import qot.assets.textures.window.WindowTextures;
  * 
  * @author Hunter Bragg
  *
- * @param <E>
+ * @param 
  */
-public class WindowHeader<E> extends WindowObject<E> {
+public class WindowHeader extends WindowObject {
 	
 	//---------------
 	// Static Fields
@@ -46,10 +46,10 @@ public class WindowHeader<E> extends WindowObject<E> {
 	//--------
 	
 	/** The parent window for which this header pertains to. */
-	protected IWindowParent<?> window;
+	protected IWindowParent window;
 	
 	/** The set of default draw header buttons. */
-	public WindowButton<?> fileUpButton, closeButton, maximizeButton, pinButton, minimizeButton;
+	public WindowButton fileUpButton, closeButton, maximizeButton, pinButton, minimizeButton;
 	
 	/** True if using standard default drawing scheme. */
 	public boolean drawDefault = true;
@@ -86,7 +86,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	public int titleOffset = 0;
 
 	/** A position clicked on the header. Used to determine header movement if delta is large enough. */
-	private Box2<Integer, Integer> clickPos = new Box2<>(-1, -1);
+	private Point2i clickPos = new Point2i(-1, -1);
 	/** Used to dynamically keep track of the last created header button position. */
 	private int buttonPos = buttonWidth + 2;
 	
@@ -97,9 +97,9 @@ public class WindowHeader<E> extends WindowObject<E> {
 	/** Used to denote whether or not this header has tabs or not. */
 	private boolean isTabHeader = false;
 	/** Used to keep track of all tabs on this header. */
-	private EArrayList<HeaderTab<?>> tabList;
+	private EList<HeaderTab> tabList;
 	/** The currently selected header tab. */
-	private HeaderTab<?> currentTab;
+	private HeaderTab currentTab;
 	
 	//--------------
 	// Constructors
@@ -110,14 +110,14 @@ public class WindowHeader<E> extends WindowObject<E> {
 	 */
 	protected WindowHeader() {}
 	
-	public WindowHeader(IWindowObject<?> parentIn) { this(parentIn, true, defaultHeight, ""); }
-	public WindowHeader(IWindowObject<?> parentIn, boolean drawDefaultIn, int headerHeight) { this(parentIn, drawDefaultIn, headerHeight, ""); }
-	public WindowHeader(IWindowObject<?> parentIn, boolean drawDefaultIn, int headerHeight, String titleIn) {
+	public WindowHeader(IWindowObject parentIn) { this(parentIn, true, defaultHeight, ""); }
+	public WindowHeader(IWindowObject parentIn, boolean drawDefaultIn, int headerHeight) { this(parentIn, drawDefaultIn, headerHeight, ""); }
+	public WindowHeader(IWindowObject parentIn, boolean drawDefaultIn, int headerHeight, String titleIn) {
 		if (parentIn != null) {
 			Dimension_d dim = parentIn.getDimensions();
 			init(parentIn, dim.startX, dim.startY - headerHeight, dim.width, headerHeight);
 			
-			if (parentIn instanceof IWindowParent<?> p) window = p;
+			if (parentIn instanceof IWindowParent p) window = p;
 			else window = parentIn.getWindowParent();
 		}
 		drawDefault = drawDefaultIn;
@@ -158,7 +158,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 		
 		//check for header grabs with maximize-able windows
 		if (pressed && window != null && window.isMaximized()) {
-			double dist = ENumUtil.distance(mX, mY, clickPos.getA(), clickPos.getB());
+			double dist = ENumUtil.distance(mX, mY, clickPos.x, clickPos.y);
 			if (dist >= 5) headerGrabMaximize();
 		}
 		
@@ -231,7 +231,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 			closeButton.setAlwaysVisible(val);
 			
 			//check for fileup button visibility
-			IWindowParent<?> parent = getWindowParent();
+			IWindowParent parent = getWindowParent();
 			if (parent != null) {
 				var hist = parent.getWindowHistory();
 				
@@ -246,7 +246,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public void actionPerformed(IActionObject<?> object, Object... args) {
+	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == closeButton) 		handleClose();
 		if (object == maximizeButton) 	handleMaximize();
 		if (object == minimizeButton) 	handleMinimize();
@@ -288,8 +288,9 @@ public class WindowHeader<E> extends WindowObject<E> {
 		var p = (drawDefault) ? getWindowParent() : getParent();
 		if (p == null) return false;
 		if (p.hasFocus() || this.hasFocus()) return true;
-		for (var o : p.getAllChildren())
+		for (var o : p.getAllChildren()) {
 			if (o.hasFocus()) return true;
+		}
 		return false;
 	}
 	
@@ -343,35 +344,37 @@ public class WindowHeader<E> extends WindowObject<E> {
 	 * @param mYIn Mouse Y
 	 */
 	protected void handleMaximizeDraw(double mXIn, double mYIn) {
-		if (moving && window != null && window.isMaximizable() && ((mXIn <= 5) || (mXIn >= res.width - 5) || (mYIn <= 8))) {
-			//TaskBar b = GameRenderer.instance.getTaskBar();
-			
-			double w = res.width;
-			double h = res.height;
-			
-			if (mXIn <= 5 && mYIn <= 8) { //top left
-				drawHRect(4, 4, w / 2 - 2, (h / 2) - 3, 2, EColors.lgray);
-			}
-			else if (mXIn <= 5 && mYIn >= (h - 8)) { //bot left
-				drawHRect(4, (h / 2) + 3, w / 2 - 2, h - 4, 2, EColors.lgray);
-			}
-			else if (mXIn >= (w - 5) && mYIn <= 8) { //top right
-				drawHRect(w / 2 + 3,  4, w - 4, (h / 2) - 3, 2, EColors.lgray);
-			}
-			else if (mXIn >= (w - 5) && mYIn >= (h - 8)) { //bot right
-				drawHRect(w / 2 + 3, (h / 2) + 3, w - 4, h - 4, 2, EColors.lgray);
-			}
-			else if (mXIn <= 5) { //left
-				drawHRect(4, 4, w / 2 - 2, h - 4, 2, EColors.lgray);
-			}
-			else if (mXIn >= (w - 5)) { //right
-				drawHRect(w / 2 + 3, 4, w - 4, h - 4, 2, EColors.lgray);
-			}
-			else if (mYIn <= 8) { //top
-				drawHRect(4, 4, w - 4, h - 4, 2, EColors.lgray);
-			}
-			
-		}
+	    // don't care if not moving or window can't be maximized
+	    if (!moving || window == null || !window.isMaximizable()) return;
+	    // don't care if the mouse isn't close enough to a screen edge
+	    if ((mXIn > 5) && (mXIn < res.width - 5) && (mYIn > 8)) return;
+	    
+        //TaskBar b = GameRenderer.instance.getTaskBar();
+        
+        double w = res.width;
+        double h = res.height;
+        
+        if (mXIn <= 5 && mYIn <= 8) { //top left
+            drawHRect(4, 4, w / 2 - 2, (h / 2) - 3, 2, EColors.lgray);
+        }
+        else if (mXIn <= 5 && mYIn >= (h - 8)) { //bot left
+            drawHRect(4, (h / 2) + 3, w / 2 - 2, h - 4, 2, EColors.lgray);
+        }
+        else if (mXIn >= (w - 5) && mYIn <= 8) { //top right
+            drawHRect(w / 2 + 3,  4, w - 4, (h / 2) - 3, 2, EColors.lgray);
+        }
+        else if (mXIn >= (w - 5) && mYIn >= (h - 8)) { //bot right
+            drawHRect(w / 2 + 3, (h / 2) + 3, w - 4, h - 4, 2, EColors.lgray);
+        }
+        else if (mXIn <= 5) { //left
+            drawHRect(4, 4, w / 2 - 2, h - 4, 2, EColors.lgray);
+        }
+        else if (mXIn >= (w - 5)) { //right
+            drawHRect(w / 2 + 3, 4, w - 4, h - 4, 2, EColors.lgray);
+        }
+        else if (mYIn <= 8) { //top
+            drawHRect(4, 4, w - 4, h - 4, 2, EColors.lgray);
+        }
 	}
 	
 	/**
@@ -382,26 +385,28 @@ public class WindowHeader<E> extends WindowObject<E> {
 	 */
 	protected void headerClick(int button) {
 		var topParent = getTopParent();
-		if (button == 0) {
-			var parent = getParent();
-			if (parent instanceof WindowParent<?> p) {
-				p.bringToFront();
-				
-				if (headerMoveable && !window.isMaximized()) {
-					moving = true;
-					topParent.setModifyingObject(parent, ObjectModifyType.MOVE);
-					topParent.setModifyMousePos(Mouse.getMx(), Mouse.getMy());
-				}
-			}
-			else {
-				if (headerMoveable) {
-					moving = true;
-					topParent.setModifyingObject(parent, ObjectModifyType.MOVE);
-					topParent.setModifyMousePos(Mouse.getMx(), Mouse.getMy());
-				}
-			}
+		
+		if (button != 0) {
+		    topParent.clearModifyingObject();
+		    return;
 		}
-		else topParent.clearModifyingObject();
+		
+		var parent = getParent();
+		
+        if (parent instanceof WindowParent p) {
+            p.bringToFront();
+            
+            if (headerMoveable && !window.isMaximized()) {
+                moving = true;
+                topParent.setModifyingObject(parent, ObjectModifyType.MOVE);
+                topParent.setModifyMousePos(Mouse.getMx(), Mouse.getMy());
+            }
+        }
+        else if (headerMoveable) {
+            moving = true;
+            topParent.setModifyingObject(parent, ObjectModifyType.MOVE);
+            topParent.setModifyMousePos(Mouse.getMx(), Mouse.getMy());
+        }
 	}
 	
 	private void headerGrabMaximize() {
@@ -420,8 +425,8 @@ public class WindowHeader<E> extends WindowObject<E> {
 	 * 
 	 * @return This header
 	 */
-	public WindowHeader<E> updateButtonVisibility() {
-		if (getParent() instanceof WindowParent<?> window) {
+	public WindowHeader updateButtonVisibility() {
+		if (getParent() instanceof WindowParent window) {
 			int buttonPos = buttonWidth * 2 + 3;
 			
 			if (maximizeButton != null) {
@@ -492,24 +497,22 @@ public class WindowHeader<E> extends WindowObject<E> {
 	
 	protected void handleMaximize() {
 		var p = getWindowParent();
-		if (p != null) {
-			if (p.isMaximizable()) {
-				if (p.getMaximizedPosition() == ScreenLocation.TOP) {
-					p.setMaximized(ScreenLocation.OUT);
-					p.miniaturize();
-					getTopParent().setFocusedObject(p);
-				}
-				else {
-					if (p.getMaximizedPosition() == ScreenLocation.OUT) p.setPreMax(p.getDimensions());
-					p.setMaximized(ScreenLocation.TOP);
-					p.maximize();
-					getTopParent().setFocusedObject(p);
-				}
-				
-				//maximizeButton.setButtonTexture(p.getMaximizedPosition() == ScreenLocation.center ? EMCResources.guiMinButton : EMCResources.guiMaxButton);
-				//maximizeButton.setButtonSelTexture(p.getMaximizedPosition() == ScreenLocation.center ? EMCResources.guiMinButtonSel : EMCResources.guiMaxButtonSel);
-			}
-		}
+		if (p == null || !p.isMaximizable()) return;
+		
+		if (p.getMaximizedPosition() == ScreenLocation.TOP) {
+            p.setMaximized(ScreenLocation.OUT);
+            p.miniaturize();
+            getTopParent().setFocusedObject(p);
+        }
+        else {
+            if (p.getMaximizedPosition() == ScreenLocation.OUT) p.setPreMax(p.getDimensions());
+            p.setMaximized(ScreenLocation.TOP);
+            p.maximize();
+            getTopParent().setFocusedObject(p);
+        }
+        
+        //maximizeButton.setButtonTexture(p.getMaximizedPosition() == ScreenLocation.center ? EMCResources.guiMinButton : EMCResources.guiMaxButton);
+        //maximizeButton.setButtonSelTexture(p.getMaximizedPosition() == ScreenLocation.center ? EMCResources.guiMinButtonSel : EMCResources.guiMaxButtonSel);
 	}
 	
 	protected void handleMinimize() {
@@ -521,7 +524,7 @@ public class WindowHeader<E> extends WindowObject<E> {
 	}
 	
 	protected void handleFileUp() {
-		if (getParent() instanceof WindowParent<?> wp) {
+		if (getParent() instanceof WindowParent wp) {
 			wp.fileUpAndClose();
 		}
 		else if (getTopParent() != null) getTopParent().close(true);

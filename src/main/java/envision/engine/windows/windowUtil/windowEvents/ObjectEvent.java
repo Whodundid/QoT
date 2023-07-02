@@ -12,14 +12,14 @@ public abstract class ObjectEvent {
 	// Fields
 	//--------
 	
-	private final IWindowObject<?> parentObject;
+	private final IWindowObject parentObject;
 	private final EventType eventType;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public ObjectEvent(IWindowObject<?> parentObjectIn, EventType typeIn) {
+	public ObjectEvent(IWindowObject parentObjectIn, EventType typeIn) {
 		parentObject = parentObjectIn;
 		eventType = typeIn;
 	}
@@ -29,7 +29,7 @@ public abstract class ObjectEvent {
 	//---------
 	
 	/** Returns the parent object from which the event was created. */
-	public IWindowObject<?> getEventParent() { return parentObject; }
+	public IWindowObject getEventParent() { return parentObject; }
 	/** Returns the type of event this is */
 	public EventType getEventType() { return eventType; }
 	

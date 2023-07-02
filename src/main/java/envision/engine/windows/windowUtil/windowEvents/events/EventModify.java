@@ -13,14 +13,14 @@ public class EventModify extends ObjectEvent {
 	// Fields
 	//--------
 	
-	private final IWindowObject<?> modifyingObject;
+	private final IWindowObject modifyingObject;
 	private final ObjectModifyType modifyType;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public EventModify(IWindowObject<?> parentObjectIn, IWindowObject<?> modifyingObjectIn, ObjectModifyType modifyingTypeIn) {
+	public EventModify(IWindowObject parentObjectIn, IWindowObject modifyingObjectIn, ObjectModifyType modifyingTypeIn) {
 		super(parentObjectIn, EventType.MODIFY);
 		modifyingObject = modifyingObjectIn;
 		modifyType = modifyingTypeIn;
@@ -30,7 +30,7 @@ public class EventModify extends ObjectEvent {
 	// Getters
 	//---------
 	
-	public IWindowObject<?> getModifyingObect() { return modifyingObject; }
+	public IWindowObject getModifyingObect() { return modifyingObject; }
 	public ObjectModifyType getModifyType() { return modifyType; }
 	
 }

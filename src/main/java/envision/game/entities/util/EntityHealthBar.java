@@ -1,8 +1,9 @@
-package envision.game.entities;
+package envision.game.entities.util;
 
 import envision.Envision;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.windows.windowTypes.WindowObject;
+import envision.game.entities.Entity;
 import eutil.colors.EColors;
 
 public class EntityHealthBar extends WindowObject {

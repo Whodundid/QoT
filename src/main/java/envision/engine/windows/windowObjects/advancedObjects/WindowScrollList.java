@@ -21,21 +21,21 @@ import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public class WindowScrollList<E> extends WindowObject<E> {
+public class WindowScrollList<E> extends WindowObject {
 	
 	//--------
 	// Fields
 	//--------
 	
-	protected EList<IWindowObject<?>> listContents = EList.newList();
-	protected EList<IWindowObject<?>> drawnListObjects = EList.newList();
-	protected WindowScrollBar<?> vScroll, hScroll;
+	protected EList<IWindowObject> listContents = EList.newList();
+	protected EList<IWindowObject> drawnListObjects = EList.newList();
+	protected WindowScrollBar vScroll, hScroll;
 	protected WindowButton reset;
 	protected double scrollableHeight = 0;
 	protected double scrollableWidth = 0;
-	protected EList<IWindowObject<?>> listObjsToBeRemoved = EList.newList();
-	protected EList<IWindowObject<?>> listObjsToBeAdded = EList.newList();
-	protected EList<IWindowObject<?>> ignoreList = EList.newList();
+	protected EList<IWindowObject> listObjsToBeRemoved = EList.newList();
+	protected EList<IWindowObject> listObjsToBeAdded = EList.newList();
+	protected EList<IWindowObject> ignoreList = EList.newList();
 	protected int backgroundColor = 0xff4D4D4D;
 	protected int borderColor = 0xff000000;
 	protected double heightToBeSet = 0, widthToBeSet = 0;
@@ -50,7 +50,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	//--------------
 	
 	protected WindowScrollList() {}
-	public WindowScrollList(IWindowObject<?> parentIn, double xIn, double yIn, double widthIn, double heightIn) {
+	public WindowScrollList(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn) {
 		init(parentIn, xIn, yIn, widthIn, heightIn);
 		scrollableWidth = (int) widthIn - 2;
 		scrollableHeight = (int) heightIn - 2;
@@ -166,7 +166,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		if (isMoveable()) {
 			Dimension_d d = getDimensions();
 			var loc = new Box2<>(d.startX, d.startY);
-			var previousLocations = new BoxList<IWindowObject<?>, Box2<Double, Double>>();
+			var previousLocations = new BoxList<IWindowObject, Box2<Double, Double>>();
 			var objs = getCombinedChildren();
 			
 			for (var o : objs) {
@@ -210,7 +210,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public void actionPerformed(IActionObject<?> object, Object... args) {
+	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == reset) {
 			vScroll.reset();
 			hScroll.reset();
@@ -250,7 +250,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public EList<IWindowObject<?>> getCombinedChildren() {
+	public EList<IWindowObject> getCombinedChildren() {
 		var r = EList.newList(getChildren());
 		r.addAll(getAddingChildren());
 		r.addAll(listContents);
@@ -259,10 +259,10 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public EList<IWindowObject<?>> getAllChildren() {
-		EList<IWindowObject<?>> foundObjs = EList.newList();
-		EList<IWindowObject<?>> objsWithChildren = EList.newList();
-		EList<IWindowObject<?>> workList = EList.newList();
+	public EList<IWindowObject> getAllChildren() {
+		EList<IWindowObject> foundObjs = EList.newList();
+		EList<IWindowObject> objsWithChildren = EList.newList();
+		EList<IWindowObject> workList = EList.newList();
 		
 		//grab all immediate children and add them to foundObjs, then check if any have children of their own
 		getChildren().forEach(o -> {
@@ -302,7 +302,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public void removeObject(IWindowObject<?>... objs) {
+	public void removeObject(IWindowObject... objs) {
 		getRemovingChildren().add(objs);
 		listObjsToBeRemoved.add(objs);
 	}
@@ -330,7 +330,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		//get both the current list objects and those being added
 		var objs = EList.combineLists(listContents, listObjsToBeAdded);
 		var ignored = EList.newList(ignoreList);
-		EList<IWindowObject<?>> aObjs = EList.newList();
+		EList<IWindowObject> aObjs = EList.newList();
 		
 		
 		for (var o : objs) {
@@ -400,13 +400,13 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		else heightToBeSet += amount;
 	}
 	
-	public void addAndIgnore(IWindowObject<?>... objsIn) {
+	public void addAndIgnore(IWindowObject... objsIn) {
 		addToIgnoreList(objsIn);
 		addObjectToList(objsIn);
 	}
 	
-	public void addObjectToList(IWindowObject<?>... objsIn) { addObjectToList(true, objsIn); }
-	public void addObjectToList(boolean useRelativeCoords, IWindowObject<?>... objsIn) {
+	public void addObjectToList(IWindowObject... objsIn) { addObjectToList(true, objsIn); }
+	public void addObjectToList(boolean useRelativeCoords, IWindowObject... objsIn) {
 		for (var o : objsIn) {
 			if (o == null) continue;
 			if (o == this) continue;
@@ -444,7 +444,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 		}
 	}
 	
-	public void removeObjectFromList(IWindowObject<?>... objsIn) {
+	public void removeObjectFromList(IWindowObject... objsIn) {
 		listObjsToBeRemoved.add(objsIn);
 	}
 	
@@ -457,11 +457,11 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	}
 	
 	public void clearIgnoreList() { ignoreList = EList.newList(); }
-	public void setIgnoreList(IWindowObject<?>... objects) {
+	public void setIgnoreList(IWindowObject... objects) {
 		ignoreList = EList.newList(objects);
 	}
 	
-	public void addToIgnoreList(IWindowObject<?>... objects) {
+	public void addToIgnoreList(IWindowObject... objects) {
 		if (ignoreList == null) ignoreList = EList.newList();
 		ignoreList.add(objects);
 	}
@@ -478,7 +478,7 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	
 	void removeListObjects() {
 		for (int i = 0; i < listObjsToBeRemoved.size(); i++) {
-			IWindowObject<?> o = listObjsToBeRemoved.get(i);
+			IWindowObject o = listObjsToBeRemoved.get(i);
 			if (o == null) continue;
 			
 			if (!o.equals(getTopParent().getFocusedObject())) {
@@ -545,11 +545,11 @@ public class WindowScrollList<E> extends WindowObject<E> {
 	public boolean isVScrollDrawn() { return vScrollVis && (vScroll != null ? vScroll.getHighVal() > vScroll.getVisibleAmount() : false); }
 	public boolean isHScrollDrawn() { return hScrollVis && (hScroll != null ? hScroll.getHighVal() > hScroll.getVisibleAmount() : false); }
 	public boolean isResetDrawn() { return resetVis && (isVScrollDrawn() || isHScrollDrawn()); }
-	public WindowScrollBar<?> getVScrollBar() { return vScroll; }
-	public WindowScrollBar<?> getHScrollBar() { return hScroll; }
-	public EList<IWindowObject<?>> getDrawnObjects() { return drawnListObjects; }
-	public EList<IWindowObject<?>> getListObjects() { return listContents; }
-	public EList<IWindowObject<?>> getAddingListObjects() { return listObjsToBeAdded; }
+	public WindowScrollBar getVScrollBar() { return vScroll; }
+	public WindowScrollBar getHScrollBar() { return hScroll; }
+	public EList<IWindowObject> getDrawnObjects() { return drawnListObjects; }
+	public EList<IWindowObject> getListObjects() { return listContents; }
+	public EList<IWindowObject> getAddingListObjects() { return listObjsToBeAdded; }
 	
 	//---------
 	// Setters

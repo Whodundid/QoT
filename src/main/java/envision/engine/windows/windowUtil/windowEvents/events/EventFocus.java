@@ -15,7 +15,7 @@ public class EventFocus extends ObjectEvent {
 	// Fields
 	//--------
 	
-	public final IWindowObject<?> eventObject;
+	public final IWindowObject eventObject;
 	public final FocusType type;
 	public final int actionCode;
 	public final int mX, mY;
@@ -24,7 +24,7 @@ public class EventFocus extends ObjectEvent {
 	// Constructors
 	//--------------
 	
-	public EventFocus(IWindowObject<?> parentObjectIn, IWindowObject<?> eventObjectIn, FocusType typeIn) {
+	public EventFocus(IWindowObject parentObjectIn, IWindowObject eventObjectIn, FocusType typeIn) {
 		super(parentObjectIn, EventType.FOCUS);
 		eventObject = eventObjectIn;
 		type = typeIn;
@@ -33,7 +33,7 @@ public class EventFocus extends ObjectEvent {
 		mY = -1;
 	}
 	
-	public EventFocus(IWindowObject<?> parentObjectIn, IWindowObject<?> eventObjectIn, FocusType typeIn, int actionCodeIn, int mXIn, int mYIn) {
+	public EventFocus(IWindowObject parentObjectIn, IWindowObject eventObjectIn, FocusType typeIn, int actionCodeIn, int mXIn, int mYIn) {
 		super(parentObjectIn, EventType.FOCUS);
 		eventObject = eventObjectIn;
 		type = typeIn;
@@ -46,7 +46,7 @@ public class EventFocus extends ObjectEvent {
 	// Getters
 	//---------
 	
-	public IWindowObject<?> getFocusObject() { return eventObject; }
+	public IWindowObject getFocusObject() { return eventObject; }
 	public FocusType getFocusType() { return type; }
 	public int getActionCode() { return actionCode; }
 	public Point2i getMousePoint() { return new Point2i(mX, mY); }

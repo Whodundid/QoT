@@ -9,7 +9,7 @@ import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.game.entities.Entity;
-import envision.game.entities.EntityLevel;
+import envision.game.entities.util.EntityLevel;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import qot.assets.textures.window.WindowTextures;

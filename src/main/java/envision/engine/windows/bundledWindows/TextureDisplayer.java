@@ -23,8 +23,8 @@ public class TextureDisplayer extends WindowParent {
 	// Fields
 	//--------
 	
-	private WindowButton<?> previous, next, open;
-	private WindowImageBox<?> imageBox;
+	private WindowButton previous, next, open;
+	private WindowImageBox imageBox;
 	private Path path;
 	private File file;
 	private EList<Path> paths;

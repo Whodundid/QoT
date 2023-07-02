@@ -13,16 +13,16 @@ import eutil.math.dimensions.Dimension_d;
  * 
  * @author Hunter Bragg
  * 
- * @param <E> A custom type that this object can store for later use
+ * @param  A custom type that this object can store for later use
  */
-public class WindowObjectProperties<E> {
+public class WindowObjectProperties {
 	
 	//--------
 	// Fields
 	//--------
 	
 	/** The single WindowObject instance for which these properties pertain to. */
-	public final WindowObject<E> instance;
+	public final WindowObject instance;
 	
 	/** The event handler for this object. */
 	public ObjectEventHandler eventHandler;
@@ -30,18 +30,18 @@ public class WindowObjectProperties<E> {
 	public FutureTaskManager futureTaskManager;
 	
 	/** The immediate parent of this object. */
-	public IWindowObject<?> parent;
+	public IWindowObject parent;
 	/** The object that will receive focus once this object is closed. */
-	public IWindowObject<?> focusObjectOnClose;
+	public IWindowObject focusObjectOnClose;
 	/** The object that will receive focus once this object is fully added to its parent. */
-	public IWindowObject<?> defaultFocusObject;
+	public IWindowObject defaultFocusObject;
 	
 	/** The current children on this object. */
-	public EList<IWindowObject<?>> children = EList.newList();
+	public EList<IWindowObject> children = EList.newList();
 	/** The children that will be removed on the next draw cycle. */
-	public EList<IWindowObject<?>> childrenToBeRemoved = EList.newList();
+	public EList<IWindowObject> childrenToBeRemoved = EList.newList();
 	/** The children that will be added on the next draw cycle. */
-	public EList<IWindowObject<?>> childrenToBeAdded = EList.newList();
+	public EList<IWindowObject> childrenToBeAdded = EList.newList();
 	
 	/** Specifies a region for which this object is interactably restricted by beyond its normal dimensions. */
 	public Dimension_d boundaryDimension;
@@ -96,9 +96,9 @@ public class WindowObjectProperties<E> {
 	//--------------------------------
 	
 	/** Tracked state of whether or not this object has been initialized. */
-	public volatile boolean isInit = false;
+	public volatile boolean isInitialized = false;
 	/** Tracked state of whether or not this object has had its children initialized. */
-	public volatile boolean isChildInit = false;
+	public volatile boolean areChildrenInit = false;
 	/** Tracked state of whether or not this object has been drawn at least once. */
 	public volatile boolean hasFirstDraw = false;
 	/** Tracked state of whether or not this object has received focus at least once. */
@@ -116,18 +116,11 @@ public class WindowObjectProperties<E> {
 	/** Tracked state of whether or not this object has been closed. */
 	public volatile boolean isClosed = false;
 	
-	//------------------------
-	// Fields : Stored Object
-	//------------------------
-	
-	/** An internally stored object of a specific type for customized functionality. */
-	public E genericObject = null;
-	
 	//--------------
 	// Constructors
 	//--------------
 	
-	WindowObjectProperties(WindowObject<E> instanceIn) {
+	WindowObjectProperties(WindowObject instanceIn) {
 		instance = instanceIn;
 		objectId = getNextObjectPID();
 		

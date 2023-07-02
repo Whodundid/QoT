@@ -17,14 +17,14 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 	//--------
 	
 	private String link;
-	private WindowButton<?> yes, copy, no;
+	private WindowButton yes, copy, no;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
 	public LinkConfirmationWindow(String linkIn) { this(Envision.getActiveTopParent(), linkIn); }
-	public LinkConfirmationWindow(IWindowObject<?> parentIn, String linkIn) {
+	public LinkConfirmationWindow(IWindowObject parentIn, String linkIn) {
 		super(parentIn);
 		setResizeable(false);
 		link = linkIn;

@@ -11,7 +11,7 @@ import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
-public class WindowDialogueBox extends ActionWindowParent {
+public class WindowDialogueBox<E> extends ActionWindowParent {
 	
 	//-------
 	// Types
@@ -26,16 +26,17 @@ public class WindowDialogueBox extends ActionWindowParent {
 	public int messageColor = 0xffffffff, titleColor = 0xffffffff;
 	public String message = "", title = "";
 	protected EList<String> wordWrappedLines;
-	protected IWindowObject<?> defaultObject;
+	protected IWindowObject defaultObject;
 	protected WindowButton yes, no, okButton;
 	protected DialogBoxTypes type;
+	protected E genericObject;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public WindowDialogueBox(IWindowObject<?> parentIn) { this(parentIn, DialogBoxTypes.CUSTOM); }
-	public WindowDialogueBox(IWindowObject<?> parentIn, DialogBoxTypes typeIn) {
+	public WindowDialogueBox(IWindowObject parentIn) { this(parentIn, DialogBoxTypes.CUSTOM); }
+	public WindowDialogueBox(IWindowObject parentIn, DialogBoxTypes typeIn) {
 		super(parentIn);
 		type = typeIn;
 		setSize(400, 200);
@@ -62,8 +63,8 @@ public class WindowDialogueBox extends ActionWindowParent {
 				yes = new WindowButton(this, midX - g - bw, endY - 40, bw, 30, "Yes");
 				no = new WindowButton(this, midX + g, endY - 40, bw, 30, "No");
 				
-				yes.setOnPressAction(() -> WindowDialogueBox.this.performAction("y", yes));
-				no.setOnPressAction(() -> WindowDialogueBox.this.performAction("n", no));
+				yes.onPress(() -> WindowDialogueBox.this.performAction("y", yes));
+				no.onPress(() -> WindowDialogueBox.this.performAction("n", no));
 				
 				no.setStringColor(EColors.yellow);
 				yes.setStringColor(EColors.lgreen);
@@ -78,7 +79,7 @@ public class WindowDialogueBox extends ActionWindowParent {
 			case OK:
 				okButton = new WindowButton(this, midX - 40, endY - 30, 80, 30, "Ok") {
 					@Override
-					public void onPress(int button) {
+					public void press(int button) {
 						playPressSound();
 						getParent().close();
 					}
@@ -116,7 +117,7 @@ public class WindowDialogueBox extends ActionWindowParent {
 	@Override
 	public void keyPressed(char typedKey, int keyCode) {
 		if (keyCode == Keyboard.KEY_ENTER) {
-			if (defaultObject instanceof WindowButton<?> wb) {
+			if (defaultObject instanceof WindowButton wb) {
 				wb.performAction();
 			}
 		}
@@ -126,7 +127,7 @@ public class WindowDialogueBox extends ActionWindowParent {
 	// Getters
 	//---------
 	
-	public IWindowObject<?> getPrimaryObject() { return defaultObject; }
+	public IWindowObject getPrimaryObject() { return defaultObject; }
 	
 	//---------
 	// Setters
@@ -141,6 +142,7 @@ public class WindowDialogueBox extends ActionWindowParent {
 		if (getHeader() != null) header.setTitle(title);
 	}
 	
+	public void setTitleColor(EColors color) { setTitleColor(color.intVal); }
 	public void setTitleColor(int colorIn) {
 		titleColor = colorIn;
 		if (getHeader() != null) header.setTitleColor(titleColor);
@@ -150,5 +152,12 @@ public class WindowDialogueBox extends ActionWindowParent {
 		message = stringIn;
 		wordWrappedLines = EStringOutputFormatter.createWordWrapString(message, (int) width - 20);
 	}
+	
+	//================
+    // Generic Object
+    //================
+    
+    public void setGenericObject(E objectIn) { genericObject = objectIn; }
+    public E getGenericObject() { return genericObject; }
 	
 }

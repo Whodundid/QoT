@@ -17,7 +17,7 @@ import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.editorParts.toolBox.ToolCategory;
 import envision.game.world.worldEditor.editorTools.EditorToolType;
 import eutil.colors.EColors;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2d;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
@@ -26,7 +26,7 @@ public class RegionSidePanel extends SidePanel {
 	WindowButton edit, delete;
 	WindowTextArea<Region> regionList;
 	
-	Box2<Integer, Integer> clickPos = new Box2(-1, -1);
+	Point2d clickPos = new Point2d(-1, -1);
 	
 	public RegionSidePanel(EditorSidePanel panelIn, MapEditorScreen editorIn) {
 		super(panelIn, editorIn, SidePanelType.REGION);

@@ -8,22 +8,22 @@ import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.math.dimensions.Dimension_d;
 
-public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
+public class WindowSetting<E extends IActionObject> extends ActionObject {
 	
 	//--------
 	// Fields
 	//--------
 	
 	private E object;
-	private WindowLabel<?> label;
+	private WindowLabel label;
 
 	//--------------
 	// Constructors
 	//--------------
 	
-	public WindowSetting(IWindowObject<?> parent, E objectIn, String title) { this(parent, objectIn, title, EColors.lgray.intVal); }
-	public WindowSetting(IWindowObject<?> parent, E objectIn, String title, EColors colorIn) { this(parent, objectIn, title, colorIn.intVal); }
-	public WindowSetting(IWindowObject<?> parent, E objectIn, String title, int colorIn) {
+	public WindowSetting(IWindowObject parent, E objectIn, String title) { this(parent, objectIn, title, EColors.lgray.intVal); }
+	public WindowSetting(IWindowObject parent, E objectIn, String title, EColors colorIn) { this(parent, objectIn, title, colorIn.intVal); }
+	public WindowSetting(IWindowObject parent, E objectIn, String title, int colorIn) {
 		super(parent);
 		
 		if (objectIn != null) {
@@ -51,7 +51,7 @@ public class WindowSetting<E extends IActionObject> extends ActionObject<E> {
 	}
 	
 	@Override
-	public void setActionReceiver(IWindowObject<?> objectIn) {
+	public void setActionReceiver(IWindowObject objectIn) {
 		super.setActionReceiver(objectIn);
 		EUtil.nullDo(object, o -> o.setActionReceiver(objectIn));
 	}

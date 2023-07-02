@@ -14,7 +14,7 @@ import envision.game.world.worldEditor.editorParts.util.EditorObject;
 import envision.game.world.worldEditor.editorTools.EditorToolType;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import qot.world_tiles.GlobalTileList;
 
 public class TerrainSidePanel extends PaletteSidePanel {
@@ -22,7 +22,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
 	public static final ToolCategory terrainTools = ToolCategory.from("Terrain", MOVE, MAGICWAND,
 			  														  PAINTBUCKET, BRUSH, PENCIL,
 			  														  EYEDROPPER, ERASER, LINE, SHAPE);
-	private EArrayList<WindowButton<WorldTile>> buttons = new EArrayList();
+	private EList<WindowButton<WorldTile>> buttons = EList.newList();
 	
 	public TerrainSidePanel(EditorSidePanel panelIn, MapEditorScreen in) {
 		super(panelIn, in, SidePanelType.TERRAIN);

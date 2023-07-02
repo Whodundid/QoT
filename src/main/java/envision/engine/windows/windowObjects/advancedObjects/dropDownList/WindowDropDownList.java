@@ -13,14 +13,14 @@ import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
 
-public class WindowDropDownList<E> extends WindowObject<E> {
+public class WindowDropDownList<E> extends WindowObject {
 	
 	//--------
 	// Fields
 	//--------
 	
 	private EList<DropDownListEntry<E>> listContents = EList.newList();
-	private DropDownListEntry<E> selectedEntry;
+	private DropDownListEntry selectedEntry;
 	private double entryHeight = 30;
 	private boolean listOpen = false;
 	private boolean fixedWidth = false;
@@ -36,12 +36,12 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y) {
+	public WindowDropDownList(IWindowObject parentIn, double x, double y) {
 	    init(parentIn, x, y, 75, entryHeight);
 	}
 	
-	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y, double entryHeightIn) { this(parentIn, x, y, entryHeightIn, false); }
-	public WindowDropDownList(IWindowObject<?> parentIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
+	public WindowDropDownList(IWindowObject parentIn, double x, double y, double entryHeightIn) { this(parentIn, x, y, entryHeightIn, false); }
+	public WindowDropDownList(IWindowObject parentIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
 		init(parentIn, x, y, width, entryHeightIn);
 		entryHeight = entryHeightIn;
 		globalAction = useGlobalAction;
@@ -125,10 +125,10 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	
 	public void runGlobalAction() {}
 	
-	public WindowDropDownList<E> addEntry(String title) { return addEntry(title, EColors.lgray, null); }
-	public WindowDropDownList<E> addEntry(String title, EColors colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn.intVal, objIn)); }
-	public WindowDropDownList<E> addEntry(String title, int colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn, objIn)); }
-	public WindowDropDownList<E> addEntry(DropDownListEntry<E> entryIn) {
+	public WindowDropDownList addEntry(String title) { return addEntry(title, EColors.lgray, null); }
+	public WindowDropDownList addEntry(String title, EColors colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn.intVal, objIn)); }
+	public WindowDropDownList addEntry(String title, int colorIn, Object objIn) { return addEntry(new DropDownListEntry(title, colorIn, objIn)); }
+	public WindowDropDownList addEntry(DropDownListEntry entryIn) {
 		entryIn.setEntryID(listContents.size());
 		entryIn.setParentList(this);
 		entryIn.setGlobalActionPresent(globalAction);
@@ -139,7 +139,7 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 		return this;
 	}
 	
-	public synchronized void removeEntry(DropDownListEntry<E> entryIn) {
+	public synchronized void removeEntry(DropDownListEntry entryIn) {
 		var it = listContents.iterator();
 		while (it.hasNext()) {
 			if (it.next().equals(entryIn)) {
@@ -227,8 +227,8 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	// Getters
 	//---------
 	
-	public DropDownListEntry<E> getHoveringEntry(Point2i point) { return getHoveringEntry(point.x, point.y); }
-	public DropDownListEntry<E> getHoveringEntry(int mXIn, int mYIn) {
+	public DropDownListEntry getHoveringEntry(Point2i point) { return getHoveringEntry(point.x, point.y); }
+	public DropDownListEntry getHoveringEntry(int mXIn, int mYIn) {
 	    if (!isMouseInside()) return null;
 	    
 	    double offset = drawTop ? entryHeight : 0;
@@ -270,9 +270,9 @@ public class WindowDropDownList<E> extends WindowObject<E> {
 	public void setFixedWidth(int newWidth) { fixedWidth = true; setWidth(newWidth); }
 	public void setWidth(int widthIn) {  setDimensions(startX, startY, widthIn, height); }
 	public void setSelectedEntry(int entry) { selectedEntry = listContents.get(entry); }
-	public void setSelectedEntry(DropDownListEntry<E> entry) { setSelectedEntry(entry, false); }
+	public void setSelectedEntry(DropDownListEntry entry) { setSelectedEntry(entry, false); }
 	
-	public void setSelectedEntry(DropDownListEntry<E> entry, boolean addIfNotContains) {
+	public void setSelectedEntry(DropDownListEntry entry, boolean addIfNotContains) {
 		if (entry != null) {
 			if (listContents.contains(entry)) { selectedEntry = entry; }
 			else if (addIfNotContains) {

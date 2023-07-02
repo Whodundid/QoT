@@ -3,7 +3,7 @@ package envision.engine.windows.windowObjects.basicObjects;
 import envision.engine.windows.windowTypes.WindowObject;
 import eutil.colors.EColors;
 
-public abstract class WindowShape<E> extends WindowObject<E> {
+public abstract class WindowShape extends WindowObject {
 	
 	//--------
 	// Fields

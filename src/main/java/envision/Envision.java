@@ -39,7 +39,7 @@ import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.game.effects.sounds.SoundEngine;
-import envision.game.entities.Player;
+import envision.game.entities.player.Player;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.layerSystem.LayerSystem;
@@ -116,9 +116,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private static TextureLoader textureLoader = new TextureLoader("");
 	
 	/** The top most rendered screen. */
-	public static GameTopScreen<?> topScreen;
+	public static GameTopScreen topScreen;
 	/** The screen currently being displayed. */
-	public static GameScreen<?> currentScreen;
+	public static GameScreen currentScreen;
 	
 	/** The game's world. */
 	public static IGameWorld theWorld;
@@ -127,7 +127,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	// Game tick stuff
 	private long UPS = 60;
-	private double timeU = 1000000000 / UPS;
+	private double timeU = 1000 / UPS;
 	private double deltaU = 0;
 	private long lagCheck = 0;
 	private long curNumTicks = 0;
@@ -135,7 +135,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	// Framerate stuff
 	private long FPS = 60; //60 fps by default -- user can modify
-	private double timeF = 1000000000 / FPS;
+	private double timeF = 1000 / FPS;
 	private double deltaF = 0;
 	private long startTime = 0l;
 	/** The time of the current update. */
@@ -339,13 +339,13 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		startTime = System.currentTimeMillis();
 		oldTime = startTime;
 		long timer = startTime;
-		long initialTime = System.nanoTime();
+		long initialTime = System.currentTimeMillis();
 		
 		GLFW.glfwMakeContextCurrent(getGameWindow().getWindowHandle());
 		
 		while (running && !GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
 			try {
-				long currentTime = System.nanoTime();
+				long currentTime = System.currentTimeMillis();
 				deltaU += (currentTime - initialTime) / timeU;
 				deltaF += (currentTime - initialTime) / timeF;
 				initialTime = currentTime;
@@ -355,20 +355,26 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 					oldTime = curTime;
 					curTime = System.currentTimeMillis();
 					
+					// 'dt' is ms :)
 					dt = curTime - oldTime;
-					dt /= 1000.0f;
+					//dt /= 1000.0f;
 					
 					//if (dt < 0.006f) dt = 0.006f;
-					if (dt > 0.015f) dt = 0.015f;
+					//if (dt > 0.015f) dt = 0.015f;
+					//if (dt > 15.0f) dt = 15.0f;
 					
 					//update inputs
 					GLFW.glfwPollEvents();
 					if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
 						running = false;
+						break;
 					}
+					
 					runGameTick(dt);
+					
 					if (ticks == Integer.MAX_VALUE) ticks = 0;
 					else ticks++;
+					
 					deltaU--;
 				}
 				
@@ -378,6 +384,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 					deltaF--;
 				}
 				
+				// measures fps
 				if (System.currentTimeMillis() - timer > 1000) {
 					curFrameRate = frames;
 					curNumTicks = ticks;
@@ -481,7 +488,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	private void setTargetUPSi(int upsIn) {
 		UPS = upsIn;
-		timeU = 1000000000 / UPS;
+		timeU = 1000 / UPS;
+		System.out.println(UPS + " : " + timeU);
 		deltaU = 0;
 		deltaF = 0;
 		ticks = 0;
@@ -489,7 +497,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	private void setTargetFPSi(int fpsIn) {
 		FPS = fpsIn;
-		timeF = 1000000000 / FPS;
+		timeF = 1000 / FPS;
 		deltaU = 0;
 		deltaF = 0;
 		frames = 0;
@@ -541,7 +549,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		return windowIn;
 	}
 	
-	public static TopWindowParent<?> getActiveTopParent() {
+	public static TopWindowParent getActiveTopParent() {
 		return (GameTopScreen.isTopFocused()) ? topScreen : currentScreen;
 	}
 	
@@ -680,9 +688,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** Returns the engine's rendering engine. */
 	public static RenderEngine getRenderEngine() { return renderEngine; }
 	/** Returns this engine's top level rendering system. */
-	public static GameTopScreen<?> getTopScreen() { return topScreen; }
+	public static GameTopScreen getTopScreen() { return topScreen; }
 	/** Returns the actively rendered screen. */
-	public static GameScreen<?> getCurrentScreen() { return currentScreen; }
+	public static GameScreen getCurrentScreen() { return currentScreen; }
 	/** Returns this engine's terminal command handler. */
 	public static TerminalCommandHandler getTerminalHandler() { return terminalHandler; }
 	/** Returns this game's constant player object. */

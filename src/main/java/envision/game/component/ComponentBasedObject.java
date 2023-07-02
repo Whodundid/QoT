@@ -1,9 +1,6 @@
-package envision.game.entities;
+package envision.game.component;
 
 import envision.game.GameObject;
-import envision.game.component.ComponentType;
-import envision.game.component.EntityComponent;
-import envision.game.component.EntityComponentSystem;
 
 public abstract class ComponentBasedObject extends GameObject {
 	

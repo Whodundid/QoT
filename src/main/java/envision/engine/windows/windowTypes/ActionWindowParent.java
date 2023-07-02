@@ -7,7 +7,7 @@ import eutil.EUtil;
 
 //Author: Hunter Bragg
 
-public abstract class ActionWindowParent<E> extends WindowParent<E> implements IActionObject<E> {
+public abstract class ActionWindowParent extends WindowParent implements IActionObject {
 
 	//--------
 	// Fields
@@ -15,14 +15,14 @@ public abstract class ActionWindowParent<E> extends WindowParent<E> implements I
 	
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
-	protected IWindowObject<?> actionReceiver;
+	protected IWindowObject actionReceiver;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
 	/** Instantiates this ActionWindowParent with the given parent. */
-	protected ActionWindowParent(IWindowObject<?> parentIn) {
+	protected ActionWindowParent(IWindowObject parentIn) {
 		actionReceiver = parentIn;
 		windowInstance = this;
 		res = Envision.getWindowDims();
@@ -40,12 +40,12 @@ public abstract class ActionWindowParent<E> extends WindowParent<E> implements I
 		}
 	}
 	
-	@Override public void onPress(int button) {}
+	@Override public void press(int button) {}
 	@Override public boolean runsActionOnPress() { return runActionOnPress; }
 	@Override public boolean runsActionOnRelease() { return runActionOnRelease; }
 	@Override public void setRunActionOnPress(boolean value) { runActionOnPress = value; }
 	@Override public void setRunActionOnRelease(boolean val) { runActionOnRelease = val; }
-	@Override public void setActionReceiver(IWindowObject<?> objIn) { actionReceiver = objIn; }
-	@Override public IWindowObject<?> getActionReceiver() { return actionReceiver; }
+	@Override public void setActionReceiver(IWindowObject objIn) { actionReceiver = objIn; }
+	@Override public IWindowObject getActionReceiver() { return actionReceiver; }
 	
 }

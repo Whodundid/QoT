@@ -2,6 +2,7 @@ package envision.game.entities;
 
 import eutil.misc.Direction;
 
+@Deprecated(since="any time --> remove this in favor of having everything be component/json based")
 public abstract class Enemy extends BasicRenderedEntity {
 
 	protected long randShort = 400l;

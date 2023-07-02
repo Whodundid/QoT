@@ -1,4 +1,4 @@
-package envision.game.util;
+package envision.game.entities.movement;
 
 import envision.game.entities.Entity;
 import envision.game.world.worldTiles.WorldTile;
@@ -9,7 +9,7 @@ import eutil.math.vectors.Vec2f;
 import eutil.misc.Rotation;
 import qot.world_tiles.VoidTile;
 
-public class CollisionHelper {
+public class MovementCollisionHelper {
 	
 	private Entity theEntity;
 	
@@ -17,7 +17,7 @@ public class CollisionHelper {
 	// Fields
 	//========
 	
-	public CollisionHelper(Entity entity) {
+	public MovementCollisionHelper(Entity entity) {
 		theEntity = entity;
 	}
 	
@@ -47,13 +47,15 @@ public class CollisionHelper {
 		double normX = moveX / len;
 		double normY = moveY / len;
 		
-		if (len == 0 || len == Float.NaN || normX == Float.NaN || normY == Float.NaN) { return; }
+		if (len == 0 || len == Float.NaN || normX == Float.NaN || normY == Float.NaN) {
+		    return;
+		}
 		
-		var speed = e.speed;
+		var speed = e.getSpeed();
 		
 		// TEMP -- add in modifiers
 		if (e.activeEffectsTracker.containsKey("SPEED_MODIFIER")) {
-			speed += e.activeEffectsTracker.get("SPEED_MODIFIER");
+			speed += (e.activeEffectsTracker.get("SPEED_MODIFIER") * 0.0001);
 		}
 		
 		normX *= speed;
@@ -88,7 +90,7 @@ public class CollisionHelper {
 					double tey = tsy + world.getTileHeight();
 					
 					var tDims = new Dimension_d(tsx, tsy, tex, tey);
-					boolean col = CollisionHelper.overlapOnAxis(dims, tDims, xAxis);
+					boolean col = MovementCollisionHelper.overlapOnAxis(dims, tDims, xAxis);
 					
 					if (col) {
 						blockX = true;
@@ -108,7 +110,7 @@ public class CollisionHelper {
 					double tey = tsy + world.getTileHeight();
 					
 					var tDims = new Dimension_d(tsx, tsy, tex, tey);
-					boolean col = CollisionHelper.overlapOnAxis(dims, tDims, yAxis);
+					boolean col = MovementCollisionHelper.overlapOnAxis(dims, tDims, yAxis);
 					
 					if (col) {
 						blockY = true;

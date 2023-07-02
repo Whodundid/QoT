@@ -2,7 +2,7 @@ package envision.game.world.worldTiles;
 
 import envision.Envision;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.game.entities.ComponentBasedObject;
+import envision.game.component.ComponentBasedObject;
 import envision.game.entities.Entity;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;

@@ -19,34 +19,34 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import envision.engine.windows.windowUtil.windowEvents.events.EventObjects;
 import envision.engine.windows.windowUtil.windowEvents.events.EventRedraw;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
-public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E> {
+public class TopWindowParent extends WindowObject implements ITopParent {
 	
 	//--------
 	// Fields
 	//--------
 	
-	protected IWindowObject<?> modifyingObject;
-	protected IWindowObject<?> objectRequestingFocus, focusedObject, focusLockObject;
-	protected IWindowObject<?> toFront, toBack;
-	protected IWindowObject<?> hoveringTextObject;
-	protected IWindowObject<?> escapeStopper;
-	protected Box2<Integer, Integer> mousePos = new Box2<>();
-	protected Box2<Integer, Integer> oldMousePos = new Box2<>();
+	protected IWindowObject modifyingObject;
+	protected IWindowObject objectRequestingFocus, focusedObject, focusLockObject;
+	protected IWindowObject toFront, toBack;
+	protected IWindowObject hoveringTextObject;
+	protected IWindowObject escapeStopper;
+	protected Point2i mousePos = new Point2i();
+	protected Point2i oldMousePos = new Point2i();
 	protected Deque<EventFocus> focusQueue = new ArrayDeque<>();
 	protected ObjectModifyType modifyType = ObjectModifyType.NONE;
 	protected ScreenLocation resizingDir = ScreenLocation.OUT;
-	protected IWindowParent<?> maximizingWindow;
+	protected IWindowParent maximizingWindow;
 	protected ScreenLocation maximizingArea = ScreenLocation.OUT;
 	protected boolean maximizingHeaderCenter = false;
 	protected int mX = 0, mY = 0;
 	protected long mouseHoverTime = 0l;
 	protected long hoverRefTime = 0l;
-	protected IWindowObject<?> lastClickedObject = null;
+	protected IWindowObject lastClickedObject = null;
 	protected long lastClickTime = 0l;
 	protected long doubleClickThreshold = 500l;
 	
@@ -86,7 +86,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 			
 			boolean draw = true;
 			
-			if (o instanceof IWindowParent<?> wp) {
+			if (o instanceof IWindowParent wp) {
 				draw = (!wp.isMinimized() || wp.drawsWhileMinimized());
 				if (wp.isHighlighted()) highlightedWindows.add(wp);
 			}
@@ -107,7 +107,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 		}
 		
 		//draw highlighted window borders
-		for (IWindowParent<?> p : highlightedWindows) {
+		for (IWindowParent p : highlightedWindows) {
 			if (p == null) continue;
 			p.drawHighlightBorder();
 		}
@@ -121,7 +121,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	//size
 	@Override public boolean hasHeader() { return false; }
 	@Override public boolean isResizeable() { return false; }
-	@Override public WindowHeader<?> getHeader() { return null; }
+	@Override public WindowHeader getHeader() { return null; }
 	@Override public double getMinWidth() { return res.width; }
 	@Override public double getMinHeight() { return res.height; }
 	@Override public double getMaxWidth() { return res.width; }
@@ -136,13 +136,13 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	@Override public void resize(double xIn, double yIn, ScreenLocation areaIn) {}
 	
 	//objects
-	@Override public boolean isChildOf(IWindowObject<?> objIn) { return false; }
+	@Override public boolean isChildOf(IWindowObject objIn) { return false; }
 	
 	//parents
-	@Override public IWindowObject<?> getParent() { return null; }
-	@Override public void setParent(IWindowObject<?> parentIn) {}
-	@Override public ITopParent<E> getTopParent() { return this; }
-	@Override public IWindowParent<?> getWindowParent() { return null; }
+	@Override public IWindowObject getParent() { return null; }
+	@Override public void setParent(IWindowObject parentIn) {}
+	@Override public ITopParent getTopParent() { return this; }
+	@Override public IWindowParent getWindowParent() { return null; }
 	
 	//focus
 	@Override public boolean hasFocus() { return this.equals(getFocusedObject()); }
@@ -167,7 +167,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	}
 	@Override public void onFocusLost(EventFocus eventIn) { postEvent(new EventFocus(this, this, FocusType.LOST)); }
 	@Override
-	public void transferFocus(IWindowObject<?> objIn) {
+	public void transferFocus(IWindowObject objIn) {
 		if (objIn == getFocusLockObject() || !doesFocusLockExist()) {
 			if (objIn != null) {
 				if (!objIn.hasFocus()) {
@@ -210,7 +210,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	@Override public boolean isClosed() { return false; }
 	@Override public void setCloseable(boolean val) {}
 	@Override public void close() { removeAllObjects(); }
-	@Override public void setFocusedObjectOnClose(IWindowObject<?> objIn) {}
+	@Override public void setFocusedObjectOnClose(IWindowObject objIn) {}
 	
 	//------------------------
 	// Overrides : ITopParent 
@@ -220,33 +220,33 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	@Override public void drawDebugInfo() { StaticTopParent.drawDebugInfo(this); }
 	
 	//draw order
-	@Override public void bringObjectToFront(IWindowParent<?> objIn) { toFront = objIn; }
-	@Override public void sendObjectToBack(IWindowParent<?> objIn) { toBack = objIn; }
+	@Override public void bringObjectToFront(IWindowParent objIn) { toFront = objIn; }
+	@Override public void sendObjectToBack(IWindowParent objIn) { toBack = objIn; }
 	
 	//hovering text
-	@Override public void setHoveringObject(IWindowObject<?> objIn) { hoveringTextObject = objIn;}
-	@Override public IWindowObject<?> getHoveringObject() { return hoveringTextObject; }
+	@Override public void setHoveringObject(IWindowObject objIn) { hoveringTextObject = objIn;}
+	@Override public IWindowObject getHoveringObject() { return hoveringTextObject; }
 	
 	//double click
-	@Override public void setLastClickedChild(IWindowObject<?> objectIn) { lastClickedObject = objectIn; }
-	@Override public IWindowObject<?> getLastClickedChild() { return lastClickedObject; }
+	@Override public void setLastClickedChild(IWindowObject objectIn) { lastClickedObject = objectIn; }
+	@Override public IWindowObject getLastClickedChild() { return lastClickedObject; }
 	@Override public void setLastChildClickTime(long timeIn) { lastClickTime = timeIn; }
 	@Override public long getLastChildClickTime() { return lastClickTime; }
 	
 	//focus
-	@Override public IWindowObject<?> getFocusedObject() { return focusedObject; }
-	@Override public void setFocusedObject(IWindowObject<?> objIn) { focusedObject = objIn; }
-	@Override public void setObjectRequestingFocus(IWindowObject<?> objIn, FocusType typeIn) { focusQueue.add(new EventFocus(this, objIn, typeIn)); }
-	@Override public IWindowObject<?> getFocusLockObject() { return focusLockObject; }
-	@Override public void setFocusLockObject(IWindowObject<?> objIn) { focusLockObject = objIn; transferFocus(focusLockObject); }
+	@Override public IWindowObject getFocusedObject() { return focusedObject; }
+	@Override public void setFocusedObject(IWindowObject objIn) { focusedObject = objIn; }
+	@Override public void setObjectRequestingFocus(IWindowObject objIn, FocusType typeIn) { focusQueue.add(new EventFocus(this, objIn, typeIn)); }
+	@Override public IWindowObject getFocusLockObject() { return focusLockObject; }
+	@Override public void setFocusLockObject(IWindowObject objIn) { focusLockObject = objIn; transferFocus(focusLockObject); }
 	@Override public boolean doesFocusLockExist() { return focusLockObject != null; }
 	@Override public void updateFocus() { StaticTopParent.updateFocus(this, focusQueue); }
 	
 	//object modification
 	@Override public ObjectModifyType getModifyType() { return modifyType; }
-	@Override public void setModifyingObject(IWindowObject<?> objIn, ObjectModifyType typeIn) { modifyingObject = objIn; modifyType = typeIn; }
+	@Override public void setModifyingObject(IWindowObject objIn, ObjectModifyType typeIn) { modifyingObject = objIn; modifyType = typeIn; }
 	@Override
-	public void setMaximizingWindow(IWindowParent<?> objIn, ScreenLocation areaIn, boolean centerAroundHeader) {
+	public void setMaximizingWindow(IWindowParent objIn, ScreenLocation areaIn, boolean centerAroundHeader) {
 		if (objIn != null && objIn.isMaximizable()) {
 			maximizingWindow = objIn;
 			maximizingArea = areaIn;
@@ -262,7 +262,7 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 	@Override public void clearModifyingObject() { modifyingObject = null; modifyType = ObjectModifyType.NONE; }
 	
 	//close
-	@Override public void setEscapeStopper(IWindowObject<?> obj) { if (obj != this) { escapeStopper = obj; } }
+	@Override public void setEscapeStopper(IWindowObject obj) { if (obj != this) { escapeStopper = obj; } }
 	@Override public IWindowObject getEscapeStopper() { return escapeStopper; }
 	
 	protected void updateCursor() {
@@ -330,11 +330,11 @@ public class TopWindowParent<E> extends WindowObject<E> implements ITopParent<E>
 			switch (modifyType) {
 			case MOVE:
 			case MOVE_ALREADY_CLICKED:
-				modifyingObject.move(mX - mousePos.getA(), mY - mousePos.getB());
+				modifyingObject.move(mX - mousePos.x, mY - mousePos.y);
 				mousePos.set(mX, mY);
 				break;
 			case RESIZE:
-				modifyingObject.resize(mX - mousePos.getA(), mY - mousePos.getB(), resizingDir);
+				modifyingObject.resize(mX - mousePos.x, mY - mousePos.y, resizingDir);
 				mousePos.set(mX, mY);
 				break;
 			default: break;

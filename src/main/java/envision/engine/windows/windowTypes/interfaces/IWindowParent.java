@@ -9,7 +9,7 @@ import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public interface IWindowParent<E> extends IWindowObject<E> {
+public interface IWindowParent extends IWindowObject {
 
 	//------
 	// Init
@@ -17,6 +17,8 @@ public interface IWindowParent<E> extends IWindowObject<E> {
 	
 	/** Call to initialize the window. THIS SHOULD ONLY BE CALLED INTERNALLY! */
 	public default void initWindow() {}
+	
+	public long getWindowID();
 	
 	//----------------
 	// Drawing Checks
@@ -116,9 +118,9 @@ public interface IWindowParent<E> extends IWindowObject<E> {
 	//----------------
 	
 	/** Returns the chain of windows that will be opened when pressing the 'back' or 'file up' button. */
-	public Stack<IWindowParent<?>> getWindowHistory();
+	public Stack<IWindowParent> getWindowHistory();
 	/** Sets the chain of windows that will be opened when pressing the 'back' or 'file up' button. */
-	public void setWindowHistory(Stack<IWindowParent<?>> historyIn);
+	public void setWindowHistory(Stack<IWindowParent> historyIn);
 	
 	//----------------
 	// Window Aliases

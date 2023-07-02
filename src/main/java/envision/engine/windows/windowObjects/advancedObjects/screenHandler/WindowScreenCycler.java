@@ -3,17 +3,17 @@ package envision.engine.windows.windowObjects.advancedObjects.screenHandler;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
-public class WindowScreenCycler<E> extends ActionObject<E> {
+public class WindowScreenCycler extends ActionObject {
 	
 	//--------
 	// Fields
 	//--------
 	
-	private IWindowObject<?> parent;
-	private EArrayList<WindowScreen<E>> screens = new EArrayList();
+	private IWindowObject parent;
+	private EList<WindowScreen> screens = EList.newList();
 	private int currentScreen = 0;
 	private boolean atBeginning = false;
 	private boolean atEnd = false;
@@ -22,8 +22,8 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowScreenCycler(IWindowObject<?> parentIn) { this(parentIn, (WindowScreen<E>[]) null); }
-	public WindowScreenCycler(IWindowObject<?> parentIn, WindowScreen<E>... screensIn) {
+	public WindowScreenCycler(IWindowObject parentIn) { this(parentIn, (WindowScreen[]) null); }
+	public WindowScreenCycler(IWindowObject parentIn, WindowScreen... screensIn) {
 		super(parentIn);
 		if (screensIn != null) screens.add(screensIn);
 		atBeginning = true;
@@ -102,17 +102,17 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	public void showCurrent() { EUtil.nullDo(screens.get(currentScreen), s -> { s.showScreen(); s.onLoaded(); }); }
 	public void hideCurrent() { EUtil.nullDo(screens.get(currentScreen), s -> { s.hideScreen(); s.onUnloaded(); }); }
 	
-	public void addScreen(WindowScreen<E>... screensIn) { screens.add(screensIn); }
+	public void addScreen(WindowScreen... screensIn) { screens.add(screensIn); }
 	
 	//---------
 	// Getters
 	//---------
 	
-	public WindowScreen<E> getCurrentScreen() { return screens.get(currentScreen); }
+	public WindowScreen getCurrentScreen() { return screens.get(currentScreen); }
 	public int getCurrentScreenNum() { return currentScreen; }
 	public int getCurrentStage() { return (screens.isNotEmpty()) ? screens.get(currentScreen).getCurrentStage() : -1; }
-	public EArrayList<WindowScreen<E>> getScreens() { return screens; }
-	public IWindowObject<?> getParent() { return parent; }
+	public EList<WindowScreen> getScreens() { return screens; }
+	public IWindowObject getParent() { return parent; }
 	
 	public boolean atBeginning() { return atBeginning; }
 	public boolean atEnd() { return atEnd; }
@@ -132,7 +132,7 @@ public class WindowScreenCycler<E> extends ActionObject<E> {
 	}
 	
 	public void setCurrentStage(int num) {
-		WindowScreen<E> screen = screens.get(currentScreen);
+		WindowScreen screen = screens.get(currentScreen);
 		if (screen != null) {
 			num = ENumUtil.clamp(num, 0, screen.getNumStages());
 			screen.setCurrentStage(num);

@@ -12,7 +12,7 @@ import qot.assets.textures.window.WindowTextures;
 
 //Author: Hunter Bragg
 
-public abstract class NotificationObject<T> extends WindowParent<T> {
+public abstract class NotificationObject extends WindowParent {
 
 	protected String message = "";
 	protected NotificationType type;
@@ -122,8 +122,8 @@ public abstract class NotificationObject<T> extends WindowParent<T> {
 	}
 	
 	@Override
-	public void actionPerformed(IActionObject<?> object, Object... args) {
-		if (object == close) { close(); }
+	public void actionPerformed(IActionObject object, Object... args) {
+		if (object == close) close();
 	}
 
 	public void moveOut() {

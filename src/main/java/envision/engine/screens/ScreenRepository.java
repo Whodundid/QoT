@@ -1,13 +1,12 @@
 package envision.engine.screens;
 
-import eutil.datatypes.EArrayList;
-import qot.screens.main.MainMenuScreen;
-import qot.screens.main.OptionsScreen;
-import qot.screens.main.WorldSelectScreen;
-
 import java.lang.reflect.Constructor;
 
 import envision.game.world.worldEditor.MapMenuScreen;
+import eutil.datatypes.util.EList;
+import qot.screens.main.MainMenuScreen;
+import qot.screens.main.OptionsScreen;
+import qot.screens.main.WorldSelectScreen;
 
 /**
  * A static collection of GameScreens intended for up-front use in one
@@ -25,7 +24,7 @@ public class ScreenRepository {
 	
 	//------------------------------------
 	
-	private static final EArrayList<GameScreen<?>> screens = new EArrayList();
+	private static final EList<GameScreen> screens = EList.newList();
 	
 	//------------------------------------
 
@@ -80,7 +79,7 @@ public class ScreenRepository {
 	 * @return
 	 */
 	private static Class<? extends GameScreen> getScreenClass(String nameOrAlias) {
-		for (GameScreen<?> s : screens) {
+		for (GameScreen s : screens) {
 			String name = s.getClass().getSimpleName();
 			if (matchAlias(s, nameOrAlias) || name.equalsIgnoreCase(nameOrAlias)) {
 				return s.getClass();
@@ -97,7 +96,7 @@ public class ScreenRepository {
 	 * @param alias The alias to check for
 	 * @return True if the GameScreen contains alias
 	 */
-	private static boolean matchAlias(GameScreen<?> s, String alias) {
+	private static boolean matchAlias(GameScreen s, String alias) {
 		for (String a : s.getAliases()) {
 			if (a.equalsIgnoreCase(alias)) return true;
 		}
@@ -111,8 +110,8 @@ public class ScreenRepository {
 	/**
 	 * @return A copy of the registered screens list
 	 */
-	public static EArrayList<GameScreen> getRegisteredScreens() {
-		return new EArrayList(screens);
+	public static EList<GameScreen> getRegisteredScreens() {
+		return EList.of(screens);
 	}
 	
 }

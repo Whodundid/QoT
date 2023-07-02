@@ -16,7 +16,7 @@ import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import qot.assets.textures.taskbar.TaskBarTextures;
 import qot.assets.textures.window.WindowTextures;
@@ -28,18 +28,18 @@ public class TextEditorWindow extends WindowParent {
 	//--------
 	
 	private File path = null;
-	private WindowTextArea<?> document;
-	private WindowButton<?> save, cancel, reload;
+	private WindowTextArea<String> document;
+	private WindowButton save, cancel, reload;
 	private boolean failed = false;
 	private boolean newFile = false;
 	
 	private double vPos, hPos;
-	private TextAreaLine<?> line;
+	private TextAreaLine<String> line;
 	
 	private volatile boolean loading = false;
 	private volatile boolean loaded = false;
-	private volatile EArrayList<String> lines;
-	private volatile EArrayList<TextAreaLine<?>> parsed;
+	private volatile EList<String> lines;
+	private volatile EList<TextAreaLine> parsed;
 	private boolean restored = false;
 	
 	//--------------
@@ -201,7 +201,7 @@ public class TextEditorWindow extends WindowParent {
 		if (!path.exists()) newFile = true;
 		
 		//all parsed lines
-		lines = new EArrayList();
+		lines = EList.newList();
 		
 		if (path.exists())
 		try (BufferedReader r = new BufferedReader(new FileReader(path))) {
@@ -217,7 +217,7 @@ public class TextEditorWindow extends WindowParent {
 			document.setEditable(false);
 		}
 		
-		if (isInit()) {
+		if (isInitialized()) {
 			document.getVScrollBar().setScrollPos(0);
 		}
 		
@@ -256,7 +256,7 @@ public class TextEditorWindow extends WindowParent {
 	}
 	
 	private void openDialogue(boolean pass) {
-		WindowDialogueBox box = new WindowDialogueBox(this, DialogBoxTypes.OK);
+		var box = new WindowDialogueBox(this, DialogBoxTypes.OK);
 		
 		box.setTitle("Saving File");
 		box.setTitleColor(EColors.lgray.intVal);
@@ -270,6 +270,6 @@ public class TextEditorWindow extends WindowParent {
 	// Getters
 	//---------
 	
-	public WindowTextArea<?> getTextArea() { return document; }
+	public WindowTextArea getTextArea() { return document; }
 
 }

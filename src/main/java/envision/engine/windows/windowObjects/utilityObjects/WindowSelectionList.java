@@ -8,8 +8,8 @@ import envision.engine.windows.windowTypes.ActionWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.Box3;
+import eutil.datatypes.util.EList;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
@@ -22,8 +22,8 @@ public class WindowSelectionList extends ActionWindowParent {
 	
 	protected WindowButton select, cancel;
 	protected WindowTextArea list;
-	protected EArrayList<Box3<String, Integer, Object>> toAdd = new EArrayList<>();
-	protected IWindowObject<?> actionReciever;
+	protected EList<Box3<String, Integer, Object>> toAdd = EList.newList();
+	protected IWindowObject actionReciever;
 	
 	private double vPos, hPos;
 	
@@ -31,7 +31,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	// Constructors
 	//--------------
 	
-	public WindowSelectionList(IWindowObject<?> parent) {
+	public WindowSelectionList(IWindowObject parent) {
 		super(parent);
 	}
 	
@@ -148,8 +148,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	
 	protected void selectCurrentOptionAndClose() {
 		if (list.getCurrentLine() != null && list.getCurrentLine().getGenericObject() != null) {
-			setGenericObject(list.getCurrentLine().getGenericObject());
-			performAction(null, null);
+			performAction(list.getCurrentLine().getGenericObject());
 			close();
 		}
 	}

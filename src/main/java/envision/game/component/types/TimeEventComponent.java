@@ -2,18 +2,18 @@ package envision.game.component.types;
 
 import java.util.UUID;
 
+import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
 import envision.game.component.EntityComponent;
-import envision.game.entities.ComponentBasedObject;
 
 public abstract class TimeEventComponent extends EntityComponent {
 	
-	/** The tick that this timer started counting on. -1 by default to indicate no started. */
-	protected int startTick = -1;
-	/** The internal current tick that this timer is currently on. */
-	protected int currentTick;
-	/** The tick on which this timer's last timer event was triggered on. */
-	protected int lastEventTick;
+	/** The time that this timer started counting on. -1 by default to indicate no started. */
+	protected float startTime = -1;
+	/** The internal current time that this timer is currently on. */
+	protected float currentTime;
+	/** The time on which this timer's last timer event was triggered on. */
+	protected float lastEventTime;
 	/** Indicates whether or not this timing component is currently counting. */
 	protected boolean isPaused = false;
 	
@@ -33,7 +33,7 @@ public abstract class TimeEventComponent extends EntityComponent {
 	// Abstracts
 	//===========
 	
-	// outlines that children of this component must specify the 'onGameTick' method
+	// outlines that children of this component must specify the 'onGametime' method
 	public abstract void onGameTick(float deltaTime);
 	
 	/**
@@ -48,7 +48,7 @@ public abstract class TimeEventComponent extends EntityComponent {
 	//=========
 	
 	/** Pauses this timer's counting. */
-	public void puaseTimer() {
+	public void pauseTimer() {
 		isPaused = true;
 	}
 	
@@ -65,9 +65,9 @@ public abstract class TimeEventComponent extends EntityComponent {
 	// Getters
 	//=========
 	
-	public int getStartTick() { return startTick; }
-	public int getCurrentTick() { return currentTick; }
-	public int getLastEventTick() { return lastEventTick; }
+	public float getStartTime() { return startTime; }
+	public float getCurrentTime() { return currentTime; }
+	public float getLastEventTime() { return lastEventTime; }
 	public boolean isPaused() { return isPaused; }
 	
 }

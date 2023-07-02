@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import envision.game.entities.ComponentBasedObject;
-
 public abstract class EntityComponent {
 	
 	//========

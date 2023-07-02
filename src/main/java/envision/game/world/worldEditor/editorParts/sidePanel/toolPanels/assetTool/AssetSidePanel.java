@@ -14,13 +14,13 @@ import envision.game.world.worldEditor.editorParts.toolBox.ToolCategory;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
 import envision.game.world.worldEditor.editorTools.EditorToolType;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import qot.GlobalAssetList;
 
 public class AssetSidePanel extends PaletteSidePanel {
 
 	public static final ToolCategory assetTools = ToolCategory.from("Assets", PLACE, MOVE);
-	private EArrayList<WindowButton<EditorObject>> buttons = new EArrayList();
+	private EList<WindowButton<EditorObject>> buttons = EList.newList();
 	
 	public AssetSidePanel(EditorSidePanel panelIn, MapEditorScreen in) {
 		super(panelIn, in, SidePanelType.ASSET);

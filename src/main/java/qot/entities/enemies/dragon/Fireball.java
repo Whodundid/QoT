@@ -31,7 +31,7 @@ public class Fireball extends BasicRenderedEntity {
 		setCollisionBox(startX - 8, startY - 8, endX + 8, endY + 8);
 		
 		this.spawningObject = spawningObject;
-		speed = 270;
+		setSpeed(270);
 	}
 	
 	@Override

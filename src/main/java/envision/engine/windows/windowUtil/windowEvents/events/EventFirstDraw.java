@@ -12,7 +12,7 @@ public class EventFirstDraw extends ObjectEvent {
 	// Constructors
 	//--------------
 	
-	public EventFirstDraw(IWindowObject<?> parentObjectIn) {
+	public EventFirstDraw(IWindowObject parentObjectIn) {
 		super(parentObjectIn, EventType.FIRSTDRAW);
 	}
 	

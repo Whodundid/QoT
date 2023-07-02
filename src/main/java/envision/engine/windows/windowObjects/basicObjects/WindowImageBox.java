@@ -11,13 +11,13 @@ import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
-public class WindowImageBox<E> extends WindowObject<E> {
+public class WindowImageBox extends WindowObject {
 	
 	//--------
 	// Fields
 	//--------
 	
-	private EList<GameTexture> images = new EArrayList<>();
+	private EList<GameTexture> images = EList.newList();
 	private int borderColor = EColors.black.c();
 	private int backgroundColor = EColors.vdgray.c();
 	private boolean drawImage = true;
@@ -38,8 +38,8 @@ public class WindowImageBox<E> extends WindowObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowImageBox(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, (GameTexture) null); }
-	public WindowImageBox(IWindowObject<?> objIn, double xIn, double yIn, double widthIn, double heightIn, GameTexture imageIn) {
+	public WindowImageBox(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) { this(objIn, xIn, yIn, widthIn, heightIn, (GameTexture) null); }
+	public WindowImageBox(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn, GameTexture imageIn) {
 		init(objIn, xIn, yIn, widthIn, heightIn);
 		images.add(imageIn);
 		singleImage = true;

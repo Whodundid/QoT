@@ -10,7 +10,7 @@ public class Deb0 extends DebugCommand {
 	
 	@Override
 	public void run(ETerminalWindow termIn, Object... args) {
-		var w = new FileExplorerWindow(null);
+		var w = new FileExplorerWindow();
 		
 		Envision.displayWindow(ScreenLevel.TOP, w);
 	}

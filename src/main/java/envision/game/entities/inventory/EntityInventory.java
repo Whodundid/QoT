@@ -1,5 +1,6 @@
-package envision.game.entities;
+package envision.game.entities.inventory;
 
+import envision.game.entities.Entity;
 import envision.game.items.Item;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;

@@ -8,7 +8,7 @@ import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.math.dimensions.Dimension_d;
 
-public class ContainerTab<E> extends WindowObject<E> {
+public class ContainerTab extends WindowObject {
 	
 	//--------
 	// Fields
@@ -81,12 +81,12 @@ public class ContainerTab<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public void actionPerformed(IActionObject<?> object, Object... args) {
+	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == tabButton) setSelected();
 	}
 	
 	@Override
-	public void addObject(IWindowObject<?>... objects) {
+	public void addObject(IWindowObject... objects) {
 		boolean selected = isSelected();
 		
 		//translate each child down by the tabHeight
@@ -118,7 +118,7 @@ public class ContainerTab<E> extends WindowObject<E> {
 		}
 		//otherwise hide all children (except tab button)
 		else {
-			for (IWindowObject<?> o : getCombinedChildren()) {
+			for (IWindowObject o : getCombinedChildren()) {
 				if (o == tabButton) continue;
 				o.setHidden(true);
 			}

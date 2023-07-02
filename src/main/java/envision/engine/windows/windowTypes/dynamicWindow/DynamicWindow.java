@@ -7,8 +7,8 @@ import envision.Envision;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.ObjectPosition;
-import eutil.datatypes.EArrayList;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2d;
+import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
 
 /** A special type of WindowParent that can be directly constructed from a serialized file. */
@@ -24,10 +24,10 @@ public class DynamicWindow extends WindowParent {
 	
 	//parsed values
 	
-	private Box2<Double, Double> parsedDims = new Box2<>();
+	private Point2d parsedDims = new Point2d();
 	private ObjectPosition parsedCenterType = null;
 	
-	private EArrayList<IWindowObject<?>> parsedObjects = new EArrayList<>();
+	private EList<IWindowObject> parsedObjects = EList.newList();
 	
 	//--------------
 	// Constructors

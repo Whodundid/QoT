@@ -2,7 +2,7 @@ package envision.engine.terminal.commands.categories.windows;
 
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.engine.windows.windowTypes.WindowParent;
+import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
@@ -29,9 +29,9 @@ public class CMD_MoveWindowToFront extends TerminalCommand {
 		else if (args.size() >= 1) {
 			try {
 				long pid = Long.parseLong(args.get(0));
-				EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+				EList<IWindowParent> windows = termIn.getTopParent().getAllActiveWindows();
 				
-				WindowParent theWindow = EUtil.getFirst(windows, w -> w.getObjectID() == pid);
+				IWindowParent theWindow = EUtil.getFirst(windows, w -> w.getObjectID() == pid);
 				if (theWindow != null) {
 					theWindow.bringToFront();
 					termIn.writeln("Window: [" + theWindow.getObjectName() + " | " + theWindow.getObjectID() + "] brought to front.", EColors.green);
@@ -43,10 +43,10 @@ public class CMD_MoveWindowToFront extends TerminalCommand {
 				try {
 					String name = EStringUtil.combineAll(args, " ").trim();
 					
-					EList<WindowParent> windows = termIn.getTopParent().getAllActiveWindows();
-					WindowParent theWindow = null;
+					EList<IWindowParent> windows = termIn.getTopParent().getAllActiveWindows();
+					IWindowParent theWindow = null;
 					
-					for (WindowParent p : windows) {
+					for (IWindowParent p : windows) {
 						if (p.getObjectName().toLowerCase().equals(name)) {
 							theWindow = p;
 							break;

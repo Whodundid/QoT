@@ -109,7 +109,7 @@ public class RenderingManager {
 			endX = i;
 		}
 		
-		if (BatchManager.isEnabled()) BatchManager.drawRect(startX, y, endX + thickness, y + thickness, color);
+		if (BatchManager.isEnabled()) BatchManager.drawRect(startX, y, endX, y + thickness, color);
 		else GLObject.drawHorizontalLine(startX, endX, y, thickness, color);
 	}
 	

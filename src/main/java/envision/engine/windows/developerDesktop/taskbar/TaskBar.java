@@ -1,4 +1,4 @@
-package envision.engine.windows.desktopOverlay;
+package envision.engine.windows.developerDesktop.taskbar;
 
 import java.util.Collections;
 
@@ -12,14 +12,13 @@ import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.EStringUtil;
 import qot.assets.textures.window.WindowTextures;
 
-public class TaskBar<E> extends WindowObject<E> {
+public class TaskBar extends WindowObject {
 	
 	//----------------------------------------------
 	
@@ -31,9 +30,9 @@ public class TaskBar<E> extends WindowObject<E> {
 	// Fields
 	//--------
 	
-	public static EArrayList<TaskBarButton<?>> buttons = new EArrayList();
-	protected static EArrayList<IWindowParent<?>> toAdd = new EArrayList();
-	protected static EArrayList<IWindowParent<?>> toRemove = new EArrayList();
+	public static EList<TaskBarButton> buttons = EList.newList();
+	protected static EList<IWindowParent> toAdd = EList.newList();
+	protected static EList<IWindowParent> toRemove = EList.newList();
 	ScreenLocation drawSide = ScreenLocation.TOP;
 	
 	//--------------
@@ -50,8 +49,8 @@ public class TaskBar<E> extends WindowObject<E> {
 	// Static Methods
 	//----------------
 	
-	public static synchronized void windowOpened(IWindowParent<?> window) { toAdd.add(window); }
-	public static synchronized void windowClosed(IWindowParent<?> window) { toRemove.add(window); }
+	public static synchronized void windowOpened(IWindowParent window) { toAdd.add(window); }
+	public static synchronized void windowClosed(IWindowParent window) { toRemove.add(window); }
 	
 	//-----------
 	// Overrides
@@ -86,9 +85,9 @@ public class TaskBar<E> extends WindowObject<E> {
 	}
 	
 	@Override
-	public void actionPerformed(IActionObject<?> object, Object... args) {
-		if (object instanceof TaskBarButton<?> b) {
-			if (args.length > 0 && args[0] instanceof WindowParent<?> window) {
+	public void actionPerformed(IActionObject object, Object... args) {
+		if (object instanceof TaskBarButton) {
+			if (args.length > 0 && args[0] instanceof WindowParent window) {
 				if (window.isMinimized()) window.setMinimized(false);
 				window.bringToFront();
 				Envision.getTopScreen().setFocusedObject(window);
@@ -102,18 +101,17 @@ public class TaskBar<E> extends WindowObject<E> {
 					//QoT.displayWindow(new EMCGuiSelectionList(), CenterType.screen);
 				}
 			}
-			else if (genObj instanceof WindowParent<?> w) {
+			else if (genObj instanceof WindowParent w) {
 				if (args.length != 1 || !(args[0] instanceof String)) return;
 				String selection = (String) args[0];
 				
-				if (genObj == "Pin") {
+				if (selection.equals("Pin")) {
 					System.out.println("pinning: " + genObj.getClass().getSimpleName());
 				}
-				
-				if (genObj == "New Window") {
+				else if (selection.equals("New Window")) {
 					try {
 						var n = w.getClass().getDeclaredConstructor().newInstance();
-						IWindowParent<?> old = null;
+						IWindowParent old = null;
 						
 						var windows = Envision.getTopScreen().getAllWindowInstances(n.getClass());
 						if (windows != null && windows.isNotEmpty()) {
@@ -127,16 +125,14 @@ public class TaskBar<E> extends WindowObject<E> {
 						e.printStackTrace();
 					}
 				}
-				
-				if (EStringUtil.equalsAny(selection, "Close", "Close All")) {
+				else if (EStringUtil.equalsAny(selection, "Close", "Close All")) {
 					if (w != null) {
 						var c = w.getClass();
 						var windows = Envision.getTopScreen().getAllWindowInstances(c);
 						windows.forEach(p -> p.close());
 					}
 				}
-				
-				if (selection.equals("Recenter") && w != null) {
+				else if (selection.equals("Recenter") && w != null) {
 					var c = w.getClass();
 					EList<? extends WindowParent> windows = Envision.getTopScreen().getAllWindowInstances(c);
 					
@@ -221,9 +217,9 @@ public class TaskBar<E> extends WindowObject<E> {
 	
 	private void updateLists() {
 		try {
-			EArrayList<IWindowObject<?>> removeGhosts = new EArrayList<>();
+			EList<IWindowObject> removeGhosts = EList.newList();
 			for (var o : getChildren()) {
-				if (o instanceof TaskBarButton<?> tb) {
+				if (o instanceof TaskBarButton tb) {
 					if (!Envision.getTopScreen().isWindowOpen(tb.getWindowType().getClass()))
 						removeGhosts.add(o);
 				}
@@ -234,7 +230,7 @@ public class TaskBar<E> extends WindowObject<E> {
 			}
 			
 			//check for ghost buttons
-			for (TaskBarButton<?> b : buttons) {
+			for (TaskBarButton b : buttons) {
 				if (!Envision.getTopScreen().isWindowOpen(b.getWindowType().getClass()))
 					toRemove.add(b.getWindowType());
 			}
@@ -245,7 +241,7 @@ public class TaskBar<E> extends WindowObject<E> {
 			
 			//process objects to be removed
 			if (toRemove.isNotEmpty()) {
-				EArrayList<TaskBarButton<?>> removing = new EArrayList<>();
+				EList<TaskBarButton> removing = EList.newList();
 				
 				for (var p : toRemove) {
 					for (var b : buttons) {
@@ -271,10 +267,10 @@ public class TaskBar<E> extends WindowObject<E> {
 		}
 	}
 	
-	private void addButton(IWindowParent<?> window) {
+	private void addButton(IWindowParent window) {
 		if (window.showInTaskBar()) {
 			if (!typeExists(window)) {
-				TaskBarButton<?> b = new TaskBarButton(this, window);
+				TaskBarButton b = new TaskBarButton(this, window);
 				
 				int sX = 0;
 				int sY = 0;
@@ -318,7 +314,7 @@ public class TaskBar<E> extends WindowObject<E> {
 		}
 	}
 	
-	private boolean typeExists(IWindowParent<?> testIn) {
+	private boolean typeExists(IWindowParent testIn) {
 		if (testIn != null) {
 			if (buttons.isEmpty()) return false;
 			
@@ -338,13 +334,12 @@ public class TaskBar<E> extends WindowObject<E> {
 		toRemove.clear();
 		
 		var windows = Envision.getTopScreen().getAllActiveWindows();
-		EArrayList<IWindowParent<?>> filtered = new EArrayList<>();
-		EArrayList<TaskBarButton<?>> toBuild = new EArrayList<>();
+		EList<IWindowParent> filtered = EList.newList();
+		EList<TaskBarButton> toBuild = EList.newList();
 		
 		for (var w : windows) {
 			boolean contains = false;
 			for (var f : filtered) {
-				//if (w.getClass() == SettingsWindowMain.class) continue;
 				if (f.getClass() == w.getClass()) {
 					contains = true;
 					break;

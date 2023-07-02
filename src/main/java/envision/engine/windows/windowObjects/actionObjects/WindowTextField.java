@@ -12,7 +12,7 @@ import eutil.strings.EStringUtil;
 
 //Author: Hunter Bragg
 
-public class WindowTextField<E> extends ActionObject<E> {
+public class WindowTextField extends ActionObject {
 	
 	//--------
 	// Fields
@@ -47,7 +47,7 @@ public class WindowTextField<E> extends ActionObject<E> {
 	
 	protected WindowTextField() {}
 	
-	public WindowTextField(IWindowObject<?> parentIn, double x, double y, double widthIn, double heightIn) {
+	public WindowTextField(IWindowObject parentIn, double x, double y, double widthIn, double heightIn) {
 		init(parentIn, x, y, widthIn, heightIn);
 		//Keyboard.enableRepeatEvents(true);
 	}

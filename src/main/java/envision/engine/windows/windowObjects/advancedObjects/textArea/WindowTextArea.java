@@ -36,15 +36,15 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	// Constructors
 	//--------------
 	
-	public WindowTextArea(IWindowObject<?> parentIn, double x, double y, double widthIn, double heightIn) {
+	public WindowTextArea(IWindowObject parentIn, double x, double y, double widthIn, double heightIn) {
 		this(parentIn, x, y, widthIn, heightIn, false);
 	}
 	
-	public WindowTextArea(IWindowObject<?> parentIn, double x, double y, double widthIn, double heightIn, boolean editableIn) {
+	public WindowTextArea(IWindowObject parentIn, double x, double y, double widthIn, double heightIn, boolean editableIn) {
 		this(parentIn, x, y, widthIn, heightIn, false, false);
 	}
 	
-	public WindowTextArea(IWindowObject<?> parentIn, double x, double y, double widthIn, double heightIn, boolean editableIn, boolean addLine) {
+	public WindowTextArea(IWindowObject parentIn, double x, double y, double widthIn, double heightIn, boolean editableIn, boolean addLine) {
 		super(parentIn, x, y, widthIn, heightIn);
 		editable = editableIn;
 		textDocument = new EArrayList<>();

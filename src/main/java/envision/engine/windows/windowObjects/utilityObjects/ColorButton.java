@@ -4,7 +4,7 @@ import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 
-public class ColorButton<E> extends WindowButton<E> {
+public class ColorButton extends WindowButton {
 	
 	//--------
 	// Fields
@@ -17,8 +17,8 @@ public class ColorButton<E> extends WindowButton<E> {
 	// Constructors
 	//--------------
 	
-	public ColorButton(IWindowObject<?> parent, double xIn, double yIn, double widthIn, double heightIn) { this(parent, xIn, yIn, widthIn, heightIn, 0xffffffff); }
-	public ColorButton(IWindowObject<?> parent, double xIn, double yIn, double widthIn, double heightIn, int colorIn) {
+	public ColorButton(IWindowObject parent, double xIn, double yIn, double widthIn, double heightIn) { this(parent, xIn, yIn, widthIn, heightIn, 0xffffffff); }
+	public ColorButton(IWindowObject parent, double xIn, double yIn, double widthIn, double heightIn, int colorIn) {
 		super(parent, xIn, yIn, widthIn, heightIn);
 		color = colorIn;
 		setDrawTextures(false);

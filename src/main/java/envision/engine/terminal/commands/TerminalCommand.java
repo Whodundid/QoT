@@ -2,6 +2,7 @@ package envision.engine.terminal.commands;
 
 import java.io.File;
 import java.nio.file.FileSystems;
+import java.util.Collection;
 import java.util.List;
 
 import envision.engine.terminal.terminalUtil.ArgHelper;
@@ -30,9 +31,9 @@ public abstract class TerminalCommand {
 	public static final String ERROR_TOO_MANY = "Too many arguments!";
 	public static final String ERROR_NOT_ENOUGH = "Not enough arguments!";
 	
-	static final String ERROR_EXPECTED_AT_LEAST = "Expected at least '%d' arguments!";
-	static final String ERORR_EXPECTED_NO_MORE_THAN = "Expected no more than '%d' arguments!";
-	static final String ERROR_EXPECTED_EXACT_ARGUMENTS = "Expected exactly '%d' arguments!";
+	static final String ERROR_EXPECTED_AT_LEAST = "Expected at least '%d' argument(s)!";
+	static final String ERORR_EXPECTED_NO_MORE_THAN = "Expected no more than '%d' argument(s)!";
+	static final String ERROR_EXPECTED_EXACT_ARGUMENTS = "Expected exactly '%d' argument(s)!";
 
 	private static final String ERROR_EXPECTED_NO_MORE_THAN = null;
 	
@@ -167,10 +168,10 @@ public abstract class TerminalCommand {
 	}
 	
 	protected void basicTabComplete(ETerminalWindow termIn, EList<String> args, String... completionsIn) {
-		basicTabComplete(termIn, args, new EArrayList<String>(completionsIn));
+		basicTabComplete(termIn, args, EList.of(completionsIn));
 	}
 	
-	protected void basicTabComplete(ETerminalWindow termIn, List<String> args, List<String> completionsIn) {
+	protected void basicTabComplete(ETerminalWindow termIn, List<String> args, Collection<String> completionsIn) {
 		if (args.isEmpty()) {
 			termIn.buildTabCompletions(completionsIn);
 			return;
@@ -208,12 +209,12 @@ public abstract class TerminalCommand {
 	// Argument Helpers
 	//==================
 	
-	protected void expectAtLeast(int amount) {}
+	protected void expectAtLeast(int amount) { expectAtLeast(amount, null); }
 	protected void expectAtLeast(int amount, String message) {
 		checkAtLeast(amount, message);
 	}
 	
-	protected void expectNoMoreThan(int amount) {}
+	protected void expectNoMoreThan(int amount) { expectNoMoreThan(amount, null); }
 	protected void expectNoMoreThan(int amount, String message) {
 		checkNoMoreThan(amount, message);
 	}
@@ -252,7 +253,7 @@ public abstract class TerminalCommand {
 	
 	protected int getLastUsed() { return term.getLastUsed(); }
 	protected int getHistoryLine() { return term.getHistoryLine(); }
-	protected WindowTextArea<?> getTextArea() { return term.getTextArea(); }
+	protected WindowTextArea getTextArea() { return term.getTextArea(); }
 	protected TerminalTextField getInputField() { return term.getInputField(); }
 	protected EList<TextAreaLine> getInfoLines() { return term.getInfoLines(); }
 	protected int getTabPos() { return term.getTabPos(); }

@@ -23,17 +23,17 @@ public class ColorPickerSimple extends ActionWindowParent {
 	//--------
 	
 	//color buttons
-	private ColorPickerButton<?> lred, red, maroon, brown, dorange, borange, orange, lorange, yellow;
-	private ColorPickerButton<?> lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine;
-	private ColorPickerButton<?> cyan, skyblue, blue, regal, grape, navy, violet, eggplant, purple, magenta, pink, hotpink;
-	private ColorPickerButton<?> white, chalk, lgray, gray, mgray, dgray, pdgray, lsteel, steel, dsteel, vdgray, black;
+	private ColorPickerButton lred, red, maroon, brown, dorange, borange, orange, lorange, yellow;
+	private ColorPickerButton lime, green, lgreen, dgreen, seafoam, turquoise, aquamarine;
+	private ColorPickerButton cyan, skyblue, blue, regal, grape, navy, violet, eggplant, purple, magenta, pink, hotpink;
+	private ColorPickerButton white, chalk, lgray, gray, mgray, dgray, pdgray, lsteel, steel, dsteel, vdgray, black;
 	
 	//functional objects
-	private WindowTextField<?> inputField;
-	private WindowButton<?> select, back;
-	private WindowButton<?> advanced;
-	private WindowRect<?> colorDisplay;
-	private WindowLabel<?> colorLabel, inputLabel;
+	private WindowTextField inputField;
+	private WindowButton select, back;
+	private WindowButton advanced;
+	private WindowRect colorDisplay;
+	private WindowLabel colorLabel, inputLabel;
 	
 	//the current color
 	private int currentColor = 0xffffffff;
@@ -42,8 +42,8 @@ public class ColorPickerSimple extends ActionWindowParent {
 	// Constructors
 	//--------------
 	
-	public ColorPickerSimple(IWindowObject<?> parentIn) { this(parentIn, 0xffffffff); }
-	public ColorPickerSimple(IWindowObject<?> parentIn, int colorIn) {
+	public ColorPickerSimple(IWindowObject parentIn) { this(parentIn, 0xffffffff); }
+	public ColorPickerSimple(IWindowObject parentIn, int colorIn) {
 		super(parentIn);
 		currentColor = colorIn;
 	}
@@ -73,7 +73,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		updateValues();
 		
 		//create color buttons
-		WindowContainer<?> colorContainer = new WindowContainer(this, startX + 5, colorDisplay.endY + 16, width - 10, 100);
+		WindowContainer colorContainer = new WindowContainer(this, startX + 5, colorDisplay.endY + 16, width - 10, 100);
 		colorContainer.setTitle("Color Palette");
 		colorContainer.setTitleColor(EColors.lgray.intVal);
 		colorContainer.setBackgroundColor(0xff383838);
@@ -131,7 +131,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 		black = new ColorPickerButton(this, vdgray.endX + 1, y2, w, h, EColors.black);
 		
 		//create manual color input field & label
-		WindowContainer<?> inputContainer = new WindowContainer(this, startX + 5, colorContainer.endY + 6, width - 10, 107);
+		WindowContainer inputContainer = new WindowContainer(this, startX + 5, colorContainer.endY + 6, width - 10, 107);
 		inputContainer.setTitle("Hex Color Code");
 		inputContainer.setTitleColor(EColors.lgray.intVal);
 		inputContainer.setBackgroundColor(0xff383838);

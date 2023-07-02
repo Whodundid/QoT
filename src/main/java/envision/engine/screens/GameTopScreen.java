@@ -5,24 +5,24 @@ import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.engine.windows.desktopOverlay.DesktopRCM;
-import envision.engine.windows.desktopOverlay.TaskBar;
+import envision.engine.windows.developerDesktop.DesktopRCM;
+import envision.engine.windows.developerDesktop.taskbar.TaskBar;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;
 import qot.settings.QoTSettings;
 
 /** The renderer that is overlaid onto every other one. (Need a better name). */
-public class GameTopScreen<E> extends TopWindowParent<E> {
+public class GameTopScreen extends TopWindowParent {
 	
-	public static GameTopScreen<?> instance;
+	public static GameTopScreen instance;
 	private static boolean hasFocus = false;
-	private static TaskBar<?> taskBar;
-	private final EArrayList<IWindowParent> highlightedWindows = new EArrayList<>();
+	private static TaskBar taskBar;
+	private final EList<IWindowParent> highlightedWindows = EList.newList();
 	
-	public static GameTopScreen<?> getInstance() {
+	public static GameTopScreen getInstance() {
 		return instance = (instance != null) ? instance : new GameTopScreen();
 	}
 	
@@ -102,7 +102,7 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 				if (!o.willBeDrawn() || o.isHidden()) continue;
 				boolean draw = true;
 				
-				if (o instanceof IWindowParent<?> wp) {
+				if (o instanceof IWindowParent wp) {
 					draw = (wp.drawsWhileMinimized() || !wp.isMinimized());
 					if (wp.isHighlighted()) highlightedWindows.add(wp);
 				}
@@ -125,7 +125,7 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 			}
 			
 			//draw highlighted window borders
-			for (IWindowParent<?> p : highlightedWindows) {
+			for (IWindowParent p : highlightedWindows) {
 				if (p == null) continue;
 				p.drawHighlightBorder();
 			}
@@ -211,15 +211,15 @@ public class GameTopScreen<E> extends TopWindowParent<E> {
 		addObject(taskBar = new TaskBar(fromScratch));
 	}
 	
-	public TaskBar<?> getTaskBar() {
-		var objects = new EArrayList<>(getChildren());
+	public TaskBar getTaskBar() {
+		var objects = EList.of(getChildren());
 		objects.removeAll(getRemovingChildren());
 		objects.addAll(getAddingChildren());
 		
 		if (taskBar != null) return taskBar;
 		else {
 			for (int i = 0; i < objects.size(); i++) {
-				if (objects.get(i) instanceof TaskBar<?> b) {
+				if (objects.get(i) instanceof TaskBar b) {
 					return taskBar = b;
 				}
 			}

@@ -28,6 +28,6 @@ import envision.engine.windows.windowTypes.WindowObject;
  *
  * @param <E>
  */
-public class TabbedHeader<E> extends WindowObject<E> {
+public class TabbedHeader extends WindowObject {
 	
 }

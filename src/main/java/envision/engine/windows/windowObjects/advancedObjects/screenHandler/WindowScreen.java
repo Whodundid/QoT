@@ -2,7 +2,7 @@ package envision.engine.windows.windowObjects.advancedObjects.screenHandler;
 
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
 public class WindowScreen<E> {
@@ -11,7 +11,7 @@ public class WindowScreen<E> {
 	// Fields
 	//--------
 	
-	private EArrayList<IWindowObject<?>> objects = new EArrayList<>();
+	private EList<IWindowObject> objects = EList.newList();
 	private int curStage = 0;
 	private int numStages = 1;
 	
@@ -42,7 +42,7 @@ public class WindowScreen<E> {
 	// Getters
 	//---------
 	
-	public EArrayList<IWindowObject<?>> getObjects() { return objects; }
+	public EList<IWindowObject> getObjects() { return objects; }
 	public int getNumStages() { return numStages; }
 	public int getCurrentStage() { return curStage; }
 	
@@ -50,6 +50,6 @@ public class WindowScreen<E> {
 	// Setters
 	//---------
 	
-	public void setObjects(IWindowObject<?>... objectsIn) { objects.add(objectsIn); }
+	public void setObjects(IWindowObject... objectsIn) { objects.add(objectsIn); }
 	
 }

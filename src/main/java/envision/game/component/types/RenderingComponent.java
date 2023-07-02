@@ -1,9 +1,9 @@
 package envision.game.component.types;
 
 import envision.Envision;
+import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
 import envision.game.component.EntityComponent;
-import envision.game.entities.ComponentBasedObject;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
 import eutil.colors.EColors;

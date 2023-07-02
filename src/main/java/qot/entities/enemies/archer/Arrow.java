@@ -24,7 +24,7 @@ public class Arrow extends BasicRenderedEntity {
 		setTexture(EntityTextures.fireBall_projectile);
 		setCollisionBox(startX - 8, startY - 8, endX + 8, endY + 8);
 		
-		speed = 270;
+		setSpeed(270);
 	}
 	
 	@Override

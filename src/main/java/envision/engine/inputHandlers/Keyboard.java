@@ -375,6 +375,8 @@ public class Keyboard extends GLFWKeyCallback {
 	public static boolean isCtrlQ(int keyCode) { return keyCode == KEY_Q && onlyCtrlDown(); }
 	public static boolean isCtrlE(int keyCode) { return keyCode == KEY_E && onlyCtrlDown(); }
 	
+	public static boolean isShiftDelete(int keyCode) { return keyCode == KEY_DELETE && isShiftDown(); }
+	
 	//-------------------
 	// Clipboard Methods
 	//-------------------

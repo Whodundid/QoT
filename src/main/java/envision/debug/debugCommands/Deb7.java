@@ -1,7 +1,7 @@
 package envision.debug.debugCommands;
 
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.game.entities.EntityLevel;
+import envision.game.entities.util.EntityLevel;
 import envision.game.util.IDrawable;
 import envision.game.util.InsertionSort;
 import eutil.datatypes.EArrayList;

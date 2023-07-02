@@ -30,15 +30,15 @@ public class WindowStatusBar extends WindowObject {
 	// Constructors
 	//--------------
 	
-	public WindowStatusBar(IWindowObject<?> parent, double xIn, double yIn, double width, double height, double min, double max) {
+	public WindowStatusBar(IWindowObject parent, double xIn, double yIn, double width, double height, double min, double max) {
 		this(parent, xIn, yIn, width, height, min, max, 0xffffffff);
 	}
 	
-	public WindowStatusBar(IWindowObject<?> parent, double xIn, double yIn, double width, double height, double min, double max, EColors color) {
+	public WindowStatusBar(IWindowObject parent, double xIn, double yIn, double width, double height, double min, double max, EColors color) {
 		this(parent, xIn, yIn, width, height, min, max, color.intVal);
 	}
 	
-	public WindowStatusBar(IWindowObject<?> parent, double xIn, double yIn, double width, double height, double minIn, double maxIn, int colorIn) {
+	public WindowStatusBar(IWindowObject parent, double xIn, double yIn, double width, double height, double minIn, double maxIn, int colorIn) {
 		init(parent, xIn, yIn, width, height);
 		min = minIn;
 		max = maxIn;

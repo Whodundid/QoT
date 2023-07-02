@@ -1,17 +1,16 @@
 package envision.game.world.worldEditor.editorParts.toolBox;
 
-import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
-
 import java.util.List;
 
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.game.world.worldEditor.editorTools.EditorToolType;
+import eutil.colors.EColors;
+import eutil.datatypes.util.EList;
 
 public class ToolCategory {
 	
 	public String name;
-	public EArrayList<EditorToolType> tools = new EArrayList();
+	public EList<EditorToolType> tools = EList.newList();
 	
 	public ToolCategory(String nameIn) {
 		name = nameIn;
@@ -28,10 +27,10 @@ public class ToolCategory {
 	}
 	
 	public String getName() { return name; }
-	public EArrayList<EditorToolType> getTypes() { return tools; }
+	public EList<EditorToolType> getTypes() { return tools; }
 	
-	public EArrayList<WindowButton<EditorToolType>> buildButtons(EditorToolBox parentIn) {
-		EArrayList<WindowButton<EditorToolType>> buttons = new EArrayList();
+	public EList<WindowButton<EditorToolType>> buildButtons(EditorToolBox parentIn) {
+		EList<WindowButton<EditorToolType>> buttons = EList.newList();
 		
 		for (EditorToolType t : tools) {
 			WindowButton<EditorToolType> b = new WindowButton(parentIn) {

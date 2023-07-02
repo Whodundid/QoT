@@ -1,4 +1,4 @@
-package envision.engine.windows.desktopOverlay;
+package envision.engine.windows.developerDesktop.taskbar;
 
 import envision.Envision;
 import envision.engine.windows.windowObjects.advancedObjects.dropDownList.DropDownListEntry;
@@ -21,15 +21,15 @@ public class WindowDropDown extends WindowDropDownList {
 	// Fields
 	//--------
 	
-	private TaskBarButton<?> parentButton;
-	private DropDownListEntry<?> last = null;
+	private TaskBarButton parentButton;
+	private DropDownListEntry last = null;
 	private RightClickMenu rcm = null;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public WindowDropDown(TaskBarButton<?> taskButtonIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
+	public WindowDropDown(TaskBarButton taskButtonIn, double x, double y, double entryHeightIn, boolean useGlobalAction) {
 		super(taskButtonIn, x, y, entryHeightIn, useGlobalAction);
 		parentButton = taskButtonIn;
 		setAlwaysOpen(true);
@@ -57,7 +57,7 @@ public class WindowDropDown extends WindowDropDownList {
 			w.setDrawWhenMinimized(true);
 		}
 		
-		if (entry.getEntryObject() instanceof IWindowParent<?> p) {
+		if (entry.getEntryObject() instanceof IWindowParent p) {
 			for (var w : windows) {
 				if (w == p) continue;
 				
@@ -186,8 +186,8 @@ public class WindowDropDown extends WindowDropDownList {
 			rcm = null;
 		}
 		
-		DropDownListEntry entry = getHoveringEntry(mXIn, mYIn);
-		if (entry != null && entry.getEntryObject() instanceof WindowParent<?> p) {
+		DropDownListEntry<?> entry = getHoveringEntry(mXIn, mYIn);
+		if (entry != null && entry.getEntryObject() instanceof WindowParent p) {
 			int total = 0;
 			if (p.isClosable()) total++;
 			if (p.isMaximizable()) total++;

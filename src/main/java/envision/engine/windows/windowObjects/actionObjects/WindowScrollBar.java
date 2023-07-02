@@ -4,14 +4,14 @@ import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
-import eutil.datatypes.boxes.Box2;
+import eutil.datatypes.points.Point2i;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public class WindowScrollBar<E> extends ActionObject<E> {
+public class WindowScrollBar extends ActionObject {
 	
 	//--------
 	// Fields
@@ -30,26 +30,26 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	protected double thumbEndX = 0, thumbEndY = 0;
 	public boolean isScrolling = false;
 	public boolean renderThumb = true;
-	protected IWindowParent<?> window;
-	private Box2<Integer, Integer> mousePos = new Box2<>(0, 0);
+	protected IWindowParent window;
+	private Point2i mousePos = new Point2i(0, 0);
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn) {
+	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn) {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, ScreenLocation.RIGHT, 3); 
 	}
 	
-	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn) {
+	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn) {
 		this(parentIn, visibleAmountIn, highValIn, widthIn, heightIn, ScreenLocation.RIGHT, 3);
 	}
 	
-	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn) {
+	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn) {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, sideIn, 3);
 	}
 	
-	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn, int thicknessIn) {
+	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, ScreenLocation sideIn, int thicknessIn) {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, sideIn, thicknessIn);
 	}
 	
@@ -57,7 +57,7 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, sideIn, 3);
 	}
 	
-	public WindowScrollBar(IWindowObject<?> parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn, ScreenLocation sideIn, double thicknessIn) {
+	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn, double widthIn, double heightIn, ScreenLocation sideIn, double thicknessIn) {
 		Dimension_d dim = parentIn.getDimensions();
 		
 		scrollBarThickness = thicknessIn;
@@ -109,9 +109,9 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	
 	@Override
 	public void drawObject(int mX, int mY) {
-		if (isScrolling && mousePos != null && mousePos.getA() != null && mousePos.getB() != null) {
-			if (vertical && mY - mousePos.getB() != 0) moveThumb(0, mY - mousePos.getB());
-			else if (mX - mousePos.getA() != 0) moveThumb(mX - mousePos.getA(), 0);
+		if (isScrolling && mousePos != null) {
+			if (vertical && mY - mousePos.y != 0) moveThumb(0, mY - mousePos.y);
+			else if (mX - mousePos.x != 0) moveThumb(mX - mousePos.x, 0);
 			mousePos.set(mX, mY);
 		}
 		
@@ -318,7 +318,7 @@ public class WindowScrollBar<E> extends ActionObject<E> {
 	@Override
 	public void performAction(Object... args) {
 		if (actionReceiver != null) {
-			//IWindowParent<?> p = actionReceiver.getWindowParent();
+			//IWindowParent p = actionReceiver.getWindowParent();
 			//if (p != null) p.bringToFront();
 			actionReceiver.actionPerformed(this, args);
 		}

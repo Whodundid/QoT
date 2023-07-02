@@ -15,7 +15,7 @@ import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
 
-public class WindowSlider<E> extends ActionObject<E> {
+public class WindowSlider extends ActionObject {
 
 	//--------
 	// Fields
@@ -43,11 +43,11 @@ public class WindowSlider<E> extends ActionObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowSlider(IWindowObject<?> parentIn, double xIn, double yIn, double widthIn, double heightIn, double lowValIn, double highValIn, boolean verticalIn) {
+	public WindowSlider(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn, double lowValIn, double highValIn, boolean verticalIn) {
 		this(parentIn, xIn, yIn, widthIn, heightIn, lowValIn, highValIn, 0.0f, verticalIn);
 	}
 	
-	public WindowSlider(IWindowObject<?> parentIn, double xIn, double yIn, double widthIn, double heightIn, double lowValIn, double highValIn, float startVal, boolean verticalIn) {
+	public WindowSlider(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn, double lowValIn, double highValIn, float startVal, boolean verticalIn) {
 		super(parentIn);
 		init(parentIn, xIn, yIn, widthIn, heightIn);
 		lowVal = lowValIn;

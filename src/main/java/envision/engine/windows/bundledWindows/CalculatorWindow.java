@@ -8,20 +8,20 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
 import qot.assets.textures.taskbar.TaskBarTextures;
 
-public class CalculatorWindow<E> extends WindowParent<E> {
+public class CalculatorWindow extends WindowParent {
 
 	//--------
 	// Fields
 	//--------
 	
-	private WindowTextField<?> outputField;
-	private WindowButton<?> sin, cos, tan, backspace, clear;
-	private WindowButton<?> sqrt, square, pow, pi, divide;
-	private WindowButton<?> log, seven, eight, nine, multiply;
-	private WindowButton<?> ln, four, five, six, subtract;
-	private WindowButton<?> e2x, one, two, three, plus;
-	private WindowButton<?> second, zero, decimal, negate, enter;
-	private WindowTextArea<?> history;
+	private WindowTextField outputField;
+	private WindowButton sin, cos, tan, backspace, clear;
+	private WindowButton sqrt, square, pow, pi, divide;
+	private WindowButton log, seven, eight, nine, multiply;
+	private WindowButton ln, four, five, six, subtract;
+	private WindowButton e2x, one, two, three, plus;
+	private WindowButton second, zero, decimal, negate, enter;
+	private WindowTextArea history;
 	
 	private String val = null;
 	private String lastVal = null;

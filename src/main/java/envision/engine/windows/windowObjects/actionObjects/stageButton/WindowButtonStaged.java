@@ -3,7 +3,7 @@ package envision.engine.windows.windowObjects.actionObjects.stageButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
 //Author: Hunter Bragg
@@ -14,20 +14,20 @@ import eutil.math.ENumUtil;
  * 
  * @author Hunter Bragg
  */
-public class WindowButtonStaged<E> extends WindowButton<E> {
+public class WindowButtonStaged extends WindowButton {
 
 	//--------
 	// Fields
 	//--------
 	
-	protected EArrayList<ButtonStage> stages = new EArrayList();
+	protected EList<ButtonStage> stages = EList.newList();
 	protected int curStage = 0;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public WindowButtonStaged(IWindowObject<?> parentIn, double posX, double posY, double width, double height) {
+	public WindowButtonStaged(IWindowObject parentIn, double posX, double posY, double width, double height) {
 		super(parentIn, posX, posY, width, height);
 	}
 	
@@ -39,7 +39,7 @@ public class WindowButtonStaged<E> extends WindowButton<E> {
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		if (isEnabled() && willBeDrawn()) {
 			pressedButton = button;
-			if (runActionOnPress) { onPress(button); }
+			if (runActionOnPress) { press(button); }
 			else if (button == 0 || (button == 1 && acceptRightClicks)) {
 				playPressSound();
 				curStage = (curStage >= stages.size()) ? 0 : curStage + 1;

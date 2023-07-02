@@ -1,6 +1,6 @@
 package envision.game.component.types;
 
-import envision.game.entities.ComponentBasedObject;
+import envision.game.component.ComponentBasedObject;
 import eutil.random.ERandomUtil;
 
 /**
@@ -16,14 +16,14 @@ import eutil.random.ERandomUtil;
  */
 public class RandomTimeEventComponent extends TimeEventComponent {
 	
-	/** The minimum interval between each time event. Begins after the initial delay is over. */
-	protected int minTickInterval;
-	/** The minimum interval between each time event. Begins after the initial delay is over. */
-	protected int maxTickInterval;
-	/** The current, randomly decided, interval for this timer. */
-	protected int currentInterval;
-	/** A specified number of ticks that must pass before time intervals are measured. */
-	protected int startDelay;
+	/** The minimum interval (in ms) between each time event. Begins after the initial delay is over. */
+	protected float minTimeInterval;
+	/** The minimum interval (in ms) between each time event. Begins after the initial delay is over. */
+	protected float maxTimeInterval;
+	/** The current, randomly decided, interval (in ms) for this timer. */
+	protected float currentInterval;
+	/** A specified amount of ms that must pass before time intervals are measured. */
+	protected float startDelay;
 	
 	//==============
 	// Constructors
@@ -34,9 +34,9 @@ public class RandomTimeEventComponent extends TimeEventComponent {
 	 * initial delay.
 	 * 
 	 * @param theEntityIn The entity that this component is attached to
-	 * @param interval    The number of ticks in-between each timer event
+	 * @param interval    The amount of ms in between each timer event
 	 */
-	public RandomTimeEventComponent(ComponentBasedObject theEntityIn, int minInterval, int maxInterval) {
+	public RandomTimeEventComponent(ComponentBasedObject theEntityIn, float minInterval, float maxInterval) {
 		this(theEntityIn, minInterval, maxInterval, 0);
 	}
 	
@@ -45,15 +45,14 @@ public class RandomTimeEventComponent extends TimeEventComponent {
 	 * specified initial delay.
 	 * 
 	 * @param theEntityIn The entity that this component is attached to
-	 * @param interval    The number of ticks in-between each timer event
-	 * @param delay       A number of ticks to wait for until actual counting
-	 *                    begins
+	 * @param interval    The amount of ms in between each timer event
+	 * @param delay       An amount of ms to wait for until actual counting begins
 	 */
-	public RandomTimeEventComponent(ComponentBasedObject theEntityIn, int minInterval, int maxInterval, int delay) {
+	public RandomTimeEventComponent(ComponentBasedObject theEntityIn, float minInterval, float maxInterval, float delay) {
 		super(theEntityIn);
 		
-		minTickInterval = minInterval;
-		maxTickInterval = maxInterval;
+		minTimeInterval = minInterval;
+		maxTimeInterval = maxInterval;
 		startDelay = delay;
 		
 		currentInterval = generateRandomInterval();
@@ -64,9 +63,9 @@ public class RandomTimeEventComponent extends TimeEventComponent {
 	 * initial delay.
 	 * 
 	 * @param theEntityIn The entity that this component is attached to
-	 * @param interval    The number of ticks in-between each timer event
+	 * @param interval    An amount of ms in between each timer event
 	 */
-	public RandomTimeEventComponent(ComponentBasedObject theEntityIn, String timerNameIn, int minInterval, int maxInterval) {
+	public RandomTimeEventComponent(ComponentBasedObject theEntityIn, String timerNameIn, float minInterval, float maxInterval) {
 		this(theEntityIn, timerNameIn, minInterval, maxInterval, 0);
 	}
 	
@@ -75,15 +74,15 @@ public class RandomTimeEventComponent extends TimeEventComponent {
 	 * specified initial delay.
 	 * 
 	 * @param theEntityIn The entity that this component is attached to
-	 * @param interval    The number of ticks in-between each timer event
-	 * @param delay       A number of ticks to wait for until actual counting
+	 * @param interval    The amount of ms in between each timer event
+	 * @param delay       An amount of ms to wait for until actual counting
 	 *                    begins
 	 */
-	public RandomTimeEventComponent(ComponentBasedObject theEntityIn, String timerNameIn, int minInterval, int maxInterval, int delay) {
+	public RandomTimeEventComponent(ComponentBasedObject theEntityIn, String timerNameIn, float minInterval, float maxInterval, float delay) {
 		super(theEntityIn, timerNameIn);
 		
-		minTickInterval = minInterval;
-		maxTickInterval = maxInterval;
+		minTimeInterval = minInterval;
+		maxTimeInterval = maxInterval;
 		startDelay = delay;
 		
 		currentInterval = generateRandomInterval();
@@ -98,19 +97,18 @@ public class RandomTimeEventComponent extends TimeEventComponent {
 		// if paused, ignore
 		if (isPaused) return;
 		
-		currentTick++;
+		currentTime += deltaTime;
 		
-		// some roll-over logic to prevent overflows
-		if (currentTick == (Integer.MAX_VALUE - currentInterval)) {
-			currentTick = currentInterval;
-			lastEventTick = 0;
+		if ((currentTime - lastEventTime) >= currentInterval) {
+		    lastEventTime = currentTime;
+		    currentInterval = generateRandomInterval();
+		    onEvent();
 		}
 		
-		// actually measure the number of ticks since the last tick event
-		if ((currentTick - lastEventTick) >= currentInterval) {
-			lastEventTick = currentTick;
-			currentInterval = generateRandomInterval();
-			onEvent();
+		// some roll-over logic to prevent overflows
+		if (currentTime >= 1E9F) {
+			currentTime = 0F;
+			lastEventTime = 0F;
 		}
 	}
 	
@@ -118,11 +116,11 @@ public class RandomTimeEventComponent extends TimeEventComponent {
 	// Methods
 	//=========
 	
-	public int generateRandomInterval() {
-		return generateRandomInterval(minTickInterval, maxTickInterval);
+	public float generateRandomInterval() {
+		return generateRandomInterval(minTimeInterval, maxTimeInterval);
 	}
 	
-	public int generateRandomInterval(int min, int max) {
+	public float generateRandomInterval(float min, float max) {
 		return ERandomUtil.getRoll(min, max);
 	}
 	
@@ -130,17 +128,17 @@ public class RandomTimeEventComponent extends TimeEventComponent {
 	// Getters
 	//=========
 	
-	public int getMinTickInterval() { return minTickInterval; }
-	public int getMaxTickInterval() { return maxTickInterval; }
-	public int getCurrentInterval() { return currentInterval; }
-	public int getStartDelay() { return startDelay; }
+	public float getMinTimeInterval() { return minTimeInterval; }
+	public float getMaxTimeInterval() { return maxTimeInterval; }
+	public float getCurrentInterval() { return currentInterval; }
+	public float getStartDelay() { return startDelay; }
 	
 	//=========
 	// Setters
 	//=========
 	
-	public void setMinTickInterval(int interval) { minTickInterval = interval; }
-	public void setMaxTickInterval(int interval) { maxTickInterval = interval; }
-	public void setCurrentInterval(int interval) { currentInterval = interval; }
+	public void setMinTimeInterval(float interval) { minTimeInterval = interval; }
+	public void setMaxTimeInterval(float interval) { maxTimeInterval = interval; }
+	public void setCurrentInterval(float interval) { currentInterval = interval; }
 	
 }

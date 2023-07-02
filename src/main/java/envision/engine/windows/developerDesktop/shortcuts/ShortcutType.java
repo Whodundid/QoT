@@ -1,4 +1,4 @@
-package envision.engine.windows.desktopOverlay;
+package envision.engine.windows.developerDesktop.shortcuts;
 
 public enum ShortcutType {
 	FILE,

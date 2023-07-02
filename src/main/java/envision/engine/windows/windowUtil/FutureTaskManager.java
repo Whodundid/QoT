@@ -1,9 +1,10 @@
 package envision.engine.windows.windowUtil;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 /**
  * Keeps track of a series of tasks that will be executed once the
@@ -26,10 +27,10 @@ public class FutureTaskManager {
 	// Fields
 	//--------
 
-	private final IWindowObject<?> theObject;
-	private final ConcurrentHashMap<FutureTaskEventType, EArrayList<Runnable>> futureTasks = new ConcurrentHashMap<>();
+	private final IWindowObject theObject;
+	private final ConcurrentMap<FutureTaskEventType, EList<Runnable>> futureTasks = new ConcurrentHashMap<>();
 
-	public FutureTaskManager(IWindowObject<?> objectIn) {
+	public FutureTaskManager(IWindowObject objectIn) {
 		theObject = objectIn;
 	}
 	
@@ -45,9 +46,9 @@ public class FutureTaskManager {
 	 * @param task The task to be eventually performed
 	 */
 	public void addFutureTask(FutureTaskEventType type, Runnable task) {
-		var tasks = futureTasks.get(type);
+		EList<Runnable> tasks = futureTasks.get(type);
 		if (tasks == null) {
-			tasks = new EArrayList<Runnable>();
+			tasks = EList.newList();
 			futureTasks.put(type, tasks);
 		}
 		tasks.put(task);
@@ -93,8 +94,8 @@ public class FutureTaskManager {
 	 * @param type The type of future tasks to be executed
 	 * @return A list of all tasks that will be run for the given type
 	 */
-	public EArrayList<Runnable> getFutureTasks(FutureTaskEventType type) {
-		return futureTasks.getOrDefault(type, new EArrayList<>());
+	public EList<Runnable> getFutureTasks(FutureTaskEventType type) {
+		return futureTasks.getOrDefault(type, EList.newList());
 	}
 	
 }

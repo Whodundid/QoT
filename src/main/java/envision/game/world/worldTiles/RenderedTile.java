@@ -1,6 +1,6 @@
 package envision.game.world.worldTiles;
 
-import envision.game.entities.Sortable;
+import envision.game.entities.util.Sortable;
 
 public class RenderedTile implements Sortable {
 

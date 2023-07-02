@@ -132,7 +132,7 @@ public class NotificationHandler {
 	// Methods
 	//=========
 	
-	public NotificationHandler post(String message, WindowParent<?> attentionWindow) {
+	public NotificationHandler post(String message, WindowParent attentionWindow) {
 	    return post(new EnvisionNotification(message));
 	}
 	

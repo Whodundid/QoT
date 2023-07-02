@@ -12,12 +12,9 @@ import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import qot.screens.main.MainMenuScreen;
 
-public class GameScreen<E>
-	extends TopWindowParent<E>
-	implements ITopParent<E>, IEventListener
-{
+public class GameScreen extends TopWindowParent implements ITopParent, IEventListener {
 	
-	protected Stack<GameScreen<?>> screenHistory = new Stack<>();
+	protected Stack<GameScreen> screenHistory = new Stack<>();
 	protected EList<String> aliases = new EArrayList<>();
 	
 	/** The point at which the screen will start fading. */
@@ -90,8 +87,8 @@ public class GameScreen<E>
 		reInitChildren();
 	}
 	
-	public Stack<GameScreen<?>> getScreenHistory() { return screenHistory; }
-	public GameScreen<E> setScreenHistory(Stack<GameScreen<?>> historyIn) {
+	public Stack<GameScreen> getScreenHistory() { return screenHistory; }
+	public GameScreen setScreenHistory(Stack<GameScreen> historyIn) {
 		screenHistory = historyIn;
 		return this;
 	}
@@ -130,11 +127,11 @@ public class GameScreen<E>
 		return aliases;
 	}
 	
-	public GameScreen<?> getPreviousScreen() {
+	public GameScreen getPreviousScreen() {
 		return (!screenHistory.isEmpty()) ? screenHistory.peek() : null;
 	}
 	
-	public GameScreen<E> setWindowSize() {
+	public GameScreen setWindowSize() {
 		setDimensions(0, 0, Envision.getWidth(), Envision.getHeight());
 		return this;
 	}

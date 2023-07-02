@@ -13,26 +13,26 @@ import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
+public abstract class WindowObject extends EGui implements IWindowObject {
 	
 	//--------
 	// Fields
 	//--------
 	
-	protected WindowObjectProperties<E> properties = new WindowObjectProperties(this);
+	protected WindowObjectProperties properties = new WindowObjectProperties(this);
 	
 	//---------------------
 	// Initializer Methods
 	//---------------------
 	
 	/** Initializes this WindowObject with the specified parent. */
-	public void init(IWindowObject<?> objIn) {
+	public void init(IWindowObject objIn) {
 		properties.parent = objIn;
 		res = Envision.getWindowDims();
 	}
 	
 	/** Initializes this WindowObject with the specified parent and starting coordinates. */
-	public void init(IWindowObject<?> objIn, Number xIn, Number yIn) {
+	public void init(IWindowObject objIn, Number xIn, Number yIn) {
 		properties.parent = objIn;
 		startX = xIn.doubleValue();
 		startY = yIn.doubleValue();
@@ -42,7 +42,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	}
 	
 	/** Initializes this WindowObject with the specified parent and dimensions. */
-	public void init(IWindowObject<?> objIn, Number xIn, Number yIn, Number widthIn, Number heightIn) {
+	public void init(IWindowObject objIn, Number xIn, Number yIn, Number widthIn, Number heightIn) {
 		properties.parent = objIn;
 		startXPos = xIn.doubleValue();
 		startYPos = yIn.doubleValue();
@@ -66,7 +66,7 @@ public abstract class WindowObject<E> extends EGui implements IWindowObject<E> {
 	//-------------------------------
 	
 	/** Returns the current properties of this object. */
-	public WindowObjectProperties<E> properties() { return properties; }
+	public WindowObjectProperties properties() { return properties; }
 	
 	//--------------------------------
 	// Overrides : MouseInputAcceptor

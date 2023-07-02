@@ -2,9 +2,9 @@ package envision.game.world.layerSystem;
 
 import envision.Envision;
 import envision.game.GameObject;
+import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
 import envision.game.component.types.RenderingComponent;
-import envision.game.entities.ComponentBasedObject;
 import envision.game.util.IDrawable;
 import envision.game.util.InsertionSort;
 import envision.game.world.IGameWorld;

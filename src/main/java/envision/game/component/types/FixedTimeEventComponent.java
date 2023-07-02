@@ -1,20 +1,20 @@
 package envision.game.component.types;
 
-import envision.game.entities.ComponentBasedObject;
+import envision.game.component.ComponentBasedObject;
 
 /**
  * A more specific type of TimedEventComponent that triggers a timed event on a fixed interval.
- * This component can optionally specify an initial delay (in ticks) that define a specific number
- * of ticks that must pass before intervals are measured.
+ * This component can optionally specify an initial delay (in ms) that define a specific duration
+ * in ms that must pass before intervals are measured.
  * 
  * @author Hunter Bragg
  */
 public class FixedTimeEventComponent extends TimeEventComponent {
 	
-	/** The interval between each time event. Begins after the initial delay is over. */
-	protected int tickInterval;
-	/** A specified number of ticks that must pass before time intervals are measured. */
-	protected int startDelay;
+	/** The interval (in ms) between each time event. Begins after the initial delay is over. */
+	protected float timeInterval;
+	/** A specified duration (in ms) that must pass before time intervals are measured. */
+	protected float startDelay;
 	
 	//==============
 	// Constructors
@@ -25,9 +25,9 @@ public class FixedTimeEventComponent extends TimeEventComponent {
 	 * initial delay.
 	 * 
 	 * @param theEntityIn The entity that this component is attached to
-	 * @param interval    The number of ticks in-between each timer event
+	 * @param interval    An amount of ms in between each timer event
 	 */
-	public FixedTimeEventComponent(ComponentBasedObject theEntityIn, int interval) {
+	public FixedTimeEventComponent(ComponentBasedObject theEntityIn, float interval) {
 		this(theEntityIn, interval, 0);
 	}
 	
@@ -36,14 +36,14 @@ public class FixedTimeEventComponent extends TimeEventComponent {
 	 * specified initial delay.
 	 * 
 	 * @param theEntityIn The entity that this component is attached to
-	 * @param interval    The number of ticks in-between each timer event
-	 * @param delay       A number of ticks to wait for until actual counting
+	 * @param interval    An amount of ms in between each timer event
+	 * @param delay       An amount of ms to wait for until actual counting
 	 *                    begins
 	 */
-	public FixedTimeEventComponent(ComponentBasedObject theEntityIn, int interval, int delay) {
+	public FixedTimeEventComponent(ComponentBasedObject theEntityIn, float interval, float delay) {
 		super(theEntityIn);
 		
-		tickInterval = interval;
+		timeInterval = interval;
 		startDelay = delay;
 	}
 	
@@ -52,9 +52,9 @@ public class FixedTimeEventComponent extends TimeEventComponent {
 	 * initial delay.
 	 * 
 	 * @param theEntityIn The entity that this component is attached to
-	 * @param interval    The number of ticks in-between each timer event
+	 * @param interval    An amount of ms in between each timer event
 	 */
-	public FixedTimeEventComponent(ComponentBasedObject theEntityIn, String timerNameIn, int interval) {
+	public FixedTimeEventComponent(ComponentBasedObject theEntityIn, String timerNameIn, float interval) {
 		this(theEntityIn, timerNameIn, interval, 0);
 	}
 	
@@ -63,14 +63,14 @@ public class FixedTimeEventComponent extends TimeEventComponent {
 	 * specified initial delay.
 	 * 
 	 * @param theEntityIn The entity that this component is attached to
-	 * @param interval    The number of ticks in-between each timer event
-	 * @param delay       A number of ticks to wait for until actual counting
+	 * @param interval    An amount of ms in between each timer event
+	 * @param delay       An amount of ms to wait for until actual counting
 	 *                    begins
 	 */
-	public FixedTimeEventComponent(ComponentBasedObject theEntityIn, String timerNameIn, int interval, int delay) {
+	public FixedTimeEventComponent(ComponentBasedObject theEntityIn, String timerNameIn, float interval, float delay) {
 		super(theEntityIn, timerNameIn);
 		
-		tickInterval = interval;
+		timeInterval = interval;
 		startDelay = delay;
 	}
 	
@@ -80,33 +80,35 @@ public class FixedTimeEventComponent extends TimeEventComponent {
 	
 	@Override
 	public void onGameTick(float deltaTime) {
-		currentTick++;
-		
-		// some roll-over logic to prevent overflows
-		if (currentTick == (Integer.MAX_VALUE - tickInterval)) {
-			currentTick = tickInterval;
-			lastEventTick = 0;
-		}
-		
-		// actually measure the number of ticks since the last tick event
-		if ((currentTick - lastEventTick) >= tickInterval) {
-			lastEventTick = currentTick;
-			onEvent();
-		}
+        // if paused, ignore
+        if (isPaused) return;
+        
+        currentTime += deltaTime;
+        
+        if (currentTime - lastEventTime >= timeInterval) {
+            lastEventTime = currentTime;
+            onEvent();
+        }
+        
+        // some roll-over logic to prevent overflows
+        if (currentTime >= 1E9F) {
+            currentTime = 0F;
+            lastEventTime = 0F;
+        }
 	}
 	
 	//=========
 	// Getters
 	//=========
 	
-	public int getTickInterval() { return tickInterval; }
-	public int getStartDelay() { return startDelay; }
+	public float getTimeInterval() { return timeInterval; }
+	public float getStartDelay() { return startDelay; }
 	
 	//=========
 	// Setters
 	//=========
 	
-	public void setTickInterval(int intervalIn) { tickInterval = intervalIn; }
+	public void setTimeInterval(float intervalIn) { timeInterval = intervalIn; }
 	
 	
 }

@@ -29,7 +29,7 @@ public class TrollBoar extends Enemy {
 		setHealth(20);
 		setExperienceRewardedOnKill(250);
 		setBaseMeleeDamage(5);
-		this.speed = 200;
+		setSpeed(200);
 		
 		nextAttack = ERandomUtil.getRoll(200, 500);
 		doesWaitAttack = ERandomUtil.randomBool();

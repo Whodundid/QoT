@@ -16,14 +16,14 @@ import eutil.datatypes.boxes.BoxList;
 
 //Author: Hunter Bragg
 
-public class RightClickMenu extends ActionWindowParent {
+public class RightClickMenu<E> extends ActionWindowParent {
 	
 	//--------
 	// Fields
 	//--------
 	
-	protected BoxList<String, WindowButton<?>> options = new BoxList<>();
-	//public WindowLabel<?> title;
+	protected BoxList<String, WindowButton> options = new BoxList<>();
+	//public WindowLabel title;
 	public String title = "";
 	public boolean useTitle = false;
 	protected boolean dontCloseOnPress = false;
@@ -33,26 +33,24 @@ public class RightClickMenu extends ActionWindowParent {
 	public int titleBackgroundColor = 0xff1f1f1f;
 	public int separatorLineColor = 0xff000000;
 	public int borderColor = 0xff000000;
+	protected E genericObject;
 	
 	//--------------
 	// Constructors
 	//--------------
-	
-	public RightClickMenu() { this(Envision.getActiveTopParent()); }
-	public RightClickMenu(IWindowObject<?> obj) {
-		super(obj);
-		setDimensions(Mouse.getMx(), Mouse.getMy(), 260, 60);
-		getTopParent().registerListener(this);
-		
-//		title = new WindowLabel(this, 0, 0, "");
-//		title.setVisible(useTitle);
-//		title.setDrawCentered(true);
-//		title.setColor(0xffbb00);
-		addObject();
-		
-		setUseTitle(true);
-		showInTaskBar = false;
-	}
+    
+    public RightClickMenu() { this(Envision.getActiveTopParent()); }
+    public RightClickMenu(String titleIn) { this(Envision.getActiveTopParent(), titleIn); }
+    public RightClickMenu(IWindowObject parent) { this(parent, ""); }
+    public RightClickMenu(IWindowObject parent, String titleIn) {
+        super(parent);
+        setDimensions(Mouse.getMx(), Mouse.getMy(), 260, 60);
+        getTopParent().registerListener(this);
+        
+        setTitle(titleIn);
+        setUseTitle(true);
+        showInTaskBar = false;
+    }
 	
 	//-----------
 	// Overrides
@@ -98,6 +96,9 @@ public class RightClickMenu extends ActionWindowParent {
 		}
 	}
 	
+	@Override public void showOnCurrent() { showOnCurrent(ObjectPosition.CURSOR_CORNER); }
+	@Override public void showOnTop() { showOnTop(ObjectPosition.CURSOR_CORNER); }
+	
 	//---------
 	// Methods
 	//---------
@@ -132,7 +133,7 @@ public class RightClickMenu extends ActionWindowParent {
 				super.drawObject(mX, mY);
 			}
 			@Override
-			public void onPress(int button) {
+			public void press(int button) {
 				if (getPressedButton() == 0 && isEnabled()) {
 					playPressSound();
 					action.run();
@@ -172,7 +173,7 @@ public class RightClickMenu extends ActionWindowParent {
 				super.drawObject(mX, mY);
 			}
 			@Override
-			public void onPress(int button) {
+			public void press(int button) {
 				if (getPressedButton() == 0 && isEnabled()) {
 					playPressSound();
 					RightClickMenu.this.performAction(getString());
@@ -209,7 +210,7 @@ public class RightClickMenu extends ActionWindowParent {
 				super.drawObject(mX, mY);
 			}
 			@Override
-			public void onPress(int button) {
+			public void press(int button) {
 				if (getPressedButton() == 0 && isEnabled()) {
 					playPressSound();
 					RightClickMenu.this.performAction(getString());
@@ -291,6 +292,13 @@ public class RightClickMenu extends ActionWindowParent {
 		}
 	}
 	
+	//================
+    // Generic Object
+    //================
+    
+    public void setGenericObject(E objectIn) { genericObject = objectIn; }
+    public E getGenericObject() { return genericObject; }
+	
 	//---------
 	// Getters
 	//---------
@@ -300,7 +308,7 @@ public class RightClickMenu extends ActionWindowParent {
 	public int getLineSepartorColor() { return separatorLineColor; }
 	public int getBorderColor() { return borderColor; }
 	public int getTitleHeight() { return titleHeight; }
-	//public WindowLabel<?> getTitle() { return title; }
+	//public WindowLabel getTitle() { return title; }
 	public String getTitle() { return title; }
 	public boolean hasTitle() { return useTitle; }
 	

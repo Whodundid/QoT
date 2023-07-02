@@ -22,15 +22,15 @@ import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public class TextAreaLine<E> extends WindowTextField<E> {
+public class TextAreaLine<E> extends WindowTextField {
 	
 	//--------
 	// Fields
 	//--------
 	
-	protected WindowTextArea<E> parentTextArea;
-	protected WindowLabel<?> numberLabel;
-	protected IWindowObject<?> focusRequester;
+	protected WindowTextArea parentTextArea;
+	protected WindowLabel numberLabel;
+	protected IWindowObject focusRequester;
 	public int lineNumberColor = 0xff555555;
 	protected int lineNumber = 0;
 	protected int drawnLineNumber = 0;
@@ -48,6 +48,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	protected String linkText = "";
 	protected boolean webLink;
 	protected Object linkObject;
+	protected E genericObject;
 	
 	//--------------
 	// Constructors
@@ -349,7 +350,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	// Getters
 	//---------
 	
-	public IWindowObject<?> getFocusRequester() { return focusRequester; }
+	public IWindowObject getFocusRequester() { return focusRequester; }
 	public int getDrawnLineNumber() { return drawnLineNumber; }
 	public int getLineNumber() { return lineNumber; }
 	public long getDoubleClickThreshold() { return doubleClickThreshold; }
@@ -359,7 +360,7 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 	// Setters
 	//---------
 	
-	public void setParentTextArea(WindowTextArea<E> area) {
+	public void setParentTextArea(WindowTextArea area) {
 		setParent(area);
 		parentTextArea = area;
 	}
@@ -514,5 +515,12 @@ public class TextAreaLine<E> extends WindowTextField<E> {
 			}
 		}
 	}
+	
+	//================
+	// Generic Object
+	//================
+	
+	public void setGenericObject(E objectIn) { genericObject = objectIn; }
+	public E getGenericObject() { return genericObject; }
 	
 }

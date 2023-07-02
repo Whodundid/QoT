@@ -3,12 +3,13 @@ package envision.engine.terminal.commands.categories.system;
 import envision.Envision;
 import envision.engine.screens.GameScreen;
 import envision.engine.screens.ScreenRepository;
+import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.IListableCommand;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.commands.categories.engine.CMD_Help;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -31,72 +32,76 @@ public class CMD_List extends TerminalCommand {
 	
 	@Override
 	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
-		String[] types = {"objects, windows, screens, commands"};
+		String[] types = {"objects, windows, screens, commands, aliases"};
 		super.basicTabComplete(termIn, args, new EArrayList().addA(types));
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			if (runVisually) termIn.writeln("objects, windows, screens, commands", EColors.green);
-			else termIn.info(getUsage());
+	public void runCommand() {
+		if (args().isEmpty()) {
+			if (visually()) writeln("objects, windows, screens, commands, aliases", EColors.green);
+			else info(getUsage());
+			return;
 		}
-		else if (args.size() > 2) termIn.error("Too many arguments!");
-		else {
-			switch (args.get(0)) {
-			case "o":
-			case "obj":
-			case "objects": listObjects(termIn, args, runVisually); break;
-			case "w":
-			case "win":
-			case "windows": listWindows(termIn, args, runVisually); break;
-			case "s":
-			case "screen":
-			case "screens": listScreens(termIn, args, runVisually); break;
-			case "h":
-			case "help":
-			case "cmd":
-			case "cmds":
-			case "commands": new CMD_Help().runCommand(termIn, new EArrayList(), false); break;
-			default:
-				boolean found = false;
-				
-				try {
-					//check if the input is a listable command
-					for (TerminalCommand c : Envision.getTerminalHandler().getCommandList()) {
-						String name = args.get(0).toLowerCase();
-						
-						if (name != null && c != null && c.getAliases() != null) {
-							if (name.equals(c.getName()) || c.getAliases().contains(name)) {
-								if (c instanceof IListableCommand) {
-									found = true;
-									((IListableCommand) c).list(termIn, args, runVisually);
-								}
-							}
-						}
-						
-					}
-					
-					if (!found) { termIn.error("Unrecognized list type!"); }
-				}
-				catch (Exception e) { error(termIn, e); }
-				
-			}
-		}
+		
+		expectNoMoreThan(2);
+		
+		switch (firstArg()) {
+        case "o":
+        case "obj":
+        case "objects": listObjects(); break;
+        case "w":
+        case "win":
+        case "windows": listWindows(); break;
+        case "s":
+        case "screen":
+        case "screens": listScreens(); break;
+        case "h":
+        case "help":
+        case "cmd":
+        case "cmds":
+        case "commands": new CMD_Help().runCommand(term(), new EArrayList(), false); break;
+        case "alias":
+        case "aliases": listAliases(); break;
+        default:
+            boolean found = false;
+            
+            try {
+                //check if the input is a listable command
+                for (TerminalCommand c : Envision.getTerminalHandler().getCommandList()) {
+                    String name = firstArg().toLowerCase();
+                    
+                    if (name != null && c != null && c.getAliases() != null) {
+                        if (name.equals(c.getName()) || c.getAliases().contains(name)) {
+                            if (c instanceof IListableCommand listable) {
+                                found = true;
+                                listable.list(term(), args(), visually());
+                            }
+                        }
+                    }
+                    
+                }
+                
+                if (!found) error("Unrecognized list type!");
+            }
+            catch (Exception e) {
+                error(e);
+            }
+        }
 	}
 	
-	private void listObjects(ETerminalWindow<?> termIn, EList<String> args, boolean runVisually) {
-		termIn.writeln("Listing all current objects in this top renderer\n", EColors.lgreen);
-		if (runVisually) {
+	private void listObjects() {
+		writeln("Listing all current objects in this top renderer\n", EColors.lgreen);
+		if (visually()) {
 			int grandTotal = 0; //this isn't completely right tree wise, but whatever
-			for (var obj : termIn.getTopParent().getChildren()) {
-				termIn.writeln(String.format("%3d : %s", obj.getObjectID(), obj.toString()), EColors.green);
+			for (var obj : term().getTopParent().getChildren()) {
+				writeln(String.format("%3d : %s", obj.getObjectID(), obj.toString()), EColors.green);
 				
 				//int depth = 3;
 				
-				var foundObjs = new EArrayList<IWindowObject<?>>();
-				var objsWithChildren = new EArrayList<IWindowObject<?>>();
-				var workList = new EArrayList<IWindowObject<?>>();
+				EList<IWindowObject> foundObjs = EList.newList();
+				EList<IWindowObject> objsWithChildren = EList.newList();
+				EList<IWindowObject> workList = EList.newList();
 				
 				//grab all immediate children and add them to foundObjs, then check if any have children of their own
 				obj.getChildren().forEach(o -> {
@@ -109,7 +114,7 @@ public class CMD_List extends TerminalCommand {
 				for (var o : EList.combineLists(objsWithChildren, workList)) {
 					String s = String.format("   %3d : %s", o.getObjectID(), o.toString());
 					//for (int i = 0; i < depth; i++) { s += " "; }
-					termIn.writeln(s, EColors.lgray);
+					writeln(s, EColors.lgray);
 				}
 				//depth += 3;
 				
@@ -129,46 +134,46 @@ public class CMD_List extends TerminalCommand {
 					for (var o : EList.combineLists(objsWithChildren, workList)) {
 						String s = String.format("   %3d : %s", o.getObjectID(), o.toString());
 						//for (int i = 0; i < depth; i++) { s += " "; }
-						termIn.writeln(s, EColors.lgray);
+						writeln(s, EColors.lgray);
 					}
 					//depth += 3;
 				}
 				
-				termIn.writeln("Total objects: " + foundObjs.size(), EColors.yellow);
+				writeln("Total objects: " + foundObjs.size(), EColors.yellow);
 				
 				grandTotal += foundObjs.size();
 			}
 			
-			termIn.writeln("Grand total: " + grandTotal, EColors.orange);
+			writeln("Grand total: " + grandTotal, EColors.orange);
 		}
 		else {
-			for (var obj : termIn.getTopParent().getChildren()) {
-				termIn.writeln(obj.toString(), EColors.green);
+			for (var obj : term().getTopParent().getChildren()) {
+				writeln(obj.toString(), EColors.green);
 			}
-			termIn.writeln("Total objects: " + termIn.getTopParent().getChildren().size(), 0xffffff00);
+			writeln("Total objects: " + term().getTopParent().getChildren().size(), 0xffffff00);
 		}
 	}
 	
-	private void listWindows(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		EList<WindowParent<?>> windows = termIn.getTopParent().getAllActiveWindows();
+	private void listWindows() {
+		EList<IWindowParent> windows = term().getTopParent().getAllActiveWindows();
 		
 		String plural = windows.size() > 1 ? "s" : "";
 		
-		termIn.writeln("Listing " + windows.size() + " active window" + plural + "..\n", EColors.lgreen);
+		writeln("Listing " + windows.size() + " active window" + plural + "..\n", EColors.lgreen);
 		
 		String title = "(Name | PID | Type)";
-		termIn.writeln(title, EColors.lime);
-		termIn.writeln(EStringUtil.repeatString("-", title.length()), EColors.lime);
+		writeln(title, EColors.lime);
+		writeln(EStringUtil.repeatString("-", title.length()), EColors.lime);
 		
 		for (var p : windows) {
 			String out = p.getObjectName() + " | " + p.getObjectID() + " | " + p.getClass().getSimpleName()
 						 + (p.isPinned() ? " | " + EColors.mc_lightpurple + "pinned" : ""
 						 + (p.isMinimized() ? " | " + EColors.mc_lightpurple + "minimized" : ""));
-			termIn.writeln(out, EColors.lime);
+			writeln(out, EColors.lime);
 		}
 	}
 	
-	private void listScreens(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	private void listScreens() {
 		/**
 		String dir = (args.size() >= 2) ? args.get(1) : "engine.screens";
 		
@@ -189,16 +194,16 @@ public class CMD_List extends TerminalCommand {
 			}
 		}
 		
-		termIn.writeln("Listing " + classNames.size() + " available screens..\n", EColors.lgreen);
+		writeln("Listing " + classNames.size() + " available screens..\n", EColors.lgreen);
 		for (String s : classNames) {
-			termIn.writeln(s, EColors.lime);
+			writeln(s, EColors.lime);
 		}
 		*/
 		
-		termIn.writeln("Listing " + ScreenRepository.getRegisteredScreens().size() + " available screens..\n", EColors.lgreen);
-		for (GameScreen<?> s : ScreenRepository.getRegisteredScreens()) {
+		writeln("Listing " + ScreenRepository.getRegisteredScreens().size() + " available screens..\n", EColors.lgreen);
+		for (GameScreen s : ScreenRepository.getRegisteredScreens()) {
 			if (s.getAliases() == null || s.getAliases().isEmpty()) {
-				termIn.writeln("  " + s.getClass().getSimpleName(), 0xffb2b2b2);
+				writeln("  " + s.getClass().getSimpleName(), 0xffb2b2b2);
 			}
 			else {
 				var sb = EStringBuilder.of(EColors.mc_green);
@@ -208,9 +213,22 @@ public class CMD_List extends TerminalCommand {
 					else sb.a(commandAlias, ", ");
 				}
 				
-				termIn.writeln(EColors.lgray, "  ", s.getClass().getSimpleName(), ": ", sb);
+				writeln(EColors.lgray, "  ", s.getClass().getSimpleName(), ": ", sb);
 			}
 		}
+	}
+	
+	private void listAliases() {
+	    var aliases = TerminalCommandHandler.getInstance().getCommandAliases();
+	    
+	    writeln(EColors.lgreen, "Listing aliases..\n");
+	    
+	    for (var entry : aliases.entrySet()) {
+	        String aliasName = entry.getKey();
+	        String aliasValue = entry.getValue();
+	        
+	        writeln("  ", EColors.mc_lightpurple, aliasName, EColors.white, "=", EColors.yellow, "'", aliasValue, "'");
+	    }
 	}
 	
 }

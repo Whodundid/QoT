@@ -10,7 +10,7 @@ import envision.engine.windows.windowObjects.basicObjects.WindowStatusBar;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.effects.sounds.SoundEngine;
 import envision.game.entities.Entity;
-import envision.game.entities.Player;
+import envision.game.entities.player.Player;
 import envision.game.world.IGameWorld;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;

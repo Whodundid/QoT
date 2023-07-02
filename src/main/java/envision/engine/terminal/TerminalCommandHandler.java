@@ -1,8 +1,9 @@
 package envision.engine.terminal;
 
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
@@ -54,9 +55,11 @@ import envision.engine.terminal.commands.categories.game.CMD_TransposeOld;
 import envision.engine.terminal.commands.categories.game.CMD_UnloadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_WorldInfo;
 import envision.engine.terminal.commands.categories.game.CMD_WorldsDir;
+import envision.engine.terminal.commands.categories.system.CMD_Alias;
 import envision.engine.terminal.commands.categories.system.CMD_Calculator;
 import envision.engine.terminal.commands.categories.system.CMD_ClearTerminal;
 import envision.engine.terminal.commands.categories.system.CMD_ClearTerminalHistory;
+import envision.engine.terminal.commands.categories.system.CMD_Echo;
 import envision.engine.terminal.commands.categories.system.CMD_ForLoop;
 import envision.engine.terminal.commands.categories.system.CMD_HexToDec;
 import envision.engine.terminal.commands.categories.system.CMD_JavaTrace;
@@ -65,6 +68,7 @@ import envision.engine.terminal.commands.categories.system.CMD_ReregisterCommand
 import envision.engine.terminal.commands.categories.system.CMD_Runtime;
 import envision.engine.terminal.commands.categories.system.CMD_SU;
 import envision.engine.terminal.commands.categories.system.CMD_System;
+import envision.engine.terminal.commands.categories.system.CMD_Unalias;
 import envision.engine.terminal.commands.categories.system.CMD_WhoAmI;
 import envision.engine.terminal.commands.categories.windows.CMD_ClearObjects;
 import envision.engine.terminal.commands.categories.windows.CMD_CloseWindow;
@@ -81,6 +85,7 @@ import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 import eutil.reflection.EModifier;
+import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
 
 //Author: Hunter Bragg
@@ -90,8 +95,8 @@ public class TerminalCommandHandler {
 	public static final String version = "1.0";
 	private static TerminalCommandHandler instance;
 	protected BoxList<String, TerminalCommand> commands;
+	public Map<String, String> commandAliases = new HashMap<>();
 	protected EList<TerminalCommand> commandList;
-	protected EList<TerminalCommand> customCommandList;
 	public static boolean drawSpace = true;
 	public static EList<String> cmdHistory = new EArrayList<>();
 	
@@ -102,7 +107,6 @@ public class TerminalCommandHandler {
 	private TerminalCommandHandler() {
 		commands = new BoxList<>();
 		commandList = new EArrayList<>();
-		customCommandList = new EArrayList<>();
 	}
 	
 	public void initCommands() {
@@ -205,7 +209,9 @@ public class TerminalCommandHandler {
 		registerCommand(new CMD_WhoAmI(), termIn, runVisually);
 		registerCommand(new CMD_RenderSettings(), termIn, runVisually);
 		registerCommand(new CMD_SU(), termIn, runVisually);
-		//registerCommand(new CMD_SSH(), termIn, runVisually);
+		registerCommand(new CMD_Alias(), termIn, runVisually);
+		registerCommand(new CMD_Unalias(), termIn, runVisually);
+		registerCommand(new CMD_Echo(), termIn, runVisually);
 		
 		//windows
 		registerCommand(new CMD_CloseWindow(), termIn, runVisually);
@@ -234,56 +240,132 @@ public class TerminalCommandHandler {
 	
 	public void executeCommand(ETerminalWindow termIn, String cmd) { executeCommand(termIn, cmd, false); }
 	public void executeCommand(ETerminalWindow termIn, String cmd, boolean tab) {
-		boolean emptyEnd = cmd.endsWith(" ");
-		
 		cmd = cmd.trim();
-		String[] commandParts = cmd.split(" ");
-		EList<String> commandArguments = new EArrayList<>();
-		String baseCommand = "";
 		
-		if (commandParts.length > 0) {
-			baseCommand = commandParts[0].toLowerCase();
-			for (int i = 1; i < commandParts.length; i++) {
-				commandArguments.add(commandParts[i]);
-			}
-			if (emptyEnd) commandArguments.add("");
-			
-			if (commands.getBoxWithA(baseCommand) != null) {
-				TerminalCommand command = commands.getBoxWithA(baseCommand).getB();
-				
-				if (command == null) {
-					termIn.error("Unrecognized command.");
-					termIn.writeln();
-					return;
-				}
-				
-				boolean runVisually = false;
-				Iterator<String> i = commandArguments.iterator();
-				while (i.hasNext()) {
-					String arg = i.next();
-					if (arg.equals("-i")) {
-						runVisually = true;
-						i.remove();
-						break;
-					}
-				}
-				
-				if (tab) {
-					if (command.showInHelp()) command.handleTabComplete(termIn, commandArguments);
-				}
-				else {
-					command.preRun(termIn, commandArguments, runVisually);
-				
-					if (drawSpace && !command.getName().equals("clear")) {
-						termIn.writeln();
-						drawSpace = true;
-					}
-				}
-				
-				return;
-			}
+		// separate multiple commands in one line from one another
+		EList<String> splitCommands = parseIndividualCommands(cmd);
+		
+		// run each command
+		for (String singleCommand : splitCommands) {
+		    String[] commandParts = singleCommand.split(" ");
+	        EList<String> commandArguments = EList.newList();
+	        String baseCommand = "";
+	        
+	        if (commandParts.length == 0) {
+	            termIn.writeln("Unrecognized command.\n", 0xffff5555);
+	            return;
+	        }
+	        
+	        // parse out arguments from input string
+	        baseCommand = commandParts[0].toLowerCase();
+	        for (int i = 1; i < commandParts.length; i++) {
+	            commandArguments.add(commandParts[i]);
+	        }
+	        
+	        runCommand(termIn, baseCommand, commandArguments, tab);
 		}
-		termIn.writeln("Unrecognized command.\n", 0xffff5555);
+	}
+	
+	private void runCommand(ETerminalWindow termIn, String baseCommand, EList<String> commandArguments, boolean tab) {
+        // try to find a registered command that matches
+        final var foundCommand = commands.getBoxWithA(baseCommand);
+        
+        if (foundCommand == null) {
+            // try to find a command alias instead
+            final String foundAlias = commandAliases.get(baseCommand);
+            
+            // check if this was an alias and execute its replacement if it was
+            if (foundAlias != null) {
+                var aliasCommand = new EStringBuilder(foundAlias);
+                aliasCommand.a(" ");
+                aliasCommand.a(EStringUtil.combineAll(commandArguments));
+                executeCommand(termIn, aliasCommand.toString(), tab);
+                return;
+            }
+            
+            termIn.writeln("Unrecognized command.\n", 0xffff5555);
+            return;
+        }
+        
+        // extract the associated command
+        TerminalCommand command = commands.getBoxWithA(baseCommand).getB();
+        
+        if (command == null) {
+            termIn.error("Unrecognized command.");
+            termIn.writeln();
+            return;
+        }
+        
+        boolean runVisually = false;
+        var it = commandArguments.iterator();
+        while (it.hasNext()) {
+            String arg = it.next();
+            if (arg.equals("-i")) {
+                runVisually = true;
+                it.remove();
+                break;
+            }
+        }
+        
+        if (tab) {
+            if (command.showInHelp()) command.handleTabComplete(termIn, commandArguments);
+        }
+        else {
+            command.preRun(termIn, commandArguments, runVisually);
+        
+            if (drawSpace && !command.getName().equals("clear")) {
+                termIn.writeln();
+                drawSpace = true;
+            }
+        }
+	}
+	
+    /**
+     * Parses out individual commands that are separated by a ';' but only when
+     * the ';' is not in a string
+     * 
+     * @param input the full input line
+     * 
+     * @return parsed individual commands from the input line
+     */
+	private EList<String> parseIndividualCommands(String input) {
+	    EList<String> individualCommands = EList.newList();
+	    var curCommand = new EStringBuilder();
+	    
+	    char prevChar = '\0';
+	    boolean inStr = false;
+	    
+	    final int len = input.length();
+	    for (int i = 0; i < len; i++) {
+	        char c = input.charAt(i);
+	        
+	        switch (c) {
+	        case '\'':
+	        case '"':
+	            if (prevChar != '\\') inStr = !inStr;
+	            break;
+	        case ';':
+	            if (!inStr) {
+	                individualCommands.add(curCommand.toString());
+	                curCommand.clear();
+	                prevChar = c;
+	                continue;
+	            }
+	            break;
+	        default:
+	            break;
+	        }
+	        
+	        curCommand.a(c);
+	        prevChar = c;
+	    }
+	    
+	    // get the last command off of the buffer
+	    if (!curCommand.isEmpty()) {
+	        individualCommands.add(curCommand.toString());
+	    }
+	        
+	    return individualCommands;
 	}
 	
 	public synchronized void reregisterAllCommands(boolean runVisually) { reregisterAllCommands(null, runVisually); }
@@ -303,8 +385,6 @@ public class TerminalCommandHandler {
 		}
 		
 		registerBaseCommands(termIn, runVisually);
-		
-		customCommandList.forEach(c -> registerCommand(c, termIn, runVisually));
 	}
 	
 	public TerminalCommand getCommand(String commandName) {
@@ -315,6 +395,62 @@ public class TerminalCommandHandler {
 		return null;
 	}
 	
+	public static TerminalCommand tabCompleteCommand(String input) {
+	    if (input == null || input.isBlank()) return null;
+	    
+	    for (var cmd : instance.getCommandList()) {
+	        String name = cmd.getName();
+	        var aliases = cmd.getAliases();
+	        
+	        if (input.equals(name)) return cmd;
+	        if (EStringUtil.startsWithAny(input, aliases)) return cmd;
+	    }
+	    
+	    return null;
+	}
+    
+    /**
+     * Finds and returns a list of all possible command names or aliases that
+     * start with the given input.
+     * 
+     * @param input The starting part of a potential command
+     * 
+     * @return a list of possible command names that start with the given input
+     */
+    public static EList<String> buildTabCompleteCommandOptions(String input) {
+        EList<String> returnList = EList.newList();
+        
+        // return the empty list if there isn't any input to check against
+        if (input == null || input.isBlank()) return returnList;
+        
+        // check command names
+        for (var cmd : instance.getCommandList()) {
+            String name = cmd.getName();
+            var aliases = cmd.getAliases();
+            
+            // check the command name itself
+            if (name.startsWith(input)) {
+                returnList.add(name);
+            }
+            
+            // then check its aliases
+            for (String alias : aliases) {
+                if (alias.startsWith(input)) {
+                    returnList.add(alias);
+                }
+            }
+        }
+        
+        // now check command aliases
+        for (String alias : instance.getCommandAliases().keySet()) {
+            if (alias.startsWith(input)) {
+                returnList.add(alias);
+            }
+        }
+        
+        return returnList;
+    }
+    
 	public static EList<String> getSortedCommandNames() {
 		EList<String> cmds = new EArrayList();
 		BoxList<String, EList<TerminalCommand>> sortedAll = getSortedCommands();
@@ -390,24 +526,17 @@ public class TerminalCommandHandler {
 		return sortedCommands;
 	}
 	
-	private static class Sorter implements Comparator {
-
-		@Override
-		public int compare(Object a, Object b) {
-			
-			if (a instanceof TerminalCommand && b instanceof TerminalCommand) {
-				String name1 = ((TerminalCommand) a).getName();
-				String name2 = ((TerminalCommand) b).getName();
-				
-				return name1.compareToIgnoreCase(name2);
-			}
-			
-			return 0;
-		}
-		
+	public void addCommandAlias(String aliasIn, String valueIn) {
+	    if (aliasIn == null || aliasIn.isBlank()) return;
+	    commandAliases.put(aliasIn, valueIn);
+	}
+	
+	public void removeCommandAlias(String aliasIn) {
+	    commandAliases.remove(aliasIn);
 	}
 	
 	public EList<TerminalCommand> getCommandList() { return commandList; }
+	public Map<String, String> getCommandAliases() { return commandAliases; }
 	public List<String> getCommandNames() { return commands.getAVals(); }
 	public EList<String> getHistory() { return cmdHistory; }
 	public TerminalCommandHandler clearHistory() { cmdHistory.clear(); return this; }

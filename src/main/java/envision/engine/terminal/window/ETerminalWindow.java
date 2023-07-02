@@ -2,7 +2,7 @@ package envision.engine.terminal.window;
 
 import java.io.File;
 import java.nio.file.FileSystems;
-import java.util.List;
+import java.util.Collection;
 
 import envision.Envision;
 import envision.engine.rendering.fontRenderer.FontRenderer;
@@ -35,7 +35,7 @@ import qot.settings.QoTSettings;
 
 //Author: Hunter Bragg
 
-public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConsoleOutputReceiver {
+public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutputReceiver {
 	
 	public static final String sep = FileSystems.getDefault().getSeparator();
 	
@@ -327,10 +327,8 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 					writeln("> " + cmd, 0xffffffff);
 				}
 				
-				TerminalCommandHandler.cmdHistory.add(cmd);
-				TerminalCommandHandler.getInstance().executeCommand(this, cmd, false);
+				runCommand(cmd);
 				inputField.clear();
-				scrollToBottom();
 				tab1 = false;
 				tabData.clear();
 			}
@@ -338,6 +336,17 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Executes the following command input in this terminal.
+	 * 
+	 * @param input The command to run
+	 */
+	public void runCommand(String input) {
+	    TerminalCommandHandler.cmdHistory.add(input);
+        TerminalCommandHandler.getInstance().executeCommand(this, input, false);
+        scrollToBottom();
 	}
 	
 	@Override
@@ -432,16 +441,12 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 				if (!isCommand && getCurrentArg() >= 1) {
 					TerminalCommandHandler.getInstance().executeCommand(this, input, true);
 				}
-				else if (startArgPos == -1 || getCurrentArg() == 0 && !tab1) { //build completions off of partial command input
+				//build completions off of partial command input
+				else if (startArgPos == -1 || getCurrentArg() == 0 && !tab1) {
 					if (!isCommand) {
 						isCommand = true;
 						try {
-							EList<String> options = new EArrayList<>();
-							
-							for (String s : TerminalCommandHandler.getSortedCommandNames()) {
-								if (s.startsWith(input)) { options.add(s); }
-							}
-						
+							EList<String> options = TerminalCommandHandler.buildTabCompleteCommandOptions(input);
 							buildTabCompletions(options);
 						}
 						catch (IndexOutOfBoundsException e) {}
@@ -458,8 +463,8 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 					if (isCommand) {
 						inputField.setText(tabBase + tabData.get(tabPos));
 					}
-					else if (startArgPos >= 0) { //determine where we are getting tab completion data from
-						
+					//determine where we are getting tab completion data from
+					else if (startArgPos >= 0) {
 						//grab everything up to the argument being tabbed
 						String f = "";
 						for (int i = 0, spaces = 0; i < input.length(); i++) {
@@ -508,7 +513,7 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 	}
 	
 	public ETerminalWindow buildTabCompletions(String... dataIn) { return buildTabCompletions(EList.of(dataIn)); }
-	public ETerminalWindow buildTabCompletions(List<String> dataIn) {
+	public ETerminalWindow buildTabCompletions(Collection<String> dataIn) {
 		clearTabCompletions();
 		
 		if (dataIn.isEmpty()) return this;
@@ -547,12 +552,12 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 		
 		//position each auto complete option on one line up to the max line width
 		int amount = dataIn.size();
-		int i = 0;
 		int cur = 1;
 		String line = "";
 		
-		while (amount > 0) {
-			line += dataIn.get(i) + ", ";
+		var it = dataIn.iterator();
+		while (amount > 0 && it.hasNext()) {
+			line += it.next() + ", ";
 			
 			if (cur == maxData || amount == 1) {
 				try {
@@ -574,7 +579,6 @@ public class ETerminalWindow<E> extends WindowParent<E> implements EnvisionConso
 			
 			amount--;
 			cur++;
-			i++;
 		}
 		
 		//add each created line to the grid

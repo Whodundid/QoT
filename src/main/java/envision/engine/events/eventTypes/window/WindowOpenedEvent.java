@@ -5,13 +5,13 @@ import envision.engine.windows.windowTypes.WindowParent;
 
 public class WindowOpenedEvent extends WindowEvent {
 
-	private final WindowParent<?> window;
+	private final WindowParent window;
 	
-	public WindowOpenedEvent(WindowParent<?> windowIn) {
+	public WindowOpenedEvent(WindowParent windowIn) {
 		super(EventType.WINDOW_OPENED, true);
 		window = windowIn;
 	}
 	
-	public WindowParent<?> getWindow() { return window; }
+	public WindowParent getWindow() { return window; }
 	
 }

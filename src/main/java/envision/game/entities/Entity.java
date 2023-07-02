@@ -7,8 +7,12 @@ import envision.Envision;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.game.abilities.ActiveAbilityTracker;
 import envision.game.abilities.EntitySpellbook;
+import envision.game.component.ComponentBasedObject;
+import envision.game.entities.inventory.EntityInventory;
+import envision.game.entities.movement.MovementCollisionHelper;
+import envision.game.entities.util.EntityHealthBar;
+import envision.game.entities.util.EntityLevel;
 import envision.game.items.Item;
-import envision.game.util.CollisionHelper;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
@@ -95,9 +99,14 @@ public abstract class Entity extends ComponentBasedObject {
 	public EntityHealthBar healthBar;
 	public EList<IWindowObject> drawnObjects = EList.newList();
 	
-	public final CollisionHelper collisionHelper;
-	/** I am.. SPEED */
-	public double speed = 32 * 4.5;
+	public final MovementCollisionHelper collisionHelper;
+	
+	/**
+	 * I am.. SPEED
+	 * <p>
+	 * Measured in pixels per ms.
+	 */
+	private double speed = (32 * 4.5) / 1000.0;
 	
 	public ActiveAbilityTracker abilityTracker;
 	public EntitySpellbook spellbook;
@@ -119,7 +128,7 @@ public abstract class Entity extends ComponentBasedObject {
 		xpNeeded = EntityLevel.getXPNeededForNextLevel(level + 1);
 		healthBar = new EntityHealthBar(this);
 		
-		collisionHelper = new CollisionHelper(this);
+		collisionHelper = new MovementCollisionHelper(this);
 		abilityTracker = new ActiveAbilityTracker(this, 5);
 		spellbook = new EntitySpellbook(this);
 	}
@@ -299,7 +308,7 @@ public abstract class Entity extends ComponentBasedObject {
 	public boolean isInvincible() { return invincible; }
 	public long getExperienceRewardedOnKill() { return experienceRewarded; }
 	
-	public CollisionHelper getCollisionHelper() { return collisionHelper; }
+	public MovementCollisionHelper getCollisionHelper() { return collisionHelper; }
 	public ActiveAbilityTracker getAbilityTracker() { return abilityTracker; }
 	public EntitySpellbook getSpellbook() { return spellbook; }
 	
@@ -411,6 +420,17 @@ public abstract class Entity extends ComponentBasedObject {
 			return true;
 		}
 		return false;
+	}
+	
+	public double getSpeed() { return speed; }
+	
+	/**
+	 * Sets entity movement speed in terms of pixels traveled per second.
+	 * 
+	 * @param speed pixels per second
+	 */
+	public void setSpeed(double speed) {
+	    this.speed = speed / 1000.0;
 	}
 	
 }

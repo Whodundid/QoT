@@ -19,7 +19,7 @@ public class WindowBuilderTool extends WindowButton {
 		setHoverText(toolType.description);
 		setButtonTexture(toolType.toolTexture);
 		setRunActionOnPress(true);
-		setOnPressAction(() -> parentScreen.setCurrentTool(toolType));
+		onPress(() -> parentScreen.setCurrentTool(toolType));
 	}
 	
 	@Override

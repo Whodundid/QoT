@@ -1,7 +1,7 @@
 package envision.engine.windows.windowUtil.windowEvents;
 
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
 
@@ -11,17 +11,17 @@ public class ObjectEventHandler {
 	// Fields
 	//--------
 	
-	private final IWindowObject<?> parent;
-	private final EArrayList<IWindowObject<?>> listeners = new EArrayList<>();
-	private final EArrayList<IWindowObject<?>> toBeAdded = new EArrayList<>();
-	private final EArrayList<IWindowObject<?>> toBeRemoved = new EArrayList<>();
+	private final IWindowObject parent;
+	private final EList<IWindowObject> listeners = EList.newList();
+	private final EList<IWindowObject> toBeAdded = EList.newList();
+	private final EList<IWindowObject> toBeRemoved = EList.newList();
 	private boolean iterating = false;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public ObjectEventHandler(IWindowObject<?> parentIn) {
+	public ObjectEventHandler(IWindowObject parentIn) {
 		parent = parentIn;
 	}
 	
@@ -39,14 +39,14 @@ public class ObjectEventHandler {
 		updateList();
 	}
 	
-	public void registerObject(IWindowObject<?> object) {
+	public void registerObject(IWindowObject object) {
 		if (object != null && listeners.notContains(object)) {
 			toBeAdded.add(object);
 		}
 		updateList();
 	}
 	
-	public void unregisterObject(IWindowObject<?> object) {
+	public void unregisterObject(IWindowObject object) {
 		if (object != null) {
 			toBeRemoved.add(object);
 		}
@@ -82,6 +82,6 @@ public class ObjectEventHandler {
 	// Getters
 	//---------
 	
-	public EArrayList<IWindowObject<?>> getListenerObjects() { return listeners; }
+	public EList<IWindowObject> getListenerObjects() { return listeners; }
 	
 }

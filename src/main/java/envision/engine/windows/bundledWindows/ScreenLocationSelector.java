@@ -10,14 +10,14 @@ import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public class ScreenLocationSelector<E> extends ActionObject<E> {
+public class ScreenLocationSelector extends ActionObject {
 	
 	//--------
 	// Fields
 	//--------
 	
 	protected IUseScreenLocation obj;
-	protected WindowButton<ScreenLocation> bLeft, bRight, tLeft, tRight, center, custom, chatDraw;
+	protected WindowButton bLeft, bRight, tLeft, tRight, center, custom, chatDraw;
 	protected int heightRatio = 0, widthRatio = 0;
 	public String drawName = "";
 	
@@ -46,13 +46,6 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 		center = new WindowButton(this, startX + width / 2 - 11, startY + (heightRatio / 2) - 7, 23, 15, "C");
 		custom = new WindowButton(this, startX + width / 2 - (95 / 2), endY, 95, 16, "Custom location");
 		
-		bLeft.setGenericObject(ScreenLocation.BOT_LEFT);
-		bRight.setGenericObject(ScreenLocation.BOT_RIGHT);
-		tLeft.setGenericObject(ScreenLocation.TOP_LEFT);
-		tRight.setGenericObject(ScreenLocation.TOP_RIGHT);
-		center.setGenericObject(ScreenLocation.CENTER);
-		custom.setGenericObject(ScreenLocation.CUSTOM);
-		
 		addObject(bLeft, bRight, tLeft, tRight, center, custom);
 	}
 	
@@ -71,7 +64,7 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 		case TOP_LEFT: msg = "Top Left"; tLeft.drawRect(EColors.lred, -1); break;
 		case TOP_RIGHT: msg = "Top Right"; tRight.drawRect(EColors.lred, -1); break;
 		case CENTER: msg = "Center"; center.drawRect(EColors.lred, -1); break;
-		case CUSTOM: msg = "Custom (" + obj.getLocation().getA() + ", " + obj.getLocation().getB() + ")"; break;
+		case CUSTOM: msg = "Custom (" + obj.getLocation().x + ", " + obj.getLocation().y + ")"; break;
 		default: msg = "Center"; break;
 		}
 		
@@ -82,7 +75,7 @@ public class ScreenLocationSelector<E> extends ActionObject<E> {
 	}
 	
 	@Override
-	public void actionPerformed(IActionObject<?> object, Object... args) {
+	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == bLeft) 	obj.setLocation(ScreenLocation.BOT_LEFT);
 		if (object == bRight) 	obj.setLocation(ScreenLocation.BOT_RIGHT);
 		if (object == tLeft) 	obj.setLocation(ScreenLocation.TOP_LEFT);

@@ -33,7 +33,7 @@ public class Spawner extends Building {
 		setExperienceRewardedOnKill(300);
 		
 		addComponent(spawnerComponent = new RandomTimeEventComponent(this, "spawn_update", 200, 1000));
-		addComponent(defenderComponent = new RandomTimeEventComponent(this, "defense", 100, 500));
+		/*addComponent(*/defenderComponent = new RandomTimeEventComponent(this, "defense", 100, 500)/*)*/;
 		
 		this.setHeadText(EntityList.getEntity(entityToSpawn.getType()).getName());
 	}
@@ -62,7 +62,7 @@ public class Spawner extends Building {
 		var fb = new Fireball(this);
 		fb.worldX = worldX + 1;
 		fb.worldY = worldY + 1;
-		fb.speed = 700;
+		fb.setSpeed(700);
 		world.addEntity(fb);
 	}
 	

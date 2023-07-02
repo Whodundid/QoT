@@ -19,7 +19,7 @@ public class CMD_Files extends AbstractFileCommand {
 	
 	@Override
 	public void runCommand() {
-		Envision.displayWindow(ScreenLevel.TOP, new FileExplorerWindow());
+		Envision.displayWindow(ScreenLevel.TOP, new FileExplorerWindow(dir()));
 	}
 	
 }

@@ -13,14 +13,14 @@ public class EventAction extends ObjectEvent {
 	// Fields
 	//--------
 	
-	private final IActionObject<?> actionObject;
+	private final IActionObject actionObject;
 	private final Object[] args;
 	
 	//--------------
 	// Constructors
 	//--------------
 	
-	public EventAction(IWindowObject<?> parentObjectIn, IActionObject<?> actionObjectIn, Object[] argsIn) {
+	public EventAction(IWindowObject parentObjectIn, IActionObject actionObjectIn, Object[] argsIn) {
 		super(parentObjectIn, EventType.ACTION);
 		actionObject = actionObjectIn;
 		args = argsIn;
@@ -30,7 +30,7 @@ public class EventAction extends ObjectEvent {
 	// Getters
 	//---------
 	
-	public IActionObject<?> getActionObject() { return actionObject; }
+	public IActionObject getActionObject() { return actionObject; }
 	public Object[] getArgs() { return args; }
 	
 }

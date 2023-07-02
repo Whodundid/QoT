@@ -23,7 +23,7 @@ public class FocusLockBorder extends WindowObject {
 	// Constructors
 	//--------------
 	
-	public FocusLockBorder(IWindowObject<?> parentIn) {
+	public FocusLockBorder(IWindowObject parentIn) {
 		if (parentIn != null) {
 			Dimension_d dim = parentIn.getDimensions();
 			init(parentIn, dim.startX, dim.startY, dim.width, dim.height);
@@ -32,7 +32,7 @@ public class FocusLockBorder extends WindowObject {
 		}
 	}
 	
-	public FocusLockBorder(IWindowObject<?> parentIn, double startXIn, double startYIn, double widthIn, double heightIn) {
+	public FocusLockBorder(IWindowObject parentIn, double startXIn, double startYIn, double widthIn, double heightIn) {
 		if (parentIn != null) {
 			init(parentIn, startXIn, startYIn, widthIn, heightIn);
 			startTime = System.currentTimeMillis();

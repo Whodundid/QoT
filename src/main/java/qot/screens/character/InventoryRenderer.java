@@ -8,7 +8,7 @@ import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import envision.game.entities.Entity;
-import envision.game.entities.EntityInventory;
+import envision.game.entities.inventory.EntityInventory;
 import envision.game.items.Item;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;

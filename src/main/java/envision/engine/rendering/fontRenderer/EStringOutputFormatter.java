@@ -1,7 +1,7 @@
 package envision.engine.rendering.fontRenderer;
 
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.debug.Broken;
 
 /** Used to concatenate 'EColors' color codes within drawn Strings. */
@@ -108,46 +108,55 @@ public class EStringOutputFormatter {
 	
 	/** Breaks a String into a list of smaller strings based on a set maximum line width. */
 	@Broken(since="June 5, 2022")
-	public static EArrayList<String> createWordWrapString(String stringIn, double widthMax) {
-		EArrayList<String> lines = new EArrayList();
+	public static EList<String> createWordWrapString(String stringIn, double widthMax) {
+		EList<String> lines = EList.newList();
+		
+		// don't care if string is null or empty
+		if (stringIn == null || stringIn.isEmpty()) return lines;
+		// don't care if the allotted width is less than the length of one character
+		if (widthMax < 10) return lines;
+		
+		boolean shouldWrap = getStringWidth(stringIn) > widthMax;
+		
 		try {
-			
+		    
+		    // if there's no need to wrap, just return the line itself
+		    if (!shouldWrap) {
+		        lines.add(stringIn);
+		        return lines;
+		    }
+		    
 			//CURRENTLY STUCK IN INFINITE LOOP HERE!
 			
-			if (stringIn != null && !stringIn.isEmpty() && widthMax > 5 && getStringWidth(stringIn) > widthMax) {
-				String restOfString = stringIn;
-				while (getStringWidth(restOfString) > widthMax) {
-					int i = 0;
-					int iPos = 0;
-					char end = Character.MIN_VALUE;
-					String buildString = "";
-					//System.out.println("HERE 1");
-					
-					while (!(getStringWidth(buildString) >= widthMax) && i < restOfString.length() - 1) {
-						buildString += restOfString.charAt(i);
-						i++;
-						//System.out.println("HERE 2");
-					}
-					
-					while (i > 0 && end != ' ') {
-						iPos = i;
-						end = restOfString.charAt(i--);
-						//System.out.println("HERE 3");
-					}
-					
-					if (i <= 0) {
-						lines.add(restOfString.substring(0, buildString.length() - 1));
-						restOfString = restOfString.substring(buildString.length() - 1, restOfString.length());
-					}
-					else {
-						lines.add(restOfString.substring(0, iPos));
-						restOfString = restOfString.substring(iPos + 1, restOfString.length());
-					}
-					
-				}
-				lines.add(restOfString);
-			}
-			else lines.add(stringIn);
+		    String restOfString = stringIn;
+            while (getStringWidth(restOfString) > widthMax) {
+                int i = 0;
+                int iPos = 0;
+                char end = Character.MIN_VALUE;
+                String buildString = "";
+                
+                while (!(getStringWidth(buildString) >= widthMax) && i < restOfString.length() - 1) {
+                    buildString += restOfString.charAt(i);
+                    i++;
+                }
+                
+                while (i > 0 && end != ' ') {
+                    iPos = i;
+                    end = restOfString.charAt(i--);
+                }
+                
+                if (i <= 0) {
+                    lines.add(restOfString.substring(0, buildString.length() - 1));
+                    restOfString = restOfString.substring(buildString.length() - 1, restOfString.length());
+                }
+                else {
+                    lines.add(restOfString.substring(0, iPos));
+                    restOfString = restOfString.substring(iPos + 1, restOfString.length());
+                }
+                
+            }
+            
+            lines.add(restOfString);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

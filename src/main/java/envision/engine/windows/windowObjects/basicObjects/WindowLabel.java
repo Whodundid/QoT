@@ -10,7 +10,7 @@ import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
 
-public class WindowLabel<E> extends WindowObject<E> {
+public class WindowLabel extends WindowObject {
 	
 	//--------
 	// Fields
@@ -29,10 +29,10 @@ public class WindowLabel<E> extends WindowObject<E> {
 	// Constructors
 	//--------------
 	
-	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos) { this(parentIn, xPos, yPos, "", 0xffffffff); }
-	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn) { this(parentIn, xPos, yPos, stringIn, 0xffffffff); }
-	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn, EColors colorIn) { this(parentIn, xPos, yPos, stringIn, colorIn.c()); }
-	public WindowLabel(IWindowObject<?> parentIn, double xPos, double yPos, String stringIn, int colorIn) {
+	public WindowLabel(IWindowObject parentIn, double xPos, double yPos) { this(parentIn, xPos, yPos, "", 0xffffffff); }
+	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn) { this(parentIn, xPos, yPos, stringIn, 0xffffffff); }
+	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn, EColors colorIn) { this(parentIn, xPos, yPos, stringIn, colorIn.c()); }
+	public WindowLabel(IWindowObject parentIn, double xPos, double yPos, String stringIn, int colorIn) {
 		init(parentIn, xPos, yPos, FontRenderer.strWidth(stringIn), FontRenderer.FONT_HEIGHT);
 		displayString = stringIn;
 		displayStringColor = colorIn;
@@ -46,32 +46,32 @@ public class WindowLabel<E> extends WindowObject<E> {
 	public void drawObject(int mX, int mY) {
 		if (wordWrap && wordWrappedLines != null) {
 			int i = 0;
+			
+			double textHeight = getTextHeight();
+			double yPos = startY - textHeight * 0.5;
+			
 			for (String s : wordWrappedLines) {
+			    
+			    double drawX = startX;
+			    double drawY = yPos + (i * FontRenderer.FONT_HEIGHT) + (i > 0 ? i * gapSize : 0);
+			    
 				if (centered) {
-					//if (shadow) { drawCenteredStringWithShadow(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0), displayStringColor); }
-					//else { drawCenteredString(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0), displayStringColor); }
+					if (shadow) drawStringCS(s, drawX, drawY, displayStringColor);
+					else drawStringC(s, drawX, drawY, displayStringColor);
 				}
 				else {
-					//if (shadow) { drawStringWithShadow(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0), displayStringColor); }
-					//else { drawString(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0), displayStringColor); }
-					drawString(s, startX, startY + (i * 9) + (i > 0 ? i * gapSize : 0));
+					if (shadow) drawStringS(s, drawX, drawY, displayStringColor);
+					else drawString(s, drawX, drawY, displayStringColor);
 				}
 				i++;
 			}
 		}
-		else {
-			if (centered) {
-				drawStringC(displayString, startX, startY, displayStringColor);
-				//if (shadow) { drawCenteredStringWithShadow(displayString, startX, startY, displayStringColor); }
-				//else { drawCenteredString(displayString, startX, startY, displayStringColor); }
-			}
-			else {
-				//if (shadow) { drawStringWithShadow(displayString, startX, startY, displayStringColor); }
-				//else { drawString(displayString, startX, startY, displayStringColor); }
-				drawString(displayString, startX, startY, displayStringColor);
-				
-			}
-		}
+		else if (centered) {
+            if (shadow) drawStringCS(displayString, startX, startY, displayStringColor);
+            else drawStringC(displayString, startX, startY, displayStringColor);
+        }
+        else if (shadow) drawStringS(displayString, startX, startY, displayStringColor);
+        else drawString(displayString, startX, startY, displayStringColor);
 	}
 	
 	//---------
@@ -137,12 +137,12 @@ public class WindowLabel<E> extends WindowObject<E> {
 	// Static Methods
 	//----------------
 	
-	public static void enableShadow(boolean val, WindowLabel<?> label, WindowLabel<?>... additional) {
+	public static void enableShadow(boolean val, WindowLabel label, WindowLabel... additional) {
 		EUtil.filterNullForEachA(l -> l.enableShadow(val), EUtil.add(label, additional));
 	}
 	
-	public static void setColor(EColors colorIn, WindowLabel<?> label, WindowLabel<?>... additional) { setColor(colorIn.intVal, label, additional); }
-	public static void setColor(int colorIn, WindowLabel<?> label, WindowLabel<?>... additional) {
+	public static void setColor(EColors colorIn, WindowLabel label, WindowLabel... additional) { setColor(colorIn.intVal, label, additional); }
+	public static void setColor(int colorIn, WindowLabel label, WindowLabel... additional) {
 		EUtil.filterNullForEachA(l -> l.setColor(colorIn), EUtil.add(label, additional));
 	}
 	

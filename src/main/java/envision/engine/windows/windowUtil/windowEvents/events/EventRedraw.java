@@ -12,7 +12,7 @@ public class EventRedraw extends ObjectEvent {
 	// Constructors
 	//--------------
 	
-	public EventRedraw(IWindowObject<?> parentObjectIn) {
+	public EventRedraw(IWindowObject parentObjectIn) {
 		super(parentObjectIn, EventType.REDRAW);
 	}
 	

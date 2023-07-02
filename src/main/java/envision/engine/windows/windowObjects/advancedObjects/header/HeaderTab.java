@@ -2,7 +2,7 @@ package envision.engine.windows.windowObjects.advancedObjects.header;
 
 import envision.engine.windows.windowTypes.WindowObject;
 
-public class HeaderTab<E> extends WindowObject<E> {
+public class HeaderTab extends WindowObject {
 	
 	//--------
 	// Fields

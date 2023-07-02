@@ -1,4 +1,4 @@
-package envision.game.entities;
+package envision.game.entities.player;
 
 import envision.game.quests.Quest;
 import eutil.datatypes.util.EList;
