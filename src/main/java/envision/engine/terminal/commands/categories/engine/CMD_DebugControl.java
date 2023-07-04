@@ -29,109 +29,109 @@ public class CMD_DebugControl extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-	    if (args.size() == 0) {
+	public void runCommand() {
+	    if (noArgs()) {
             Envision.setDebugMode(!Envision.isDebugMode());
-            termIn.writeln(((Envision.isDebugMode()) ? "Enabled" : "Disabled") + " debug mode.", EColors.yellow);
+            writeln(((Envision.isDebugMode()) ? "Enabled" : "Disabled") + " debug mode.", EColors.yellow);
             return;
         }
 	    
 	    try {
-            String arg = args.get(0).toLowerCase();
+            String arg = firstArg().toLowerCase();
             
             if (arg.equals("init")) {
-                if (args.size() == 1) {
+                if (oneArg()) {
                     boolean val = DebugFunctions.drawWindowInit = !DebugFunctions.drawWindowInit;
                     EColors c = val ? EColors.mc_green : EColors.mc_red;
-                    termIn.writeln("Draw window initialization times in debug: " + c + val, EColors.lgray);
+                    writeln("Draw window initialization times in debug: " + c + val, EColors.lgray);
                 }
-                else if (args.size() == 2) {
+                else if (twoArgs()) {
                     try {
-                        boolean val = Boolean.parseBoolean(args.get(1).toLowerCase());
+                        boolean val = Boolean.parseBoolean(firstArg().toLowerCase());
                         EColors c = val ? EColors.mc_green : EColors.mc_red;
                         DebugFunctions.drawWindowInit = val;
-                        termIn.writeln("Set draw init: " + c + val, EColors.lgray);
+                        writeln("Set draw init: " + c + val, EColors.lgray);
                     }
                     catch (Exception e) {
-                        termIn.error("Error parsing input!");
-                        error(termIn, e);
+                        error("Error parsing input!");
+                        error(term(), e);
                     }
                 }
             }
             else if (arg.equals("pid")) {
-                if (args.size() == 1) {
+                if (oneArg()) {
                     boolean val = DebugFunctions.drawWindowPID = !DebugFunctions.drawWindowPID;
                     EColors c = val ? EColors.mc_green : EColors.mc_red;
-                    termIn.writeln("Draw window process id in debug: " + c + val, EColors.lgray);
+                    writeln("Draw window process id in debug: " + c + val, EColors.lgray);
                 }
-                else if (args.size() == 2) {
+                else if (twoArgs()) {
                     try {
-                        boolean val = Boolean.parseBoolean(args.get(1).toLowerCase());
+                        boolean val = Boolean.parseBoolean(firstArg().toLowerCase());
                         EColors c = val ? EColors.mc_green : EColors.mc_red;
                         DebugFunctions.drawWindowPID = val;
-                        termIn.writeln("Set draw PID: " + c + val, EColors.lgray);
+                        writeln("Set draw PID: " + c + val, EColors.lgray);
                     }
                     catch (Exception e) {
-                        termIn.error("Error parsing input!");
-                        error(termIn, e);
+                        error("Error parsing input!");
+                        error(term(), e);
                     }
                 }
             }
             else if (arg.equals("dims") || arg.equals("pos")) {
-                if (args.size() == 1) {
+                if (oneArg()) {
                     boolean val = DebugFunctions.drawWindowDimensions = !DebugFunctions.drawWindowDimensions;
                     EColors c = val ? EColors.mc_green : EColors.mc_red;
-                    termIn.writeln("Draw window dimensions in debug: " + c + val, EColors.lgray);
+                    writeln("Draw window dimensions in debug: " + c + val, EColors.lgray);
                 }
-                else if (args.size() == 2) {
+                else if (twoArgs()) {
                     try {
-                        boolean val = Boolean.parseBoolean(args.get(1).toLowerCase());
+                        boolean val = Boolean.parseBoolean(firstArg().toLowerCase());
                         EColors c = val ? EColors.mc_green : EColors.mc_red;
                         DebugFunctions.drawWindowDimensions = val;
-                        termIn.writeln("Set draw dimensions: " + c + val, EColors.lgray);
+                        writeln("Set draw dimensions: " + c + val, EColors.lgray);
                     }
                     catch (Exception e) {
-                        termIn.error("Error parsing input!");
-                        error(termIn, e);
+                        error("Error parsing input!");
+                        error(term(), e);
                     }
                 }
             }
             else if (arg.equals("drawinfo")) {
-                if (args.size() == 1) {
+                if (oneArg()) {
                     boolean val = DebugFunctions.drawInfo = !DebugFunctions.drawInfo;
                     EColors c = !val ? EColors.mc_green : EColors.mc_red;
-                    termIn.writeln("Draw EMC debug info: " + c + val, EColors.lgray);
+                    writeln("Draw EMC debug info: " + c + val, EColors.lgray);
                 }
-                else if (args.size() == 2) {
+                else if (twoArgs()) {
                     try {
-                        boolean val = Boolean.parseBoolean(args.get(1).toLowerCase());
+                        boolean val = Boolean.parseBoolean(firstArg().toLowerCase());
                         EColors c = val ? EColors.mc_green : EColors.mc_red;
                         DebugFunctions.drawInfo = val;
-                        termIn.writeln("Set draw EMC debug info: " + c + val, EColors.lgray);
+                        writeln("Set draw EMC debug info: " + c + val, EColors.lgray);
                     }
                     catch (Exception e) {
-                        termIn.error("Error parsing input!");
-                        error(termIn, e);
+                        error("Error parsing input!");
+                        error(term(), e);
                     }
                 }
             }
             else {
                 try {
-                    int i = Integer.parseInt(args.get(0));
+                    int i = Integer.parseInt(firstArg());
                     if (i >= 0 && i < DebugFunctions.getTotal()) {
-                        Object[] passArgs = (args.size() > 1) ? args.subList(1, args.length()).toArray() : new Object[0];
-                        DebugFunctions.runDebugFunction(i, termIn, passArgs);
+                        Object[] passArgs = (argLength() > 1) ? args().subList(1, argLength()).toArray() : new Object[0];
+                        DebugFunctions.runDebugFunction(i, term(), passArgs);
                     }
                 }
                 catch (Exception e) {
-                    termIn.writeln("Tried to run debug command by number but failed!", EColors.orange);
-                    termIn.error("Value out of range (0-" + DebugFunctions.getTotal() + ")");
+                    writeln("Tried to run debug command by number but failed!", EColors.orange);
+                    error("Value out of range (0-" + DebugFunctions.getTotal() + ")");
                 }
             }
         }
         catch (Exception e) {
             e.printStackTrace();
-            error(termIn, e);
+            error(term(), e);
         }
 	}
 	

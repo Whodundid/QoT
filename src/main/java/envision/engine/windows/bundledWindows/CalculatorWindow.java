@@ -51,7 +51,7 @@ public class CalculatorWindow extends WindowParent {
 	
 	@Override
 	public void initWindow() {
-		setSize(456, 527);
+		setGuiSize(456, 527);
 		setResizeable(true);
 		setMinDims(148, 100);
 		setMaximizable(true);

@@ -20,7 +20,7 @@ public class CMD_SaveWorld extends TerminalCommand {
 	@Override public String getUsage() { return "ex: sw"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (Envision.theWorld != null) {
 			termIn.writeln("Saving '" + Envision.theWorld.getWorldName() + "'", EColors.green);
 			Envision.theWorld.saveWorldToFile();

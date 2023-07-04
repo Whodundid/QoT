@@ -21,7 +21,7 @@ public class CMD_ClearTerminalHistory extends TerminalCommand {
 	@Override public String getUsage() { return "ex: clrh"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		Envision.getTerminalHandler().clearHistory();
 		termIn.writeln("Terminal history cleared..", 0xff55ff55);
 	}

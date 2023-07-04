@@ -24,7 +24,7 @@ public class CMD_SpawnEntity extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.error("Entity type must be specified!");
 			termIn.info(getUsage());

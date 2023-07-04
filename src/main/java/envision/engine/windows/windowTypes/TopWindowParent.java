@@ -275,7 +275,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	public void updateBeforeNextDraw(int mXIn, int mYIn) {
 		postEvent(new EventRedraw(this));
 		res = Envision.getWindowDims();
-		setSize(res.width, res.height);
+		setGuiSize(res.width, res.height);
 		
 		mX = mXIn;
 		mY = mYIn;

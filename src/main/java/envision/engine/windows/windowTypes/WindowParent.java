@@ -128,8 +128,8 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 				if (time.length() > 6) time = time.substring(time.length() - 6);
 				
 				if (DebugFunctions.drawWindowPID) {
-					pos = FontRenderer.strWidth("ID: " + getObjectID());
-					draw = EColors.mc_aqua + "ID: " + EColors.yellow + getObjectID();
+					pos = FontRenderer.strWidth("ID: " + getWindowID());
+					draw = EColors.mc_aqua + "ID: " + EColors.yellow + getWindowID();
 					drawRect(startX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
 	                drawRect(startX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
 	                pos += 13;

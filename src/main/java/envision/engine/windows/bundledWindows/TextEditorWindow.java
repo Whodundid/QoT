@@ -60,7 +60,7 @@ public class TextEditorWindow extends WindowParent {
 	
 	@Override
 	public void initWindow() {
-		setSize(600, 500);
+		setGuiSize(600, 500);
 		setMinDims(125, 125);
 		setResizeable(true);
 		setMaximizable(true);

@@ -110,7 +110,7 @@ public class WindowDropDown extends WindowDropDownList {
 	public void mouseExited(int mXIn, int mYIn) {
 	    if (rcm != null) return;
 	    
-	    if (!parentButton.isMouseInside(mXIn, mYIn)) {
+	    if (!parentButton.isMouseInsideGui(mXIn, mYIn)) {
             parentButton.destroyList();
         }
         else {
@@ -158,7 +158,7 @@ public class WindowDropDown extends WindowDropDownList {
 				double maxW = ENumUtil.clamp(p.width, 0, res.width - 40);
 				double maxH = ENumUtil.clamp(p.height, 0, res.height - 40 - oH);
 				
-				p.setSize(maxW, maxH);
+				p.setGuiSize(maxW, maxH);
 				p.centerObjectWithSize(maxW, maxH);
 				p.setPosition(p.startX, p.startY + hh);
 				p.reInitChildren();

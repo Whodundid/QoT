@@ -28,7 +28,7 @@ public class DesktopShortcut_Command extends DesktopShortcut {
     
     @Override
     public void openShortcut() {
-        theCommand.runCommand(null, args, false);
+        theCommand.runCommand_i(null, args, false);
     }
     
 }

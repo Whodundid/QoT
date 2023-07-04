@@ -17,7 +17,7 @@ public class CMD_Lsblk extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: lsblk"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		try {
 			if (args.size() == 0) {
 				File[] drives = File.listRoots();

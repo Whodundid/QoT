@@ -101,7 +101,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		setObjectName("Terminal");
 		int w = ENumUtil.clamp(750, 200, Envision.getWidth());
 		int h = ENumUtil.clamp(400, 200, Envision.getHeight());
-		setSize(w, h);
+		setGuiSize(w, h);
 		setMinDims(480, 285);
 		setResizeable(true);
 		setMaximizable(true);
@@ -309,7 +309,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 				
 				if (cmd.equals("y") || cmd.equals("n")) {
 					confirmationCommand.onConfirmation(cmd);
-					confirmationCommand.runCommand(this, previousArgs, prevRunVisually);
+					confirmationCommand.runCommand_i(this, previousArgs, prevRunVisually);
 					clearConfirmationRequirement();
 				}
 				else {

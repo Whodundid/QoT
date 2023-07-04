@@ -57,7 +57,7 @@ public class WindowStatusBar extends WindowObject {
 		drawRect(EColors.dsteel, 5);
 		
 		drawRect(x, y, ex, ey, color);
-		if (isMouseInside(mXIn, mYIn)) {
+		if (isMouseInsideGui(mXIn, mYIn)) {
 			drawStringC((int) current + "/" + (int) max, midX, midY - FontRenderer.FONT_HEIGHT / 2 + 2.5);
 		}
 	}

@@ -22,7 +22,7 @@ public class CMD_SetVolume extends TerminalCommand {
 	@Override public String getUsage() { return "ex: vol 50"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.writeln(EColors.yellow, "Volume: " + QoTSettings.musicVolume.get());
 			return;

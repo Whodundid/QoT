@@ -19,7 +19,7 @@ public class CMD_Runtime extends TerminalCommand {
 	@Override public String getUsage() { return "ex: runtime"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) termIn.error("This command does not take any arguments");
 		else {
 			Runtime rt = Runtime.getRuntime();

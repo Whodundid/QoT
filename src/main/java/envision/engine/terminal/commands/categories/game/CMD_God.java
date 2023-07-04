@@ -19,7 +19,7 @@ public class CMD_God extends TerminalCommand {
 	@Override public String getUsage() { return "ex: god"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			termIn.errorUsage(ERROR_TOO_MANY, getUsage());
 			return;

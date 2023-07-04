@@ -1,5 +1,6 @@
 package envision.engine.windows.windowTypes;
 
+import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.EObjectGroup;
 import envision.engine.windows.windowUtil.FutureTaskManager;
@@ -58,6 +59,9 @@ public class WindowObjectProperties {
 	
 	/** The object group that this object belongs to (if there is one). */
 	public EObjectGroup objectGroup;
+	
+	/** The header of this object. (if there is one) */
+	public WindowHeader objectHeader;
 	
 	//---------------------
 	// Fields : Object IDs

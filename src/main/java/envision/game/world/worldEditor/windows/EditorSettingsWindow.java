@@ -18,7 +18,7 @@ public class EditorSettingsWindow extends WindowParent {
 	
 	@Override
 	public void initWindow() {
-		setSize(Envision.getWidth() / 2, Envision.getHeight() / 2);
+		setGuiSize(Envision.getWidth() / 2, Envision.getHeight() / 2);
 		setMinDims(300, 300);
 		setMaximizable(true);
 		setResizeable(true);

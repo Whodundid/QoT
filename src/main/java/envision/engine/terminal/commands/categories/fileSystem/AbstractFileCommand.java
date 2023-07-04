@@ -33,7 +33,7 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		try {
 			term = termIn;
 			argHelper = fileHelper = new FileHelper(termIn, args, runVisually);

@@ -55,7 +55,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 	@Override
 	public void initWindow() {
 		setObjectName("Color Picker");
-		setSize(407, 374);
+		setGuiSize(407, 374);
 		setPinnable(false);
 	}
 	

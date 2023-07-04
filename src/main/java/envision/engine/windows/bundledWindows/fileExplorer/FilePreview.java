@@ -8,6 +8,7 @@ import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.terminal.terminalUtil.FileType;
 import envision.engine.windows.developerDesktop.EnvisionDeveloperDesktop;
 import envision.engine.windows.developerDesktop.util.EnvisionDesktopUtil;
+import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.WindowObject;
 import eutil.colors.EColors;
@@ -27,6 +28,7 @@ public class FilePreview extends WindowObject {
 	private FileType fileType;
 	private int orderPos;
 	private RightClickMenu fileRCM;
+	private WindowTextField textField;
 	
 	//--------------
 	// Constructors
@@ -49,6 +51,22 @@ public class FilePreview extends WindowObject {
 	public String toString() {
 	    return String.valueOf(theFile.getName());
 	}
+    
+    @Override
+    public void initChildren() {
+        double textH = FontRenderer.FONT_HEIGHT;
+        double textW = strWidth(theFile.getName()) + 20;
+        double textX = startX + 50;
+        double textY = midY - textH / 2 + 2;
+        
+        textField = new WindowTextField(this, textX, textY, textW, textH);
+        textField.setEnableBackgroundDrawing(false);
+        textField.setText(theFile.getName());
+        textField.setScissoringEnabled(false);
+        textField.setClickable(false);
+        
+        addObject(textField);
+    }
 	
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
@@ -57,8 +75,9 @@ public class FilePreview extends WindowObject {
 		boolean isCutFile = EnvisionDeveloperDesktop.checkFileForCut(theFile);
 		int color = (isCutFile) ? EColors.mc_lightpurple.intVal : EColors.white.intVal;
 		
+		textField.setTextColor(color);
 		drawTexture(texture, startX, midY - texture.getWidth() / 2, 40, 40);
-		drawString(theFile.getName(), startX + 50, midY - FontRenderer.FONT_HEIGHT / 2, color);
+		//drawString(theFile.getName(), startX + 50, midY - FontRenderer.FONT_HEIGHT / 2, color);
 		
 		//draw transparent highlight overlay
 		if (isHighlighted) {
@@ -98,6 +117,18 @@ public class FilePreview extends WindowObject {
 	//==================
 	// Internal Methods
 	//==================
+	
+	private void enableRenameMode() {
+	    
+	}
+	
+	private void finishRename() {
+	    
+	}
+	
+	private void cancelRename() {
+	    
+	}
 	
     private void openFileRCM() {
         if (fileRCM != null) {

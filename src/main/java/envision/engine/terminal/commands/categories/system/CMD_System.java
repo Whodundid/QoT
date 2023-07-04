@@ -22,7 +22,7 @@ public class CMD_System extends TerminalCommand {
 	@Override public String getUsage() { return "ex: sys"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			termIn.error("This command does not take any arguments");
 		}

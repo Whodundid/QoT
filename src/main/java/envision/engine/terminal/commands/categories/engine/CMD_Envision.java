@@ -20,7 +20,7 @@ public class CMD_Envision extends TerminalCommand {
 	@Override public String getUsage() { return "ex: envision 'file'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.writeln(EnvisionLang.getVersionString(), EColors.seafoam);
 			termIn.info("To run an Envision script, add an Envision program directory\n",

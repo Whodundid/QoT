@@ -20,7 +20,7 @@ public class CMD_ShowWindow extends TerminalCommand {
 	@Override public String getUsage() { return "ex: display 4 (where 4 is the window id)"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.error("Not enough arguments!");
 			return;

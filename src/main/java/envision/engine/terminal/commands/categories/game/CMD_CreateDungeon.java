@@ -22,7 +22,7 @@ public class CMD_CreateDungeon extends TerminalCommand {
 	@Override public String getUsage() { return "ex: crdung small 'name'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		DungeonBuilder builder = new DungeonBuilder();
 		
 		if (args.isEmpty()) {

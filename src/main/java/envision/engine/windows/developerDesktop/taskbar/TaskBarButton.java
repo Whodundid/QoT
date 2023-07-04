@@ -107,7 +107,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 		//draw number of windows
 		drawTotal();
 		
-		if (!pressed && (isDrawingHover() || (dropDown != null && dropDown.isMouseInside(mXIn, mYIn)))) {
+		if (!pressed && (isDrawingHover() || (dropDown != null && dropDown.isMouseInsideGui(mXIn, mYIn)))) {
 			if (!listMade) createList();
 		}
 	}
@@ -165,7 +165,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 	@Override
 	public void mouseExited(int mXIn, int mYIn) {
 		if (pressed) pressed = false;
-		if (listMade && (dropDown != null && !dropDown.isMouseInside(mXIn, mYIn))) destroyList();
+		if (listMade && (dropDown != null && !dropDown.isMouseInsideGui(mXIn, mYIn))) destroyList();
 		super.mouseExited(mXIn, mYIn);
 	}
 	

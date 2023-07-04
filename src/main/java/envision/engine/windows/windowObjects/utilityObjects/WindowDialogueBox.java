@@ -39,7 +39,7 @@ public class WindowDialogueBox<E> extends ActionWindowParent {
 	public WindowDialogueBox(IWindowObject parentIn, DialogBoxTypes typeIn) {
 		super(parentIn);
 		type = typeIn;
-		setSize(400, 200);
+		setGuiSize(400, 200);
 		setResizeable(true);
 		setMinDims(350, 150);
 	}

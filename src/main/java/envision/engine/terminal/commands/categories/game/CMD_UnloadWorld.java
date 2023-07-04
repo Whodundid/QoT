@@ -21,7 +21,7 @@ public class CMD_UnloadWorld extends TerminalCommand {
 	@Override public String getUsage() { return "ex: uw"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (Envision.theWorld != null) {
 			termIn.writeln("Unloading world '" + Envision.theWorld.getWorldName() + "'", EColors.green);
 			Envision.loadWorld(null);

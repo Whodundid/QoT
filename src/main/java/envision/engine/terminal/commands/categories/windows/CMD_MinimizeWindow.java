@@ -21,7 +21,7 @@ public class CMD_MinimizeWindow extends TerminalCommand {
 	@Override public String getUsage() { return "ex: minimize 4 (where 4 is the window pid)"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) termIn.error("Not enough arguments!");
 		else if (args.size() >= 1) {
 			try {

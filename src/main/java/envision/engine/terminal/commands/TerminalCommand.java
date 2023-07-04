@@ -11,6 +11,7 @@ import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.terminal.window.termParts.TerminalTextField;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea;
+import envision.engine.windows.windowTypes.interfaces.ITopParent;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -53,26 +54,34 @@ public abstract class TerminalCommand {
 	
 	protected TerminalCommand() {}
 	
-	//------------------
+	//==================
 	// Abstract Methods
-	//------------------
+	//==================
 	
+	/** Returns the string by which this command is called. */
 	public abstract String getName();
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	
+	/** While overridable, this function is intended to only be called by the terminal command handler. */
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		try {
 			term = termIn;
 			argHelper = new ArgHelper(termIn, args, runVisually);
 			runCommand();
 		}
 		catch (TermArgLengthException e) {
-			term.error(e.getMessage());
+			errorUsage(e.getMessage());
 		}
 		catch (Exception e) {
-			error(term, e);
+			error(e);
 		}
 	}
 	
+	/** The intended override target for commands. */
 	protected void runCommand() throws Exception {}
+	
+	//=================
+	// Utility Methods
+	//=================
 	
 	public File curDir() { return argHelper.curDir(); }
 	public boolean visually() { return argHelper.visually(); }
@@ -82,6 +91,12 @@ public abstract class TerminalCommand {
 	public EList<String> args() { return argHelper.args(); }
 	public int argLength() { return argHelper.length(); }
 	public ETerminalWindow term() { return term; }
+	public boolean noArgs() { return argHelper.length() == 0; }
+	public boolean oneArg() { return argHelper.length() == 1; }
+	public boolean twoArgs() { return argHelper.length() == 2; }
+	public boolean threeArgs() { return argHelper.length() == 3; }
+	
+	public ITopParent getTopParent() { return term().getTopParent(); }
 	
 	public boolean showInHelp() { return true; }
 	public EList<String> getAliases() { return new EArrayList<>(); }
@@ -115,7 +130,7 @@ public abstract class TerminalCommand {
 			}
 		}
 		
-		runCommand(termIn, args, runVisually);
+		runCommand_i(termIn, args, runVisually);
 	}
 	
 	//---------
@@ -209,17 +224,32 @@ public abstract class TerminalCommand {
 	// Argument Helpers
 	//==================
 	
+	/** Throws a default error if there were more than zero args passed. */
+    protected void expectNoArgs() { expectNoArgs(ERROR_NO_ARGS); }
+    /** Throws a customized error if there were more than zero args passed. */
+    protected void expectNoArgs(String message) {
+        if (argLength() == 0) return;
+        if (message != null) throw new TermArgLengthException(message);
+        throw new TermArgLengthException(ERROR_NO_ARGS);
+    }
+	
+    /** Throws a default error if there were less than the expected number of arguments passed. */
 	protected void expectAtLeast(int amount) { expectAtLeast(amount, null); }
+	/** Throws a customized error if there were less than the expected number of arguments passed. */
 	protected void expectAtLeast(int amount, String message) {
 		checkAtLeast(amount, message);
 	}
 	
+	/** Throws a default error if there were more than the expected number of arguments passed. */
 	protected void expectNoMoreThan(int amount) { expectNoMoreThan(amount, null); }
+	/** Throws a customized error if there were more than the expected number of arguments passed. */
 	protected void expectNoMoreThan(int amount, String message) {
 		checkNoMoreThan(amount, message);
 	}
 	
+	/** Throws a default error if the number of arguments passed is not the exact expected amount. */
 	protected void expectExactly(int amount) { expectExactly(amount, null); }
+	/** Throws a customized error if the number of arguments passed is not the exact expected amount. */
 	protected void expectExactly(int amount, String message) {
 		checkExact(amount, message);
 	}

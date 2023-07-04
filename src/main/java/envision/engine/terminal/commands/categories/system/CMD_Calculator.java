@@ -20,7 +20,7 @@ public class CMD_Calculator extends TerminalCommand {
 	@Override public String getUsage() { return "ex: calc"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		termIn.writeln("Opening Calculator", EColors.lgreen);
 		termIn.getTopParent().displayWindow(new CalculatorWindow());
 	}

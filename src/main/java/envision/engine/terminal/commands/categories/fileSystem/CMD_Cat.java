@@ -19,7 +19,7 @@ public class CMD_Cat extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: cat '.txt'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		try {
 			if (args.size() == 0) termIn.error("Not enough arguments!");
 			else if (args.size() >= 1) {

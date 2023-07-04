@@ -21,7 +21,7 @@ public class CMD_ClearObjects extends TerminalCommand {
 	@Override public String getUsage() { return "ex: clro"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		EList<IWindowObject> objs = termIn.getTopParent().getCombinedChildren();
 		if (objs.isEmpty()) return;
 		

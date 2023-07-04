@@ -35,7 +35,7 @@ public class CMD_PlaySong extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			displaySongList(termIn);
 			return;

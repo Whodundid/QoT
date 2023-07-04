@@ -20,7 +20,7 @@ public class CMD_ListEntities extends TerminalCommand {
 	@Override public String getUsage() { return "ex: le"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (Envision.theWorld == null) {
 			termIn.error("Current World is Null");
 			return;

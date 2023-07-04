@@ -20,7 +20,7 @@ public class CMD_CloseWindow extends TerminalCommand {
 	@Override public String getUsage() { return "ex: close 23 (where 23 is the window pid)"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) termIn.close();
 		else if (args.size() >= 1) {
 			try {
@@ -29,7 +29,7 @@ public class CMD_CloseWindow extends TerminalCommand {
 				
 				IWindowParent theWindow = EUtil.getFirst(windows, w -> w.getWindowID() == pid);
 				if (EUtil.nullDo(theWindow, w -> w.close())) {
-					termIn.writeln("Window: '" + theWindow.getObjectName() + " ; " + theWindow.getObjectID() + "' closed", EColors.green);
+					termIn.writeln("Window: '" + theWindow.getObjectName() + " ; " + theWindow.getWindowID() + "' closed", EColors.green);
 				}
 				else termIn.error("No window with that pid currently exists!");
 				
@@ -43,7 +43,7 @@ public class CMD_CloseWindow extends TerminalCommand {
 						for (IWindowParent p : windows) {
 							if (p != termIn) {
 								p.close();
-								termIn.writeln("Window: '" + p.getObjectName() + " ; " + p.getObjectID() + "' closed", EColors.green);
+								termIn.writeln("Window: '" + p.getObjectName() + " ; " + p.getWindowID() + "' closed", EColors.green);
 							}
 						}
 					}
@@ -63,7 +63,7 @@ public class CMD_CloseWindow extends TerminalCommand {
 						}
 						
 						if (EUtil.nullDo(theWindow, w -> w.close())) {
-							termIn.writeln("Window: '" + theWindow.getObjectName() + " ; " + theWindow.getObjectID() + "' closed", EColors.green);
+							termIn.writeln("Window: '" + theWindow.getObjectName() + " ; " + theWindow.getWindowID() + "' closed", EColors.green);
 						}
 						else termIn.error("No window with that name currently exists!");
 					}

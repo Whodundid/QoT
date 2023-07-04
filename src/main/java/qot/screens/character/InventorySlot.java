@@ -31,7 +31,7 @@ public class InventorySlot extends WindowObject {
 		drawHRect(EColors.black, 1, 0);
 		
 		if (!isMoving) {
-			if (isMouseInside(mXIn, mYIn)) {
+			if (isMouseInsideGui(mXIn, mYIn)) {
 				if (renderer.getMovingSlot() != null) {
 					drawRect(sx, sy, ex, ey, EColors.chalk.opacity(50));
 				}

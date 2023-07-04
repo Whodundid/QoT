@@ -21,7 +21,7 @@ public class CMD_MoveWindowToFront extends TerminalCommand {
 	@Override public String getUsage() { return "ex: tofront 4 (where 4 is the window pid)"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.bringToFront();
 			termIn.writeln("Window: [" + termIn.getObjectName() + " | " + termIn.getObjectID() + "] brought to front.", EColors.green);

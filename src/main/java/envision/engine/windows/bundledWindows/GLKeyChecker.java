@@ -31,7 +31,7 @@ public class GLKeyChecker extends WindowParent {
 	
 	@Override
 	public void initWindow() {
-		setSize(300, 300);
+		setGuiSize(300, 300);
 		setResizeable(true);
 		setMinimizable(true);
 		setMaximizable(true);

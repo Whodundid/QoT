@@ -126,12 +126,11 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	public static Player thePlayer;
 	
 	// Game tick stuff
-	private long UPS = 60;
-	private double timeU = 1000 / UPS;
-	private double deltaU = 0;
-	private long lagCheck = 0;
-	private long curNumTicks = 0;
-	private long ticks = 0;
+	private long TPS = 60;
+	private double timeT = 1000 / TPS;
+	private double deltaT = 0;
+	private int curNumTicks = 0;
+	private int ticks = 0;
 	
 	// Framerate stuff
 	private long FPS = 60; //60 fps by default -- user can modify
@@ -346,12 +345,11 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		while (running && !GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
 			try {
 				long currentTime = System.currentTimeMillis();
-				deltaU += (currentTime - initialTime) / timeU;
+				deltaT += (currentTime - initialTime) / timeT;
 				deltaF += (currentTime - initialTime) / timeF;
 				initialTime = currentTime;
 				
-				//synchronize game inputs to 60 ticks per second by default
-				if (deltaU >= 1) {
+				if (deltaT >= 1) {
 					oldTime = curTime;
 					curTime = System.currentTimeMillis();
 					
@@ -375,7 +373,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 					if (ticks == Integer.MAX_VALUE) ticks = 0;
 					else ticks++;
 					
-					deltaU--;
+					deltaT--;
 				}
 				
 				if (deltaF >= 1) {
@@ -393,8 +391,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 					timer += 1000;
 				}
 				
-				if (deltaU > 3 || deltaF > 5) {
-					deltaU = 0;
+				if (deltaT > 3 || deltaF > 5) {
+					deltaT = 0;
 					deltaF = 0;
 				}
 			}
@@ -484,21 +482,20 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	//=======================
 	
 	private long getTargetFPSi() { return FPS; }
-	private long getTargetUPSi() { return UPS; }
+	private long getTargetUPSi() { return TPS; }
 	
 	private void setTargetUPSi(int upsIn) {
-		UPS = upsIn;
-		timeU = 1000 / UPS;
-		System.out.println(UPS + " : " + timeU);
-		deltaU = 0;
+		TPS = upsIn;
+		timeT = 1000.0 / (double) TPS;
+		deltaT = 0;
 		deltaF = 0;
 		ticks = 0;
 	}
 	
 	private void setTargetFPSi(int fpsIn) {
 		FPS = fpsIn;
-		timeF = 1000 / FPS;
-		deltaU = 0;
+		timeF = 1000.0 / (double) FPS;
+		deltaT = 0;
 		deltaF = 0;
 		frames = 0;
 	}
@@ -665,12 +662,14 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	/** Returns the FPS (frames per second) of the active game's game window. */
 	public static int getFPS() { return instance.curFrameRate; }
+	/** Returns the TPS (ticks per second) of the engine. */
+	public static int getTPS() { return instance.curNumTicks; }
 	/** Returns the engine's current total number of game ticks run. */
 	public static long getRunningTicks() { return instance.ticks; }
 	/** Returns the FPS target that the window is trying to run at. */
 	public static int getTargetFPS() { return (int) instance.getTargetFPSi(); }
 	/** Returns the UPS (updates per second) that the game is trying to run at. */
-	public static int getTargetUPS() { return (int) instance.getTargetUPSi(); }
+	public static int getTargetTPS() { return (int) instance.getTargetUPSi(); }
 	/** Returns the change in time between ticks. */
 	public static float getDeltaTime() { return instance.dt; }
 	

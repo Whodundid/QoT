@@ -126,10 +126,10 @@ public class WindowLabel extends WindowObject {
 			double w = longest;
 			double h = getTextHeight();
 			
-			setSize(w, h);
+			setGuiSize(w, h);
 		}
 		else {
-			setSize(FontRenderer.strWidth(displayString), FontRenderer.FONT_HEIGHT);
+			setGuiSize(FontRenderer.strWidth(displayString), FontRenderer.FONT_HEIGHT);
 		}
 	}
 	

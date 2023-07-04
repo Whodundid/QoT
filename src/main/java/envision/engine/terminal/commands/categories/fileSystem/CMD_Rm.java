@@ -19,7 +19,7 @@ public class CMD_Rm extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: rm 'dir'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
 		if (args.size() == 1) {
 			try {

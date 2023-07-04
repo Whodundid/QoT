@@ -46,7 +46,7 @@ public class OptionsScreen extends GameScreen {
 		fpsSlider.setSliderValue(Envision.getTargetFPS());
 		
 		upsInput = new WindowTextField(this, fpsSlider.startX, fpsSlider.endY + 60, 75, 35);
-		upsInput.setText(Envision.getTargetUPS());
+		upsInput.setText(Envision.getTargetTPS());
 		
 		boolean fs = QoTSettings.fullscreen.get();
 		String fText = (fs) ? "Disable FullScreen" : "Enable FullScreen";
@@ -125,7 +125,7 @@ public class OptionsScreen extends GameScreen {
 		String input = upsInput.getText();
 		
 		if (input == null) {
-			upsInput.setText(Envision.getTargetUPS());
+			upsInput.setText(Envision.getTargetTPS());
 			return;
 		}
 		
@@ -142,7 +142,7 @@ public class OptionsScreen extends GameScreen {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			upsInput.setText(Envision.getTargetUPS());
+			upsInput.setText(Envision.getTargetTPS());
 		}
 	}
 	

@@ -48,27 +48,13 @@ public class FileExplorerWindow extends ActionWindowParent {
     // Constructors
     //--------------
     
-    public FileExplorerWindow() {
-        this(Envision.getActiveTopParent());
-    }
-    public FileExplorerWindow(String dirIn) {
-        this(Envision.getActiveTopParent(), new File(dirIn), false);
-    }
-    public FileExplorerWindow(File dirIn) {
-        this(Envision.getActiveTopParent(), dirIn, false);
-    }
-    public FileExplorerWindow(IWindowObject parent) {
-        this(parent, System.getProperty("user.dir"), false);
-    }
-    public FileExplorerWindow(IWindowObject parent, String dirIn) {
-        this(parent, new File(dirIn), false);
-    }
-    public FileExplorerWindow(IWindowObject parent, File dirIn) {
-        this(parent, dirIn, false);
-    }
-    public FileExplorerWindow(IWindowObject parent, String dirIn, boolean selectModeIn) {
-        this(parent, new File(dirIn), selectModeIn);
-    }
+    public FileExplorerWindow() { this(Envision.getActiveTopParent()); }
+    public FileExplorerWindow(String dirIn) { this(Envision.getActiveTopParent(), new File(dirIn), false); }
+    public FileExplorerWindow(File dirIn) { this(Envision.getActiveTopParent(), dirIn, false); }
+    public FileExplorerWindow(IWindowObject parent) { this(parent, System.getProperty("user.dir"), false); }
+    public FileExplorerWindow(IWindowObject parent, String dirIn) { this(parent, new File(dirIn), false); }
+    public FileExplorerWindow(IWindowObject parent, File dirIn) { this(parent, dirIn, false); }
+    public FileExplorerWindow(IWindowObject parent, String dirIn, boolean selectModeIn) { this(parent, new File(dirIn), selectModeIn); }
     public FileExplorerWindow(IWindowObject parent, File dirIn, boolean selectModeIn) {
         super(parent);
         curDir = dirIn;
@@ -83,7 +69,7 @@ public class FileExplorerWindow extends ActionWindowParent {
     @Override
     public void initWindow() {
         setObjectName("File Explorer");
-        setSize(800, 483);
+        setGuiSize(800, 483);
         setResizeable(true);
         setMaximizable(true);
         setMinDims(400, 200);
@@ -117,7 +103,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         double dirWidth = (endX - 6) - (fileUpBtn.endX + 12);
         dirField = new WindowTextField(this, fileUpBtn.endX + 12, topY, dirWidth, bW);
         dirField.setMaxStringLength(1024);
-        dirField.setText("> " + curDir);
+        dirField.setText(curDir);
         
         IActionObject.setActionReceiver(this, backBtn, forwardBtn, fileUpBtn);
         IActionObject.setActionReceiver(this, dirField);
@@ -143,10 +129,6 @@ public class FileExplorerWindow extends ActionWindowParent {
         text = dirField.getText();
         vPos = fileArea.getVScrollBar().getScrollPos();
         prevHighlight = EList.newList();
-        /*
-         * for (var f : highlighted) { System.out.println(f.getOrderPos()); }
-         * System.out.println("NONONONONO");
-         */
         highlighted.map(f -> f.getOrderPos()).forEach(prevHighlight::add);
     }
     

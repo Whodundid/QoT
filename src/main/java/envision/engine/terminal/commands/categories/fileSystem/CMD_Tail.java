@@ -22,7 +22,7 @@ public class CMD_Tail extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: tail 'file path' 10"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.error("Not enough arguments!"); termIn.info(getUsage()); }
 		else if (args.size() == 1) { tryFind(termIn, args, 10); }
 		else if (args.size() == 2) {

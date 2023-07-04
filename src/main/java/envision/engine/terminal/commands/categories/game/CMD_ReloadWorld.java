@@ -24,7 +24,7 @@ public class CMD_ReloadWorld extends TerminalCommand {
 	@Override public String getUsage() { return "ex: relw"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			termIn.errorUsage(ERROR_NO_ARGS, getUsage());
 			return;

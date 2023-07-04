@@ -19,7 +19,7 @@ public class CMD_NoClip extends TerminalCommand {
 	@Override public String getUsage() { return "ex: nc"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (Envision.thePlayer != null) {
 			Envision.thePlayer.setNoClipAllowed(!Envision.thePlayer.isNoClipping());
 			termIn.writeln(((Envision.thePlayer.isNoClipping()) ? "Enabled" : "Disabled") + " no clipping");

@@ -22,7 +22,7 @@ public class CMD_ReloadTextures extends TerminalCommand {
 	@Override public String getUsage() { return "ex: relt"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		termIn.writeln("Reloading all textures..", 0xffffaa00);
 		TextureSystem.getInstance().reloadAllTextures();
 		termIn.writeln("Textures Reloaded!", EColors.green);

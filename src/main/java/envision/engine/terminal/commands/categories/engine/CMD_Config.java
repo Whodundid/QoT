@@ -31,68 +31,72 @@ public class CMD_Config extends TerminalCommand {
 	}
 
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			displayConfig(termIn);
+	public void runCommand() {
+	    expectNoMoreThan(1);
+	    
+		if (noArgs()) {
+			displayConfig();
 			if (hasModifier("-a")) FileOpener.openFile(QoTSettings.getGameConfig().getFile());
+			return;
 		}
-		else if (args.size() == 1) {
-			switch (args.get(0)) {
-			case "edit": editConfig(termIn); break;
-			case "rel":
-			case "reload":
-			case "l":
-			case "load": reloadConfig(termIn); break;
-			case "s":
-			case "save": saveConfig(termIn); break;
-			case "res":
-			case "reset": resetConfig(termIn); break;
-			default:
-				errorUsage(termIn, "Invalid action argument!");
-			}
-		}
+		
+		if (oneArg()) {
+            switch (firstArg()) {
+            case "edit": editConfig(); break;
+            case "rel":
+            case "reload":
+            case "l":
+            case "load": reloadConfig(); break;
+            case "s":
+            case "save": saveConfig(); break;
+            case "res":
+            case "reset": resetConfig(); break;
+            default:
+                errorUsage("Invalid action argument!");
+            }
+        }
 	}
 	
-	private void displayConfig(ETerminalWindow termIn) {
-		termIn.writeln(EColors.aquamarine, Envision.getGameName(), " config:");
+	private void displayConfig() {
+		writeln(EColors.aquamarine, Envision.getGameName(), " config:");
 		
 		var config = QoTSettings.getGameConfig().getConfigContents();
 		for (var setting : config) {
-			termIn.writeln(EColors.yellow, "  ", setting.getA(), " ", EColors.seafoam, setting.getB());
+			writeln(EColors.yellow, "  ", setting.getA(), " ", EColors.seafoam, setting.getB());
 		}
 	}
 	
-	private void editConfig(ETerminalWindow termIn) {
-		termIn.writeln();
+	private void editConfig() {
+		writeln();
 		File configFile = QoTSettings.getGameConfig().getFile();
 		if (configFile == null) {
-			termIn.error("Failed to read config file!");
+			error("Failed to read config file!");
 			return;
 		}
 		
 		TextEditorWindow texteditor = new TextEditorWindow(configFile);
-		texteditor.setFocusedObjectOnClose(termIn);
+		texteditor.setFocusedObjectOnClose(term());
 		
-		termIn.getTopParent().displayWindow(texteditor);
+		getTopParent().displayWindow(texteditor);
 		texteditor.setFocusToLineIfEmpty();
 	}
 	
-	private void reloadConfig(ETerminalWindow termIn) {
-		termIn.info("Reloading " + Envision.getGameName() + " config..");
-		if (QoTSettings.getGameConfig().tryLoad()) termIn.writeln(EColors.lgreen, "Success");
-		else termIn.writeln(EColors.lred, "Failed to reload config!");
+	private void reloadConfig() {
+		info("Reloading ", Envision.getGameName(), " config..");
+		if (QoTSettings.getGameConfig().tryLoad()) writeln(EColors.lgreen, "Success");
+		else error("Failed to reload config!");
 	}
 	
-	private void saveConfig(ETerminalWindow termIn) {
-		termIn.info("Saving " + Envision.getGameName() + " config..");
-		if (QoTSettings.getGameConfig().trySave()) termIn.writeln(EColors.lgreen, "Success");
-		else termIn.writeln(EColors.lred, "Failed to save config!");
+	private void saveConfig() {
+		info("Saving ", Envision.getGameName(), " config..");
+		if (QoTSettings.getGameConfig().trySave()) writeln(EColors.lgreen, "Success");
+		else error("Failed to save config!");
 	}
 	
-	private void resetConfig(ETerminalWindow termIn) {
-		termIn.info("Reseting " + Envision.getGameName() + " config to default values..");
-		if (QoTSettings.getGameConfig().tryReset()) termIn.writeln(EColors.lgreen, "Success");
-		else termIn.writeln(EColors.lred, "Failed to reset config!");
+	private void resetConfig() {
+		info("Reseting ", Envision.getGameName(), " config to default values..");
+		if (QoTSettings.getGameConfig().tryReset()) writeln(EColors.lgreen, "Success");
+		else error("Failed to reset config!");
 	}
 	
 }

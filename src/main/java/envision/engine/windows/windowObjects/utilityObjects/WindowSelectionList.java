@@ -42,7 +42,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	@Override
 	public void initWindow() {
 		setObjectName("Make A Selection..");
-		setSize(200, 230);
+		setGuiSize(200, 230);
 		setMinDims(100, 100);
 		setResizeable(true);
 	}

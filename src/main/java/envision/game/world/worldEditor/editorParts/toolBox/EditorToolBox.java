@@ -148,7 +148,7 @@ public class EditorToolBox extends WindowObject {
 		h += 1;
 		
 		//assign our dimensions
-		setSize(w, h);
+		setGuiSize(w, h);
 	}
 	
 	public MapEditorScreen getEditor() { return editor; }

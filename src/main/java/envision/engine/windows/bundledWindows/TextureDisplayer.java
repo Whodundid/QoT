@@ -52,7 +52,7 @@ public class TextureDisplayer extends WindowParent {
 	
 	@Override
 	public void initWindow() {
-		setSize(422, 250);
+		setGuiSize(422, 250);
 		setResizeable(true);
 		setMaximizable(true);
 		setMinDims(144, 100);

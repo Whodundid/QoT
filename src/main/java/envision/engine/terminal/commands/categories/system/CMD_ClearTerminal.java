@@ -20,7 +20,7 @@ public class CMD_ClearTerminal extends TerminalCommand {
 	@Override public String getUsage() { return "ex: clr"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		termIn.clear();
 	}
 	

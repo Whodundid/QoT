@@ -34,7 +34,7 @@ public class TerminalOptionsWindow extends WindowParent {
 	
 	@Override
 	public void initWindow() {
-		setSize(490, 340);
+		setGuiSize(490, 340);
 		setMinDims(490, 340);
 		setResizeable(true);
 		setObjectName("Terminal Settings");

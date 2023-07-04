@@ -3,7 +3,10 @@ package envision.engine.windows.windowObjects.actionObjects;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
+import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
+import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.datatypes.points.Point2i;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
@@ -80,6 +83,7 @@ public class WindowScrollBar extends ActionObject {
 		
 		setScrollBarValues(visibleAmountIn, highValIn, (int) (vertical ? height : width));
 		window = getWindowParent();
+		getTopParent().registerListener(this);
 	}
 	
 	//-----------
@@ -145,6 +149,21 @@ public class WindowScrollBar extends ActionObject {
 	public void onFocusLost(EventFocus eventIn) {
 		isScrolling = false;
 	}
+    
+    @Override
+    public void close(boolean recursive) {
+        getTopParent().unregisterListener(this);
+        super.close(recursive);
+    }
+	
+    @Override
+    public void onEvent(ObjectEvent e) {
+        if (e instanceof EventMouse m) {
+            if (m.getMouseType() == MouseType.RELEASED) {
+                isScrolling = false;
+            }
+        }
+    }
 	
 	//---------
 	// Methods

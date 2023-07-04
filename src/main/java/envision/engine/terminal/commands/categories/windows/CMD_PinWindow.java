@@ -20,7 +20,7 @@ public class CMD_PinWindow extends TerminalCommand {
 	@Override public String getUsage() { return "ex: pin 4 (where 4 is the window pid)"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			boolean val = termIn.isPinned();
 			termIn.setPinned(!val);

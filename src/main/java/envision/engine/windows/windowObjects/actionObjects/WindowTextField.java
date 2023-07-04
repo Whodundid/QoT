@@ -34,6 +34,7 @@ public class WindowTextField extends ActionObject {
 	protected boolean useObjectGroupForCursorDraw = false;
 	protected boolean drawShadowed = true;
 	protected boolean textRecentlyEntered = false;
+	protected boolean scissoring = true;
 	protected long startTime = 0l;
 	protected int clickStartPos = -1;
 	protected int cursorCounter;
@@ -58,7 +59,7 @@ public class WindowTextField extends ActionObject {
 	
 	@Override
 	public void drawObject(int mX, int mY) {
-		scissor();
+		if (scissoring) scissor();
 		
 		if (getEnableBackgroundDrawing()) {
 			drawHRect(borderColor);
@@ -91,7 +92,7 @@ public class WindowTextField extends ActionObject {
 			drawString(drawText, startX + 5, endY - FontRenderer.FONT_HEIGHT, textColor);			
 		}
 		
-		endScissor();
+		if (scissoring) endScissor();
 	}
 	
 	@Override 
@@ -338,6 +339,7 @@ public class WindowTextField extends ActionObject {
 	public int getTextColor() { return textColor; }
 	public int getTextEmptyColor() { return textWhenEmptyColor; }
 	public int getBorderColor() { return borderColor; }
+	public boolean isScissoring() { return scissoring; }
 	
 	/** see @getNthWordFromPos() params: N, position */
 	public int getNthWordFromCursor(int pos) {
@@ -402,6 +404,7 @@ public class WindowTextField extends ActionObject {
 	public void setBorderColor(int colorIn) { borderColor = colorIn; }
 	public void setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; }
 	public void setDrawShadowed(boolean val) { drawShadowed = val; }
+	public void setScissoringEnabled(boolean val) { scissoring = val; }
 	
 	public void setCursorPos(int posIn) {
 		cursorPosition = posIn;

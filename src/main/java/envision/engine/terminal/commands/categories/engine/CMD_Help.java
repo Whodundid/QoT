@@ -31,7 +31,7 @@ public class CMD_Help extends TerminalCommand implements IListableCommand {
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			list(termIn, args, runVisually);
 			termIn.writeln();

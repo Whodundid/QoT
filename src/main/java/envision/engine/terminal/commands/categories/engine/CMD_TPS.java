@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.engine;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -21,26 +20,25 @@ public class CMD_TPS extends TerminalCommand {
 	@Override public String getUsage() { return "ex: tps"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			termIn.writeln("TPS: " + Envision.getTargetUPS(), EColors.lime);
+	public void runCommand() {
+	    expectNoMoreThan(1);
+	    
+		if (noArgs()) {
+	         writeln(EColors.yellow, "target: ", Envision.getTargetTPS());
+	         writeln(EColors.green, "actual: ", Envision.getTPS());
+	         return;
 		}
-		else if (args.hasOne()) {
-			String arg = args.get(0);
-			try {
-				int val = Integer.parseInt(arg);
-				val = ENumUtil.clamp(val, 1, Integer.MAX_VALUE);
-				Envision.setTargetUPS(val);
-				termIn.writeln("Set game tickrate to " + val + " ticks per second!", EColors.lime);
-			}
-			catch (Exception e) {
-				error(termIn, e);
-				termIn.error("Expected a valid integer value!");
-			}
-		}
-		else {
-			errorUsage(termIn, ERROR_TOO_MANY);
-		}
+		
+        try {
+            int val = Integer.parseInt(firstArg());
+            val = ENumUtil.clamp(val, 1, Integer.MAX_VALUE);
+            Envision.setTargetUPS(val);
+            writeln("Set game tickrate to " + val + " ticks per second!", EColors.lime);
+        }
+        catch (Exception e) {
+            error(e);
+            error("Expected a valid integer value!");
+        }
 	}
 	
 }

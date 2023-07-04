@@ -27,7 +27,7 @@ public class CMD_OpenWindow extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			switch (args.get(0).toLowerCase()) {
 			case "keys": termIn.getTopParent().displayWindow(new GLKeyChecker()); break;

@@ -34,7 +34,7 @@ public class RegionEditWindow extends WindowParent {
 	@Override
 	public void initWindow() {
 		setObjectName("Edit Region");
-		setSize(400, 400);
+		setGuiSize(400, 400);
 	}
 	
 	@Override

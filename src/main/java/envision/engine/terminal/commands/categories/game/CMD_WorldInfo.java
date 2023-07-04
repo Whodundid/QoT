@@ -24,7 +24,7 @@ public class CMD_WorldInfo extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isNotEmpty()) {
 			errorUsage(termIn, ERROR_NO_ARGS);
 			return;

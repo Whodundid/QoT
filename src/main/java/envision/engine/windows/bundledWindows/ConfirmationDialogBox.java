@@ -46,7 +46,7 @@ public class ConfirmationDialogBox<E> extends WindowDialogueBox {
     }
     
     private void setupWindow() {
-        setSize(300, 200);
+        setGuiSize(300, 200);
         setMinDims(300, 200);
         setResizeable(true);
         setMaximizable(false);

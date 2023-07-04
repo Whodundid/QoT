@@ -20,7 +20,7 @@ public class CMD_Kill extends TerminalCommand {
 	@Override public String getUsage() { return "ex: kill 0"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (Envision.theWorld == null) {
 			termIn.error("Current World is Null");
 			return;

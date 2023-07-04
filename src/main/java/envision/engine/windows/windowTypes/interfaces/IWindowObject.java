@@ -88,6 +88,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		preReInit();
 		properties().children.clear();
 		properties().childrenToBeAdded.clear();
+		properties().objectHeader = null;
 		initChildren();
 		postReInit();
 		properties().areChildrenInit = true;
@@ -560,14 +561,14 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	//--------
 	
 	/** Returns true if this object has a header. */
-	public default boolean hasHeader() { return getHeader() != null; }
+	public default boolean hasHeader() { return properties().objectHeader != null; }
 	/** If this object has a header, returns the header object, otherwise returns null. */
-	public default WindowHeader getHeader() {
-		for (var o : getCombinedChildren()) {
-			if (o instanceof WindowHeader h) return h;
-		}
-		return null;
-	}
+	public default WindowHeader getHeader() { return properties().objectHeader; }
+//		for (var o : getCombinedChildren()) {
+//			if (o instanceof WindowHeader h) return h;
+//		}
+//		return null;
+//	}
 	
 	//-------------------
 	// Size And Position
@@ -576,9 +577,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Returns the current dimensions of this object. */
 	public default Dimension_d getDimensions() { return instance().getDimensions(); }
 	/** Returns the current position of this object. */
-	public default Point2d getPosition() { return instance().getPosition(); }
+	public default Point2d getPosition() { return instance().getGuiPosition(); }
 	/** Returns the position this object will relocate to when reset. */
-	public default Point2d getInitialPosition() { return instance().getInitialPosition(); }
+	public default Point2d getInitialPosition() { return instance().getGuiInitialPosition(); }
 	/** Returns the minimum width and height that this object can have. */
 	public default Point2d getMinDims() { return instance().getMinDims(); }
 	/** Returns the maximum width and height that this object can have. */
@@ -597,7 +598,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Specifies this objects position, width, and height. (x, y, width, height) */
 	public default void setDimensions(double x, double y, double w, double h) { instance().setDimensions(x, y, w, h); }
 	/** Specifies the position this object will relocate to when its' position is reset. */
-	public default void setInitialPosition(double x, double y) { instance().setInitialPosition(x, y); }
+	public default void setInitialPosition(double x, double y) { instance().setGuiInitialPosition(x, y); }
 	/** Sets both the minimum width and height for this object. */
 	public default void setMinDims(double w, double h) { instance().setMinDims(w, h); }
 	/** Sets both the maximum width and height for this object. */
@@ -612,7 +613,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	public default void setMaxHeight(double h) { instance().setMaxHeight(h); }
 
 	/** Specifies this object's width and height based on the current starting position. */
-	public default void setSize(double widthIn, double heightIn) { instance().setSize(widthIn, heightIn); }
+	public default void setSize(double widthIn, double heightIn) { instance().setGuiSize(widthIn, heightIn); }
 	
 	/** Centers the object around the center of the screen with proper dimensions. */
 	public default void centerObjectWithSize(double w, double h) { instance().centerGuiWithSize(w, h); }
@@ -735,14 +736,17 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		if (top != null) top.setFocusedObject(this);
 	}
 	
-	/** Move this object and all of its children to the specified x and y coordinates.
-	 *  The specified position represents the top left corner of this object. All children
-	 *  will remain in their original positions relative to the parent object. */
+    /**
+     * Move this object and all of its children to the specified x and y
+     * coordinates. The specified position represents the top left corner of
+     * this object. All children will remain in their original positions
+     * relative to the parent object.
+     */
 	public default void setPosition(double newX, double newY) {
 		//only move this object and its children if it is move-able
 		if (!isMoveable()) return;
 		
-		Dimension_d d = getDimensions();		
+		Dimension_d d = getDimensions();
 		//the object's current position and relative clickArea for shorter code
 		var loc = new Box2<>(d.startX, d.startY);
 		
@@ -795,6 +799,11 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Returns a list of all objects that are going to be removed on the next draw cycle */
 	public default EList<IWindowObject> getRemovingChildren() { return properties().childrenToBeRemoved; }
 
+	/** Returns a list of all immediate children on this object that will be drawn. */
+	public default EList<IWindowObject> getVisibleChildren() {
+	    return getChildren().filter(c -> c.willBeDrawn());
+	}
+	
 	/** Returns a list of all children that descend from this parent. */
 	public default EList<IWindowObject> getAllChildren() {
 		EList<IWindowObject> foundObjs = EList.newList();
@@ -915,14 +924,14 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	 */
 	public default void addObject(IWindowObject... objs) {
 		for (var o : objs) {
-			//prevent null additions
+			// prevent null additions
 			if (o == null) continue;
-			//prevent self additions
+			// prevent self additions
 			if (o == this) continue;
-			//don't add if already being removed
+			// don't add if already being removed
 			if (getRemovingChildren().contains(o)) continue;
-			//don't add if the object is either being added or is already in the object
-			//this only goes 1 layer deep however!
+			// don't add if the object is either being added or is already in the object
+			// this only goes 1 layer deep however!
 			if (getCombinedChildren().contains(o)) {
 				System.out.println(this + " already contains " + o + "!");
 				continue;
@@ -931,23 +940,27 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 			try {
 				o.properties().isBeingAdded = true;
 				
-				//prevent multiple headers being added
-				if (o instanceof WindowHeader && hasHeader()) continue;
-				//if it's a window, do it's init
+				// prevent multiple headers being added
+				if (o instanceof WindowHeader h) {
+				    if (hasHeader()) continue;
+				    else properties().objectHeader = h;
+				}
+				
+				// if it's a window, do it's init
 				if (o instanceof WindowParent p && !o.isInitialized()) p.initWindow();
 				
-				//initialize all of the children's children
+				// initialize all of the children's children
 				o.setParent(this);
 				o.onPreInit();
 				o.initChildren();
 				o.onChildrenInit_i();
 				
-				//if the parent has a boundary enforcer, apply it to the child as well
+				// if the parent has a boundary enforcer, apply it to the child as well
 				if (isBoundaryEnforced()) o.setBoundaryEnforcer(getBoundaryEnforcer());
 				
-				//give the processed child to the parent so that it will be added
+				// give the processed child to the parent so that it will be added
 				getAddingChildren().add(o);
-				//tell the child that it has been fully initialized and that it is ready to be added on the next draw cycle
+				// tell the child that it has been fully initialized and that it is ready to be added on the next draw cycle
 				o.onInit_i();
 			}
 			catch (Exception e) {
@@ -964,6 +977,14 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	public default void removeObject(IWindowObject... objs) {
 		EUtil.filterNullForEach(objs, o -> o.properties().isBeingRemoved = true);
 		getRemovingChildren().add(objs);
+	}
+	
+    /**
+     * Returns a list combining the objects currently within within this
+     * object as well as the ones being added.
+     */
+	public default EList<IWindowObject> getCurrentCombinedChildren() {
+	    return EList.combineLists(getChildren(), getAddingChildren());
 	}
 	
 	/**
@@ -1170,16 +1191,19 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	 */
 	public default ScreenLocation getEdgeSideMouseIsOn() {
 		Dimension_d d = getDimensions();
-		boolean left = false, right = false, top = false, bottom = false;
 		double rStartY = hasHeader() ? getHeader().startY : d.startY;
 		int mX = Mouse.getMx();
 		int mY = Mouse.getMy();
 		
 		if (mX >= d.startX - 5 && mX <= d.endX + 5 && mY >= rStartY - 5 && mY <= d.endY + 4) {
+		    boolean left = false, right = false, top = false, bottom = false;
+		    
 			if (mX >= d.startX - 5 && mX <= d.startX) left = true;
-			if (mX >= d.endX - 4 && mX <= d.endX + 5) right = true;
+			else if (mX >= d.endX - 4 && mX <= d.endX + 5) right = true;
+			
 			if (mY >= rStartY - 6 && mY <= rStartY) top = true;
-			if (mY >= d.endY - 4 && mY <= d.endY + 4) bottom = true;
+			else if (mY >= d.endY - 4 && mY <= d.endY + 4) bottom = true;
+			
 			if (left) {
 				if (top) return ScreenLocation.TOP_LEFT;
 				else if (bottom) return ScreenLocation.BOT_LEFT;
@@ -1215,23 +1239,28 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	 */
 	public default boolean isMouseInside() {
 		//if the top renderer is being drawn and this object is not a child of the top renderer -- ignore
-		if (Envision.getTopScreen().hasFocus() && !isChildOf(Envision.getTopScreen())) return false;
+		//if (Envision.getTopScreen().hasFocus() && !isChildOf(Envision.getTopScreen())) return false;
 		
-		Dimension_d d = getDimensions();
-		int mX = Mouse.getMx();
-		int mY = Mouse.getMy();
+	    final WindowObject instance = instance();
+		final double startX = instance.startX;
+		final double startY = instance.startY;
+		final double endX = instance.endX;
+		final double endY = instance.endY;
+		
+		final int mX = Mouse.getMx();
+		final int mY = Mouse.getMy();
 		
 		// check if there is a boundary enforcer limiting the overall area
 		if (isBoundaryEnforced()) {
-			Dimension_d b = getBoundaryEnforcer();
-			return mX >= d.startX && mX >= b.startX &&
-				   mX <= d.endX && mX <= b.endX &&
-				   mY >= d.startY && mY >= b.startY &&
-				   mY <= d.endY && mY <= b.endY;
+			final Dimension_d b = getBoundaryEnforcer();
+			return mX >= startX && mX >= b.startX &&
+				   mX <= endX && mX <= b.endX &&
+				   mY >= startY && mY >= b.startY &&
+				   mY <= endY && mY <= b.endY;
 		}
 		
 		// otherwise just check if the mouse is within the object's boundaries
-		return mX >= d.startX && mX <= d.endX && mY >= d.startY && mY <= d.endY;
+		return mX >= startX && mX <= endX && mY >= startY && mY <= endY;
 	}
 	
 	/**

@@ -22,7 +22,7 @@ public class CMD_ForLoop extends TerminalCommand {
 	@Override public String getUsage() { return "ex: for 0-9-1 'cmd'"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.size() < 2) {
 			termIn.error("Not enought arguments for loop!");
 			termIn.info(getUsage());

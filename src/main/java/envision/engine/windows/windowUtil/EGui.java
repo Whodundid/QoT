@@ -131,7 +131,7 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	}
 	
 	/** Returns the ScreenLocation area the mouse is currently on for an object. */
-	public ScreenLocation getEdgeAreaMouseIsOn(int mX, int mY) {
+	public ScreenLocation getEdgeAreaMouseIsOnGui(int mX, int mY) {
 		boolean left = false, right = false, top = false, bottom = false;
 		if (mX >= startX - 5 && mX <= endX + 5 && mY >= startY - 5 && mY <= endY + 4) {
 			if (mX >= startX - 5 && mX <= startX) left = true;
@@ -154,16 +154,16 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 		return ScreenLocation.OUT;
 	}
 	
-	public boolean isMouseInside(int mX, int mY) {
+	public boolean isMouseInsideGui(int mX, int mY) {
 		return mX >= startX && mX <= endX && mY >= startY && mY <= endY;
 	}
 	
-	//---------
+	//=========
 	// Getters
-	//---------
+	//=========
 	
-	public Point2d getPosition() { return new Point2d(startX, startY); }
-	public Point2d getInitialPosition() { return new Point2d(startXPos, startYPos); }
+	public Point2d getGuiPosition() { return new Point2d(startX, startY); }
+	public Point2d getGuiInitialPosition() { return new Point2d(startXPos, startYPos); }
 	public Dimension_d getDimensions() { return new Dimension_d(startX, startY, endX, endY); }
 	
 	public Point2d getMinDims() { return new Point2d(minWidth, minHeight); }
@@ -177,9 +177,9 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	// Setters
 	//---------
 	
-	public void setPosition(double newX, double newY) { setDimensions(newX, newY, width, height); }
-	public void setInitialPosition(double xIn, double yIn) { startXPos = xIn; startYPos = yIn; }
-	public void setSize(double widthIn, double heightIn) { setDimensions(startX, startY, widthIn, heightIn); }
+	public void setGuiPosition(double newX, double newY) { setDimensions(newX, newY, width, height); }
+	public void setGuiInitialPosition(double xIn, double yIn) { startXPos = xIn; startYPos = yIn; }
+	public void setGuiSize(double widthIn, double heightIn) { setDimensions(startX, startY, widthIn, heightIn); }
 	
 	public void setDimensions(Dimension_d dimIn) { setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
 	public void setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {

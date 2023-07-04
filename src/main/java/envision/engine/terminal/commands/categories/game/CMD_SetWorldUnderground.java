@@ -24,7 +24,7 @@ public class CMD_SetWorldUnderground extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (Envision.theWorld == null) {
 			termIn.error("No world loaded!");
 			return;

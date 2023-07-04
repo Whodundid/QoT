@@ -19,7 +19,7 @@ public class CMD_HexToDec extends TerminalCommand {
 	@Override public String getUsage() { return "ex: h2d 0xff"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) { termIn.info(getUsage()); }
 		
 		String s = args.get(0);

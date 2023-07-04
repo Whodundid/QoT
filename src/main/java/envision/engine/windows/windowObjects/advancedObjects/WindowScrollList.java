@@ -14,6 +14,7 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventObjects;
 import eutil.colors.EColors;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
+import eutil.datatypes.points.Point2d;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
@@ -139,18 +140,17 @@ public class WindowScrollList<E> extends WindowObject {
 			objs.addAll(listObjsToBeAdded);
 			
 			for (var o : objs) {
-				if (o.isMoveable()) {
-					if (o instanceof WindowParent p) {
-						if (p.movesWithParent()) o.move(newX, newY);
-					}
-					else {
-						if (listContents.contains(o)) {
-							var initial = o.getInitialPosition();
-							o.setInitialPosition(initial.x + newX, initial.y + newY);
-						}
-						o.move(newX, newY);
-					}
-				}
+			    if (!o.isMoveable()) continue;
+			    if (o instanceof WindowParent p) {
+                    if (p.movesWithParent()) o.move(newX, newY);
+                }
+                else {
+                    if (listContents.contains(o)) {
+                        var initial = o.getInitialPosition();
+                        o.setInitialPosition(initial.x + newX, initial.y + newY);
+                    }
+                    o.move(newX, newY);
+                }
 			}
 			
 			startX += newX;
@@ -221,7 +221,10 @@ public class WindowScrollList<E> extends WindowObject {
 			double hScrollPos = hScroll.getScrollPos() - hScroll.getVisibleAmount();
 			
 			for (var o : EList.combineLists(listContents, listObjsToBeAdded)) {
-				o.setPosition(o.getInitialPosition().x - hScrollPos, o.getInitialPosition().y - vScrollPos);
+			    final Point2d initialPos = o.getInitialPosition();
+			    double scrollX = initialPos.x - hScrollPos;
+			    double scrollY = initialPos.y - vScrollPos;
+				o.setPosition(scrollX, scrollY);
 			}
 			
 			updateDrawnObjects();
@@ -242,9 +245,13 @@ public class WindowScrollList<E> extends WindowObject {
 	public void mouseScrolled(int change) {
 		if (allowScrolling) {
 			if (Keyboard.isShiftDown()) {
-				if (scrollableWidth - (width - 2) > 0) hScroll.setScrollPos(hScroll.getScrollPos() - change * 18);
+				if (scrollableWidth - (width - 2) > 0) {
+				    hScroll.setScrollPos(hScroll.getScrollPos() - change * 18);
+				}
 			}
-			else if (scrollableHeight - (height - 2) > 0) vScroll.setScrollPos(vScroll.getScrollPos() - change * 18);
+			else if (scrollableHeight - (height - 2) > 0) {
+			    vScroll.setScrollPos(vScroll.getScrollPos() - change * 18);
+			}
 		}
 		super.mouseScrolled(change);
 	}

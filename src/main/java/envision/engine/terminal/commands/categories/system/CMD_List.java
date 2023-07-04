@@ -60,7 +60,7 @@ public class CMD_List extends TerminalCommand {
         case "help":
         case "cmd":
         case "cmds":
-        case "commands": new CMD_Help().runCommand(term(), new EArrayList(), false); break;
+        case "commands": new CMD_Help().runCommand_i(term(), new EArrayList(), false); break;
         case "alias":
         case "aliases": listAliases(); break;
         default:

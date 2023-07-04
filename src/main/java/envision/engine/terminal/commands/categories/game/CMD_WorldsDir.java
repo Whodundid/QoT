@@ -25,7 +25,7 @@ public class CMD_WorldsDir extends TerminalCommand {
 	@Override public String getUsage() { return "ex: wdir"; }
 	
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.size() > 1) {
 			termIn.error("This command may only take one additional argument! (-c, -o)");
 		}

@@ -20,74 +20,75 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventKeyboard;
 import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
-import eutil.debug.Inefficient;
 import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
 public class StaticTopParent extends EGui {
 	
-	public static final EList<IWindowObject> emptyObjectList = EList.emptyUnmodifiableList();
+	public static final EList<IWindowObject> EMPTY_OBJECT_LIST = EList.emptyUnmodifiableList();
 	
-	//---------------------
+	//=====================
 	// Basic Input Methods
-	//---------------------
+	//=====================
 	
 	/** Notify the focused object that a mouse button was just pressed. */
 	public static void mousePressed(ITopParent objIn, int mX, int mY, int button, Deque<EventFocus> focusQueue) {
-		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.PRESSED)); //post an event
-		var underMouse = objIn.getHighestZObjectUnderMouse(); //get the highest object under the mouse
+	    //post an event
+		objIn.postEvent(new EventMouse(objIn, mX, mY, button, MouseType.PRESSED));
 		
-		if (objIn.getFocusLockObject() != null) { //first check if there is a focusLock
+		final IWindowObject underMouse = objIn.getHighestZObjectUnderMouse();
+		final IWindowObject focusedObject = objIn.getFocusedObject();
+		final IWindowObject focusLockObject = objIn.getFocusLockObject();
+		
+		//first check if there is a focusLock
+		if (focusLockObject != null) {
 			if (underMouse != null) { //if there is, then check if there is actually anything under the cursor
 				//allow focus to be passed to the object under the cursor if it is the focusLockObject, a child of the focusLockObject or an EGuiHeader
-				if (underMouse.equals(objIn.getFocusLockObject()) || underMouse.isChildOf(objIn.getFocusLockObject()) || underMouse instanceof WindowHeader) {
+				if (underMouse.equals(focusLockObject) || underMouse.isChildOf(focusLockObject) || underMouse instanceof WindowHeader) {
 					focusQueue.add(new EventFocus(objIn, underMouse, FocusType.MOUSE_PRESS, button, mX, mY));
 				}
 				else { //otherwise, annoy the user
-					if (objIn.getFocusLockObject() instanceof IWindowParent p) p.bringToFront();
-					objIn.getFocusLockObject().drawFocusLockBorder();
+					if (focusLockObject instanceof IWindowParent p) p.bringToFront();
+					focusLockObject.drawFocusLockBorder();
 				}
 			}
 			else { //otherwise, annoy the user
-				if (objIn.getFocusLockObject() instanceof IWindowParent p) p.bringToFront();
-				objIn.getFocusLockObject().drawFocusLockBorder();
+				if (focusLockObject instanceof IWindowParent p) p.bringToFront();
+				focusLockObject.drawFocusLockBorder();
 			}
 		}
-		else if (underMouse != null) { //if there is no lock, check if there was actually an object under the cursor
+		//if there is no lock, check if there was actually an object under the cursor
+		else if (underMouse != null) {
 			//check if the object is the focused object, if it is, pass the event to it, otherwise, start a focus request
-			if (underMouse.equals(objIn.getFocusedObject())) {
+			if (underMouse.equals(focusedObject)) {
 				
-				var focused = objIn.getFocusedObject();
-				focused.mousePressed(mX, mY, button);
+			    focusedObject.mousePressed(mX, mY, button);
 				boolean dclicked = false;
 				
 				//check if the object was recently pressed and is eligible for a double click event
 				if (button == 0) {
 					var lastClicked = objIn.getLastClickedChild();
-					if (lastClicked == focused) {
+					if (lastClicked == focusedObject) {
 						long clickTime = objIn.getLastChildClickTime();
 						
 						if (System.currentTimeMillis() - clickTime <= 200) {
-							focused.onDoubleClick();
+						    focusedObject.onDoubleClick();
 							dclicked = true;
 						}
 					}
 				}
 				
-				objIn.setLastClickedChild(focused);
+				objIn.setLastClickedChild(focusedObject);
 				if (dclicked) objIn.setLastChildClickTime(0);
 				else objIn.setLastChildClickTime(System.currentTimeMillis());
 			}
 			else focusQueue.add(new EventFocus(objIn, underMouse, FocusType.MOUSE_PRESS, button, mX, mY));
 		}
-		else { //there was no lock and there was nothing under the cursor
+		//there was no lock and there was nothing under the cursor
+		else {
 			objIn.clearFocusedObject();
-			if (button == 1) { //open a right click menu if the right mouse button was pressed
-				//Envision.displayWindow(new RendererRCM(), CenterType.cursorCorner);
-			}
 		}
 	}
 	
@@ -107,8 +108,12 @@ public class StaticTopParent extends EGui {
 		
 		//pass the event to the focused object, if it exists and if it isn't the parent itself
 		//if (objIn.getFocusedObject() != null && objIn.getFocusedObject() != objIn) objIn.getFocusedObject().mouseReleased(mX, mY, button);
-		if (objIn.getModifyType() == ObjectModifyType.RESIZE) objIn.clearModifyingObject(); //stop resizing windows when the mouse isn't pressed
-		if (objIn.getDefaultFocusObject() != null) objIn.getDefaultFocusObject().requestFocus(); //transfer focus back to the defaultFocusObject, if it exists
+		
+		//stop resizing windows when the mouse isn't pressed
+		if (objIn.getModifyType() == ObjectModifyType.RESIZE) objIn.clearModifyingObject();
+		
+		//transfer focus back to the defaultFocusObject, if it exists
+		if (objIn.getDefaultFocusObject() != null) objIn.getDefaultFocusObject().requestFocus(); 
 	}
 	
 	/** Notify the focused object that the mouse was just dragged. */
@@ -122,15 +127,15 @@ public class StaticTopParent extends EGui {
 		objIn.postEvent(new EventMouse(objIn, mX, mY, -1, MouseType.SCROLLED));
 		
 		var highest = objIn.getHighestZObjectUnderMouse();
-		//if there are actually any objects under the mouse
-		if (highest != null) {
-			var obj = highest;
-			var p = obj.getWindowParent();
-			
-			//only scroll the top most window under the mouse
-			if (p != null) p.mouseScrolled(change);
-			else obj.mouseScrolled(change);
-		}
+		// check if there are actually any objects under the mouse
+		if (highest == null) return;
+		
+		var obj = highest;
+        var p = obj.getWindowParent();
+        
+        //only scroll the top most window under the mouse
+        if (p != null) p.mouseScrolled(change);
+        else obj.mouseScrolled(change);
 	}
 	
 	/** Notify the focused object that the keyboard just had a key pressed. */
@@ -149,108 +154,106 @@ public class StaticTopParent extends EGui {
 		if (fo != null && fo != objIn) fo.keyReleased(typedChar, keyCode);
 	}
 	
-	//-----------------
+	//=================
 	// Drawing Methods
-	//-----------------
+	//=================
 
 	/** Debug method used to display topParent information in the top left corner of the screen. */
 	public static void drawDebugInfo(ITopParent objIn) {
-		if (Envision.isDebugMode() && objIn == Envision.getTopScreen()) {
-			var top = Envision.getActiveTopParent();
-			
-			double yPos = 40;
-			double xPos = 3;
-			
-			TaskBar bar = Envision.getTopScreen().getTaskBar();
-			if (bar != null && !bar.isHidden() && bar.willBeDrawn()) {
-				yPos = bar.endY + 6;
-			}
-			
-			var modObj = (top != null) ? top.getModifyingObject() : null;
-			var modType = (top != null) ? top.getModifyType() : null;
-			var lastClickObj = (top != null) ? top.getLastClickedChild() : null;
-			var lastClickTime = (top != null) ? top.getLastChildClickTime() : null;
-			var focusedObj = (top != null) ? top.getFocusedObject() : null;
-			var ho = (top != null) ? top.getHighestZObjectUnderMouse() : null;
-			var focusLockObj = (top != null) ? top.getFocusLockObject() : null;
-			
-			String out = "null";
-			int zLevel = (ho instanceof IWindowParent wp) ? wp.getZLevel() : -1;
-			
-			String topParent = "TopParent: " + top;
-			String focusedObject = "";
-			String focusLockObject = "";
-			//String objects = "objs: " + objIn.getObjects();
-			String modifyType = "ModifyingObject & type: (" + modObj + " : " + modType + ")";
-			String underMouse = "Object under mouse: " + (ho != null ? ho : out) + " " + zLevel;
-			String lastClicked = "Last clicked object: " + lastClickObj + " : " + lastClickTime;
-			String mousePos = "Mouse pos: (" + Mouse.getMx() + ", " + Mouse.getMy() + ")";
-			
-			if (objIn.getFocusedObject() instanceof WindowButton b) {
-				focusedObject = "FocuedObject: " + (b.getString().isEmpty() ? b : "EGuiButton: " + b.getString());
-			}
-			else focusedObject = "FocuedObject: " + focusedObj;
-			
-			if (objIn.getFocusLockObject() instanceof WindowButton b) {
-				focusLockObject = "FocusLockObject: " + (b.getString().isEmpty() ? b : "EGuiButton: " + b.getString());
-			}
-			else focusLockObject = "FocusLockObject: " + focusLockObj;
-			
-			if (ho != null) out = ho.getClass().getName();
-			
-			double longestX = strWidth(topParent);
-			
-			if (strWidth(focusedObject) > longestX) 		longestX = strWidth(focusedObject);
-			if (strWidth(focusLockObject) > longestX) 	longestX = strWidth(focusLockObject);
-			//if (stringWidth(objects) > longestX)	 	longestX = stringWidth(objects);
-			if (strWidth(modifyType) > longestX) 			longestX = strWidth(modifyType);
-			if (strWidth(underMouse) > longestX) 			longestX = strWidth(underMouse);
-			if (strWidth(lastClicked) > longestX) 		longestX = strWidth(lastClicked);
-			if (strWidth(mousePos) > longestX) 			longestX = strWidth(mousePos);
-			
-			longestX += 5;
-			
-			//draw background
-			//drawRect(xPos, yPos - 3, longestX + 1, yPos + 141, EColors.black.opacity(100));
-			drawRect(xPos + 1, yPos - 2, longestX, yPos + 140, EColors.dgray.opacity(150));
-			
-			//--------------------------------------------------------------------------------
-			
-			//draw what the topParent is
-			drawString(topParent, xPos + 3, yPos, EColors.pink.opacity(190));
-			
-			//draw the currently focused object - if it's a button, show that too
-			drawString(focusedObject, xPos + 3, yPos + 20, EColors.cyan.opacity(190));
-			
-			//draw the current focusLockObject - if it's a button, show that too
-			drawString(focusLockObject, xPos + 3, yPos + 40, EColors.yellow.opacity(190));
-			
-			//draw the topParent's current immediate children
-			//drawStringWithShadow(objects, 2, yPos + 30, 0x70f3ff);
-			
-			//draw the topParent's current modifying object and type
-			drawString(modifyType, xPos + 3, yPos + 60, EColors.lime.opacity(190));
-			
-			//draw the highest object currently under the mouse
-			drawString(underMouse, xPos + 3, yPos + 80, EColors.changeOpacity(0xffffbb00, 190));
-			
-			//draw the last clicked object
-			drawString(lastClicked, xPos + 3, yPos + 100, EColors.seafoam.opacity(190));
-			
-			//draw the current mouse position
-			drawString(mousePos, xPos + 3, yPos + 120, EColors.lgray.opacity(190));
-			
-			//draw escape stopper
-			//drawStringWithShadow("EscapeStopper: " + objIn.getEscapeStopper(), 2, 72, 0x70f3ff);
-			
-			//--------------------------------------------------------------------------------
-			
-		}
+	    if (!Envision.isDebugMode()) return;
+	    if (objIn != Envision.getTopScreen()) return;
+	    
+        var top = Envision.getActiveTopParent();
+        
+        double yPos = 40;
+        double xPos = 3;
+        
+        TaskBar bar = Envision.getTopScreen().getTaskBar();
+        if (bar != null && !bar.isHidden() && bar.willBeDrawn()) {
+            yPos = bar.endY + 6;
+        }
+        
+        var modObj = (top != null) ? top.getModifyingObject() : null;
+        var modType = (top != null) ? top.getModifyType() : null;
+        var lastClickObj = (top != null) ? top.getLastClickedChild() : null;
+        var lastClickTime = (top != null) ? top.getLastChildClickTime() : null;
+        var focusedObj = (top != null) ? top.getFocusedObject() : null;
+        var ho = (top != null) ? top.getHighestZObjectUnderMouse() : null;
+        var focusLockObj = (top != null) ? top.getFocusLockObject() : null;
+        
+        String out = "null";
+        int zLevel = (ho instanceof IWindowParent wp) ? wp.getZLevel() : -1;
+        
+        String topParent = "TopParent: " + top;
+        String focusedObject = "";
+        String focusLockObject = "";
+        //String objects = "objs: " + objIn.getObjects();
+        String modifyType = "ModifyingObject & type: (" + modObj + " : " + modType + ")";
+        String underMouse = "Object under mouse: " + (ho != null ? ho : out) + " " + zLevel;
+        String lastClicked = "Last clicked object: " + lastClickObj + " : " + lastClickTime;
+        String mousePos = "Mouse pos: (" + Mouse.getMx() + ", " + Mouse.getMy() + ")";
+        
+        if (objIn.getFocusedObject() instanceof WindowButton b) {
+            focusedObject = "FocuedObject: " + (b.getString().isEmpty() ? b : "EGuiButton: " + b.getString());
+        }
+        else focusedObject = "FocuedObject: " + focusedObj;
+        
+        if (objIn.getFocusLockObject() instanceof WindowButton b) {
+            focusLockObject = "FocusLockObject: " + (b.getString().isEmpty() ? b : "EGuiButton: " + b.getString());
+        }
+        else focusLockObject = "FocusLockObject: " + focusLockObj;
+        
+        if (ho != null) out = ho.getClass().getName();
+        
+        double longestX = strWidth(topParent);
+        
+        if (strWidth(focusedObject) > longestX)         longestX = strWidth(focusedObject);
+        if (strWidth(focusLockObject) > longestX)   longestX = strWidth(focusLockObject);
+        //if (stringWidth(objects) > longestX)      longestX = stringWidth(objects);
+        if (strWidth(modifyType) > longestX)            longestX = strWidth(modifyType);
+        if (strWidth(underMouse) > longestX)            longestX = strWidth(underMouse);
+        if (strWidth(lastClicked) > longestX)       longestX = strWidth(lastClicked);
+        if (strWidth(mousePos) > longestX)          longestX = strWidth(mousePos);
+        
+        longestX += 5;
+        
+        //draw background
+        //drawRect(xPos, yPos - 3, longestX + 1, yPos + 141, EColors.black.opacity(100));
+        drawRect(xPos + 1, yPos - 2, longestX, yPos + 140, EColors.dgray.opacity(150));
+        
+        //--------------------------------------------------------------------------------
+        
+        //draw what the topParent is
+        drawString(topParent, xPos + 3, yPos, EColors.pink.opacity(190));
+        
+        //draw the currently focused object - if it's a button, show that too
+        drawString(focusedObject, xPos + 3, yPos + 20, EColors.cyan.opacity(190));
+        
+        //draw the current focusLockObject - if it's a button, show that too
+        drawString(focusLockObject, xPos + 3, yPos + 40, EColors.yellow.opacity(190));
+        
+        //draw the topParent's current immediate children
+        //drawStringWithShadow(objects, 2, yPos + 30, 0x70f3ff);
+        
+        //draw the topParent's current modifying object and type
+        drawString(modifyType, xPos + 3, yPos + 60, EColors.lime.opacity(190));
+        
+        //draw the highest object currently under the mouse
+        drawString(underMouse, xPos + 3, yPos + 80, EColors.changeOpacity(0xffffbb00, 190));
+        
+        //draw the last clicked object
+        drawString(lastClicked, xPos + 3, yPos + 100, EColors.seafoam.opacity(190));
+        
+        //draw the current mouse position
+        drawString(mousePos, xPos + 3, yPos + 120, EColors.lgray.opacity(190));
+        
+        //draw escape stopper
+        //drawStringWithShadow("EscapeStopper: " + objIn.getEscapeStopper(), 2, 72, 0x70f3ff);
 	}
 	
-	//----------------
+	//================
 	// Object Methods
-	//----------------
+	//================
 	
 	/** Returns the object with the highest z level, this could even be the topParent itself. */
 	public static IWindowObject getHighestZLevelObject(ITopParent objIn) {
@@ -314,7 +317,7 @@ public class StaticTopParent extends EGui {
 	}
 	
 	public static void removeAllObjects(ITopParent objIn) {
-		//check in both the current objects and the objects that will be added
+		// check in both the current objects and the objects that will be added
 		for (var p : objIn.getCombinedChildren()) {
 			var childObjects = p.getAllChildren();
 			for (int i = childObjects.size() - 1; i >= 0; i--) {
@@ -326,17 +329,17 @@ public class StaticTopParent extends EGui {
 	
 	/** Returns true if there are any pinned windows within the specified topParent. */
 	public static boolean hasPinnedObjects(ITopParent objIn) {
-		//check in both the current objects and the objects that will be added
+		// check in both the current objects and the objects that will be added
 		for (var o : objIn.getCombinedChildren()) {
-			//only windows can be pinned
+			// only windows can be pinned
 			if (o instanceof IWindowParent wp && wp.isPinned()) return true;
 		}
 		return false;
 	}
 	
-	//---------------
+	//===============
 	// Focus Methods
-	//---------------
+	//===============
 	
 	/** Removes any object that possesses a focus lock on the specified topParent. */
 	public static void clearFocusLockObject(ITopParent objIn) {
@@ -365,60 +368,68 @@ public class StaticTopParent extends EGui {
 	
 	/** Method used to process focus events that are present in the specified topParent. */
 	public static void updateFocus(ITopParent objIn, Deque<EventFocus> focusQueue) {
-		//remove any lingering focused objects if they are no longer within in the parent
+		// remove any lingering focused objects if they are no longer within in the parent
 		var children = objIn.getAllChildren();
 		if (objIn.getFocusedObject() != null && !children.contains(objIn.getFocusedObject())) objIn.clearFocusedObject();
 		if (objIn.getFocusLockObject() != null && !children.contains(objIn.getFocusLockObject())) objIn.clearFocusLockObject();
 		if (objIn.getDefaultFocusObject() != null && !children.contains(objIn.getDefaultFocusObject())) objIn.setDefaultFocusObject(null);
 		
-		//don't process any events if there aren't any to process
-		if (!focusQueue.isEmpty()) {
-			EventFocus event = focusQueue.pop();
-			
-			if (event.getFocusObject() != null) {
-				IWindowObject obj = event.getFocusObject();
-				if (children.contains(obj)) { //only allow object which are a part of the parent to request focus from the parent
-					
-					if (objIn.doesFocusLockExist()) { //check for a focus lock and, if it exists, only allow focus to transfer to headers or the focusLockObject
-						if (obj.equals(objIn.getFocusLockObject()) || obj.isChildOf(objIn.getFocusLockObject()) || obj instanceof WindowHeader) {
-							passFocus(objIn, objIn.getFocusedObject(), obj, event);
-						}
-						else if (objIn.getFocusedObject() != objIn.getFocusLockObject()) {
-							passFocus(objIn, objIn.getFocusedObject(), objIn.getFocusLockObject(), new EventFocus(objIn, objIn.getFocusLockObject(), FocusType.DEFAULT_FOCUS_OBJECT));
-						}
-					}
-					else {
-						//if there is already an object in focus, transfer the focus to the requesting object
-						if (objIn.getFocusedObject() != null) passFocus(objIn, objIn.getFocusedObject(), obj, event);
-						else {
-							//otherwise, pass focus to a defaultFocusObject, if there is one, else pass it back to the topParent
-							if (objIn.getDefaultFocusObject() != null) passFocus(objIn, objIn.getFocusedObject(), objIn.getDefaultFocusObject(), event);
-							else passFocus(objIn, objIn.getFocusedObject(), objIn, event);
-						}
-					}
-				}
-				else { //the object is the topParent itself
-					passFocus(objIn, objIn.getFocusedObject(), objIn, event);
-				}
-			}
+		// defining this after we have cleared out old objects
+		final IWindowObject focusedObject = objIn.getFocusedObject();
+		final IWindowObject focusLockObject = objIn.getFocusLockObject();
+		final IWindowObject defaultFocusObject = objIn.getDefaultFocusObject();
+		
+		// don't process any events if there aren't any to process
+		if (focusQueue.isEmpty()) {
+		    if (focusedObject == null) {
+		        passFocus(objIn, focusedObject, objIn, new EventFocus(objIn, objIn, FocusType.DEFAULT_FOCUS_OBJECT));
+		    }
+		    return;
 		}
-		else if (objIn.getFocusedObject() == null) {
-			passFocus(objIn, objIn.getFocusedObject(), objIn, new EventFocus(objIn, objIn, FocusType.DEFAULT_FOCUS_OBJECT));
-		}
+		
+		EventFocus event = focusQueue.pop();
+		// don't care if there's no focus event
+        if (event.getFocusObject() == null) return;
+		
+        IWindowObject obj = event.getFocusObject();
+        
+        // only allow object which are a part of the parent to request focus from the parent
+        if (children.notContains(obj)) {
+            // the object is the topParent itself
+            passFocus(objIn, focusedObject, objIn, event);
+            return;
+        }
+        
+        // check for a focus lock and, if it exists, only allow focus to transfer to headers or the focusLockObject
+        if (objIn.doesFocusLockExist()) {
+            if (obj.equals(focusLockObject) || obj.isChildOf(focusLockObject) || obj instanceof WindowHeader) {
+                passFocus(objIn, focusedObject, obj, event);
+            }
+            else if (focusedObject != focusLockObject) {
+                passFocus(objIn, focusedObject, focusLockObject, new EventFocus(objIn, focusLockObject, FocusType.DEFAULT_FOCUS_OBJECT));
+            }
+            return;
+        }
+        
+        // if there is already an object in focus, transfer the focus to the requesting object
+        if (focusedObject != null) passFocus(objIn, focusedObject, obj, event);
+        // otherwise, pass focus to a defaultFocusObject, if there is one
+        else if (defaultFocusObject != null) passFocus(objIn, focusedObject, defaultFocusObject, event);
+        // else pass it back to the topParent
+        else passFocus(objIn, focusedObject, objIn, event);
 	}
 	
-	/** Internal method used to quickly transfer focus from old object to new object. */
+	/** Internal method used to quickly transfer focus from previous object to new object. */
 	private static void passFocus(ITopParent par, IWindowObject from, IWindowObject to, EventFocus event) {
 		if (from != null) from.onFocusLost(event);
 		par.setFocusedObject(to);
 		to.onFocusGained(event);
 	}
 	
-	//--------------
+	//==============
 	// Mouse Checks
-	//--------------
+	//==============
 	
-	//mouse checks
 	/** Returns true if the mouse is over any object edge. */
 	public static boolean isMouseOnObjEdge(ITopParent objIn) {
 		return getEdgeAreaMouseIsOn(objIn) != ScreenLocation.OUT;
@@ -431,7 +442,8 @@ public class StaticTopParent extends EGui {
 			ScreenLocation loc = o.getEdgeSideMouseIsOn();
 			if (loc != ScreenLocation.OUT) return loc;
 		}
-		return ScreenLocation.OUT; //otherwise, return out becuse it wasn't under an object edge
+		//otherwise, return out because it wasn't under an object edge
+		return ScreenLocation.OUT;
 	}
 	
 	/** Returns true if the cursor is currently inside an EGuiHeader object. */
@@ -442,76 +454,124 @@ public class StaticTopParent extends EGui {
 		return false;
 	}
 	
+	/** Returns the first window header found under the mouse (if there is one). */
 	public static WindowHeader getHeaderUnderMouse(ITopParent objIn) {
-		return (WindowHeader) EUtil.getFirst(objIn.getAllChildrenUnderMouse(), o -> (o instanceof WindowHeader));
+		return (WindowHeader) objIn.getAllChildrenUnderMouse().getFirst(o -> o instanceof WindowHeader);
 	}
 	
 	/** Returns the object that has the highest z level under the cursor. */
-	@Inefficient(reason="HORRIBLY INEFFICIENT!")
 	public static IWindowObject getHighestZObjectUnderMouse(ITopParent objIn) {
-		try {
-			BoxList<IWindowObject, EList<IWindowObject>> sortedByParent = new BoxList<>();
-			var underMouse = objIn.getAllObjectsUnderMouse();
-			
-			//first setup the sorted list
-			for (int i = objIn.getChildren().size() - 1; i >= 0; i--) {
-				sortedByParent.add(objIn.getChildren().get(i), EList.newList());
-			}
-			
-			//next iterate through each of the objects found under the mouse and add them to the corresponding parents
-			for (var o : underMouse) {
-				for (int i = 0; i < sortedByParent.size(); i++) {
-					var parent = sortedByParent.getA(i);
-					if (o.equals(parent) || parent.getAllChildren().contains(o)) sortedByParent.getB(i).add(o);
-				}
-			}
-			
-			//next iterate through each of the sorted parent's found objects to see if they are the highest object
-			for (var box : sortedByParent) {
-				if (box.getB().isEmpty()) continue;
-				
-				//get the last object (which should be the highest object)
-				var objects = box.getB();
-				return objects.getLast();
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return null;
+        var objectsUnderMouse = objIn.getAllObjectsUnderMouse();
+        
+        if (objectsUnderMouse.isEmpty()) return null;
+        IWindowObject highestObject = objectsUnderMouse.getLast();
+        
+        EList<IWindowObject> childrenUnderMouse = getChildrenUnderMouseForObject(highestObject);
+        if (childrenUnderMouse.isEmpty()) return highestObject;
+        highestObject = childrenUnderMouse.getLast();
+        
+        return highestObject;
+	}
+	
+    /**
+     * Returns a list of all children that are under the mouse cursor for the
+     * given object.
+     * 
+     * @param objIn The parent object
+     * 
+     * @return the children of the parent object that are under the mouse
+     */
+	public static EList<IWindowObject> getChildrenUnderMouseForObject(IWindowObject objIn) {
+	    // find all children that are visible, we need all of them because all children
+	    // may not directly be within the bounds of the parent object.
+        EList<IWindowObject> children = objIn.getAllVisibleChildren();
+        EList<IWindowObject> underMouse = EList.newList();
+        
+        for (var o : children) {
+            if (isObjectUnderMouse(o)) {
+                underMouse.add(o);
+            }
+        }
+	    
+	    return underMouse;
+	}
+	
+    /**
+     * Returns true if the given object meets any of the possible conditions
+     * that constitute it being under the mouse.
+     * <p>
+     * In order for an object to be under the mouse, it must meet all of the
+     * following requirements:
+     * <ul>
+     *      <li> 1. The object is going to be drawn (not hidden)
+     *      <li> 2. The object is clickable or there is at least hover text available for it
+     *      <li> 3. If the object is a window, the window is not minimized
+     * </ul>
+     * <p>
+     * In addition to the previous requirements, the possible conditions that
+     * permit an object to be declared as 'under the mouse' are as follows:
+     * <ul>
+     *      <li> 1. The cursor's position is within the object's bounds
+     *      <li> 2. The object is a non-maximized, resizable window and the cursor is
+     *              on one of the window's edges
+     *      <li> 3. The object has a header and the cursor is inside of the header
+     *      <li> 4. The object must not be in a minimized parent window
+     * </ul>
+     * 
+     * @param o The object to check for being under the mouse or not
+     * 
+     * @return true if all requirements and any condition is met for being under the mouse
+     */
+    public static boolean isObjectUnderMouse(IWindowObject o) {
+        if (!o.willBeDrawn()) return false;
+        if (!o.isClickable() && o.getHoverText() == null) return false;
+        if (o instanceof IWindowParent wp && wp.isMinimized()) return false;
+        
+        final boolean mouseInside = o.isMouseInside();
+        final boolean resizable = o.isResizeable();
+        final boolean mouseOnEdge = o.isMouseOnEdge(Mouse.getMx(), Mouse.getMy());
+        final boolean onResizableObjectEdge = resizable && mouseOnEdge;
+        
+        final WindowHeader header = o.getHeader();
+        final boolean hasHeader = header != null;
+        final boolean inHeader = (hasHeader) ? isObjectUnderMouse(header) : false;
+        
+        if (o instanceof IWindowParent wp) {
+            final boolean isMaximizedTop = wp.getMaximizedPosition() == ScreenLocation.TOP;
+            final boolean windowBeResized = onResizableObjectEdge && !isMaximizedTop;
+            
+            //then check if the mouse is in or around the object if it's resizeable
+            if (mouseInside || windowBeResized || inHeader) return true;
+        }
+        //then check if the mouse is in or around the object if it's resizeable
+        else if (mouseInside || onResizableObjectEdge || inHeader) {
+            final var wp = o.getWindowParent();
+            
+            if (wp == null || !wp.isMinimized()) return true;
+        }
+        
+        return false;
 	}
 	
 	/** Returns a list of all objects that currently under the cursor. */
 	public static EList<IWindowObject> getAllObjectsUnderMouse(ITopParent objIn) {
-		if (!objIn.willBeDrawn()) return emptyObjectList;
+	    // if the given top object isn't going to be drawn, then nothing is under the mouse
+		if (!objIn.willBeDrawn()) return EMPTY_OBJECT_LIST;
 		
+		// don't care if resizing -- don't check if an object is being resized
+		if (objIn.getModifyType() == ObjectModifyType.RESIZE) return EMPTY_OBJECT_LIST;
+		
+		// The list to return
 		EList<IWindowObject> underMouse = EList.newList();
-		EList<IWindowObject> children = objIn.getAllVisibleChildren();
 		
-		int mX = Mouse.getMx();
-		int mY = Mouse.getMy();
+		// find all children
+		EList<IWindowObject> children = objIn.getVisibleChildren();
 		
-		//don't check if an object is being resized
-		if (objIn.getModifyType() != ObjectModifyType.RESIZE) {
-			
-			for (var o : children) {
-				if (!o.willBeDrawn()) continue;
-				if (o instanceof IWindowParent wp && wp.isMinimized()) continue;
-				if (!o.isClickable() && o.getHoverText() == null) continue;
-				
-				if (o instanceof IWindowParent wp) {
-					//then check if the mouse is in or around the object if it's resizeable
-					if (o.isMouseInside() || ((o.isResizeable() && o.isMouseOnEdge(mX, mY)) && !(wp.getMaximizedPosition() == ScreenLocation.TOP))) {
-						underMouse.add(o);
-					}
-				}
-				//then check if the mouse is in or around the object if it's resizeable
-				else if (o.isMouseInside() || (o.isResizeable() && o.isMouseOnEdge(mX, mY))) {
-					var wp = o.getWindowParent();
-					if (wp == null || !wp.isMinimized()) underMouse.add(o);
-				}
-			} //for
+		// get all immediately visible children
+		for (IWindowObject visibleChild : children) {
+		    if (isObjectUnderMouse(visibleChild)) {
+                underMouse.add(visibleChild);
+            }
 		}
 		
 		return underMouse;

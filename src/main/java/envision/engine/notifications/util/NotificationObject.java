@@ -56,13 +56,13 @@ public abstract class NotificationObject extends WindowParent {
 		drawRect(endX - 1, startY, endX, endY, 0xff000000); //right border
 		drawRect(startX + 1, startY, endX - 1, startY + 1, 0xff000000); //top border
 		
-		int inColor = isMouseInside(mXIn, mYIn) ? 0xff2b2b2b : 0xbb2b2b2b;
+		int inColor = isMouseInsideGui(mXIn, mYIn) ? 0xff2b2b2b : 0xbb2b2b2b;
 		drawRect(startX + 1, startY + 1, endX - 1, endY - 1, inColor); //background
 		
-		if (!isMouseInside(mXIn, mYIn)) checkTime();
+		if (!isMouseInsideGui(mXIn, mYIn)) checkTime();
 		else if (!moving) birthTime = System.currentTimeMillis();
 		
-		close.setVisible(isMouseInside(mXIn, mYIn));
+		close.setVisible(isMouseInsideGui(mXIn, mYIn));
 		
 		calcPos();
 		super.drawObject(mXIn, mYIn);

@@ -19,7 +19,7 @@ public class CMD_WhoAmI extends TerminalCommand {
 	@Override public String getHelpInfo(boolean runVisually) { return "Provides user info on the current player."; }
 
 	@Override
-	public void runCommand(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			var user = Envision.getCurrentUser();
 			termIn.writeln(((user.isDev()) ? EColors.purple : EColors.lgray), user);
