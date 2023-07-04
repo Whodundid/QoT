@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>whodundid</groupId>
 			<artifactId>EUtil</artifactId>
-			<version>2.5.0</version>
+			<version>2.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>whodundid</groupId>
