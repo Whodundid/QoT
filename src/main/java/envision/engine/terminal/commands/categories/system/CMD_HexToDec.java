@@ -1,7 +1,6 @@
 package envision.engine.terminal.commands.categories.system;
 
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -10,7 +9,7 @@ public class CMD_HexToDec extends TerminalCommand {
 	
 	public CMD_HexToDec() {
 		setCategory("System");
-		expectedArgLength = 0;
+		expectedArgLength = 1;
 	}
 	
 	@Override public String getName() { return "hextodec"; }
@@ -19,16 +18,16 @@ public class CMD_HexToDec extends TerminalCommand {
 	@Override public String getUsage() { return "ex: h2d 0xff"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { termIn.info(getUsage()); }
-		
-		String s = args.get(0);
+	public void runCommand() {
+	    expectAtLeast(1);
+	    
+		String s = firstArg();
 		s = (s.startsWith("0x")) ? s.substring(2) : s;
 		
 		System.out.println(0xff00ffff);
 		
 		long val = Long.parseLong(s, 16);
-		termIn.writeln(val, EColors.aquamarine);
+		writeln(val, EColors.aquamarine);
 	}
 	
 }

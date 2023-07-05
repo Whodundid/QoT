@@ -4,7 +4,7 @@ import envision.Envision;
 import envision.engine.screens.GameScreen;
 import envision.engine.screens.ScreenRepository;
 import envision.engine.terminal.TerminalCommandHandler;
-import envision.engine.terminal.commands.IListableCommand;
+import envision.engine.terminal.commands.ListableCommand;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.commands.categories.engine.CMD_Help;
 import envision.engine.terminal.window.ETerminalWindow;
@@ -39,7 +39,7 @@ public class CMD_List extends TerminalCommand {
 	@Override
 	public void runCommand() {
 		if (args().isEmpty()) {
-			if (visually()) writeln("objects, windows, screens, commands, aliases", EColors.green);
+			if (runVisually()) writeln("objects, windows, screens, commands, aliases", EColors.green);
 			else info(getUsage());
 			return;
 		}
@@ -67,19 +67,26 @@ public class CMD_List extends TerminalCommand {
             boolean found = false;
             
             try {
+                String name = firstArg().toLowerCase();
+                
+                if (name == null) {
+                    error("list type is somehow null!");
+                    return;
+                }
+
                 //check if the input is a listable command
                 for (TerminalCommand c : Envision.getTerminalHandler().getCommandList()) {
-                    String name = firstArg().toLowerCase();
                     
-                    if (name != null && c != null && c.getAliases() != null) {
-                        if (name.equals(c.getName()) || c.getAliases().contains(name)) {
-                            if (c instanceof IListableCommand listable) {
-                                found = true;
-                                listable.list(term(), args(), visually());
-                            }
-                        }
-                    }
+                    if (c == null) continue;
+                    if (!(c instanceof ListableCommand)) continue;
+                    if (!c.matchesNameOrAlias(name)) return;
                     
+                    found = true;
+                    
+                    // display listable command
+                    displayListableCommand((ListableCommand) c);
+                    
+                    break;
                 }
                 
                 if (!found) error("Unrecognized list type!");
@@ -90,9 +97,25 @@ public class CMD_List extends TerminalCommand {
         }
 	}
 	
+//	private ListableCommand findListableCommandFromInput(String input) {
+//	    
+//	}
+	
+	private void displayListableCommand(ListableCommand listable) {
+	    if (listable.hasCustomizedListDisplay()) {
+            listable.displayList(term());
+        }
+        else {
+            EList<String> theList = listable.getList();
+            for (String s : theList) {
+                writeln(s);
+            }
+        }
+	}
+	
 	private void listObjects() {
 		writeln("Listing all current objects in this top renderer\n", EColors.lgreen);
-		if (visually()) {
+		if (runVisually()) {
 			int grandTotal = 0; //this isn't completely right tree wise, but whatever
 			for (var obj : term().getTopParent().getChildren()) {
 				writeln(String.format("%3d : %s", obj.getObjectID(), obj.toString()), EColors.green);

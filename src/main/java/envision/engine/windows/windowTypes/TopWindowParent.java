@@ -18,7 +18,6 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyTyp
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import envision.engine.windows.windowUtil.windowEvents.events.EventObjects;
 import envision.engine.windows.windowUtil.windowEvents.events.EventRedraw;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;
@@ -35,6 +34,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	protected IWindowObject toFront, toBack;
 	protected IWindowObject hoveringTextObject;
 	protected IWindowObject escapeStopper;
+	protected DragAndDropObject dragAndDropObject;
 	protected Point2i mousePos = new Point2i();
 	protected Point2i oldMousePos = new Point2i();
 	protected Deque<EventFocus> focusQueue = new ArrayDeque<>();
@@ -50,7 +50,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	protected long lastClickTime = 0l;
 	protected long doubleClickThreshold = 500l;
 	
-	private final EList<IWindowParent> highlightedWindows = new EArrayList<>();
+	private final EList<IWindowParent> highlightedWindows = EList.newList();
 	
 	//---------------------------
 	// Overrides : IWindowObject
@@ -110,6 +110,12 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		for (IWindowParent p : highlightedWindows) {
 			if (p == null) continue;
 			p.drawHighlightBorder();
+		}
+		
+		// draw object being dragged and dropped
+		if (dragAndDropObject != null) {
+		    if (!dragAndDropObject.hasFirstDraw()) dragAndDropObject.onFirstDraw();
+		    dragAndDropObject.drawObject_i(mX, mY);
 		}
 		
 		//notify hover object
@@ -466,5 +472,16 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 			if (p.isMaximized()) p.maximize();
 		}
 	}
+	
+	//===============
+	// Drag and Drop
+	//===============
+	
+    /** Sets the list of objects that are being 'dragged and dropped'. */
+	@Override public void setDragAndDropObject(DragAndDropObject objects) { dragAndDropObject = objects; }
+    /** Removes all drag and drop objects. */
+	@Override public void clearDragAndDropObject() { dragAndDropObject = null; }
+    /** Returns all objects currently being dragged and dropped. */
+	@Override public DragAndDropObject getDragAndDropObject() { return dragAndDropObject; }
 	
 }

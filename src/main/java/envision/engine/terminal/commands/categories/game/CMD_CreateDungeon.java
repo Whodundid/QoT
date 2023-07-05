@@ -1,7 +1,6 @@
 package envision.engine.terminal.commands.categories.game;
 
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import envision.game.world.GameWorld;
 import envision.game.world.dungeonBuilder.DungeonBuilder;
 import envision.game.world.dungeonBuilder.DungeonBuilderSettings;
@@ -22,30 +21,32 @@ public class CMD_CreateDungeon extends TerminalCommand {
 	@Override public String getUsage() { return "ex: crdung small 'name'"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand() {
+	    expectNoMoreThan(2);
+	    
 		DungeonBuilder builder = new DungeonBuilder();
 		
-		if (args.isEmpty()) {
-			GameWorld dung = builder.buildRandomDungeon();
-			dung.setWorldName("rand_dung");
-			dung.saveWorldToFile();
+		if (noArgs()) {
+		    GameWorld dung = builder.buildRandomDungeon();
+            dung.setWorldName("rand_dung");
+            dung.saveWorldToFile();
+            return;
 		}
-		else {
-			String size = (args.size() >= 1) ? args.get(0) : "small";
-			DungeonSize dungSize = DungeonSize.fromString(size);
-			
-			DungeonBuilderSettings settings = new DungeonBuilderSettings();
-			settings.size = dungSize;
-			
-			GameWorld dung = builder.buildRandomDungeon(settings);
-			if (dung != null) {
-				String dungName = (args.size() >= 2) ? args.get(1) : "rand_dung";
-				
-				dung.setWorldName(dungName);
-				dung.saveWorldToFile();
-			}
-			else termIn.error("Created map returned null!");
-		}
+		
+		String size = (oneArg()) ? arg(0) : "small";
+        DungeonSize dungSize = DungeonSize.fromString(size);
+        
+        DungeonBuilderSettings settings = new DungeonBuilderSettings();
+        settings.size = dungSize;
+        
+        GameWorld dung = builder.buildRandomDungeon(settings);
+        if (dung != null) {
+            String dungName = (twoArgs()) ? arg(1) : "rand_dung";
+            
+            dung.setWorldName(dungName);
+            dung.saveWorldToFile();
+        }
+        else error("Created map returned null!");
 	}
 	
 }

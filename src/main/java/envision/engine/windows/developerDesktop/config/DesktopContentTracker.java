@@ -3,7 +3,7 @@ package envision.engine.windows.developerDesktop.config;
 import java.io.File;
 import java.io.IOException;
 
-import envision.engine.windows.developerDesktop.EnvisionDeveloperDesktop;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 
 /**
  * A wrapper for a file that keeps track of all shortcuts/programs/items on
@@ -16,7 +16,7 @@ import envision.engine.windows.developerDesktop.EnvisionDeveloperDesktop;
  */
 public class DesktopContentTracker {
     
-    public static final File DESKTOP_CONFIG_FILE = new File(EnvisionDeveloperDesktop.DESKTOP_DIR, "desktop_config.ini");
+    public static final File DESKTOP_CONFIG_FILE = new File(DeveloperDesktop.DESKTOP_DIR, "desktop_config.ini");
     
     static {
         if (!DESKTOP_CONFIG_FILE.exists()) {

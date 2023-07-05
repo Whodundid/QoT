@@ -2,9 +2,9 @@ package envision.engine.terminal.commands.categories.fileSystem;
 
 import java.io.File;
 
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.Envision;
+import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
 
 public class CMD_MkDir extends AbstractFileCommand {
 	
@@ -17,39 +17,28 @@ public class CMD_MkDir extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: mkdir 'name'"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
-		if (args.size() == 1) {
-			try {
-				
-				File f = new File(termIn.getDir().getCanonicalPath() + "/" + args.get(0));
-				
-				if (f.exists()) {
-					if (!f.isDirectory()) {
-						if (f.mkdirs()) {
-							String path = f.getPath();
-							String colorPath = "" + EColors.mc_aqua + path;
-							termIn.writeLink("Created Dir: " + colorPath, path, new File(path), false, EColors.yellow);
-						}
-					}
-					else { termIn.error("That directory already exists!"); }
-				}
-				else {
-					if (f.mkdirs()) {
-						String path = f.getPath();
-						String colorPath = "" + EColors.mc_aqua + path;
-						termIn.writeLink("Created Dir: " + colorPath, path, new File(path), false, EColors.yellow);
-					}
-				}
-				
-			}
-			catch (Exception e) {
-				error(termIn, e);
-			}
-		}
-		else {
-			termIn.error("Too many arguments!");
-		}
+	public void runCommand() {
+	    expectAtLeast(1);
+	    
+	    for (String input : args()) {
+	        File f = parseFilePath(input);
+	        
+	        if (f.exists() && f.isDirectory()) {
+	            error("That directory already exists!");
+	            continue;
+	        }
+	        
+	        if (!f.mkdirs()) {
+	            error("Failed to create directory!");
+	            continue;
+	        }
+	        
+	        String path = f.getName();
+	        String colorPath = "" + EColors.mc_aqua + path;
+	        writeLink("Created Dir: " + colorPath, path, f, false, EColors.yellow);
+	    }
+	    
+	    Envision.getActiveTopParent().reloadAllWindowInstances(FileExplorerWindow.class);
 	}
 	
 }

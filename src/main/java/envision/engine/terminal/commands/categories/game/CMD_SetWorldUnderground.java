@@ -24,28 +24,24 @@ public class CMD_SetWorldUnderground extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand() {
+	    expectNoMoreThan(1);
+	    
 		if (Envision.theWorld == null) {
-			termIn.error("No world loaded!");
+			error("No world loaded!");
 			return;
 		}
 		
 		//empty -- toggle
-		if (args.length() == 0) {
+		if (noArgs()) {
 			Envision.theWorld.setUnderground(!Envision.theWorld.isUnderground());
 			return;
 		}
 		
-		if (args.length() != 1) {
-			errorUsage(termIn, ERROR_NOT_ENOUGH);
-			return;
-		}
-		
-		
-		String val = args.get(0).toLowerCase();
+		String val = firstArg().toLowerCase();
 		
 		if (val.equals("true") || val.equals("t")) Envision.theWorld.setUnderground(true);
 		else if (val.equals("false") || val.equals("f")) Envision.theWorld.setUnderground(false);
-		else termIn.error(getUsage());
+		else error(getUsage());
 	}
 }

@@ -2,7 +2,7 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.game.entities.player.Player;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
@@ -19,14 +19,18 @@ public class CMD_NoClip extends TerminalCommand {
 	@Override public String getUsage() { return "ex: nc"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (Envision.thePlayer != null) {
-			Envision.thePlayer.setNoClipAllowed(!Envision.thePlayer.isNoClipping());
-			termIn.writeln(((Envision.thePlayer.isNoClipping()) ? "Enabled" : "Disabled") + " no clipping");
-		}
-		else {
-			termIn.error("There isn't a player!");
-		}
+	public void runCommand() {
+	    expectNoArgs();
+	    
+	    final Player p = Envision.thePlayer;
+	    
+	    if (p == null) {
+	        error("There isn't a player!");
+	        return;
+	    }
+	    
+	    p.setNoClipAllowed(!p.isNoClipping());
+        writeln(((p.isNoClipping()) ? "Enabled" : "Disabled") + " no clipping");
 	}
 	
 }

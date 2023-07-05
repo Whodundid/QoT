@@ -21,14 +21,14 @@ import eutil.file.FileOpener;
  * A utility class which contains useful functions for interfacing with the
  * Envision Developer Desktop.
  */
-public class EnvisionDesktopUtil {
+public class DesktopUtil {
     
     //==============
     // Constructors
     //==============
     
     /** Hidden by default. */
-    private EnvisionDesktopUtil() {}
+    private DesktopUtil() {}
     
     //======================
     // File Utility Methods

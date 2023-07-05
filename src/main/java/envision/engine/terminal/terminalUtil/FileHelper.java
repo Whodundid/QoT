@@ -8,14 +8,14 @@ import eutil.datatypes.util.EList;
 
 public class FileHelper extends ArgHelper {
 	
-	private final File fromRelative;
-	private final File fromFull;
-	private final File toRelative;
-	private final File toFull;
+	private File fromRelative;
+	private File fromFull;
+	private File toRelative;
+	private File toFull;
 	
 	public FileHelper(ETerminalWindow termIn, EList<String> argsIn, boolean runVisuallyIn) throws IOException {
 		super(termIn, argsIn, runVisuallyIn);
-	
+		
 		if (size == 0) {
 			fromRelative = null;
 			fromFull = null;
@@ -23,17 +23,27 @@ public class FileHelper extends ArgHelper {
 			toFull = null;
 		}
 		else if (size == 1) {
-			fromRelative = new File(curDir, argsIn.get(0)).getCanonicalFile();
-			fromFull = new File(argsIn.get(0)).getCanonicalFile();
+		    fromRelative = generateFile(curDir, arg(0));
+			fromFull = new File(arg(0)).getCanonicalFile();
 			toRelative = null;
 			toFull = null;
 		}
 		else {
-			fromRelative = new File(curDir, argsIn.get(0)).getCanonicalFile();
-			fromFull = new File(argsIn.get(0)).getCanonicalFile();
-			toRelative = new File(curDir, argsIn.get(1)).getCanonicalFile();
-			toFull = new File(argsIn.get(1)).getCanonicalFile();
+			fromRelative = generateFile(curDir, arg(0));
+			fromFull = new File(arg(0)).getCanonicalFile();
+			toRelative = generateFile(curDir, arg(1)).getCanonicalFile();
+			toFull = new File(arg(1)).getCanonicalFile();
 		}
+	}
+	
+	private File generateFile(File cur, String path) {
+	    try {
+	        File f = new File(curDir, path).getCanonicalFile();
+	        return f;
+	    }
+	    catch (Exception e) {
+	        return curDir;
+	    }
 	}
 	
 	public File fromRelative() { return fromRelative; }

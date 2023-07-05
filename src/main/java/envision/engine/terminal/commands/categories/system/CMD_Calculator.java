@@ -1,7 +1,6 @@
 package envision.engine.terminal.commands.categories.system;
 
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.bundledWindows.CalculatorWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -20,9 +19,9 @@ public class CMD_Calculator extends TerminalCommand {
 	@Override public String getUsage() { return "ex: calc"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		termIn.writeln("Opening Calculator", EColors.lgreen);
-		termIn.getTopParent().displayWindow(new CalculatorWindow());
+	public void runCommand() {
+		writeln("Opening Calculator", EColors.lgreen);
+		displayWindow(new CalculatorWindow());
 	}
 	
 }

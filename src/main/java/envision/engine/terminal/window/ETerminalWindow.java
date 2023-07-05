@@ -1,6 +1,7 @@
 package envision.engine.terminal.window;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.util.Collection;
 
@@ -10,8 +11,10 @@ import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.termParts.TerminalTextField;
 import envision.engine.terminal.window.termParts.TerminalTextLine;
+import envision.engine.windows.bundledWindows.fileExplorer.MovingFileObject;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea;
+import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.EObjectGroup;
@@ -19,6 +22,7 @@ import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
+import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import envision_lang._launch.EnvisionConsoleOutputReceiver;
@@ -228,22 +232,48 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	
 	@Override
 	public void onGroupNotification(ObjectEvent e) {
-		if (!(e instanceof EventMouse)) return;
-		
-		EventMouse m = (EventMouse) e;
-		var mt = m.getMouseType();
-		
-		if (mt == MouseType.PRESSED) {
-			bringToFront();
-			var p = e.getEventParent();
-			if (p instanceof WindowTextArea || p instanceof TextAreaLine) {
-				if (inputField != null) inputField.requestFocus();
-			}
-		}
-		else if (mt == MouseType.RELEASED) {
-			if (inputField != null) inputField.requestFocus();
-		}
+	    if (e instanceof EventMouse m) {
+	        var mt = m.getMouseType();
+	        
+	        if (mt == MouseType.PRESSED) {
+	            bringToFront();
+	            var p = e.getEventParent();
+	            if (p instanceof WindowTextArea || p instanceof TextAreaLine) {
+	                if (inputField != null) inputField.requestFocus();
+	            }
+	        }
+	        else if (mt == MouseType.RELEASED) {
+	            if (inputField != null) inputField.requestFocus();
+	        }
+	    }
+        else if (e instanceof EventDragAndDrop d) {
+            onDragAndDrop(d.getObjectBeingDropped());
+        }
 	}
+	
+    @Override
+    public void onDragAndDrop(DragAndDropObject objectBeingDropped) {
+        if (!(objectBeingDropped instanceof MovingFileObject)) return;
+        
+        final var mfo = (MovingFileObject) objectBeingDropped;
+        final var files = mfo.getFilesBeingMoved().map(f -> f.getFile());
+        
+        if (files.size() > 1) return;
+        final File theFile = files.getFirst();
+        
+        if (theFile.isDirectory()) {
+            try {
+                setDir(theFile.getCanonicalFile());
+                String path = dir.getName();
+                String colorPath = EColors.mc_aqua + path;
+                writeLink("Current Dir: " + colorPath, path, dir, false, EColors.yellow);
+                writeln();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 	
 	@Override
 	public void resize(double xIn, double yIn, ScreenLocation areaIn) {

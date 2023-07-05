@@ -25,17 +25,21 @@ public class EObjectGroup {
 		groupParent = parentIn;
 	}
 	
+	public EObjectGroup(IWindowObject parentIn, IWindowObject... children) {
+	    this(parentIn);
+	    addObject(children);
+	}
+	
 	//---------
 	// Methods
 	//---------
 	
 	/** does not accept duplicates */
 	public EObjectGroup addObject(IWindowObject... objectIn) {
-		if (objectIn != null) {
-			for (var o : objectIn) {
-				objects.addNullContains(o);
-			}
-		}
+	    for (var o : objectIn) {
+            objects.addIfNotContains(o);
+            o.setObjectGroup(this);
+        }
 		return this;
 	}
 	
@@ -43,6 +47,7 @@ public class EObjectGroup {
 		if (objectsIn != null) {
 			for (var o : objectsIn) {
 				objects.addIfNotContains(o);
+				o.setObjectGroup(this);
 			}
 		}
 		return this;

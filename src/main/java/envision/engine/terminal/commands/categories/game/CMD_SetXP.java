@@ -19,12 +19,13 @@ public class CMD_SetXP extends TerminalCommand {
 	
 	@Override
 	public void runCommand() {
-		if (Envision.thePlayer == null) {
+	    expectAtLeast(1);
+
+	    if (Envision.thePlayer == null) {
 			error("There is no player!");
 			return;
 		}
 		
-		expectAtLeast(1);
 		var p = Envision.thePlayer;
 		
 		//toggle

@@ -6,12 +6,18 @@ import java.io.IOException;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.terminalUtil.FileHelper;
 import envision.engine.terminal.terminalUtil.TermArgLengthException;
+import envision.engine.terminal.terminalUtil.TerminalCommandError;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public abstract class AbstractFileCommand extends TerminalCommand {
 	
+    public static final String ERROR_FILE_NULL = "The given file path is null!";
+    public static final String ERROR_NOT_EXISTS = "File: '%s' does not exist!";
+    public static final String ERROR_NOT_DIRECTORY = "File: '%s' is a file not a directory!";
+    public static final String ERROR_NOT_FILE = "File: '%s' is directory not a a file!";
+    
 	protected FileHelper fileHelper;
 	
 	//==============
@@ -20,7 +26,6 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 	
 	protected AbstractFileCommand() {
 		setCategory("File System");
-		
 	}
 	
 	//===========
@@ -40,10 +45,10 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 			runCommand();
 		}
 		catch (TermArgLengthException e) {
-			term.error(e.getMessage());
+			errorUsage(e.getMessage());
 		}
 		catch (Exception e) {
-			error(term, e);
+			error(e);
 		}
 	}
 	
@@ -59,6 +64,50 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 	protected String fromName() { return fileHelper.fromName(); }
 	protected String toName() { return fileHelper.toName(); }
 	
+	//===============================
+	// Common File Errors Assertions
+	//===============================
+	
+	/** Throws a default error if the given file path was null. */
+    protected void expectFileNotNull(File file) { expectFileNotNull(file, ERROR_FILE_NULL); }
+    /** Throws a customized error if the given file path was null. */
+    protected void expectFileNotNull(File file, String message) {
+        if (file != null) return;
+        if (message != null) throw new TerminalCommandError(message);
+        throw new TerminalCommandError(ERROR_FILE_NULL);
+    }
+    
+    /** Throws a default error if the given file path does not exist. */
+    protected void expectFileExists(File file) { expectFileExists(file, null); }
+    /** Throws a customized error if the given file path does not exist. */
+    protected void expectFileExists(File file, String message) {
+        if (file.exists()) return;
+        if (message != null) throw new TerminalCommandError(message);
+        throw new TerminalCommandError(String.format(ERROR_NOT_EXISTS, file.getName()));
+    }
+    
+    /** Throws a default error if the given file path was a directory, not a file. */
+    protected void expectFile(File file) { expectFile(file, null); }
+    /** Throws a customized error if the given file path was a directory, not a file. */
+    protected void expectFile(File file, String message) {
+        if (!file.isDirectory()) return;
+        if (message != null) throw new TerminalCommandError(message);
+        throw new TerminalCommandError(String.format(ERROR_NOT_FILE, file.getName()));
+    }
+    
+    /** Throws a default error if the given file path was a file, not a directory. */
+    protected void expectDirectory(File file) { expectDirectory(file, null); }
+    /** Throws a customized error if the given file path was a file, not a directory. */
+    protected void expectDirectory(File file, String message) {
+        if (file.isDirectory()) return;
+        if (message != null) throw new TerminalCommandError(message);
+        throw new TerminalCommandError(String.format(ERROR_NOT_DIRECTORY, file.getName()));
+    }
+	
+    //=====================
+    // Useful File Methods
+    //=====================
+    
 	protected void fileTabComplete(ETerminalWindow termIn, EList<String> args) {
 		try {
 			fileTabComplete(termIn, termIn.getDir().getCanonicalPath(), args);
@@ -160,6 +209,8 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 	
 	//===============================================================================================
 	
+	protected File parseFirstArgFilePath() { return parseFilePath(dir(), firstArg()); }
+	protected File parseFilePath(final String pathIn) { return parseFilePath(dir(), pathIn); }
 	protected File parseFilePath(final File currentDir, final String pathIn) {
 		// prevent null paths from being evaluated
 		if (pathIn == null) return null;
@@ -167,13 +218,16 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 		if (pathIn.isBlank()) return currentDir;
 		
 		// get all separators on the same page
-		pathIn.replace("\\", SEPARATOR).replace("/", SEPARATOR);
+		String workingPath = pathIn.replace("\\", SEPARATOR).replace("/", SEPARATOR);
 		
-		final File dir = currentDir;
-		final File parentDir = currentDir.getParentFile();
+		File dir = currentDir;
+		File parentDir = currentDir.getParentFile();
+		
+		// check for paths that have no parent dir (C:/ ..)
+		if (parentDir == null) parentDir = dir;
 		
 		// try the simple replacement ones first
-		switch (pathIn) {
+		switch (workingPath) {
 		case ".": return dir;
 		case "..": return parentDir;
 		case "~": return USER_DIR;
@@ -184,11 +238,11 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 		String parsedPath = null;
 		
 		// if dir starts with a '.' replace with 'dir'
-		if (pathIn.startsWith("." + SEPARATOR)) parsedPath = dir + pathIn.substring(2);
+		if (workingPath.startsWith("." + SEPARATOR)) parsedPath = dir + workingPath.substring(1);
 		// if dir starts with a '..' replace with 'parentDir'
-		else if (pathIn.startsWith(".." + SEPARATOR)) parsedPath = parentDir + pathIn.substring(3);
+		else if (workingPath.startsWith(".." + SEPARATOR)) parsedPath = parentDir + workingPath.substring(2);
 		// replace '~' with starting user dir
-		else if (pathIn.startsWith("~" + SEPARATOR)) parsedPath = USER_DIR + pathIn.substring(2);
+		else if (workingPath.startsWith("~" + SEPARATOR)) parsedPath = USER_DIR + workingPath.substring(1);
 		
 		// check if we found a match
 		if (parsedPath != null) {
@@ -196,7 +250,7 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 		}
 		
 		// check if it could be a drive root
-		final String allLower = pathIn.toLowerCase();
+		final String allLower = workingPath.toLowerCase();
 		for (File driveLetter : File.listRoots()) {
 			final var driveLower = String.valueOf(driveLetter).toLowerCase();
 			if (allLower.equals(driveLower)) {
@@ -204,7 +258,7 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 			}
 		}
 		
-		return new File(currentDir, pathIn);
+		return new File(currentDir, workingPath);
 	}
 	
 	protected boolean deleteRecursively(ETerminalWindow termIn, File path) {

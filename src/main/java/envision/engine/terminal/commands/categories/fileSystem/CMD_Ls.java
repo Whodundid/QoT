@@ -82,11 +82,10 @@ public class CMD_Ls extends AbstractFileCommand {
 		}
 		
 		try {
-			String path = dir.getAbsolutePath();
-			String colorPath = EColors.mc_aqua + path;
+			String colorPath = EColors.mc_aqua + dir.getName();
 			boolean showHidden = hasModifier("-a");
 			
-			writeLink("Viewing Dir: " + colorPath, path, new File(path), false, EColors.yellow);
+			writeLink("Viewing Dir: " + colorPath, dir.getName(), dir, false, EColors.yellow);
 			if (dir.list().length > 0) writeln();
 			
 			if (showHidden && OSType.isWindows()) {

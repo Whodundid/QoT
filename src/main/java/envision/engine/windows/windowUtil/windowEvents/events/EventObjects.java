@@ -21,7 +21,7 @@ public class EventObjects extends ObjectEvent {
 	//--------------
 	
 	public EventObjects(IWindowObject parentIn, IWindowObject targetObjectIn, ObjectEventType typeIn) {
-		super(parentIn, EventType.OBJECT);
+		super(parentIn, EventType.OBJECT, true);
 		targetObject = targetObjectIn;
 		type = typeIn;
 	}

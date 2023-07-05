@@ -1,7 +1,6 @@
 package envision.engine.terminal.commands.categories.fileSystem;
 
 import java.io.File;
-import java.io.IOException;
 
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
@@ -21,18 +20,12 @@ public class CMD_Pwd extends AbstractFileCommand {
 	@Override public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {}
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.size() == 0) {
-			try {
-				String path = termIn.getDir().getCanonicalPath();
-				String colorPath = "" + EColors.mc_aqua + path;
-				termIn.writeLink("Current Dir: " + colorPath, path, new File(path), false, EColors.yellow);
-			}
-			catch (IOException e) {
-				error(termIn, e);
-			}
-		}
-		else { termIn.error("Too many arguments!"); }
+	public void runCommand() {
+	    expectNoArgs();
+	    
+	    File path = dirFull();
+        String colorPath = "" + EColors.mc_aqua + path;
+        writeLink("Current Dir: " + colorPath, String.valueOf(path), path, false, EColors.yellow);
 	}
 	
 }

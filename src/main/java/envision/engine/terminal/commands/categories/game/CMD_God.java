@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
@@ -19,20 +18,17 @@ public class CMD_God extends TerminalCommand {
 	@Override public String getUsage() { return "ex: god"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) {
-			termIn.errorUsage(ERROR_TOO_MANY, getUsage());
-			return;
-		}
+	public void runCommand() {
+	    expectNoArgs();
 		
 		if (Envision.thePlayer == null) {
-			termIn.error("There is no player!");
+			error("There is no player!");
 			return;
 		}
 		
 		//toggle
 		Envision.thePlayer.setInvincible(!Envision.thePlayer.isInvincible());
-		termIn.writeln("Godmode ", (Envision.thePlayer.isInvincible()) ? "enabled!" : "disabled!");
+		writeln("Godmode ", (Envision.thePlayer.isInvincible()) ? "enabled!" : "disabled!");
 	}
 	
 }

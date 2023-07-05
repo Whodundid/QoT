@@ -22,7 +22,7 @@ public class EventKeyboard extends ObjectEvent {
 	//--------------
 	
 	public EventKeyboard(IWindowObject parentIn, char charIn, int keyIn, KeyboardType typeIn) {
-		super(parentIn, EventType.KEYBOARD);
+		super(parentIn, EventType.KEYBOARD, true);
 		eventChar = charIn;
 		eventKey = keyIn;
 		type = typeIn;

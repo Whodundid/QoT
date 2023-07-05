@@ -425,9 +425,15 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	public void setDrawDefaultBackground(boolean val) { drawDefaultBackground = val; }
 	public void setMoveWithParent(boolean val) { moveWithParent = val; }
 	
+	/** Returns true if this object has a header. */
+    //@Override public boolean hasHeader() { return header != null; }
+    /** If this object has a header, returns the header object, otherwise returns null. */
+    //@Override public WindowHeader getHeader() { return header; }
+	
 	public WindowParent setHeader(WindowHeader headerIn) {
-		if (header != null) removeObject();
+		if (header != null) removeObject(header);
 		header = headerIn;
+		//properties().objectHeader = header;
 		if (header != null) header.updateButtonVisibility();
 		addObject(header);
 		return this;

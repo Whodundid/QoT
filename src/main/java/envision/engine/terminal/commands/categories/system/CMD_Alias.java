@@ -1,12 +1,13 @@
 package envision.engine.terminal.commands.categories.system;
 
 import envision.engine.terminal.TerminalCommandHandler;
-import envision.engine.terminal.commands.TerminalCommand;
+import envision.engine.terminal.commands.ListableCommand;
 import eutil.colors.EColors;
+import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
 
-public class CMD_Alias extends TerminalCommand {
+public class CMD_Alias extends ListableCommand {
     
     public CMD_Alias() {
         setCategory("System");
@@ -76,6 +77,11 @@ public class CMD_Alias extends TerminalCommand {
         TerminalCommandHandler.getInstance().addCommandAlias(aliasName, aliasValue);
         
         writeln(EColors.lgreen, "Added Alias '", EColors.mc_lightpurple, aliasName, EColors.lgreen, "'");
+    }
+    
+    @Override
+    public EList<String> getList() {
+        return TerminalCommandHandler.getInstance().getCommandAliasNames();
     }
     
 }

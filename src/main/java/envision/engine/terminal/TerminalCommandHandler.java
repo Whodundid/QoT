@@ -2,7 +2,6 @@ package envision.engine.terminal;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import envision.Envision;
@@ -34,7 +33,6 @@ import envision.engine.terminal.commands.categories.fileSystem.CMD_Mv;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_OpenFile;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Pwd;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Rm;
-import envision.engine.terminal.commands.categories.fileSystem.CMD_RmDir;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Tail;
 import envision.engine.terminal.commands.categories.game.CMD_CreateDungeon;
 import envision.engine.terminal.commands.categories.game.CMD_GiveItem;
@@ -149,7 +147,6 @@ public class TerminalCommandHandler {
 		registerCommand(new CMD_Cd(), termIn, runVisually);
 		registerCommand(new CMD_Pwd(), termIn, runVisually);
 		registerCommand(new CMD_Rm(), termIn, runVisually);
-		registerCommand(new CMD_RmDir(), termIn, runVisually);
 		registerCommand(new CMD_MkDir(), termIn, runVisually);
 		registerCommand(new CMD_Mv(), termIn, runVisually);
 		registerCommand(new CMD_Cp(), termIn, runVisually);
@@ -537,7 +534,8 @@ public class TerminalCommandHandler {
 	
 	public EList<TerminalCommand> getCommandList() { return commandList; }
 	public Map<String, String> getCommandAliases() { return commandAliases; }
-	public List<String> getCommandNames() { return commands.getAVals(); }
+	public EList<String> getCommandNames() { return commands.getAVals(); }
+	public EList<String> getCommandAliasNames() { return EList.of(commandAliases.keySet()); }
 	public EList<String> getHistory() { return cmdHistory; }
 	public TerminalCommandHandler clearHistory() { cmdHistory.clear(); return this; }
 	

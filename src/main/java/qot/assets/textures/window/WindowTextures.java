@@ -28,6 +28,7 @@ public class WindowTextures extends TextureLoader {
 	public static final GameTexture
 	
 	checkmark 		= new GameTexture(textureDir, "checkmark.png"),
+	red_x           = new GameTexture(textureDir, "x_image.png"),
 	close 			= new GameTexture(textureDir, "close.png"),
 	close_sel		= new GameTexture(textureDir, "close_sel.png"),
 	max 			= new GameTexture(textureDir, "max.png"),
@@ -64,7 +65,7 @@ public class WindowTextures extends TextureLoader {
 	problem 		= new GameTexture(textureDir, "problem.png"),
 	problem_sel 	= new GameTexture(textureDir, "problem_sel.png"),
 	problem_open 	= new GameTexture(textureDir, "problem_open.png"),
-	problem_open_sel= new GameTexture(textureDir,"problem_open_sel.png"),
+	problem_open_sel= new GameTexture(textureDir, "problem_open_sel.png"),
 	terminal 		= new GameTexture(textureDir, "terminal.png"),
 	terminal_sel 	= new GameTexture(textureDir, "terminal_sel.png");
 	
@@ -75,6 +76,7 @@ public class WindowTextures extends TextureLoader {
 	@Override
 	public void onRegister(TextureSystem sys) {
 		reg(sys, checkmark);
+		reg(sys, red_x);
 		reg(sys, close);
 		reg(sys, close_sel);
 		reg(sys, max);

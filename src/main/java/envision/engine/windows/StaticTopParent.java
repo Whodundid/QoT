@@ -370,7 +370,15 @@ public class StaticTopParent extends EGui {
 	public static void updateFocus(ITopParent objIn, Deque<EventFocus> focusQueue) {
 		// remove any lingering focused objects if they are no longer within in the parent
 		var children = objIn.getAllChildren();
-		if (objIn.getFocusedObject() != null && !children.contains(objIn.getFocusedObject())) objIn.clearFocusedObject();
+		if (objIn.getFocusedObject() != null) {
+		    if (objIn == Envision.getActiveTopParent()) {
+		        //System.out.println(objIn.getFocusedObject());
+		        //objIn.close();
+		    }
+		    if (!children.contains(objIn.getFocusedObject())) {
+		        objIn.clearFocusedObject();		        
+		    }
+		}
 		if (objIn.getFocusLockObject() != null && !children.contains(objIn.getFocusLockObject())) objIn.clearFocusLockObject();
 		if (objIn.getDefaultFocusObject() != null && !children.contains(objIn.getDefaultFocusObject())) objIn.setDefaultFocusObject(null);
 		

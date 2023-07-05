@@ -5,13 +5,19 @@ import java.nio.file.FileSystems;
 import java.util.Collection;
 import java.util.List;
 
+import envision.Envision;
+import envision.engine.screens.GameScreen;
 import envision.engine.terminal.terminalUtil.ArgHelper;
 import envision.engine.terminal.terminalUtil.TermArgLengthException;
+import envision.engine.terminal.terminalUtil.TerminalCommandError;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.terminal.window.termParts.TerminalTextField;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
+import envision.engine.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.windows.windowUtil.ObjectPosition;
+import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -31,12 +37,12 @@ public abstract class TerminalCommand {
 	public static final String ERROR_NO_ARGS = "This command does not take any arguments!";
 	public static final String ERROR_TOO_MANY = "Too many arguments!";
 	public static final String ERROR_NOT_ENOUGH = "Not enough arguments!";
+	public static final String ERROR_NULL = "The given value is null!";
 	
 	static final String ERROR_EXPECTED_AT_LEAST = "Expected at least '%d' argument(s)!";
-	static final String ERORR_EXPECTED_NO_MORE_THAN = "Expected no more than '%d' argument(s)!";
+	static final String ERROR_EXPECTED_NO_MORE_THAN = "Expected no more than '%d' argument(s)!";
+	static final String ERROR_EXPECTED_BETWEEN = "Expected between %d to %d arguments!";
 	static final String ERROR_EXPECTED_EXACT_ARGUMENTS = "Expected exactly '%d' argument(s)!";
-
-	private static final String ERROR_EXPECTED_NO_MORE_THAN = null;
 	
 	protected ArgHelper argHelper;
 	private String category = "none";
@@ -84,19 +90,39 @@ public abstract class TerminalCommand {
 	//=================
 	
 	public File curDir() { return argHelper.curDir(); }
-	public boolean visually() { return argHelper.visually(); }
-	public String firstArg() { return argHelper.first(); }
-	public String lastArg() { return argHelper.last(); }
-	public String arg(int index) { return argHelper.arg(index); }
-	public EList<String> args() { return argHelper.args(); }
-	public int argLength() { return argHelper.length(); }
+	public boolean runVisually() { return argHelper.visually(); }
+	public String firstArg() { return argHelper.firstString(); }
+	public String lastArg() { return argHelper.lastString(); }
+	public String arg(int index) { return argHelper.stringArg(index); }
+	public EList<String> args() { return argHelper.stringArgs(); }
+	public int argLength() { return argHelper.stringLength(); }
 	public ETerminalWindow term() { return term; }
-	public boolean noArgs() { return argHelper.length() == 0; }
-	public boolean oneArg() { return argHelper.length() == 1; }
-	public boolean twoArgs() { return argHelper.length() == 2; }
-	public boolean threeArgs() { return argHelper.length() == 3; }
+	public boolean noArgs() { return argHelper.stringLength() == 0; }
+	public boolean oneArg() { return argHelper.stringLength() == 1; }
+	public boolean twoArgs() { return argHelper.stringLength() == 2; }
+	public boolean threeArgs() { return argHelper.stringLength() == 3; }
+	
+    /**
+     * Returns true if the given input either matches this command's name
+     * or one of its aliases.
+     * 
+     * @param input The input to test for
+     * 
+     * @return true if this command name or alias(es) match
+     */
+	public boolean matchesNameOrAlias(String input) {
+	    if (input == null) return false;
+	    if (EUtil.isEqual(getName(), input)) return true;
+	    if (getAliases().contains(input)) return true;
+	    return false;
+	}
 	
 	public ITopParent getTopParent() { return term().getTopParent(); }
+	public GameScreen displayScreen(GameScreen screenIn) { return Envision.displayScreen(screenIn); }
+	public IWindowParent displayWindow(IWindowParent windowIn) { return getTopParent().displayWindow(windowIn); }
+	public IWindowParent displayWindow(IWindowParent windowIn, ObjectPosition position) {
+	    return getTopParent().displayWindow(windowIn, position);
+	}	
 	
 	public boolean showInHelp() { return true; }
 	public EList<String> getAliases() { return new EArrayList<>(); }
@@ -162,6 +188,8 @@ public abstract class TerminalCommand {
 	
 	public void onConfirmation(String response) {}
 	
+	protected void usage() { info(getUsage()); }
+	
 	protected void errorUsage(String errorReason) { errorUsage(term, errorReason); }
 	protected void errorUsage(ETerminalWindow term, String errorReason) {
 		term.errorUsage(errorReason, getUsage());
@@ -170,8 +198,8 @@ public abstract class TerminalCommand {
 	/**
 	 * Returns true if the specified modifier was parsed at command start.
 	 * 
-	 * @param in
-	 * @return
+	 * @param in The modifier to check for
+	 * @return true if input contained modifier
 	 */
 	protected boolean hasModifier(String in) {
 		return in != null && in.length() >= 1 && parsedModifiers.contains(in);
@@ -224,6 +252,15 @@ public abstract class TerminalCommand {
 	// Argument Helpers
 	//==================
 	
+	/** Throws a default error if the given object was null. */
+	protected void expectNotNull(Object obj) { expectNotNull(obj, ERROR_NULL); }
+	/** Throws a customized error if the given object was null. */
+	protected void expectNotNull(Object obj, String message) {
+	    if (obj != null) return;
+	    if (message != null) throw new TerminalCommandError(message);
+	    throw new TerminalCommandError(ERROR_NULL);
+	}
+	
 	/** Throws a default error if there were more than zero args passed. */
     protected void expectNoArgs() { expectNoArgs(ERROR_NO_ARGS); }
     /** Throws a customized error if there were more than zero args passed. */
@@ -247,6 +284,13 @@ public abstract class TerminalCommand {
 		checkNoMoreThan(amount, message);
 	}
 	
+    /** Throws a default error if the number of expected arguments is not between the given range. */
+    protected void expectBetween(int low, int high) { expectBetween(low, high, null); }
+    /** Throws a customized error if the number of expected arguments is not between the given range. */
+    protected void expectBetween(int low, int high, String message) {
+        checkBetween(low, high, message);
+    }
+	
 	/** Throws a default error if the number of arguments passed is not the exact expected amount. */
 	protected void expectExactly(int amount) { expectExactly(amount, null); }
 	/** Throws a customized error if the number of arguments passed is not the exact expected amount. */
@@ -265,6 +309,12 @@ public abstract class TerminalCommand {
 		if (message != null) throw new TermArgLengthException(message);
 		throw new TermArgLengthException(String.format(ERROR_EXPECTED_NO_MORE_THAN, amount));
 	}
+    
+    private void checkBetween(int low, int high, String message) {
+        if (argLength() >= low && argLength() <= high) return;
+        if (message != null) throw new TermArgLengthException(message);
+        throw new TermArgLengthException(String.format(ERROR_EXPECTED_BETWEEN, low, high));
+    }
 	
 	private void checkExact(int amount, String message) {
 		if (argLength() == amount) return;
@@ -276,7 +326,7 @@ public abstract class TerminalCommand {
 	// Terminal Helpers
 	//==================
 	
-	protected void clear() { term.clear(); }
+	protected void clearTerm() { term.clear(); }
 	protected void clearTabData() { term.clearTabData(); }
 	protected void clearTabCompletions() { term.clearTabCompletions(); }
 	protected void resetTab() { term.resetTab(); }
@@ -293,6 +343,14 @@ public abstract class TerminalCommand {
 	protected String getTabBase() { return term.getTabBase(); }
 	protected File dir() { return term.getDir(); }
 	protected File parentDir() { return (dir().getParentFile() == null) ? dir() : dir().getParentFile(); }
+
+	protected File dirFull() { return getCanonicalFile(dir()); }
+	protected File parentDirFull() { return getCanonicalFile(parentDirFull()); }
+	
+	protected static File getCanonicalFile(File f) {
+	    try { return f.getCanonicalFile(); }
+	    catch (Exception e) { return f; }
+	}
 	
 	protected ETerminalWindow setDir(File dirIn) { return term.setDir(dirIn); }
 	protected ETerminalWindow setInputEnabled(boolean val) { return term.setInputEnabled(val); }
@@ -303,7 +361,7 @@ public abstract class TerminalCommand {
 	protected ETerminalWindow setTextTabBeing(String in) { return term.setTextTabBeing(in); }
 	protected ETerminalWindow setTabBase(String in) { return term.setTabBase(in); }
 	
-	protected void requireConfirmation(String message) { term.setRequiresCommandConfirmation(this, message, args(), visually()); }
+	protected void requireConfirmation(String message) { term.setRequiresCommandConfirmation(this, message, args(), runVisually()); }
 	protected void clearConfirmation() { term.clearConfirmationRequirement(); }
 	
 	protected ETerminalWindow writeln() { return term.writeln(); }

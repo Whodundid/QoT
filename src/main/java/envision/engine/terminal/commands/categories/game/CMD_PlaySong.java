@@ -26,7 +26,7 @@ public class CMD_PlaySong extends TerminalCommand {
 	
 	@Override
 	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
-		EArrayList<String> range = new EArrayList<>();
+		EList<String> range = EList.newList();
 		for (int i = 0; i < Songs.songList.size(); i++) {
 			range.add(String.valueOf(i));
 		}
@@ -35,53 +35,43 @@ public class CMD_PlaySong extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			displaySongList(termIn);
+	public void runCommand() {
+	    expectNoMoreThan(1);
+	    
+	    if (noArgs()) {
+			displaySongList();
 			return;
 		}
 		
-		if (args.length() != 1) termIn.error(getUsage());
-		
-		int song = ENumUtil.parseInt(args, 0, -1);
+		int song = ENumUtil.parseInt(args(), 0, -1);
 		SoundEngine.stopAll();
-		if (song >= 0) playSong(termIn, song);
-		else playSong(termIn, args.get(0));
+		if (song >= 0) playSong(song);
+		else playSong(firstArg());
 	}
 	
-	private void displaySongList(ETerminalWindow termIn) {
+	private void displaySongList() {
 		int i = 0;
 		for (Audio s : Songs.songList) {
-			termIn.writeln(String.format("%2d", i++), " : ", s.getName());
+			writeln(String.format("%2d", i++), " : ", s.getName());
 		}
 	}
 	
-	private void playSong(ETerminalWindow termIn, int songNum) {
-		try {
-			Audio theSong = Songs.songList.get(songNum);
-			SoundEngine.play(theSong);
-			theSong.setVolume(QoTSettings.musicVolume.get() * 0.001);
-		}
-		catch (Throwable t) {
-			error(termIn, t);
-		}
+	private void playSong(int songNum) {
+	    Audio theSong = Songs.songList.get(songNum);
+        SoundEngine.play(theSong);
+        theSong.setVolume(QoTSettings.musicVolume.get() * 0.001);
 	}
 	
-	private void playSong(ETerminalWindow termIn, String songName) {
-		try {
-			for (Audio s : Songs.songList) {
-				if (EUtil.isEqual(s.getName().toLowerCase(), songName.toLowerCase())) {
-					termIn.writeln("Playing song '" + s.getName() + "'", EColors.lgreen);
-					SoundEngine.play(s);
-					s.setVolume(QoTSettings.musicVolume.get() * 0.001);
-					return;
-				}
-			}
-			termIn.error("No song found under that name!");
-		}
-		catch (Throwable t) {
-			error(termIn, t);
-		}
+	private void playSong(String songName) {
+	    for (Audio s : Songs.songList) {
+            if (EUtil.isEqual(s.getName().toLowerCase(), songName.toLowerCase())) {
+                writeln("Playing song '" + s.getName() + "'", EColors.lgreen);
+                SoundEngine.play(s);
+                s.setVolume(QoTSettings.musicVolume.get() * 0.001);
+                return;
+            }
+        }
+        error("No song found under that name!");
 	}
 	
 }

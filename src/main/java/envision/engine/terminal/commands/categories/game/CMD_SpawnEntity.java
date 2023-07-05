@@ -1,6 +1,5 @@
 package envision.engine.terminal.commands.categories.game;
 
-import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.EArrayList;
@@ -24,21 +23,8 @@ public class CMD_SpawnEntity extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			termIn.error("Entity type must be specified!");
-			termIn.info(getUsage());
-		}
-		else if (args.size() != 3) {
-			termIn.error("Too many arguments!");
-			termIn.info(getUsage());
-		}
-		else if (Envision.theWorld == null) {
-			termIn.error("Error! There is no world loaded for which to spawn entities in!");
-		}
-		else {
-			//QoT.theWorld.addEntity(null);
-		}
+	public void runCommand() {
+	    expectExactly(3);
 	}
 	
 }

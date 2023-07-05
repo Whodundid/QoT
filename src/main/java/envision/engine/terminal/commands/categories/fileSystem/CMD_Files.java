@@ -1,7 +1,5 @@
 package envision.engine.terminal.commands.categories.fileSystem;
 
-import envision.Envision;
-import envision.engine.screens.ScreenLevel;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -19,7 +17,7 @@ public class CMD_Files extends AbstractFileCommand {
 	
 	@Override
 	public void runCommand() {
-		Envision.displayWindow(ScreenLevel.TOP, new FileExplorerWindow(dir()));
+		displayWindow(new FileExplorerWindow(dir()));
 	}
 	
 }

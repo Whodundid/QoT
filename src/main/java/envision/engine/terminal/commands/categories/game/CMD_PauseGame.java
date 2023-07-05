@@ -2,9 +2,7 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
 
 public class CMD_PauseGame extends TerminalCommand {
 	
@@ -18,21 +16,18 @@ public class CMD_PauseGame extends TerminalCommand {
 	@Override public String getUsage() { return "ex: pause"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) {
-			termIn.error("This command takes no arguments!");
-			return;
-		}
-		
-		var paused = Envision.isPaused();
+	public void runCommand() {
+	    expectNoArgs();
+	    
+		boolean paused = Envision.isPaused();
 		
 		if (paused) {
 			Envision.unpause();
-			termIn.writeln("Game Resumed", EColors.yellow);
+			writeln("Game Resumed", EColors.yellow);
 		}
 		else {
 			Envision.pause();
-			termIn.writeln("Game Paused", EColors.yellow);
+			writeln("Game Paused", EColors.yellow);
 		}
 	}
 	

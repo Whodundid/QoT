@@ -15,7 +15,7 @@ public class ObjectEventHandler {
 	private final EList<IWindowObject> listeners = EList.newList();
 	private final EList<IWindowObject> toBeAdded = EList.newList();
 	private final EList<IWindowObject> toBeRemoved = EList.newList();
-	private boolean iterating = false;
+	private volatile boolean iterating = false;
 	
 	//--------------
 	// Constructors
@@ -29,24 +29,25 @@ public class ObjectEventHandler {
 	// Methods
 	//---------
 	
-	public void processEvent(ObjectEvent e) {
+	public synchronized boolean processEvent(ObjectEvent e) {
 		if (parent.getObjectGroup() != null) parent.getObjectGroup().notifyGroup(e);
 		sendListenEvent(e);
+		return !e.isCancelled();
 	}
 	
-	public void unregisterAllObjects() {
+	public synchronized void unregisterAllObjects() {
 		toBeRemoved.addAll(listeners);
 		updateList();
 	}
 	
-	public void registerObject(IWindowObject object) {
+	public synchronized void registerObject(IWindowObject object) {
 		if (object != null && listeners.notContains(object)) {
 			toBeAdded.add(object);
 		}
 		updateList();
 	}
 	
-	public void unregisterObject(IWindowObject object) {
+	public synchronized void unregisterObject(IWindowObject object) {
 		if (object != null) {
 			toBeRemoved.add(object);
 		}
@@ -57,7 +58,7 @@ public class ObjectEventHandler {
 	// Internal Methods
 	//------------------
 	
-	private void sendListenEvent(ObjectEvent e) {
+	private synchronized void sendListenEvent(ObjectEvent e) {
 		iterating = true;
 		listeners.forEach(o -> o.onEvent(e));
 		iterating = false;
@@ -66,16 +67,20 @@ public class ObjectEventHandler {
 	
 	private void updateList() {
 		if (iterating) return;
-		
-		if (toBeAdded.isNotEmpty()) {
-			listeners.addAll(toBeAdded);
-			toBeAdded.clear();
-		}
-		
-		if (toBeRemoved.isNotEmpty()) {
-			listeners.removeAll(toBeRemoved);
-			toBeRemoved.clear();
-		}
+        // remove old listeners that are closed
+        for (var o : listeners) {
+            if (o.isClosed()) toBeRemoved.add(o);
+        }
+        
+        if (toBeAdded.isNotEmpty()) {
+            listeners.addAll(toBeAdded);
+            toBeAdded.clear();
+        }
+        
+        if (toBeRemoved.isNotEmpty()) {
+            listeners.removeAll(toBeRemoved);
+            toBeRemoved.clear();
+        }
 	}
 	
 	//---------

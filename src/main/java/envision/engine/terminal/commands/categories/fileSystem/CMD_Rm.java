@@ -1,11 +1,13 @@
 package envision.engine.terminal.commands.categories.fileSystem;
 
 import java.io.File;
+import java.io.IOException;
 
-import envision.engine.terminal.window.ETerminalWindow;
+import org.apache.commons.io.FileUtils;
+
+import envision.engine.terminal.terminalUtil.TerminalCommandError;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
-import eutil.strings.EStringUtil;
 
 public class CMD_Rm extends AbstractFileCommand {
 	
@@ -19,103 +21,41 @@ public class CMD_Rm extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: rm 'dir'"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { termIn.error("Not enough arguments!"); }
-		if (args.size() == 1) {
-			try {
-				File f = new File(termIn.getDir().getCanonicalPath() + "/" + args.get(0));
-				
-				if (f.exists()) {
-					if (!f.isDirectory()) {
-						if (!f.delete()) { termIn.error("Error: cannot delete the specified file"); }
-						termIn.info("Removing file: " + EColors.mc_aqua + f.getName());
-					}
-					else {
-						termIn.error(f.getName() + " is a directory!");
-					}
-				}
-				else {
-					termIn.error("Error: Cannot find a file with that path!");
-				}
-			}
-			catch (Exception e) {
-				error(termIn, e);
-			}
-		}
-		else if (args.size() == 2) {
-			try {
-				File f = new File(termIn.getDir().getCanonicalPath() + "/" + args.get(0));
-				
-				if (f.exists()) {
-					if (f.isDirectory()) {
-						if (args.get(1).equals("-r")) {
-							if (!deleteRecursively(termIn, f)) { termIn.error("Error: cannot fully delete specified directory"); }
-							termIn.info("Removing Dir: " + EColors.mc_aqua + f.getPath());
-						}
-						else {
-							termIn.error("Invalid parameter type: '" + args.get(0) + "'");
-						}
-					}
-					else {
-						if (!f.delete()) { termIn.error("Error: cannot delete the specified file"); }
-						termIn.info("Removing file: " + EColors.mc_aqua + f.getName());
-					}
-				}
-				else {
-					termIn.error("Error: Cannot find a file with that path!");
-				}
-			}
-			catch (Exception e) {
-				error(termIn, e);
-			}
-		}
-		else {
-			String all = EStringUtil.combineAll(args.subList(1, args.size() - 1), " ");
-			File f = new File(all);
-			
-			if (f.exists()) {
-				if (f.isDirectory()) {
-					if (args.get(1).equals("-r")) {
-						if (!deleteRecursively(termIn, f)) { termIn.error("Error: cannot fully delete specified directory"); }
-						termIn.info("Removing Dir: " + EColors.mc_aqua + f.getPath());
-					}
-					else {
-						termIn.error("Invalid parameter type: '" + args.get(0) + "'");
-					}
-				}
-				else {
-					if (!f.delete()) { termIn.error("Error: cannot delete the specified file"); }
-					termIn.info("Removing file: " + EColors.mc_aqua + f.getName());
-				}
-			}
-			else {
-				try {
-					f = new File(termIn.getDir().getCanonicalPath() + "/" + all);
-					
-					if (f.exists()) {
-						if (f.isDirectory()) {
-							if (args.get(1).equals("-r")) {
-								if (!deleteRecursively(termIn, f)) { termIn.error("Error: cannot fully delete specified directory"); }
-								termIn.info("Removing Dir: " + EColors.mc_aqua + f.getPath());
-							}
-							else {
-								termIn.error("Invalid parameter type: '" + args.get(0) + "'");
-							}
-						}
-						else {
-							if (!f.delete()) { termIn.error("Error: cannot delete the specified file"); }
-							termIn.info("Removing file: " + EColors.mc_aqua + f.getName());
-						}
-					}
-					else {
-						termIn.error("Error: Cannot find a file with that path!");
-					}
-				}
-				catch (Exception e) {
-					error(termIn, e);
-				}
-			} //else
-		}
+	public void runCommand() throws IOException {
+	    expectAtLeast(1);
+	    
+	    boolean recursive = hasModifier("-r");
+	    
+	    for (String toDelete : args()) {
+	        try {
+	            File f = parseFilePath(toDelete);
+	            deleteFile(f, recursive);
+	        }
+	        catch (TerminalCommandError e) {
+	            error(e.getMessage());
+	        }
+	        catch (Exception e) {
+	            error(e);
+	        }
+	    }
+	    
+	    DeveloperDesktop.reloadFileExplorers();
+	}
+	
+	private void deleteFile(File file, boolean recursive) throws TerminalCommandError, IOException {
+        expectFileNotNull(file);
+        expectFileExists(file);
+        
+        if (file.isDirectory()) {
+            if (recursive) FileUtils.deleteDirectory(file);
+            else if (file.list().length > 0) error("'", file.getName(), "' is not empty!");
+            else if (!file.delete()) error("Could not delete directory: '", file.getName(), "'");
+            else writeln(EColors.yellow, "Deleting directory: ", EColors.mc_aqua, file.getName());
+            return;
+        }
+        
+        if (!file.delete()) error("Could not delete file: '", file.getName(), "'");
+        else writeln(EColors.yellow, "Deleting file: ", EColors.mc_aqua, file.getName());
 	}
 	
 }

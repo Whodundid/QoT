@@ -1,5 +1,6 @@
 package envision.engine.windows.windowTypes.interfaces;
 
+import java.util.Collection;
 import java.util.function.Consumer;
 
 import envision.Envision;
@@ -9,6 +10,7 @@ import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowObjects.utilityObjects.FocusLockBorder;
+import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.WindowObjectProperties;
 import envision.engine.windows.windowTypes.WindowParent;
@@ -24,6 +26,7 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectEventType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventAction;
+import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import envision.engine.windows.windowUtil.windowEvents.events.EventModify;
 import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
@@ -31,7 +34,6 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventObjects;
 import envision.engine.windows.windowUtil.windowEvents.events.EventRedraw;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.points.Point2d;
@@ -203,7 +205,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	public default EList<Runnable> getFutureTasks(FutureTaskEventType type) {
 		var ftm = getFutureTaskManager();
 		if (ftm != null) return ftm.getFutureTasks(type);
-		return new EArrayList<>();
+		return EList.newList();
 	}
 	
 	/**
@@ -564,11 +566,6 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	public default boolean hasHeader() { return properties().objectHeader != null; }
 	/** If this object has a header, returns the header object, otherwise returns null. */
 	public default WindowHeader getHeader() { return properties().objectHeader; }
-//		for (var o : getCombinedChildren()) {
-//			if (o instanceof WindowHeader h) return h;
-//		}
-//		return null;
-//	}
 	
 	//-------------------
 	// Size And Position
@@ -1328,9 +1325,10 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	}
 	
 	/** Broadcasts an ObjectEvent on this object. */
-	public default void postEvent(ObjectEvent e) {
+	public default boolean postEvent(ObjectEvent e) {
 		var handler = properties().eventHandler;
-		if (handler != null) handler.processEvent(e);
+		if (handler != null) return handler.processEvent(e);
+		return false;
 	}
 	
 	/** Called on ObjectEvents. */
@@ -1344,6 +1342,20 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	public default void actionPerformed(IActionObject object, Object... args) {
 		postEvent(new EventAction(this, object, args));
 	}
+	
+	//===============
+	// Drag and Drop
+	//===============
+	
+    /** Internal event called whenever an object is being dragged-and-dropped into this object. */
+    public default void onDragAndDrop_i(DragAndDropObject objectBeingDropped) {
+        if (postEvent(new EventDragAndDrop(objectBeingDropped, this))) {
+            onDragAndDrop(objectBeingDropped);
+        }
+    }
+	
+	/** Event called whenever an object is being dragged-and-dropped into this object. */
+	public default void onDragAndDrop(DragAndDropObject objectBeingDropped) {}
 	
 	//--------------
 	// Close Object
@@ -1417,7 +1429,21 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	public static void setVal(Consumer<? super IWindowObject> action, IWindowObject... objs) {
 		EUtil.filterNullForEachA(action, objs);
 	}
+
+	public static void setMoveable(boolean val, Collection<IWindowObject> objs) { setVal(o -> o.setMoveable(val), objs); }
+	public static void setResizeable(boolean val, Collection<IWindowObject> objs) { setVal(o -> o.setResizeable(val), objs); }
+	public static void setCloseable(boolean val, Collection<IWindowObject> objs) { setVal(o -> o.setCloseable(val), objs); }
+	public static void setClickable(boolean val, Collection<IWindowObject> objs) { setVal(o -> o.setClickable(val), objs); }
+    public static void setHidden(boolean val, Collection<IWindowObject> objs) { setVal(o -> o.setHidden(val), objs); }
+    public static void setEnabled(boolean val, Collection<IWindowObject> objs) { setVal(o -> o.setEnabled(val), objs); }
+    public static void setVisible(boolean val, Collection<IWindowObject> objs) { setVal(o -> o.setVisible(val), objs); }
+    public static void setPersistent(boolean val, Collection<IWindowObject> objs) { setVal(o -> o.setAlwaysVisible(val), objs); }
+    public static void setHoverText(String text, Collection<IWindowObject> objs) { setVal(o -> o.setHoverText(text), objs); }
 	
+    public static void setVal(Consumer<? super IWindowObject> action, Collection<IWindowObject> objs) {
+        EUtil.filterNullForEach(objs, action);
+    }
+    
 	/**
 	 * Returns true if the object is moving in regards to its top parent.
 	 * 

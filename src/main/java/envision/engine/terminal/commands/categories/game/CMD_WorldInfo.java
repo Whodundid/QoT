@@ -24,27 +24,24 @@ public class CMD_WorldInfo extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) {
-			errorUsage(termIn, ERROR_NO_ARGS);
-			return;
-		}
+	public void runCommand() {
+	    expectNoArgs();
 		
 		IGameWorld world = Envision.theWorld;
 		
 		if (world == null) {
-			termIn.error("No world loaded!");
+			error("No world loaded!");
+			return;
 		}
-		else {
-			String n = world.getWorldName();
-			int w = world.getWidth();
-			int h = world.getHeight();
-			boolean u = world.isUnderground();
-			
-			termIn.writeln(EColors.yellow + "Name: " + EColors.green + n);
-			termIn.writeln(EColors.yellow + "Dims: " + EColors.green + "[" + w + "x" + h + "]");
-			termIn.writeln(EColors.yellow + "Underground: " + EColors.green + u);
-		}
+		
+		String n = world.getWorldName();
+        int w = world.getWidth();
+        int h = world.getHeight();
+        boolean u = world.isUnderground();
+        
+        writeln(EColors.yellow + "Name: " + EColors.green + n);
+        writeln(EColors.yellow + "Dims: " + EColors.green + "[" + w + "x" + h + "]");
+        writeln(EColors.yellow + "Underground: " + EColors.green + u);
 	}
 	
 }

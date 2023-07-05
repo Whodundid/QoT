@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea;
@@ -226,29 +227,30 @@ public class TextEditorWindow extends WindowParent {
 	}
 	
 	private void saveFile() {
-		if (path != null) {
-			
-			//create the required directories if they do not exist
-			if (!path.getParentFile().exists()) path.getParentFile().mkdirs();
-			
-			//save the file
-			try (PrintWriter writer = new PrintWriter(path, "UTF-8")) {
-				
-				if (document != null) {
-					var lines = document.getTextDocument();
-					
-					for (var l : lines) {
-						writer.println(l.getText());
-					}
-				}
-				
-				openDialogue(true);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				openDialogue(false);
-			}
-		}
+	    if (path == null) return;
+	    
+        //create the required directories if they do not exist
+        if (!path.getParentFile().exists()) path.getParentFile().mkdirs();
+        
+        //save the file
+        try (PrintWriter writer = new PrintWriter(path, "UTF-8")) {
+            
+            if (document != null) {
+                var lines = document.getTextDocument();
+                
+                for (var l : lines) {
+                    writer.println(l.getText());
+                }
+            }
+            
+            openDialogue(true);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            openDialogue(false);
+        }
+		
+		DeveloperDesktop.reloadFileExplorers();
 	}
 	
 	private void reloadFile() {

@@ -32,22 +32,22 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 	}
 	
 	/** Initializes this WindowObject with the specified parent and starting coordinates. */
-	public void init(IWindowObject objIn, Number xIn, Number yIn) {
+	public void init(IWindowObject objIn, double xIn, double yIn) {
 		properties.parent = objIn;
-		startX = xIn.doubleValue();
-		startY = yIn.doubleValue();
+		startX = xIn;
+		startY = yIn;
 		startXPos = startX;
 		startYPos = startY;
 		res = Envision.getWindowDims();
 	}
 	
 	/** Initializes this WindowObject with the specified parent and dimensions. */
-	public void init(IWindowObject objIn, Number xIn, Number yIn, Number widthIn, Number heightIn) {
+	public void init(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) {
 		properties.parent = objIn;
-		startXPos = xIn.doubleValue();
-		startYPos = yIn.doubleValue();
-		startWidth = widthIn.doubleValue();
-		startHeight = heightIn.doubleValue();
+		startXPos = xIn;
+		startYPos = yIn;
+		startWidth = widthIn;
+		startHeight = heightIn;
 		setDimensions(startXPos, startYPos, startWidth, startHeight);
 		res = Envision.getWindowDims();
 	}

@@ -12,5 +12,6 @@ public enum EventType {
 	CLOSE,
 	MODIFY,
 	ACTION,
+	DRAG_AND_DROP,
 	NONE;
 }

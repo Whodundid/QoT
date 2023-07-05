@@ -22,13 +22,29 @@ public class EventMouse extends ObjectEvent {
 	//--------------
 	
 	public EventMouse(IWindowObject parentObjectIn, int mXIn, int mYIn, int buttonIn, MouseType typeIn) {
-		super(parentObjectIn, EventType.MOUSE);
+		super(parentObjectIn, EventType.MOUSE, true);
 		mX = mXIn;
 		mY = mYIn;
 		button = buttonIn;
 		type = typeIn;
 	}
-
+	
+	//===========
+	// Overrides
+	//===========
+	
+	@Override
+	public String toString() {
+	    String buttonStr = switch (button) {
+        case 0 -> "LEFT";
+        case 1 -> "RIGHT";
+        case 2 -> "MIDDLE";
+        default -> "" + button;
+        };
+	    
+	    return "EventMouse[" + getEventParent() + ", (" + mX + ", " + mY + ") , " + buttonStr + ", " + type + "]";
+	}
+	
 	//---------
 	// Getters
 	//---------

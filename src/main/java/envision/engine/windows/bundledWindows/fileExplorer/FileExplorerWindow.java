@@ -1,18 +1,27 @@
 package envision.engine.windows.bundledWindows.fileExplorer;
 
 import java.io.File;
+import java.io.IOException;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.bundledWindows.ConfirmationDialogBox;
-import envision.engine.windows.developerDesktop.EnvisionDeveloperDesktop;
-import envision.engine.windows.developerDesktop.util.EnvisionDesktopUtil;
+import envision.engine.windows.bundledWindows.ErrorDialogBox;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
+import envision.engine.windows.developerDesktop.util.DesktopUtil;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
+import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.ActionWindowParent;
+import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
+import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
+import envision.engine.windows.windowUtil.windowEvents.events.EventKeyboard;
+import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
@@ -32,6 +41,7 @@ public class FileExplorerWindow extends ActionWindowParent {
     private WindowTextField dirField, searchField;
     private WindowButton cancelBtn, selectBtn;
     private WindowScrollList fileArea;
+    private RightClickMenu folderRCM;
     
     private EList<FilePreview> order = EList.newList();
     private EList<FilePreview> highlighted = EList.newList();
@@ -58,6 +68,7 @@ public class FileExplorerWindow extends ActionWindowParent {
     public FileExplorerWindow(IWindowObject parent, File dirIn, boolean selectModeIn) {
         super(parent);
         curDir = dirIn;
+        if (!curDir.isDirectory()) curDir = curDir.getParentFile();
         selectMode = selectModeIn;
         windowIcon = WindowTextures.file_folder;
     }
@@ -116,6 +127,8 @@ public class FileExplorerWindow extends ActionWindowParent {
         fileArea = new WindowScrollList(this, startX + 2, fileUpBtn.endY + 8, width - 4, faH);
         fileArea.setBackgroundColor(EColors.pdgray);
         
+        setObjectGroup(new EObjectGroup(this, fileArea, header, backBtn, forwardBtn, fileUpBtn));
+        
         addObject(backBtn, forwardBtn, fileUpBtn);
         addObject(cancelBtn, selectBtn);
         addObject(dirField);
@@ -126,6 +139,7 @@ public class FileExplorerWindow extends ActionWindowParent {
     
     @Override
     public void preReInit() {
+        refresh();
         text = dirField.getText();
         vPos = fileArea.getVScrollBar().getScrollPos();
         prevHighlight = EList.newList();
@@ -152,13 +166,37 @@ public class FileExplorerWindow extends ActionWindowParent {
     }
     
     @Override
+    public void onGroupNotification(ObjectEvent e) {
+        if (e instanceof EventMouse m) {
+            final IWindowObject obj = e.getEventParent();
+            if (obj != this && obj != fileArea) return;
+            if (m.getMouseButton() == 1) openFolderRCM();
+        }
+        else if (e instanceof EventDragAndDrop d) {
+            onDragAndDrop(d.getObjectBeingDropped());
+        }
+        else if (e instanceof EventKeyboard k) {
+            keyPressed(k.getEventChar(), k.getEventKey());
+        }
+    }
+    
+    @Override
+    public void mousePressed(int mXIn, int mYIn, int button) {
+        super.mousePressed(mXIn, mYIn, button);
+        if (button == 1) openFolderRCM();
+    }
+    
+    @Override
     public void keyPressed(char typedChar, int keyCode) {
         if (Keyboard.isCtrlV(keyCode)) performFilePaste();
         else if (Keyboard.isShiftDelete(keyCode)) deleteHighlightedFiles();
         else if (keyCode == Keyboard.KEY_DELETE) recycleHighlightedFiles();
         else if (keyCode == Keyboard.KEY_ENTER) openHighlightedFiles();
+        else if (Keyboard.isCtrlC(keyCode)) DeveloperDesktop.setFilesToCopy(getHighlightedFiles());
+        else if (Keyboard.isCtrlX(keyCode)) DeveloperDesktop.setFilesToCut(getHighlightedFiles());
         else if (Keyboard.isCtrlA(keyCode)) selectAll();
         else if (Keyboard.isCtrlD(keyCode)) deselectAll();
+        else if (keyCode == Keyboard.KEY_F5) refresh();
     }
     
     @Override
@@ -174,6 +212,26 @@ public class FileExplorerWindow extends ActionWindowParent {
         }
     }
     
+    @Override
+    public void onDragAndDrop(DragAndDropObject objectBeingDropped) {
+        if (!(objectBeingDropped instanceof MovingFileObject)) return;
+        
+        var mfo = (MovingFileObject) objectBeingDropped;
+        var files = mfo.getFilesBeingMoved().map(f -> f.getFile());
+        DeveloperDesktop.setFilesToCopy(files);
+        DeveloperDesktop.performCut(curDir);
+        DeveloperDesktop.reloadFileExplorers();
+        
+//        String text = EColors.yellow + "Move";
+//        if (files.hasOne()) text += " the file: " + files.getFirst().getName();
+//        else text += files.size() + " files";
+//        text += " to " + curDir.getName() + "?";
+//        ConfirmationDialogBox.showDialog(text, () -> {
+//            DeveloperDesktop.performCut(curDir);
+//            DeveloperDesktop.reloadFileExplorers();
+//        });
+    }
+    
     //---------
     // Methods
     //---------
@@ -183,11 +241,37 @@ public class FileExplorerWindow extends ActionWindowParent {
         highlighted.clear();
     }
     
+    private void openFolderRCM() {
+        if (folderRCM != null) {
+            folderRCM.close();
+            folderRCM = null;
+        }
+        
+        folderRCM = new RightClickMenu("Folder Options");
+        folderRCM.addOption("New File", WindowTextures.file_txt, () -> createNewFile());
+        folderRCM.addOption("New Folder", WindowTextures.new_folder, () -> createNewFolder());
+        folderRCM.addOptionIf(DeveloperDesktop.hasFilesToCopy(), "Paste", () -> performFilePaste());
+        folderRCM.addOption("New Window", WindowTextures.file_folder, () -> DeveloperDesktop.openFileExplorer(curDir));
+        folderRCM.addOption("Refresh", WindowTextures.refresh, () -> refresh());
+        folderRCM.addOption("Terminal Here", WindowTextures.terminal, () -> DesktopUtil.openInTerminal(curDir));
+        folderRCM.showOnCurrent();
+    }
+    
     //---------
     // Getters
     //---------
     
     public File getSelectedFile() { return selectedFile; }
+    
+    /** Returns a list of all files that are currently highlighted in this file explorer. */
+    public EList<FilePreview> getHighlightedFilePreviews() {
+        return EList.of(highlighted);
+    }
+    
+    /** Returns a list of all files that are currently highlighted in this file explorer. */
+    public EList<File> getHighlightedFiles() {
+        return EList.of(highlighted.map(f -> f.getFile()));
+    }
     
     //---------
     // Setters
@@ -333,7 +417,7 @@ public class FileExplorerWindow extends ActionWindowParent {
                 setDir(f.getFile());
                 break;
             default:
-                EnvisionDesktopUtil.openFile(f.getFile());
+                DesktopUtil.openFile(f.getFile());
             }
         }
         catch (Exception e) {
@@ -386,15 +470,11 @@ public class FileExplorerWindow extends ActionWindowParent {
     }
     
     public void performFilePaste() {
-        File theFile = EnvisionDeveloperDesktop.getWorkingFile();
-        boolean isCut = EnvisionDeveloperDesktop.isCutOperation();
-        
-        if (theFile == null) return;
-        
-        if (isCut) EnvisionDeveloperDesktop.performCut(curDir);
-        else EnvisionDeveloperDesktop.performCopy(curDir);
-        
-        refresh();
+        if (!DeveloperDesktop.hasFilesToCopy()) return;
+        if (DeveloperDesktop.performFileOperation(curDir)) {
+            refresh();
+            DeveloperDesktop.reloadFileExplorers();
+        }
     }
     
     public void openHighlightedFiles() {
@@ -402,7 +482,7 @@ public class FileExplorerWindow extends ActionWindowParent {
             // if there are multiple files selected and one is a directory,
             // open the directory in a new file explorer window
             if (file.isDir() && highlighted.size() > 1) {
-                EnvisionDesktopUtil.openFile(file.getFile());
+                DesktopUtil.openFile(file.getFile());
             }
             else openFile(file);
         }
@@ -421,7 +501,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         
         String text = EColors.yellow + "Are you sure you want to recycle the file: " + EColors.white + filePreview;
         ConfirmationDialogBox.showDialog(text, () -> {
-            EnvisionDesktopUtil.recycleFile(filePreview.getFile());
+            DesktopUtil.recycleFile(filePreview.getFile());
             refresh();
         });
     }
@@ -439,7 +519,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         
         String text = EColors.yellow + "Are you sure you want to delete the file: " + EColors.white + filePreview;
         ConfirmationDialogBox.showDialog(text, () -> {
-            EnvisionDesktopUtil.deleteFile(filePreview.getFile());
+            DesktopUtil.deleteFile(filePreview.getFile());
             refresh();
         });
     }
@@ -460,7 +540,7 @@ public class FileExplorerWindow extends ActionWindowParent {
             + EColors.mc_lightpurple + size + EColors.yellow + "' files?";
         
         ConfirmationDialogBox.showDialog(text, () -> {
-            EnvisionDesktopUtil.recycleMultipleFiles(mappedFiles);
+            DesktopUtil.recycleMultipleFiles(mappedFiles);
             refresh();
         });
     }
@@ -481,9 +561,35 @@ public class FileExplorerWindow extends ActionWindowParent {
             + EColors.mc_lightpurple + size + EColors.yellow + "' files?";
         
         ConfirmationDialogBox.showDialog(text, () -> {
-            EnvisionDesktopUtil.deleteMultipleFiles(mappedFiles);
+            DesktopUtil.deleteMultipleFiles(mappedFiles);
             refresh();
         });
+    }
+    
+    public void createNewFile() {
+        try {
+            if (DeveloperDesktop.createFileInDir(curDir, "New File")) {
+                refresh();
+                return;
+            }
+            ErrorDialogBox.showDialog("Failed to create new file!");
+        }
+        catch (IOException e) {
+            ErrorDialogBox.showDialog(e.toString());
+        }
+    }
+    
+    public void createNewFolder() {
+        try {
+            if (DeveloperDesktop.createDirectoryInDir(curDir, "New Folder")) {
+                refresh();
+                return;
+            }
+            ErrorDialogBox.showDialog("Failed to create new folder!");
+        }
+        catch (IOException e) {
+            ErrorDialogBox.showDialog(e.toString());
+        }
     }
     
 }

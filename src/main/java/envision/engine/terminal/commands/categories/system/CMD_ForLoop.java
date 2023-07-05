@@ -2,8 +2,6 @@ package envision.engine.terminal.commands.categories.system;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.strings.EStringUtil;
@@ -22,96 +20,74 @@ public class CMD_ForLoop extends TerminalCommand {
 	@Override public String getUsage() { return "ex: for 0-9-1 'cmd'"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.size() < 2) {
-			termIn.error("Not enought arguments for loop!");
-			termIn.info(getUsage());
-		}
-		else if (args.size() >= 2) {
-			String vals = args.get(0);
-			
-			EArrayList<String> otherArgs = new EArrayList(args.subList(1, args.size()));
-			
-			//String cmd = "";
-			//for (String s : otherArgs) { cmd += (s + " "); }
-			//if (otherArgs.size() >= 1) { cmd = cmd.substring(0, cmd.length() - 1); }
-			
-			if (vals.length() < 3) { termIn.error("Not enough arguments for loop!"); }
-			else if (vals.length() >= 3 && vals.contains("-")) {
-				int pos = EStringUtil.findStartingIndex(vals, "-");
-				String firstArg = vals.substring(0, pos);
-				String secondParse = vals.substring(pos + 1);
-				
-				String secondArg = EStringUtil.subStringToString(secondParse, 0, "-");
-				System.out.println(secondArg);
-				
-				
-				String thirdArg = EStringUtil.subStringToString(secondParse, 0, "-", true);
-				
-				System.out.println(thirdArg);
-				
-				
-				
-				boolean positive = true;
-				int firstI = 0;
-				int secondI = 0;
-				int thirdI = 0;
-				
-				Class type = checkClasses(termIn, firstArg, secondArg, thirdArg);
-				
-				if (type == null) { termIn.error("Could not parse range value types!"); return; }
-				if (type == Exception.class) { termIn.error("Inconsistent range datatype values!"); return; }
-				
-				if (type == Integer.class) {
-					firstI = Integer.parseInt(firstArg);
-					secondI = Integer.parseInt(secondArg);
-					thirdI = Integer.parseInt(thirdArg);
-					
-					positive = (secondI - firstI > 0); //check direction
-					
-					if (positive) {
-						try {
-							for (int i = firstI; i <= secondI; i = i + thirdI) {
-								runLoop(termIn, i, otherArgs);
-							}
-						}
-						catch (Exception e) {
-							error(termIn, e);
-						}
-					}
-					else {
-						try {
-							for (int i = firstI; i >= secondI; i = i - thirdI) {
-								runLoop(termIn, i, otherArgs);
-							}
-						}
-						catch (Exception e) {
-							error(termIn, e);
-						}
-					}
-				}
-				else if (type == String.class) {
-					
-				}
-			}
-			else {
-				termIn.error("Invalid for loop range argument!");
-			}
-			
-			/*
-			if (!cmd.isEmpty()) {
-				try {
-					if (!(cmd.equals("clear") || cmd.equals("clr") || cmd.equals("cls"))) { termIn.writeln("> " + cmd); }
-					
-				} catch (Exception e) { e.printStackTrace(); }
-			}
-			*/
-		}
-		
-		
+	public void runCommand() {
+	    expectExactly(3, "Expected at least 2 int arguments and one command target for loop!");
+	    
+	    String vals = firstArg();
+        
+        EList<String> otherArgs = EList.of(args().subList(1, argLength()));
+        
+        if (!vals.contains("-")) {
+            error("Invalid for loop range argument!");
+            return;
+        }
+        
+        int pos = EStringUtil.findStartingIndex(vals, "-");
+        String firstArg = vals.substring(0, pos);
+        String secondParse = vals.substring(pos + 1);
+        
+        String secondArg = EStringUtil.subStringToString(secondParse, 0, "-");
+        System.out.println(secondArg);
+        
+        
+        String thirdArg = EStringUtil.subStringToString(secondParse, 0, "-", true);
+        
+        System.out.println(thirdArg);
+        
+        boolean positive = true;
+        int firstI = 0;
+        int secondI = 0;
+        int thirdI = 0;
+        
+        Class type = checkClasses(firstArg, secondArg, thirdArg);
+        
+        if (type == null) { error("Could not parse range value types!"); return; }
+        if (type == Exception.class) { error("Inconsistent range datatype values!"); return; }
+        
+        if (type == Integer.class) {
+            firstI = Integer.parseInt(firstArg);
+            secondI = Integer.parseInt(secondArg);
+            thirdI = Integer.parseInt(thirdArg);
+            
+            positive = (secondI - firstI > 0); //check direction
+            
+            if (positive) {
+                try {
+                    for (int i = firstI; i <= secondI; i = i + thirdI) {
+                        runLoop(i, otherArgs);
+                    }
+                }
+                catch (Exception e) {
+                    error(e);
+                }
+            }
+            else {
+                try {
+                    for (int i = firstI; i >= secondI; i = i - thirdI) {
+                        runLoop(i, otherArgs);
+                    }
+                }
+                catch (Exception e) {
+                    error(e);
+                }
+            }
+        }
+        else if (type == String.class) {
+            
+        }
 	}
 	
-	private Class checkClasses(ETerminalWindow termIn, String firstArg, String secondArg, String thirdArg) {
+	private Class checkClasses(String firstArg, String secondArg, String thirdArg) {
 		try {
 			Class first = String.class;
 			Class second = String.class;
@@ -127,24 +103,28 @@ public class CMD_ForLoop extends TerminalCommand {
 			
 		}
 		catch (Exception e) {
-			error(termIn, e);
+			error(e);
 		}
 		return null;
 	}
 	
-	private void runLoop(ETerminalWindow termIn, Object curVal, EArrayList<String> argsIn) {
+	private void runLoop(Object curVal, EList<String> argsIn) {
 		String cmd = replaceValsInArgs(argsIn, curVal);
-		termIn.writeln("> " + cmd);
-		Envision.getTerminalHandler().executeCommand(termIn, cmd, false);
+		writeln("> " + cmd);
+		Envision.getTerminalHandler().executeCommand(term(), cmd, false);
 	}
 	
-	private String replaceValsInArgs(EArrayList<String> argsIn, Object curVal) {
+	private String replaceValsInArgs(EList<String> argsIn, Object curVal) {
 		String cmd = "";
 		for (String s : argsIn) {
 			s = s.replaceAll("\\#", "" + curVal);
 			cmd += s + " ";
 		}
-		if (argsIn.size() > 0 && cmd.length() > 0) { cmd = cmd.substring(0, cmd.length() - 1); }
+		
+		if (argsIn.size() > 0 && cmd.length() > 0) {
+		    cmd = cmd.substring(0, cmd.length() - 1);
+		}
+		
 		return cmd;
 	}
 	

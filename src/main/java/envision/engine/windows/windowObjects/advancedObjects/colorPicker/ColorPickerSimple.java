@@ -1,5 +1,6 @@
 package envision.engine.windows.windowObjects.advancedObjects.colorPicker;
 
+import envision.Envision;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.basicObjects.WindowContainer;
@@ -42,6 +43,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 	// Constructors
 	//--------------
 	
+	public ColorPickerSimple() { this(Envision.getActiveTopParent(), 0xffffffff); }
 	public ColorPickerSimple(IWindowObject parentIn) { this(parentIn, 0xffffffff); }
 	public ColorPickerSimple(IWindowObject parentIn, int colorIn) {
 		super(parentIn);

@@ -33,13 +33,13 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 	//--------------------------
 	
 	@Override
-	public void init(IWindowObject objIn, Number xIn, Number yIn) {
+	public void init(IWindowObject objIn, double xIn, double yIn) {
 		super.init(objIn, xIn, yIn);
 		actionReceiver = objIn;
 	}
 	
 	@Override
-	public void init(IWindowObject objIn, Number xIn, Number yIn, Number widthIn, Number heightIn) {
+	public void init(IWindowObject objIn, double xIn, double yIn, double widthIn, double heightIn) {
 		super.init(objIn, xIn, yIn, widthIn, heightIn);
 		actionReceiver = objIn;
 	}

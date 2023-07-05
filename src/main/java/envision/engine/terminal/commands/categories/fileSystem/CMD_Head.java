@@ -1,12 +1,11 @@
 package envision.engine.terminal.commands.categories.fileSystem;
 
 import java.io.File;
-import java.util.Scanner;
+import java.io.IOException;
 
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
-import eutil.strings.EStringUtil;
+import eutil.file.LineReader;
+import eutil.math.ENumUtil;
 
 public class CMD_Head extends AbstractFileCommand {
 	
@@ -19,72 +18,33 @@ public class CMD_Head extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: head 'file path' 10"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) { termIn.error("Not enough arguments!"); termIn.info(getUsage()); }
-		else if (args.size() == 1) { tryFind(termIn, args, 10); }
-		else if (args.size() == 2) {
-			try {
-				long len = Long.parseLong(args.get(1));
-				
-				if (len < 0) { termIn.error("Value cannot be negative!"); }
-				else if (len > Integer.MAX_VALUE) { termIn.error("Value is too large!"); }
-				else {
-					tryFind(termIn, args, (int) len);
-				}
-			}
-			catch (NumberFormatException e) { termIn.error("Cannot parse arg!"); }
-			catch (Exception e) { error(termIn, e); }
-		}
-		else { termIn.error("Too many arguments!"); termIn.info(getUsage()); }
+	public void runCommand() throws IOException {
+	    expectBetween(1, 2);
+	    
+	    File theFile = parseFilePath(dir(), firstArg());
+	    int amount = 10;
+	    
+	    if (twoArgs()) amount = ENumUtil.parseInt(arg(1), 10);
+	    
+	    display(theFile, amount);
 	}
 	
-	private void tryFind(ETerminalWindow termIn, EList<String> args, int len) {
-		String all = EStringUtil.combineAll(args, " ");
-		File f = new File(all);
-		
-		if (all.startsWith("..")) { f = new File(termIn.getDir(), args.get(0)); }
-		
-		if (f.exists()) { display(termIn, f, len); }
-		else {
-			f = new File(termIn.getDir(), all);
-			
-			if (f.exists()) { display(termIn, f, len); }
-			else {
-				if (args.get(0).startsWith("..")) { f = new File(termIn.getDir(), args.get(0)); }
-				else { f = new File(args.get(0)); }
-				
-				if (f.exists()) { display(termIn, f, len); }
-				else {
-					f = new File(termIn.getDir(), args.get(0));
-					
-					if (f.exists()) { display(termIn, f, len); }
-					else {
-						termIn.error("'" + args.get(0) + "' is not a vaild directory!");
-					}
-				}
-			}
-		}
-	}
-	
-	private void display(ETerminalWindow termIn, File fileIn, int len) {
-		if (!fileIn.isDirectory()) {
-			try (Scanner reader = new Scanner(fileIn)) {
-				if (reader.hasNext()) {
-					termIn.info("Displaying content:\n");
-				}
-				
-				int i = 0;
-				if (len > 0) {
-					while (reader.hasNext() && i < len) {
-						String s = reader.nextLine();
-						termIn.writeln(s, EColors.lgray);
-						i++;
-					}
-				}
-			}
-			catch (Exception e) { error(termIn, e); }
-		}
-		else { termIn.error(fileIn.getName() + " is a directory not a file!"); }
+	private void display(File fileIn, int len) throws IOException {
+	    expectFileNotNull(fileIn);
+	    expectFileExists(fileIn);
+	    expectFile(fileIn);
+	    
+	    try (var reader = new LineReader(fileIn)) {
+	        info("Displaying content:\n");
+            if (len <= 0) return;
+            
+            int i = 0;
+            while (reader.hasNextLine() && i < len) {
+                String s = reader.nextLine();
+                writeln(s, EColors.lgray);
+                i++;
+            }
+        }
 	}
 
 }

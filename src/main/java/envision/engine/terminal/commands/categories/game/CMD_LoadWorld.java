@@ -17,6 +17,7 @@ public class CMD_LoadWorld extends AbstractFileCommand {
 	public CMD_LoadWorld() {
 		setCategory("Game");
 		expectedArgLength = 0;
+		setAcceptedModifiers("-ns");
 	}
 
 	@Override public String getName() { return "loadworld"; }
@@ -30,45 +31,26 @@ public class CMD_LoadWorld extends AbstractFileCommand {
 	}
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			termIn.error("Error: Map name empty!");
-			return;
-		}
+	public void runCommand() {
+	    expectExactly(1, "Error: Map name empty!");
 		
-		String worldName = args.get(0);
+		String worldName = firstArg();
 		GameWorld world = buildWorld(worldName);
 		
-		boolean switchTo = true;
+		boolean switchTo = !hasModifier("-ns");
 		
-		if (args.length() > 1) {
-			try {
-				String flag = args.get(1);
-				if ("-ns".equals(flag)) switchTo = false;
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+		if (!world.getWorldFile().exists()) {
+		    error("World '" + worldName + "' does not exist!");
+		    return;
 		}
 		
-		if (world.getWorldFile().exists()) {
-			termIn.writeln("Loading world...", EColors.green);
-			
-			Envision.setPlayer(new QoT_Player("Test"));
-			
-			if (switchTo) {
-				Envision.displayScreen(new GamePlayScreen());
-			}
-			
-			Envision.loadWorld(world);
-		}
-		else {
-			termIn.error("World '" + worldName + "' does not exist!");
-		}
+		writeln("Loading world...", EColors.green);
+        Envision.setPlayer(new QoT_Player("Test"));
+        if (switchTo) Envision.displayScreen(new GamePlayScreen());
+        Envision.loadWorld(world);
 	}
 	
 	public static GameWorld buildWorld(String worldName) {
-		//worldName = (worldName.endsWith(".twld")) ? worldName : worldName + ".twld";
 		File f = new File(QoTSettings.getEditorWorldsDir(), worldName);
 		return new GameWorld(f);
 	}

@@ -21,7 +21,9 @@ public class CMD_GiveItem extends TerminalCommand {
 	
 	@Override
 	public void runCommand() {
-		if (Envision.thePlayer == null) {
+	    expectAtLeast(1);
+
+	    if (Envision.thePlayer == null) {
 			error("There is no player!");
 			return;
 		}
@@ -37,9 +39,7 @@ public class CMD_GiveItem extends TerminalCommand {
 			return;
 		}
 		
-		expectAtLeast(1);
 		var target = Envision.thePlayer;
-		
 		var input = ENumUtil.parseInt(arg(0), -1);
 		
 		if (input < 0 || input >= items.size()) {

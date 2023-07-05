@@ -21,7 +21,7 @@ public class EventModify extends ObjectEvent {
 	//--------------
 	
 	public EventModify(IWindowObject parentObjectIn, IWindowObject modifyingObjectIn, ObjectModifyType modifyingTypeIn) {
-		super(parentObjectIn, EventType.MODIFY);
+		super(parentObjectIn, EventType.MODIFY, true);
 		modifyingObject = modifyingObjectIn;
 		modifyType = modifyingTypeIn;
 	}

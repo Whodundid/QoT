@@ -1,12 +1,10 @@
 package envision.engine.terminal.commands.categories.fileSystem;
 
 import java.io.File;
+import java.io.IOException;
 
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
 import eutil.file.LineReader;
-import eutil.strings.EStringUtil;
 
 public class CMD_Cat extends AbstractFileCommand {
 	
@@ -19,55 +17,22 @@ public class CMD_Cat extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: cat '.txt'"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		try {
-			if (args.size() == 0) termIn.error("Not enough arguments!");
-			else if (args.size() >= 1) {
-				String all = EStringUtil.combineAll(args, " ");
-				File f = new File(all);
-				
-				if (all.startsWith("..")) f = new File(termIn.getDir(), args.get(0));
-				
-				if (f.exists()) displayFile(termIn, f);
-				else {
-					f = new File(termIn.getDir(), all);
-					
-					if (f.exists()) displayFile(termIn, f);
-					else {
-						if (args.get(0).startsWith("..")) f = new File(termIn.getDir(), args.get(0));
-						else f = new File(args.get(0));
-						
-						if (f.exists()) displayFile(termIn, f);
-						else {
-							f = new File(termIn.getDir(), args.get(0));
-							
-							if (f.exists()) displayFile(termIn, f);
-							else {
-								termIn.error("'" + args.get(0) + "' is not a vaild directory!");
-							}
-						}
-					}
-				}
-			}
-			else { termIn.error("Too many arguments!"); }
-		}
-		catch (Exception e) {
-			error(termIn, e);
-		}
+	public void runCommand() throws IOException {
+	    expectAtLeast(1);
+	    
+	    File f = parseFilePath(dir(), firstArg());
+	    
+	    displayFile(f);
 	}
 	
-	private void displayFile(ETerminalWindow termIn, File fileIn) {
-		if (fileIn.isDirectory()) {
-			termIn.error(fileIn.getName() + " is a directory not a file!");
-			return;
-		}
+	private void displayFile(File fileIn) throws IOException {
+	    expectFileNotNull(fileIn);
+	    expectFileExists(fileIn);
+	    expectFile(fileIn);
 		
 		try (var reader = new LineReader(fileIn)) {
-			if (reader.hasNextLine()) termIn.info("Displaying content:\n");
-			reader.forEach(l -> termIn.writeln(l, EColors.lgray));
-		}
-		catch (Exception e) {
-			error(termIn, e);
+			if (reader.hasNextLine()) info("Displaying content:\n");
+			reader.forEach(l -> writeln(l, EColors.lgray));
 		}
 	}
 	

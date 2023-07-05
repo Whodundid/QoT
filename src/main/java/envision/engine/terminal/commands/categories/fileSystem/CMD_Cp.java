@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 
 import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import eutil.colors.EColors;
 
 public class CMD_Cp extends AbstractFileCommand {
@@ -32,14 +33,14 @@ public class CMD_Cp extends AbstractFileCommand {
 		
 		File dest = toRelative();
 		if (!dest.exists()) dest = toFull();
-		if (!dest.exists()) {
-			dest = new File(dest, f.getName());
-		}
+		if (!dest.exists()) dest = new File(dest, f.getName());
 		
 		if (isDir) FileUtils.copyDirectory(f, dest);
 		else FileUtils.copyFileToDirectory(f, dest);
 		
 		writeln("Copied object to: " + EColors.white + dest, EColors.green);
+		
+		DeveloperDesktop.reloadFileExplorers();
 	}
 	
 	private void move(ETerminalWindow termIn, File src, File dest) {

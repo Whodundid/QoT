@@ -2,7 +2,7 @@ package envision.engine.terminal.commands.categories.system;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
+import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
@@ -21,9 +21,10 @@ public class CMD_ClearTerminalHistory extends TerminalCommand {
 	@Override public String getUsage() { return "ex: clrh"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand() {
+	    expectNoArgs();
 		Envision.getTerminalHandler().clearHistory();
-		termIn.writeln("Terminal history cleared..", 0xff55ff55);
+		writeln(EColors.green, "Terminal history cleared..");
 	}
 	
 }

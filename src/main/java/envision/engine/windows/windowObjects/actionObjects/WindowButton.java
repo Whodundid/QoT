@@ -177,6 +177,7 @@ public class WindowButton<E> extends ActionObject {
 	
 	@Override
 	public void mousePressed(int mX, int mY, int button) {
+	    super.mousePressed(mX, mY, button);
 		if (isClickable()) {
 			EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
 			pressButton(button);

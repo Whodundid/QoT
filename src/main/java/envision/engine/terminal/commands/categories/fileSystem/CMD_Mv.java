@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import eutil.colors.EColors;
 import qot.settings.QoTSettings;
 
@@ -66,14 +67,14 @@ public class CMD_Mv extends AbstractFileCommand {
 		}
 		
 		move(term, f, dest);
+		
+		DeveloperDesktop.reloadFileExplorers();
 	}
 	
 	private void move(ETerminalWindow termIn, File src, File dest) {
 		try {
 			var from = Paths.get(src.getCanonicalPath());
 			var to = Paths.get(dest.getCanonicalPath());
-//			System.out.println("Moving: " + from);
-//			System.out.println("To: " + to);
 			Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
 			termIn.writeln("Moved object to: " + EColors.white + to, EColors.green);
 		}

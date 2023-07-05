@@ -17,12 +17,12 @@ public class CMD_Speed extends TerminalCommand {
 	
 	@Override
 	public void runCommand() {
-		if (Envision.thePlayer == null) {
+	    expectAtLeast(1);
+
+	    if (Envision.thePlayer == null) {
 			error("There is no player!");
 			return;
 		}
-		
-		expectAtLeast(1);
 		
 		//toggle
 		double s = ENumUtil.parseDouble(arg(0), 32.0 * 4.5);

@@ -1,8 +1,10 @@
 package envision.engine.terminal.commands.categories.fileSystem;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -31,15 +33,11 @@ public class CMD_L extends AbstractFileCommand {
 	
 	@Override
 	public void runCommand() {
+	    expectNoMoreThan(1);
+	    
 		//if empty -- ls current dir
 		if (args().isEmpty()) {
 			listDir(null);
-			return;
-		}
-		
-		//check if too many args
-		if (argLength() > 1) {
-			errorUsage(term, ERROR_TOO_MANY);
 			return;
 		}
 		
@@ -89,11 +87,10 @@ public class CMD_L extends AbstractFileCommand {
 		}
 		
 		try {
-			String path = dir.getAbsolutePath();
-			String colorPath = EColors.mc_aqua + path;
+			String colorPath = EColors.mc_aqua + dir.getName();
 			boolean showHidden = hasModifier("-a");
 			
-			writeLink("Viewing Dir: " + colorPath, path, new File(path), false, EColors.yellow);
+			writeLink("Viewing Dir: " + colorPath, dir.getName(), dir, false, EColors.yellow);
 			if (dir.list().length > 0) writeln();
 			
 			EList<File> allFiles = EList.newList();
@@ -181,8 +178,8 @@ public class CMD_L extends AbstractFileCommand {
 		public boolean isDirectory;
 		public boolean isSymbolicLink;
 		
-		public FileProperties(File f) { this(f, null); }
-		public FileProperties(File f, String overrideName) {
+		public FileProperties(File f) throws IOException { this(f, null); }
+		public FileProperties(File f, String overrideName) throws IOException {
 			theFile = f;
 			perms = getPermissions(f);
 			owner = getOwner(f);
@@ -195,16 +192,23 @@ public class CMD_L extends AbstractFileCommand {
 			isSymbolicLink = Files.isSymbolicLink(f.toPath());
 		}
 		
-		/** Retrieves the string format of the file permissions for the given file. */
-		private static String getPermissions(File f) {
+		/** Retrieves the string format of the file permissions for the given file. 
+		 * @throws IOException */
+		private static String getPermissions(File f) throws IOException {
 			final Path path = f.toPath();
 			final var sb = new EStringBuilder();
 			if (Files.isSymbolicLink(path)) sb.a('l');
 			else if (Files.isDirectory(path)) sb.a('d');
 			else sb.a('-');
-			sb.a((Files.isReadable(path)) ? 'r' : '-');
-			sb.a((Files.isWritable(path)) ? 'w' : '-');
-			sb.a((Files.isExecutable(path)) ? 'x' : '-');
+			try {
+			    var set = Files.getPosixFilePermissions(path);
+			    sb.a(PosixFilePermissions.toString(set));
+			}
+			catch (UnsupportedOperationException e) {
+			    sb.a((Files.isReadable(path)) ? 'r' : '-');
+	            sb.a((Files.isWritable(path)) ? 'w' : '-');
+	            sb.a((Files.isExecutable(path)) ? 'x' : '-');
+			}
 			return sb.toString();
 		}
 		

@@ -21,7 +21,7 @@ public class EventAction extends ObjectEvent {
 	//--------------
 	
 	public EventAction(IWindowObject parentObjectIn, IActionObject actionObjectIn, Object[] argsIn) {
-		super(parentObjectIn, EventType.ACTION);
+		super(parentObjectIn, EventType.ACTION, true);
 		actionObject = actionObjectIn;
 		args = argsIn;
 	}

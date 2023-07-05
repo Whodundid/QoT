@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -21,15 +20,15 @@ public class CMD_UnloadWorld extends TerminalCommand {
 	@Override public String getUsage() { return "ex: uw"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (Envision.theWorld != null) {
-			termIn.writeln("Unloading world '" + Envision.theWorld.getWorldName() + "'", EColors.green);
-			Envision.loadWorld(null);
-			Envision.displayScreen(new MainMenuScreen());
+	public void runCommand() {
+		if (Envision.theWorld == null) {
+		    writeln("No world to unload", EColors.yellow);
+		    return;
 		}
-		else {
-			termIn.writeln("No world to unload", EColors.yellow);
-		}
+		
+		writeln("Unloading world '" + Envision.theWorld.getWorldName() + "'", EColors.green);
+        Envision.loadWorld(null);
+        displayScreen(new MainMenuScreen());
 	}
 	
 }

@@ -27,19 +27,17 @@ public class CMD_OpenWindow extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isNotEmpty()) {
-			switch (args.get(0).toLowerCase()) {
-			case "keys": termIn.getTopParent().displayWindow(new GLKeyChecker()); break;
-			case "color":
-			case "colors": termIn.getTopParent().displayWindow(new ColorPickerSimple(termIn)); break;
-			default: termIn.error("Unrecognized screen name!");
-			}
-		}
-		else {
-			termIn.error("Command input cannot be empty!");
-			termIn.info(getUsage());
-		}
+	public void runCommand() {
+	    expectAtLeast(1);
+	    
+	    for (String arg : args()) {
+	        switch (arg.toLowerCase()) {
+	        case "keys": displayWindow(new GLKeyChecker()); break;
+	        case "color":
+	        case "colors": displayWindow(new ColorPickerSimple()); break;
+	        default: error("Unrecognized screen name!");
+	        }
+	    }
 	}
 	
 }

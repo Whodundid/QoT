@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -20,18 +19,20 @@ public class CMD_ListEntities extends TerminalCommand {
 	@Override public String getUsage() { return "ex: le"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand() {
+	    expectNoArgs();
+	    
 		if (Envision.theWorld == null) {
-			termIn.error("Current World is Null");
+			error("Current World is Null");
 			return;
 		}
 		
 		var entities = Envision.theWorld.getEntitiesInWorld();
 		entities.sort((a, b) -> Long.compare(a.getWorldID(), b.getWorldID()));
 		
-		termIn.writeln("Listing all Entities in world", EColors.orange);
+		writeln("Listing all Entities in world", EColors.orange);
 		for (var e : entities) {
-			termIn.writeln("  " + EColors.lgreen + e.getName() + EColors.white + " : " + EColors.lgray + e.getWorldID());
+			writeln("  ", EColors.lgreen, e.getName(), EColors.white, " : ", EColors.lgray, e.getWorldID());
 		}
 	}
 	

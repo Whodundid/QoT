@@ -13,7 +13,7 @@ public class EventRedraw extends ObjectEvent {
 	//--------------
 	
 	public EventRedraw(IWindowObject parentObjectIn) {
-		super(parentObjectIn, EventType.REDRAW);
+		super(parentObjectIn, EventType.REDRAW, true);
 	}
 	
 }

@@ -1,7 +1,6 @@
 package envision.engine.terminal.commands.categories.system;
 
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
@@ -20,8 +19,8 @@ public class CMD_ClearTerminal extends TerminalCommand {
 	@Override public String getUsage() { return "ex: clr"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		termIn.clear();
+	public void runCommand() {
+		clearTerm();
 	}
 	
 }

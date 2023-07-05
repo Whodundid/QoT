@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -20,14 +19,14 @@ public class CMD_SaveWorld extends TerminalCommand {
 	@Override public String getUsage() { return "ex: sw"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (Envision.theWorld != null) {
-			termIn.writeln("Saving '" + Envision.theWorld.getWorldName() + "'", EColors.green);
-			Envision.theWorld.saveWorldToFile();
-		}
-		else {
-			termIn.writeln("No world to save", EColors.yellow);
-		}
+	public void runCommand() {
+	    if (Envision.theWorld == null) {
+	        writeln("No world to save", EColors.yellow);
+	        return;
+	    }
+	    
+	    writeln("Saving '" + Envision.theWorld.getWorldName() + "'", EColors.green);
+        Envision.theWorld.saveWorldToFile();
 	}
 	
 }

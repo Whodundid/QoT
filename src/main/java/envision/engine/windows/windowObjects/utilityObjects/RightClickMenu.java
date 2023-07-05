@@ -116,6 +116,16 @@ public class RightClickMenu<E> extends ActionWindowParent {
 	public void addOption(String optionName) { addOption(optionName, (GameTexture) null); }
 	public void removeOption(String... optionNames) { for (String s : optionNames) { removeOption(s); } }
 	
+	public void addOptionIf(boolean cond, String optionName) { addOptionIf(cond, optionName, (GameTexture) null); }
+	public void addOptionIf(boolean cond, String optionName, GameTexture icon) {
+	    if (!cond) addOption(optionName, icon);
+	}
+	
+	public void addOptionIf(boolean cond, String optionName, Runnable action) { addOptionIf(cond, optionName, null, action); }
+	public void addOptionIf(boolean cond, String optionName, GameTexture icon, Runnable action) {
+	    if (cond) addOption(optionName, icon, action);
+	}
+	
 	public WindowButton addOption(String optionName, Runnable action) { return addOption(optionName, null, action); }
 	public WindowButton addOption(String optionName, GameTexture optionIcon, Runnable action) {
 		if (optionName == null || options.containsA(optionName)) return null;

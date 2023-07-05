@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.system;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
@@ -21,9 +20,10 @@ public class CMD_ReregisterCommands extends TerminalCommand {
 	@Override public String getUsage() { return "ex: rrac -i"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow conIn, EList<String> args, boolean runVisually) {
-		conIn.writeln("Rebuilding command list..", 0xffffaa00);
-		Envision.getTerminalHandler().reregisterAllCommands(conIn, runVisually);
+	public void runCommand() {
+	    expectNoArgs();
+		writeln("Rebuilding command list..", 0xffffaa00);
+		Envision.getTerminalHandler().reregisterAllCommands(term(), runVisually());
 	}
 	
 }

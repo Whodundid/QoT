@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -20,25 +19,21 @@ public class CMD_Kill extends TerminalCommand {
 	@Override public String getUsage() { return "ex: kill 0"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand() {
+	    expectExactly(1);
+	    
 		if (Envision.theWorld == null) {
-			termIn.error("Current World is Null");
-			return;
-		}
-		
-		if (args.length() != 1) {
-			termIn.error("This command only accepts one argument");
-			termIn.info(getUsage());
+			error("Current World is Null");
 			return;
 		}
 		
 		var entities = Envision.theWorld.getEntitiesInWorld();
 		
-		int id = Integer.parseInt(args.get(0));
+		int id = Integer.parseInt(firstArg());
 		for (var e : entities) {
 			if (e.getWorldID() == id) {
 				Envision.theWorld.removeEntity(e);
-				termIn.writeln("Killed entity! " + id, EColors.lgreen);
+				writeln("Killed entity! " + id, EColors.lgreen);
 				break;
 			}
 		}
