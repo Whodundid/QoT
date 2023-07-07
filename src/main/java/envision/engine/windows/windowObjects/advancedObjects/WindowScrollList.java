@@ -12,7 +12,6 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyTyp
 import envision.engine.windows.windowUtil.windowEvents.events.EventModify;
 import envision.engine.windows.windowUtil.windowEvents.events.EventObjects;
 import eutil.colors.EColors;
-import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.points.Point2d;
 import eutil.datatypes.util.EList;
@@ -133,80 +132,81 @@ public class WindowScrollList<E> extends WindowObject {
 	public void move(double newX, double newY) {
 		postEvent(new EventModify(this, this, ObjectModifyType.MOVE));
 		
-		if (isMoveable()) {
-			var objs = EList.newList(getChildren());
-			objs.addAll(getAddingChildren());
-			objs.addAll(listContents);
-			objs.addAll(listObjsToBeAdded);
-			
-			for (var o : objs) {
-			    if (!o.isMoveable()) continue;
-			    if (o instanceof WindowParent p) {
-                    if (p.movesWithParent()) o.move(newX, newY);
-                }
-                else {
-                    if (listContents.contains(o)) {
-                        var initial = o.getInitialPosition();
-                        o.setInitialPosition(initial.x + newX, initial.y + newY);
-                    }
-                    o.move(newX, newY);
-                }
-			}
-			
-			startX += newX;
-			startY += newY;
-			var boundary = getBoundaryEnforcer();
-			if (boundary != null) boundary.move(newX, newY);
-			setDimensions(startX, startY, width, height);
-		}
+		if (!isMoveable()) return;
+		
+		var objs = EList.newList(getChildren());
+        objs.addAll(getAddingChildren());
+        objs.addAll(listContents);
+        objs.addAll(listObjsToBeAdded);
+        
+        for (var o : objs) {
+            if (!o.isMoveable()) continue;
+            if (o instanceof WindowParent p && p.movesWithParent()) o.move(newX, newY);
+            else o.move(newX, newY);
+        }
+        
+        for (var o : listContents) {
+            var initial = o.getInitialPosition();
+            o.setInitialPosition(initial.x + newX, initial.y + newY);
+        }
+        
+        for (var o : listObjsToBeAdded) {
+            var initial = o.getInitialPosition();
+            o.setInitialPosition(initial.x + newX, initial.y + newY);
+        }
+        
+        startX += newX;
+        startY += newY;
+        var boundary = getBoundaryEnforcer();
+        if (boundary != null) boundary.move(newX, newY);
+        setDimensions(startX, startY, width, height);
 	}
 	
 	@Override
 	public void setPosition(double newX, double newY) {
-		if (isMoveable()) {
-			Dimension_d d = getDimensions();
-			var loc = new Box2<>(d.startX, d.startY);
-			var previousLocations = new BoxList<IWindowObject, Box2<Double, Double>>();
-			var objs = getCombinedChildren();
-			
-			for (var o : objs) {
-				var dims = o.getDimensions();
-				previousLocations.add(o, new Box2<>(dims.startX - loc.getA(), dims.startY - loc.getB()));
-			}
-			
-			setDimensions(newX, newY, d.width, d.height);
-			
-			for (var o : objs) {
-				if (o.isMoveable()) {
-					var oldLoc = previousLocations.getBoxWithA(o).getB();
-					o.setInitialPosition(newX + oldLoc.getA(), newY + oldLoc.getB());
-					o.setPosition(newX + oldLoc.getA(), newY + oldLoc.getB());
-				}
-			}
-			
-			// Now handle list objects
-			
-			objs.clear();
-			previousLocations.clear();
-			
-			objs.addAll(listContents);
-			objs.addAll(listObjsToBeAdded);
-			
-			for (var o : objs) {
-				var dims = o.getDimensions();
-				previousLocations.add(o, new Box2<>(dims.startX - loc.getA(), dims.startY - loc.getB()));
-			}
-			
-			for (var o : objs) {
-				double eX = endX - (isVScrollDrawn() ? vScroll.width + 2 : 1);
-				double eY = endY - (isHScrollDrawn() ? hScroll.height - 4 : 1);
-				
-				Dimension_d bounds = new Dimension_d(startX + 1, startY + 1, eX, eY);
-				
-				o.setBoundaryEnforcer(getDimensions());
-				for (var q : o.getCombinedChildren()) q.setBoundaryEnforcer(bounds);
-			}
-		}
+	    if (!isMoveable()) return;
+	    
+	    final var thisBounds = getDimensions();
+        var loc = new Point2d(thisBounds.startX, thisBounds.startY);
+        var previousLocations = new BoxList<IWindowObject, Point2d>();
+        var objs = getCombinedChildren();
+        
+        for (var o : objs) {
+            var dims = o.getDimensions();
+            previousLocations.add(o, new Point2d(dims.startX - loc.x, dims.startY - loc.y));
+        }
+        
+        setDimensions(newX, newY, thisBounds.width, thisBounds.height);
+        
+        for (var o : objs) {
+            if (!o.isMoveable()) continue;
+            var oldLoc = previousLocations.getBoxWithA(o).getB();
+            o.setInitialPosition(newX + oldLoc.x, newY + oldLoc.y);
+            o.setPosition(newX + oldLoc.x, newY + oldLoc.y);
+        }
+        
+        // Now handle list objects
+        
+        objs.clear();
+        previousLocations.clear();
+        
+        objs.addAll(listContents);
+        objs.addAll(listObjsToBeAdded);
+        
+        for (var o : objs) {
+            var dims = o.getDimensions();
+            previousLocations.add(o, new Point2d(dims.startX - loc.x, dims.startY - loc.y));
+        }
+        
+        for (var o : objs) {
+            double eX = endX - (isVScrollDrawn() ? vScroll.width + 2 : 1);
+            double eY = endY - (isHScrollDrawn() ? hScroll.height - 4 : 1);
+            
+            Dimension_d bounds = new Dimension_d(startX + 1, startY + 1, eX, eY);
+            
+            o.setBoundaryEnforcer(thisBounds);
+            for (var q : o.getCombinedChildren()) q.setBoundaryEnforcer(bounds);
+        }
 	}
 	
 	@Override

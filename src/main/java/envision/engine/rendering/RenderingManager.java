@@ -197,6 +197,17 @@ public class RenderingManager {
 		drawRect(left, bottom - borderWidth, right, bottom, color); //bottom
 	}
 	
+	/** Draws a filled rectangle within the given dimension bounds. */
+    public static void drawHRect(IDimension dims, EColors color) { drawHRect(dims, color.intVal, 1); }
+    /** Draws a filled rectangle within the given dimension bounds. */
+    public static void drawHRect(IDimension dims, int color) { drawHRect(dims, color, 1); }
+    /** Draws a filled rectangle within the given dimension bounds. */
+    public static void drawHRect(IDimension dims, EColors color, int borderWidth) { drawHRect(dims, color.intVal, borderWidth); }
+    /** Draws a filled rectangle within the given dimension bounds. */
+    public static void drawHRect(IDimension dims, int color, int borderWidth) {
+        drawHRect(dims.startX_d(), dims.startY_d(), dims.endX_d(), dims.endY_d(), borderWidth, color);
+    }
+	
 	/** Draws a texture with the given dimensions. */
 	//static void drawTexture(double x, double y, double w, double h) { drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, false, Rotation.UP, 0xffffffff); }
 	public static void drawTexture(GameTexture tex, double x, double y, double w, double h) { drawTexture(tex, x, y, w, h, false, Rotation.UP, 0xffffffff); }

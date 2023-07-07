@@ -132,6 +132,14 @@ public class WindowObjectProperties {
 		futureTaskManager = new FutureTaskManager(instanceIn);
 	}
 	
+	//=========
+	// Setters
+	//=========
+	
+	public void setBoundaryEnforcer(Dimension_d dimIn) {
+        boundaryDimension = (dimIn != null) ? new Dimension_d(dimIn) : null;
+    }
+	
 	//----------------
 	// Static Methods
 	//----------------

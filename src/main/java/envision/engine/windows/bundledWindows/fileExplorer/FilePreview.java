@@ -109,6 +109,8 @@ public class FilePreview extends WindowObject {
         //draw mouse hovering selection rect
         if (isMouseOver()) { drawHRect(EColors.lgray); }
         
+        drawHRect(getBoundaryEnforcer(), EColors.red);
+        
         checkMouseMove();
     }
     

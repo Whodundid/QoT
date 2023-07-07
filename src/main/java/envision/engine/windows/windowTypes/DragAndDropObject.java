@@ -82,7 +82,7 @@ public abstract class DragAndDropObject extends WindowParent {
             }
             
             // finally close this object
-            getTopParent().unregisterListener(this);
+            //getTopParent().unregisterListener(this);
             close();
         }
     }

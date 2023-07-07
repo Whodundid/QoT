@@ -1174,7 +1174,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	//--------------
 	
 	/** Specifies a region that this object will adhere to for mouse checks. */
-	public default void setBoundaryEnforcer(Dimension_d dimIn) { properties().boundaryDimension = dimIn; }
+	public default void setBoundaryEnforcer(Dimension_d dimIn) { properties().setBoundaryEnforcer(dimIn); }
 	/** Returns the boundary for which this object is bounded by. */
 	public default Dimension_d getBoundaryEnforcer() { return properties().boundaryDimension; }
 	
