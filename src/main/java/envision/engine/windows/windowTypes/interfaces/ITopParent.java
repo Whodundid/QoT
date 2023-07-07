@@ -236,24 +236,24 @@ public interface ITopParent extends IWindowObject {
 	/** Displays the specified window parent with variable arguments. */
 	default <T extends IWindowParent> T displayWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
 		if (windowIn == null) return null;
-		if (windowIn != null) {
-			//import window history
-			if (transferHistory && oldObject != null) {
-				oldObject.getWindowHistory().add(oldObject);
-				windowIn.setWindowHistory(oldObject.getWindowHistory());
-				windowIn.setPinned(oldObject.isPinned());
-			}
-			
-			//initialize the window -- if it's not already
-			if (!windowIn.isInitialized()) windowIn.initWindow();
-			
-			//position and add the window
-			if (loc != ObjectPosition.NONE) setPos(windowIn, oldObject, loc);
-			addObject(windowIn);
-			if (this == Envision.getTopScreen()) TaskBar.windowOpened(windowIn);
-			windowIn.bringToFront();
-			if (transferFocus) windowIn.requestFocus();
-		}
+		
+        //import window history
+        if (transferHistory && oldObject != null) {
+            oldObject.getWindowHistory().add(oldObject);
+            windowIn.setWindowHistory(oldObject.getWindowHistory());
+            windowIn.setPinned(oldObject.isPinned());
+        }
+        
+        //initialize the window -- if it's not already
+        if (!windowIn.isInitialized()) windowIn.initWindow();
+        
+        //position and add the window
+        if (loc != ObjectPosition.NONE) setPos(windowIn, oldObject, loc);
+        addObject(windowIn);
+        if (this == Envision.getTopScreen()) TaskBar.windowOpened(windowIn);
+        windowIn.bringToFront();
+        if (transferFocus) windowIn.requestFocus();
+        
 		return windowIn;
 	}
 	
@@ -346,7 +346,7 @@ public interface ITopParent extends IWindowObject {
 			sY = (int) (sY + gDim.height > Envision.getHeight() ? -4 + sY - (sY + gDim.height - Envision.getHeight()) : sY);
 		}
 		
-		windowIn.setPosition(sX, sY);
+		windowIn.setPosition(sX, sY, true);
 	}
 	
 	//===============

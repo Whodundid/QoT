@@ -65,20 +65,11 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		//reset highlighted windows
 		highlightedWindows.clear();
 		
-		//prime renderer
-//		GLSettings.pushMatrix();
-//		GLSettings.enableBlend();
-//		GLSettings.clearDepth();	
-		
 		//update first draw state
 		if (!hasFirstDraw()) onFirstDraw_i();
 		
 		//draw this object first
-		//Envision.getRenderEngine().getBatchManager().pushLayer();
 		drawObject(mX, mY);
-		
-		//draw debug stuff on top of object
-		if (Envision.isDebugMode()) drawDebugInfo();
 		
 		//now draw all child objects on top of parent
 		for (var o : getChildren()) {
@@ -92,10 +83,6 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 			}
 			
 			if (draw) {
-//				GLSettings.colorA(1.0f);
-//				GLSettings.clearDepth();
-//				GLSettings.disableScissor();
-				
 				if (!o.hasFirstDraw()) o.onFirstDraw_i();
 				o.drawObject_i(mX, mY);
 				
@@ -121,7 +108,8 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		//notify hover object
 		if (getHoveringObject() != null) getHoveringObject().onMouseHover(mX, mY);
 		
-		//Envision.getRenderEngine().getBatchManager().popLayer();
+	    //draw debug stuff on top of object
+        //if (Envision.isDebugMode()) drawDebugInfo();
 	}
 	
 	//size

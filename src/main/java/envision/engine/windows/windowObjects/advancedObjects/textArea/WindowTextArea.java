@@ -2,6 +2,7 @@ package envision.engine.windows.windowObjects.advancedObjects.textArea;
 
 import java.util.Iterator;
 
+import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
@@ -139,7 +140,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 		boolean oneOf = focused == this || isChildOf(focused);
 		
 		if (isEditable() && (oneOf || !Mouse.isButtonDown(0))) {
-			//CursorHelper.setCursor(EMCResources.cursorIBeam);
+			CursorHelper.setCursor(CursorHelper.ibeam);
 		}
 	}
 	

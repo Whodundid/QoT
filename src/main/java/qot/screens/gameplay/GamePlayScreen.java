@@ -218,8 +218,7 @@ public class GamePlayScreen extends GameScreen {
 	}
 	
 	public void openPauseWindowIfNotOpen() {
-		//System.out.println(this.properties.childrenToBeRemoved);
-		if (pauseWindow != null && getChildren().contains(pauseWindow)) return;
+		if (pauseWindow != null && getChildren().contains(pauseWindow) && !pauseWindow.isClosed()) return;
 		displayWindow(pauseWindow = new GamePauseWindow(this, 30, 30));
 	}
 	

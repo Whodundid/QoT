@@ -48,7 +48,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	protected boolean drawMinimized = false;
 	protected boolean drawDefaultBackground = false;
 	protected boolean highlighted = false;
-	protected Stack<IWindowParent> WindowHistory = new Stack();
+	protected Stack<IWindowParent> windowHistory = new Stack();
 	protected EList<String> aliases = EList.newList();
 	protected GameTexture windowIcon = null;
 	protected Dimension_d preMaxFull = new Dimension_d();
@@ -117,55 +117,53 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 		super.drawObject_i(mXIn, mYIn);
 		if (!willBeDrawn() && Envision.isDebugMode()) return;
 		
-		if (Envision.isDebugMode()) {
-			if (!isMaximized()) {
-				double y = hasHeader() ? getHeader().startY - FontRenderer.FONT_HEIGHT : startY - FontRenderer.FONT_HEIGHT;
-				int pos = 0;
-				//int half = -1;
-				String draw = "";
-				String time = String.valueOf(initTime);
-				
-				if (time.length() > 6) time = time.substring(time.length() - 6);
-				
-				if (DebugFunctions.drawWindowPID) {
-					pos = FontRenderer.strWidth("ID: " + getWindowID());
-					draw = EColors.mc_aqua + "ID: " + EColors.yellow + getWindowID();
-					drawRect(startX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
-	                drawRect(startX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
-	                pos += 13;
-	                draw += " ";
-				}
-				
-				if (DebugFunctions.drawWindowInit) {
-				    var sX = startX + pos;
-					pos += (int) strWidth("InitTime: " + time);
-					draw += EColors.mc_aqua + "InitTime: " + EColors.yellow + time;
-					drawRect(sX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
-	                drawRect(sX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
-	                pos += 13;
-                    draw += " ";
-				}
-				
-//				drawRect(startX, y - 1, startX + pos + 5, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
-//				drawRect(startX + 1, y, startX + pos + 4, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
-//				if (half > 0) drawRect(startX + half, y, startX + half + 1, y + FontRenderer.FONT_HEIGHT, EColors.black);
-				
-				if (DebugFunctions.drawWindowDimensions) {
-					String dims = "[" + (int) startX + ", " + (int) startY + ", " + (int) width + " " + (int) height + "]";
-					int eX = FontRenderer.strWidth(dims);
-					var sX = startX + pos;
-					pos += eX;
-					draw += EColors.seafoam + dims;
-					
-					drawRect(sX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
-					drawRect(sX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
-	                pos += 13;
-	                draw += " ";
-				}
-				
-				drawString(draw, startX + 3, y + 3);
-			}
-		}
+		if (!Envision.isDebugMode() && !isMaximized()) return;
+		
+		double y = hasHeader() ? getHeader().startY - FontRenderer.FONT_HEIGHT : startY - FontRenderer.FONT_HEIGHT;
+        int pos = 0;
+        //int half = -1;
+        String draw = "";
+        String time = String.valueOf(initTime);
+        
+        if (time.length() > 6) time = time.substring(time.length() - 6);
+        
+        if (DebugFunctions.drawWindowPID) {
+            pos = FontRenderer.strWidth("ID: " + getWindowID());
+            draw = EColors.mc_aqua + "ID: " + EColors.yellow + getWindowID();
+            drawRect(startX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+            drawRect(startX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+            pos += 13;
+            draw += " ";
+        }
+        
+        if (DebugFunctions.drawWindowInit) {
+            var sX = startX + pos;
+            pos += (int) strWidth("InitTime: " + time);
+            draw += EColors.mc_aqua + "InitTime: " + EColors.yellow + time;
+            drawRect(sX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+            drawRect(sX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+            pos += 13;
+            draw += " ";
+        }
+        
+//      drawRect(startX, y - 1, startX + pos + 5, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+//      drawRect(startX + 1, y, startX + pos + 4, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+//      if (half > 0) drawRect(startX + half, y, startX + half + 1, y + FontRenderer.FONT_HEIGHT, EColors.black);
+        
+        if (DebugFunctions.drawWindowDimensions) {
+            String dims = "[" + (int) startX + ", " + (int) startY + ", " + (int) width + " " + (int) height + "]";
+            int eX = FontRenderer.strWidth(dims);
+            var sX = startX + pos;
+            pos += eX;
+            draw += EColors.seafoam + dims;
+            
+            drawRect(sX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
+            drawRect(sX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
+            pos += 13;
+            draw += " ";
+        }
+        
+        drawString(draw, startX + 3, y + 3);
 	}
 	
 	@Override
@@ -304,12 +302,12 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	
 	@Override
 	public Stack<IWindowParent> getWindowHistory() {
-		return WindowHistory;
+		return windowHistory;
 	}
 	
 	@Override
 	public void setWindowHistory(Stack<IWindowParent> historyIn) {
-		WindowHistory = historyIn;
+		windowHistory = historyIn;
 		if (header != null) header.updateButtonVisibility();
 	}
 	
@@ -359,8 +357,8 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	private void pullHistoryFrom(IWindowParent objectIn) {
 		if (objectIn != null) {
 			if (objectIn instanceof WindowParent wp) {
-				WindowHistory = wp.getWindowHistory();
-				WindowHistory.push(objectIn);
+				windowHistory = wp.getWindowHistory();
+				windowHistory.push(objectIn);
 			}
 		}
 	}
@@ -370,28 +368,32 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	//---------
 	
 	public void fileUpAndClose() {
-		if (!WindowHistory.isEmpty() && WindowHistory.peek() != null) {
-			var oldGuiPass = WindowHistory.pop();
-			try {
-				var newGui = oldGuiPass.getClass().getConstructor().newInstance();
-				newGui.setWindowHistory(oldGuiPass.getWindowHistory());
-				IWindowParent p = getTopParent().displayWindow(newGui, this, true, true, false, ObjectPosition.OBJECT_CENTER);
-				p.setPinned(isPinned());
-				if (isMaximized() && newGui.isMaximizable()) {
-					newGui.setPreMax(getPreMax());
-					newGui.setMaximized(getMaximizedPosition());
-					newGui.maximize();
-				}
-				
-				//THIS IS NOT RIGHT
-				// V V V V V V V V
-				
-				getTopParent().setFocusedObject(p);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+	    if (windowHistory.isEmpty() || windowHistory.peek() == null) {
+	        close();
+	        return;
+	    }
+	    
+	    var oldGuiPass = windowHistory.pop();
+        try {
+            var newGui = oldGuiPass.getClass().getConstructor().newInstance();
+            newGui.setWindowHistory(oldGuiPass.getWindowHistory());
+            IWindowParent p = getTopParent().displayWindow(newGui, this, true, true, false, ObjectPosition.OBJECT_CENTER);
+            p.setPinned(isPinned());
+            if (isMaximized() && newGui.isMaximizable()) {
+                newGui.setPreMax(getPreMax());
+                newGui.setMaximized(getMaximizedPosition());
+                newGui.maximize();
+            }
+            
+            //THIS IS NOT RIGHT
+            // V V V V V V V V
+            
+            getTopParent().setFocusedObject(p);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
 		close();
 	}
 	
@@ -400,11 +402,6 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 		drawRect(0xff383838, 1);
 		drawRect(0xff3f3f3f, 2);
 		drawRect(0xff424242, 3);
-		//drawRect(0xffc6c6c6, 1);
-		//drawRect(startX, startY, endX, endY, 0xff000000);
-		//drawRect(startX + 1, startY + 1, endX - 1, endY - 1, 0xff383838);
-		//drawRect(startX + 2, startY + 2, endX - 2, endY - 2, 0xff3f3f3f);
-		//drawRect(startX + 3, startY + 3, endX - 3, endY - 3, 0xff424242);
 	}
 	
 	public void enableHeader(boolean val) {

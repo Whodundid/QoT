@@ -93,11 +93,10 @@ public class GameTopScreen extends TopWindowParent {
 			//draw this object first
 			drawObject(mX, mY);
 			
-			//draw debug stuff
-			if (Envision.isDebugMode()) drawDebugInfo();
-			
 			//now draw all child objects on top of parent
 			for (var o : getChildren()) {
+			    //don't draw this here
+			    if (o instanceof TaskBar) continue;
 				//only draw if the object is actually visible
 				if (!o.willBeDrawn() || o.isHidden()) continue;
 				boolean draw = true;
@@ -134,6 +133,12 @@ public class GameTopScreen extends TopWindowParent {
 			var hoveringObject = getHoveringObject();
 			if (hoveringObject != null) hoveringObject.onMouseHover(Mouse.getMx(), Mouse.getMy());
 		}
+		
+        //draw debug stuff
+        if (Envision.isDebugMode()) drawDebugInfo();
+		
+        //draw taskbar on top everything
+		if (taskBar != null) taskBar.drawObject_i(mX, mY);
 		
 		//draw game fps
 		if (QoTSettings.drawFPS.get()) {

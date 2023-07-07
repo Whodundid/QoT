@@ -131,8 +131,8 @@ public class FontRenderer {
 	// Helper Methods
 	//================
 	
-	public String trimToWidth(String in, int width) { return trimToWidth(in, width, true); }
-	public String trimToWidth(String in, int width, boolean reverse) {
+	public static String trimToWidth(String in, int width) { return trimToWidth(in, width, true); }
+	public static String trimToWidth(String in, int width, boolean reverse) {
 		String s = "";
 		int curLen = 0;
 		for (int i = (reverse) ? in.length() - 1 : 0; i < in.length() && curLen < width; i += (reverse) ? -1 : 1) {

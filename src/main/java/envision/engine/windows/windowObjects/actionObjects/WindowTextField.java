@@ -229,8 +229,10 @@ public class WindowTextField extends ActionObject {
 			y = h;
 			h = j;
 		}
-		//if (w > startX + width) { w = startX + width; }
-		//if (x > startX + width) { x = startX + width; }
+		if (w > startX + width) { w = startX + width; }
+		if (x > startX + width) { x = startX + width; }
+		
+		//drawRect(x, y, w, h, EColors.blue.opacity(100));
 		
 		//Tessellator tessellator = Tessellator.getInstance();
 		//WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -292,32 +294,30 @@ public class WindowTextField extends ActionObject {
 	 * position. Negative numbers will delete words left of the cursor.
 	 */
 	public void deleteWords(int numberOfWords) {
-		if (text.length() != 0) {
-			if (selectionEnd != cursorPosition) writeText("");
-			else deleteFromCursor(getNthWordFromCursor(numberOfWords) - cursorPosition);
-		}
+	    if (text.isEmpty()) return;
+	    else if (selectionEnd != cursorPosition) writeText("");
+        else deleteFromCursor(getNthWordFromCursor(numberOfWords) - cursorPosition);
 	}
 
 	/**
 	 * delete the selected text, otherwise deletes characters from either
 	 * side of the cursor. params: delete num
 	 */
-	public void deleteFromCursor(int p_146175_1_) {
-		if (text.length() != 0) {
-			if (selectionEnd != cursorPosition) {
-				writeText("");
-			}
-			else {
-				boolean flag = p_146175_1_ < 0;
-				int i = flag ? cursorPosition + p_146175_1_ : cursorPosition;
-				int j = flag ? cursorPosition : cursorPosition + p_146175_1_;
-				String s = "";
-				if (i >= 0) s = text.substring(0, i);
-				if (j < text.length()) s = s + text.substring(j);
-				text = s;
-				if (flag) moveCursorBy(p_146175_1_);
-			}
-		}
+	public void deleteFromCursor(int amountToDelete) {
+	    if (text.isEmpty()) return;
+	    if (selectionEnd != cursorPosition) {
+	        writeText("");
+	        return;
+	    }
+	    
+	    boolean flag = amountToDelete < 0;
+        int i = flag ? cursorPosition + amountToDelete : cursorPosition;
+        int j = flag ? cursorPosition : cursorPosition + amountToDelete;
+        String s = "";
+        if (i >= 0) s = text.substring(0, i);
+        if (j < text.length()) s = s + text.substring(j);
+        text = s;
+        if (flag) moveCursorBy(amountToDelete);
 	}
 	
 	//---------
@@ -425,18 +425,17 @@ public class WindowTextField extends ActionObject {
 		if (posIn < 0) posIn = 0;
 		selectionEnd = posIn;
 		
-		if (FontRenderer.getInstance() != null) {
-			if (lineScrollOffset > i) lineScrollOffset = i;
-			//int j = (int) getWidth();
-			//String s = Game.getFontRenderer().trimToWidth(text.substring(lineScrollOffset), j);
-			String s = text.substring(lineScrollOffset);
-			int k = s.length() + lineScrollOffset;
-			//if (posIn == lineScrollOffset) { lineScrollOffset -= Game.getFontRenderer().trimToWidth(text, j, true).length(); }
-			if (posIn == lineScrollOffset) lineScrollOffset -= text.length();
-			if (posIn > k) lineScrollOffset += posIn - k;
-			else if (posIn <= lineScrollOffset) lineScrollOffset -= lineScrollOffset - posIn;
-			lineScrollOffset = ENumUtil.clamp(lineScrollOffset, 0, i);
-		}
+        if (lineScrollOffset > i) lineScrollOffset = i;
+        
+        String s = text.substring(lineScrollOffset);
+        int k = s.length() + lineScrollOffset;
+        
+        if (posIn == lineScrollOffset) lineScrollOffset -= text.length();
+        
+        if (posIn > k) lineScrollOffset += posIn - k;
+        else if (posIn <= lineScrollOffset) lineScrollOffset -= lineScrollOffset - posIn;
+        
+        lineScrollOffset = ENumUtil.clamp(lineScrollOffset, 0, i);
 	}
 
 	public void setText(Object objectIn) { setText(EStringUtil.toString(objectIn)); }

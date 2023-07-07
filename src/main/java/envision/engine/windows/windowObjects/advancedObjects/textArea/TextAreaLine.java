@@ -1,12 +1,12 @@
 package envision.engine.windows.windowObjects.advancedObjects.textArea;
 
 import envision.Envision;
+import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
-import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowObjects.utilityObjects.LinkConfirmationWindow;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
@@ -29,22 +29,12 @@ public class TextAreaLine<E> extends WindowTextField {
 	//--------
 	
 	protected WindowTextArea parentTextArea;
-	protected WindowLabel numberLabel;
 	protected IWindowObject focusRequester;
 	public int lineNumberColor = 0xff555555;
 	protected int lineNumber = 0;
 	protected int drawnLineNumber = 0;
 	protected int lineNumberWidth = 0;
-	protected int maxVisibleLength = 3;
-	protected boolean textRecentlyEntered = false;
-	protected boolean deleting = false;
-	protected boolean creating = false;
-	protected boolean highlighted = false;
 	protected boolean lineEquals = false, drawCursor = false;
-	protected long startTime = 0l;
-	protected long doubleClickTimer = 0l;
-	protected long doubleClickThreshold = 500l;
-	protected boolean clicked = false;
 	protected String linkText = "";
 	protected boolean webLink;
 	protected Object linkObject;
@@ -233,37 +223,34 @@ public class TextAreaLine<E> extends WindowTextField {
 			b = Mouse.getButton();
 		}
 		
-		try {
-			if (isMouseOver()) EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
-			if (b == 0) {
-				startTextTimer();
-				
-				if (isResizeable() && !getEdgeSideMouseIsOn().equals(ScreenLocation.OUT)) {
-					getTopParent().setModifyingObject(this, ObjectModifyType.RESIZE);
-					getTopParent().setResizingDir(getEdgeSideMouseIsOn());
-					getTopParent().setModifyMousePos(mX, mY);
-				}
-				
-				if (parentTextArea.isEditable()) {
-					int i = (int) (mX - startX - parentTextArea.getLineNumberOffset() + 3);
-					int cursorPos = FontRenderer.getInstance().trimToWidth(text, i).length();
-					
-					setCursorPos(cursorPos);
-					selectionEnd = cursorPosition;
-					
-					if (clickStartPos == -1) clickStartPos = cursorPos;
-				}
-				
-				checkLinkClick(mX, mY, b);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+        if (isMouseOver()) EUtil.nullDo(getWindowParent(), w -> w.bringToFront());
+        if (b != 0) return;
+        
+        startTextTimer();
+        
+        if (isResizeable() && !getEdgeSideMouseIsOn().equals(ScreenLocation.OUT)) {
+            getTopParent().setModifyingObject(this, ObjectModifyType.RESIZE);
+            getTopParent().setResizingDir(getEdgeSideMouseIsOn());
+            getTopParent().setModifyMousePos(mX, mY);
+        }
+        
+        if (parentTextArea.isEditable()) {
+            int i = (int) (mX - startX - parentTextArea.getLineNumberOffset());
+            int cursorPos = FontRenderer.trimToWidth(text, i).length();
+            setCursorPos(cursorPos);
+            selectionEnd = cursorPosition;
+            
+            if (clickStartPos == -1) clickStartPos = cursorPos;
+        }
+        
+        checkLinkClick(mX, mY, b);
 	}
 	
 	/** Prevent cursor updates. */
-	@Override public void updateCursorImage() {}
+	@Override
+	public void updateCursorImage() {
+	    
+	}
 	
 	@Override
 	public void mouseEntered(int mXIn, int mYIn) {
@@ -272,7 +259,7 @@ public class TextAreaLine<E> extends WindowTextField {
 		boolean oneOf = focused == this || parentTextArea.isChildOf(focused);
 		
 		if (parentTextArea.isEditable() && (oneOf || !Mouse.isButtonDown(0))) {
-			//CursorHelper.setCursor(EMCResources.cursorIBeam);
+			CursorHelper.setCursor(CursorHelper.ibeam);
 		}
 	}
 	
@@ -315,13 +302,13 @@ public class TextAreaLine<E> extends WindowTextField {
 				if (clickStartPos == -1) clickStartPos = text.length() + 1;
 			}
 			else if (mX >= startX) {
-				//int i = (int) (mX - startX - parentTextArea.getLineNumberOffset() + 3);
-				//int cursorPos = Game.getFontRenderer().trimToWidth(text, i).length();
-				
-				//setCursorPosition(cursorPos);
-				//selectionEnd = cursorPosition;
-				
-				//if (clickStartPos == -1) { clickStartPos = cursorPos; }
+                int i = (int) (mX - startX - parentTextArea.getLineNumberOffset() + 3);
+                int cursorPos = FontRenderer.trimToWidth(text, i).length();
+                
+                setCursorPos(cursorPos);
+                selectionEnd = cursorPosition;
+                
+                if (clickStartPos == -1) { clickStartPos = cursorPos; }
 			}
 			else {
 				setCursorPos(0);
@@ -353,7 +340,6 @@ public class TextAreaLine<E> extends WindowTextField {
 	public IWindowObject getFocusRequester() { return focusRequester; }
 	public int getDrawnLineNumber() { return drawnLineNumber; }
 	public int getLineNumber() { return lineNumber; }
-	public long getDoubleClickThreshold() { return doubleClickThreshold; }
 	public Box3<String, Object, Boolean> getLink() { return new Box3<>(linkText, linkObject, webLink); }
 	
 	//---------
@@ -387,7 +373,6 @@ public class TextAreaLine<E> extends WindowTextField {
 	public void setLineNumberColor(EColors colorIn) { lineNumberColor = colorIn.intVal; }
 	public void setLineNumberColor(int colorIn) { lineNumberColor = colorIn; }
 	public void setDrawnLineNumber(int numberIn) { drawnLineNumber = numberIn; }
-	public void setDoubleClickThreshold(long timeIn) { doubleClickThreshold = timeIn; }
 	public void setFocusRequester(IWindowObject obj) { focusRequester = obj; }
 	
 	//------------------
@@ -395,11 +380,6 @@ public class TextAreaLine<E> extends WindowTextField {
 	//------------------
 	
 	protected void updateValues() {
-		if (clicked && System.currentTimeMillis() - doubleClickTimer >= doubleClickThreshold) {
-			clicked = false;
-			doubleClickTimer = 0l;
-		}
-		
 		if (parentTextArea != null && parentTextArea.getCurrentLine() != null) {
 			lineEquals = parentTextArea.getCurrentLine().equals(this);
 			drawCursor = parentTextArea.isEditable() && lineEquals && Envision.updateCounter / 60 % 2 == 0;

@@ -740,8 +740,12 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
      * relative to the parent object.
      */
 	public default void setPosition(double newX, double newY) {
+	    setPosition(newX, newY, true);
+	}
+
+	public default void setPosition(double newX, double newY, boolean force) {
 		//only move this object and its children if it is move-able
-		if (!isMoveable()) return;
+		if (!force && !isMoveable()) return;
 		
 		Dimension_d d = getDimensions();
 		//the object's current position and relative clickArea for shorter code

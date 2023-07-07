@@ -97,7 +97,7 @@ public class OptionsScreen extends GameScreen {
 	//---------------------------------------------
 	
 	private void back() {
-		Envision.displayScreen(new MainMenuScreen());
+	    this.closeScreen();
 	}
 	
 	private void volumeSlider() {

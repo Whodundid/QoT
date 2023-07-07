@@ -22,7 +22,7 @@ public class GamePauseWindow extends WindowParent {
 		setMaxDims(400, 200);
 		setMinDims(200, 100);
 		setMinimizable(false);
-		setResizeable(true);
+		setResizeable(false);
 		setMoveable(false);
 		
 		parent = parentScreen;

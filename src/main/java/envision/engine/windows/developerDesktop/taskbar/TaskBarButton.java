@@ -228,7 +228,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 			dropDown.addEntry(i + ": " + EColors.green + p.getObjectName(), EColors.lorange, p);
 		}
 		
-		Envision.getTopScreen().addObject(dropDown);
+		parentBar.addObject(dropDown);
 		
 		listMade = true;
 	}
