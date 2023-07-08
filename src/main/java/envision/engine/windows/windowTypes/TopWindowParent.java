@@ -203,7 +203,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	@Override public boolean isClosable() { return false; }
 	@Override public boolean isClosed() { return false; }
 	@Override public void setCloseable(boolean val) {}
-	@Override public void close() { removeAllObjects(); }
+	//@Override public void close() { removeAllObjects(); }
 	@Override public void setFocusedObjectOnClose(IWindowObject objIn) {}
 	
 	//------------------------

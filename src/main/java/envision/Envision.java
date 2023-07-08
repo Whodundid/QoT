@@ -705,6 +705,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** Returns the primary Envision engine instance. */
 	public static EnvisionLang getEnvisionLang() { return envisionLang; }
 	
+    public static void enableVSync(boolean val) { gameWindow.enableVSync(val); }
+    public static void setFullscreen(boolean val) { gameWindow.setFullscreen(val); }
+    
 	/** Returns the current user. */
 	public static UserProfile getCurrentUser() { return profileRegistry.getCurrentUser(); }
 	/** Returns the user profile registry. */

@@ -135,7 +135,9 @@ public class CMD_List extends TerminalCommand {
 				objsWithChildren.forEach(c -> workList.addAll(c.getChildren()));
 				
 				for (var o : EList.combineLists(objsWithChildren, workList)) {
-					String s = String.format("   %3d : %s", o.getObjectID(), o.toString());
+				    String id = (o instanceof IWindowParent wp) ? "[" + wp.getWindowID() + ":" + wp.getObjectID() + "]"
+				                : "" + o.getObjectID();
+					String s = String.format("   %10s : %s", id, o.toString());
 					//for (int i = 0; i < depth; i++) { s += " "; }
 					writeln(s, EColors.lgray);
 				}
@@ -189,7 +191,7 @@ public class CMD_List extends TerminalCommand {
 		writeln(EStringUtil.repeatString("-", title.length()), EColors.lime);
 		
 		for (var p : windows) {
-			String out = p.getObjectName() + " | " + p.getObjectID() + " | " + p.getClass().getSimpleName()
+			String out = p.getObjectName() + " | " + p.getWindowID() + " | " + p.getClass().getSimpleName()
 						 + (p.isPinned() ? " | " + EColors.mc_lightpurple + "pinned" : ""
 						 + (p.isMinimized() ? " | " + EColors.mc_lightpurple + "minimized" : ""));
 			writeln(out, EColors.lime);

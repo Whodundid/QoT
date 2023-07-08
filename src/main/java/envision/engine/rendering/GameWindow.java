@@ -11,6 +11,7 @@ import envision.engine.windows.WindowSize;
 import eutil.datatypes.points.Point2i;
 import eutil.math.dimensions.Dimension_d;
 import eutil.math.dimensions.Dimension_i;
+import qot.settings.QoTSettings;
 
 public class GameWindow {
 	
@@ -26,6 +27,12 @@ public class GameWindow {
 	private Dimension_d windowDims = new Dimension_d();
 	/** The title of the window. */
 	private String windowTitle;
+	
+	private int preFullscreenX;
+	private int preFullscreenY;
+	private int preFullscreenWidth;
+	private int preFullscreenHeight;
+	private boolean isFullscreen = false;
 	
 	private int[] xPos = new int[1], yPos = new int[1];
 	
@@ -114,11 +121,50 @@ public class GameWindow {
 		return new Dimension_i(pos.x, pos.y, pos.x + width, pos.y + height);
 	}
 	
+	public void enableVSync(boolean val) {
+	    int interval = (QoTSettings.vsync.get()) ? 1 : 0;
+        GLFW.glfwSwapInterval(interval);
+	}
+	
+    public void setFullscreen(boolean val) {
+        if (val && !isFullscreen) {
+            final var dims = getWindowDims();
+            preFullscreenX = (int) dims.startX;
+            preFullscreenY = (int) dims.startY;
+            preFullscreenWidth = (int) dims.width;
+            preFullscreenHeight = (int) dims.height;
+            long primary = GLFW.glfwGetPrimaryMonitor();
+            var mode = GLFW.glfwGetVideoMode(primary);
+            GLFW.glfwWindowHint(GLFW.GLFW_RED_BITS, mode.redBits());
+            GLFW.glfwWindowHint(GLFW.GLFW_GREEN_BITS, mode.greenBits());
+            GLFW.glfwWindowHint(GLFW.GLFW_BLUE_BITS, mode.blueBits());
+            GLFW.glfwWindowHint(GLFW.GLFW_REFRESH_RATE, mode.refreshRate());
+            GLFW.glfwSetWindowMonitor(getWindowHandle(), primary, 0, 0, mode.width(), mode.height(), mode.refreshRate());
+            width = mode.width();
+            height = mode.height();
+            isFullscreen = true;
+        }
+        else if (!val && isFullscreen) {
+            int x = preFullscreenX;
+            int y = preFullscreenY;
+            int w = preFullscreenWidth;
+            int h = preFullscreenHeight;
+            var mode = GLFW.glfwGetVideoMode(getWindowHandle());
+            GLFW.glfwWindowHint(GLFW.GLFW_RED_BITS, mode.redBits());
+            GLFW.glfwWindowHint(GLFW.GLFW_GREEN_BITS, mode.greenBits());
+            GLFW.glfwWindowHint(GLFW.GLFW_BLUE_BITS, mode.blueBits());
+            GLFW.glfwWindowHint(GLFW.GLFW_REFRESH_RATE, mode.refreshRate());
+            GLFW.glfwSetWindowMonitor(getWindowHandle(), 0, x, y, w, h, mode.refreshRate());
+            isFullscreen = false;
+        }
+    }
+	
 	public void destroy() {
 		GLFW.glfwDestroyWindow(windowHandle);
 		GLFW.glfwTerminate();
 	}
 	
 	public long getWindowHandle() { return windowHandle; }
+	public boolean isFullscreen() { return isFullscreen; }
 	
 }

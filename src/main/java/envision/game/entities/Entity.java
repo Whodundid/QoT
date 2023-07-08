@@ -244,6 +244,10 @@ public abstract class Entity extends ComponentBasedObject {
 		collisionHelper.tryMove(x, y, Envision.getDeltaTime());
 	}
 	
+	public void movePixel(double x, double y) {
+	    collisionHelper.tryMovePixel(x, y);
+	}
+	
 	/**
 	 * Returns true if this entity actually exists within a loaded world.
 	 * 

@@ -263,6 +263,7 @@ public class MapEditorScreen extends GameScreen {
 	public void mouseScrolled(int change) {
 		double c = Math.signum(change);
 		double z = 1.0;
+		double zoom = actualWorld.getCameraZoom();
 		
 		if (exitSaverBox != null) {
 			exitSaverBox.drawFocusLockBorder();
@@ -270,11 +271,12 @@ public class MapEditorScreen extends GameScreen {
 		}
 		
 		if (Keyboard.isCtrlDown()) {
-			if (c > 0 && actualWorld.getCameraZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
-			else if (actualWorld.getCameraZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
-			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
-			else if (actualWorld.getCameraZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
-			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
+			if (c > 0 && zoom == 0.25)     z = 0.05;     // if at 0.25 and zooming out -- 0.05x
+			else if (zoom < 1.0)           z = c * 0.05; // if less than 1 zoom by 0.05x
+			else if (zoom < 2.0)           z = c * 0.1;  // if less than 2 zoom by 0.1x
+			else if (c > 0 && zoom == 1.0) z = c * 0.05; // if at 1.0 and zooming in -- 0.05x
+			else if (c < 0 && zoom == 2.0) z = c * 0.1;  // if at 2.0 and zooming in -- 0.1x
+			else                           z = c * 0.25; // otherwise always zoom by 0.25x
 			
 			z = ENumUtil.round(actualWorld.getCameraZoom() + z, 2);
 			actualWorld.setCameraZoom(z);
@@ -628,6 +630,8 @@ public class MapEditorScreen extends GameScreen {
 				mapFile = new File(mapDir, mapName + "/" + mapName + ".twld");
 			}
 			actualWorld = new GameWorld(mapFile);
+			actualWorld.getCamera().setMinZoom(0.25);
+			actualWorld.getCamera().setMaxZoom(10);
 			actualWorld.setCameraZoom(oldZoom);
 		}
 		else if (actualWorld != null) {

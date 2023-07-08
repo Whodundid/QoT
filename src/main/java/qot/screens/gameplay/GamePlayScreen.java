@@ -47,6 +47,7 @@ public class GamePlayScreen extends GameScreen {
 		screenHistory.push(new MainMenuScreen());
 		world = Envision.getWorld();
 		openPause = openPauseOnStart;
+		world.getCamera().setMinZoom(2);
 	}
 	
 	@Override
@@ -86,7 +87,7 @@ public class GamePlayScreen extends GameScreen {
 	public void drawScreen(int mXIn, int mYIn) {
 		//top hud
 		drawRect(0, 0, Envision.getWidth(), 39, EColors.lgray);
-		drawRect(0, 39, Envision.getWidth(), 41, EColors.gray);
+		drawRect(0, 39, Envision.getWidth(), 44, EColors.gray);
 		//mouse pos
 		
 		if (world == null) {
@@ -153,10 +154,10 @@ public class GamePlayScreen extends GameScreen {
 			else openPauseWindow();
 		}
 		
-		if (keyCode == Keyboard.KEY_LEFT) Envision.thePlayer.move(-1, 0);
-		if (keyCode == Keyboard.KEY_RIGHT) Envision.thePlayer.move(1, 0);
-		if (keyCode == Keyboard.KEY_UP) Envision.thePlayer.move(0, -1);
-		if (keyCode == Keyboard.KEY_DOWN) Envision.thePlayer.move(0, 1);
+		if (keyCode == Keyboard.KEY_LEFT) Envision.thePlayer.movePixel(-1, 0);
+		if (keyCode == Keyboard.KEY_RIGHT) Envision.thePlayer.movePixel(1, 0);
+		if (keyCode == Keyboard.KEY_UP) Envision.thePlayer.movePixel(0, -1);
+		if (keyCode == Keyboard.KEY_DOWN) Envision.thePlayer.movePixel(0, 1);
 		
 		if (keyCode == Keyboard.KEY_N) {
 			Entity obj = world.getEntitiesInWorld().getRandom();

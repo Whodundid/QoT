@@ -8,8 +8,10 @@ import envision.engine.events.IEventListener;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
+import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
+import eutil.math.ENumUtil;
 import qot.screens.main.MainMenuScreen;
 
 public class GameScreen extends TopWindowParent implements ITopParent, IEventListener {
@@ -20,13 +22,14 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	/** The point at which the screen will start fading. */
 	protected long screenFadeStart;
 	/** The amount of time it takes for the screen to fade in/out. (measured in milliseconds) */
-	protected long screenFadeDuration = 1500;
+	protected long screenFadeDuration = 150;
 	/** True if the screen is actively fading. */
 	protected boolean isFading = false;
 	/** True if fading in. */
 	protected boolean isFadingIn = false;
 	/** True if screen fading should happen on load/close. */
 	protected boolean performFade = true;
+	protected GameScreen screenToDisplay = null;
 	
 	//--------------
 	// Constructors
@@ -34,21 +37,46 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	
 	public GameScreen() {
 		setDefaultDims();
-		//Envision.getRenderEngine().getBatchManager().pushLayer();
 	}
 	
 	//-----------
 	// Overrides
 	//-----------
 	
-	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		drawScreen(mXIn, mYIn);
-	}
+    @Override
+    public void drawObject_i(int mXIn, int mYIn) {
+        drawScreen(mXIn, mYIn);
+        super.drawObject_i(mXIn, mYIn);
+        if (isFading && performFade) {
+            drawFade();
+        }
+    }
+    
+    private void drawFade() {
+        long t = System.currentTimeMillis();
+        long amount = 0;
+        
+        if (t - screenFadeStart >= screenFadeDuration) {
+            if (!isFadingIn) closeScreen_i(false);
+            isFading = false;
+            isFadingIn = false;
+        }
+        
+        if (isFadingIn) {
+            amount = ENumUtil.clamp(255 - (((t - screenFadeStart) * 255) / screenFadeDuration), 0, 255);
+        }
+        else {
+            amount = ENumUtil.clamp(((t - screenFadeStart) * 255) / screenFadeDuration, 0, 255);
+        }
+        
+        drawRect(EColors.vdgray.opacity(amount));
+    }
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (keyCode == Keyboard.KEY_ESC && !screenHistory.isEmpty()) closeScreen();
+		if (keyCode == Keyboard.KEY_ESC && !screenHistory.isEmpty()) {
+		    fadeOutAndClose();
+		}
 		super.keyPressed(typedChar, keyCode);
 	}
 	
@@ -97,31 +125,35 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	 * Closes this screen and displays the previous screen in history.
 	 */
 	public void closeScreen() {
-		closeScreen(false);
+		fadeOutAndClose();
 	}
-	
-	/**
-	 * Set the boolean argument to true if you want the next screen to
-	 * remember this screen in history. Generally you will want this value
-	 * to be false!
-	 * 
-	 * @param hist
-	 */
-	public void closeScreen(boolean hist) {
-		Envision.getEventHandler().unsubscribeFromAll(this);
-		
-		if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
-			var screen = screenHistory.pop();
-			screen.setScreenHistory(screenHistory);
-			
-			Envision.displayScreen(screen, (hist) ? this : new MainMenuScreen());
-		}
-		else {
-			Envision.displayScreen(new MainMenuScreen());
-		}
-		
-		//Envision.getRenderEngine().getBatchManager().popLayer();
-	}
+    
+    /**
+     * Set the boolean argument to true if you want the next screen to
+     * remember this screen in history. Generally you will want this value
+     * to be false!
+     * 
+     * @param hist
+     */
+    public void closeScreen_i(boolean hist) {
+        Envision.getEventHandler().unsubscribeFromAll(this);
+        
+        if (screenToDisplay != null) {
+            screenHistory.clear();
+            Envision.displayScreen(screenToDisplay, this);
+            return;
+        }
+        
+        if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
+            var screen = screenHistory.pop();
+            screen.setScreenHistory(screenHistory);
+            
+            Envision.displayScreen(screen, (hist) ? this : new MainMenuScreen());
+        }
+        else {
+            Envision.displayScreen(new MainMenuScreen());
+        }
+    }
 	
 	public EList<String> getAliases() {
 		return aliases;
@@ -145,13 +177,18 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 		screenFadeStart = System.currentTimeMillis();
 		isFading = true;
 		isFadingIn = true;
-	}
-	
-	public void fadeOutAndClose() {
-		if (!performFade) return;
-		screenFadeStart = System.currentTimeMillis();
-		isFading = true;
-		isFadingIn = false;
-	}
-	
+    }
+    
+    public void fadeOutAndClose() {
+        fadeOutAndDisplayScreen(null);
+    }
+    
+    public void fadeOutAndDisplayScreen(GameScreen screenIn) {
+        if (!performFade) { closeScreen(); return; }
+        screenToDisplay = screenIn;
+        screenFadeStart = System.currentTimeMillis();
+        isFading = true;
+        isFadingIn = false;
+    }
+    
 }

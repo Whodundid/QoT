@@ -20,8 +20,8 @@ public class WorldRenderer extends EGui {
 	//--------
 	
 	private GameWorld world;
-	private int distX = 20;
-	private int distY = 20;
+	private int distX = 22;
+	private int distY = 22;
 
 	/** the world coordinates at the center of the screen. */
 	public int midDrawX, midDrawY;

@@ -138,10 +138,6 @@ public class WorldDrawLayer {
 				RenderingComponent r = e.getComponent(ComponentType.RENDERING);
 				r.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
 			}
-			else {
-				//if (layer == 1) System.out.println(obj);
-				//obj.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);				
-			}
 		}
 	}
 	

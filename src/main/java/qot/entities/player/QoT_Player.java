@@ -26,14 +26,14 @@ public class QoT_Player extends Player {
 	public QoT_Player(String nameIn, int posX, int posY) {
 		super(nameIn);
 		
-		//init(posX, posY, 48, 48);
+		//init(posX, posY, 32, 32);
 		init(posX, posY, 40, 40);
 		
 		setMaxHealth(10);
 		setHealth(10);
 		setBaseMeleeDamage(1);
 		
-		baseInventorySize = 10;
+		baseInventorySize = 20;
 		inventory.setSize(baseInventorySize);
 		
 		inventory.setItem(0, Items.lesserHealing);

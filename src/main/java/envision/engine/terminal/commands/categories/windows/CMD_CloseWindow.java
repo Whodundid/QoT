@@ -20,8 +20,6 @@ public class CMD_CloseWindow extends TerminalCommand {
 	
 	@Override
 	public void runCommand() {
-	    expectAtLeast(1);
-	    
 	    if (noArgs()) {
 	        term().close();
 	        return;

@@ -97,7 +97,7 @@ public class OptionsScreen extends GameScreen {
 	//---------------------------------------------
 	
 	private void back() {
-	    this.closeScreen();
+	    closeScreen();
 	}
 	
 	private void volumeSlider() {
@@ -147,11 +147,11 @@ public class OptionsScreen extends GameScreen {
 	}
 	
 	private void vSync() {
-		//Envision.setVSync(!QoTSettings.vsync.get());
+		Envision.enableVSync(QoTSettings.vsync.toggle());
 	}
 	
 	private void fullscreen() {
-		//Envision.setFullScreen(!QoTSettings.fullscreen.get());
+		Envision.setFullscreen(QoTSettings.fullscreen.toggle());
 	}
 	
 	private void resolution() {

@@ -1,8 +1,6 @@
 package envision.engine.rendering.batching;
 
 import envision.Envision;
-import envision.engine.rendering.GLModes;
-import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.textureSystem.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
@@ -37,7 +35,7 @@ public class BatchManager implements IBatchManager {
 	//==============
 	
 	public BatchManager() {
-		this(10, 500, 32);
+		this(30, 500, 32);
 	}
 	
 	public BatchManager(int maxLayersIn, int maxBatchSizeIn, int texSlotsIn) {
@@ -48,7 +46,7 @@ public class BatchManager implements IBatchManager {
 		batchLayerStack = new EArrayList<>(maxLayersIn);
 		
 		for (int i = 0; i < maxLayersIn; i++) {
-			availableLayers[i] = new BatchLayer(i, 100, maxBatchSize, batchTexSlots);	
+			availableLayers[i] = new BatchLayer(i, 200, maxBatchSize, batchTexSlots);	
 		}
 	}
 	
