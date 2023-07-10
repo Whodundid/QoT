@@ -1,14 +1,15 @@
 package envision.game.entities;
 
+import java.text.DecimalFormat;
+
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
-import envision.game.world.WorldRenderer;
-import eutil.colors.EColors;
 import eutil.misc.Rotation;
+import eutil.strings.EStringBuilder;
 
 public class EntityRenderer extends RenderingComponent {
 	
@@ -39,6 +40,38 @@ public class EntityRenderer extends RenderingComponent {
 		var tex = theObject.getTexture();
 		if (tex == null) return;
 		
+//		final double zoom = camera.getZoom();
+//		
+//		final int worldX = theObject.worldX;
+//        final int worldY = theObject.worldY;
+//		
+//        final int screenWidth = Envision.getWidth();
+//        final int screenHeight = Envision.getHeight();
+//        
+//        final double camWorldX = camera.getCameraCenterX();
+//        final double camWorldY = camera.getCameraCenterY();
+//        
+//        //scaled pixel width of the entity
+//        final double drawW = theObject.width * zoom;
+//        //scaled pixel height of the entity
+//        final double drawH = theObject.height * zoom;
+//        
+        final var df = new DecimalFormat("#.#####");
+        var sb = new EStringBuilder();
+        sb.a("xy[", df.format(theObject.startX), ", ", df.format(theObject.startY), "] | ");
+        sb.a("wh[", df.format(theObject.width), ", ", df.format(theObject.height), "] | ");
+//        sb.a("cwxy[", df.format(worldX), ", ", df.format(worldY), "] | ");
+//        sb.a("cwxy[", df.format(camWorldX), ", ", df.format(camWorldY), "] | ");
+//        sb.a("dwh[", df.format(drawW), ", ", df.format(drawH), "] | ");
+//        sb.a(df.format((worldX - camWorldX) * drawW + screenWidth / 2));
+        //System.out.println(sb);
+//        
+//        double drawX = ((camWorldX - worldX) * drawW) + screenWidth / 2;
+//        double drawY = ((worldY - camWorldY) * drawH) + screenHeight / 2;
+        
+        //drawX -= camera.getScaledTileWidth() * 0.5;
+        //drawY -= camera.getScaledTileHeight() * 0.5;
+		
 		double zoom = camera.getZoom();
 		
 		//pixel width of each tile
@@ -68,10 +101,15 @@ public class EntityRenderer extends RenderingComponent {
 		drawX += (distX - midDrawX) * w;
 		drawY += (distY - midDrawY) * h;
 		
-		drawX += entityOffsetX;
-		drawY += entityOffsetY;
+		//System.out.println(entityOffsetX + " : " + camera.getOffsetX());
+		
 		drawX -= camera.getOffsetX();
 		drawY -= camera.getOffsetY();
+		//double tileX = drawX;
+		//double tileY = drawY;
+		
+		drawX += entityOffsetX;
+		drawY += entityOffsetY;
 		
 		var width = theObject.width;
 		var height = theObject.height;
@@ -104,19 +142,6 @@ public class EntityRenderer extends RenderingComponent {
 		}
 		else {
 			drawEntity(world, drawX, drawY, drawW, drawH, 0xffffffff, mouseOver);
-		}
-		
-		if (WorldRenderer.drawEntityHitboxes) {
-			double colSX = drawX + (collisionBox.startX * zoom);
-			double colSY = drawY + (collisionBox.startY * zoom);
-			double colEX = colSX + (collisionBox.width * zoom);
-			double colEY = colSY + (collisionBox.height * zoom);
-			
-			RenderingManager.drawHRect(colSX - 1, colSY, colEX, colEY - 1, 1, EColors.yellow);
-		}
-		
-		if (WorldRenderer.drawEntityOutlines) {
-			RenderingManager.drawHRect(drawX, drawY, drawX + drawW, drawY + drawH, 1, EColors.blue);
 		}
 	}
 	

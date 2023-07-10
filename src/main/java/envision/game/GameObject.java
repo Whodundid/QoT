@@ -83,6 +83,9 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	/** Can be overridden in child classes to denote specific entity behavior. */
 	public void onLivingUpdate(float dt) {}
 	
+	/** Called by the world whenever this entity is added to it. */
+	public void onAddedToWorld(IGameWorld world) {}
+	
 	/** Called from the world whenever this entity is removed from it. */
 	public void onRemovedFromWorld() {
 		if (animationHandler != null) {

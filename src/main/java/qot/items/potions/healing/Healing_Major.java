@@ -10,7 +10,7 @@ public class Healing_Major extends Potion {
 	public Healing_Major() {
 		super("Major Healing Potion", ItemList.HEALING_LESSER.ID);
 		this.setUsable(true);
-		this.setDiesOnUse(true);
+		this.setIsDestroyedOnUse(true);
 		this.setTexture(ItemTextures.major_healing);
 		this.setDescription("This potion heals 25 HP");
 		this.setBasePrice(35);

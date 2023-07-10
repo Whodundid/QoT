@@ -1,4 +1,4 @@
-package envision.game.component.types;
+package envision.game.component.types.timing;
 
 import envision.game.component.ComponentBasedObject;
 import eutil.random.ERandomUtil;

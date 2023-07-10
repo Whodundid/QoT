@@ -6,7 +6,6 @@ import envision.engine.screens.ScreenRepository;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.ListableCommand;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.commands.categories.engine.CMD_Help;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
@@ -56,11 +55,11 @@ public class CMD_List extends TerminalCommand {
         case "s":
         case "screen":
         case "screens": listScreens(); break;
-        case "h":
-        case "help":
-        case "cmd":
-        case "cmds":
-        case "commands": new CMD_Help().runCommand_i(term(), new EArrayList(), false); break;
+//        case "h":
+//        case "help":
+//        case "cmd":
+//        case "cmds":
+//        case "commands": new CMD_Help().runCommand_i(term(), new EArrayList(), false); break;
         case "alias":
         case "aliases": listAliases(); break;
         default:

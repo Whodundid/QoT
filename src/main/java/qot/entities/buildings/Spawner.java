@@ -2,7 +2,8 @@ package qot.entities.buildings;
 
 import envision.Envision;
 import envision.game.component.EntityComponent;
-import envision.game.component.types.RandomTimeEventComponent;
+import envision.game.component.types.death.DropItemOnDeathComponent;
+import envision.game.component.types.timing.RandomTimeEventComponent;
 import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
 import eutil.datatypes.util.EList;
@@ -10,6 +11,7 @@ import eutil.random.ERandomUtil;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
 import qot.entities.enemies.dragon.Fireball;
+import qot.items.Items;
 
 public class Spawner extends Building {
 
@@ -20,7 +22,7 @@ public class Spawner extends Building {
 	private RandomTimeEventComponent spawnerComponent;
 	private RandomTimeEventComponent defenderComponent;
 	
-	public Spawner() { this(0, 0, new EntitySpawn(0, 0, EntityList.randomEntity())); }
+	public Spawner() { this(0, 0, new EntitySpawn(0, 0, EntityList.getEntity(EntityList.spawnable().getRandom()))); }
 	public Spawner(int posX, int posY, EntitySpawn entityToSpawn) {
 		this.entityToSpawn = entityToSpawn;
 		this.setTexture(HouseTextures.anvil);
@@ -32,10 +34,17 @@ public class Spawner extends Building {
 		setBaseMeleeDamage(1);
 		setExperienceRewardedOnKill(300);
 		
-		addComponent(spawnerComponent = new RandomTimeEventComponent(this, "spawn_update", 200, 1000));
-		/*addComponent(*/defenderComponent = new RandomTimeEventComponent(this, "defense", 100, 500)/*)*/;
+		addComponent(spawnerComponent = new RandomTimeEventComponent(this, "spawn_update", 2000, 8000));
+		addComponent(defenderComponent = new RandomTimeEventComponent(this, "defense", 3000, 5000));
 		
 		this.setHeadText(EntityList.getEntity(entityToSpawn.getType()).getName());
+		
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(2);
+        
+        addComponent(itemOnDeath);
 	}
 	
 	@Override
@@ -90,7 +99,7 @@ public class Spawner extends Building {
 	
 	@Override
 	public int getInternalSaveID() {
-		return EntityList.Spawner.ID;
+		return EntityList.SPAWNER.ID;
 	}
 	
 }

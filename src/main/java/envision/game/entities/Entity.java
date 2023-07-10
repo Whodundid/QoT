@@ -8,6 +8,8 @@ import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.game.abilities.ActiveAbilityTracker;
 import envision.game.abilities.EntitySpellbook;
 import envision.game.component.ComponentBasedObject;
+import envision.game.component.ComponentType;
+import envision.game.component.types.death.OnDeathComponent;
 import envision.game.entities.inventory.EntityInventory;
 import envision.game.entities.movement.MovementCollisionHelper;
 import envision.game.entities.util.EntityHealthBar;
@@ -167,11 +169,15 @@ public abstract class Entity extends ComponentBasedObject {
 		if (invincible) return;
 		health = ENumUtil.clamp(health - amount, 0, health);
 		
+		if (health == 0 && maxHealth > 0) {
+		    kill();
+		}
+		
 		// TODO this should eventually be a game setting
 		boolean drawDamageSplash = true;
 		if (drawDamageSplash) {
 			var dmg = new FloatingTextEntity(worldX, worldY, amount, 1500).setColor(EColors.red);
-			Envision.getWorld().getEntitiesInWorld().add(dmg);
+			Envision.getWorld().addEntity(dmg);
 		}
 		
 		healthChanged(amount);
@@ -209,6 +215,10 @@ public abstract class Entity extends ComponentBasedObject {
 		int diff = health;
 		health = 0;
 		healthChanged(diff);
+		if (this.hasComponent(ComponentType.ON_DEATH)) {
+		    OnDeathComponent c = getComponent(ComponentType.ON_DEATH);
+		    c.onDeath(null);
+		}
 	}
 	
 	public void giveItem(Item item) {

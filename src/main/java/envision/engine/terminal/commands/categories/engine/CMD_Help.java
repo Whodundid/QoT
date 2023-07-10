@@ -35,7 +35,7 @@ public class CMD_Help extends ListableCommand {
 	    expectNoMoreThan(1);
 	    
 		if (noArgs()) {
-			getList();
+			displayList(term());
 			writeln();
 			writeln("To see help information on a specific command, type help followed by the command.", EColors.yellow);
 			writeln("To run a command with more information, add -i after the command. ex: list -i", EColors.yellow);
@@ -62,12 +62,12 @@ public class CMD_Help extends ListableCommand {
 		}
 	}
 	
-	public void showHelp() {
-	    writeln("Listing all terminal commands\n", EColors.lgreen);
+	public void showHelp(ETerminalWindow termIn) {
+	    termIn.writeln("Listing all terminal commands\n", EColors.lgreen);
         
         for (var box : TerminalCommandHandler.getSortedCommands()) {
             //print category name
-            writeln("  " +  box.getA(), EColors.orange);
+            termIn.writeln("  " +  box.getA(), EColors.orange);
             
             //print each command under the current category
             for (TerminalCommand command : box.getB()) {
@@ -75,7 +75,7 @@ public class CMD_Help extends ListableCommand {
                 
                 //if the command doesn't have any aliases, just print the command name
                 if (aliasList == null || aliasList.isEmpty()) {
-                    writeln("    " + command.getName(), 0xffb2b2b2);
+                    termIn.writeln("    " + command.getName(), 0xffb2b2b2);
                     continue;
                 }
                 
@@ -89,10 +89,20 @@ public class CMD_Help extends ListableCommand {
                     else a.a(commandAlias, ", ");
                 }
                 
-                writeln(EColors.lgray, "    ", command.getName(), ": ", a);
+                termIn.writeln(EColors.lgray, "    ", command.getName(), ": ", a);
             }
         }
 	}
+	
+	@Override
+	public boolean hasCustomizedListDisplay() {
+        return true;
+    }
+	
+	@Override
+    public void displayList(ETerminalWindow termIn) {
+        showHelp(termIn);
+    }
 	
 	@Override
 	public EList<String> getList() {

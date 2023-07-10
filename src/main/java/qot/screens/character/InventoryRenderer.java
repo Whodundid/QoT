@@ -168,7 +168,7 @@ public class InventoryRenderer extends WindowObject {
 		
 		item.onItemUse(theEntity);
 		
-		if (item.diesOnUse()) {
+		if (item.isDestroyedOnUse()) {
 			removeItem(index);
 		}
 	}

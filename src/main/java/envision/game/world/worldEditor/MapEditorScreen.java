@@ -630,6 +630,7 @@ public class MapEditorScreen extends GameScreen {
 				mapFile = new File(mapDir, mapName + "/" + mapName + ".twld");
 			}
 			actualWorld = new GameWorld(mapFile);
+			actualWorld.getCamera().setEdgeLocked(false);
 			actualWorld.getCamera().setMinZoom(0.25);
 			actualWorld.getCamera().setMaxZoom(10);
 			actualWorld.setCameraZoom(oldZoom);

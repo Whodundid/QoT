@@ -1,6 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
+import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.effects.animations.AnimationHandler;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
@@ -9,6 +10,7 @@ import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
 import qot.entities.EntityList;
+import qot.items.Items;
 
 public class WhodundidsBrother extends Enemy {
 
@@ -53,6 +55,13 @@ public class WhodundidsBrother extends Enemy {
 		idle1.addFrame(EntityTextures.whobro_blink2);
 		idle1.addFrame(EntityTextures.whobro_blink1);
 		idle1.addFrame(EntityTextures.whobro_blink0);
+		
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(7);
+        
+        addComponent(itemOnDeath);
 	}
 
 	@Override

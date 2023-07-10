@@ -70,8 +70,8 @@ public class QoT_Player extends Player {
 				e.drainHealth(damage);
 				//addObject(new DamageSplash(e.startX + e.midX, e.startY + e.midY, damage));
 				if (e.isDead()) {
-					if (e instanceof Thyrah) giveItem(Items.random());
-					else if (ERandomUtil.roll(5, 0, 10)) giveItem(Items.random());
+					//if (e instanceof Thyrah) giveItem(Items.random());
+					//else if (ERandomUtil.roll(5, 0, 10)) giveItem(Items.random());
 					
 					getStats().addKilled(1);
 					Envision.theWorld.removeEntity(e);

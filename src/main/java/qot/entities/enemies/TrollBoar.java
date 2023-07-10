@@ -1,12 +1,14 @@
 package qot.entities.enemies;
 
 import envision.Envision;
+import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import eutil.datatypes.points.Point2i;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
 import qot.entities.EntityList;
+import qot.items.Items;
 
 public class TrollBoar extends Enemy {
 	
@@ -36,6 +38,13 @@ public class TrollBoar extends Enemy {
 		waitAttackTime = ERandomUtil.getRoll(600, 4000);
 		
 		//this.setHeadText(doesWaitAttack + " : " + waitAttackTime);
+		
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(1);
+        
+        addComponent(itemOnDeath);
 	}
 	
 	@Override

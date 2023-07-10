@@ -1,4 +1,4 @@
-package envision.game.component.types;
+package envision.game.component.types.timing;
 
 import java.util.UUID;
 
@@ -35,13 +35,6 @@ public abstract class TimeEventComponent extends EntityComponent {
 	
 	// outlines that children of this component must specify the 'onGametime' method
 	public abstract void onGameTick(float deltaTime);
-	
-	/**
-	 * Called whenever this timer has reached the end of one interval.
-	 */
-	public void onEvent() {
-		theObject.onComponentEvent(this, componentID);
-	}
 	
 	//=========
 	// Methods

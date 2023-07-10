@@ -10,7 +10,7 @@ public class Mana_Major extends Potion {
 	public Mana_Major() {
 		super("Major Mana Potion", ItemList.MANA_MAJOR.ID);
 		this.setUsable(true);
-		this.setDiesOnUse(true);
+		this.setIsDestroyedOnUse(true);
 		this.setTexture(ItemTextures.major_mana);
 		this.setDescription("This potion restores 25 MP");
 		this.setBasePrice(35);

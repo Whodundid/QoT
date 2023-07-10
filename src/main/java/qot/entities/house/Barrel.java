@@ -1,8 +1,10 @@
 package qot.entities.house;
 
+import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
+import qot.items.Items;
 
 public class Barrel extends BasicRenderedEntity {
 
@@ -14,6 +16,13 @@ public class Barrel extends BasicRenderedEntity {
 		setMaxHealth(5);
 		setHealth(5);
 		setExperienceRewardedOnKill(1);
+		
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(10);
+        
+        addComponent(itemOnDeath);
 	}
 	
 	@Override

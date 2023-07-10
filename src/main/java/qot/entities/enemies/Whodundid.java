@@ -1,6 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
+import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
 import eutil.math.dimensions.Dimension_d;
@@ -8,6 +9,7 @@ import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
 import qot.entities.EntityList;
+import qot.items.Items;
 
 public class Whodundid extends Enemy {
 	
@@ -30,6 +32,13 @@ public class Whodundid extends Enemy {
 		
 		randShort = 400l;
 		randLong = 800l;
+		
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(5);
+        
+        addComponent(itemOnDeath);
 	}
 	
 	@Override

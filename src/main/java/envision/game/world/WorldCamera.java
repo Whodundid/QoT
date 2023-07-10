@@ -89,6 +89,9 @@ public class WorldCamera {
         double magicalAdjustmentX = (tw - ew) * zoom;
         double magicalAdjustmentY = (th - eh) * zoom;
         
+        double vw = gameWidth / scaledTileWidth;
+        double vh = gameHeight / scaledTileHeight;
+        
         double viewableWidth = (gameWidth - scaledTileWidth + magicalAdjustmentX - 0.5) / scaledTileWidth;
         double viewableHeight = (gameHeight + scaledTileHeight + magicalAdjustmentY - 0.5) / scaledTileHeight;
         
@@ -106,18 +109,18 @@ public class WorldCamera {
         
         double leftCoordEdge = Math.floor(halfWidth);
         double rightCoordEdge = Math.floor(ww - halfWidth - (ew / tw));
-        double topCoordEdge = halfHeight - 1;
+        double topCoordEdge = halfHeight - 3;
         double botCoordEdge = Math.floor(wh - halfHeight - (eh / th)) + 1;
         
         double leftEdgeX = viewablePixelsForHalfWidth;
         double rightEdgeX = (ww * tw - viewablePixelsForHalfWidth) - ew;
-        double topEdgeY = viewablePixelsForHalfHeight - th;
+        double topEdgeY = viewablePixelsForHalfHeight - th * 3;
         double botEdgeY = (wh * th - viewablePixelsForHalfHeight) + (th - eh);
         
-        if (isEdgeLocked && viewableWidth + 1 < ww && viewableHeight + 1 < wh) {
+        if (isEdgeLocked && vw <= ww && vh <= wh) {
             xCoordToSet = Math.floor(ENumUtil.clamp(xCoordToSet, leftCoordEdge, rightCoordEdge));
-            xToSet = ENumUtil.clamp(xToSet, leftEdgeX, rightEdgeX);
             yCoordToSet = Math.floor(ENumUtil.clamp(yCoordToSet, topCoordEdge, botCoordEdge));
+            xToSet = ENumUtil.clamp(xToSet, leftEdgeX, rightEdgeX);
             yToSet = ENumUtil.clamp(yToSet, topEdgeY, botEdgeY);
         }
         
@@ -135,6 +138,10 @@ public class WorldCamera {
         focusedPoint.y = yToSet;
         offsetX = entityPixelX;
         offsetY = entityPixelY;
+        
+//        var s = new EStringBuilder();
+//        s.a(xCoordToSet, " ", yCoordToSet);
+//        System.out.println(s);
 	}
 	
 	//---------
@@ -158,6 +165,16 @@ public class WorldCamera {
 	/** Returns the object the camera is currently focused on. (Could be null) */
 	public GameObject getFocusedObject() { return focusedObject; }
 	
+	/** Returns the size (in pixels) for the width of each tile in the world. */
+	public double getScaledTileWidth() { return theWorld.getTileWidth() * zoom; }
+	/** Returns the size (in pixels) for the height of each tile in the world. */
+	public double getScaledTileHeight() { return theWorld.getTileHeight() * zoom; }
+	
+	/** Returns the X location of where the camera is in terms of decimal world coordinates. */
+	public double getCameraCenterX() { return focusedPoint.x / theWorld.getTileWidth(); }
+	/** Returns the Y location of where the camera is in terms of decimal world coordinates. */
+	public double getCameraCenterY() { return focusedPoint.y / theWorld.getTileHeight(); }
+	
 	//---------
 	// Setters
 	//---------
@@ -169,12 +186,41 @@ public class WorldCamera {
 	 * @param zoomIn The zoom to set
 	 */
 	public void setZoom(double zoomIn) {
+	    double min = minZoom;
+	    double max = maxZoom;
+	    
+	    if (isEdgeLocked) {
+	        min = calcMinEdgeLockZoom();
+	        min = ENumUtil.clamp(min, minZoom, 1000);
+	        max = ENumUtil.clamp(max, min, max);
+	    }
+	    
 		zoom = zoomIn;
-		zoom = ENumUtil.clamp(zoom, minZoom, maxZoom);
+		
+		zoom = ENumUtil.clamp(zoom, min, max);
+	}
+	
+	protected double calcMinEdgeLockZoom() {
+	    final int gameWidth = Envision.getWidth();
+        final int gameHeight = Envision.getHeight();
+        
+        double pixelWidth = theWorld.getPixelWidth();
+        double pixelHeight = theWorld.getPixelHeight();
+        
+        double minZoomWidth = gameWidth / pixelWidth;
+        double minZoomHeight = gameHeight / pixelHeight;
+        
+        minZoomWidth = Math.round(minZoomWidth * 4) / 4.0;
+        minZoomHeight = Math.round(minZoomHeight * 4) / 4.0;
+        
+	    return Math.max(minZoomWidth, minZoomHeight);
 	}
 	
 	public void setMinZoom(double zoomIn) { minZoom = zoomIn; }
 	public void setMaxZoom(double zoomIn) { maxZoom = zoomIn; }
+	
+	public void setEdgeLocked(boolean val) { isEdgeLocked = val; }
+	public boolean isEdgeLocked() { return isEdgeLocked; }
 	
 	/**
 	 * Sets an object that the camera will focus in on and follow.

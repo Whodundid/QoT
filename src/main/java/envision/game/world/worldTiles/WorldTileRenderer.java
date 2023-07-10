@@ -48,42 +48,77 @@ public class WorldTileRenderer extends RenderingComponent {
 		//ignore if there is no texture
 		if (!theTile.hasTexture()) return;
 		
-		double zoom = camera.getZoom();
+//		final int halfScreenW = Envision.getWidth() >> 1;
+//		final int halfScreenH = Envision.getHeight() >> 1;
+//		
+//		final double camWorldX = camera.getCameraCenterX();
+//		final double camWorldY = camera.getCameraCenterY();
+//		
+//		//pixel width of each tile
+//		final double w = camera.getScaledTileWidth();
+//		//pixel height of each tile
+//		final double h = camera.getScaledTileHeight();
+//		
+//		double drawX = (theTile.worldX - camWorldX - 0.5) * w + halfScreenW;
+//		double drawY = (theTile.worldY - camWorldY - 0.5) * h + halfScreenH;
 		
-		//pixel width of each tile
-		double w = (int) (world.getTileWidth() * zoom);
-		//pixel height of each tile
-		double h = (int) (world.getTileHeight() * zoom);
-		
-		//the left most x coordinate for map drawing
-		double x = (int) (midX - (distX * w) - (w / 2));
-		//the top most y coordinate for map drawing
-		double y = (int) (midY - (distY * h) - (h / 2));
-		
-		double tileOffsetX = (theTile.startX % world.getTileWidth()) * zoom;
-		double tileOffsetY = (theTile.startY % world.getTileWidth()) * zoom;
-		
-		//transform the world coordinates of the tile to screen x/y coordinates
-		double drawX = (theTile.worldX * w) + x;
-		double drawY = (theTile.worldY * h) + y;
-		
-		//translate to the middle drawn world tile
-		drawX += (distX - midDrawX) * w;
-		drawY += (distY - midDrawY) * h;
-		
-		drawX += tileOffsetX;
-		drawY += tileOffsetY;
-		//apply the player's (CAMERA'S) offset to the drawn tile
-		drawX -= camera.getOffsetX();
-		drawY -= camera.getOffsetY();
+//		//the left most x pixel for map drawing
+//		double x = (int) (midX - (distX * w) - (w / 2));
+//		//the top most y pixel for map drawing
+//		double y = (int) (midY - (distY * h) - (h / 2));
+//		
+//		//transform the world coordinates of the tile to screen x/y coordinates
+//		double drawX = (theTile.worldX * w) + x;
+//		double drawY = (theTile.worldY * h) + y;
+//		
+//		//translate to the middle drawn world tile
+//		drawX += (distX - midDrawX) * w;
+//		drawY += (distY - midDrawY) * h;
+//		
+//		//apply the player's (CAMERA'S) offset to the drawn tile
+//		drawX -= camera.getOffsetX();
+//		drawY -= camera.getOffsetY();
 		
 		//calculate the entity's draw width and height based off of actual dims and zoom
 		//double drawW = theTile.width * zoom;
 		//double drawH = theTile.height * zoom;
 		
-		if (BatchManager.isEnabled()) drawTile(world, drawX, drawY, w, h, 0xffffffff, false);
-		else drawTile(world, drawX, drawY, w, h, calcBrightness(theTile.worldX, theTile.worldY), false);
+		//if (BatchManager.isEnabled()) drawTile(world, drawX, drawY, w, h, 0xffffffff, false);
+		//else drawTile(world, drawX, drawY, w, h, calcBrightness(theTile.worldX, theTile.worldY), false);
+		
+		old(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
 	}
+	
+    private void old(IGameWorld world, WorldCamera camera,
+        int midDrawX, int midDrawY,
+        double midX, double midY,
+        int distX, int distY)
+    {
+        //pixel width of each tile
+        final double w = camera.getScaledTileWidth();
+        //pixel height of each tile
+        final double h = camera.getScaledTileHeight();
+
+        //the left most x pixel for map drawing
+        double x = (int) (midX - (distX * w) - (w * 0.5));
+        //the top most y pixel for map drawing
+        double y = (int) (midY - (distY * h) - (h * 0.5));
+        
+        //transform the world coordinates of the tile to screen x/y coordinates
+        double drawX = (theTile.worldX * w) + x;
+        double drawY = (theTile.worldY * h) + y;
+        
+        //translate to the middle drawn world tile
+        drawX += (distX - midDrawX) * w;
+        drawY += (distY - midDrawY) * h;
+        
+        //apply the player's (CAMERA'S) offset to the drawn tile
+        drawX -= camera.getOffsetX();
+        drawY -= camera.getOffsetY();
+        
+        if (BatchManager.isEnabled()) drawTile(world, drawX, drawY, w, h, 0xffffffff, false);
+        else drawTile(world, drawX, drawY, w, h, calcBrightness(theTile.worldX, theTile.worldY), false);
+    }
 	
 	//-----------------------------------------------------------------------------------------------------------
 	

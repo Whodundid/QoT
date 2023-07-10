@@ -1,103 +1,125 @@
 package qot.entities.enemies.archer;
 
-import envision.game.entities.BasicRenderedEntity;
-import eutil.math.vectors.Vec2d;
+import java.text.DecimalFormat;
+
+import envision.Envision;
+import envision.game.component.types.death.DropItemOnDeathComponent;
+import envision.game.entities.Enemy;
+import envision.game.world.GameWorld;
+import eutil.math.dimensions.Dimension_d;
+import eutil.misc.Direction;
+import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
 import qot.entities.EntityList;
+import qot.items.Items;
 
-public class Archer extends BasicRenderedEntity {
-
-	/** I am.. SPEED */
-	public double speed;
-	public Vec2d velocity;
-	public long oldTime, curTime;
-	public boolean start;
-	float dt;
-	
-	boolean left = true;
-	long timeSinceLeft;
-	
-	public Archer() { this("Archer", 0, 0); }
-	public Archer(String nameIn, int x, int y) {
-		super(nameIn);
-		
-		setBaseMeleeDamage(3);
-		setMaxHealth(25);
-		setHealth(25);
-		
-		init(x, y, 32, 64);
-		tex = EntityTextures.player;
-		
-		setCollisionBox(startX + 8, endY - 15, endX - 8, endY);
-		setExperienceRewardedOnKill(75);
-		
-		speed = 50;
-	}
-	
-	public void move(double moveX, double moveY, float timeSinceLastUdate) {
-		double len = Math.sqrt(moveX * moveX + moveY * moveY);
-		double normX = moveX / len;
-		double normY = moveY / len;
-		
-		normX *= speed;
-		normY *= speed;
-		
-		startX = startX + normX * timeSinceLastUdate;
-		startY = startY + normY * timeSinceLastUdate;
-		
-		this.setHeadText("" + (int) startX + " " + left);
-		
-		double valX = startX / world.getTileWidth();
-		double valY = startY / world.getTileHeight();
-		
-		worldX = (int) valX;
-		worldY = (int) valY;
-	}
-	
-	@Override
-	public void onLivingUpdate(float dt) {
-		if (!start) {
-			oldTime = System.currentTimeMillis();
-			curTime = oldTime;
-			timeSinceLeft = (long) curTime;
-			
-			start = true;
-		}
-
-		oldTime = curTime;
-		curTime = System.currentTimeMillis();
-		
-		dt = curTime - oldTime;
-		dt /= 1000.0f;
-		
-		if (dt > 0.15f) dt = 0.15f;
-		
-		// movement logic
-		if (left) {
-			if ((System.currentTimeMillis() - timeSinceLeft) <= 2000L) {
-				move(1.0f, 1f, dt);
-			}
-			else {
-				left = false;
-				timeSinceLeft = System.currentTimeMillis();
-			}
-		}
-		else {
-			if ((System.currentTimeMillis() - timeSinceLeft) <= 2000L) {
-				move(-1.0f, -1f, dt);
-			}
-			else {
-				left = true;
-				timeSinceLeft = System.currentTimeMillis();
-			}
-		}
-	}
-	
-	@Override
-	public int getInternalSaveID() {
-		return EntityList.Archer.ID;
-	}
-	
-	
-	
+public class Archer extends Enemy {
+    
+    private boolean hit = false;
+    private long timeSinceLastHit;
+    private long timeSinceLastFireball;
+    private long fireballDelay = 3000;
+    
+    public Archer() {
+        this("Archer", 0, 0);
+    }
+    public Archer(String nameIn, int x, int y) {
+        super(nameIn);
+        
+        setBaseMeleeDamage(3);
+        setMaxHealth(15);
+        setHealth(15);
+        
+        init(x, y, 32, 64);
+        tex = EntityTextures.player;
+        
+        setCollisionBox(startX + 8, endY - 15, endX - 8, endY);
+        setExperienceRewardedOnKill(75);
+        
+        setSpeed(50);
+        
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(5);
+        
+        addComponent(itemOnDeath);
+    }
+    
+    @Override
+    public void onLivingUpdate(float dt) {
+        var p = Envision.thePlayer;
+        if (p == null) return;
+        
+        double dist = world.getDistance(this, p);
+        this.headText = "" + new DecimalFormat("#.00").format(dist);
+        
+        // wander around if player is not near
+        if (dist > 300) {
+            if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
+                waitTime = ERandomUtil.getRoll(randShort, randLong);
+                moveTime = ERandomUtil.getRoll(randShort, 800l);
+                waitDelay = ERandomUtil.getRoll(randShort, randLong);
+                lastMove = System.currentTimeMillis();
+                lastDir = ERandomUtil.randomDir(true);
+            }
+            
+            if (System.currentTimeMillis() - lastMove >= moveTime) {
+                move(lastDir);
+            }
+        }
+        // get closer to the player
+        else if (dist <= 300 && dist > 200) {
+            Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
+            move(dirToPlayer);
+        }
+        // shoot arrows at the player
+        else if (dist <= 200 && dist >= 75) {
+            shootArrow();
+        }
+        // else do melee stuff
+        else {
+            Dimension_d testDim = getCollisionDims();
+            Dimension_d pDims = Envision.thePlayer.getCollisionDims();
+            
+            if (testDim.partiallyContains(pDims)) {
+                if (hit) {
+                    //System.out.println(System.currentTimeMillis() - timeSinceLastHit);
+                    if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
+                        hit = false;
+                    }
+                }
+                else {
+                    hit = true;
+                    timeSinceLastHit = System.currentTimeMillis();
+                    Envision.thePlayer.drainHealth(getBaseMeleeDamage());
+                }
+            }
+            
+            Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
+            move(dirToPlayer);
+        }
+        
+    }
+    
+    private void shootArrow() {
+        var left = switch (facing) {
+        case LEFT, UP -> true;
+        default -> false;
+        };
+        
+        if (System.currentTimeMillis() - timeSinceLastFireball >= fireballDelay) {
+            timeSinceLastFireball = System.currentTimeMillis();
+            var fb = new Arrow();
+            fb.worldX = (left) ? worldX : (int) (worldX + width / world.getTileWidth());
+            fb.worldY = worldY;
+            world.addEntity(fb);
+        }
+    }
+    
+    @Override
+    public int getInternalSaveID() {
+        return EntityList.ARCHER.ID;
+    }
+    
 }

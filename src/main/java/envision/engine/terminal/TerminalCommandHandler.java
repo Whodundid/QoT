@@ -13,6 +13,7 @@ import envision.engine.terminal.commands.categories.engine.CMD_DisplayScreen;
 import envision.engine.terminal.commands.categories.engine.CMD_Envision;
 import envision.engine.terminal.commands.categories.engine.CMD_FPS;
 import envision.engine.terminal.commands.categories.engine.CMD_Help;
+import envision.engine.terminal.commands.categories.engine.CMD_LockCam;
 import envision.engine.terminal.commands.categories.engine.CMD_ReloadTextures;
 import envision.engine.terminal.commands.categories.engine.CMD_RenderSettings;
 import envision.engine.terminal.commands.categories.engine.CMD_SetVolume;
@@ -180,6 +181,7 @@ public class TerminalCommandHandler {
 		registerCommand(new CMD_Speed(), termIn, runVisually);
 		registerCommand(new CMD_SetXP(), termIn, runVisually);
 		registerCommand(new CMD_GiveItem(), termIn, runVisually);
+		registerCommand(new CMD_LockCam(), termIn, runVisually);
 		
 		//system
 		registerCommand(new CMD_Calculator(), termIn, runVisually);

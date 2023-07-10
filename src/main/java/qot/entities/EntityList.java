@@ -1,6 +1,7 @@
 package qot.entities;
 
 import envision.game.entities.Entity;
+import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;
 import qot.doodads.BirchTree;
 import qot.doodads.Bush0;
@@ -53,9 +54,9 @@ public enum EntityList {
 	LEAVES(19),
 	STICKS(20),
 	
-	Archer(21),
+	ARCHER(21),
 	
-	Spawner(22),
+	SPAWNER(22),
 	;
 	
 	public final int ID;
@@ -101,8 +102,8 @@ public enum EntityList {
 		case LEAVES: return new LeavesGroundClutter();
 		case STICKS: return new SticksGroundClutter();
 		
-		case Archer: return new Archer();
-		case Spawner: return new Spawner();
+		case ARCHER: return new Archer();
+		case SPAWNER: return new Spawner();
 		default: return null;
 		}
 	}
@@ -112,6 +113,18 @@ public enum EntityList {
 		int len = values().length;
 		if (idIn >= len) return null;
 		return values()[idIn];
+	}
+	
+	public static EList<EntityList> spawnable() {
+	    EList<EntityList> list = EList.newList();
+	    list.add(ARCHER);
+	    list.add(SPAWNER);
+	    list.add(GOBLIN);
+	    list.add(WHODUNDID);
+	    list.add(TROLLBOAR);
+	    list.add(THYRAH);
+	    list.add(WHODUNDIDS_BROTHER);
+	    return list;
 	}
 	
 }

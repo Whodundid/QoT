@@ -1,8 +1,10 @@
 package qot.entities.house;
 
+import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
+import qot.items.Items;
 
 public class Crate extends BasicRenderedEntity {
 
@@ -17,6 +19,13 @@ public class Crate extends BasicRenderedEntity {
 		
 		setCollisionBox(startX + 2, startY + 14, endX - 2, endY - 1);
 		setExperienceRewardedOnKill(2);
+		
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(10);
+        
+        addComponent(itemOnDeath);
 	}
 	
 	@Override

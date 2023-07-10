@@ -10,10 +10,9 @@ public abstract class Item extends GameObject {
 	protected String name;
 	protected int basePrice;
 	protected String description;
-	protected GameTexture texture;
 	protected double weight;
 	protected boolean isUsable;
-	protected boolean diesOnUse;
+	protected boolean isDestroyedOnUse;
 	protected int damageBonus;
 
 	public Item(String nameIn, int idIn) { this(nameIn, 0, "", idIn); }
@@ -44,18 +43,14 @@ public abstract class Item extends GameObject {
 	public int getID() { return id; }
 	public double getCarryWeight() { return weight; }
 	public boolean isUsable() { return isUsable; }
-	public boolean diesOnUse() { return diesOnUse; }
+	public boolean isDestroyedOnUse() { return isDestroyedOnUse; }
 	public int getDamageBonus() { return damageBonus; }
 	
-	/** Can return null if this item does not have a texture. */
-	public GameTexture getTexture() { return texture; }
-	
-	public Item setTexture(GameTexture textureIn) { texture = textureIn; return this; }
 	public Item setDescription(String in) { description = in; return this; }
 	public Item setBasePrice(int in) { basePrice = in; return this; }
 	public void setCarryWeight(double weightIn) { weight = weightIn; }
 	public void setUsable(boolean val) { isUsable = val; }
-	public void setDiesOnUse(boolean val) { diesOnUse = val; }
+	public void setIsDestroyedOnUse(boolean val) { isDestroyedOnUse = val; }
 	public void setDamageBonus(int val) { damageBonus = val; }
 	
 }

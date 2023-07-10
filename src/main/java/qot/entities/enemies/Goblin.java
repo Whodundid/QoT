@@ -1,6 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
+import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
 import eutil.math.dimensions.Dimension_d;
@@ -8,6 +9,7 @@ import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
 import qot.entities.EntityList;
+import qot.items.Items;
 
 public class Goblin extends Enemy {
 	
@@ -28,6 +30,13 @@ public class Goblin extends Enemy {
 		
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 		setExperienceRewardedOnKill(25);
+		
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(10);
+        
+        addComponent(itemOnDeath);
 	}
 	
 	@Override

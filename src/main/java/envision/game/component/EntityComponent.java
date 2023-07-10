@@ -110,6 +110,13 @@ public abstract class EntityComponent {
 		}
 	}
 	
+	/**
+     * Call to pass an event with arguments to the parent entity.
+     */
+    public void onEvent(Object... args) {
+        theObject.onComponentEvent(this, componentID, args);
+    }
+	
 	//=========
 	// Getters
 	//=========

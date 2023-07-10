@@ -101,6 +101,9 @@ public class Region extends GameObject {
 				else if (name.equals("Mine")) {
 					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountain_dung/mountain_dung.twld")));
 				}
+				else if (name.equals("toRuins")) {
+				    Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "test/test.twld")));
+				}
 			//}
 			else if (name.equals("exitCave")) {
 				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
@@ -111,6 +114,9 @@ public class Region extends GameObject {
 			else if (name.equals("cave_entrance")) {
 				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")));
 			}
+            else if (name.equals("toNew")) {
+                Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+            }
 		}
 	}
 	protected synchronized void onEntityExited(Entity in, double xPos, double yPos) {

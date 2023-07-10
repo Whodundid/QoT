@@ -1,12 +1,14 @@
 package qot.entities.enemies.dragon;
 
 import envision.Envision;
+import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
+import qot.items.Items;
 
 public class Thyrah extends Enemy {
 	
@@ -29,6 +31,13 @@ public class Thyrah extends Enemy {
 		
 		randShort = 200l;
 		randLong = 200l;
+		
+        // item on death
+        
+        var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
+        itemOnDeath.setChance(1);
+        
+        addComponent(itemOnDeath);
 	}
 
 	@Override

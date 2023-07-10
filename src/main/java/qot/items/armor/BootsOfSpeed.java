@@ -23,7 +23,7 @@ public class BootsOfSpeed extends Item {
 	@Override
 	public void onItemEquip(Entity user) {
 		if (!user.activeEffectsTracker.containsKey("SPEED_MODIFIER")) {
-			user.activeEffectsTracker.put("SPEED_MODIFIER", 75.0);
+			user.activeEffectsTracker.put("SPEED_MODIFIER", 750.0);
 		}
 	}
 	

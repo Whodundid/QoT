@@ -10,7 +10,7 @@ public class Healing_Lesser extends Potion {
 	public Healing_Lesser() {
 		super("Lesser Healing Potion", ItemList.HEALING_LESSER.ID);
 		this.setUsable(true);
-		this.setDiesOnUse(true);
+		this.setIsDestroyedOnUse(true);
 		this.setTexture(ItemTextures.lesser_healing);
 		this.setDescription("This potion heals 30 HP");
 		this.setBasePrice(5);

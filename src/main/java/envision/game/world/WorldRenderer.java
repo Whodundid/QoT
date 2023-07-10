@@ -115,33 +115,54 @@ public class WorldRenderer extends EGui {
 		renderWorld(partialTicks);
 	}
 	
-	private void renderWorld(float partialTicks) {
-		if (world == null) RenderingManager.drawStringC("Failed to load!", midX, midY);
-		else if (world.width < 0 || world.height < 0 || world.tileWidth <= 0 || world.tileHeight <= 0) {
-			RenderingManager.drawStringC("Bad world dimensions!", midX, midY);
-		}
-		else {
-			//drawRect(0xff4fedff);
-			if (!world.isUnderground()) drawRect(0xff4fbaff);
-			else drawRect(0xff000000);
-			
-//			//pixel width of each tile
-//			double w = (int) (world.getTileWidth() * world.getCameraZoom());
-//			//pixel height of each tile
-//			double h = (int) (world.getTileHeight() * world.getCameraZoom());
-//			
-//			//the left most x coordinate for map drawing
-//			double x = (int) (midX - (distX * w) - (w / 2));
-//			//the top most y coordinate for map drawing
-//			double y = (int) (midY - (distY * h) - (h / 2));
-			
-			renderMapLayers();
-			
-//			if (drawPosBox) {
-//				drawPosBox(x, y, w, h);
-//			}
-		}
-	}
+    private void renderWorld(float partialTicks) {
+        if (world == null) {
+            RenderingManager.drawStringC("Failed to load!", midX, midY);
+            return;
+        }
+        
+        if (world.width < 0 || world.height < 0 || world.tileWidth <= 0 || world.tileHeight <= 0) {
+            RenderingManager.drawStringC("Bad world dimensions!", midX, midY);
+            return;
+        }
+        
+        //drawRect(0xff4fedff);
+        if (!world.isUnderground()) drawRect(0xff4fbaff);
+        else drawRect(0xff000000);
+        
+        //pixel width of each tile
+        double w = (int) (world.getTileWidth() * world.getCameraZoom());
+        //pixel height of each tile
+        double h = (int) (world.getTileHeight() * world.getCameraZoom());
+        
+        //the left most x coordinate for map drawing
+        double x = (int) (midX - (distX * w) - (w / 2));
+        //the top most y coordinate for map drawing
+        double y = (int) (midY - (distY * h) - (h / 2));
+        
+        renderMapLayers();
+        
+//      if (drawPosBox) {
+//          drawPosBox(x, y, w, h);
+//      }
+        
+//        if (WorldRenderer.drawPosBox && world.camera.getFocusedObject() != null) {
+//            RenderingManager.drawHRect(tileX, tileY, tileX + w, tileY + h, 4, EColors.red);
+//        }
+//        
+//        if (WorldRenderer.drawEntityHitboxes) {
+//            double colSX = drawX + (collisionBox.startX * zoom);
+//            double colSY = drawY + (collisionBox.startY * zoom);
+//            double colEX = colSX + (collisionBox.width * zoom);
+//            double colEY = colSY + (collisionBox.height * zoom);
+//            
+//            RenderingManager.drawHRect(colSX - 1, colSY, colEX, colEY - 1, 1, EColors.yellow);
+//        }
+//        
+//        if (WorldRenderer.drawEntityOutlines) {
+//            RenderingManager.drawHRect(drawX, drawY, drawX + drawW, drawY + drawH, 1, EColors.blue);
+//        }
+    }
 	
 	private void renderMapLayers() {
 		final var cam = world.camera;

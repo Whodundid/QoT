@@ -34,7 +34,8 @@ public class ItemTextures extends TextureLoader {
 	lesser_mana = new GameTexture(textureDir, "lesser_mana.png"),
 	major_healing = new GameTexture(textureDir, "major_healing.png"),
 	major_mana = new GameTexture(textureDir, "major_mana.png"),
-	boots_of_speed = new GameTexture(textureDir, "boots_of_speed.png");
+	boots_of_speed = new GameTexture(textureDir, "boots_of_speed.png"),
+	loot_bag = new GameTexture(textureDir, "loot_bag.png");
 	
 	//-----------
 	// Overrides
@@ -50,6 +51,7 @@ public class ItemTextures extends TextureLoader {
 		reg(sys, major_healing);
 		reg(sys, major_mana);
 		reg(sys, boots_of_speed);
+		reg(sys, loot_bag);
 	}
 	
 }

@@ -10,7 +10,7 @@ public class Mana_Lesser extends Potion {
 	public Mana_Lesser() {
 		super("Lesser Mana Potion", ItemList.MANA_LESSER.ID);
 		this.setUsable(true);
-		this.setDiesOnUse(true);
+		this.setIsDestroyedOnUse(true);
 		this.setTexture(ItemTextures.lesser_mana);
 		this.setDescription("This potion restores 30 MP");
 		this.setBasePrice(100);

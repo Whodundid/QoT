@@ -300,9 +300,9 @@ public class GameWorld implements IGameWorld {
 		
 		//assign entity ID
 		ent.setWorldID(getNextEntityID());
-		Envision.getEventHandler().postEvent(new WorldAddedEntityEvent(this, ent));
-		
 		ent.setWorldPos(ent.worldX, ent.worldY);
+		ent.onAddedToWorld(this);
+		Envision.getEventHandler().postEvent(new WorldAddedEntityEvent(this, ent));
 		
 		//check if player
 		if (ent == Envision.thePlayer) {

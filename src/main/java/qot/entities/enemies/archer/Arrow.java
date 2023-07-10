@@ -9,19 +9,18 @@ import qot.assets.textures.entity.EntityTextures;
 public class Arrow extends BasicRenderedEntity {
 	
 	private boolean spawned = false;
-	private long timeToLive = 3000;
+	private long timeToLive = 600;
 	private long timeSpawned;
 	
 	public Arrow() { this("Arrow", 0, 0); }
 	public Arrow(String nameIn, int x, int y) {
 		super(nameIn);
 		
-		setBaseMeleeDamage(3 + ERandomUtil.getRoll(0, 3));
+		setBaseMeleeDamage(2 + ERandomUtil.getRoll(0, 2));
 		setInvincible(true);
-		setNoClipAllowed(true);
 		
 		init(x, y, 32, 32);
-		setTexture(EntityTextures.fireBall_projectile);
+		setTexture(EntityTextures.arrow_projectile);
 		setCollisionBox(startX - 8, startY - 8, endX + 8, endY + 8);
 		
 		setSpeed(270);
