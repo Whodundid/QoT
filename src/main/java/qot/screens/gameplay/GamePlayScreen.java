@@ -44,7 +44,7 @@ public class GamePlayScreen extends GameScreen {
 	public GamePlayScreen() { this(false); }
 	public GamePlayScreen(boolean openPauseOnStart) {
 		super();
-		screenHistory.push(new MainMenuScreen());
+		//screenHistory.push(new MainMenuScreen());
 		world = Envision.getWorld();
 		openPause = openPauseOnStart;
 		world.getCamera().setMinZoom(2);
@@ -183,6 +183,47 @@ public class GamePlayScreen extends GameScreen {
 		if (Envision.thePlayer != null) {
 			Envision.thePlayer.onMousePress(mXIn, mYIn, button);
 		}
+		
+		double zoom = world.getCameraZoom();
+		double drawDistX = world.getWorldRenderer().getDistX();
+		double drawDistY = world.getWorldRenderer().getDistY();
+		double camX = world.getCamera().getWorldX();
+		double camY = world.getCamera().getWorldY();
+		
+		double tileDrawWidth = (world.getTileWidth() * zoom); //pixel width of each tile
+		double tileDrawHeight = (world.getTileHeight() * zoom); //pixel height of each tile
+		double drawAreaMidX = Envision.getWidth() / 2; //the middle x of the map draw area
+		double drawAreaMidY = Envision.getHeight() / 2; //the middle y of the map draw area
+		double mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2)); //the left most x coordinate for map drawing
+		double mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2)); //the top most y coordinate for map drawing
+		
+        //converting to shorthand to reduce footprint
+        double x = mapDrawStartX;
+        double y = mapDrawStartY;
+        double w = tileDrawWidth;
+        double h = tileDrawHeight;
+		
+	    //The X world pixel under the mouse scaled by the render zoom
+        int xWorldPixel = (int) Math.floor(mXIn - x - ((drawDistX - camX) * w));
+        //The Y world pixel under the mouse scaled by the render zoom
+        int yWorldPixel = (int) Math.floor(mYIn - y - ((drawDistY - camY) * h));
+        
+        //The X world pixel under the mouse with zoom scaling removed
+        int xWorldPixelNoZoom = (int) (xWorldPixel / zoom);
+        //The Y world pixel under the mouse with zoom scaling removed
+        int yWorldPixelNoZoom = (int) (yWorldPixel / zoom);
+        
+        //The X coordinate world tile under the mouse
+        //double xMouseTile = xWorldPixel / w;
+        //The Y coordinate world tile under the mouse
+        //double yMouseTile = yWorldPixel / h;
+        
+        // garbage
+        for (var e : world.getEntitiesInWorld()) {
+            if (e.getCollisionDims().contains(xWorldPixelNoZoom, yWorldPixelNoZoom)) {
+                e.onMousePress(mXIn, mYIn, button);
+            }
+        }
 	}
 	
 	@Override
@@ -191,11 +232,11 @@ public class GamePlayScreen extends GameScreen {
 		double z = 1.0;
 		
 		if (Keyboard.isCtrlDown()) {
-			if (c > 0 && world.getCameraZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
-			else if (world.getCameraZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
-			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
-			else if (world.getCameraZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
-			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
+			if (c > 0 && world.getCameraZoom() == 0.25)      z = 0.05;		//if at 0.25 and zooming out -- 0.05x
+			else if (world.getCameraZoom() < 1.0)            z = c * 0.1;	//if less than 1 zoom by 0.1x
+			else if (c > 0)                                  z = 0.25;		//if greater than 1 zoom by 0.25x
+			else if (world.getCameraZoom() == 1.0)           z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
+			else                                             z = c * 0.25;	//otherwise always zoom by 0.25x
 			
 			z = ENumUtil.round(world.getCameraZoom() + z, 2);
 			world.setCameraZoom(z);

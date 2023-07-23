@@ -92,9 +92,9 @@ public class WorldDrawLayer {
 					builtLayer.add(obj);
 					continue;
 				}
-				//if (obj.getDimensions().contains(w_left, w_top, w_right, w_bot)) {
+				if (obj.getDimensions().contains(w_left, w_top, w_right, w_bot)) {
 					builtLayer.add(obj);
-				//}
+				}
 			}
 		}
 		

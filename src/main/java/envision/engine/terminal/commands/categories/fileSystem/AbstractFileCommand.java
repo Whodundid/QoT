@@ -6,6 +6,7 @@ import java.io.IOException;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.terminalUtil.FileHelper;
 import envision.engine.terminal.terminalUtil.TermArgLengthException;
+import envision.engine.terminal.terminalUtil.TermArgParsingException;
 import envision.engine.terminal.terminalUtil.TerminalCommandError;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.util.EList;
@@ -37,20 +38,23 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 		fileTabComplete(termIn, args);
 	}
 	
-	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		try {
-			term = termIn;
-			argHelper = fileHelper = new FileHelper(termIn, args, runVisually);
-			runCommand();
-		}
-		catch (TermArgLengthException e) {
-			errorUsage(e.getMessage());
-		}
-		catch (Exception e) {
-			error(e);
-		}
-	}
+    @Override
+    public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+        try {
+            term = termIn;
+            argHelper = fileHelper = new FileHelper(termIn, args, runVisually);
+            runCommand();
+        }
+        catch (TermArgParsingException e) {
+            e.display(termIn);
+        }
+        catch (TermArgLengthException e) {
+            errorUsage(e.getMessage());
+        }
+        catch (Exception e) {
+            error(e);
+        }
+    }
 	
 	//=========
 	// Methods

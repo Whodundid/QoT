@@ -7,7 +7,7 @@ public abstract class BasicRenderedEntity extends Entity {
 	protected BasicRenderedEntity(String nameIn) {
 		super(nameIn);
 		
-		addComponent(new EntityRenderer(this));
+		addComponent(new EntityRenderer(this, false));
 	}
 	
 }

@@ -14,7 +14,7 @@ public class ShopItemSlot {
 	private Item theItemToSell;
 	private Item itemToTradeFor;
 	private int goldPrice;
-	private EList<ItemTransactionStrat> sellStrats = EList.newList();
+	private EList<ItemTransactionRequirement> sellStrats = EList.newList();
 	
 	public ShopItemSlot(Item theItemToSellIn) {
 		theItemToSell = theItemToSellIn;
@@ -23,11 +23,11 @@ public class ShopItemSlot {
 	public Item getItem() { return theItemToSell; }
 	public Item getItemToTradeFor() { return itemToTradeFor; }
 	public int getGoldPrice() { return goldPrice; }
-	public EList<ItemTransactionStrat> getSellStrats() { return sellStrats.toUnmodifiableList(); }
+	public EList<ItemTransactionRequirement> getSellStrats() { return sellStrats.toUnmodifiableList(); }
 	
 	public void setItemToTradeFor(Item toTradeFor) { itemToTradeFor = toTradeFor; }
 	public void setGoldPrice(int gold) { goldPrice = gold; }
-	public void setSellStrats(EList<ItemTransactionStrat> sellStratsIn) { sellStrats.clearThenAddAll(sellStratsIn); }
-	public void setSellStrats(ItemTransactionStrat... stratIn) { sellStrats.clearThenAdd(stratIn); }
+	public void setSellStrats(EList<ItemTransactionRequirement> sellStratsIn) { sellStrats.clearThenAddAll(sellStratsIn); }
+	public void setSellStrats(ItemTransactionRequirement... stratIn) { sellStrats.clearThenAdd(stratIn); }
 	
 }

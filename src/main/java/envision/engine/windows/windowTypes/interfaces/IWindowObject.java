@@ -1361,6 +1361,35 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Event called whenever an object is being dragged-and-dropped into this object. */
 	public default void onDragAndDrop(DragAndDropObject objectBeingDropped) {}
 	
+    /**
+     * If set to return true, permits this object to be receptive to drag
+     * and drop events from the system's host file system.
+     * <p>
+     * This value returns false by default and must be explicitly overrided
+     * by an implementing object to enable this functionality.
+     * 
+     * @return True if system drag and drops are permitted
+     */
+	public default boolean allowsSystemDragAndDrop() {
+	    var wp = getWindowParent();
+	    if (wp != null && wp != this) return wp.allowsSystemDragAndDrop();
+	    return false;
+	}
+	
+    /**
+     * A special type of drag and drop event that occurs when files from
+     * the host OS are dragged and dropped onto a the game window and
+     * specifically onto this window object.
+     * 
+     * @param droppedFileNames The list of files being dragged and dropped
+     */
+	public default void onSystemDragAndDrop(EList<String> droppedFileNames) {
+	    var wp = getWindowParent();
+	    if (wp != null && wp.allowsSystemDragAndDrop()) {
+	        wp.onSystemDragAndDrop(droppedFileNames);
+	    }
+	}
+	
 	//--------------
 	// Close Object
 	//--------------

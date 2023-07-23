@@ -1,11 +1,13 @@
 package envision.engine.rendering.textureSystem;
 
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Iterator;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL46;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
@@ -157,6 +159,11 @@ public class TextureSystem {
 		// ensure that OpenGL is initialized first.
 		if (!GLFW.glfwInit()) return;
 		
+		if (textureIn.getBufferedImage() != null) {
+		    registerFromBufferedImage(textureIn, minFilter, magFilter);
+		    return;
+		}
+		
 		try (var stack = MemoryStack.stackPush()) {
 			IntBuffer width = stack.mallocInt(1);
 			IntBuffer height = stack.mallocInt(1);
@@ -188,6 +195,53 @@ public class TextureSystem {
 			e.printStackTrace();
 			Envision.errorf("Failed to read the image information! {}", filePath);
 		}
+	}
+	
+	//---------------------------------------------------------------------------------------------------------------------
+    
+    private void registerFromBufferedImage(GameTexture textureIn, int minFilter, int magFilter) {
+        BufferedImage image = textureIn.getBufferedImage();
+        try {
+            int w = image.getWidth();
+            int h = image.getHeight();
+            int[] pixels = new int[w * h];
+            image.getRGB(0, 0, w, h, pixels, 0, w);
+            ByteBuffer buffer = ByteBuffer.allocateDirect(w * h * 4);
+            
+            for (int i = 0; i < h; i++) {
+                for (int j = 0; j < w; j++) {
+                    int pixel = pixels[i * w + j];
+                    
+                    buffer.put((byte) ((pixel >> 16) & 0xFF));
+                    buffer.put((byte) ((pixel >> 8) & 0xFF));
+                    buffer.put((byte) (pixel & 0xFF));
+                    buffer.put((byte) ((pixel >> 24) & 0xFF));
+                }
+            }
+            
+            buffer.flip();
+            
+            int texID = GL11.glGenTextures();
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, magFilter);
+            
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+            
+            //--------------------------------------------
+            // Set the values onto the GameTexture object
+            //--------------------------------------------
+            
+            EReflectionUtil.setField(textureIn, "width", w);
+            EReflectionUtil.setField(textureIn, "height", h);
+            EReflectionUtil.setField(textureIn, "textureID", texID);
+            EReflectionUtil.setField(textureIn, "imageBytes", buffer);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Envision.errorf("Failed to read the image information! {}", image);
+        }
 	}
 	
 }

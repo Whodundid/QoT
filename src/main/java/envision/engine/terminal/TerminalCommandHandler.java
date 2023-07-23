@@ -6,18 +6,18 @@ import java.util.Map;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
+import envision.engine.terminal.commands.categories.engine.CMD_CameraZoom;
 import envision.engine.terminal.commands.categories.engine.CMD_Config;
 import envision.engine.terminal.commands.categories.engine.CMD_CurScreenInfo;
 import envision.engine.terminal.commands.categories.engine.CMD_DebugControl;
 import envision.engine.terminal.commands.categories.engine.CMD_DisplayScreen;
 import envision.engine.terminal.commands.categories.engine.CMD_Envision;
 import envision.engine.terminal.commands.categories.engine.CMD_FPS;
-import envision.engine.terminal.commands.categories.engine.CMD_Help;
 import envision.engine.terminal.commands.categories.engine.CMD_LockCam;
+import envision.engine.terminal.commands.categories.engine.CMD_PlaySong;
 import envision.engine.terminal.commands.categories.engine.CMD_ReloadTextures;
 import envision.engine.terminal.commands.categories.engine.CMD_RenderSettings;
 import envision.engine.terminal.commands.categories.engine.CMD_SetVolume;
-import envision.engine.terminal.commands.categories.engine.CMD_Shutdown;
 import envision.engine.terminal.commands.categories.engine.CMD_TPS;
 import envision.engine.terminal.commands.categories.engine.CMD_Version;
 import envision.engine.terminal.commands.categories.fileSystem.CMD_Cat;
@@ -43,13 +43,13 @@ import envision.engine.terminal.commands.categories.game.CMD_ListEntities;
 import envision.engine.terminal.commands.categories.game.CMD_LoadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_NoClip;
 import envision.engine.terminal.commands.categories.game.CMD_PauseGame;
-import envision.engine.terminal.commands.categories.game.CMD_PlaySong;
 import envision.engine.terminal.commands.categories.game.CMD_ReloadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_SaveWorld;
 import envision.engine.terminal.commands.categories.game.CMD_SetWorldUnderground;
 import envision.engine.terminal.commands.categories.game.CMD_SetXP;
 import envision.engine.terminal.commands.categories.game.CMD_SpawnEntity;
 import envision.engine.terminal.commands.categories.game.CMD_Speed;
+import envision.engine.terminal.commands.categories.game.CMD_Time;
 import envision.engine.terminal.commands.categories.game.CMD_TransposeOld;
 import envision.engine.terminal.commands.categories.game.CMD_UnloadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_WorldInfo;
@@ -60,12 +60,14 @@ import envision.engine.terminal.commands.categories.system.CMD_ClearTerminal;
 import envision.engine.terminal.commands.categories.system.CMD_ClearTerminalHistory;
 import envision.engine.terminal.commands.categories.system.CMD_Echo;
 import envision.engine.terminal.commands.categories.system.CMD_ForLoop;
+import envision.engine.terminal.commands.categories.system.CMD_Help;
 import envision.engine.terminal.commands.categories.system.CMD_HexToDec;
 import envision.engine.terminal.commands.categories.system.CMD_JavaTrace;
 import envision.engine.terminal.commands.categories.system.CMD_List;
 import envision.engine.terminal.commands.categories.system.CMD_ReregisterCommands;
 import envision.engine.terminal.commands.categories.system.CMD_Runtime;
 import envision.engine.terminal.commands.categories.system.CMD_SU;
+import envision.engine.terminal.commands.categories.system.CMD_Shutdown;
 import envision.engine.terminal.commands.categories.system.CMD_System;
 import envision.engine.terminal.commands.categories.system.CMD_Unalias;
 import envision.engine.terminal.commands.categories.system.CMD_WhoAmI;
@@ -133,92 +135,96 @@ public class TerminalCommandHandler {
 		return commands;
 	}
 	
-	private void registerBaseCommands(boolean runVisually) { registerBaseCommands(null, runVisually); }
-	private void registerBaseCommands(ETerminalWindow termIn, boolean runVisually) {
-		//findCommands().filter(c -> c.shouldRegister()).forEach(c -> registerCommand(c, termIn, runVisually));
-		
-		//define commands to register here
-		
-		registerCommand(new CMD_TransposeOld(), termIn, runVisually);
-		
-		//file system
-		registerCommand(new CMD_Files(), termIn, runVisually);
-		registerCommand(new CMD_L(), termIn, runVisually);
-		registerCommand(new CMD_Ls(), termIn, runVisually);
-		registerCommand(new CMD_Cd(), termIn, runVisually);
-		registerCommand(new CMD_Pwd(), termIn, runVisually);
-		registerCommand(new CMD_Rm(), termIn, runVisually);
-		registerCommand(new CMD_MkDir(), termIn, runVisually);
-		registerCommand(new CMD_Mv(), termIn, runVisually);
-		registerCommand(new CMD_Cp(), termIn, runVisually);
-		registerCommand(new CMD_Lsblk(), termIn, runVisually);
-		registerCommand(new CMD_Cat(), termIn, runVisually);
-		registerCommand(new CMD_Head(), termIn, runVisually);
-		registerCommand(new CMD_Tail(), termIn, runVisually);
-		registerCommand(new CMD_Edit(), termIn, runVisually);
-		registerCommand(new CMD_OpenFile(), termIn, runVisually);
-		
-		//game
-		registerCommand(new CMD_CreateDungeon(), termIn, runVisually);
-		registerCommand(new CMD_FPS(), termIn, runVisually);
-		registerCommand(new CMD_LoadWorld(), termIn, runVisually);
-		registerCommand(new CMD_NoClip(), termIn, runVisually);
-		registerCommand(new CMD_PauseGame(), termIn, runVisually);
-		registerCommand(new CMD_SaveWorld(), termIn, runVisually);
-		registerCommand(new CMD_SetWorldUnderground(), termIn, runVisually);
-		registerCommand(new CMD_PlaySong(), termIn, runVisually);
-		registerCommand(new CMD_SpawnEntity(), termIn, runVisually);
-		registerCommand(new CMD_TPS(), termIn, runVisually);
-		registerCommand(new CMD_UnloadWorld(), termIn, runVisually);
-		registerCommand(new CMD_SetVolume(), termIn, runVisually);
-		registerCommand(new CMD_WorldInfo(), termIn, runVisually);
-		registerCommand(new CMD_WorldsDir(), termIn, runVisually);
-		registerCommand(new CMD_ListEntities(), termIn, runVisually);
-		registerCommand(new CMD_Kill(), termIn, runVisually);
-		registerCommand(new CMD_ReloadWorld(), termIn, runVisually);
-		registerCommand(new CMD_Config(), termIn, runVisually);
-		registerCommand(new CMD_God(), termIn, runVisually);
-		registerCommand(new CMD_Speed(), termIn, runVisually);
-		registerCommand(new CMD_SetXP(), termIn, runVisually);
-		registerCommand(new CMD_GiveItem(), termIn, runVisually);
-		registerCommand(new CMD_LockCam(), termIn, runVisually);
-		
-		//system
-		registerCommand(new CMD_Calculator(), termIn, runVisually);
-		registerCommand(new CMD_ClearObjects(), termIn, runVisually);
-		registerCommand(new CMD_ClearTerminal(), termIn, runVisually);
-		registerCommand(new CMD_ClearTerminalHistory(), termIn, runVisually);
-		registerCommand(new CMD_CurScreenInfo(), termIn, runVisually);
-		registerCommand(new CMD_DebugControl(), termIn, runVisually);
-		registerCommand(new CMD_Envision(), termIn, runVisually);
-		registerCommand(new CMD_ForLoop(), termIn, runVisually);
-		registerCommand(new CMD_Help(), termIn, runVisually);
-		registerCommand(new CMD_HexToDec(), termIn, runVisually);
-		registerCommand(new CMD_TermID(), termIn, runVisually);
-		registerCommand(new CMD_JavaTrace(), termIn, runVisually);
-		registerCommand(new CMD_List(), termIn, runVisually);
-		registerCommand(new CMD_DisplayScreen(), termIn, runVisually);
-		registerCommand(new CMD_OpenWindow(), termIn, runVisually);
-		registerCommand(new CMD_ReloadTextures(), termIn, runVisually);
-		registerCommand(new CMD_ReregisterCommands(), termIn, runVisually);
-		registerCommand(new CMD_Runtime(), termIn, runVisually);
-		registerCommand(new CMD_Shutdown(), termIn, runVisually);
-		registerCommand(new CMD_System(), termIn, runVisually);
-		registerCommand(new CMD_Version(), termIn, runVisually);
-		registerCommand(new CMD_WhoAmI(), termIn, runVisually);
-		registerCommand(new CMD_RenderSettings(), termIn, runVisually);
-		registerCommand(new CMD_SU(), termIn, runVisually);
-		registerCommand(new CMD_Alias(), termIn, runVisually);
-		registerCommand(new CMD_Unalias(), termIn, runVisually);
-		registerCommand(new CMD_Echo(), termIn, runVisually);
-		
-		//windows
-		registerCommand(new CMD_CloseWindow(), termIn, runVisually);
-		registerCommand(new CMD_MinimizeWindow(), termIn, runVisually);
-		registerCommand(new CMD_PinWindow(), termIn, runVisually);
-		registerCommand(new CMD_ShowWindow(), termIn, runVisually);
-		registerCommand(new CMD_MoveWindowToFront(), termIn, runVisually);
-	}
+    private void registerBaseCommands(boolean runVisually) { registerBaseCommands(null, runVisually); }
+    private void registerBaseCommands(ETerminalWindow termIn, boolean runVisually) {
+        //findCommands().filter(c -> c.shouldRegister()).forEach(c -> registerCommand(c, termIn, runVisually));
+        
+        //define commands to register here
+        
+        
+        // engine
+        registerCommand(new CMD_CameraZoom(), termIn, runVisually);
+        registerCommand(new CMD_Config(), termIn, runVisually);
+        registerCommand(new CMD_CurScreenInfo(), termIn, runVisually);
+        registerCommand(new CMD_DebugControl(), termIn, runVisually);
+        registerCommand(new CMD_DisplayScreen(), termIn, runVisually);
+        registerCommand(new CMD_Envision(), termIn, runVisually);
+        registerCommand(new CMD_FPS(), termIn, runVisually);
+        registerCommand(new CMD_LockCam(), termIn, runVisually);
+        registerCommand(new CMD_PlaySong(), termIn, runVisually);
+        registerCommand(new CMD_ReloadTextures(), termIn, runVisually);
+        registerCommand(new CMD_RenderSettings(), termIn, runVisually);
+        registerCommand(new CMD_SetVolume(), termIn, runVisually);
+        registerCommand(new CMD_TPS(), termIn, runVisually);
+        registerCommand(new CMD_Version(), termIn, runVisually);
+        
+        //file system
+        registerCommand(new CMD_Files(), termIn, runVisually);
+        registerCommand(new CMD_L(), termIn, runVisually);
+        registerCommand(new CMD_Ls(), termIn, runVisually);
+        registerCommand(new CMD_Cd(), termIn, runVisually);
+        registerCommand(new CMD_Pwd(), termIn, runVisually);
+        registerCommand(new CMD_Rm(), termIn, runVisually);
+        registerCommand(new CMD_MkDir(), termIn, runVisually);
+        registerCommand(new CMD_Mv(), termIn, runVisually);
+        registerCommand(new CMD_Cp(), termIn, runVisually);
+        registerCommand(new CMD_Lsblk(), termIn, runVisually);
+        registerCommand(new CMD_Cat(), termIn, runVisually);
+        registerCommand(new CMD_Head(), termIn, runVisually);
+        registerCommand(new CMD_Tail(), termIn, runVisually);
+        registerCommand(new CMD_Edit(), termIn, runVisually);
+        registerCommand(new CMD_OpenFile(), termIn, runVisually);
+        
+        //game
+        registerCommand(new CMD_CreateDungeon(), termIn, runVisually);
+        registerCommand(new CMD_GiveItem(), termIn, runVisually);
+        registerCommand(new CMD_God(), termIn, runVisually);
+        registerCommand(new CMD_Kill(), termIn, runVisually);
+        registerCommand(new CMD_ListEntities(), termIn, runVisually);
+        registerCommand(new CMD_LoadWorld(), termIn, runVisually);
+        registerCommand(new CMD_NoClip(), termIn, runVisually);
+        registerCommand(new CMD_PauseGame(), termIn, runVisually);
+        registerCommand(new CMD_ReloadWorld(), termIn, runVisually);
+        registerCommand(new CMD_SaveWorld(), termIn, runVisually);
+        registerCommand(new CMD_SetWorldUnderground(), termIn, runVisually);
+        registerCommand(new CMD_SetXP(), termIn, runVisually);
+        registerCommand(new CMD_SpawnEntity(), termIn, runVisually);
+        registerCommand(new CMD_Speed(), termIn, runVisually);
+        registerCommand(new CMD_Time(), termIn, runVisually);
+        registerCommand(new CMD_TransposeOld(), termIn, runVisually);
+        registerCommand(new CMD_UnloadWorld(), termIn, runVisually);
+        registerCommand(new CMD_WorldInfo(), termIn, runVisually);
+        registerCommand(new CMD_WorldsDir(), termIn, runVisually);
+        
+        //system
+        registerCommand(new CMD_Alias(), termIn, runVisually);
+        registerCommand(new CMD_Calculator(), termIn, runVisually);
+        registerCommand(new CMD_ClearTerminal(), termIn, runVisually);
+        registerCommand(new CMD_ClearTerminalHistory(), termIn, runVisually);
+        registerCommand(new CMD_Echo(), termIn, runVisually);
+        registerCommand(new CMD_ForLoop(), termIn, runVisually);
+        registerCommand(new CMD_Help(), termIn, runVisually);
+        registerCommand(new CMD_HexToDec(), termIn, runVisually);
+        registerCommand(new CMD_JavaTrace(), termIn, runVisually);
+        registerCommand(new CMD_List(), termIn, runVisually);
+        registerCommand(new CMD_ReregisterCommands(), termIn, runVisually);
+        registerCommand(new CMD_Runtime(), termIn, runVisually);
+        registerCommand(new CMD_Shutdown(), termIn, runVisually);
+        registerCommand(new CMD_System(), termIn, runVisually);
+        registerCommand(new CMD_SU(), termIn, runVisually);
+        registerCommand(new CMD_Unalias(), termIn, runVisually);        
+        registerCommand(new CMD_WhoAmI(), termIn, runVisually);
+        
+        //windows
+        registerCommand(new CMD_ClearObjects(), termIn, runVisually);
+        registerCommand(new CMD_CloseWindow(), termIn, runVisually);
+        registerCommand(new CMD_MinimizeWindow(), termIn, runVisually);
+        registerCommand(new CMD_MoveWindowToFront(), termIn, runVisually);
+        registerCommand(new CMD_OpenWindow(), termIn, runVisually);
+        registerCommand(new CMD_PinWindow(), termIn, runVisually);
+        registerCommand(new CMD_ShowWindow(), termIn, runVisually);
+        registerCommand(new CMD_TermID(), termIn, runVisually);
+    }
 	
 	public void registerCommand(TerminalCommand command, boolean runVisually) { registerCommand(command, null, runVisually); }
 	public void registerCommand(TerminalCommand command, ETerminalWindow termIn, boolean runVisually) {

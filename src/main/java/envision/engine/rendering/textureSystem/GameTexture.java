@@ -1,5 +1,6 @@
 package envision.engine.rendering.textureSystem;
 
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.GL11;
@@ -40,6 +41,8 @@ public class GameTexture {
 	/** Mag Filter property for when registering texture. */
 	private int magFilter = GL11.GL_NEAREST;
 	
+	private BufferedImage image;
+	
 	//--------------
 	// Constructors
 	//--------------
@@ -60,6 +63,16 @@ public class GameTexture {
 		filePath = basePath + filePathIn;
 		minFilter = minFilterIn;
 		magFilter = magFilterIn;
+	}
+	
+	public GameTexture(BufferedImage imageIn) {
+	    image = imageIn;
+	}
+	
+	public GameTexture(BufferedImage imageIn, int minFilterIn, int magFilterIn) {
+	    image = imageIn;
+	    minFilter = minFilterIn;
+	    magFilter = magFilterIn;
 	}
 	
 	//-------------------
@@ -120,6 +133,7 @@ public class GameTexture {
 	public int getMagFilter() { return magFilter; }
 	public boolean hasBeenDestroyed() { return destroyed; }
 	public boolean hasParent() { return parentTexture != null; }
+	public BufferedImage getBufferedImage() { return image; }
 	
 	public EList<GameTexture> getAllChildren() {
 		EList<GameTexture> found = EList.newList();

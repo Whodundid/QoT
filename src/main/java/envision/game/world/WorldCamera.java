@@ -109,12 +109,12 @@ public class WorldCamera {
         
         double leftCoordEdge = Math.floor(halfWidth);
         double rightCoordEdge = Math.floor(ww - halfWidth - (ew / tw));
-        double topCoordEdge = halfHeight - 3;
+        double topCoordEdge = halfHeight - 1;// - 3;
         double botCoordEdge = Math.floor(wh - halfHeight - (eh / th)) + 1;
         
         double leftEdgeX = viewablePixelsForHalfWidth;
         double rightEdgeX = (ww * tw - viewablePixelsForHalfWidth) - ew;
-        double topEdgeY = viewablePixelsForHalfHeight - th * 3;
+        double topEdgeY = viewablePixelsForHalfHeight - th * 1;// - th * 3;
         double botEdgeY = (wh * th - viewablePixelsForHalfHeight) + (th - eh);
         
         if (isEdgeLocked && vw <= ww && vh <= wh) {
@@ -162,6 +162,10 @@ public class WorldCamera {
 	public double getOffsetY() { return offsetY; }
 	/** Returns the current zoom of the camera. Higher values are more zoomed in! */
 	public double getZoom() { return zoom; }
+	/** Returns the min zoom of the camera. */
+	public double getMinZoom() { return minZoom; }
+	/** Returns the max zoom of the camera. */
+	public double getMaxZoom() { return maxZoom; }
 	/** Returns the object the camera is currently focused on. (Could be null) */
 	public GameObject getFocusedObject() { return focusedObject; }
 	

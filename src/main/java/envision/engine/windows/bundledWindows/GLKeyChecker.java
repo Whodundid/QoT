@@ -6,7 +6,7 @@ import eutil.colors.EColors;
 import qot.assets.textures.taskbar.TaskBarTextures;
 
 public class GLKeyChecker extends WindowParent {
-	
+    
 	//--------
 	// Fields
 	//--------

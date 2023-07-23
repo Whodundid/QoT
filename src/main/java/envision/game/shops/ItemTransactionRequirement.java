@@ -10,13 +10,13 @@ package envision.game.shops;
  * 
  * @author Hunter Bragg
  */
-public enum ItemTransactionStrat {
+public enum ItemTransactionRequirement {
 	/** Item can be bought with gold. */
-	GOLD,
+	GOLD_AMOUNT,
 	/** Item can be traded for with specified item(s). */
-	TRADE_ITEM,
+	TRADE_FOR_ITEM,
 	/** Item can only be bought if buying entity has completed the specified quest(s). */
-	HAS_COMPLETED_QUESTS,
+	HAS_COMPLETED_QUEST,
 	/** Item can only be bought if buying entity has completed the specified quest objective(s). */
 	HAS_COMPLETED_QUEST_OBJECTIVE,
 	/** Item can only be bought if some variable [global/script] requirement has been met. */

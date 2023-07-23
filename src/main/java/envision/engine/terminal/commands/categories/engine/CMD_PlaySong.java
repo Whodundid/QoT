@@ -1,4 +1,4 @@
-package envision.engine.terminal.commands.categories.game;
+package envision.engine.terminal.commands.categories.engine;
 
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;

@@ -22,6 +22,7 @@ import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.screens.GameScreen;
 import envision.engine.screens.GameTopScreen;
 import eutil.colors.EColors;
+import eutil.datatypes.util.EList;
 import qot.assets.textures.entity.EntityTextures;
 import qot.assets.textures.general.GeneralTextures;
 import qot.launcher.LauncherLogger;
@@ -509,6 +510,9 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 			LauncherLogger.log(msg);
 		}
 	}
+
+    @Override
+    public void onDroppedFiles(EList<String> droppedFileNames) {}
 	
 	//---------------------------------------------------------------------------------------------
 	//---------------------------------------------------------------------------------------------

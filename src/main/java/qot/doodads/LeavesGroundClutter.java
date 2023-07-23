@@ -1,12 +1,12 @@
 package qot.doodads;
 
-import envision.game.entities.BasicRenderedEntity;
+import envision.game.entities.Doodad;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.doodads.ground_clutter.GroundClutterTextures;
 import qot.entities.EntityList;
 
-public class LeavesGroundClutter extends BasicRenderedEntity {
+public class LeavesGroundClutter extends Doodad {
 	
 	public LeavesGroundClutter() { this(0, 0); }
 	public LeavesGroundClutter(int posX, int posY) {

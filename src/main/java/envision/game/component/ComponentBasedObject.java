@@ -42,9 +42,17 @@ public abstract class ComponentBasedObject extends GameObject {
 	 * Used by components to notify the object when an event related to some
 	 * specific component has occurred.
 	 */
-	public void onComponentEvent(EntityComponent theComponent, String id, Object... args) {
-		// do nothing by default;
+	protected void onComponentEvent_i(EntityComponent theComponent, String id, Object... args) {
+		onComponentEvent(theComponent, id, args);
 	}
+	
+    /**
+     * Used by components to notify the object when an event related to some
+     * specific component has occurred.
+     */
+    protected void onComponentEvent(EntityComponent theComponent, String id, Object... args) {
+        // do nothing by default;
+    }
 	
 	//==================
 	// Wrapped From ECS

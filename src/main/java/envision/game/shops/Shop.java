@@ -1,31 +1,40 @@
 package envision.game.shops;
 
+import static envision.game.shops.ShopTransactionResult.*;
+
 import envision.game.entities.Entity;
 import envision.game.items.Item;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class Shop {
 	
-	private int inventorySize = 6;
-	private EList<Item> shopInventory = new EArrayList<>();
-	private Shopkeeper shopkeeper;
+    private String shopName;
+	private int inventorySize = 10;
+	private EList<Item> shopInventory = EList.newList();
+	private EList<Shopkeeper> shopkeeper;
+	
+	//==============
+	// Constructors
+	//==============
+	
+	public Shop() { this("Shop"); }
+	public Shop(String shopNameIn) {
+	    shopName = shopNameIn;
+	}
 	
 	//==============
 	// Shop Methods
 	//==============
 	
-	public ShopTransactionResult buyItemAtSlot(Entity buyingEntity, int slot) {
-		//if (buyingEntity == null) return fail_buy("The entity trying to buy is null!");
-		//if (!checkSlot(slot)) return fail_buy("The given item slot is out of range!");
+	public ShopTransactionResult buyItemAtSlot(Shopkeeper seller, Entity buyer, int slot) {
+		if (buyer == null) return fail_buy("The entity trying to buy is null!");
+		if (!checkSlot(slot)) return fail_buy("The given item slot '" + slot + "' is out of range!");
 		
-		//return fail_buy("No item selected!");
-		return null;
+		return fail_buy("No item selected!");
 	}
 	
 	public ShopTransactionResult sellItem(Item toSell) {
-		//return fail_sell(toSell, "Generic failure reason!");
-		return null;
+		return fail_sell("Generic failure reason!");
 	}
 	
 	public void addItem(Item in) {
@@ -74,7 +83,5 @@ public class Shop {
 	public EList<Item> getItems() {
 		return shopInventory;
 	}
-	
-	//fail_buy(Entity buyer) { return ShopTransactionResult.base(buyer, this)
 	
 }

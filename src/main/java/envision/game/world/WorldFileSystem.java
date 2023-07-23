@@ -87,8 +87,8 @@ public class WorldFileSystem {
 		writer.println("# " + EStringUtil.repeatString("-", theWorld.getWorldName().length() + " config".length()));
 		writer.println();
 		writer.println("underground=" + theWorld.isUnderground());
-		writer.println("timeOfDay=" + theWorld.getTimeOfDay());
-		writer.println("lengthOfDay=" + theWorld.getLengthOfDay());
+		writer.println("timeOfDay=" + theWorld.getTime());
+		writer.println("lengthOfDay=" + theWorld.getDayLength());
 		
 		writer.close();
 	}

@@ -79,6 +79,9 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	public void onRenderTick(float dt) {
 		
 	}
+    
+    public void onMousePress(int mXIn, int mYIn, int button) {}
+    public void onKeyPress(char typedChar, int keyCode) {}
 	
 	/** Can be overridden in child classes to denote specific entity behavior. */
 	public void onLivingUpdate(float dt) {}
@@ -108,7 +111,9 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	public Rotation getFacing() { return facing; }
 	public int getRenderLayer() { return renderLayer; }
 	
-	public Dimension_d getDimensions() { return new Dimension_d(startX, startY, endX, endY); }
+	public Dimension_d getDimensions() {
+	    return new Dimension_d(startX, startY, endX, endY);
+	}
 	
 	public GameObject setName(String nameIn) { name = nameIn; return this; }
 	public GameObject setTexture(GameTexture in) { tex = in; return this; }

@@ -1,6 +1,5 @@
 package envision.game.world;
 
-import java.awt.Point;
 import java.io.File;
 
 import envision.Envision;
@@ -13,6 +12,7 @@ import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.worldTiles.WorldTile;
 import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.EArrayList;
+import eutil.datatypes.points.Point2d;
 import eutil.datatypes.util.EList;
 import eutil.debug.Inefficient;
 import eutil.math.ENumUtil;
@@ -55,16 +55,21 @@ public class GameWorld implements IGameWorld {
 	protected LayerSystem layers = new LayerSystem();
 	
 	/** The current time of day measured in game ticks. */
-	protected long timeOfDay = 0l;
+	protected int timeOfDay = 0;
 	/**
 	 * The full length of one day measured in game ticks. Default is 10 min
 	 * based on 60 tps.
 	 */
-	protected long lengthOfDay = 36000l;
+	protected int lengthOfDay = 72000;
+	protected int ambientLightLevel = 255; // between [0-255]
+	protected boolean isDay = false;
+	protected boolean isNight = false;
+	protected boolean isSunrise = false;
+	protected boolean isSunset = false;
 	
 	protected final WorldFileSystem worldFileSystem;
 	
-	/** IDK WHAT THIS ONE IS!!! */
+	/** This one is true if this world is THE active world in the engine. */
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
 	
@@ -92,6 +97,8 @@ public class GameWorld implements IGameWorld {
 		worldFileSystem = new WorldFileSystem(this);
 		worldRenderer = new WorldRenderer(this);
 		camera = new WorldCamera(this);
+		
+		timeOfDay = lengthOfDay / 2;
 	}
 	
 	public GameWorld(File worldFile) {
@@ -108,6 +115,8 @@ public class GameWorld implements IGameWorld {
 		
 		worldRenderer = new WorldRenderer(this);
 		camera = new WorldCamera(this);
+		
+		timeOfDay = lengthOfDay / 2;
 	}
 	
 	/**
@@ -145,6 +154,8 @@ public class GameWorld implements IGameWorld {
 		worldRenderer = new WorldRenderer(this);
 		camera = new WorldCamera(this);
 		fileLoaded = true;
+		
+		timeOfDay = lengthOfDay / 2;
 	}
 	
 	public void setDefaultValues() {
@@ -160,6 +171,8 @@ public class GameWorld implements IGameWorld {
 		worldObjects = EList.newList();
 		entityData = EList.newList();
 		fileLoaded = false;
+		
+		timeOfDay = lengthOfDay / 2;
 	}
 	
 	//---------
@@ -194,7 +207,7 @@ public class GameWorld implements IGameWorld {
 	
 	public synchronized void onGameTick(float dt) {
 		//update time of day
-		if (timeOfDay++ >= lengthOfDay) timeOfDay = 0;
+		updateTime();
 		
 		//add all incoming game objects
 		if (toAdd.isNotEmpty()) {
@@ -283,6 +296,57 @@ public class GameWorld implements IGameWorld {
 		}
 	}
 	
+	/**
+	 * Is there a better way to do this?
+	 * <p>
+	 * You BET your sweet BIPPY there is!
+	 */
+	protected void updateTime() {
+        if (timeOfDay++ >= lengthOfDay) timeOfDay = 0;
+        
+        int minLight = 30; // the minimum brightness of the world
+        int maxLight = 255; // the maximum brightness of the world
+        int deltaLight = maxLight - minLight;
+
+        // if underground, don't bother doing daylight calculations
+        if (underground) {
+            ambientLightLevel = minLight;
+            return;
+        }
+        
+        int transitionPeriodLength = lengthOfDay / 4;
+        int sunrise = (int) (lengthOfDay * 0.2);
+        int sunriseEnd = sunrise + transitionPeriodLength;
+        int sunset = (int) (lengthOfDay * 0.6D);          
+        int sunsetEnd = sunset + transitionPeriodLength;
+        
+        // check still night
+        if (timeOfDay < sunrise) {
+            isNight = true; isDay = false; isSunrise = false; isSunset = false;
+            ambientLightLevel = minLight;
+        }
+        // check sunrise
+        else if (timeOfDay >= sunrise && timeOfDay <= (sunrise + transitionPeriodLength)) {
+            isNight = false; isDay = false; isSunrise = true; isSunset = false;
+            ambientLightLevel = minLight + ((timeOfDay - sunrise) * deltaLight) / transitionPeriodLength;
+        }
+        // check sunset
+        else if (timeOfDay >= sunset && timeOfDay <= (sunset + transitionPeriodLength)) {
+            isNight = false; isDay = false; isSunrise = false; isSunset = true;
+            ambientLightLevel = minLight + (deltaLight - (((timeOfDay - sunset) * deltaLight) / transitionPeriodLength));
+        }
+        // check day
+        else if (timeOfDay >= sunriseEnd && timeOfDay < sunset) {
+            isNight = false; isDay = true; isSunrise = false; isSunset = false;
+            ambientLightLevel = maxLight;
+        }
+        // check night
+        else if (timeOfDay >= sunsetEnd) {
+            isNight = true; isDay = false; isSunrise = false; isSunset = false;
+            ambientLightLevel = minLight;
+        }
+	}
+	
 	//Any GameObject
 	public synchronized <E extends GameObject> E addObjectToWorld(E ent) { return (E) toAdd.addR(ent); }
 	public synchronized <E extends GameObject> void addObjectToWorld(E... ents) { toAdd.add(ents); }
@@ -353,7 +417,7 @@ public class GameWorld implements IGameWorld {
 	}
 	
 	@Override
-	public double distanceTo(GameObject ent, Point point) {
+	public double distanceTo(GameObject ent, Point2d point) {
 		if (ent == null || point == null) return -1;
 		if (!worldObjects.contains(ent)) return -1;
 		
@@ -522,9 +586,6 @@ public class GameWorld implements IGameWorld {
 	@Override public EList<Entity> getEntitiesInWorld() { return entityData; }
 	public EList<EntitySpawn> getEntitySpawns() { return entitySpawns; }
 	
-	public long getTimeOfDay() { return timeOfDay; }
-	public long getLengthOfDay() { return lengthOfDay; }
-	
 	/** Returns this world's rendering system. */
 	public WorldRenderer getWorldRenderer() { return worldRenderer; }
 	
@@ -572,18 +633,19 @@ public class GameWorld implements IGameWorld {
 	@Override public void setLoaded(boolean val) { loaded = val && isFileLoaded(); }
 	public void setUnderground(boolean val) { underground = val; }
 	
-	public GameWorld setTimeOfDay(long timeInTicks) {
-		timeOfDay = ENumUtil.clamp(timeInTicks, 0, lengthOfDay);
-		return this;
-	}
-	public GameWorld setLengthOfDay(long timeInTicks) {
-		lengthOfDay = ENumUtil.clamp(timeInTicks, 0, Long.MAX_VALUE);
-		return this;
-	}
-	
 	public void fillWith(WorldTile t) { fillWith(0, t); }
 	public void fillWith(int layer, WorldTile t) {
 		worldLayers.get(layer).fillWith(t);
 	}
-	
+    
+    @Override public int getTime() { return timeOfDay; }
+    @Override public int getDayLength() { return lengthOfDay; }
+    @Override public void setTime(int timeInTicks) { timeOfDay = ENumUtil.clamp(timeInTicks, 0, lengthOfDay); updateTime(); }
+    @Override public void setDayLength(int timeInTicks) { lengthOfDay = ENumUtil.clamp(timeInTicks, 0, lengthOfDay); updateTime(); }
+    @Override public boolean isDay() { return isDay; }
+    @Override public boolean isNight() { return isNight; }
+    @Override public boolean isSunrise() { return isSunrise; }
+    @Override public boolean isSunset() { return isSunset; }
+    @Override public int getAmbientLightLevel() { return ambientLightLevel; }
+    
 }

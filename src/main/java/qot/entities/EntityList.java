@@ -57,6 +57,7 @@ public enum EntityList {
 	ARCHER(21),
 	
 	SPAWNER(22),
+	SHOPKEEPER(23), // please let this be the last damn one of these..
 	;
 	
 	public final int ID;

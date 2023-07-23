@@ -1,12 +1,12 @@
 package qot.doodads;
 
-import envision.game.entities.BasicRenderedEntity;
+import envision.game.entities.Doodad;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.doodads.trees.TreeTextures;
 import qot.entities.EntityList;
 
-public class BushyTree2 extends BasicRenderedEntity {
+public class BushyTree2 extends Doodad {
 
 	public BushyTree2() { this(0, 0); }
 	public BushyTree2(int posX, int posY) {

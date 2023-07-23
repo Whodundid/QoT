@@ -373,4 +373,9 @@ public class EditorWorld implements IGameWorld {
 	@Override public EnvisionProgram getStartupScript() { return actualWorld.getStartupScript(); }
 	@Override public void setStartupScript(EnvisionProgram program) { actualWorld.setStartupScript(program); }
 	
+    @Override public int getTime() { return 0; }
+    @Override public int getDayLength() { return 0; }
+    @Override public void setTime(int timeInTicks) {}
+    @Override public void setDayLength(int timeInTicks) {}
+	
 }

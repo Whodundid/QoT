@@ -128,6 +128,9 @@ public class MovementCollisionHelper {
         double valX = e.startX / world.getTileWidth();
         double valY = e.startY / world.getTileHeight();
         
+        e.endX = e.startX + e.width;
+        e.endY = e.startY + e.height;
+        
         e.worldX = (int) valX;
         e.worldY = (int) valY;
     }
@@ -246,6 +249,9 @@ public class MovementCollisionHelper {
 		
 		double valX = e.startX / world.getTileWidth();
 		double valY = e.startY / world.getTileHeight();
+		
+        e.endX = e.startX + e.width;
+        e.endY = e.startY + e.height;
 		
 		e.worldX = (int) valX;
 		e.worldY = (int) valY;

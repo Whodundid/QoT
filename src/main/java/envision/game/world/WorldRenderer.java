@@ -127,8 +127,9 @@ public class WorldRenderer extends EGui {
         }
         
         //drawRect(0xff4fedff);
-        if (!world.isUnderground()) drawRect(0xff4fbaff);
-        else drawRect(0xff000000);
+        //if (!world.isUnderground()) drawRect(0xff4fbaff);
+        //else
+        drawRect(0xff000000);
         
         //pixel width of each tile
         double w = (int) (world.getTileWidth() * world.getCameraZoom());

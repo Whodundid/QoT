@@ -10,7 +10,7 @@ import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.terminal.terminalUtil.FileType;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
-import envision.engine.windows.developerDesktop.util.DesktopUtil;
+import envision.engine.windows.developerDesktop.util.DeveloperDesktopUtil;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.DragAndDropObject;
@@ -269,7 +269,7 @@ public class FilePreview extends WindowObject {
         DeveloperDesktop.setFilesToCut(explorer.getHighlightedFiles());
     }
     public void showInTerminal() {
-        DesktopUtil.openInTerminal(theFile);
+        DeveloperDesktopUtil.openInTerminal(theFile);
     }
     
     //=========

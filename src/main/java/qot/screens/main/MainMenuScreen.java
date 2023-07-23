@@ -85,7 +85,7 @@ public class MainMenuScreen extends GameScreen {
                 var w = Envision.theWorld = world;
                 w.getWorldRenderer().onWorldLoaded();
                 w.setCameraZoom(ERandomUtil.getRoll(2.5, 3));
-                w.setUnderground(ERandomUtil.roll(1, 1, 10));
+                w.setTime(36000/*ERandomUtil.getRoll(0, w.getDayLength())*/);
                 int ww = w.getWidth();
                 int wh = w.getHeight();
                 int lowerX = (ww / 2) - ww / 4;

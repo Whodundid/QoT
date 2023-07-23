@@ -30,8 +30,6 @@ public class GameManager {
 	//=========
 	
 	public void onGameTick(float dt) {
-		timeOfDay++;
-		
 		activeWorld.onGameTick(dt);
 	}
 	

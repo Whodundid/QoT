@@ -23,7 +23,7 @@ public class PlayerRenderer extends EntityRenderer {
 	//==============
 	
 	public PlayerRenderer(QoT_Player playerIn) {
-		super(playerIn);
+		super(playerIn, true);
 		player = playerIn;
 	}
 	

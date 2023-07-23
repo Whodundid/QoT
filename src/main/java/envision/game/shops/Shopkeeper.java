@@ -2,10 +2,10 @@ package envision.game.shops;
 
 public interface Shopkeeper {
 	
-	boolean isCurrentlySelling();
-	Shop getShop();
+    Shop getShop();
+    void setShop(Shop shopIn);
 	
+    boolean isCurrentlySelling();
 	void setCurrentlySelling(boolean val);
-	void setShop(Shop shopIn);
 	
 }

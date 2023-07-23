@@ -8,7 +8,7 @@ import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.bundledWindows.ConfirmationDialogBox;
 import envision.engine.windows.bundledWindows.ErrorDialogBox;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
-import envision.engine.windows.developerDesktop.util.DesktopUtil;
+import envision.engine.windows.developerDesktop.util.DeveloperDesktopUtil;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
@@ -253,7 +253,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         folderRCM.addOptionIf(DeveloperDesktop.hasFilesToCopy(), "Paste", () -> performFilePaste());
         folderRCM.addOption("New Window", WindowTextures.file_folder, () -> DeveloperDesktop.openFileExplorer(curDir));
         folderRCM.addOption("Refresh", WindowTextures.refresh, () -> refresh());
-        folderRCM.addOption("Terminal Here", WindowTextures.terminal, () -> DesktopUtil.openInTerminal(curDir));
+        folderRCM.addOption("Terminal Here", WindowTextures.terminal, () -> DeveloperDesktopUtil.openInTerminal(curDir));
         folderRCM.showOnCurrent();
     }
     
@@ -417,7 +417,7 @@ public class FileExplorerWindow extends ActionWindowParent {
                 setDir(f.getFile());
                 break;
             default:
-                DesktopUtil.openFile(f.getFile());
+                DeveloperDesktopUtil.openFile(f.getFile());
             }
         }
         catch (Exception e) {
@@ -482,7 +482,7 @@ public class FileExplorerWindow extends ActionWindowParent {
             // if there are multiple files selected and one is a directory,
             // open the directory in a new file explorer window
             if (file.isDir() && highlighted.size() > 1) {
-                DesktopUtil.openFile(file.getFile());
+                DeveloperDesktopUtil.openFile(file.getFile());
             }
             else openFile(file);
         }
@@ -501,7 +501,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         
         String text = EColors.yellow + "Are you sure you want to recycle the file: " + EColors.white + filePreview;
         ConfirmationDialogBox.showDialog(text, () -> {
-            DesktopUtil.recycleFile(filePreview.getFile());
+            DeveloperDesktopUtil.recycleFile(filePreview.getFile());
             refresh();
         });
     }
@@ -519,7 +519,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         
         String text = EColors.yellow + "Are you sure you want to delete the file: " + EColors.white + filePreview;
         ConfirmationDialogBox.showDialog(text, () -> {
-            DesktopUtil.deleteFile(filePreview.getFile());
+            DeveloperDesktopUtil.deleteFile(filePreview.getFile());
             refresh();
         });
     }
@@ -540,7 +540,7 @@ public class FileExplorerWindow extends ActionWindowParent {
             + EColors.mc_lightpurple + size + EColors.yellow + "' files?";
         
         ConfirmationDialogBox.showDialog(text, () -> {
-            DesktopUtil.recycleMultipleFiles(mappedFiles);
+            DeveloperDesktopUtil.recycleMultipleFiles(mappedFiles);
             refresh();
         });
     }
@@ -561,7 +561,7 @@ public class FileExplorerWindow extends ActionWindowParent {
             + EColors.mc_lightpurple + size + EColors.yellow + "' files?";
         
         ConfirmationDialogBox.showDialog(text, () -> {
-            DesktopUtil.deleteMultipleFiles(mappedFiles);
+            DeveloperDesktopUtil.deleteMultipleFiles(mappedFiles);
             refresh();
         });
     }

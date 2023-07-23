@@ -20,9 +20,7 @@ public class Archer extends Enemy {
     private long timeSinceLastFireball;
     private long fireballDelay = 3000;
     
-    public Archer() {
-        this("Archer", 0, 0);
-    }
+    public Archer() { this("Archer", 0, 0); }
     public Archer(String nameIn, int x, int y) {
         super(nameIn);
         
@@ -49,29 +47,21 @@ public class Archer extends Enemy {
     @Override
     public void onLivingUpdate(float dt) {
         var p = Envision.thePlayer;
-        if (p == null) return;
+        if (p == null) {
+            wander();
+            return;
+        }
         
         double dist = world.getDistance(this, p);
         this.headText = "" + new DecimalFormat("#.00").format(dist);
         
         // wander around if player is not near
         if (dist > 300) {
-            if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-                waitTime = ERandomUtil.getRoll(randShort, randLong);
-                moveTime = ERandomUtil.getRoll(randShort, 800l);
-                waitDelay = ERandomUtil.getRoll(randShort, randLong);
-                lastMove = System.currentTimeMillis();
-                lastDir = ERandomUtil.randomDir(true);
-            }
-            
-            if (System.currentTimeMillis() - lastMove >= moveTime) {
-                move(lastDir);
-            }
+            wander();
         }
         // get closer to the player
         else if (dist <= 300 && dist > 200) {
-            Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
-            move(dirToPlayer);
+            moveTowardsPlayer();
         }
         // shoot arrows at the player
         else if (dist <= 200 && dist >= 75) {
@@ -79,27 +69,27 @@ public class Archer extends Enemy {
         }
         // else do melee stuff
         else {
-            Dimension_d testDim = getCollisionDims();
-            Dimension_d pDims = Envision.thePlayer.getCollisionDims();
-            
-            if (testDim.partiallyContains(pDims)) {
-                if (hit) {
-                    //System.out.println(System.currentTimeMillis() - timeSinceLastHit);
-                    if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
-                        hit = false;
-                    }
-                }
-                else {
-                    hit = true;
-                    timeSinceLastHit = System.currentTimeMillis();
-                    Envision.thePlayer.drainHealth(getBaseMeleeDamage());
-                }
-            }
-            
-            Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
-            move(dirToPlayer);
+            doMeleeStuff();
+        }
+    }
+    
+    private void wander() {
+        if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
+            waitTime = ERandomUtil.getRoll(randShort, randLong);
+            moveTime = ERandomUtil.getRoll(randShort, 800l);
+            waitDelay = ERandomUtil.getRoll(randShort, randLong);
+            lastMove = System.currentTimeMillis();
+            lastDir = ERandomUtil.randomDir(true);
         }
         
+        if (System.currentTimeMillis() - lastMove >= moveTime) {
+            move(lastDir);
+        }
+    }
+    
+    private void moveTowardsPlayer() {
+        Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
+        move(dirToPlayer);
     }
     
     private void shootArrow() {
@@ -115,6 +105,28 @@ public class Archer extends Enemy {
             fb.worldY = worldY;
             world.addEntity(fb);
         }
+    }
+    
+    private void doMeleeStuff() {
+        Dimension_d testDim = getCollisionDims();
+        Dimension_d pDims = Envision.thePlayer.getCollisionDims();
+        
+        if (testDim.partiallyContains(pDims)) {
+            if (hit) {
+                //System.out.println(System.currentTimeMillis() - timeSinceLastHit);
+                if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
+                    hit = false;
+                }
+            }
+            else {
+                hit = true;
+                timeSinceLastHit = System.currentTimeMillis();
+                Envision.thePlayer.drainHealth(getBaseMeleeDamage());
+            }
+        }
+        
+        Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
+        move(dirToPlayer);
     }
     
     @Override

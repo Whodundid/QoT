@@ -2,12 +2,15 @@ package envision.game.entities;
 
 import java.text.DecimalFormat;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
+import envision.game.GameObject;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
+import eutil.colors.EColors;
 import eutil.misc.Rotation;
 import eutil.strings.EStringBuilder;
 
@@ -15,15 +18,32 @@ public class EntityRenderer extends RenderingComponent {
 	
 	protected Entity theEntity;
 	
+	// Transparency
+	
+	protected boolean makeTransparentIfInFront = false;
+	/** True if this entity is current blocking the focused camera entity and will be drawn transparent. */
+	protected boolean isTransparent;
+	protected boolean fadeBack;
+	/** the tick that transparency fading started on. */
+	protected long transparencyStartTick;
+	/** 60 ticks for 1 second. */
+	protected long transparencyTransitionTickDuration = 10;
+	
 	//==============
 	// Constructors
 	//==============
 	
-	public EntityRenderer(Entity entityIn) {
-		super(entityIn);
-		theEntity = entityIn;
-	}
-	
+    public EntityRenderer(Entity entityIn) {
+        super(entityIn);
+        theEntity = entityIn;
+    }
+    
+    public EntityRenderer(Entity entityIn, boolean drawTransparentIfBlockingCamera) {
+        super(entityIn);
+        theEntity = entityIn;
+        makeTransparentIfInFront = drawTransparentIfBlockingCamera;
+    }
+    
 	//=========
 	// Methods
 	//=========
@@ -124,6 +144,12 @@ public class EntityRenderer extends RenderingComponent {
 		int mY = Mouse.getMy();
 		boolean mouseOver = (mX >= drawX && mX <= drawX + drawW && mY >= drawY && mY <= drawY + drawH);
 		
+        int worldBrightness = world.getAmbientLightLevel();
+        int color = EColors.white.brightness(worldBrightness);
+        
+        // check if camera should make the entity transparent if the camera target is behind it
+        color = checkIfCameraTargetIsBehind(camera, color);
+		
 		if (!BatchManager.isEnabled()) {
 			double cmx = collisionBox.midX; //collision mid x
 			double cmy = collisionBox.midY; //collision mid y
@@ -141,8 +167,70 @@ public class EntityRenderer extends RenderingComponent {
 			drawEntity(world, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
 		}
 		else {
-			drawEntity(world, drawX, drawY, drawW, drawH, 0xffffffff, mouseOver);
+			drawEntity(world, drawX, drawY, drawW, drawH, color, mouseOver);
 		}
+	}
+	
+	protected int checkIfCameraTargetIsBehind(WorldCamera camera, int color) {
+	    if (!makeTransparentIfInFront) return color;
+	    
+        GameObject target = camera.getFocusedObject();
+        if (target == null) return color;
+        if (target == theEntity) return color;
+        
+        var targetDims = target.getCollisionDims();
+        var dims = theEntity.getDimensions();
+        boolean contains = dims.partiallyContains(targetDims);
+        
+        double tsp = target.getSortPoint();
+        double esp = theEntity.getSortPoint();
+        boolean blocking = Double.compare(tsp, esp) < 0;
+        
+        final int low = 100; // the lowest opacity point (out of 255)
+        
+        boolean care = contains && blocking;
+        long ticks = Envision.getRunningTicks();
+        int dur = (int) transparencyTransitionTickDuration;
+        int start = (int) transparencyStartTick;
+        int deltaO = 255 - low; // opacity low/high delta
+        
+        if (care) {
+            if (fadeBack) fadeBack = false;
+            
+            if (!isTransparent) {
+                isTransparent = true;
+                transparencyStartTick = ticks;
+            }
+            
+            int ratio = 100;
+            
+            if (ticks - start < dur) {
+                ratio = (int) (low + deltaO - ((ticks - start) * deltaO) / dur);
+            }
+            
+            return EColors.changeOpacity(color, ratio);
+        }
+        else if (isTransparent) {
+            if (!fadeBack) {
+                fadeBack = true;
+                transparencyStartTick = ticks;
+                start = (int) transparencyStartTick;
+            }
+            
+            int ratio = 255;
+            
+            if (ticks - start < dur) {
+                ratio = (int) (low + ((ticks - start) * deltaO) / dur);
+            }
+            else {
+                isTransparent = false;
+                fadeBack = false;
+            }
+            
+            return EColors.changeOpacity(color, ratio);
+        }
+        
+        return color;
 	}
 	
 	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {

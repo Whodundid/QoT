@@ -9,6 +9,7 @@ import envision.Envision;
 import envision.engine.screens.GameScreen;
 import envision.engine.terminal.terminalUtil.ArgHelper;
 import envision.engine.terminal.terminalUtil.TermArgLengthException;
+import envision.engine.terminal.terminalUtil.TermArgParsingException;
 import envision.engine.terminal.terminalUtil.TerminalCommandError;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.terminal.window.termParts.TerminalTextField;
@@ -38,6 +39,9 @@ public abstract class TerminalCommand {
 	public static final String ERROR_TOO_MANY = "Too many arguments!";
 	public static final String ERROR_NOT_ENOUGH = "Not enough arguments!";
 	public static final String ERROR_NULL = "The given value is null!";
+	
+	public static final String ERROR_EXPECTED_INT = "Expected an integer value!";
+	public static final String ERROR_EXPECTED_NUMBER = "Expected a numeric value!";
 	
 	static final String ERROR_EXPECTED_AT_LEAST = "Expected at least '%d' argument(s)!";
 	static final String ERROR_EXPECTED_NO_MORE_THAN = "Expected no more than '%d' argument(s)!";
@@ -74,6 +78,9 @@ public abstract class TerminalCommand {
 			argHelper = new ArgHelper(termIn, args, runVisually);
 			runCommand();
 		}
+		catch (TermArgParsingException e) {
+		    e.display(termIn);
+		}
 		catch (TermArgLengthException e) {
 			errorUsage(e.getMessage());
 		}
@@ -92,6 +99,8 @@ public abstract class TerminalCommand {
 	public File curDir() { return argHelper.curDir(); }
 	public boolean runVisually() { return argHelper.visually(); }
 	public String firstArg() { return argHelper.firstString(); }
+	public String secondArg() { return argHelper.arg(1); }
+	public String thirdArg() { return argHelper.arg(2); }
 	public String lastArg() { return argHelper.lastString(); }
 	public String arg(int index) { return argHelper.stringArg(index); }
 	public EList<String> args() { return argHelper.stringArgs(); }
@@ -151,8 +160,18 @@ public abstract class TerminalCommand {
 		while (it.hasNext()) {
 			var s = it.next();
 			if (s.startsWith("-") && s.length() > 1) {
-				if (allowAnyModifier || acceptedModifiers.contains(s)) parsedModifiers.add(s);
-				it.remove();
+			    // check if input is a negative number
+			    String numberPortion = s.substring(1);
+			    if (ENumUtil.isNumber(numberPortion)) {
+			        continue;
+			    }
+			    
+			    // if it's not a number, check if it's a valid modifier
+			    // and remove it from arguments if so
+				if (allowAnyModifier || acceptedModifiers.contains(s)) {
+				    parsedModifiers.add(s);
+				    it.remove();
+				}
 			}
 		}
 		
@@ -322,6 +341,32 @@ public abstract class TerminalCommand {
 		throw new TermArgLengthException(String.format(ERROR_EXPECTED_EXACT_ARGUMENTS, amount));
 	}
 	
+	//==========================
+	// Argument Parsing Helpers
+	//==========================
+    
+	protected int parseInt(String input) { return parseInt(input, ERROR_EXPECTED_INT); }
+    protected int parseInt(String input, String onErrorString) {
+        try { return Integer.parseInt(input); }
+        catch (Exception e) { throw new TermArgParsingException(e, onErrorString); }
+    }
+    protected int parseInt(String input, int defaultValue, String onErrorString) {
+        try { return Integer.parseInt(input); }
+        catch (Exception e) { error(e, onErrorString); }
+        return defaultValue;
+    }
+    
+    protected double parseDouble(String input) { return parseDouble(input, ERROR_EXPECTED_NUMBER); }
+    protected double parseDouble(String input, String onErrorString) {
+        try { return Double.parseDouble(input); }
+        catch (Exception e) { throw new TermArgParsingException(e, onErrorString); }
+    }
+    protected double parseDouble(String input, double defaultValue, String onErrorString) {
+        try { return Double.parseDouble(input); }
+        catch (Exception e) { error(e, onErrorString); }
+        return defaultValue;
+    }
+    
 	//==================
 	// Terminal Helpers
 	//==================

@@ -1,6 +1,7 @@
 package envision.engine.windows.windowObjects.advancedObjects.colorPicker;
 
 import envision.Envision;
+import envision.engine.windows.WindowRegistry;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.basicObjects.WindowContainer;
@@ -19,6 +20,10 @@ import eutil.math.dimensions.Dimension_d;
 
 public class ColorPickerSimple extends ActionWindowParent {
 	
+    static {
+        WindowRegistry.registerWindow("colors", ColorPickerSimple.class);
+    }
+    
 	//--------
 	// Fields
 	//--------

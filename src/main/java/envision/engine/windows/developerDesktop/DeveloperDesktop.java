@@ -10,13 +10,14 @@ import org.apache.commons.io.FileUtils;
 import envision.Envision;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.engine.windows.developerDesktop.shortcuts.DesktopShortcut;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.engine.windows.windowUtil.ObjectPosition;
+import envision.engine.windows.developerDesktop.util.DeveloperDesktopUtil;
+import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
 import qot.settings.QoTSettings;
 
-public class DeveloperDesktop extends WindowObject {
+public class DeveloperDesktop {
     
     /** The directory for where content for this desktop is located. */
     public static final File DESKTOP_DIR = new File(QoTSettings.getLocalGameDir(), "desktop");
@@ -26,6 +27,24 @@ public class DeveloperDesktop extends WindowObject {
     // setup the desktop directory upfront
     static {
         if (!DESKTOP_DIR.exists()) DESKTOP_DIR.mkdirs();
+    }
+    
+    public static void onSystemDragAndDrop(EList<String> droppedFileNames) {
+        if (!DeveloperDesktop.isOpen()) return;
+        var obj = Envision.getTopScreen().getHighestZObjectUnderMouse();
+        
+        if (obj != null && obj.allowsSystemDragAndDrop()) {
+            obj.onSystemDragAndDrop(droppedFileNames);
+        }
+        else {
+            for (String fileName : droppedFileNames) {
+                DeveloperDesktop.openFileAtMouse(fileName);
+            }
+        }
+    }
+    
+    public static boolean isOpen() {
+        return Envision.topScreen.hasFocus();
     }
     
     public void addShortcut(DesktopShortcut shortcut) {
@@ -39,15 +58,6 @@ public class DeveloperDesktop extends WindowObject {
     /** Returns the list of all shortcuts actively on the desktop. */
     public EList<DesktopShortcut> getShortcuts() {
         return shortcuts;
-    }
-    
-    public static void openFileExplorer() { openFileExplorer(new File(System.getProperty("user.dir"))); }
-    public static void openFileExplorer(File dir) {
-        Envision.getTopScreen().displayWindow(new FileExplorerWindow(dir), ObjectPosition.EXISTING_OBJECT_INDENT);
-    }
-    
-    public static void reloadFileExplorers() {
-        Envision.getTopScreen().reloadAllWindowInstances(FileExplorerWindow.class);
     }
     
     //======================
@@ -266,6 +276,49 @@ public class DeveloperDesktop extends WindowObject {
         while (true);
         
         return testFile.getName();
+    }
+    
+    //======================
+    // File Opening Helpers
+    //======================
+    
+    /** {@link DeveloperDesktopUtil#openFile(String) openFile} */
+    public static <T extends IWindowObject> T openFile(String fileName) {
+        return DeveloperDesktopUtil.openFile(new File(fileName), false);
+    }
+    
+    /** {@link DeveloperDesktopUtil#openFileAtMouse(String) openFileAtMouse} */
+    public static <T extends IWindowObject> T openFileAtMouse(String fileName) {
+        return DeveloperDesktopUtil.openFileAtMouse(new File(fileName));
+    }
+    
+    /** {@link DeveloperDesktopUtil#openFile(File) openFile} */
+    public static <T extends IWindowParent> T openFile(File file) {
+        return DeveloperDesktopUtil.openFile(file, false);
+    }
+    
+    /** {@link DeveloperDesktopUtil#openFileExplorer(File) openFileAtMouse} */
+    public static <T extends IWindowParent> T openFileAtMouse(File file) {
+        return DeveloperDesktopUtil.openFileAtMouse(file);
+    }
+    
+    /** {@link DeveloperDesktopUtil#openFile(File, boolean) openFile} */
+    public static <T extends IWindowParent> T openFile(File file, boolean inSystemOS) {
+        return DeveloperDesktopUtil.openFile(file, inSystemOS);
+    }
+    
+    /** {@link DeveloperDesktopUtil#openFileExplorer() openFileExplorer} */
+    public static FileExplorerWindow openFileExplorer() {
+        return DeveloperDesktopUtil.openFileExplorer();
+    }
+    
+    /** {@link DeveloperDesktopUtil#openFileExplorer(File) openFileExplorer} */
+    public static FileExplorerWindow openFileExplorer(File dir) {
+       return DeveloperDesktopUtil.openFileExplorer(dir);
+    }
+    
+    public static void reloadFileExplorers() {
+        Envision.getTopScreen().reloadAllWindowInstances(FileExplorerWindow.class);
     }
     
 }

@@ -35,6 +35,8 @@ import envision.engine.screens.ScreenLevel;
 import envision.engine.settings.UserProfile;
 import envision.engine.settings.UserProfileRegistry;
 import envision.engine.terminal.TerminalCommandHandler;
+import envision.engine.windows.WindowRegistry;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
@@ -45,6 +47,7 @@ import envision.game.world.IGameWorld;
 import envision.game.world.layerSystem.LayerSystem;
 import envision_lang.EnvisionLang;
 import eutil.datatypes.points.Point2i;
+import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
 import eutil.math.dimensions.Dimension_i;
 import qot.assets.textures.GameTextures;
@@ -131,6 +134,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private double deltaT = 0;
 	private int curNumTicks = 0;
 	private int ticks = 0;
+	private long totalRunningTicks = 0L;
 	
 	// Framerate stuff
 	private long FPS = 60; //60 fps by default -- user can modify
@@ -266,6 +270,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		
 		terminalHandler = TerminalCommandHandler.getInstance();
 		terminalHandler.initCommands();
+		WindowRegistry.loadBaseWindows();
 	}
 	
 	//=======
@@ -370,8 +375,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 					
 					runGameTick(dt);
 					
-					if (ticks == Integer.MAX_VALUE) ticks = 0;
-					else ticks++;
+					if (totalRunningTicks == Long.MAX_VALUE) totalRunningTicks = 0;
+					else totalRunningTicks++;
 					
 					deltaT--;
 				}
@@ -466,6 +471,21 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	public void onMouseInput(int action, int mXIn, int mYIn, int button, int change) {
 		if (!renderEngine.isContextInit()) return;
 		topScreen.handleMouseInput(action, mXIn, mYIn, button, change);
+	}
+	
+    @Override
+    public void onMouseEnteredWindow(int mXIn, int mYIn) {
+        
+    }
+    
+    @Override
+    public void onMouseExitedWindow(int mXIn, int mYIn) {
+        
+    }
+	
+	@Override
+	public void onDroppedFiles(EList<String> droppedFileNames) {
+	    DeveloperDesktop.onSystemDragAndDrop(droppedFileNames);
 	}
 	
 	@Override
@@ -665,7 +685,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** Returns the TPS (ticks per second) of the engine. */
 	public static int getTPS() { return instance.curNumTicks; }
 	/** Returns the engine's current total number of game ticks run. */
-	public static long getRunningTicks() { return instance.ticks; }
+	public static long getRunningTicks() { return instance.totalRunningTicks; }
 	/** Returns the FPS target that the window is trying to run at. */
 	public static int getTargetFPS() { return (int) instance.getTargetFPSi(); }
 	/** Returns the UPS (updates per second) that the game is trying to run at. */

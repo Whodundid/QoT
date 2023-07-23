@@ -1,6 +1,5 @@
 package envision.game.world;
 
-import java.awt.Point;
 import java.io.File;
 
 import envision.game.GameObject;
@@ -9,6 +8,7 @@ import envision.game.entities.EntitySpawn;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.worldTiles.WorldTile;
 import envision_lang._launch.EnvisionProgram;
+import eutil.datatypes.points.Point2d;
 import eutil.datatypes.util.EList;
 import eutil.misc.Direction;
 
@@ -55,12 +55,22 @@ public interface IGameWorld {
 	void onGameTick(float dt);
 	void onRenderTick(float partial);
 	WorldRenderer getWorldRenderer();
-
+	
+	int getTime();
+	int getDayLength();
+	void setTime(int timeInTicks);
+	void setDayLength(int lengthInTicks);
+	default boolean isDay() { return true; }
+	default boolean isNight() { return false; }
+	default boolean isSunrise() { return false; }
+	default boolean isSunset() { return false; }
+	default int getAmbientLightLevel() { return 255; }
+	
 	boolean isUnderground();
 	void setUnderground(boolean val);
 	
 	default double getDistance(GameObject a, GameObject b) { return -1; }
-	default double distanceTo(GameObject ent, Point point) { return -1; }
+	default double distanceTo(GameObject ent, Point2d point) { return -1; }
 	default EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) { return null; }
 	default EList<GameObject> getAllGameObjectsWithinDistance(GameObject obj, double maxDistance) { return null; }
 	default Direction getDirectionTo(GameObject start, GameObject dest) { return Direction.OUT; }
