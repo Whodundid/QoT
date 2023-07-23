@@ -120,7 +120,7 @@
 	<distributionManagement>
 		<repository>
 			<id>storm-repo</id>
-			<url>http://192.168.0.10:8080/repository/storm_repo/</url>
+			<url>http://76.120.33.12:8080/repository/storm_repo/</url>
 		</repository>
 	</distributionManagement>
 
@@ -128,7 +128,7 @@
 		<repository>
 			<id>storm_repo</id>
 			<name>storm_repo</name>
-			<url>http://192.168.0.10:8080/repository/storm_repo/</url>
+			<url>http://76.120.33.12:8080/repository/storm_repo/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -142,7 +142,7 @@
 		<pluginRepository>
 			<id>storm_repo</id>
 			<name>storm_repo</name>
-			<url>http://192.168.0.10:8080/repository/storm_repo/</url>
+			<url>http://76.120.33.12:8080/repository/storm_repo/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
