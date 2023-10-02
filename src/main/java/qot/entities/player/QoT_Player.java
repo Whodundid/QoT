@@ -10,6 +10,7 @@ import envision.game.world.GameWorld;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;
+import qot.abilities.Abilities;
 import qot.assets.textures.entity.EntityTextures;
 import qot.entities.enemies.dragon.Thyrah;
 import qot.items.Items;
@@ -88,11 +89,18 @@ public class QoT_Player extends Player {
 			int ability = keyCode - Keyboard.KEY_1;
 			abilityTracker.useAbility(ability);
 		}
+		
 	}
 	
 	@Override
 	public void onLivingUpdate(float dt) {
 		abilityTracker.onGameTick(dt);
+		
+		if (!spellbook.knowsAbility(Abilities.fireball) && magicLevel >= 5) {
+			this.spellbook.learnAbility(Abilities.fireball);
+			this.abilityTracker.addAbility(Abilities.fireball);
+		}
+		// Add more learnable abilities here? Could be its own method
 	}
 	
 	@Override
