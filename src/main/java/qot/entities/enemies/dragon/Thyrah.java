@@ -8,6 +8,7 @@ import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
+import qot.entities.projectiles.Fireball;
 import qot.items.Items;
 
 public class Thyrah extends Enemy {

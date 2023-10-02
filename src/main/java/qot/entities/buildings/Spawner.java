@@ -10,7 +10,7 @@ import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
-import qot.entities.enemies.dragon.Fireball;
+import qot.entities.projectiles.Fireball;
 import qot.items.Items;
 
 public class Spawner extends Building {

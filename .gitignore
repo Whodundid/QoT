@@ -5,3 +5,8 @@
 /hs_err_pid*.log
 /*.log
 /target/
+
+/.lwjgl/
+/.settings/
+/LOG_*.log
+/.settings

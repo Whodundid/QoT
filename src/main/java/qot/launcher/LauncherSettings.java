@@ -31,6 +31,9 @@ public class LauncherSettings {
 	
 	@Override
 	public String toString() {
+		System.out.println("INSTALL_DIR=" + INSTALL_DIR + " " +
+				   "USE_INTERNAL_RESOURCE_PATH=" + USE_INTERNAL_RESOURCES_PATH + " " +
+				   "IN_JAR=" + IN_JAR);
 		return "INSTALL_DIR=" + INSTALL_DIR + " " +
 			   "USE_INTERNAL_RESOURCE_PATH=" + USE_INTERNAL_RESOURCES_PATH + " " +
 			   "IN_JAR=" + IN_JAR;

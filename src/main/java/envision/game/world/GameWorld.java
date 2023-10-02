@@ -304,7 +304,7 @@ public class GameWorld implements IGameWorld {
 	protected void updateTime() {
         if (timeOfDay++ >= lengthOfDay) timeOfDay = 0;
         
-        int minLight = 30; // the minimum brightness of the world
+        int minLight = 100; // the minimum brightness of the world
         int maxLight = 255; // the maximum brightness of the world
         int deltaLight = maxLight - minLight;
 

@@ -1,4 +1,4 @@
-package qot.entities.enemies.dragon;
+package qot.entities.projectiles;
 
 import envision.Envision;
 import envision.game.GameObject;
@@ -34,8 +34,12 @@ public class Fireball extends BasicRenderedEntity {
 		setSpeed(270);
 	}
 	
-	@Override
-	public void onLivingUpdate(float dt) {
+	/**
+	 * When fireball spawns, it follows the mouse cursor, grabs the coordinates, and then casts the fireball in an animation
+	 * towards the cursor. If it touches Enemy Entities, it will do damage to them accordingly. If they are below the minimum health
+	 * they will be destroyed 
+	 */
+	@Override public void onLivingUpdate(float dt) {
 		var cur = System.currentTimeMillis();
 		
 		if (!spawned) {
@@ -80,6 +84,7 @@ public class Fireball extends BasicRenderedEntity {
 	}
 	
 	private void damageGround(int x, int y) { damageGround(x, y, 1); }
+	
 	private void damageGround(int x, int y, int amount) {
 		if (!(x >= 0 && x < world.getWidth() && y >= 0 && y < world.getHeight())) return;
 		
@@ -128,8 +133,7 @@ public class Fireball extends BasicRenderedEntity {
 		world.removeEntity(this);
 	}
 	
-	@Override
-	public int getInternalSaveID() {
+	@Override public int getInternalSaveID() {
 		return 0;
 	}
 	
