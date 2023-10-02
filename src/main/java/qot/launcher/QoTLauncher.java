@@ -219,7 +219,8 @@ public class QoTLauncher extends JFrame {
 	 * @return the file path last attempted
 	 */
 	private Box2<String, BufferedImage> tryFirstLoad(final String dirIn, final String resourceName) {
-		String dir = "/" + resourcePath + dirIn;
+		//String dir = "/" + resourcePath + dirIn;
+		String dir = resourcePath + dirIn;
 		
 		// try to load resource
 		BufferedImage img = loadResource(dir, resourceName, false);
@@ -263,7 +264,7 @@ public class QoTLauncher extends JFrame {
 			if (base.endsWith("/") && file.startsWith("/")) file = file.substring(0, file.length() - 1);
 			if (!base.endsWith("/") && !file.startsWith("/")) base += "/";
 			String resourcePath = base + file;
-			var resource = QoTLauncher.class.getResource(resourcePath);
+			var resource = ClassLoader.getSystemResource(resourcePath);
 			//System.out.println("Reading resource: '" + resourcePath + "'");
 			LauncherLogger.log(LauncherLogLevel.DEBUG, "Reading resource: '" + resourcePath + "'");
 			return ImageIO.read(resource);
