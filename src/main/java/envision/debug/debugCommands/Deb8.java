@@ -67,7 +67,7 @@ public class Deb8 extends DebugCommand {
 				#println(v1 + v2)
 			 """);
 		
-		interpreter.setup(EList.newList());
+		interpreter.setupWithUserArguments(EList.newList());
 		hasStarted = true;
 	}
 	
