@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.stone;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.walls.stone.StoneWallTextures;
 import qot.world_tiles.TileIDs;
@@ -17,10 +18,10 @@ public class StoneWall extends WorldTile {
 		numVariants = StoneWallTextures.stone_wall.getChildren().size();
 		
 		if (id < 0) {
-			setTexture(StoneWallTextures.stone_wall.getRandVariant());
+		    setSprite(new Sprite(StoneWallTextures.stone_wall.getRandVariant()));
 		}
 		else {
-			setTexture(StoneWallTextures.stone_wall.getChild(id));
+		    setSprite(new Sprite(StoneWallTextures.stone_wall.getChild(id)));
 		}
 	}
 	

@@ -3,6 +3,7 @@ package qot.entities.enemies.archer;
 import java.text.DecimalFormat;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
@@ -29,7 +30,7 @@ public class Archer extends Enemy {
         setHealth(15);
         
         init(x, y, 32, 64);
-        tex = EntityTextures.player;
+        sprite = new Sprite(EntityTextures.player);
         
         setCollisionBox(startX + 8, endY - 15, endX - 8, endY);
         setExperienceRewardedOnKill(75);

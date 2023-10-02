@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.system;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
@@ -15,7 +14,7 @@ public class CMD_ReregisterCommands extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "rebuild"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("rrac", "reb", "rebuildcommands", "rebuildcmds"); }
+	@Override public EList<String> getAliases() { return EList.of("rrac", "reb", "rebuildcommands", "rebuildcmds"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Rebuilds the commands in the terminal's command handler."; }
 	@Override public String getUsage() { return "ex: rrac -i"; }
 	

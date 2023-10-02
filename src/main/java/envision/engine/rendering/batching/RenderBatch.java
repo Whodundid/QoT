@@ -49,7 +49,7 @@ public class RenderBatch {
 	public RenderBatch(int maxIn, int texSlotsIn, ShaderProgram shaderIn) {
 		maxBatchSize = maxIn;
 		texSlots = new int[texSlotsIn];
-		vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
+		vertices = new float[maxBatchSize * VERTEX_SIZE * Float.BYTES];
 		textures = EList.newList();
 		shader = shaderIn;
 		

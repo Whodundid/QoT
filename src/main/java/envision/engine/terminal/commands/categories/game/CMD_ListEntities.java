@@ -3,7 +3,6 @@ package envision.engine.terminal.commands.categories.game;
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_ListEntities extends TerminalCommand {
@@ -14,7 +13,7 @@ public class CMD_ListEntities extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "listentities"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("le", "entities"); }
+	@Override public EList<String> getAliases() { return EList.of("le", "entities"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays all Entities in the World"; }
 	@Override public String getUsage() { return "ex: le"; }
 	

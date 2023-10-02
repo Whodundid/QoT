@@ -1,5 +1,6 @@
 package qot.doodads;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Doodad;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
@@ -12,7 +13,7 @@ public class LeavesGroundClutter extends Doodad {
 	public LeavesGroundClutter(int posX, int posY) {
 		super("leaves_clutter");
 		init(posX, posY, 32, 32);
-		tex = GroundClutterTextures.leaves.getRandVariant();
+		sprite = new Sprite(GroundClutterTextures.leaves.getRandVariant());
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		setCollisionBox(0, 0, 0, 0);

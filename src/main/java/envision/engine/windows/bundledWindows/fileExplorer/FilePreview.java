@@ -8,9 +8,10 @@ import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.terminal.terminalUtil.FileType;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
-import envision.engine.windows.developerDesktop.util.DeveloperDesktopUtil;
+import envision.engine.windows.developerDesktop.util.DesktopUtil;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.DragAndDropObject;
@@ -56,6 +57,19 @@ public class FilePreview extends WindowObject {
         fileType = FileType.getFileType(theFile);
         texture = FileType.getFileTexture(fileType);
         getTopParent().registerListener(this);
+        
+        if (fileType == FileType.PICTURE) {
+            try {
+                GameTexture preview = new GameTexture(theFile.toString());
+                TextureSystem.getInstance().reg(preview);
+                if (preview.hasBeenRegistered()) {
+                    texture = preview;
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     //-----------
@@ -99,12 +113,15 @@ public class FilePreview extends WindowObject {
         else if (DeveloperDesktop.checkFileForCopy(theFile)) color = EColors.aquamarine.intVal;
         else color = EColors.white.intVal;
         
-        textField.setTextColor(color);
-        drawTexture(texture, startX, midY - texture.getWidth() / 2, 40, 40);
-        //drawString(theFile.getName(), startX + 50, midY - FontRenderer.FONT_HEIGHT / 2, color);
-        
         //draw transparent highlight overlay
-        if (isHighlighted) { drawRect(0x33ffffff); }
+        if (isHighlighted) {
+            drawRect(0x33ffffff);
+        }
+        
+        textField.setTextColor(color);
+        //drawTexture(texture, startX, midY - texture.getWidth() / 2.0, 40, 40);
+        drawTexture(texture, startX, startY, 40, height);
+        //drawString(theFile.getName(), startX + 50, midY - FontRenderer.FONT_HEIGHT / 2, color);
         
         //draw mouse hovering selection rect
         if (isMouseOver()) { drawHRect(EColors.lgray); }
@@ -120,9 +137,7 @@ public class FilePreview extends WindowObject {
             isPressed = true;
             createdMovingFile = false;
             pressPoint.set(mXIn, mYIn);
-            explorer.fileWasHighlighted(this, Keyboard.isCtrlDown(), Keyboard.isShiftDown());
         }
-        if (button == 1) openFileRCM();
     }
     
     @Override
@@ -130,10 +145,10 @@ public class FilePreview extends WindowObject {
         super.mouseReleased(mXIn, mYIn, button);
         
         if (button == 0) {
-            //isPressed = true;
-            //createdMovingFile = false;
-            //pressPoint.set(mXIn, mYIn);
-            //window.fileWasHighlighted(this, Keyboard.isCtrlDown(), Keyboard.isShiftDown());
+            explorer.fileWasHighlighted(this, Keyboard.isCtrlDown(), Keyboard.isShiftDown());
+        }
+        else if (button == 1) {
+            openFileRCM();
         }
     }
     
@@ -141,6 +156,7 @@ public class FilePreview extends WindowObject {
     public void keyPressed(char typedChar, int keyCode) {
         if (Keyboard.isShiftDelete(keyCode)) deleteFile();
         else if (keyCode == Keyboard.KEY_DELETE) recycleFile();
+        else if (Keyboard.isCtrlA(keyCode)) explorer.selectAll();
         else if (Keyboard.isCtrlC(keyCode)) copyFile();
         else if (Keyboard.isCtrlX(keyCode)) cutFile();
         else if (Keyboard.isCtrlV(keyCode)) explorer.performFilePaste();
@@ -162,6 +178,20 @@ public class FilePreview extends WindowObject {
             if (em.getMouseType() != MouseType.RELEASED) return;
             isPressed = false;
             pressPoint.set(-1, -1);
+        }
+    }
+    
+    @Override
+    public void onClosed() {
+        if (fileType == FileType.PICTURE) {
+            try {
+                System.out.println("CLEARING");
+                // clean up image preview when no longer needed
+                TextureSystem.getInstance().destroyTexture(texture);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -239,16 +269,16 @@ public class FilePreview extends WindowObject {
         }
         
         fileRCM = new RightClickMenu("File Options");
-        fileRCM.addOption("Open", WindowTextures.file_up, () -> onDoubleClick());
+        fileRCM.addOption("Open", WindowTextures.file_up, this::onDoubleClick);
         fileRCM.addOptionIf(theFile.isDirectory(), "Open in new window", WindowTextures.new_folder,() -> DeveloperDesktop.openFileExplorer(theFile));
         fileRCM.addOption("Open In OS", () -> FileOpener.openFile(theFile));
-        fileRCM.addOption("Copy", () -> copyFile());
-        fileRCM.addOption("Cut", () -> cutFile());
+        fileRCM.addOption("Copy", this::copyFile);
+        fileRCM.addOption("Cut", this::cutFile);
         fileRCM.addOptionIf(DeveloperDesktop.hasFilesToCopy(), "Paste", () -> explorer.performFilePaste());
-        fileRCM.addOption("Rename", () -> enableRenameMode());
-        fileRCM.addOption("Delete", WindowTextures.red_x, () -> recycleFile());
+        fileRCM.addOption("Rename", this::enableRenameMode);
+        fileRCM.addOption("Delete", WindowTextures.red_x, this::recycleFile);
         fileRCM.addOption("Refresh", WindowTextures.refresh, () -> explorer.refresh());
-        fileRCM.addOption("Show in Terminal", WindowTextures.terminal , () -> showInTerminal());
+        fileRCM.addOption("Show in Terminal", WindowTextures.terminal , this::showInTerminal);
         fileRCM.showOnCurrent();
     }
     
@@ -269,7 +299,7 @@ public class FilePreview extends WindowObject {
         DeveloperDesktop.setFilesToCut(explorer.getHighlightedFiles());
     }
     public void showInTerminal() {
-        DeveloperDesktopUtil.openInTerminal(theFile);
+        DesktopUtil.openInTerminal(theFile);
     }
     
     //=========

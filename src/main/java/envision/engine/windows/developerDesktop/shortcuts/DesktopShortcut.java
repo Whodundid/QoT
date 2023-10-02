@@ -1,189 +1,262 @@
 package envision.engine.windows.developerDesktop.shortcuts;
 
-import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
+import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
+import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
+import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.colors.EColors;
+import eutil.datatypes.points.Point2d;
+import eutil.strings.EStringBuilder;
 import qot.assets.textures.taskbar.TaskBarTextures;
+import qot.assets.textures.window.WindowTextures;
 
 public abstract class DesktopShortcut extends WindowObject {
-	
-	//--------
-	// Fields
-	//--------
-	
-	private ShortcutType type;
-	private File fileTarget;
-	private String terminalCommandTarget;
-	private String envisionProgramTarget;
-	private IWindowParent windowTarget;
-	private Class windowClassTarget;
-	private GameTexture icon;
-	private String description = "New Shortcut";
-	private boolean selected = false;
-	
-	//--------------
-	// Constructors
-	//--------------
-	
-	public DesktopShortcut(int x, int y) {
-		init(x, y);
-	}
-	
-	public DesktopShortcut(int x, int y, File fileIn) {
-		type = ShortcutType.FILE;
-		fileTarget = fileIn;
-		init(x, y);
-	}
-	
-	public DesktopShortcut(int x, int y, IWindowParent windowIn) {
-		type = ShortcutType.WINDOW;
-		windowTarget = windowIn;
-		init(x, y);
-	}
-	
-	public DesktopShortcut(int x, int y, ShortcutType typeIn) {
-	    type = typeIn;
+    
+    //========
+    // Fields
+    //========
+    
+    private String shortcutName = "New Shortcut";
+    private ShortcutType type;
+    private GameTexture icon;
+    private boolean selected = false;
+    
+    protected final Map<String, String> additionalProperties = new HashMap<>();
+    protected boolean isPressed;
+    protected boolean isMoving;
+    protected final Point2d pressPoint = new Point2d();
+    protected final Point2d oldPoint = new Point2d();
+    
+    protected RightClickMenu shortcutRCM;
+    
+    private boolean isRenaming = false;
+    
+    //==============
+    // Constructors
+    //==============
+    
+    // for use in parsing
+    protected DesktopShortcut(String nameIn, ShortcutType typeIn) {
+        shortcutName = nameIn;
+        type = typeIn;
+    }
+    
+    protected DesktopShortcut(String nameIn, double x, double y, ShortcutType typeIn) {
+        shortcutName = nameIn;
+        type = typeIn;
         init(x, y);
-	}
-	
-	public DesktopShortcut(int x, int y, ShortcutType typeIn, String target) {
-		if (typeIn == ShortcutType.COMMAND) terminalCommandTarget = target;
-		else if (typeIn == ShortcutType.SCRIPT) envisionProgramTarget = target;
-		else throw new IllegalArgumentException("Invalid shortcut type! '" + typeIn + "'!");
-		type = typeIn;
-		init(x, y);
-	}
-	
-	//------
-	// init
-	//------
-	
-	private void init(int x, int y) {
-		double w = 80;
-		double h = 80;
-		
-		init(Envision.getTopScreen(), x, y, w, h);
-	}
-	
-	//-----------
-	// Overrides
-	//-----------
-	
-	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		//draw icon
-		GameTexture tex = icon;
-		if (tex == null) tex = TaskBarTextures.window;
-		drawTexture(icon);
-		
-		//draw hover color
-		var color = EColors.lgray;
-		if (isMouseInside()) drawHRect(color.opacity(200));
-		if (selected) {
-			if (isMouseInside()) drawRect(color.opacity(100));
-			else drawRect(color.opacity(60));
-		}
-		
-		double scale = 1;
-		double drawX = midX;
-		
-		//draw description text below icon
-		drawStringC(description, drawX, endY + 6, scale, scale, EColors.chalk);
-	}
-	
-	@Override
-	public void mousePressed(int mXIn, int mYIn, int button) {
-		super.mousePressed(mXIn, mYIn, button);
-		
-		if (button == 0) {
-			selected = !selected;
-		}
-		else if (button == 1) {
-		    
-		}
-	}
-	
-	@Override
-	public void keyPressed(char typedChar, int keyCode) {
-		super.keyPressed(typedChar, keyCode);
-		
-		if (!selected) return;
-		
-        //if enter -- attempt to run shortcut
-        if (keyCode == Keyboard.KEY_ENTER) {
-            tryOpenShortcut();
+    }
+    
+    //======
+    // init
+    //======
+    
+    public void init() {
+        init(startX, startY);
+    }
+    
+    public void init(double x, double y) {
+        double w = 80;
+        double h = 80;
+        
+        init(Envision.getDeveloperDesktop(), x, y, w, h);
+    }
+    
+    //===========
+    // Overrides
+    //===========
+    
+    @Override
+    public void onAdded() {
+        getTopParent().registerListener(this);
+    }
+    
+    @Override
+    public void drawObject(int mXIn, int mYIn) {
+        // check if moving
+        if (isMoving) {
+            move(mXIn - oldPoint.x, mYIn - oldPoint.y);
+            oldPoint.set(mXIn, mYIn);
         }
         
-        //if delete -- attempt to remove shortcut from main over
-        if (keyCode == Keyboard.KEY_DELETE) {
-            close();
+        //draw icon
+        GameTexture tex = icon;
+        if (tex == null) tex = TaskBarTextures.window;
+        drawTexture(icon);
+        
+        //draw hover color
+        var color = EColors.lgray;
+        if (isMouseInside()) drawHRect(color.opacity(200));
+        if (selected) {
+            if (isMouseInside()) drawRect(color.opacity(100));
+            else drawRect(color.opacity(60));
         }
-	}
-	
-	@Override
-	public void onDoubleClick() {
-	    tryOpenShortcut();
-	}
-	
-	@Override
-	public void actionPerformed(IActionObject object, Object... args) {
-		super.actionPerformed(object, args);
-	}
-	
-	//---------
-	// Methods
-	//---------
-	
-	public void tryOpenShortcut() {
-	    try {
-            openShortcut();         
+        
+        double scale = 1;
+        double drawX = midX;
+        
+        //draw description text below icon
+        drawStringC(shortcutName, drawX, endY + 6, scale, scale, EColors.chalk);
+        
+        checkMouseMove();
+    }
+    
+    @Override
+    public void mousePressed(int mXIn, int mYIn, int button) {
+        super.mousePressed(mXIn, mYIn, button);
+        
+        if (button == 0) {
+            selected = !selected;
+            
+            isPressed = true;
+            pressPoint.set(mXIn, mYIn);
+            oldPoint.set(mXIn, mYIn);
+        }
+        else if (button == 1) {
+            openShortcutRCM();
+        }
+    }
+    
+    public void mouseReleased(int mXIn, int mYIn, int button) {
+        super.mouseReleased(mXIn, mYIn, button);
+        
+        if (isMoving && button == 0) {
+            isPressed = false;
+            isMoving = false;
+        }
+    }
+    
+    @Override
+    public void keyPressed(char typedChar, int keyCode) {
+        super.keyPressed(typedChar, keyCode);
+        
+        if (!selected) return;
+        
+        //if enter -- attempt to run shortcut
+        if (keyCode == Keyboard.KEY_ENTER) tryOpenShortcut();
+        //if delete -- attempt to remove shortcut from main over
+        else if (keyCode == Keyboard.KEY_DELETE) deleteShortcut();
+    }
+    
+    @Override
+    public void onDoubleClick() {
+        tryOpenShortcut();
+    }
+    
+    @Override
+    public void onEvent(ObjectEvent e) {
+        if (e instanceof EventMouse em) {
+            if (em.getMouseType() != MouseType.RELEASED) return;
+            isPressed = false;
+            isMoving = false;
+            pressPoint.set(-1, -1);
+            DeveloperDesktop.saveConfig();
+        }
+    }
+    
+    @Override
+    public void actionPerformed(IActionObject object, Object... args) {
+        super.actionPerformed(object, args);
+    }
+    
+    @Override
+    public void onClosed() {
+        getTopParent().unregisterListener(this);
+    }
+    
+    //=========
+    // Methods
+    //=========
+    
+    public void tryOpenShortcut() {
+        try {
+            openShortcut();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-	}
-	
-	public abstract void openShortcut() throws Exception;
-	
-	//---------
-	// Setters
-	//---------
-	
-	public void setFileTarget(File fileIn) {
-		type = ShortcutType.FILE;
-		fileTarget = fileIn;
-	}
-	
-	public void setWindowTarget(IWindowParent windowIn) {
-		type = ShortcutType.WINDOW;
-		windowTarget = windowIn;
-		windowClassTarget = null;
-	}
-	
-	public void setWindowTarget(Class windowClassIn) {
-		type = ShortcutType.WINDOW;
-		windowClassTarget = windowClassIn;
-		windowTarget = null;
-	}
-	
-	public void setCommandTarget(String commandIn) {
-		type = ShortcutType.COMMAND;
-		terminalCommandTarget = commandIn;
-	}
-	
-	public void setEnvisionTarget(String programIn) {
-		type = ShortcutType.SCRIPT;
-		envisionProgramTarget = programIn;
-	}
-	
-	public void setIcon(GameTexture iconIn) { icon = iconIn; }
-	public void setDescription(String descIn) { description = descIn; }
-	public void setSelected(boolean val) { selected = val; }
-	
+    }
+    
+    public abstract void openShortcut() throws Exception;
+    public abstract void openShortcutRCM();
+    public abstract void generateSaveString(EStringBuilder sb);
+    
+    protected RightClickMenu createBaseShortcutRCM() {
+        if (shortcutRCM != null) {
+            shortcutRCM.close();
+            shortcutRCM = null;
+        }
+        
+        shortcutRCM = new RightClickMenu("Shortcut Options");
+        
+        return shortcutRCM;
+    }
+    
+    protected void generateBaseSaveString(EStringBuilder sb) {
+        sb.println(type.text, ": ", shortcutName);
+        sb.incrementTabCount();
+        sb.println("position: [", startX, ",", startY, "]");
+    }
+    
+    protected void checkMouseMove() {
+        if (isMoving) return;
+        // don't care if not pressed or LMB isn't down
+        if (!isPressed || !Mouse.isLeftDown()) return;
+        // don't care if the mouse hasn't moved since being pressed
+        if (pressPoint.distance(Mouse.getMx(), Mouse.getMy()) <= 10) return;
+        
+        isMoving = true;
+    }
+    
+    public void deleteShortcut() {
+        DeveloperDesktop.removeShortcut(this);
+    }
+    
+    public void renameShortcut() {
+        
+    }
+    
+    public void cancelRename() {
+        
+    }
+    
+    public void copyShortcut() {
+        
+    }
+    
+    public void cutShortcut() {
+        
+    }
+    
+    public void openProperties() {
+        
+    }
+    
+    //=========
+    // Setters
+    //=========
+    
+    public void setIcon(GameTexture iconIn) { icon = iconIn; }
+    public void setName(String nameIn) { shortcutName = nameIn; }
+    public void setSelected(boolean val) { selected = val; }
+    public void setLocation(double xIn, double yIn) { this.setPosition(xIn, yIn); }
+    
+    public void addAdditionalProperty(String key, String value) {
+        additionalProperties.put(key, value);
+    }
+    
+    public Map<String, String> getAdditionalProperties() { return additionalProperties; }
+    
+    public String getPropertyValue(String key) { return additionalProperties.get(key); }
+    
 }

@@ -5,12 +5,14 @@ import envision.engine.inputHandlers.Mouse;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.StaticTopParent;
 import envision.engine.windows.developerDesktop.taskbar.TaskBar;
+import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.OverlayWindow;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import eutil.datatypes.util.EList;
+import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
@@ -23,34 +25,34 @@ import eutil.misc.ScreenLocation;
  */
 public interface ITopParent extends IWindowObject {
 	
-	//---------
+	//=========
 	// Drawing
-	//---------
+	//=========
 	
 	/** Event fired when debug info for the QoT top overlay is to be drawn. */
 	void drawDebugInfo();
 	
-	//------------
+	//============
 	// Draw Order
-	//------------
+	//============
 	
 	/** Specifies a window to be brought to the front on the hud. */
 	void bringObjectToFront(IWindowParent objIn);
 	/** Specifies a window to be sent to the back on the hud. */
 	void sendObjectToBack(IWindowParent objIn);
 	
-	//---------------
+	//===============
 	// Hovering Text
-	//---------------
+	//===============
 	
 	/** Sets the object that the mouse is currently hovering over. */
 	void setHoveringObject(IWindowObject objIn);
 	/** Returns the object that the mouse is currently hovering over. */
 	IWindowObject getHoveringObject();
 	
-	//--------------
+	//==============
 	// Double Click
-	//--------------
+	//==============
 	
 	/** Specifies the child object that was clicked last by the left moused button. */
 	void setLastClickedChild(IWindowObject objectIn);
@@ -61,9 +63,9 @@ public interface ITopParent extends IWindowObject {
 	/** Returns the time the last child object was clicked. */
 	long getLastChildClickTime();
 	
-	//---------
+	//=========
 	// Objects
-	//---------
+	//=========
 	
 	/** Returns the highest child object under the mouse. */
 	default IWindowObject getHighestZLevelObject() { return StaticTopParent.getHighestZLevelObject(this); }
@@ -80,9 +82,9 @@ public interface ITopParent extends IWindowObject {
 	/** Returns true if there are any child objects that are pinned. */
 	default boolean hasPinnedObjects() { return StaticTopParent.hasPinnedObjects(this); }
 	
-	//-------
+	//=======
 	// Focus
-	//-------
+	//=======
 	
 	/** Returns the currently focused object. */
 	IWindowObject getFocusedObject();
@@ -103,9 +105,9 @@ public interface ITopParent extends IWindowObject {
 	/** Event handler that manages all focus updates for itself as well as all child objects for the top parent. */
 	void updateFocus();
 	
-	//---------------------
+	//=====================
 	// Object modification
-	//---------------------
+	//=====================
 	
 	/** Returns the modify type that the modifying object will be affected by. */
 	ObjectModifyType getModifyType();
@@ -128,14 +130,14 @@ public interface ITopParent extends IWindowObject {
 	/** Clears the object being modified. */
 	void clearModifyingObject();
 	
-	//--------------
+	//==============
 	// Mouse Checks
-	//--------------
+	//==============
 	
 	/** Returns true if the mouse is on the edge of an object. */
 	default boolean isMouseOnObjEdge() { return StaticTopParent.isMouseOnObjEdge(this); }
 	/** Returns the edge type that the mouse is currently hovering over, if any. */
-	default ScreenLocation getEdgeSideMouseIsOn() { return StaticTopParent.getEdgeAreaMouseIsOn(this); }
+	@Override default ScreenLocation getEdgeSideMouseIsOn() { return StaticTopParent.getEdgeAreaMouseIsOn(this); }
 	/** Returns true if the mouse is inside of any object. */
 	default boolean isMouseInsideObject() { return getHighestZObjectUnderMouse() != null; }
 	/** Returns true if the mouse is inside of an EGuiHeader object. */
@@ -145,18 +147,18 @@ public interface ITopParent extends IWindowObject {
 	/** Returns a list of all objects underneath the mouse. */
 	default EList<IWindowObject> getAllObjectsUnderMouse() { return StaticTopParent.getAllObjectsUnderMouse(this); }
 	
-	//-------
+	//=======
 	// Close
-	//-------
+	//=======
 	
 	/** Specifies an object that, if pQoTent, will prevent the escape key from closing the hud. (Use with caution) */
 	void setEscapeStopper(IWindowObject obj);
 	/** Returns the current object that will prevent the escape key from closing the hud. */
 	IWindowObject getEscapeStopper();
 	
-	//---------
+	//=========
 	// Windows
-	//---------
+	//=========
 	
 	default boolean isTerminalOpen() {
 		return isWindowOpen(ETerminalWindow.class);
@@ -164,18 +166,18 @@ public interface ITopParent extends IWindowObject {
 	
 	/** Returns true if the specified window parent is open. */
 	default <T extends IWindowParent> boolean isWindowOpen(Class<T> windowIn) {
-		return (windowIn != null) ? getCombinedChildren().stream().anyMatch(o -> o.getClass() == windowIn) : false;
+		return (windowIn != null) && getCombinedChildren().stream().anyMatch(o -> o.getClass() == windowIn);
 	}
 	
 	default boolean isWindowOpen(IWindowParent windowIn) {
-		return (windowIn != null) ? getCombinedChildren().contains(windowIn) : false;
+		return (windowIn != null) && getCombinedChildren().contains(windowIn);
 	}
 	
 	/** Returns a list of all actively drawn window parents. */
 	default EList<IWindowParent> getAllActiveWindows() {
 		EList<IWindowParent> windows = EList.newList();
 		try {
-			getCombinedChildren().filterForEach(o -> IWindowParent.class.isInstance(o) && !o.isBeingRemoved(), w -> windows.add((IWindowParent) w));
+			getCombinedChildren().filterForEach(o -> o instanceof IWindowParent && !o.isBeingRemoved(), w -> windows.add((IWindowParent) w));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -184,7 +186,7 @@ public interface ITopParent extends IWindowObject {
 	}
 	
 	default ETerminalWindow getTerminalInstance() {
-		return (ETerminalWindow) getWindowInstance(ETerminalWindow.class);
+		return getWindowInstance(ETerminalWindow.class);
 	}
 	
 	/** Returns the first active instance of a specified type of window parent. If none are active, null is returned instead. */
@@ -234,28 +236,40 @@ public interface ITopParent extends IWindowObject {
 	/** Displays the specified window parent with variable arguments. */
 	default <T extends IWindowParent> T displayWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, ObjectPosition.OBJECT_CENTER); }
 	/** Displays the specified window parent with variable arguments. */
-	default <T extends IWindowParent> T displayWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
-		if (windowIn == null) return null;
-		
-        //import window history
+    default <T extends IWindowParent> T displayWindow(T windowIn, IWindowParent oldObject, boolean transferFocus,
+        boolean closeOld, boolean transferHistory, ObjectPosition loc) {
+        if (windowIn == null) return null;
+        
+        // import window history
         if (transferHistory && oldObject != null) {
             oldObject.getWindowHistory().add(oldObject);
             windowIn.setWindowHistory(oldObject.getWindowHistory());
             windowIn.setPinned(oldObject.isPinned());
         }
         
-        //initialize the window -- if it's not already
+        // initialize the window -- if it's not already
+        //        if (!windowIn.isInitialized()) windowIn.initWindow();
+        //        addObject(windowIn);
+        //        
+        //        windowIn.bringToFront();
+        //        if (transferFocus) windowIn.requestFocus();
+        //        
+        //        // position the window
+        //        if (loc != ObjectPosition.NONE) setPos(windowIn, oldObject, loc);
+        //        if (this == Envision.getTopScreen()) TaskBar.windowOpened(windowIn);
+        
         if (!windowIn.isInitialized()) windowIn.initWindow();
         
-        //position and add the window
+        // position the window
         if (loc != ObjectPosition.NONE) setPos(windowIn, oldObject, loc);
-        addObject(windowIn);
-        if (this == Envision.getTopScreen()) TaskBar.windowOpened(windowIn);
-        windowIn.bringToFront();
-        if (transferFocus) windowIn.requestFocus();
+        if (this == Envision.getDeveloperDesktop()) TaskBar.windowOpened(windowIn);
         
-		return windowIn;
-	}
+        addObject(windowIn);
+        if (transferFocus) windowIn.requestFocus();
+        windowIn.bringToFront();
+        
+        return windowIn;
+    }
 	
 	/**
 	 * Helper method used in conjunction with displayWindow that actually
@@ -263,31 +277,42 @@ public interface ITopParent extends IWindowObject {
 	 */
 	private void setPos(IWindowParent windowIn, IWindowObject objectIn, ObjectPosition typeIn) {
 		Dimension_d gDim = windowIn.getDimensions();
-		double headerHeight = windowIn.hasHeader() ? windowIn.getHeader().height : 0;
+		double headerHeight = WindowHeader.defaultHeight;
 		
-		int sX = 0;
-		int sY = 0;
+		double tbH = 0.0;
+		boolean drawTB = false;
+		TaskBar taskbar = null;
+		
+		if (this == Envision.getDeveloperDesktop()) {
+		    boolean hasTB = Envision.getDeveloperDesktop().getTaskBar() != null;
+	        taskbar = (hasTB) ? Envision.getDeveloperDesktop().getTaskBar() : null;
+	        drawTB = (hasTB && Envision.getDeveloperDesktop().getTaskBar().willBeDrawn());
+	        tbH = (drawTB && taskbar != null) ? taskbar.height : 0.0;
+		}
+		
+		double sX = 0.0;
+		double sY = 0.0;
 		
 		switch (typeIn) {
 		case SCREEN_CENTER:
-			sX = (int) ((Envision.getWidth() / 2) - (gDim.width / 2));
-			sY = (int) ((Envision.getHeight() / 2) - (gDim.height / 2));
+			sX = (Envision.getWidth() / 2.0) - (gDim.width / 2.0);
+			sY = (Envision.getHeight() / 2.0) - (gDim.height / 2.0);
 			break;
 		case BOT_LEFT:
 			sX = 1;
-			sY = (int) (Envision.getHeight() - 2 - gDim.height);
+			sY = Envision.getHeight() - 2.0 - gDim.height;
 			break;
 		case TOP_LEFT:
-			sX = 1;
-			sY = 2;
+			sX = 1.0;
+			sY = 2.0 + headerHeight + tbH;
 			break;
 		case BOT_RIGHT:
-			sX = (int) (Envision.getWidth() - 1 - gDim.width);
-			sY = (int) (Envision.getHeight() - 2 - gDim.height);
+			sX = Envision.getWidth() - 1.0 - gDim.width;
+			sY = Envision.getHeight() - 2.0 - gDim.height;
 			break;
 		case TOP_RIGHT:
-			sX = (int) (Envision.getWidth() - 1 - gDim.width);
-			sY = 2;
+			sX = Envision.getWidth() - 1.0 - gDim.width;
+			sY = 2.0 + headerHeight + tbH;
 			break;
 		case CURSOR_CENTER:
 			sX = (int) (Mouse.getMx() - (gDim.width / 2));
@@ -295,44 +320,49 @@ public interface ITopParent extends IWindowObject {
 			break;
 		case CURSOR_CORNER:
 			sX = Mouse.getMx();
-			sY = Mouse.getMy();
+			sY = ENumUtil.clamp(Mouse.getMy(), 2.0 + headerHeight, Mouse.getMy());
 			break;
 		case OBJECT_CENTER:
 			if (objectIn != null) {
 				Dimension_d objDim = objectIn.getDimensions();
-				sX = (int) (objDim.midX - (gDim.width / 2));
-				sY = (int) (objDim.midY - (gDim.height / 2));
+				sX = objDim.midX - (gDim.width / 2.0);
+				sY = objDim.midY - (gDim.height / 2.0);
 			}
 			break;
 		case OBJECT_CORNER:
 			if (objectIn != null) {
 				Dimension_d objDim = objectIn.getDimensions();
-				sX = (int) objDim.startX;
-				sY = (int) objDim.startY;
+				sX = objDim.startX;
+				sY = objDim.startY;
 			}
 			break;
 		case OBJECT_INDENT:
 			if (objectIn != null) {
 				Dimension_d objDim = objectIn.getDimensions();
-				sX = (int) (objDim.startX + 25);
-				sY = (int) (objDim.startY + 25);
+				sX = objDim.startX + 25.0;
+				sY = objDim.startY + 25.0;
 			}
 			break;
 		case EXISTING_OBJECT_INDENT:
-			EList<IWindowObject> windows = EList.newList();
-			getCombinedChildren().stream()
-			                     .filter(o -> windowIn.getClass().isInstance(o))
-			                     .filter(o -> !o.isBeingRemoved())
-			                     .forEach(windows::add);
+			EList<? extends IWindowParent> windows = getAllWindowInstances(windowIn.getClass());
+//			getCombinedChildren().stream()
+//			                     .filter(o -> windowIn.getClass().isInstance(o))
+//			                     .filter(o -> !o.isBeingRemoved())
+//			                     .forEach(windows::add);
+			
+			var last = windows.getFirst();
 			
 			if (windows.isEmpty()) {
-				sX = (int) ((Envision.getWidth() / 2) - (gDim.width / 2));
-				sY = (int) ((Envision.getHeight() / 2) - (gDim.height / 2));
+			    // use TOP_LEFT positioning
+			    sX = 35.0;
+	            sY = 35.0 + headerHeight + tbH;
+				//sX = (Envision.getWidth() / 2.0) - (gDim.width / 2.0);
+				//sY = (Envision.getHeight() / 2.0) - (gDim.height / 2.0);
 			}
-			else if (windows.getLast() != null) {
-				Dimension_d objDim = windows.getLast().getDimensions();
-				sX = (int) (objDim.startX + Envision.getWidth() / 25);
-				sY = (int) (objDim.startY + Envision.getWidth() / 25);
+			else if (last != null) {
+				Dimension_d objDim = last.getDimensions();
+				sX = objDim.startX + headerHeight + headerHeight * 0.35;
+				sY = objDim.startY + headerHeight + headerHeight * 0.35;
 			}
 			
 			break;
@@ -340,10 +370,10 @@ public interface ITopParent extends IWindowObject {
 		}
 		
 		if (!(windowIn instanceof OverlayWindow)) {
-			sX = sX < 0 ? 4 : sX;
-			sY = (int) ((sY - headerHeight) < 2 ? 4 + headerHeight : sY);
-			sX = (int) (sX + gDim.width > Envision.getWidth() ? -4 + sX - (sX + gDim.width - Envision.getWidth()) : sX);
-			sY = (int) (sY + gDim.height > Envision.getHeight() ? -4 + sY - (sY + gDim.height - Envision.getHeight()) : sY);
+			sX = sX < 0.0 ? 4.0 : sX;
+			sY = (sY - headerHeight) < 2.0 ? 4.0 + headerHeight : sY;
+			sX = sX + gDim.width > Envision.getWidth() ? -4.0 + sX - (sX + gDim.width - Envision.getWidth()) : sX;
+			sY = sY + gDim.height > Envision.getHeight() ? -4.0 + sY - (sY + gDim.height - Envision.getHeight()) : sY;
 		}
 		
 		windowIn.setPosition(sX, sY, true);

@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.nature;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.water.WaterTextures;
 import qot.world_tiles.TileIDs;
@@ -9,7 +10,7 @@ public class Water extends WorldTile {
 	public Water() {
 		super(TileIDs.WATER);
 		setBlocksMovement(true);
-		setTexture(WaterTextures.water);
+		setSprite(new Sprite(WaterTextures.water));
 		setWall(true);
 		wallHeight = -0.05;
 	}

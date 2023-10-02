@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.stone;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
@@ -17,10 +18,10 @@ public class ClayPad extends WorldTile {
 		numVariants = StoneFloorTextures.clay_pad.getChildren().size();
 		
 		if (id < 0) {
-			setTexture(StoneFloorTextures.clay_pad.getRandVariant());
+		    setSprite(new Sprite(StoneFloorTextures.clay_pad.getRandVariant()));
 		}
 		else {
-			setTexture(StoneFloorTextures.clay_pad.getChild(id));
+		    setSprite(new Sprite(StoneFloorTextures.clay_pad.getChild(id)));
 		}
 	}
 	

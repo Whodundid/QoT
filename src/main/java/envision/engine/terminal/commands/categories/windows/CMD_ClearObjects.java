@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.windows;
 
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
@@ -15,7 +14,7 @@ public class CMD_ClearObjects extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "clearobj"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("clro"); }
+	@Override public EList<String> getAliases() { return EList.of("clro"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Clears the objects from the renderer"; }
 	@Override public String getUsage() { return "ex: clro"; }
 	

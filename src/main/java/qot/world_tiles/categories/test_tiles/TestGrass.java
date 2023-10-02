@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.test_tiles;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.colors.EColors;
 import eutil.random.ERandomUtil;
@@ -25,10 +26,10 @@ public class TestGrass extends WorldTile {
 		}
 		
 		if (id < 0) {
-			setTexture(GrassTextures.grass.getRandVariant());
+		    setSprite(new Sprite(GrassTextures.grass.getRandVariant()));
 		}
 		else {
-			setTexture(GrassTextures.grass.getChild(id));
+		    setSprite(new Sprite(GrassTextures.grass.getChild(id)));
 		}
 		
 		blocksMovement = false;

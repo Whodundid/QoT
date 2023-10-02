@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.system;
 
 import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_HexToDec extends TerminalCommand {
@@ -13,7 +12,7 @@ public class CMD_HexToDec extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "hextodec"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("h2d", "hex"); }
+	@Override public EList<String> getAliases() { return EList.of("h2d", "hex"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "converts a hex value to a decimal value"; }
 	@Override public String getUsage() { return "ex: h2d 0xff"; }
 	

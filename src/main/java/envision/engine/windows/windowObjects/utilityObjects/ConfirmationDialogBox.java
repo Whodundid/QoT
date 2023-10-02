@@ -1,10 +1,9 @@
-package envision.engine.windows.bundledWindows;
+package envision.engine.windows.windowObjects.utilityObjects;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
-import envision.engine.windows.windowObjects.utilityObjects.WindowDialogueBox;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 
@@ -82,11 +81,11 @@ public class ConfirmationDialogBox<E> extends WindowDialogueBox {
         yes.setString(EColors.green + "Yes");
         no.setString(EColors.lred + "No");
         
-        yes.onPress(() -> {
+        yes.setAction(() -> {
             if (completionAction != null) completionAction.run();
             close();
         });
-        no.onPress(() -> close());
+        no.setAction(() -> close());
         
         addObject(textLabel, yes, no);
     }

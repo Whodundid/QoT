@@ -7,10 +7,10 @@ import org.apache.commons.io.FileUtils;
 
 import envision.Envision;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.engine.windows.bundledWindows.ErrorDialogBox;
 import envision.engine.windows.bundledWindows.TextEditorWindow;
 import envision.engine.windows.bundledWindows.TextureDisplayer;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
+import envision.engine.windows.windowObjects.utilityObjects.ErrorDialogBox;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.datatypes.util.EList;
@@ -21,14 +21,14 @@ import eutil.file.FileOpener;
  * A utility class which contains useful functions for interfacing with the
  * Envision Developer Desktop.
  */
-public class DeveloperDesktopUtil {
+public class DesktopUtil {
     
     //==============
     // Constructors
     //==============
     
     /** Hidden by default. */
-    private DeveloperDesktopUtil() {}
+    private DesktopUtil() {}
     
     //=========================
     // General Utility Methods
@@ -43,7 +43,7 @@ public class DeveloperDesktopUtil {
      * @return The opened window
      */
     public static <T extends IWindowParent> T openWindow(T windowIn) {
-        return Envision.getTopScreen().displayWindow(windowIn);
+        return Envision.getDeveloperDesktop().displayWindow(windowIn);
     }
     
     /**
@@ -56,7 +56,33 @@ public class DeveloperDesktopUtil {
      * @return The opened window
      */
     public static <T extends IWindowParent> T openWindow(T windowIn, ObjectPosition position) {
-        return Envision.getTopScreen().displayWindow(windowIn, position);
+        return Envision.getDeveloperDesktop().displayWindow(windowIn, position);
+    }
+    
+    //==================
+    // Terminal Methods
+    //==================
+    
+    /**
+     * Opens a new terminal window on the desktop.
+     * 
+     * @param <T> A type of IWindowObject
+     * @return The terminal window that was opened
+     */
+    public static ETerminalWindow openTerminalWindow() {
+        return openTerminalWindow(ObjectPosition.EXISTING_OBJECT_INDENT);
+    }
+    
+    /**
+     * Opens a new terminal window on the desktop.
+     * 
+     * @param <T> A type of IWindowObject
+     * @param dir The location of where to display the terminal window on screen
+     * 
+     * @return The terminal window that was opened
+     */
+    public static ETerminalWindow openTerminalWindow(ObjectPosition position) {
+        return openWindow(new ETerminalWindow(), position);
     }
     
     //=======================
@@ -347,7 +373,7 @@ public class DeveloperDesktopUtil {
         if (file == null) return;
         
         var term = new ETerminalWindow();
-        Envision.getTopScreen().displayWindow(term, ObjectPosition.CURSOR_CENTER);
+        Envision.getDeveloperDesktop().displayWindow(term, ObjectPosition.CURSOR_CENTER);
         
         if (!file.exists()) {
             term.error("File Error!");

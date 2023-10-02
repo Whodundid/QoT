@@ -2,6 +2,16 @@ package envision.debug;
 
 import envision.debug.debugCommands.Deb0;
 import envision.debug.debugCommands.Deb1;
+import envision.debug.debugCommands.Deb10;
+import envision.debug.debugCommands.Deb11;
+import envision.debug.debugCommands.Deb12;
+import envision.debug.debugCommands.Deb13;
+import envision.debug.debugCommands.Deb14;
+import envision.debug.debugCommands.Deb15;
+import envision.debug.debugCommands.Deb16;
+import envision.debug.debugCommands.Deb17;
+import envision.debug.debugCommands.Deb18;
+import envision.debug.debugCommands.Deb19;
 import envision.debug.debugCommands.Deb2;
 import envision.debug.debugCommands.Deb3;
 import envision.debug.debugCommands.Deb4;
@@ -13,7 +23,7 @@ import envision.debug.debugCommands.Deb9;
 import envision.debug.debugCommands.DebugCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.EUtil;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
 
@@ -22,7 +32,7 @@ import eutil.datatypes.EArrayList;
 /** A basic utility that allows the execution of dev defined test java code within game. */
 public class DebugFunctions {
 
-	private static EArrayList<DebugCommand> commands = new EArrayList();
+	private static EList<DebugCommand> commands = EList.newList();
 	
 	static {
 		commands.add(new Deb0());
@@ -35,6 +45,16 @@ public class DebugFunctions {
 		commands.add(new Deb7());
 		commands.add(new Deb8());
 		commands.add(new Deb9());
+		commands.add(new Deb10());
+		commands.add(new Deb11());
+		commands.add(new Deb12());
+		commands.add(new Deb13());
+		commands.add(new Deb14());
+		commands.add(new Deb15());
+		commands.add(new Deb16());
+		commands.add(new Deb17());
+		commands.add(new Deb18());
+		commands.add(new Deb19());
 	}
 	
 	//these are settings which can be toggled in game to hide/display certain debug values
@@ -61,7 +81,7 @@ public class DebugFunctions {
 	/** Runs the debug function number. */
 	public static boolean runDebugFunction(int functionID) { return runDebugFunction(functionID, null); }
 	/** Runs the debug function number with given arguments inside of an EArrayList. */
-	public static boolean runDebugFunction(int functionID, EArrayList args) {
+	public static boolean runDebugFunction(int functionID, EList<?> args) {
 		return runDebugFunction(functionID, null, EUtil.nullApplyR(args, a -> a.toArray(), new Object[0]));
 	}
 	/** Runs the debug function number with the option to specify a terminal and a series of arguments. */
@@ -84,6 +104,6 @@ public class DebugFunctions {
 	/** Returns the total number of debug functions available. */
 	public static int getTotal() { return IDebugCommand.values().length; }
 	
-	public static void renderUpdate() { commands.forEach(c -> c.onRendererUpdate()); }
+	public static void renderUpdate() { commands.forEach(DebugCommand::onRendererUpdate); }
 	
 }

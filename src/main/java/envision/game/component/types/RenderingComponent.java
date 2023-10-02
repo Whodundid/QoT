@@ -26,7 +26,7 @@ public abstract class RenderingComponent extends EntityComponent {
 	// Constructors
 	//==============
 	
-	public RenderingComponent(ComponentBasedObject objectIn) {
+	protected RenderingComponent(ComponentBasedObject objectIn) {
 		super(objectIn, ComponentType.RENDERING);
 	}
 	
@@ -52,7 +52,7 @@ public abstract class RenderingComponent extends EntityComponent {
 		if (world == null || !world.isUnderground()) return 0xffffffff;
 		
 		int viewDist = 18;
-		int lightx = x, lighty = y;
+		int lightx, lighty;
 		var obj = world.getCamera().getFocusedObject();
 		
 		if (obj != null) {

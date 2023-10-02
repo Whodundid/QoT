@@ -22,8 +22,10 @@ public class CMD_Envision extends TerminalCommand {
     public void runCommand() {
         if (noArgs()) {
             writeln(EnvisionLang.getVersionString(), EColors.seafoam);
-            info("To run an Envision script, add an Envision program directory\n",
-                 "along with any of its launch arguments to the end of this command.");
+            info("""
+                 To run an Envision script, add an Envision program directory
+                 along with any of its launch arguments to the end of this command.
+                 """);
             usage();
             return;
         }
@@ -35,7 +37,7 @@ public class CMD_Envision extends TerminalCommand {
         EList<String> toParse = EList.newList();
         
         EList<String> modifiers = getParsedModifiers();
-        if (modifiers.size() > 0) {
+        if (modifiers.isNotEmpty()) {
             for (int i = 0; i < modifiers.size(); i++) { toParse.add(modifiers.get(i)); }
             var launchArgs = EnvisionEnvironmnetSettings.of(toParse);
             program.setLaunchArgs(launchArgs);
@@ -46,7 +48,7 @@ public class CMD_Envision extends TerminalCommand {
             //QoT.getEnvision().runProgram(program);
             writeln(EColors.lgreen, "END ", EColors.yellow, (System.currentTimeMillis() - start), "ms");
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
             error(e);
         }

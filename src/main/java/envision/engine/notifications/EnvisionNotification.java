@@ -49,11 +49,11 @@ public class EnvisionNotification extends NotificationObject {
 			WindowButton.playPressSound();
 			close();
 			if (attentionObject != null) {
-				if (Envision.getTopScreen().getChildren().contains(attentionObject)) {
+				if (Envision.getDeveloperDesktop().getChildren().contains(attentionObject)) {
 				    attentionObject.requestFocus();
 				}
 				else {
-					Envision.getTopScreen().displayWindow(attentionObject);
+					Envision.getDeveloperDesktop().displayWindow(attentionObject);
 				}
 			}
 		}

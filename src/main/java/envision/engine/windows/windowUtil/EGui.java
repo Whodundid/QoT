@@ -4,6 +4,7 @@ import envision.Envision;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.engine.windows.windowUtil.input.KeyboardInputAcceptor;
 import envision.engine.windows.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;
@@ -70,6 +71,15 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public void drawHRect(int color, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, 1, color); }
 	public void drawHRect(int color, int size, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, size, color); }
 	
+	public void drawSprite(Sprite sprite) { drawSprite(sprite, startX, startY, width, height, false, Rotation.UP); }
+	public void drawSprite(Sprite sprite, boolean flip) { drawSprite(sprite, startX, startY, width, height, flip, Rotation.UP); }
+	public void drawSprite(Sprite sprite, int offset) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), false, Rotation.UP); }
+	public void drawSprite(Sprite sprite, Rotation rotation) { drawSprite(sprite, startX, startY, width, height, false, rotation); }
+	public void drawSprite(Sprite sprite, int offset, boolean flip) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), flip, Rotation.UP); }
+    public void drawSprite(Sprite sprite, int offset, Rotation rotation) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), false, rotation); }
+    public void drawSprite(Sprite sprite, int offset, boolean flip, Rotation rotation) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), flip, rotation); }
+
+    
 	public void drawTexture(GameTexture texture) { drawTexture(texture, startX, startY, width, height, false, Rotation.UP); }
 	public void drawTexture(GameTexture texture, Rotation rotation) { drawTexture(texture, startX, startY, width, height, false, rotation); }
 	public void drawTexture(GameTexture texture, boolean flip) { drawTexture(texture, startX, startY, width, height, flip, Rotation.UP); }
@@ -156,6 +166,14 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	
 	public boolean isMouseInsideGui(int mX, int mY) {
 		return mX >= startX && mX <= endX && mY >= startY && mY <= endY;
+	}
+	
+	public boolean isMouseInsideGui(int mX, int mY, double threshold) {
+	    double sx = startX - threshold;
+	    double sy = startY - threshold;
+	    double ex = endX + threshold;
+	    double ey = endY + threshold;
+	    return mX >= sx && mX <= ex && mY >= sy && mY <= ey;
 	}
 	
 	//=========

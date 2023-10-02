@@ -1,5 +1,6 @@
 package qot.items.potions.healing;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Entity;
 import envision.game.items.Potion;
 import qot.assets.textures.item.ItemTextures;
@@ -11,7 +12,7 @@ public class Healing_Major extends Potion {
 		super("Major Healing Potion", ItemList.HEALING_LESSER.ID);
 		this.setUsable(true);
 		this.setIsDestroyedOnUse(true);
-		this.setTexture(ItemTextures.major_healing);
+		this.setSprite(new Sprite(ItemTextures.major_healing));
 		this.setDescription("This potion heals 25 HP");
 		this.setBasePrice(35);
 	}

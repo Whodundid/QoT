@@ -1,5 +1,6 @@
 package qot.doodads;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Doodad;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
@@ -12,7 +13,7 @@ public class PineTree extends Doodad {
 	public PineTree(int posX, int posY) {
 		super("pine");
 		init(posX, posY, 200, 200);
-		tex = TreeTextures.tree_pine_0;
+		sprite = new Sprite(TreeTextures.tree_pine_0);
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		double sx = (facing == Rotation.RIGHT) ? 15 : 10;

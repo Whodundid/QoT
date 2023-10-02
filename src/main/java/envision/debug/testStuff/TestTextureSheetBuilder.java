@@ -2,15 +2,24 @@ package envision.debug.testStuff;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.terminal.terminalUtil.FileType;
+import envision.engine.windows.bundledWindows.fileExplorer.MovingFileObject;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowImageBox;
+import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
+import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
+import eutil.datatypes.Grid;
 import eutil.datatypes.util.EList;
 
 public class TestTextureSheetBuilder extends WindowParent {
@@ -20,11 +29,16 @@ public class TestTextureSheetBuilder extends WindowParent {
     //========
     
     private WindowButton clearButton;
+    private WindowButton saveSheet;
+    private WindowButton editButton;
     
     private BufferedImage image;
     private GameTexture texture;
     private WindowImageBox textureDisplayer;
     private EList<BufferedImage> textureList = EList.newList();
+    
+    private boolean isEditMode = true;
+    private Grid<WindowImageBox> spriteGrid = new Grid<>();
     
     //===========================
     // Overrides : IWindowParent
@@ -44,13 +58,23 @@ public class TestTextureSheetBuilder extends WindowParent {
     public void initChildren() {
         defaultHeader();
         
-        clearButton = new WindowButton(this, midX - 100, endY - 50, 200, 40, "Clear");
-        clearButton.onPress(() -> clearImage());
+        clearButton = new WindowButton<>(this, midX - 160, endY - 50, 150, 40, "Clear");
+        clearButton.setAction(this::clearImage);
+        
+        saveSheet = new WindowButton<>(this, midX + 10, endY - 50, 150, 40, "Save");
+        saveSheet.setAction(this::saveSheet);
         
         double texEY = height - clearButton.height - 25;
         textureDisplayer = new WindowImageBox(this, startX + 5, startY + 5, width - 10, texEY);
         
+        var group = new EObjectGroup(this);
+        group.addObject(textureDisplayer, clearButton);
+        setObjectGroup(group);
+        textureDisplayer.setObjectGroup(group);
+        clearButton.setObjectGroup(group);
+        
         addObject(clearButton);
+        addObject(saveSheet);
         addObject(textureDisplayer);
     }
     
@@ -58,6 +82,16 @@ public class TestTextureSheetBuilder extends WindowParent {
     public void drawObject(int mXIn, int mYIn) {
         drawDefaultBackground();
         
+    }
+    
+    @Override
+    public void preReInit() {
+        
+    }
+    
+    @Override
+    public void postReInit() {
+        textureDisplayer.setImage(texture);
     }
     
     @Override
@@ -74,8 +108,7 @@ public class TestTextureSheetBuilder extends WindowParent {
     public void onSystemDragAndDrop(EList<String> droppedFileNames) {
         for (String fileName : droppedFileNames) {
             try {
-                var img = ImageIO.read(new File(fileName));
-                textureList.add(img);
+                findTextures(EList.of(new File(fileName)));
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -84,6 +117,42 @@ public class TestTextureSheetBuilder extends WindowParent {
         
         updateImage();
         updateTexture();
+        requestFocus();
+        bringToFront();
+    }
+    
+    private void findTextures(EList<File> filesToProcess) {
+        for (File file : filesToProcess) {
+            try {
+                FileType type = FileType.getFileType(file);
+                if (type == FileType.FOLDER) {
+                    var files = EList.of(file.listFiles());
+                    findTextures(files);
+                }
+                else if (type == FileType.PICTURE) {
+                    var img = ImageIO.read(file);
+                    //if (img.getWidth() != 32 || img.getHeight() != 32) continue;
+                    textureList.add(img);
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    @Override
+    public void onGroupNotification(ObjectEvent e) {
+        if (e instanceof EventDragAndDrop d) {
+            onDragAndDrop(d.getObjectBeingDropped());
+        }
+    }
+    
+    @Override
+    public void onDragAndDrop(DragAndDropObject objectBeingDropped) {
+        final MovingFileObject mfo = (MovingFileObject) objectBeingDropped;
+        final var files = mfo.getFilesBeingMoved().map(f -> f.getFile().getAbsolutePath());
+        onSystemDragAndDrop(files);
     }
     
     private void updateImage() {
@@ -91,6 +160,18 @@ public class TestTextureSheetBuilder extends WindowParent {
         int pw = 0, ph = 0; // pixel width/height
         
         int size = textureList.size();
+        textureList.sort((a, b) -> {
+            final boolean alphaA = a.getColorModel().hasAlpha();
+            final boolean alphaB = b.getColorModel().hasAlpha();
+            
+            if (alphaA && !alphaB) {
+                return 1;
+            }
+            else if (alphaB && !alphaA) {
+                return -1;
+            }
+            return 0;
+        });
         
         int i = 1;
         while (i * i < size) i++;
@@ -122,6 +203,7 @@ public class TestTextureSheetBuilder extends WindowParent {
         texture = new GameTexture(image);
         TextureSystem.getInstance().reg(texture);
         textureDisplayer.setImage(texture);
+        saveSheet.setEnabled(true);
     }
     
     private void clearImage() {
@@ -131,6 +213,20 @@ public class TestTextureSheetBuilder extends WindowParent {
         
         image = null;
         textureList.clear();
+        saveSheet.setEnabled(false);
+    }
+    
+    private void saveSheet() {
+        if (image == null) return;
+        
+        String fileName = DeveloperDesktop.generateUniqueFileName(DeveloperDesktop.DESKTOP_DIR, "SPRITE_SHEET.png");
+        File toCreate = new File(DeveloperDesktop.DESKTOP_DIR, fileName);
+        try {
+            ImageIO.write(image, "png", toCreate);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
 }

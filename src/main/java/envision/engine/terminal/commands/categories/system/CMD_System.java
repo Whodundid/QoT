@@ -5,7 +5,6 @@ import java.io.File;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.terminalUtil.ESystemInfo;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_System extends TerminalCommand {
@@ -16,7 +15,7 @@ public class CMD_System extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "system"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("sys"); }
+	@Override public EList<String> getAliases() { return EList.of("sys"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays information on the system"; }
 	@Override public String getUsage() { return "ex: sys"; }
 	
@@ -67,8 +66,8 @@ public class CMD_System extends TerminalCommand {
         writeln("\nRAM: (gb)", EColors.orange);
         
         try {
-            double memTotal = ((double) ESystemInfo.getRAM_Total() / 1024d / 1024d / 1024d);
-            double memFree =  ((double) ESystemInfo.getRAM_JVM_Free() / 1024d / 1024d / 1024d);
+            double memTotal = (ESystemInfo.getRAM_Total() / 1024D / 1024D / 1024D);
+            double memFree =  (ESystemInfo.getRAM_JVM_Free() / 1024D / 1024D / 1024D);
             double memUsed = memTotal - memFree;
             
             String memTotalString = String.format("%.2f", memTotal);
@@ -88,9 +87,9 @@ public class CMD_System extends TerminalCommand {
         writeln("\nJVM Memory: (gb)", EColors.orange);
         
         try {
-            double memJVMTotal = (double) ((double) ESystemInfo.getRAM_JVM_Total() / 1024d / 1024d / 1024d);
-            double memJVMUsed = (double) ((double) ESystemInfo.getRAM_JVM_Used() / 1024d / 1024d / 1024d);
-            double memJVMFree = (double) ((double) ESystemInfo.getRAM_JVM_Free() / 1024d / 1024d / 1024d);
+            double memJVMTotal = (ESystemInfo.getRAM_JVM_Total() / 1024D / 1024D / 1024D);
+            double memJVMUsed = (ESystemInfo.getRAM_JVM_Used() / 1024D / 1024D / 1024D);
+            double memJVMFree = (ESystemInfo.getRAM_JVM_Free() / 1024D / 1024D / 1024D);
             
             String memJVMTotalString = String.format("%.2f", memJVMTotal);
             String memJVMUsedString = String.format("%.2f", memJVMUsed);
@@ -121,8 +120,8 @@ public class CMD_System extends TerminalCommand {
                 
                 writeln("  " + d.getAbsolutePath() + (primary ? EColors.mc_lightpurple + " (primary)" : ""), EColors.blue);
                 
-                double total = (double) ((double) d.getTotalSpace() / 1024d / 1024d / 1024d);
-                double free = (double) ((double) d.getFreeSpace() / 1024d / 1024d / 1024d);
+                double total = (d.getTotalSpace() / 1024D / 1024D / 1024D);
+                double free = (d.getFreeSpace() / 1024D / 1024D/ 1024D);
                 
                 String totalString = String.format("%.2f", total);
                 String freeString = String.format("%.2f", free);

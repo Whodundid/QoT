@@ -11,7 +11,6 @@ import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
-import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;
@@ -21,19 +20,19 @@ import eutil.misc.ScreenLocation;
 
 public class WindowParent extends WindowObject implements IWindowParent, Comparable<WindowParent> {
 
-	//----------------
+	//================
 	// Static Methods
-	//----------------
+	//================
 	
-	public static int defaultWidth = 220, defaultHeight = 255;
+	public static final int DEFAULT_WIDTH = 220, DEFAULT_HEIGHT = 255;
 	private static volatile int curWindowID = 0;
 	
 	/** Returns the next available id that will be assigned to a requesting object. */
 	public static synchronized int getNextWindowPID() { return curWindowID++; }
 	
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	public WindowParent windowInstance;
 	protected WindowHeader header;
@@ -48,7 +47,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	protected boolean drawMinimized = false;
 	protected boolean drawDefaultBackground = false;
 	protected boolean highlighted = false;
-	protected Stack<IWindowParent> windowHistory = new Stack();
+	protected Stack<IWindowParent> windowHistory = new Stack<>();
 	protected EList<String> aliases = EList.newList();
 	protected GameTexture windowIcon = null;
 	protected Dimension_d preMaxFull = new Dimension_d();
@@ -57,9 +56,9 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	protected long initTime = 0l;
 	protected long windowPID = -1;
 	
-	//--------------
+	//==============
 	// Constructors
-	//--------------
+	//==============
 
 	/** By default, set the parent to the QoT top overlay. */
 	
@@ -73,10 +72,12 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	}
 	
 	public WindowParent(int xPos, int yPos) {
+	    init(Envision.getActiveTopParent(), xPos, yPos);
 		__INIT__();
 	}
 	
 	public WindowParent(int xPos, int yPos, IWindowParent oldGuiIn) {
+	    init(Envision.getActiveTopParent(), xPos, yPos);
 		__INIT__();
 		pullHistoryFrom(oldGuiIn);
 	}
@@ -102,9 +103,9 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 		windowPID = getNextWindowPID();
 	}
 	
-	//-----------
+	//===========
 	// Overrides
-	//-----------
+	//===========
 	
 	@Override
 	public int compareTo(WindowParent p) {
@@ -159,7 +160,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
             
             drawRect(sX, y - 1, startX + pos + 13, y + FontRenderer.FONT_HEIGHT + 1, EColors.black);
             drawRect(sX + 1, y, startX + pos + 12, y + FontRenderer.FONT_HEIGHT, EColors.dgray);
-            pos += 13;
+            //pos += 13;
             draw += " ";
         }
         
@@ -174,7 +175,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	
 	@Override
 	public void close() {
-		if (getTopParent() == Envision.getTopScreen()) {
+		if (getTopParent() == Envision.getDeveloperDesktop()) {
 			//update the taskbar
 			TaskBar.windowClosed(this);
 		}
@@ -188,7 +189,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 		if (!(args[0] instanceof String)) return;
 		
 		String msg = (String) args[0];
-		if (msg.toLowerCase().equals("reload")) {
+		if (msg.equalsIgnoreCase("reload")) {
 			boolean any = false;
 			
 			for (var o : getAllChildren()) {
@@ -230,11 +231,11 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	@Override
 	public void maximize() {
 		Dimension_d screen = getTopParent().getDimensions();
-		boolean hasTaskBar = Envision.getTopScreen().getTaskBar() != null;
+		boolean hasTaskBar = Envision.getDeveloperDesktop().getTaskBar() != null;
 		
 		double sw = screen.width;
 		double sh = screen.height;
-		double tb = TaskBar.drawSize() - 1;
+		double tb = TaskBar.drawSize() - 1.0;
 		double hh = header.height;
 		
 		if (maximized == ScreenLocation.TOP) {
@@ -327,20 +328,34 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	@Override public GameTexture getWindowIcon() { return windowIcon; }
 	@Override public boolean showInTaskBar() { return showInTaskBar; }
 	
-	//--------
+	@Override public String getWindowName() { return getClass().getSimpleName(); }
+	
+	//========
 	// zLevel
-	//--------
+	//========
 	
 	@Override public int getZLevel() { return windowZLevel; }
 	@Override public void setZLevel(int zLevelIn) { windowZLevel = zLevelIn; }
-	@Override public void bringToFront() { EUtil.nullDo(getTopParent(), p -> p.bringObjectToFront(this)); }
-	@Override public void sendToBack() { EUtil.nullDo(getTopParent(), p -> p.sendObjectToBack(this)); }
 	
-	//------------------
+	@Override
+	public void bringToFront() {
+	    var p = getTopParent();
+	    if (p == null) return;
+	    p.bringObjectToFront(this);
+	}
+	
+	@Override
+	public void sendToBack() {
+	    var p = getTopParent();
+	    if (p == null) return;
+	    p.sendObjectToBack(this);
+	}
+	
+	//==================
 	// Internal Methods
-	//------------------
+	//==================
 	
-	protected void defaultDims() { setDimensions(startX, startY, defaultWidth, defaultHeight); }
+	protected void defaultDims() { setDimensions(startX, startY, DEFAULT_WIDTH, DEFAULT_HEIGHT); }
 	protected void defaultHeader() { setHeader(new WindowHeader(this)); }
 	protected void defaultHeader(IWindowParent in) { setHeader(new WindowHeader(in)); }
 	
@@ -350,22 +365,20 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	}
 	
 	private void initDefaultDims(IWindowObject parentIn, int xPos, int yPos) {
-		init(parentIn, xPos, yPos, defaultWidth, defaultHeight);
+		init(parentIn, xPos, yPos, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		windowInstance = this;
 	}
 	
 	private void pullHistoryFrom(IWindowParent objectIn) {
-		if (objectIn != null) {
-			if (objectIn instanceof WindowParent wp) {
-				windowHistory = wp.getWindowHistory();
-				windowHistory.push(objectIn);
-			}
-		}
+        if (objectIn instanceof WindowParent wp) {
+            windowHistory = wp.getWindowHistory();
+            windowHistory.push(objectIn);
+        }
 	}
 	
-	//---------
+	//=========
 	// Methods
-	//---------
+	//=========
 	
 	public void fileUpAndClose() {
 	    if (windowHistory.isEmpty() || windowHistory.peek() == null) {
@@ -408,16 +421,16 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 		if (header != null) header.setEnabled(val);
 	}
 	
-	//---------
+	//=========
 	// Getters
-	//---------
+	//=========
 	
 	public boolean movesWithParent() { return moveWithParent; }
 	@Override public long getWindowID() { return windowPID; }
 	
-	//---------
+	//=========
 	// Setters
-	//---------
+	//=========
 	
 	public void setDrawDefaultBackground(boolean val) { drawDefaultBackground = val; }
 	public void setMoveWithParent(boolean val) { moveWithParent = val; }
@@ -442,6 +455,6 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	}
 	
 	public void showOnTop() { showOnTop(ObjectPosition.SCREEN_CENTER); }
-	public void showOnTop(ObjectPosition position) { Envision.getTopScreen().displayWindow(this, position); }
+	public void showOnTop(ObjectPosition position) { Envision.getDeveloperDesktop().displayWindow(this, position); }
 	
 }

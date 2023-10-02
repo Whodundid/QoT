@@ -15,15 +15,15 @@ import eutil.misc.ScreenLocation;
 
 public abstract class WindowObject extends EGui implements IWindowObject {
 	
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	protected WindowObjectProperties properties = new WindowObjectProperties(this);
 	
-	//---------------------
+	//=====================
 	// Initializer Methods
-	//---------------------
+	//=====================
 	
 	/** Initializes this WindowObject with the specified parent. */
 	public void init(IWindowObject objIn) {
@@ -52,25 +52,25 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 		res = Envision.getWindowDims();
 	}
 	
-	//-----------
+	//===========
 	// Overrides
-	//-----------
+	//===========
 	
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "@" + Integer.toHexString(hashCode());
 	}
 	
-	//-------------------------------
+	//===============================
 	// Overrides : Object Properties
-	//-------------------------------
+	//===============================
 	
 	/** Returns the current properties of this object. */
 	public WindowObjectProperties properties() { return properties; }
 	
-	//--------------------------------
+	//================================
 	// Overrides : MouseInputAcceptor
-	//--------------------------------
+	//================================
 	
 	@Override
 	public void parseMousePosition(int mX, int mY) {
@@ -106,9 +106,9 @@ public abstract class WindowObject extends EGui implements IWindowObject {
 		getChildren().filterForEach(o -> o.isMouseInside() && o.willBeDrawn(), o -> o.mouseScrolled(change));
 	}
 	
-	//-----------------------------------
+	//===================================
 	// Overrides : KeyboardInputAcceptor
-	//-----------------------------------
+	//===================================
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {

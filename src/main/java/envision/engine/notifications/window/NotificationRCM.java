@@ -41,7 +41,7 @@ public class NotificationRCM extends RightClickMenu {
 	}
 	
 	private void openSettings() {
-	    Envision.getTopScreen().displayWindow(new NotificationWindow(), ObjectPosition.SCREEN_CENTER);
+	    Envision.getDeveloperDesktop().displayWindow(new NotificationWindow(), ObjectPosition.SCREEN_CENTER);
 	}
 	
 }

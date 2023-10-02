@@ -1,6 +1,7 @@
 package qot.entities.enemies.dragon;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
@@ -8,6 +9,7 @@ import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
+import qot.entities.projectiles.Fireball;
 import qot.items.Items;
 
 public class Thyrah extends Enemy {
@@ -21,7 +23,7 @@ public class Thyrah extends Enemy {
 	public Thyrah(int posX, int posY) {
 		super("Thyrah, the Dragon");
 		init(posX, posY, 128, 128);
-		tex = EntityTextures.thyrah;
+		sprite = new Sprite(EntityTextures.thyrah);
 		
 		setBaseMeleeDamage(10);
 		setMaxHealth(40);

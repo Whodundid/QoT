@@ -41,10 +41,10 @@ import qot.settings.QoTSettings;
 
 public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutputReceiver {
 	
-	public static final String sep = FileSystems.getDefault().getSeparator();
+	public static final String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
 	
 	protected TerminalTextField inputField;
-	protected WindowTextArea<?> history;
+	protected WindowTextArea<String> history;
 	protected boolean init = false;
 	protected File dir;
 	protected String textTabBegin = "";
@@ -53,13 +53,13 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	protected int startArgPos = -1;
 	protected String tabBase = "";
 	protected EList<String> tabData = EList.newList();
-	protected EList<TextAreaLine> tabDisplayLines = EList.newList();
+	protected EList<TextAreaLine<String>> tabDisplayLines = EList.newList();
 	protected boolean isCommand = false;
 	
 	protected String text = "";
 	protected int textPos = 0;
 	protected double vPos = 0, hPos = 0;
-	protected EList<? extends TextAreaLine<?>> lines;
+	protected EList<? extends TextAreaLine<String>> lines;
 	
 	public int historyLine = 0;
 	public int lastUsed = 2;
@@ -81,6 +81,8 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		dir = new File(System.getProperty("user.dir"));
 		windowIcon = TaskBarTextures.terminal;
 	}
+	
+	@Override public String getWindowName() { return "terminal"; }
 	
 	//--------------------------
 	// Envision Terminal Output
@@ -104,7 +106,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	public void initWindow() {
 		setObjectName("Terminal");
 		int w = ENumUtil.clamp(750, 200, Envision.getWidth());
-		int h = ENumUtil.clamp(400, 200, Envision.getHeight());
+		int h = ENumUtil.clamp(500, 200, Envision.getHeight());
 		setGuiSize(w, h);
 		setMinDims(480, 285);
 		setResizeable(true);
@@ -116,7 +118,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		defaultHeader(this);
 		
 		inputField = new TerminalTextField(this, startX + 1, endY - 31, width - 2, 30);
-		history = new WindowTextArea(this, startX + 1, startY + 1, width - 2, height - 1 - inputField.height) {
+		history = new WindowTextArea<>(this, startX + 1, startY + 1, width - 2, height - 1 - inputField.height) {
 			@Override
 			public void mousePressed(int mXIn, int mYIn, int button) {
 				super.mousePressed(mXIn, mYIn, button);
@@ -131,10 +133,10 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 			}
 		};
 		
-		final var lineNumbers = QoTSettings.termLineNumbers.get();
-		final var background = QoTSettings.termBackground.get();
-		final var opacity = QoTSettings.termOpacity.get();
-		final var c = EColors.changeOpacity(background, opacity);
+		final boolean lineNumbers = QoTSettings.termLineNumbers.get();
+		final int background = QoTSettings.termBackground.get();
+		final int opacity = QoTSettings.termOpacity.get();
+		final int c = EColors.changeOpacity(background, opacity);
 		
 		inputField.setBackgroundColor(c);
 		inputField.setBorderColor(0xff222222);
@@ -182,7 +184,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	
 	@Override
 	public void postReInit() {
-		for (TextAreaLine l : lines) history.addTextLine(l);
+		for (TextAreaLine<String> l : lines) history.addTextLine(l);
 		history.getVScrollBar().setScrollPos(vPos);
 		history.getHScrollBar().setScrollPos(hPos);
 		inputField.setText(text);
@@ -238,12 +240,12 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	        if (mt == MouseType.PRESSED) {
 	            bringToFront();
 	            var p = e.getEventParent();
-	            if (p instanceof WindowTextArea || p instanceof TextAreaLine) {
-	                if (inputField != null) inputField.requestFocus();
+	            if (p instanceof WindowTextArea || p instanceof TextAreaLine && inputField != null) {
+	                inputField.requestFocus();
 	            }
 	        }
-	        else if (mt == MouseType.RELEASED) {
-	            if (inputField != null) inputField.requestFocus();
+	        else if (mt == MouseType.RELEASED && inputField != null) {
+	            inputField.requestFocus();
 	        }
 	    }
         else if (e instanceof EventDragAndDrop d) {
@@ -327,12 +329,8 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		}
 		
 		try {
-			if (cmd.isEmpty()) {
-				return;
-			}
-			else if (isTab) {
+			if (isTab) {
 				handleTab();
-				return;
 			}
 			else if (requireConfirmation) {
 				writeln(cmd);
@@ -368,15 +366,27 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		}
 	}
 	
-	/**
-	 * Executes the following command input in this terminal.
-	 * 
-	 * @param input The command to run
-	 */
-	public void runCommand(String input) {
-	    TerminalCommandHandler.cmdHistory.add(input);
+    /**
+     * Executes the following command input in this terminal.
+     * 
+     * @param input The command to run
+     */
+    public void runCommand(String input) {
+        TerminalCommandHandler.cmdHistory.add(input);
         TerminalCommandHandler.getInstance().executeCommand(this, input, false);
         scrollToBottom();
+    }
+    
+    /**
+     * Executes the following command input in this terminal.
+     * 
+     * @param input The command to run
+     */
+	public void runCommand(String command, EList<String> arguments) {
+	    String argString = EStringUtil.toString(arguments);
+	    TerminalCommandHandler.cmdHistory.add(command + ((!argString.isBlank()) ? " " + argString : ""));
+	    TerminalCommandHandler.executeOnTerminal(this, command, arguments);
+	    scrollToBottom();
 	}
 	
 	@Override
@@ -393,16 +403,16 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 			double vPos = history.getVScrollBar().getScrollPos();
 			double hPos = history.getHScrollBar().getScrollPos();
 			
-			EList<TextAreaLine<?>> lines = new EArrayList();
-			for (TextAreaLine<?> l : new EArrayList<>(history.getTextDocument())) {
-				if (tabDisplayLines.notContains(l)) { lines.add(l); }
+			EList<TextAreaLine<String>> lines = EList.newList();
+			for (TextAreaLine<String> l : EList.newList(history.getTextDocument())) {
+				if (tabDisplayLines.notContains(l)) lines.add(l);
 			}
 			clearTabCompletions();
 			
 			history.clear();
 			reInitChildren();
 			
-			for (TextAreaLine l : lines) {
+			for (TextAreaLine<String> l : lines) {
 				TerminalTextLine n = new TerminalTextLine(this, l.getText(), l.textColor, l.getGenericObject(), l.getLineNumber());
 				history.addTextLine(n);
 			}
@@ -424,7 +434,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		double vPos = history.getVScrollBar().getScrollPos();
 		//double hPos = history.getHScrollBar().getScrollPos();
 		
-		EList<TextAreaLine> lines = new EArrayList<>();
+		EList<TextAreaLine<String>> lines = EList.newList();
 		for (var l : history.getTextDocument()) {
 			if (tabDisplayLines.notContains(l)) { lines.add(l); }
 		}
@@ -433,7 +443,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		history.clear();
 		reInitChildren();
 		
-		for (TextAreaLine<?> l : lines) {
+		for (TextAreaLine<String> l : lines) {
 			var n = new TerminalTextLine(this, l.getText(), l.textColor, l.getGenericObject(), l.getLineNumber());
 			history.addTextLine(n);
 		}
@@ -471,18 +481,18 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 				if (!isCommand && getCurrentArg() >= 1) {
 					TerminalCommandHandler.getInstance().executeCommand(this, input, true);
 				}
-				//build completions off of partial command input
-				else if (startArgPos == -1 || getCurrentArg() == 0 && !tab1) {
-					if (!isCommand) {
-						isCommand = true;
-						try {
-							EList<String> options = TerminalCommandHandler.buildTabCompleteCommandOptions(input);
-							buildTabCompletions(options);
-						}
-						catch (IndexOutOfBoundsException e) {}
-						catch (Exception e) { e.printStackTrace(); }
-					}
-				}
+                //build completions off of partial command input
+                else if (startArgPos == -1 || getCurrentArg() == 0 && !tab1 && !isCommand) {
+                    isCommand = true;
+                    try {
+                        EList<String> options = TerminalCommandHandler.buildTabCompleteCommandOptions(input);
+                        buildTabCompletions(options);
+                    }
+                    catch (IndexOutOfBoundsException e) {}
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 				
 				//set tab true only after parsing the first if condition
 				if (!tab1) { tab1 = true; }
@@ -523,7 +533,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 			else {
 				if (!tab1) {
 					EList<String> cnames = TerminalCommandHandler.getSortedCommandNames();
-					for (String s : cnames) { s = s.toLowerCase(); }
+					//for (String s : cnames) { s = s.toLowerCase(); }
 					
 					buildTabCompletions(cnames);
 					inputField.setText(tabBase + tabData.get(tabPos));
@@ -549,7 +559,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		if (dataIn.isEmpty()) return this;
 		
 		if (!tab1) {
-			tabData = new EArrayList(dataIn);
+			tabData = EList.newList(dataIn);
 			tabPos = 0;
 			startArgPos = getCurrentArg();
 		}
@@ -583,27 +593,27 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		//position each auto complete option on one line up to the max line width
 		int amount = dataIn.size();
 		int cur = 1;
-		String line = "";
+		var line = new EStringBuilder();
 		
 		var it = dataIn.iterator();
 		while (amount > 0 && it.hasNext()) {
-			line += it.next() + ", ";
+			line.a(it.next(), ", ");
 			
 			if (cur == maxData || amount == 1) {
 				try {
 					String format = EStringUtil.repeatString("%-" + longestLen + "s" + EStringUtil.repeatString(" ", spaceAmount), cur);
-					String[] args = line.split(", ");
-					line = String.format(format, (Object[]) args);
+					String[] args = line.splitA(", ");
+					line = new EStringBuilder(String.format(format, (Object[]) args));
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 				}
 				
 				if (!line.isEmpty()) {
-					var nl = new TextAreaLine(history, line, EColors.lgray.intVal);
+					var nl = new TextAreaLine<>(history, line.toString(), EColors.lgray.intVal);
 					tabDisplayLines.add(nl);
 				}
-				line = "";
+				line.setString("");
 				cur = 0;
 			}
 			
@@ -612,7 +622,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		}
 		
 		//add each created line to the grid
-		for (TextAreaLine l : tabDisplayLines) {
+		for (TextAreaLine<String> l : tabDisplayLines) {
 			history.addTextLine(l);
 		}
 		
@@ -622,7 +632,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	}
 	
 	public ETerminalWindow clearTabCompletions() {
-		for (TextAreaLine l : tabDisplayLines) {
+		for (TextAreaLine<String> l : tabDisplayLines) {
 			history.deleteLine(l);
 		}
 		
@@ -731,10 +741,10 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	
 	public int getLastUsed() { return lastUsed; }
 	public int getHistoryLine() { return historyLine; }
-	public WindowTextArea<?> getTextArea() { return history; }
+	public WindowTextArea<String> getTextArea() { return history; }
 	public TerminalTextField getInputField() { return inputField; }
 	public File getDir() { return dir; }
-	public EList<TextAreaLine> getInfoLines() { return tabDisplayLines; }
+	public EList<TextAreaLine<String>> getInfoLines() { return tabDisplayLines; }
 	public int getTabPos() { return tabPos; }
 	public boolean getTab1() { return tab1; }
 	public String getTextTabBegin() { return textTabBegin; }

@@ -1,5 +1,6 @@
 package qot.items.weapons.melee.swords;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Entity;
 import envision.game.items.Weapon;
 import qot.assets.textures.item.ItemTextures;
@@ -14,7 +15,7 @@ public class Sword_Wooden extends Weapon {
 		super("Wooden Sword", ItemList.SWORD_WOODEN.ID);
 		this.setDescription("This is a sword carved out of an oak tree. It is light and cheap, but it gets the job done.");
 		this.setBasePrice(1);
-		this.setTexture(ItemTextures.iron_sword);
+		this.setSprite(new Sprite(ItemTextures.iron_sword));
 		this.setDamageBonus(1);
 	}
 	

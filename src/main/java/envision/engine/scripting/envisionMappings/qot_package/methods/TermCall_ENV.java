@@ -18,7 +18,7 @@ public class TermCall_ENV extends EnvisionFunction {
 	
 	@Override
 	public void invoke(EnvisionInterpreter interpreter, EnvisionObject[] args) {
-		ETerminalWindow term = (ETerminalWindow) Envision.getTopScreen().getWindowInstance(ETerminalWindow.class);
+		ETerminalWindow term = (ETerminalWindow) Envision.getDeveloperDesktop().getWindowInstance(ETerminalWindow.class);
 		if (term != null && args.length > 0) {
 			String s = EStringUtil.combineAll(args, " ");
 			TerminalCommandHandler.getInstance().executeCommand(term, s, false);

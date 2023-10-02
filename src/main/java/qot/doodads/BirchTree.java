@@ -1,5 +1,6 @@
 package qot.doodads;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Doodad;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
@@ -12,7 +13,7 @@ public class BirchTree extends Doodad {
 	public BirchTree(int posX, int posY) {
 		super("birch");
 		init(posX, posY, 160, 160);
-		tex = TreeTextures.birch_0;
+		sprite = new Sprite(TreeTextures.birch_0);
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		double sx = (facing == Rotation.RIGHT) ? 15 : 5;

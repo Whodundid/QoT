@@ -1,17 +1,22 @@
 package envision.engine.windows.bundledWindows.fileExplorer;
 
+import static java.nio.file.StandardWatchEventKinds.*;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
-import envision.engine.windows.bundledWindows.ConfirmationDialogBox;
-import envision.engine.windows.bundledWindows.ErrorDialogBox;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
-import envision.engine.windows.developerDesktop.util.DeveloperDesktopUtil;
+import envision.engine.windows.developerDesktop.util.DesktopUtil;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
+import envision.engine.windows.windowObjects.utilityObjects.ConfirmationDialogBox;
+import envision.engine.windows.windowObjects.utilityObjects.ErrorDialogBox;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.ActionWindowParent;
 import envision.engine.windows.windowTypes.DragAndDropObject;
@@ -54,6 +59,12 @@ public class FileExplorerWindow extends ActionWindowParent {
     
     private EList<Double> scrollBarPositionHistory = EList.newList();
     
+    private WatchService watcher;
+    private WatchKey watchKey;
+    private WatchKey watchedDir;
+    private Thread watcherThread;
+    private volatile boolean updateDir = false;
+    
     //--------------
     // Constructors
     //--------------
@@ -73,6 +84,8 @@ public class FileExplorerWindow extends ActionWindowParent {
         windowIcon = WindowTextures.file_folder;
     }
     
+    @Override public String getWindowName() { return "file-explorer"; }
+    
     //-----------
     // Overrides
     //-----------
@@ -84,6 +97,13 @@ public class FileExplorerWindow extends ActionWindowParent {
         setResizeable(true);
         setMaximizable(true);
         setMinDims(400, 200);
+        
+        try {
+            watcher = FileSystems.getDefault().newWatchService();            
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     @Override
@@ -162,7 +182,46 @@ public class FileExplorerWindow extends ActionWindowParent {
         
         if (selectBtn != null) { selectBtn.setEnabled(highlighted.hasOne()); }
         
+        if (updateDir) {
+            updateDir = false;
+            buildDir();
+        }
+        
         super.drawObject(mXIn, mYIn);
+    }
+    
+    private void stopWatcher() {
+        if (watcherThread == null) return;
+        
+        watcherThread.interrupt();
+        watcherThread = null;
+    }
+    
+    private void startWatcher() {
+        if (watcherThread != null) {
+            watcherThread.interrupt();
+            watcherThread = null;
+        }
+        
+        watcherThread = new Thread(() -> {
+            while (true) {
+                try {
+                    watchKey = watcher.take();
+                }
+                catch (InterruptedException e) {
+                    return;
+                }
+                
+                if (watchedDir == null) return;
+                
+                var events = watchedDir.pollEvents();
+                if (events != null && !events.isEmpty()) {
+                    updateDir = true;
+                }
+            }
+        });
+        
+        watcherThread.start();
     }
     
     @Override
@@ -232,6 +291,11 @@ public class FileExplorerWindow extends ActionWindowParent {
 //        });
     }
     
+    @Override
+    public void onClosed() {
+        stopWatcher();
+    }
+    
     //---------
     // Methods
     //---------
@@ -253,7 +317,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         folderRCM.addOptionIf(DeveloperDesktop.hasFilesToCopy(), "Paste", () -> performFilePaste());
         folderRCM.addOption("New Window", WindowTextures.file_folder, () -> DeveloperDesktop.openFileExplorer(curDir));
         folderRCM.addOption("Refresh", WindowTextures.refresh, () -> refresh());
-        folderRCM.addOption("Terminal Here", WindowTextures.terminal, () -> DeveloperDesktopUtil.openInTerminal(curDir));
+        folderRCM.addOption("Terminal Here", WindowTextures.terminal, () -> DesktopUtil.openInTerminal(curDir));
         folderRCM.showOnCurrent();
     }
     
@@ -311,6 +375,21 @@ public class FileExplorerWindow extends ActionWindowParent {
     }
     
     private void buildDir() {
+        // stop watching old dir
+        if (watchedDir != null) {
+            watchedDir.cancel();
+            stopWatcher();
+        }
+        
+        // setup watcher for new dir
+        try {
+            watchedDir = curDir.toPath().register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY, OVERFLOW);
+            startWatcher();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         fileArea.clearList();
         order.clear();
         highlighted.clear();
@@ -328,7 +407,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         int orderPos = 0;
         int yPos = 2;
         int entrySize = 40;
-        int gap = 2;
+        int gap = 1;
         
         for (File f : folders) {
             FilePreview preview = new FilePreview(this, f, orderPos++);
@@ -417,7 +496,7 @@ public class FileExplorerWindow extends ActionWindowParent {
                 setDir(f.getFile());
                 break;
             default:
-                DeveloperDesktopUtil.openFile(f.getFile());
+                DesktopUtil.openFile(f.getFile());
             }
         }
         catch (Exception e) {
@@ -482,7 +561,7 @@ public class FileExplorerWindow extends ActionWindowParent {
             // if there are multiple files selected and one is a directory,
             // open the directory in a new file explorer window
             if (file.isDir() && highlighted.size() > 1) {
-                DeveloperDesktopUtil.openFile(file.getFile());
+                DesktopUtil.openFile(file.getFile());
             }
             else openFile(file);
         }
@@ -501,7 +580,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         
         String text = EColors.yellow + "Are you sure you want to recycle the file: " + EColors.white + filePreview;
         ConfirmationDialogBox.showDialog(text, () -> {
-            DeveloperDesktopUtil.recycleFile(filePreview.getFile());
+            DesktopUtil.recycleFile(filePreview.getFile());
             refresh();
         });
     }
@@ -519,7 +598,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         
         String text = EColors.yellow + "Are you sure you want to delete the file: " + EColors.white + filePreview;
         ConfirmationDialogBox.showDialog(text, () -> {
-            DeveloperDesktopUtil.deleteFile(filePreview.getFile());
+            DesktopUtil.deleteFile(filePreview.getFile());
             refresh();
         });
     }
@@ -540,7 +619,7 @@ public class FileExplorerWindow extends ActionWindowParent {
             + EColors.mc_lightpurple + size + EColors.yellow + "' files?";
         
         ConfirmationDialogBox.showDialog(text, () -> {
-            DeveloperDesktopUtil.recycleMultipleFiles(mappedFiles);
+            DesktopUtil.recycleMultipleFiles(mappedFiles);
             refresh();
         });
     }
@@ -561,14 +640,14 @@ public class FileExplorerWindow extends ActionWindowParent {
             + EColors.mc_lightpurple + size + EColors.yellow + "' files?";
         
         ConfirmationDialogBox.showDialog(text, () -> {
-            DeveloperDesktopUtil.deleteMultipleFiles(mappedFiles);
+            DesktopUtil.deleteMultipleFiles(mappedFiles);
             refresh();
         });
     }
     
     public void createNewFile() {
         try {
-            if (DeveloperDesktop.createFileInDir(curDir, "New File")) {
+            if (DeveloperDesktop.createFileInDir(curDir, "New File") != null) {
                 refresh();
                 return;
             }
@@ -581,7 +660,7 @@ public class FileExplorerWindow extends ActionWindowParent {
     
     public void createNewFolder() {
         try {
-            if (DeveloperDesktop.createDirectoryInDir(curDir, "New Folder")) {
+            if (DeveloperDesktop.createDirectoryInDir(curDir, "New Folder") != null) {
                 refresh();
                 return;
             }

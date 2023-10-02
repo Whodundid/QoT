@@ -5,7 +5,7 @@ import envision.debug.DebugSettings;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
@@ -46,7 +46,12 @@ public class WorldTileRenderer extends RenderingComponent {
 		 			 int distX, int distY)
 	{
 		//ignore if there is no texture
-		if (!theTile.hasTexture()) return;
+		if (!theTile.hasSprite()) return;
+		
+		if (DebugSettings.fixingCamera) {
+		    old(world, camera);
+		    return;
+		}
 		
         //pixel width of each tile
         final double w = camera.getScaledTileWidth();
@@ -78,24 +83,28 @@ public class WorldTileRenderer extends RenderingComponent {
 	}
 	
 	/** This is actually newer, but still need to work out kinks. */
-    private void old(IGameWorld world, WorldCamera camera,
-        int midDrawX, int midDrawY,
-        double midX, double midY,
-        int distX, int distY)
+    private void old(IGameWorld world, WorldCamera camera)
     {
-//      final int halfScreenW = Envision.getWidth() >> 1;
-//      final int halfScreenH = Envision.getHeight() >> 1;
-//      
-//      final double camWorldX = camera.getCameraCenterX();
-//      final double camWorldY = camera.getCameraCenterY();
-//      
-//      //pixel width of each tile
-//      final double w = camera.getScaledTileWidth();
-//      //pixel height of each tile
-//      final double h = camera.getScaledTileHeight();
-//      
-//      double drawX = (theTile.worldX - camWorldX - 0.5) * w + halfScreenW;
-//      double drawY = (theTile.worldY - camWorldY - 0.5) * h + halfScreenH;
+        final int halfScreenW = Envision.getWidth() >> 1;
+        final int halfScreenH = Envision.getHeight() >> 1;
+        
+        final double camWorldX = camera.getCameraCenterX();
+        final double camWorldY = camera.getCameraCenterY();
+        
+        //pixel width of each tile
+        final double w = camera.getScaledTileWidth();
+        //pixel height of each tile
+        final double h = camera.getScaledTileHeight();
+        
+        //              world coordinates                 pixel coords    screen cords
+        double drawX = (theTile.worldX - camWorldX - 0.5) * w             + halfScreenW;
+        double drawY = (theTile.worldY - camWorldY - 0.5) * h             + halfScreenH;
+        
+        int worldBrightness = world.getAmbientLightLevel();
+        int color = EColors.white.brightness(worldBrightness);
+        
+        if (BatchManager.isEnabled()) drawTile(world, drawX, drawY, w, h, color, false);
+        else drawTile(world, drawX, drawY, w, h, calcBrightness(theTile.worldX, theTile.worldY), false);
     }
 	
 	//-----------------------------------------------------------------------------------------------------------
@@ -112,11 +121,11 @@ public class WorldTileRenderer extends RenderingComponent {
 		if ((theTile.worldY + 1) < world.getHeight()) tb = world.getTileAt(theTile.worldX, theTile.worldY + 1);
 		
 		if (theTile.isWall && DebugSettings.drawFlatWalls) {
-			RenderingManager.drawTexture(theTile.tex, x, y, w, h, theTile.drawFlipped, rot, brightness);
+			RenderingManager.drawSprite(theTile.sprite, x, y, w, h, theTile.drawFlipped, rot, brightness);
 			
 			//draw bottom of map edge or if right above a tile with no texture/void
-			if (!DebugSettings.drawFlatWalls && (tb == null || !tb.hasTexture())) {
-				RenderingManager.drawTexture(theTile.tex, x, y + h, w, h / 2, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
+			if (!DebugSettings.drawFlatWalls && (tb == null || !tb.hasSprite())) {
+				RenderingManager.drawSprite(theTile.sprite, x, y + h, w, h / 2, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
 			}
 		}
 		else if (theTile.isWall) {
@@ -130,19 +139,19 @@ public class WorldTileRenderer extends RenderingComponent {
 			//if so - don't draw wall side
 			if (wh >= 0) {
 				//draw main texture slightly above main location
-				RenderingManager.drawTexture(theTile.tex, x, y - wh, w, h, theTile.drawFlipped, rot, tileBrightness);
+				RenderingManager.drawSprite(theTile.sprite, x, y - wh, w, h, theTile.drawFlipped, rot, tileBrightness);
 				
-				GameTexture side = (theTile.sideTex != null) ? theTile.sideTex : theTile.tex;
+				Sprite side = (theTile.sideTex != null) ? theTile.sideTex : theTile.sprite;
 				
 				double yPos = y + h - wh;
 				wallBrightness = EColors.changeBrightness(brightness, 145);
 				
 				//draw wall side slightly below
-				RenderingManager.drawTexture(side, x, yPos, w, wh, theTile.drawFlipped, rot, wallBrightness);
+				RenderingManager.drawSprite(side, x, yPos, w, wh, theTile.drawFlipped, rot, wallBrightness);
 				
 				//draw bottom of map edge or if right above a tile with no texture/void
-				if ((tb == null || !tb.hasTexture())) {
-					RenderingManager.drawTexture(theTile.tex, x, y + h, w, h / 2, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
+				if ((tb == null || !tb.hasSprite())) {
+					RenderingManager.drawSprite(theTile.sprite, x, y + h, w, h / 2, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
 				}
 			}
 			else {
@@ -150,17 +159,17 @@ public class WorldTileRenderer extends RenderingComponent {
 				double yPos = y + wh;
 				
 				//draw main texture slightly below main location
-				RenderingManager.drawTexture(theTile.tex, x, yPos, w, h, theTile.drawFlipped, rot, tileBrightness);
+				RenderingManager.drawSprite(theTile.sprite, x, yPos, w, h, theTile.drawFlipped, rot, tileBrightness);
 				
 				//I don't want to draw if ta is null
 				//but
 				//I also don't want to draw if ta is a wall and has the same wall height as this one
 				
 				if (ta != null && (!ta.isWall || ((h * ta.wallHeight) != -wh))) {
-					GameTexture side = (theTile.sideTex != null) ? theTile.sideTex : theTile.tex;
+					Sprite side = (theTile.sideTex != null) ? theTile.sideTex : theTile.sprite;
 					
 					wallBrightness = EColors.changeBrightness(brightness, 145);
-					side = (ta.sideTex != null) ? ta.sideTex : ta.tex;
+					side = (ta.sideTex != null) ? ta.sideTex : ta.sprite;
 					
 					double sideWallY = yPos - wh;
 					
@@ -174,22 +183,22 @@ public class WorldTileRenderer extends RenderingComponent {
 					//}
 					
 					//draw wall side slightly above
-					RenderingManager.drawTexture(side, x, sideWallY, w, wh, theTile.drawFlipped, rot, wallBrightness);
+					RenderingManager.drawSprite(side, x, sideWallY, w, wh, theTile.drawFlipped, rot, wallBrightness);
 				}
 				
 				//draw bottom of map edge or if right above a tile with no texture/void
-				if (tb == null || !tb.hasTexture()) {
-					RenderingManager.drawTexture(theTile.tex, x, yPos + h, w, (h / 2) - wh, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
+				if (tb == null || !tb.hasSprite()) {
+					RenderingManager.drawSprite(theTile.sprite, x, yPos + h, w, (h / 2) - wh, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
 				}
 			}
 		}
 		else {
-			RenderingManager.drawTexture(theTile.tex, x, y, w, h, theTile.drawFlipped, rot, brightness);
+			RenderingManager.drawSprite(theTile.sprite, x, y, w, h, theTile.drawFlipped, rot, brightness);
 			
 			//draw bottom of map edge or if right above a tile with no texture/void
-			if (!DebugSettings.drawFlatWalls && (tb == null || !tb.hasTexture())) {
-				var side = (theTile.sideTex != null) ? theTile.sideTex : theTile.tex;
-				RenderingManager.drawTexture(side, x, y + h, w, h / 2, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
+			if (!DebugSettings.drawFlatWalls && (tb == null || !tb.hasSprite())) {
+				var side = (theTile.sideTex != null) ? theTile.sideTex : theTile.sprite;
+				RenderingManager.drawSprite(side, x, y + h, w, h / 2, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
 			}
 		}
 		

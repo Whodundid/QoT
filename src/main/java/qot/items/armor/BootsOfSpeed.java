@@ -1,5 +1,6 @@
 package qot.items.armor;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Entity;
 import envision.game.items.Item;
 import qot.assets.textures.item.ItemTextures;
@@ -9,7 +10,7 @@ public class BootsOfSpeed extends Item {
 
 	public BootsOfSpeed() {
 		super("Boots of Speed", 1000, "These boots bestow its wearer with unmatched swiftness", ItemList.BOOTS_OF_SPEED.ID);
-		this.setTexture(ItemTextures.boots_of_speed);
+		sprite = new Sprite(ItemTextures.boots_of_speed);
 	}
 
 	@Override

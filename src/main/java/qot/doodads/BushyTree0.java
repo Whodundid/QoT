@@ -1,5 +1,6 @@
 package qot.doodads;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Doodad;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
@@ -12,7 +13,7 @@ public class BushyTree0 extends Doodad {
 	public BushyTree0(int posX, int posY) {
 		super("bushytree0");
 		init(posX, posY, 160, 160);
-		tex = TreeTextures.bushy_tree_0;
+		sprite = new Sprite(TreeTextures.bushy_tree_0);
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		double sx = (facing == Rotation.RIGHT) ? 15 : 5;

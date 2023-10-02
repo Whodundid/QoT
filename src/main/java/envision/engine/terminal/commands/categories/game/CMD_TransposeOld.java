@@ -8,7 +8,6 @@ import org.apache.commons.io.FileUtils;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.file.LineReader;
 import eutil.math.ENumUtil;
@@ -22,7 +21,7 @@ public class CMD_TransposeOld extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "fixold"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("fold"); }
+	@Override public EList<String> getAliases() { return EList.of("fold"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Fixes an old world by transposing its tiles"; }
 	@Override public String getUsage() { return "ex: fold 'name'"; }
 	@Override public void handleTabComplete(ETerminalWindow conIn, EList<String> args) {

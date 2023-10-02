@@ -7,6 +7,9 @@ import java.io.File;
 import envision.Envision;
 import envision.engine.settings.MainConfigFile;
 import envision.engine.settings.config.ConfigSetting;
+import envision.engine.settings.config.setting_types.BooleanConfigSetting;
+import envision.engine.settings.config.setting_types.IntegerConfigSetting;
+import envision.engine.settings.config.setting_types.StringConfigSetting;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 
@@ -16,8 +19,9 @@ public class QoTSettings {
     //       settings
     //-----------------------
     
+    private QoTSettings() {}
     
-    public static final ConfigSetting<Boolean>
+    public static final BooleanConfigSetting
     
     animatedMainMenu    = boolSetting("animatedMainMenu", "Animated Main Menu", true),
     drawFPS             = boolSetting("drawFPS", "Draw FPS", false),
@@ -29,7 +33,7 @@ public class QoTSettings {
     
     //-------------------------------------------------------------------------------
     
-    public static final ConfigSetting<Integer>
+    public static final IntegerConfigSetting
     
     musicVolume         = intSetting("musicVolume", "Music Volume", 50),
     targetFPS           = intSetting("targetFPS", "Target FPS", 60),
@@ -41,7 +45,7 @@ public class QoTSettings {
     
     //--------------------------------------------------------------------------------
     
-    public static final ConfigSetting<String>
+    public static final StringConfigSetting
     
     lastEditorMap       = stringSetting("lastEditorMap", "Last Editor Map", ""),
     lastMap             = stringSetting("lastMap", "Last Map", ""),
@@ -63,7 +67,7 @@ public class QoTSettings {
     private static MainConfigFile mainConfig;
     
     // holder
-    private static final EList<ConfigSetting> settings = EList.newList();
+    private static final EList<ConfigSetting<?>> settings = EList.newList();
     
     static {
         // BOOLEANS
@@ -91,7 +95,7 @@ public class QoTSettings {
         settings.add(hudCloseMethod);
     }
     
-    public static EList<ConfigSetting> getSettings() { return settings; }
+    public static EList<ConfigSetting<?>> getSettings() { return settings; }
     
     //--------------
     // initializers

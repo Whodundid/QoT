@@ -1,7 +1,7 @@
 package envision.game.world.worldTiles;
 
 import envision.Envision;
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.ComponentBasedObject;
 import envision.game.entities.Entity;
 import eutil.colors.EColors;
@@ -34,7 +34,7 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	 * If this tile is a wall, this is the texture that is drawn either above or
 	 * below the primary texture in order to give additional depth to the terrain.
 	 */
-	protected GameTexture sideTex;
+	protected Sprite sideTex;
 	
 	/**
 	 * For tiles that can have multiple variations, I.E. Grass, this number keeps
@@ -174,7 +174,7 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	// Getters
 	//---------
 	
-	public boolean hasTexture() { return tex != null; }
+	public boolean hasSprite() { return sprite != null; }
 	public boolean blocksMovement() { return blocksMovement; }
 	public boolean isWildCard() { return wildCardTexture; }
 	public boolean isWall() { return isWall; }
@@ -188,9 +188,6 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	
 	public int getWorldX() { return worldX; }
 	public int getWorldY() { return worldY; }
-	
-	public GameTexture getTexture() { return tex; }
-	public GameTexture getSideTexture() { return sideTex; }
 	
 	public String getAdditionalValues() {
 		String r = "";
@@ -208,8 +205,8 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	// Setters
 	//---------
 	
-	public WorldTile setTexture(GameTexture texIn) { tex = texIn; return this; }
-	public WorldTile setSideTexture(GameTexture texIn) { sideTex = texIn; return this; }
+	public WorldTile setSprite(Sprite texIn) { sprite = texIn; return this; }
+	public WorldTile setSideSprite(Sprite texIn) { sideTex = texIn; return this; }
 	public WorldTile setBlocksMovement(boolean val) { blocksMovement = val; return this; }
 	public WorldTile setWall(boolean val) { isWall = val; return this; }
 	public WorldTile setWildCard(boolean val) { wildCardTexture = val; return this; }
@@ -272,10 +269,10 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 		if (in == null) return null;
 		try {
 			WorldTile r = in.getClass().getConstructor().newInstance();
-			GameTexture tex = in.getTexture();
-			if (tex != null && tex.hasParent()) {
-				r.setTexture(tex.getParent().getRandVariant());
-			}
+			Sprite tex = in.getSprite();
+//			if (tex != null && tex.hasParent()) {
+//				r.setTexture(tex.getParent().getRandVariant());
+//			}
 			return r;
 		}
 		catch (Exception e) { e.printStackTrace(); }
@@ -286,7 +283,7 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	protected WorldTile copyFields(WorldTile from, WorldTile to) {
 		to.id = from.id;
 		to.name = from.name;
-		to.tex = from.tex;
+		to.sprite = from.sprite;
 		to.sideTex = from.sideTex;
 		to.numVariants = from.numVariants;
 		to.blocksMovement = from.blocksMovement;

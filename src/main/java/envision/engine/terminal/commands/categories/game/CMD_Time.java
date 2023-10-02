@@ -25,13 +25,13 @@ public class CMD_Time extends TerminalCommand {
 			return;
 		}
 		
-		int curTime = Envision.theWorld.getTime();
-		
-		writeln(EColors.yellow, "Current Time: ", EColors.lgreen, curTime);
-		
 		if (argLength() > 1) {
 		    Envision.theWorld.setTime(ENumUtil.parseInt(arg(1), 0));
 		}
+		
+		int curTime = Envision.theWorld.getTime() - 1;
+		
+		writeln(EColors.yellow, "Current Time: ", EColors.lgreen, curTime);
 	}
 	
 }

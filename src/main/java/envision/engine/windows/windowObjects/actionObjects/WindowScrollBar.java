@@ -25,6 +25,7 @@ public class WindowScrollBar extends ActionObject {
 	public double thumbSize = 50;
 	public double scrollPos = 0;
 	protected double lastScrollChange = 0;
+	protected double scrollRate = 18;
 	public double highVal = 0;
 	protected double interval = 0;
 	protected double blockIncrement = 0;
@@ -304,6 +305,7 @@ public class WindowScrollBar extends ActionObject {
 	public boolean getIsThumbRendered() { return renderThumb; }
 	public double getLastScrollChange() { return lastScrollChange; }
 	public double getScrollBarThickness() { return scrollBarThickness; }
+	public double getScrollRate() { return scrollRate; }
 	public double getThumbSize() { return thumbSize; }
 	public double getScrollPos() { return scrollPos; }
 	public double getVisibleAmount() { return visibleAmount; }
@@ -347,5 +349,5 @@ public class WindowScrollBar extends ActionObject {
 	public void setVisibleAmount(int sizeIn) { visibleAmount = sizeIn; setScrollBarValues(visibleAmount, highVal, (vertical ? height : width)); }
 	public void setHighVal(double valIn) { setScrollBarValues(visibleAmount, valIn, (getDrawVertical() ? height : width)); }
 	public void setLowVal(double valIn) { setScrollBarValues(valIn, highVal, (getDrawVertical() ? height : width)); }
-	
+	public void setScrollRate(double valIn) { scrollRate = valIn; }
 }

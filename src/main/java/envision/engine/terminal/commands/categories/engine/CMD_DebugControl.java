@@ -5,7 +5,6 @@ import envision.debug.DebugFunctions;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
@@ -19,7 +18,7 @@ public class CMD_DebugControl extends TerminalCommand {
 
 	@Override public String getName() { return "debug"; }
 	@Override public boolean showInHelp() { return true; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("deb", "dev"); }
+	@Override public EList<String> getAliases() { return EList.of("deb", "dev"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Toggles debug mode for EMC."; }
 	@Override public String getUsage() { return "ex: deb init"; }
 	

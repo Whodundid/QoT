@@ -38,9 +38,9 @@ public class GamePauseWindow extends WindowParent {
 		var sX = midX - w / 2;
 		var gap = 5;
 		
-		resume = new WindowButton(this, sX, startY + 20, w, 50, "Resume Game");
-		options = new WindowButton(this, sX, resume.endY + gap, w, 50, "Options");
-		quit = new WindowButton(this, sX, options.endY + gap, w, 50, "Quit");
+		resume = new WindowButton<>(this, sX, startY + 20, w, 50, "Resume Game");
+		options = new WindowButton<>(this, sX, resume.endY + gap, w, 50, "Options");
+		quit = new WindowButton<>(this, sX, options.endY + gap, w, 50, "Quit");
 		
 		// Makes it so confirm and deny send an action to this confirmation window
 		IActionObject.setActionReceiver(this, quit, options, resume);
@@ -64,7 +64,7 @@ public class GamePauseWindow extends WindowParent {
 		if (object == options) {
 			var opScreen = Envision.displayScreen(new OptionsScreen(), parent);
 			if (parent instanceof GamePlayScreen g) {
-				opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, () -> g.openPauseWindowIfNotOpen());
+				opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, g::openPauseWindowIfNotOpen);
 			}
 		}
 		

@@ -13,7 +13,17 @@ public enum IDebugCommand {
 	DEBUG_6(6),
 	DEBUG_7(7),
 	DEBUG_8(8),
-	DEBUG_9(9);
+	DEBUG_9(9),
+	DEBUG_10(10),
+	DEBUG_11(11),
+	DEBUG_12(12),
+	DEBUG_13(13),
+	DEBUG_14(14),
+	DEBUG_15(15),
+	DEBUG_16(16),
+	DEBUG_17(17),
+	DEBUG_18(18),
+	DEBUG_19(19);
 	
 	private int id = -1;
 	

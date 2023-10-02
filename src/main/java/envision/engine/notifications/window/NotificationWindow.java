@@ -35,7 +35,7 @@ public class NotificationWindow extends WindowParent {
 		setObjectName("Notification Manager");
 		setMaximizable(true);
 		setResizeable(true);
-		setMinDims(defaultWidth, defaultHeight);
+		setMinDims(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 	
 	@Override

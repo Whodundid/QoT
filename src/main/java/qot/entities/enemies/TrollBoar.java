@@ -1,6 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import eutil.datatypes.points.Point2i;
@@ -26,7 +27,7 @@ public class TrollBoar extends Enemy {
 	public TrollBoar(int posX, int posY) {
 		super("Troll Boar");
 		init(posX, posY, 64, 64);
-		tex = EntityTextures.trollboar;
+		sprite = new Sprite(EntityTextures.trollboar);
 		setMaxHealth(20);
 		setHealth(20);
 		setExperienceRewardedOnKill(250);

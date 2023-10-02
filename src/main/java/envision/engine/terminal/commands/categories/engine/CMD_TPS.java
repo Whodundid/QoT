@@ -3,7 +3,6 @@ package envision.engine.terminal.commands.categories.engine;
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
@@ -15,7 +14,7 @@ public class CMD_TPS extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "tps"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("ticks"); }
+	@Override public EList<String> getAliases() { return EList.of("ticks"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays the current engine ticks per second."; }
 	@Override public String getUsage() { return "ex: tps"; }
 	

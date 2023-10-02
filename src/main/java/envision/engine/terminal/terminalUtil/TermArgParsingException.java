@@ -4,7 +4,7 @@ import envision.engine.terminal.window.ETerminalWindow;
 
 public class TermArgParsingException extends RuntimeException {
     
-    private String errorString;
+    private final String errorString;
     
     public TermArgParsingException(Exception cause) {
         this(cause, null);

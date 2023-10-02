@@ -1,6 +1,7 @@
 package qot.entities.buildings;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.EntityComponent;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.component.types.timing.RandomTimeEventComponent;
@@ -10,7 +11,7 @@ import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
-import qot.entities.enemies.dragon.Fireball;
+import qot.entities.projectiles.Fireball;
 import qot.items.Items;
 
 public class Spawner extends Building {
@@ -25,7 +26,7 @@ public class Spawner extends Building {
 	public Spawner() { this(0, 0, new EntitySpawn(0, 0, EntityList.getEntity(EntityList.spawnable().getRandom()))); }
 	public Spawner(int posX, int posY, EntitySpawn entityToSpawn) {
 		this.entityToSpawn = entityToSpawn;
-		this.setTexture(HouseTextures.anvil);
+		sprite = new Sprite(HouseTextures.anvil);
 		
 		init(posX, posY, 80, 80);
 		

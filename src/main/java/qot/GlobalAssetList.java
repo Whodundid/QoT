@@ -27,6 +27,7 @@ import qot.entities.house.Chair;
 import qot.entities.house.Crate;
 import qot.entities.house.Stool;
 import qot.entities.player.QoT_Player;
+import qot.entities.shopkeepers.ShopGuy;
 
 public class GlobalAssetList {
 
@@ -62,6 +63,7 @@ public class GlobalAssetList {
 		
 		assets.add(new Archer());
 		assets.add(new Spawner());
+		assets.add(new ShopGuy());
 	}
 	
 	public static EList<GameObject> getAssets() {

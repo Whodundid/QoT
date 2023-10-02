@@ -14,7 +14,7 @@ public class TestWindow extends WindowParent {
 	private TabbedContainer container;
 	
 	public TestWindow(double x, double y, double w, double h) {
-		init(Envision.getTopScreen(), x, y, w, h);
+		init(Envision.getDeveloperDesktop(), x, y, w, h);
 		setResizeable(true);
 		setMinimizable(false);
 		setObjectName("TEST");

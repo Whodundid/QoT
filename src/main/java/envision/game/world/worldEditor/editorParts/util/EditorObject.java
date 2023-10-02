@@ -1,6 +1,6 @@
 package envision.game.world.worldEditor.editorParts.util;
 
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision.game.util.IDrawable;
@@ -40,7 +40,7 @@ public class EditorObject implements IDrawable {
 	
 	@Override
 	public String toString() {
-		return "ED[" + String.valueOf(theObject) + "]";
+		return "ED[" + theObject + "]";
 	}
 	
 	//---------
@@ -68,8 +68,8 @@ public class EditorObject implements IDrawable {
 		return (theObject != null) ? theObject.getName() : "null";
 	}
 	
-	public GameTexture getTexture() {
-		return (theObject != null) ? theObject.getTexture() : null;
+	public Sprite getSprite() {
+	    return (theObject != null) ? theObject.getSprite() : null;
 	}
 	
 	public boolean isSelected() { return isSelected; }

@@ -50,8 +50,8 @@ public class WindowDropDown extends WindowDropDownList {
 		if (entry == null || entry == last) return;
 		
 		last = entry;
-		var windows = Envision.getTopScreen().getAllActiveWindows();
-		Envision.getTopScreen().revealHiddenObjects();
+		var windows = Envision.getDeveloperDesktop().getAllActiveWindows();
+		Envision.getDeveloperDesktop().revealHiddenObjects();
 		
 		for (var w : windows) {
 			w.setDrawWhenMinimized(true);
@@ -110,19 +110,27 @@ public class WindowDropDown extends WindowDropDownList {
 	public void mouseExited(int mXIn, int mYIn) {
 	    if (rcm != null) return;
 	    
-	    if (!parentButton.isMouseInsideGui(mXIn, mYIn)) {
+	    if (!isMouseInside(mXIn, mYIn) && !parentButton.isMouseInside(mXIn, mYIn)) {
             parentButton.destroyList();
         }
         else {
-            Envision.getTopScreen().revealHiddenObjects();
+            Envision.getDeveloperDesktop().revealHiddenObjects();
             
-            for (var w : Envision.getTopScreen().getAllActiveWindows()) {
+            for (var w : Envision.getDeveloperDesktop().getAllActiveWindows()) {
                 w.setDrawWhenMinimized(false);
             }
             
             last = null;
         }
 	}
+	
+	@Override
+    public boolean isMouseOver() {
+	    boolean m = isMouseInside();
+	    var t = getTopParent();
+        var h = t.getHighestZObjectUnderMouse();
+        return m && this.equals(h);
+    }
 	
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
@@ -137,20 +145,20 @@ public class WindowDropDown extends WindowDropDownList {
 				p.setPreMax(p.getDimensions());
 				p.setMaximized(ScreenLocation.CENTER);
 				p.maximize();
-				Envision.getTopScreen().setFocusedObject(p);
+				Envision.getDeveloperDesktop().setFocusedObject(p);
 				p.bringToFront();
 				break;
 			case "Minimize":
 				parentButton.destroyList();
 				p.setMaximized(ScreenLocation.OUT);
 				p.miniaturize();
-				Envision.getTopScreen().setFocusedObject(p);
+				Envision.getDeveloperDesktop().setFocusedObject(p);
 				p.bringToFront();
 				break;
 			case "Recenter":
 				parentButton.destroyList();
 				WindowHeader h = p.getHeader();
-				TaskBar b = Envision.getTopScreen().getTaskBar();
+				TaskBar b = Envision.getDeveloperDesktop().getTaskBar();
 				
 				double hh = (h != null) ? h.height : 0;
 				double bh = (b != null) ? b.height : 0;
@@ -217,7 +225,7 @@ public class WindowDropDown extends WindowDropDownList {
 				}
 			}
 			
-			Envision.getTopScreen().displayWindow(rcm, ObjectPosition.CURSOR_CORNER);
+			Envision.getDeveloperDesktop().displayWindow(rcm, ObjectPosition.CURSOR_CORNER);
 		}
 	}
 	

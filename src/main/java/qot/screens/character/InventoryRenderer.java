@@ -70,7 +70,7 @@ public class InventoryRenderer extends WindowObject {
 			
 			if (item != null) {
 				String name = item.getName();
-				drawString(name, midX - FontRenderer.strWidth(name) / 2, startY - 40);
+				drawString(name, midX - FontRenderer.strWidth(name) / 2.0, startY - 40);
 			}
 		}
 		
@@ -79,10 +79,9 @@ public class InventoryRenderer extends WindowObject {
 			var item = getItemAtIndex(index);
 			
 			if (item != null) {
-				drawTexture(item.getTexture(), mXIn - slotSize / 2, mYIn - slotSize / 2, slotSize, slotSize);
+				drawSprite(item.getSprite(), mXIn - slotSize / 2, mYIn - slotSize / 2, slotSize, slotSize);
 			}
 		}
-		
 		
 	}
 	

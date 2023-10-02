@@ -14,7 +14,7 @@ public class CMD_SetWorldUnderground extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "underground"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("under"); }
+	@Override public EList<String> getAliases() { return EList.of("under"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Modifies whether or not the current world is underground or not."; }
 	@Override public String getUsage() { return "ex: underground"; }
 	

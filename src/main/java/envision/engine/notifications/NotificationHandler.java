@@ -156,8 +156,8 @@ public class NotificationHandler {
 	}
 	
 	public void clearAllNotifications() {
-		if (Envision.getTopScreen().isWindowOpen(NotificationObject.class)) {
-			Object o = Envision.getTopScreen().getWindowInstance(NotificationObject.class);
+		if (Envision.getDeveloperDesktop().isWindowOpen(NotificationObject.class)) {
+			Object o = Envision.getDeveloperDesktop().getWindowInstance(NotificationObject.class);
 			if (o instanceof NotificationObject obj) {
 				obj.close();
 			}
@@ -217,7 +217,7 @@ public class NotificationHandler {
 	}
 	
 	public NotificationHandler reloadWindows() {
-	    Envision.getTopScreen().getAllActiveWindows().forEach(w -> w.sendArgs("Reload Notifications"));
+	    Envision.getDeveloperDesktop().getAllActiveWindows().forEach(w -> w.sendArgs("Reload Notifications"));
 	    return this;
 	}
 	
@@ -255,7 +255,7 @@ public class NotificationHandler {
 			
 			if (n != null && isNotificationTypeEnabled(n.getType())) {
 				curNote = n;
-				Envision.getTopScreen().addObject(curNote);
+				Envision.getDeveloperDesktop().addObject(curNote);
 			}
 		}
 	}

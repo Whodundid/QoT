@@ -3,10 +3,13 @@ package envision.game.world;
 import java.io.File;
 
 import envision.Envision;
+import envision.debug.DebugSettings;
 import envision.engine.events.eventTypes.world.WorldAddedEntityEvent;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
+import envision.game.manager.LevelManager;
+import envision.game.manager.rules.Rule_DoDaylightCycle;
 import envision.game.world.layerSystem.LayerSystem;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.worldTiles.WorldTile;
@@ -54,13 +57,15 @@ public class GameWorld implements IGameWorld {
 	protected boolean underground = false;
 	protected LayerSystem layers = new LayerSystem();
 	
+	/** The time of day that the world will start with if there wasn't a previous world to inherit from. */
+	protected int initialTime = 120000; // mid day
 	/** The current time of day measured in game ticks. */
 	protected int timeOfDay = 0;
 	/**
 	 * The full length of one day measured in game ticks. Default is 10 min
 	 * based on 60 tps.
 	 */
-	protected int lengthOfDay = 72000;
+	protected int lengthOfDay = 240000;
 	protected int ambientLightLevel = 255; // between [0-255]
 	protected boolean isDay = false;
 	protected boolean isNight = false;
@@ -302,9 +307,12 @@ public class GameWorld implements IGameWorld {
 	 * You BET your sweet BIPPY there is!
 	 */
 	protected void updateTime() {
+	    if (!LevelManager.isLoaded()) return;
+	    if (!LevelManager.rules().isRuleEnabledAndEquals(Rule_DoDaylightCycle.NAME, true)) return;
+	    
         if (timeOfDay++ >= lengthOfDay) timeOfDay = 0;
         
-        int minLight = 30; // the minimum brightness of the world
+        int minLight = 100; // the minimum brightness of the world
         int maxLight = 255; // the maximum brightness of the world
         int deltaLight = maxLight - minLight;
 
@@ -326,7 +334,7 @@ public class GameWorld implements IGameWorld {
             ambientLightLevel = minLight;
         }
         // check sunrise
-        else if (timeOfDay >= sunrise && timeOfDay <= (sunrise + transitionPeriodLength)) {
+        else if (timeOfDay <= (sunrise + transitionPeriodLength)) {
             isNight = false; isDay = false; isSunrise = true; isSunset = false;
             ambientLightLevel = minLight + ((timeOfDay - sunrise) * deltaLight) / transitionPeriodLength;
         }
@@ -347,15 +355,15 @@ public class GameWorld implements IGameWorld {
         }
 	}
 	
-	//Any GameObject
-	public synchronized <E extends GameObject> E addObjectToWorld(E ent) { return (E) toAdd.addR(ent); }
-	public synchronized <E extends GameObject> void addObjectToWorld(E... ents) { toAdd.add(ents); }
-	public synchronized <E extends GameObject> void removeObjectFromWorld(E... ents) { toDelete.add(ents); }
+	// Any GameObject
+	@Override public synchronized <E extends GameObject> E addObjectToWorld(E ent) { return (E) toAdd.addR(ent); }
+	@Override public synchronized <E extends GameObject> void addObjectToWorld(E... ents) { toAdd.add(ents); }
+	@Override public synchronized <E extends GameObject> void removeObjectFromWorld(E... ents) { toDelete.add(ents); }
 	
-	//Entity specific
-	public synchronized Entity addEntity(Entity ent) { return addObjectToWorld(ent); }
-	public synchronized void addEntity(Entity... ents) { addObjectToWorld(ents); }
-	public synchronized void removeEntity(Entity... ents) { removeObjectFromWorld(ents); }
+	// Entity specific
+	@Override public synchronized Entity addEntity(Entity ent) { return addObjectToWorld(ent); }
+	@Override public synchronized void addEntity(Entity... ents) { addObjectToWorld(ents); }
+	@Override public synchronized void removeEntity(Entity... ents) { removeObjectFromWorld(ents); }
 	
 	private void addEntityInternal(Entity ent) {
 		//assign world and add
@@ -426,8 +434,8 @@ public class GameWorld implements IGameWorld {
 	
 	@Override
 	public EList<GameObject> getAllGameObjectsWithinDistance(GameObject obj, double maxDistance) {
-		if (!worldObjects.contains(obj)) return null;
-		if (maxDistance <= 0) return null;
+		if (!worldObjects.contains(obj)) return EList.newList();
+		if (maxDistance <= 0) return EList.newList();
 		
 		int arrLen = worldObjects.size() / 4;
 		if (arrLen <= 10) arrLen = 10;
@@ -446,15 +454,15 @@ public class GameWorld implements IGameWorld {
 	
 	@Override
 	public EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) {
-		if (!worldObjects.contains(obj)) return null;
-		if (maxDistance <= 0) return null;
+		if (!worldObjects.contains(obj)) return EList.newList();
+		if (maxDistance <= 0) return EList.newList();
 		
 		int arrLen = worldObjects.size() / 4;
 		if (arrLen <= 10) arrLen = 10;
 		EList<Entity> r = new EArrayList<>(arrLen);
 		
 		var list = worldObjects.stream()
-							   .filter(o -> o instanceof Entity)
+							   .filter(Entity.class::isInstance)
 							   .map(o -> (Entity) o)
 							   .collect(EList.toEList());
 		
@@ -469,6 +477,7 @@ public class GameWorld implements IGameWorld {
 		return r;
 	}
 	
+	@Override
 	public Direction getDirectionTo(GameObject start, GameObject dest) {
 		if (start == null || dest == null) return Direction.OUT;
 		if (!worldObjects.containsEach(start, dest)) return Direction.OUT;
@@ -486,7 +495,6 @@ public class GameWorld implements IGameWorld {
 			else if (dY < 0) return Direction.N;
 		if (dY == 0)
 			if (dX > 0) return Direction.E;
-			else if (dX == 0) return Direction.OUT;
 			else if (dX < 0) return Direction.W;
 		if (dX > 0)
 			if (dY > 0) return Direction.SE;
@@ -555,8 +563,8 @@ public class GameWorld implements IGameWorld {
 	@Override public int getHeight() { return height; }
 	@Override public int getTileWidth() { return tileWidth; }
 	@Override public int getTileHeight() { return tileHeight; }
-	public int getPixelWidth() { return width * tileWidth; }
-	public int getPixelHeight() { return height * tileHeight; }
+	@Override public int getPixelWidth() { return width * tileWidth; }
+	@Override public int getPixelHeight() { return height * tileHeight; }
 	public WorldTile[][] getWorldLayerData() { return getWorldLayerData(0); }
 	public WorldTile[][] getWorldLayerData(int layer) { return worldLayers.get(layer).worldData; }
 	public boolean isUnderground() { return underground; }
@@ -592,6 +600,7 @@ public class GameWorld implements IGameWorld {
 	public LayerSystem getLayerSystem() { return layers; }
 	
 	@Override public WorldCamera getCamera() { return camera; }
+	@Override public double getInitialCameraZoom() { return 2.0; }
 	@Override public double getCameraZoom() { return camera.getZoom(); }
 	@Override public void setCameraZoom(double zoomIn) { camera.setZoom(zoomIn); }
 	
@@ -638,6 +647,7 @@ public class GameWorld implements IGameWorld {
 		worldLayers.get(layer).fillWith(t);
 	}
     
+	@Override public int getInitialTime() { return initialTime; }
     @Override public int getTime() { return timeOfDay; }
     @Override public int getDayLength() { return lengthOfDay; }
     @Override public void setTime(int timeInTicks) { timeOfDay = ENumUtil.clamp(timeInTicks, 0, lengthOfDay); updateTime(); }

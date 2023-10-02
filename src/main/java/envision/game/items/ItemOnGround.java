@@ -21,7 +21,7 @@ public class ItemOnGround extends BasicRenderedEntity {
                 
         init(0, 0, 16, 16);
         theItem = item;
-        tex = item.getTexture();
+        sprite = item.sprite;
         invincible = true;
         doesDecay = false;
         ignoreClick = Mouse.isLeftDown();
@@ -32,7 +32,7 @@ public class ItemOnGround extends BasicRenderedEntity {
         
         init(0, 0, 16, 16);
         theItem = item;
-        tex = item.getTexture();
+        sprite = item.sprite;
         invincible = true;
         timeToLive = timeToLiveIn;
         ignoreClick = Mouse.isLeftDown();

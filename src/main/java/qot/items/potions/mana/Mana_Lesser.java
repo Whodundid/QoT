@@ -1,5 +1,6 @@
 package qot.items.potions.mana;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Entity;
 import envision.game.items.Potion;
 import qot.assets.textures.item.ItemTextures;
@@ -11,7 +12,7 @@ public class Mana_Lesser extends Potion {
 		super("Lesser Mana Potion", ItemList.MANA_LESSER.ID);
 		this.setUsable(true);
 		this.setIsDestroyedOnUse(true);
-		this.setTexture(ItemTextures.lesser_mana);
+		this.setSprite(new Sprite(ItemTextures.lesser_mana));
 		this.setDescription("This potion restores 30 MP");
 		this.setBasePrice(100);
 	}

@@ -67,7 +67,7 @@ public class NewMapCreatorScreen extends GameScreen {
 		
 		create = new WindowButton(this, midX - 100, tileSelection.endY + 50, 200, 45, "Create");
 		
-		tileSelection.setButtonTexture(fillTile.getTexture());
+		tileSelection.setButtonTexture(fillTile.sprite);
 		
 		empty = emptyMap.getIsChecked();
 		fillWithLabel.setVisible(!empty);

@@ -1,6 +1,7 @@
 package qot.entities.enemies.dragon;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.GameObject;
 import envision.game.entities.BasicRenderedEntity;
 import eutil.EUtil;
@@ -27,7 +28,7 @@ public class Fireball extends BasicRenderedEntity {
 		setNoClipAllowed(true);
 		
 		init(x, y, 32, 32);
-		setTexture(EntityTextures.fireBall_projectile);
+		sprite = new Sprite(EntityTextures.fireBall_projectile);
 		setCollisionBox(startX - 8, startY - 8, endX + 8, endY + 8);
 		
 		this.spawningObject = spawningObject;

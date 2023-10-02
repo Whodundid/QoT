@@ -1,5 +1,7 @@
 package envision.engine.rendering.batching;
 
+import org.joml.Vector2f;
+
 import envision.Envision;
 import envision.engine.rendering.textureSystem.GameTexture;
 import eutil.colors.EColors;
@@ -170,8 +172,8 @@ public class BatchManager implements IBatchManager {
 		float b = (color & 255) * F_255;
 		float f = (color >> 24 & 255) * F_255;
 		
-		float tx = (float) thickness;
-		float ty = (float) thickness;
+		float tx = thickness;
+		float ty = thickness;
 		
 		curBatch.vert(sx - tx, sy + ty, r, g, b, f);
 		curBatch.vert(sx, sy, r, g, b, f);
@@ -200,13 +202,13 @@ public class BatchManager implements IBatchManager {
 		
 		float posx = (float) posX;
 		float posy = (float) posY;
-		double detailD = (double) detail;
+		double detailD = detail;
 		
 		//define points
 		curBatch.vert(posx, posy, r, g, b, f);
 		
 		for (int i = 0; i < detail + 1; i++) {
-			float theta = (float) (2.0D * Math.PI * (double) i / detailD);
+			float theta = (float) (2.0D * Math.PI * i / detailD);
 			float x = (float) (radiusX * Math.cos(theta));
 			float y = (float) (radiusY * Math.sin(theta));
 			curBatch.vert(x + posx, y + posy, r, g, b, f);
@@ -217,6 +219,8 @@ public class BatchManager implements IBatchManager {
 	
 	public static void drawRect(double sx, double sy, double ex, double ey, EColors color) {
 		instance().drawRect_i(sx, sy, ex, ey, color.intVal);
+		
+		System.out.println("CAT");
 	}
 	public static void drawRect(double sxIn, double syIn, double exIn, double eyIn, int colorIn) {
 		instance().drawRect_batch(sxIn, syIn, exIn, eyIn, colorIn);
@@ -318,7 +322,7 @@ public class BatchManager implements IBatchManager {
 			break;
 		}
 		
-		float tID = (float) texID;
+		float tID = texID;
 		
 		curBatch.vert(sx, sy, 0f, r, g, b, f, tu1, tv1, tID);
 		curBatch.vert(sx, ey, 0f, r, g, b, f, tu2, tv2, tID);
@@ -341,12 +345,22 @@ public class BatchManager implements IBatchManager {
 		instance().drawTexture_i(texture, x, y, w, h, tX, tY, tW, tH, color, flip);
 	}
 	
+    public static void drawTexture(GameTexture texture, double x, double y, double w, double h, Vector2f[] coords, EColors color, Rotation rotation, boolean flip) {
+        instance().drawTexture_i(texture, x, y, w, h, coords, color.intVal, rotation, flip);
+    }
+    public static void drawTexture(GameTexture texture, double x, double y, double w, double h, Vector2f[] coords, int color, Rotation rotation, boolean flip) {
+        instance().drawTexture_i(texture, x, y, w, h, coords, color, rotation, flip);
+    }
+	
 	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color) {
 		drawTexture_batch(texture, x, y, w, h, tX, tY, tW, tH, color, false);
 	}
 	protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color, boolean flip) {
 		drawTexture_batch(texture, x, y, w, h, tX, tY, tW, tH, color, flip);
 	}
+    protected void drawTexture_i(GameTexture texture, double x, double y, double w, double h, Vector2f[] coords, int color, Rotation rotation, boolean flip) {
+        drawTexture_batch(texture, x, y, w, h, coords, color, rotation, flip);
+    }
 	
 	private void drawTexture_batch(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color, boolean flip) {
 		RenderBatch curBatch = getCurLayerBatch(texture);
@@ -359,10 +373,10 @@ public class BatchManager implements IBatchManager {
 			return;
 		}
 		
-		float xVal = (float) (tX / (float) texture.getWidth());
-		float yVal = (float) (tY / (float) texture.getHeight());
-		float wVal = (float) (tW / (float) texture.getWidth());
-		float hVal = (float) (tH / (float) texture.getHeight());
+		float xVal = (float) (tX / texture.getWidth());
+		float yVal = (float) (tY / texture.getHeight());
+		float wVal = (float) (tW / texture.getWidth());
+		float hVal = (float) (tH / texture.getHeight());
 		
 		float r = (color >> 16 & 255) * F_255;
 		float g = (color >> 8 & 255) * F_255;
@@ -383,11 +397,11 @@ public class BatchManager implements IBatchManager {
 		float tey = yVal + hVal;
 		
 		float draw_tsx = (flip) ? tex : tsx;
-		float draw_tsy = (flip) ? tsy : tsy;
+		float draw_tsy = (flip) ? tey : tsy;
 		float draw_tex = (flip) ? tsx : tex;
-		float draw_tey = (flip) ? tey : tey;
+		float draw_tey = (flip) ? tsy : tey;
 		
-		float tID = (float) texID;
+		float tID = texID;
 		
 		curBatch.vert(sx, sy, 0f, r, g, b, f, draw_tsx, draw_tsy, tID);
 		curBatch.vert(sx, ey, 0f, r, g, b, f, draw_tsx, draw_tey, tID);
@@ -396,6 +410,74 @@ public class BatchManager implements IBatchManager {
 		
 		curBatch.totalElements++;
 	}
+	
+    private void drawTexture_batch(GameTexture texture, double x, double y, double w, double h, Vector2f[] coords, int color, Rotation rotation, boolean flip) {
+        RenderBatch curBatch = getCurLayerBatch(texture);
+        if (curBatch == null) {
+            return;
+        }
+        
+        int texID = curBatch.addTexture(texture);
+        if (texID == -1) {
+            return;
+        }
+        
+        float r = (color >> 16 & 255) * F_255;
+        float g = (color >> 8 & 255) * F_255;
+        float b = (color & 255) * F_255;
+        float f = (color >> 24 & 255) * F_255;
+        
+        float sx = (float) x;
+        float sy = (float) y;
+        float ex = (float) (x + w);
+        float ey = (float) (y + h);
+        
+        float v1x = coords[0].x, v1y = coords[0].y;
+        float v2x = coords[1].x, v2y = coords[1].y;
+        float v3x = coords[2].x, v3y = coords[2].y;
+        float v4x = coords[3].x, v4y = coords[3].y;
+        
+        float tID = texID;
+        
+        // rotation and flip logic
+        float x1, x2, x3, x4;
+        float y1, y2, y3, y4;
+        
+        switch (rotation) {
+        case LEFT:
+            x1 = flip ? v4x : v1x;      y1 = v2y;
+            x2 = flip ? v1x : v4x;      y2 = v3y;
+            x3 = flip ? v2x : v3x;      y3 = v4y;
+            x4 = flip ? v3x : v2x;      y4 = v1y;
+            break;
+        case RIGHT:
+            x1 = flip ? v1x : v3x;      y1 = v4y;
+            x2 = flip ? v3x : v1x;      y2 = v1y;
+            x3 = flip ? v4x : v2x;      y3 = v2y;
+            x4 = flip ? v2x : v4x;      y4 = v3y;
+            break;
+        case DOWN:
+            x1 = flip ? v3x : v1x;      y1 = v1y;
+            x2 = flip ? v4x : v2x;      y2 = v2y;
+            x3 = flip ? v1x : v3x;      y3 = v3y;
+            x4 = flip ? v2x : v4x;      y4 = v4y;
+            break;
+        // grouping 'UP' with 'default' to ensure there is ~always~ a valid case
+        case UP:
+        default:
+            x1 = flip ? v1x : v3x;      y1 = v3y;
+            x2 = flip ? v2x : v4x;      y2 = v4y;
+            x3 = flip ? v3x : v1x;      y3 = v1y;
+            x4 = flip ? v4x : v2x;      y4 = v2y;
+        }
+        
+        curBatch.vert(sx, sy, 0f, r, g, b, f, x1, y1, tID);
+        curBatch.vert(sx, ey, 0f, r, g, b, f, x2, y2, tID);
+        curBatch.vert(ex, ey, 0f, r, g, b, f, x3, y3, tID);
+        curBatch.vert(ex, sy, 0f, r, g, b, f, x4, y4, tID);
+        
+        curBatch.totalElements++;
+    }
 	
 	//================
 	// Helper Methods

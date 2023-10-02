@@ -42,18 +42,15 @@ public class TerminalTextLine extends TextAreaLine {
 			String text = getText();
 			if (text.startsWith("> ")) { text = text.substring(2); }
 			//text = EChatUtil.removeFormattingCodes(text);
-			text = text.trim();
-			//GuiScreen.setClipboardString(text);
+			Keyboard.setClipboard(text.trim());
 		}
 	}
 	
 	@Override
 	public void onFocusGained(EventFocus eventIn) {
 		super.onFocusGained(eventIn);
-		if (eventIn.getEventType() == EventType.MOUSE) {
-			if (eventIn.getActionCode() == 1) {
-				getTopParent().displayWindow(new TerminalRCM(this), ObjectPosition.CURSOR_CORNER);
-			}
+		if (eventIn.getEventType() == EventType.MOUSE && eventIn.getActionCode() == 1) {
+			getTopParent().displayWindow(new TerminalRCM(this), ObjectPosition.CURSOR_CORNER);
 		}
 	}
 	

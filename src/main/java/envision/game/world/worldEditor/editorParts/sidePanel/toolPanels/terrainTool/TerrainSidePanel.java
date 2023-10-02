@@ -45,7 +45,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
 		int rowWidth = ((int) width - 10) / bw;
 		
 		for (WorldTile t : GlobalTileList.getTiles()) {
-			if (!t.hasTexture()) continue;
+			if (!t.hasSprite()) continue;
 			
 			WindowButton<WorldTile> b = new WindowButton(panel) {
 				@Override
@@ -71,7 +71,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
 			double by = pey + 17 + (bw * yPos) + (yPos * 2);
 			double bx = psx + (bw * xPos) + (xPos * 2);
 			
-			b.setButtonTexture(tile.getTexture());
+			b.setButtonTexture(tile.sprite);
 			b.setHoverText(tile.getName());
 			
 			//add to list first then dimension

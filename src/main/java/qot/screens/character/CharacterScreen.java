@@ -3,7 +3,7 @@ package qot.screens.character;
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
@@ -19,7 +19,7 @@ public class CharacterScreen extends GameScreen {
 	private Entity theEntity;
 	
 	//character texture draw dimensions
-	private GameTexture texture;
+	private Sprite texture;
 	private double dX, dY;
 	private double dW, dH;
 	//character frame dimensions
@@ -38,7 +38,7 @@ public class CharacterScreen extends GameScreen {
 	
 	public CharacterScreen(Entity entIn) {
 		theEntity = entIn;
-		texture = theEntity.getTexture();
+		texture = theEntity.getSprite();
 		updateDrawDimensions();
 	}
 	
@@ -135,7 +135,7 @@ public class CharacterScreen extends GameScreen {
 		}
 		
 		//draw texture
-		drawTexture(texture, dX, dY, dW, dH);
+		drawSprite(texture, dX, dY, dW, dH);
 		
 		//draw character name above char texture
 		drawStringC(theEntity.getName(), midX, 40);

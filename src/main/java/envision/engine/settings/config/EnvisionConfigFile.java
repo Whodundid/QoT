@@ -37,13 +37,13 @@ public class EnvisionConfigFile {
 	/** Attempts to parse through a potentially existing config file and match identifier-value pairs.
 	 *  Returns false if the file cannot be found. */
 	public BoxList<String, EList<String>> getConfigContents() {
-		if (configValues == null) { configValues = new BoxList<String, EList<String>>(); }
+		if (configValues == null) { configValues = new BoxList<>(); }
 		configValues.clear();
 		parseFile();
 		return configValues;
 	}
 	
-	public boolean load() { return getConfigContents().size() > 0; }
+	public boolean load() { return getConfigContents().isNotEmpty(); }
 	
 	/** Attempts to create an identifier-value pair based on a given keyWord and a specific Class type to parse the value as. */
 	protected <Val extends Object> Val getConfigVal(String keyWord, Class<Val> asType) throws Exception { return getConfigVal(keyWord, asType, null); }
@@ -102,19 +102,19 @@ public class EnvisionConfigFile {
 	}
 	
 	protected <Val> void setConfigVal(ConfigSetting<Val> settingIn, Val defaultVal) {
-		if (settingIn != null) {
-			Val get = null;
-			try {
-				get = getConfigVal(settingIn.getDescription() + ":", settingIn.getClassType(), defaultVal);
-				
-				settingIn.set(get);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			if (get == null && defaultVal != null) settingIn.set(defaultVal);
-		}
+	    if (settingIn == null) return;
+	    
+	    Val get = null;
+        try {
+            get = getConfigVal(settingIn.getDescription() + ":", settingIn.getClassType(), defaultVal);
+            
+            settingIn.set(get);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        if (get == null && defaultVal != null) settingIn.set(defaultVal);
 	}
 	
 	private void parseFile() {
@@ -144,7 +144,7 @@ public class EnvisionConfigFile {
 					String[] lineContents = restOfLine.split(" ");
 					if (lineContents.length > 1) {
 						EList<String> values = new EArrayList<>();
-						for (int i = 1; i < lineContents.length; i++) values.add(lineContents[i]);
+						values.addFrom(lineContents, 1);
 						configValues.add(identifier, values);
 					}
 				}
@@ -169,7 +169,7 @@ public class EnvisionConfigFile {
 				for (int i = 0; i < line.length(); i++) {
 					if (line.charAt(i) == ':') {
 						identifier = line.substring(0, i + 1);
-						if (identifier == identifierIn) return true;
+						if (EUtil.isEqual(identifier, identifierIn)) return true;
 						break;
 					}
 				}
@@ -296,19 +296,19 @@ public class EnvisionConfigFile {
 	}
 	
 	public boolean trySave() { return trySave(null); }
-	public boolean trySave(EList<ConfigSetting> settings) {
+	public boolean trySave(EList<ConfigSetting<?>> settings) {
 		addLine(configTitleLine != null ? configTitleLine : configName + " Config").nl();
 		if (settings != null) {
-			EUtil.filterForEach(settings, s -> !s.getIgnoreConfigWrite(), s -> addLine(s));
+			EUtil.filterForEach(settings, s -> !s.getIgnoreConfigWrite(), this::addLine);
 		}
 		return save();
 	}
 	
 	public boolean tryLoad() { return tryLoad(null); }
-	public boolean tryLoad(EList<ConfigSetting> settings) {
+	public boolean tryLoad(EList<ConfigSetting<?>> settings) {
 		try {
 			if (load()) {
-				if (settings != null) {
+				if (configValues != null) {
 				    var filtered = settings.filter(s -> !s.getIgnoreConfigRead());
 				    for (var s : filtered) {
 				        setConfigVal(s);
@@ -324,7 +324,7 @@ public class EnvisionConfigFile {
 	}
 	
 	public boolean tryReset() { return tryReset(null); }
-	public boolean tryReset(EList<ConfigSetting> settings) {
+	public boolean tryReset(EList<ConfigSetting<?>> settings) {
 		addLine(configTitleLine != null ? configTitleLine : configName + " Config").nl();
 		if (settings != null) {
 			settings.forEach(c -> addLine(c, true));

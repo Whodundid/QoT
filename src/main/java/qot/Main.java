@@ -47,10 +47,11 @@ public class Main {
 	// Main
 	//------
 	
-	public static void main(String[] args) throws IllegalArgumentException, IllegalAccessException {
+	public static void main(String[] args) throws IllegalArgumentException {
 		//setup print tracing
 		TracingPrintStream.enableTrace();
 		TracingPrintStream.setTracePrimitives(true);
+		TracingPrintStream.enableTracingEmptyLines(true);
 		TracingPrintStream.disableTrace();
 		
 		//-------------------------------------------

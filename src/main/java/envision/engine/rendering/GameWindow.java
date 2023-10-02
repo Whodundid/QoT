@@ -11,7 +11,6 @@ import envision.engine.windows.WindowSize;
 import eutil.datatypes.points.Point2i;
 import eutil.math.dimensions.Dimension_d;
 import eutil.math.dimensions.Dimension_i;
-import qot.settings.QoTSettings;
 
 public class GameWindow {
 	
@@ -111,9 +110,9 @@ public class GameWindow {
 	}
 	
 	/** Returns the X coordinate of where this window is located on the screen. */
-	public int getX() { return (int) getWindowPosition().x; }
+	public int getX() { return getWindowPosition().x; }
 	/** Returns the X coordinate of where this window is located on the screen. */
-	public int getY() { return (int) getWindowPosition().y; }
+	public int getY() { return getWindowPosition().y; }
 	
 	/** Returns the screen dimensions of where this window is located on the screen. */
 	public Dimension_i getWindowDims() {
@@ -122,7 +121,7 @@ public class GameWindow {
 	}
 	
 	public void enableVSync(boolean val) {
-	    int interval = (QoTSettings.vsync.get()) ? 1 : 0;
+	    int interval = (val) ? 1 : 0;
         GLFW.glfwSwapInterval(interval);
 	}
 	

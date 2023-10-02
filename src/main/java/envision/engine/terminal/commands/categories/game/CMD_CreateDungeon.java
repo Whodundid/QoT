@@ -5,7 +5,6 @@ import envision.game.world.GameWorld;
 import envision.game.world.dungeonBuilder.DungeonBuilder;
 import envision.game.world.dungeonBuilder.DungeonBuilderSettings;
 import envision.game.world.dungeonBuilder.DungeonSize;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_CreateDungeon extends TerminalCommand {
@@ -16,7 +15,7 @@ public class CMD_CreateDungeon extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "createdung"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("crdung"); }
+	@Override public EList<String> getAliases() { return EList.of("crdung"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Creates a new random dungeon map"; }
 	@Override public String getUsage() { return "ex: crdung small 'name'"; }
 	

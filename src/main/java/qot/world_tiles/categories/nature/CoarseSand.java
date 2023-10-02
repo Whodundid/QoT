@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.nature;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.sand.SandTextures;
 import qot.world_tiles.TileIDs;
@@ -12,10 +13,10 @@ public class CoarseSand extends WorldTile {
 		numVariants = 3;
 		
 		if (id < 0) {
-			setTexture(SandTextures.coarse_sand.getRandVariant());
+		    setSprite(new Sprite(SandTextures.coarse_sand.getRandVariant()));
 		}
 		else {
-			setTexture(SandTextures.coarse_sand.getChild(id));
+		    setSprite(new Sprite(SandTextures.coarse_sand.getChild(id)));
 		}
 	}
 	

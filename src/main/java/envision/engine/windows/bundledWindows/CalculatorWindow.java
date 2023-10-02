@@ -45,6 +45,8 @@ public class CalculatorWindow extends WindowParent {
 		windowIcon = TaskBarTextures.calculator;
 	}
 	
+	@Override public String getWindowName() { return "calculator"; }
+	
 	//-----------
 	// Overrides
 	//-----------

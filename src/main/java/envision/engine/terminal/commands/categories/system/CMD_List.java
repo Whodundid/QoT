@@ -10,7 +10,6 @@ import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
@@ -25,14 +24,13 @@ public class CMD_List extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "list"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>(); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to list various things. (mods, players, etc.)"; }
 	@Override public String getUsage() { return "ex: list screens"; }
 	
 	@Override
 	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
 		String[] types = {"objects, windows, screens, commands, aliases"};
-		super.basicTabComplete(termIn, args, new EArrayList().addA(types));
+		super.basicTabComplete(termIn, args, EList.of(types));
 	}
 	
 	@Override

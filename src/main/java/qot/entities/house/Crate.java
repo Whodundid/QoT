@@ -1,5 +1,6 @@
 package qot.entities.house;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.doodads.house.HouseTextures;
@@ -12,7 +13,7 @@ public class Crate extends BasicRenderedEntity {
 	public Crate(int x, int y) {
 		super("Crate");
 		init(x, y, 32, 32);
-		setTexture(HouseTextures.crate);
+		sprite = new Sprite(HouseTextures.crate);
 		
 		setMaxHealth(5);
 		setHealth(5);

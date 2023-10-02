@@ -33,7 +33,7 @@ public class CMD_SU extends TerminalCommand {
 		final var profile = registry.getProfile(username);
 		
 		var result = registry.setCurrentUser(profile);
-		EColors color = (result.getA()) ? EColors.green : EColors.lred;
+		EColors color = Boolean.TRUE.equals(result.getA()) ? EColors.green : EColors.lred;
 		
 		term.writeln(color, result.getB());
 	}

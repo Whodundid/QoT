@@ -1,5 +1,6 @@
 package qot.items.potions.mana;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Entity;
 import envision.game.items.Potion;
 import qot.assets.textures.item.ItemTextures;
@@ -11,7 +12,7 @@ public class Mana_Major extends Potion {
 		super("Major Mana Potion", ItemList.MANA_MAJOR.ID);
 		this.setUsable(true);
 		this.setIsDestroyedOnUse(true);
-		this.setTexture(ItemTextures.major_mana);
+		this.setSprite(new Sprite(ItemTextures.major_mana));
 		this.setDescription("This potion restores 25 MP");
 		this.setBasePrice(35);
 	}

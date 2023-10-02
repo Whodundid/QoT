@@ -49,7 +49,7 @@ public abstract class NotificationObject extends WindowParent {
 
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
-		if (onlyDrawOnHud && !Envision.topScreen.hasFocus()) close();
+		if (onlyDrawOnHud && !Envision.developerDesktop.hasFocus()) close();
 		
 		drawRect(startX, startY, startX + 1, endY, 0xff000000); //left border
 		drawRect(startX + 1, endY - 1, endX - 1, endY, 0xff000000); //bottom border

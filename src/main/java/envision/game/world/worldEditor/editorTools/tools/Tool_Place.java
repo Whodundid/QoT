@@ -1,7 +1,7 @@
 package envision.game.world.worldEditor.editorTools.tools;
 
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision.game.world.worldEditor.MapEditorScreen;
@@ -33,7 +33,7 @@ public class Tool_Place extends EditorTool {
 		//COMPLETELY HASHED TOGETHER :)
 		EditorObject primary = settings.getPrimaryPalette();
 		if (primary == null) return;
-		GameTexture tex = primary.getTexture();
+		Sprite tex = primary.getSprite();
 		double tW = primary.getGameObject().width;
 		double tH = primary.getGameObject().height;
 		double tDrawW = tW * editor.getActualWorld().getCameraZoom();
@@ -41,7 +41,7 @@ public class Tool_Place extends EditorTool {
 		double tmx = primary.getGameObject().collisionBox.midX * editor.getActualWorld().getCameraZoom();
 		double tmy = primary.getGameObject().collisionBox.midY * editor.getActualWorld().getCameraZoom();
 		
-		drawTexture(tex, Mouse.getMx() - tmx, Mouse.getMy() - tmy, tDrawW, tDrawH, 0x99ffffff);
+		drawSprite(tex, Mouse.getMx() - tmx, Mouse.getMy() - tmy, tDrawW, tDrawH, 0x99ffffff);
 		//drawTexture(tex, mX, mY, tDrawW, tDrawH, 0x99ffffff);
 		//drawHRect(mX, mY, mX + tDrawW, mY + tDrawH, 1, EColors.blue);
 		//drawTexture(tex, mX, mY, tDrawW, tDrawH);

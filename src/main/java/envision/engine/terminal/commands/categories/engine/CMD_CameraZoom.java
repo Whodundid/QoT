@@ -3,7 +3,6 @@ package envision.engine.terminal.commands.categories.engine;
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_CameraZoom extends TerminalCommand {
@@ -14,7 +13,7 @@ public class CMD_CameraZoom extends TerminalCommand {
     }
     
     @Override public String getName() { return "camerazoom"; }
-    @Override public EList<String> getAliases() { return new EArrayList<>("zoom"); }
+    @Override public EList<String> getAliases() { return EList.of("zoom"); }
     @Override
     public String getHelpInfo(boolean runVisually) {
         return "Used to specify the zoom of the camera or its limits.";

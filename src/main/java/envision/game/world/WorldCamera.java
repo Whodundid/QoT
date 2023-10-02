@@ -6,6 +6,7 @@ import envision.Envision;
 import envision.game.GameObject;
 import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;
+import eutil.strings.EStringBuilder;
 
 public class WorldCamera {
 	
@@ -56,13 +57,21 @@ public class WorldCamera {
 	public synchronized void onRenderTick(float partialTicks) {
 		if (focusedObject == null) return;
 		
+		var s = new EStringBuilder();
+		
 		double xCoordToSet = focusedObject.worldX;
         double yCoordToSet = focusedObject.worldY;
         double xToSet = focusedObject.startX;
         double yToSet = focusedObject.startY;
         
+        s.a(focusedObject.name, "   ");
+        s.a("wxy[", xCoordToSet, ", ", yCoordToSet, "]   ");
+        s.a("pxy[", xToSet, ", ", yToSet, "]   ");
+        
         final double ew = focusedObject.width;
         final double eh = focusedObject.height;
+        s.a("ewh[", ew, ", ", eh, "]   ");
+        
         final int ww = theWorld.getWidth(); // world width
         final int wh = theWorld.getHeight(); // world height
         final int tw = theWorld.getTileWidth(); // tile width
@@ -70,8 +79,8 @@ public class WorldCamera {
         final int gameWidth = Envision.getWidth();
         final int gameHeight = Envision.getHeight();
         
-        double halfTileWidth = tw  / 2;
-        double halfTileHeight = th / 2;
+        double halfTileWidth = tw / 2.0;
+        double halfTileHeight = th / 2.0;
 
         double halfEntityWidth = ew * 0.5;
         double halfEntityHeight = eh * 0.5;
@@ -139,9 +148,7 @@ public class WorldCamera {
         offsetX = entityPixelX;
         offsetY = entityPixelY;
         
-//        var s = new EStringBuilder();
-//        s.a(xCoordToSet, " ", yCoordToSet);
-//        System.out.println(s);
+        //System.out.println(s);
 	}
 	
 	//---------
@@ -153,9 +160,9 @@ public class WorldCamera {
 	/** Returns the exact Y pixel coordinate that camera is focused on in the world. */
 	public double getY() { return focusedPoint.y; }
 	/** Returns the X world coordinate that camera is focused on. */
-	public int getWorldX() { return (int) (double) focusedCoords.x; }
+	public int getWorldX() { return (int) focusedCoords.x; }
 	/** Returns the Y world coordinate that camera is focused on. */
-	public int getWorldY() { return (int) (double) focusedCoords.y; }
+	public int getWorldY() { return (int) focusedCoords.y; }
 	/** Returns the number of pixels in the X dimension that the camera is offset by in world coordinates. */
 	public double getOffsetX() { return offsetX; }
 	/** Returns the number of pixels in the Y dimension that the camera is offset by in world coordinates. */
@@ -167,7 +174,7 @@ public class WorldCamera {
 	/** Returns the max zoom of the camera. */
 	public double getMaxZoom() { return maxZoom; }
 	/** Returns the object the camera is currently focused on. (Could be null) */
-	public GameObject getFocusedObject() { return focusedObject; }
+	public synchronized GameObject getFocusedObject() { return focusedObject; }
 	
 	/** Returns the size (in pixels) for the width of each tile in the world. */
 	public double getScaledTileWidth() { return theWorld.getTileWidth() * zoom; }
@@ -242,7 +249,7 @@ public class WorldCamera {
 			offsetY = (focusedPoint.y % theWorld.getTileHeight()) * zoom;
 		}
 		else {
-			focusedCoords.set((double) focusedObject.worldX, (double) focusedObject.worldY);
+			focusedCoords.set(focusedObject.worldX, focusedObject.worldY);
 			focusedPoint.set(focusedObject.startX, focusedObject.startY);
 			offsetX = (focusedObject.startX % theWorld.getTileWidth()) * zoom;
 			offsetY = (focusedObject.startY % theWorld.getTileHeight()) * zoom;
@@ -278,7 +285,7 @@ public class WorldCamera {
 		focusedCoords.set(x, y);
 		var tw = theWorld.getTileWidth();
 		var th = theWorld.getTileHeight();
-		focusedPoint.set(x * tw + tw / 2, y * th + th / 2);
+		focusedPoint.set(x * tw + tw / 2.0, y * th + th / 2.0);
 		offsetX = (focusedPoint.x % tw) * zoom;
 		offsetY = (focusedPoint.y % th) * zoom;
 	}

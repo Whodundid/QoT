@@ -26,6 +26,7 @@ import qot.entities.house.Chair;
 import qot.entities.house.Crate;
 import qot.entities.house.Stool;
 import qot.entities.player.QoT_Player;
+import qot.entities.shopkeepers.ShopGuy;
 
 public enum EntityList {
 	PLAYER(0),
@@ -105,6 +106,7 @@ public enum EntityList {
 		
 		case ARCHER: return new Archer();
 		case SPAWNER: return new Spawner();
+		case SHOPKEEPER: return new ShopGuy();
 		default: return null;
 		}
 	}

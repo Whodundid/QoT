@@ -63,8 +63,8 @@ public class WindowDialogueBox<E> extends ActionWindowParent {
 				yes = new WindowButton(this, midX - g - bw, endY - 40, bw, 30, "Yes");
 				no = new WindowButton(this, midX + g, endY - 40, bw, 30, "No");
 				
-				yes.onPress(() -> WindowDialogueBox.this.performAction("y", yes));
-				no.onPress(() -> WindowDialogueBox.this.performAction("n", no));
+				yes.setAction(() -> WindowDialogueBox.this.performAction("y", yes));
+				no.setAction(() -> WindowDialogueBox.this.performAction("n", no));
 				
 				no.setStringColor(EColors.yellow);
 				yes.setStringColor(EColors.lgreen);
@@ -77,14 +77,11 @@ public class WindowDialogueBox<E> extends ActionWindowParent {
 				defaultObject = yes;
 				break;
 			case OK:
-				okButton = new WindowButton(this, midX - 40, endY - 30, 80, 30, "Ok") {
-					@Override
-					public void press(int button) {
-						playPressSound();
-						getParent().close();
-					}
-				};
-				okButton.setRunActionOnPress(true);
+				okButton = new WindowButton<>(this, midX - 40, endY - 80, 80, 30, "Ok");
+				okButton.setAction(() -> {
+				    WindowButton.playPressSound();
+				    close();
+				});
 				addObject(okButton);
 				
 				defaultObject = okButton;
@@ -116,10 +113,8 @@ public class WindowDialogueBox<E> extends ActionWindowParent {
 	
 	@Override
 	public void keyPressed(char typedKey, int keyCode) {
-		if (keyCode == Keyboard.KEY_ENTER) {
-			if (defaultObject instanceof WindowButton wb) {
-				wb.performAction();
-			}
+		if (keyCode == Keyboard.KEY_ENTER && defaultObject instanceof WindowButton<?> wb) {
+		    wb.performAction();
 		}
 	}
 	

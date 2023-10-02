@@ -30,18 +30,17 @@ import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.resourceLoaders.textures.TextureLoader;
 import envision.engine.screens.GameScreen;
-import envision.engine.screens.GameTopScreen;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.settings.UserProfile;
 import envision.engine.settings.UserProfileRegistry;
 import envision.engine.terminal.TerminalCommandHandler;
-import envision.engine.windows.WindowRegistry;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.game.effects.sounds.SoundEngine;
 import envision.game.entities.player.Player;
+import envision.game.manager.LevelManager;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.layerSystem.LayerSystem;
@@ -69,9 +68,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	//========
 	
 	/** The auto-set date timestamp of when this version was built. */
-	public static final String VERSION_DATE = "Jul 23, 2023 - 04:29:00";
+	public static final String VERSION_DATE = "Oct 02, 2023 - 01:21:59";
 	/** The auto-set build number of the engine. */
-	public static final String VERSION_BUILD = "42";
+	public static final String VERSION_BUILD = "48";
 	
 	private static boolean gameCreated = false;
 	public static long updateCounter = 0;
@@ -119,18 +118,20 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private static TextureLoader textureLoader = new TextureLoader("");
 	
 	/** The top most rendered screen. */
-	public static GameTopScreen topScreen;
+	public static DeveloperDesktop developerDesktop;
 	/** The screen currently being displayed. */
 	public static GameScreen currentScreen;
 	
-	/** The game's world. */
+	/** The engine's active game manager which is in charge of active worlds. */
+	public static LevelManager levelManager;
+	/** The game's active world. */
 	public static IGameWorld theWorld;
-	/** The game's player object. */
+	/** The game's active player object. */
 	public static Player thePlayer;
 	
 	// Game tick stuff
 	private long TPS = 60;
-	private double timeT = 1000 / TPS;
+	private double timeT = 1000.0 / TPS;
 	private double deltaT = 0;
 	private int curNumTicks = 0;
 	private int ticks = 0;
@@ -138,7 +139,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	// Framerate stuff
 	private long FPS = 60; //60 fps by default -- user can modify
-	private double timeF = 1000 / FPS;
+	private double timeF = 1000.0 / FPS;
 	private double deltaF = 0;
 	private long startTime = 0l;
 	/** The time of the current update. */
@@ -247,12 +248,12 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		renderEngine = RenderEngine.getInstance();
 		renderEngine.init(gameWindow.getWindowHandle());
 		
-		if (QoTSettings.batchRendering.get()) BatchManager.enable();
+		if (QoTSettings.batchRendering.getBoolean()) BatchManager.enable();
 		else BatchManager.disable();
 		
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		
-		int interval = (QoTSettings.vsync.get()) ? 1 : 0;
+		int interval = (QoTSettings.vsync.getBoolean()) ? 1 : 0;
 		GLFW.glfwSwapInterval(interval);
 		
 		textureSystem = TextureSystem.getInstance();
@@ -263,14 +264,14 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	private void setupEngine() {
 		soundEngine = SoundEngine.getInstance();
-		topScreen = GameTopScreen.getInstance();
+		developerDesktop = DeveloperDesktop.getInstance();
 		eventHandler = EventHandler.getInstance();
 		layerHandler = new LayerSystem();
 		envisionLang = EnvisionLang.getInstance();
 		
 		terminalHandler = TerminalCommandHandler.getInstance();
 		terminalHandler.initCommands();
-		WindowRegistry.loadBaseWindows();
+		DeveloperDesktop.buildDesktopFromConfig();
 	}
 	
 	//=======
@@ -425,9 +426,13 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		if (currentScreen != null) currentScreen.onGameTick(-1);
 		
 		//update current world (if there is one, and it's loaded, and the engine is not paused)
-		if (theWorld != null && theWorld.isLoaded() && !pause) {
-			theWorld.onGameTick(dt);
+		if (levelManager != null && !pause) {
+		    levelManager.onGameTick(dt);
 		}
+		
+//		if (theWorld != null && theWorld.isLoaded() && !pause) {
+//			theWorld.onGameTick(dt);
+//		}
 	}
 	
 	private void runRenderTick(long partialTicks) {
@@ -447,7 +452,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 				RenderingManager.drawString("No Screens?", 256, 256);
 			}
 			
-			topScreen.onRenderTick();
+			developerDesktop.onRenderTick();
 			//renderEngine.getRenderingContext().swapBuffers();
 			renderEngine.endFrame();
 		}
@@ -460,7 +465,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	@Override
 	public void onKeyboardInput(int action, char typedChar, int keyCode) {
 		if (!renderEngine.isContextInit()) return;
-		topScreen.handleKeyboardInput(action, typedChar, keyCode);
+		developerDesktop.handleKeyboardInput(action, typedChar, keyCode);
 		if (theWorld != null) {
 			if (action == 0) { theWorld.getWorldRenderer().keyReleased(typedChar, keyCode); }
 			if (action == 1 || action == 2) { theWorld.getWorldRenderer().keyPressed(typedChar, keyCode); }
@@ -470,7 +475,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	@Override
 	public void onMouseInput(int action, int mXIn, int mYIn, int button, int change) {
 		if (!renderEngine.isContextInit()) return;
-		topScreen.handleMouseInput(action, mXIn, mYIn, button, change);
+		developerDesktop.handleMouseInput(action, mXIn, mYIn, button, change);
 	}
 	
     @Override
@@ -485,7 +490,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	@Override
 	public void onDroppedFiles(EList<String> droppedFileNames) {
-	    DeveloperDesktop.onSystemDragAndDrop(droppedFileNames);
+	    DeveloperDesktop.getInstance().onSystemDragAndDrop(droppedFileNames);
 	}
 	
 	@Override
@@ -494,7 +499,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		gameWindow.onWindowResized(newWidth, newHeight);
 		if (theWorld != null && theWorld.isLoaded()) theWorld.getWorldRenderer().onWindowResized();
 		if (currentScreen != null) currentScreen.onScreenResized();
-		topScreen.onScreenResized();
+		developerDesktop.onScreenResized();
 	}
 	
 	//=======================
@@ -506,7 +511,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	private void setTargetUPSi(int upsIn) {
 		TPS = upsIn;
-		timeT = 1000.0 / (double) TPS;
+		timeT = 1000.0 / TPS;
 		deltaT = 0;
 		deltaF = 0;
 		ticks = 0;
@@ -514,7 +519,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	private void setTargetFPSi(int fpsIn) {
 		FPS = fpsIn;
-		timeF = 1000.0 / (double) FPS;
+		timeF = 1000.0 / FPS;
 		deltaT = 0;
 		deltaF = 0;
 		frames = 0;
@@ -557,7 +562,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
 		switch (level) {
 		case TOP:
-			topScreen.displayWindow(windowIn);
+			developerDesktop.displayWindow(windowIn);
 			break;
 		case SCREEN:
 			if (currentScreen != null) currentScreen.displayWindow(windowIn);
@@ -567,7 +572,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	}
 	
 	public static TopWindowParent getActiveTopParent() {
-		return (GameTopScreen.isTopFocused()) ? topScreen : currentScreen;
+		return (DeveloperDesktop.isOpen()) ? developerDesktop : currentScreen;
 	}
 	
 	public static GameScreen displayScreen(GameScreen screenIn) { return displayScreen(screenIn, null, true, true); }
@@ -621,6 +626,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		return currentScreen;
 	}
 	
+
+	
 	/**
 	 * Unloads the current world and loads the given one. If the given
 	 * world is null, the current world is unloaded regardless.
@@ -629,32 +636,32 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	 * @return The game world to be loaded
 	 */
 	public static GameWorld loadWorld(GameWorld worldIn) {
-		//unload the last world (if there was one)
-		if (theWorld != null) {
-			theWorld.setLoaded(false);
-			//carry over zoom from old camera
-			if (worldIn != null) worldIn.setCameraZoom(theWorld.getCameraZoom());
-		}
-		
-		theWorld = worldIn;
-		
-		if (theWorld != null) {
-			//assign as last world loaded
-			QoTSettings.lastMap.set(theWorld.getWorldName().replace(".twld", ""));
-			
-			//load the world
-			theWorld.setLoaded(true);
-			theWorld.onLoad();
-			pause = false;
-			renderWorld = true;
-			if (currentScreen != null) currentScreen.onWorldLoaded();
-			
-			//check if loaded
-			if (!theWorld.isLoaded()) warn("Failed to load world: ");
-		}
-		
-		return worldIn;
+	    return loadWorld(worldIn, true);
 	}
+    
+    public static GameWorld loadWorld(GameWorld worldIn, boolean isNewLevel) {
+        if (theWorld != null) {
+            QoTSettings.lastMap.set(theWorld.getWorldName().replace(".twld", ""));            
+        }
+        
+        if (isNewLevel || levelManager == null) {
+            levelManager = new LevelManager(worldIn);
+            levelManager.loadDefaultRules();
+            levelManager.loadStartingWorld();
+        }
+        else {
+            levelManager.loadWorld(worldIn);
+        }
+        
+        pause = false;
+        renderWorld = true;
+        if (currentScreen != null) currentScreen.onWorldLoaded();
+        
+        // check if loaded
+        if (theWorld != null && !theWorld.isLoaded()) warn("Failed to load world: ");
+        
+        return worldIn;
+    }
 	
 	public static boolean isPaused() { return pause; }
 	public static boolean isWorldRenderPaused() { return !renderWorld; }
@@ -707,7 +714,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** Returns the engine's rendering engine. */
 	public static RenderEngine getRenderEngine() { return renderEngine; }
 	/** Returns this engine's top level rendering system. */
-	public static GameTopScreen getTopScreen() { return topScreen; }
+	public static DeveloperDesktop getDeveloperDesktop() { return developerDesktop; }
 	/** Returns the actively rendered screen. */
 	public static GameScreen getCurrentScreen() { return currentScreen; }
 	/** Returns this engine's terminal command handler. */

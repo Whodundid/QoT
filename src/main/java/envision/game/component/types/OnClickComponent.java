@@ -6,11 +6,12 @@ import envision.game.component.EntityComponent;
 
 public class OnClickComponent extends EntityComponent {
 
-    protected OnClickComponent(ComponentBasedObject theEntityIn) {
+    public OnClickComponent(ComponentBasedObject theEntityIn) {
         super(theEntityIn, ComponentType.ON_CLICK);
     }
     
     public void onClick(int mX, int mY, int button) {
+        this.theObject.onMousePress(mX, mY, button);
         this.onEvent(mX, mY, button);
     }
     

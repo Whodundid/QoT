@@ -4,6 +4,7 @@ import static eutil.datatypes.util.JavaDatatype.*;
 
 import java.util.Collection;
 
+import envision.engine.settings.config.setting_types.*;
 import eutil.EUtil;
 import eutil.datatypes.util.EList;
 import eutil.datatypes.util.JavaDatatype;
@@ -13,23 +14,23 @@ import eutil.math.ENumUtil;
 
 public class ConfigSetting<T> {
 	
-	private String settingName = "";
-	private String description = "";
-	private boolean requiresDev = false;
-	private T val = null;
-	private T defaultVal = null;
-	private JavaDatatype type;
-	private EList<T> validOptions = EList.newList();
-	private final Class<T> cType;
-	private boolean ignoreConfigRead = false;
-	private boolean ignoreConfigWrite = false;
-	private boolean hasRange = false;
-	private T minValue;
-	private T maxValue;
+	protected String settingName = "";
+	protected String description = "";
+	protected boolean requiresDev = false;
+	protected T val = null;
+	protected T defaultVal = null;
+	protected JavaDatatype type;
+	protected EList<T> validOptions = EList.newList();
+	protected final Class<T> cType;
+	protected boolean ignoreConfigRead = false;
+	protected boolean ignoreConfigWrite = false;
+	protected boolean hasRange = false;
+	protected T minValue;
+	protected T maxValue;
 	
-	//--------------
+	//==============
 	// Constructors
-	//--------------
+	//==============
 	
 	public ConfigSetting(Class<T> cTypeIn, String settingNameIn, String descriptionIn, T initialValue) {
 		settingName = settingNameIn;
@@ -49,11 +50,11 @@ public class ConfigSetting<T> {
 	    return "{" + settingName + ":" + val + "}";
 	}
 	
-	//---------
+	//=========
 	// Methods
-	//---------
+	//=========
 	
-	public ConfigSetting reset() { set(defaultVal); return this; }
+	public ConfigSetting<T> reset() { set(defaultVal); return this; }
 	
 	public T toggle() {
 		if (cType.isAssignableFrom(Boolean.class)) {
@@ -64,9 +65,9 @@ public class ConfigSetting<T> {
 		return val;
 	}
 	
-	//---------
+	//=========
 	// Getters
-	//---------
+	//=========
 	
 	public String getName() { return settingName; }
 	public String getDescription() { return description; }
@@ -84,9 +85,9 @@ public class ConfigSetting<T> {
 	public boolean getIgnoreConfigWrite() { return ignoreConfigWrite; }
 	public boolean hasRange() { return hasRange; }
 	
-	//---------
+	//==========
 	// Setters
-	//---------
+	//==========
 	
     public T set(T valIn) {
         if (hasRange && cType.isAssignableFrom(Number.class)) {
@@ -101,10 +102,12 @@ public class ConfigSetting<T> {
                 throw new RuntimeException("No idea how to cast '" + valIn + "' to a '" + cType + "'");
             };
             
-            return val = (T) cType.cast(obj);
+            val = cType.cast(obj);
+            return val;
         }
         
-        return val = valIn;
+        val = valIn;
+        return val;
 	}
 	
 	public ConfigSetting<T> setValidOptions(T... argsIn) { validOptions.add(argsIn); return this; }
@@ -114,26 +117,29 @@ public class ConfigSetting<T> {
 	public ConfigSetting<T> setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
 	public ConfigSetting<T> setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
 	
-	//------------------
+	//==================
 	// Internal Methods
-	//------------------
+	//==================
 	
 	private void parseDataType() {
-		if (val == null) type = OBJECT;
+		if (val == null) {
+		    type = OBJECT;
+		    return;
+		}
 		
-		Class c = val.getClass();
+		Class<?> c = val.getClass();
 		try {
-			if (c.isAssignableFrom(Boolean.class)) 			type = BOOLEAN;
-			else if (c.isAssignableFrom(Character.class))   type = CHAR;
-			else if (c.isAssignableFrom(Byte.class)) 		type = BYTE;
-			else if (c.isAssignableFrom(Short.class)) 		type = SHORT;
-			else if (c.isAssignableFrom(Integer.class)) 	type = INT;
-			else if (c.isAssignableFrom(Long.class)) 		type = LONG;
-			else if (c.isAssignableFrom(Float.class)) 		type = FLOAT;
-			else if (c.isAssignableFrom(Double.class)) 		type = DOUBLE;
-			else if (c.isAssignableFrom(String.class))		type = STRING;
-			else if (c.isAssignableFrom(Enum.class)) 		type = ENUM;
-			else if (c != null) 							type = OBJECT;
+			if (c.isAssignableFrom(Boolean.class))           type = BOOLEAN;
+			else if (c.isAssignableFrom(Character.class))    type = CHAR;
+			else if (c.isAssignableFrom(Byte.class))         type = BYTE;
+			else if (c.isAssignableFrom(Short.class))        type = SHORT;
+			else if (c.isAssignableFrom(Integer.class))      type = INT;
+			else if (c.isAssignableFrom(Long.class))         type = LONG;
+			else if (c.isAssignableFrom(Float.class))        type = FLOAT;
+			else if (c.isAssignableFrom(Double.class))       type = DOUBLE;
+			else if (c.isAssignableFrom(String.class))       type = STRING;
+			else if (c.isAssignableFrom(Enum.class))         type = ENUM;
+			else                                             type = OBJECT;
 		}
 		catch (ClassCastException e) {
 			e.printStackTrace();
@@ -141,45 +147,47 @@ public class ConfigSetting<T> {
 		}
 	}
 	
-	//----------------
+	//================
 	// Static Methods
-	//----------------
+	//================
 	
-	public static void reset(ConfigSetting setting, ConfigSetting... additional) {
+	public static void reset(ConfigSetting<?> setting, ConfigSetting<?>... additional) {
 		EUtil.filterNullForEachA(s -> s.reset(), EUtil.add(setting, additional));
 	}
 	
+	//================
 	// Static Helpers
+	//================
 	
-	public static ConfigSetting<Boolean> boolSetting(String internalName, String displayName, Boolean defaultValue) {
-		return new ConfigSetting(Boolean.class, internalName, displayName, defaultValue);
+	public static BooleanConfigSetting boolSetting(String internalName, String displayName, boolean defaultValue) {
+		return new BooleanConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static ConfigSetting<Character> charSetting(String internalName, String displayName, Character defaultValue) {
-		return new ConfigSetting(Character.class, internalName, displayName, defaultValue);
+	public static CharConfigSetting charSetting(String internalName, String displayName, char defaultValue) {
+		return new CharConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static ConfigSetting<Byte> byteSetting(String internalName, String displayName, Byte defaultValue) {
-		return new ConfigSetting(Byte.class, internalName, displayName, defaultValue);
+	public static ByteConfigSetting byteSetting(String internalName, String displayName, byte defaultValue) {
+		return new ByteConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static ConfigSetting<Short> shortSetting(String internalName, String displayName, Short defaultValue) {
-		return new ConfigSetting(Short.class, internalName, displayName, defaultValue);
+	public static ShortConfigSetting shortSetting(String internalName, String displayName, short defaultValue) {
+		return new ShortConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static ConfigSetting<Integer> intSetting(String internalName, String displayName, Integer defaultValue) {
-		return new ConfigSetting(Integer.class, internalName, displayName, defaultValue);
+	public static IntegerConfigSetting intSetting(String internalName, String displayName, int defaultValue) {
+		return new IntegerConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static ConfigSetting<Long> longSetting(String internalName, String displayName, Long defaultValue) {
-		return new ConfigSetting(Long.class, internalName, displayName, defaultValue);
+	public static LongConfigSetting longSetting(String internalName, String displayName, long defaultValue) {
+		return new LongConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static ConfigSetting<Float> floatSetting(String internalName, String displayName, Float defaultValue) {
-		return new ConfigSetting(Integer.class, internalName, displayName, defaultValue);
+	public static FloatConfigSetting floatSetting(String internalName, String displayName, float defaultValue) {
+		return new FloatConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static ConfigSetting<Double> doubleSetting(String internalName, String displayName, Double defaultValue) {
-		return new ConfigSetting(Integer.class, internalName, displayName, defaultValue);
+	public static DoubleConfigSetting doubleSetting(String internalName, String displayName, double defaultValue) {
+		return new DoubleConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static ConfigSetting<String> stringSetting(String internalName, String displayName, String defaultValue) {
-		return new ConfigSetting(String.class, internalName, displayName, defaultValue);
+	public static StringConfigSetting stringSetting(String internalName, String displayName, String defaultValue) {
+		return new StringConfigSetting(internalName, displayName, defaultValue);
 	}
-	public static <T extends Enum> ConfigSetting<T> enumSetting(String internalName, String displayName, T defaultValue) {
-		return new ConfigSetting(Enum.class, internalName, displayName, defaultValue);
+	public static <T extends Enum> EnumConfigSetting<T> enumSetting(String internalName, String displayName, T defaultValue) {
+		return new EnumConfigSetting(internalName, displayName, defaultValue);
 	}
 	
 }

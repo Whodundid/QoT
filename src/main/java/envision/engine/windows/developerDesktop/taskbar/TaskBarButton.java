@@ -72,7 +72,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 		}
 		
 		//draw highlight if the currently focused window is of the same type as this button's base
-		var o = Envision.getTopScreen().getFocusedObject();
+		var o = Envision.getDeveloperDesktop().getFocusedObject();
 		if (base != null &&
 			o != null &&
 			o.getWindowParent() != null &&
@@ -128,7 +128,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 					
 					if (p.isMinimizable()) {
 						//check if at front
-						if (p == Envision.getTopScreen().getAllActiveWindows().getLast()) {
+						if (p == Envision.getDeveloperDesktop().getAllActiveWindows().getLast()) {
 							if (p.isMinimized()) performAction(p);
 							else p.setMinimized(true);
 						}
@@ -157,7 +157,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 				if (total == 1) rcm.addOption("Recenter", WindowTextures.move);
 				if (base.showInLists()) rcm.addOption("New Window", WindowTextures.plus);
 				
-				Envision.getTopScreen().displayWindow(rcm, ObjectPosition.CURSOR_CORNER);
+				Envision.getDeveloperDesktop().displayWindow(rcm, ObjectPosition.CURSOR_CORNER);
 			}
 		}
 	}
@@ -165,7 +165,9 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 	@Override
 	public void mouseExited(int mXIn, int mYIn) {
 		if (pressed) pressed = false;
-		if (listMade && (dropDown != null && !dropDown.isMouseInsideGui(mXIn, mYIn))) destroyList();
+		if (listMade && (dropDown != null && !dropDown.isMouseInside(mXIn, mYIn, 0.0))) {
+		    destroyList();
+		}
 		super.mouseExited(mXIn, mYIn);
 	}
 	
@@ -193,8 +195,8 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 		if (dropDown != null) {
 			dropDown.close();
 			dropDown = null;
-			Envision.getTopScreen().revealHiddenObjects();
-			for (var w : Envision.getTopScreen().getAllActiveWindows()) {
+			Envision.getDeveloperDesktop().revealHiddenObjects();
+			for (var w : Envision.getDeveloperDesktop().getAllActiveWindows()) {
 				w.setDrawWhenMinimized(false);
 			}
 		}
@@ -228,7 +230,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 			dropDown.addEntry(i + ": " + EColors.green + p.getObjectName(), EColors.lorange, p);
 		}
 		
-		parentBar.addObject(dropDown);
+		getTopParent().addObject(dropDown);
 		
 		listMade = true;
 	}
@@ -247,12 +249,12 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 	 * that this button represents.
 	 */
 	public EList<IWindowParent> getWindows() {
-		return (EList<IWindowParent>) Envision.getTopScreen().getAllWindowInstances(base.getClass());
+		return (EList<IWindowParent>) Envision.getDeveloperDesktop().getAllWindowInstances(base.getClass());
 	}
 	
 	/** Returns the total number of window instances that this button represents. */
 	public int getTotal() {
-		var windows = Envision.getTopScreen().getAllWindowInstances(base.getClass());
+		var windows = Envision.getDeveloperDesktop().getAllWindowInstances(base.getClass());
 		
 		if (total != windows.size()) {
 			earliest = Long.MAX_VALUE;

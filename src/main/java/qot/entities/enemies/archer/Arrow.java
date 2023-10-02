@@ -1,6 +1,7 @@
 package qot.entities.enemies.archer;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.BasicRenderedEntity;
 import envision.game.entities.Entity;
 import eutil.random.ERandomUtil;
@@ -20,7 +21,7 @@ public class Arrow extends BasicRenderedEntity {
 		setInvincible(true);
 		
 		init(x, y, 32, 32);
-		setTexture(EntityTextures.arrow_projectile);
+		sprite = new Sprite(EntityTextures.arrow_projectile);
 		setCollisionBox(startX - 8, startY - 8, endX + 8, endY + 8);
 		
 		setSpeed(270);

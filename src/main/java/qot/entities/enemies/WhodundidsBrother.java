@@ -1,6 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.effects.animations.AnimationHandler;
 import envision.game.entities.Enemy;
@@ -24,7 +25,7 @@ public class WhodundidsBrother extends Enemy {
 		super("Whodundid's Brother");
 		init(posX, posY, 64, 64);
 		
-		setTexture(EntityTextures.whobro);
+		sprite = new Sprite(EntityTextures.whobro);
 		setBaseMeleeDamage(2);
 		setMaxHealth(10);
 		setHealth(10);
