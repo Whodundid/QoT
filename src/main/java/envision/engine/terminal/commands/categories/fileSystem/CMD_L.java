@@ -27,7 +27,7 @@ public class CMD_L extends AbstractFileCommand {
 	}
 	
 	@Override public String getName() { return "ll"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("l"); }
+	@Override public EList<String> getAliases() { return EList.of("l"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "List all files in a directory with more information."; }
 	@Override public String getUsage() { return "ex: ll 'dir'"; }
 	

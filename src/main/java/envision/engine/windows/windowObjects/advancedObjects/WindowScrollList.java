@@ -52,8 +52,8 @@ public class WindowScrollList<E> extends WindowObject {
 	protected WindowScrollList() {}
 	public WindowScrollList(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn) {
 		init(parentIn, xIn, yIn, widthIn, heightIn);
-		scrollableWidth = (int) widthIn - 2;
-		scrollableHeight = (int) heightIn - 2;
+		scrollableWidth = (int) widthIn - 2.0;
+		scrollableHeight = (int) heightIn - 2.0;
 	}
 	
 	//-----------
@@ -65,7 +65,7 @@ public class WindowScrollList<E> extends WindowObject {
 		vScroll = new WindowScrollBar(this, height - 2, scrollableHeight, ScreenLocation.RIGHT, 7);
 		hScroll = new WindowScrollBar(this, width - 2, scrollableWidth, ScreenLocation.BOT, 7);
 		
-		reset = new WindowButton(this, endX - 5, endY - 5, 5, 5);
+		reset = new WindowButton<>(this, endX - 5, endY - 5, 5, 5);
 		
 		vScroll.setVisible(vScrollVis);
 		hScroll.setVisible(hScrollVis);
@@ -549,8 +549,8 @@ public class WindowScrollList<E> extends WindowObject {
 	public double getListHeight() { return scrollableHeight - (isHScrollDrawn() ? hScroll.getDimensions().height : 0); }
 	public double getListWidth() { return scrollableWidth - (isVScrollDrawn() ? vScroll.getDimensions().width : 0); }
 	public boolean getDrawListObjects() { return drawListObjects; }
-	public boolean isVScrollDrawn() { return vScrollVis && (vScroll != null ? vScroll.getHighVal() > vScroll.getVisibleAmount() : false); }
-	public boolean isHScrollDrawn() { return hScrollVis && (hScroll != null ? hScroll.getHighVal() > hScroll.getVisibleAmount() : false); }
+	public boolean isVScrollDrawn() { return vScrollVis && (vScroll != null && vScroll.getHighVal() > vScroll.getVisibleAmount()); }
+	public boolean isHScrollDrawn() { return hScrollVis && (hScroll != null && hScroll.getHighVal() > hScroll.getVisibleAmount()); }
 	public boolean isResetDrawn() { return resetVis && (isVScrollDrawn() || isHScrollDrawn()); }
 	public WindowScrollBar getVScrollBar() { return vScroll; }
 	public WindowScrollBar getHScrollBar() { return hScroll; }

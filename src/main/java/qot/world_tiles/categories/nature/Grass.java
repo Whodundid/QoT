@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.nature;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.grass.GrassTextures;
 import qot.world_tiles.TileIDs;
@@ -13,10 +14,10 @@ public class Grass extends WorldTile {
 		numVariants = 3;
 		
 		if (id < 0) {
-			setTexture(GrassTextures.grass.getRandVariant());
+		    setSprite(new Sprite(GrassTextures.grass.getRandVariant()));
 		}
 		else {
-			setTexture(GrassTextures.grass.getChild(id));
+		    setSprite(new Sprite(GrassTextures.grass.getChild(id)));
 		}
 	}
 	

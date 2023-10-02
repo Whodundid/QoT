@@ -122,7 +122,7 @@ public class BattleScreen extends GameScreen {
 		
 		@Override
 		public void drawObject(int mXIn, int mYIn) {
-			drawTexture(ent.getTexture(), teamA);
+			drawSprite(ent.sprite, teamA);
 			if (isMouseInside()) drawHRect(EColors.yellow);
 			
 			drawStringC(ent.getName(), midX, startY - 40, (teamA) ? EColors.skyblue : EColors.lred);

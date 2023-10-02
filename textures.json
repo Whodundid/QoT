@@ -1,0 +1,10 @@
+{
+  "textureSheetName" : "Banana Sheet",
+  "textures" : [ {
+    "textureName" : "Grass 0",
+    "texturePath" : "textures/world/nature/grass/grass_0.png"
+  }, {
+    "textureName" : "Leafy Grass 0",
+    "texturePath" : "textures/world/nature/grass/leafy_grass_0.png"
+  } ]
+}

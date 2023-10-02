@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.house;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.world_tiles.TileIDs;
@@ -8,7 +9,7 @@ public class Counter_Food extends WorldTile {
 	
 	public Counter_Food() {
 		super(TileIDs.COUNTER_FOOD);
-		setTexture(HouseTextures.counter_food);
+		setSprite(new Sprite(HouseTextures.counter_food));
 		blocksMovement = true;
 	}
 	

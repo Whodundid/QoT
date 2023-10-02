@@ -78,7 +78,7 @@ public class TaskBar extends WindowObject {
 			menu.setActionReceiver(this);
 			menu.setGenericObject(this);
 			menu.addOption("Open Window..", WindowTextures.plus);
-			Envision.getTopScreen().displayWindow(menu, ObjectPosition.CURSOR_CORNER);
+			Envision.getDeveloperDesktop().displayWindow(menu, ObjectPosition.CURSOR_CORNER);
 		}
 		
 		super.mousePressed(mXIn, mYIn, button);
@@ -90,7 +90,7 @@ public class TaskBar extends WindowObject {
 			if (args.length > 0 && args[0] instanceof WindowParent window) {
 				if (window.isMinimized()) window.setMinimized(false);
 				window.bringToFront();
-				Envision.getTopScreen().setFocusedObject(window);
+				Envision.getDeveloperDesktop().setFocusedObject(window);
 			}
 		}
 		if (object instanceof RightClickMenu rcm) {
@@ -113,13 +113,13 @@ public class TaskBar extends WindowObject {
 						var n = w.getClass().getDeclaredConstructor().newInstance();
 						IWindowParent old = null;
 						
-						var windows = Envision.getTopScreen().getAllWindowInstances(n.getClass());
+						var windows = Envision.getDeveloperDesktop().getAllWindowInstances(n.getClass());
 						if (windows != null && windows.isNotEmpty()) {
 							old = windows.get(windows.size() - 1);
 						}
 						
 						ObjectPosition pos = (old != null && !old.isMaximized()) ? ObjectPosition.OBJECT_INDENT : ObjectPosition.SCREEN_CENTER;
-						Envision.getTopScreen().displayWindow(n, old, true, false, false, pos);
+						Envision.getDeveloperDesktop().displayWindow(n, old, true, false, false, pos);
 					}
 					catch (Exception e) {
 						e.printStackTrace();
@@ -128,18 +128,18 @@ public class TaskBar extends WindowObject {
 				else if (EStringUtil.equalsAny(selection, "Close", "Close All")) {
 					if (w != null) {
 						var c = w.getClass();
-						var windows = Envision.getTopScreen().getAllWindowInstances(c);
+						var windows = Envision.getDeveloperDesktop().getAllWindowInstances(c);
 						windows.forEach(p -> p.close());
 					}
 				}
 				else if (selection.equals("Recenter") && w != null) {
 					var c = w.getClass();
-					EList<? extends WindowParent> windows = Envision.getTopScreen().getAllWindowInstances(c);
+					EList<? extends WindowParent> windows = Envision.getDeveloperDesktop().getAllWindowInstances(c);
 					
 					if (windows.size() == 1) {
 						var p = windows.get(0);
 						var h = p.getHeader();
-						var b = Envision.getTopScreen().getTaskBar();
+						var b = Envision.getDeveloperDesktop().getTaskBar();
 						
 						double hh = (h != null) ? h.height : 0;
 						double bh = (b != null) ? b.height : 0;
@@ -220,7 +220,7 @@ public class TaskBar extends WindowObject {
 			EList<IWindowObject> removeGhosts = EList.newList();
 			for (var o : getChildren()) {
 				if (o instanceof TaskBarButton tb) {
-					if (!Envision.getTopScreen().isWindowOpen(tb.getWindowType().getClass()))
+					if (!Envision.getDeveloperDesktop().isWindowOpen(tb.getWindowType().getClass()))
 						removeGhosts.add(o);
 				}
 			}
@@ -231,7 +231,7 @@ public class TaskBar extends WindowObject {
 			
 			//check for ghost buttons
 			for (TaskBarButton b : buttons) {
-				if (!Envision.getTopScreen().isWindowOpen(b.getWindowType().getClass()))
+				if (!Envision.getDeveloperDesktop().isWindowOpen(b.getWindowType().getClass()))
 					toRemove.add(b.getWindowType());
 			}
 			
@@ -333,7 +333,7 @@ public class TaskBar extends WindowObject {
 		toAdd.clear();
 		toRemove.clear();
 		
-		var windows = Envision.getTopScreen().getAllActiveWindows();
+		var windows = Envision.getDeveloperDesktop().getAllActiveWindows();
 		EList<IWindowParent> filtered = EList.newList();
 		EList<TaskBarButton> toBuild = EList.newList();
 		

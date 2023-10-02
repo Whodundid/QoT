@@ -10,7 +10,7 @@ import envision.engine.events.GameEvent;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.utilityObjects.WindowDialogueBox;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
@@ -429,7 +429,7 @@ public class MapEditorScreen extends GameScreen {
 	//------------------------
 	
 	private void updateMovement() {
-		if (Envision.getTopScreen().hasFocus()) return;
+		if (Envision.getDeveloperDesktop().hasFocus()) return;
 		if (System.currentTimeMillis() - timeSinceKey < 37) return;
 		
 		if (exitSaverBox != null && Keyboard.isAnyKeyDown(KEY_W, KEY_UP, KEY_A, KEY_LEFT, KEY_S, KEY_DOWN, KEY_D, KEY_RIGHT)) {
@@ -467,7 +467,7 @@ public class MapEditorScreen extends GameScreen {
 				//WorldTile t = world.getWorldData()[i][j];
 				WorldTile t = editorWorld.getTileAt(j, i);
 				if (t == null) continue;
-				if (!t.hasTexture()) continue;
+				if (!t.hasSprite()) continue;
 				
 				double drawPosX = x;
 				double drawPosY = y;
@@ -534,8 +534,8 @@ public class MapEditorScreen extends GameScreen {
 		for (int i = 0; i < size; i++) {
 			EditorObject object = editorWorld.getEditorEntities().get(i);
 			Entity ent = object.getEntity();
-			GameTexture tex = ent.getTexture();
-			if (tex == null) continue;
+			Sprite sprite = ent.getSprite();
+			if (sprite == null) continue;
 			
 			final double zoom = actualWorld.getCameraZoom();
 			final int wtw = actualWorld.getTileWidth(); // world tile width

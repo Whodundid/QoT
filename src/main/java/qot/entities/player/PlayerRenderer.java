@@ -35,7 +35,7 @@ public class PlayerRenderer extends EntityRenderer {
 	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		boolean flip = player.facing == Rotation.RIGHT || player.facing == Rotation.DOWN;
 		
-		RenderingManager.drawTexture(player.tex, x, y, w, h, flip, brightness);
+		RenderingManager.drawSprite(player.sprite, x, y, w, h, flip, brightness);
 		//healthBar.setDimensions(x, y - 7, w, 7);
 		//healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
 		

@@ -129,7 +129,7 @@ public class TerminalOptionsWindow extends WindowParent {
                 QoTSettings.termBackground.set(val);
                 backColor.setBackgroundColor(val);
                 QoTSettings.saveConfig();
-                Envision.getTopScreen().reloadAllWindowInstances(ETerminalWindow.class);
+                Envision.getDeveloperDesktop().reloadAllWindowInstances(ETerminalWindow.class);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -140,11 +140,11 @@ public class TerminalOptionsWindow extends WindowParent {
 	private void lineNumbers() {
 	    drawLineNumbers.toggleTrueFalseDisplay(QoTSettings.termLineNumbers, true);
 		
-	    Envision.getTopScreen().reloadAllWindowInstances(ETerminalWindow.class);
+	    Envision.getDeveloperDesktop().reloadAllWindowInstances(ETerminalWindow.class);
 	}
 	
 	private void changeColor() {
-		Envision.getTopScreen().displayWindow(new ColorPickerSimple(this, QoTSettings.termBackground.get()));
+		Envision.getDeveloperDesktop().displayWindow(new ColorPickerSimple(this, QoTSettings.termBackground.get()));
 	}
 	
 	private void changeOpacity() {
@@ -154,7 +154,7 @@ public class TerminalOptionsWindow extends WindowParent {
 	    final var background = QoTSettings.termBackground.get();
 	    final var opacity = QoTSettings.termOpacity.get();
 	    
-	    var terms = Envision.getTopScreen().getAllWindowInstances(ETerminalWindow.class);;
+	    var terms = Envision.getDeveloperDesktop().getAllWindowInstances(ETerminalWindow.class);;
 	    for (var t : terms) {
 	        var c = EColors.changeOpacity(background, opacity);
 	        t.history.setBackgroundColor(c);

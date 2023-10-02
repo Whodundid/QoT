@@ -31,6 +31,7 @@ public class MovingFileObject extends DragAndDropObject {
         sizeStringLen = strWidth(sizeString);
         if (filesBeingMoved.hasOne()) icon = filesBeingMoved.getFirst().getFileIcon();
         else icon = WindowTextures.file_txt;
+        getTopParent().setEscapeStopper(this);
         setSize(100, 100);
         bringToFront();
     }

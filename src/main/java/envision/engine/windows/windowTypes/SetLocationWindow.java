@@ -9,15 +9,15 @@ import eutil.datatypes.util.EList;
 
 public abstract class SetLocationWindow extends OverlayWindow {
 	
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	protected BoxList<IWindowObject, Boolean> previousStates = new BoxList<>();
 	
-	//---------
+	//=========
 	// Methods
-	//---------
+	//=========
 	
 	protected SetLocationWindow hideAllOnRenderer(IWindowObject... exceptionsIn) {
 		previousStates.clear();
@@ -28,7 +28,7 @@ public abstract class SetLocationWindow extends OverlayWindow {
 			previousStates.add(o, !o.isHidden());
 		}
 		
-		previousStates.getAVals().stream().filter(o -> exceptions.notContains(o)).forEach(o -> o.setHidden(true));
+		previousStates.getAVals().stream().filter(exceptions::notContains).forEach(o -> o.setHidden(true));
 		
 		return this;
 	}

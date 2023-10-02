@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.nature;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.floors.wood.WoodFloorTextures;
 import qot.world_tiles.TileIDs;
@@ -8,7 +9,7 @@ public class Wood extends WorldTile {
 	
 	public Wood() {
 		super(TileIDs.WOOD);
-		setTexture(WoodFloorTextures.wood_floor);
+		setSprite(new Sprite(WoodFloorTextures.wood_floor));
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package qot.doodads;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Doodad;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
@@ -12,7 +13,7 @@ public class SticksGroundClutter extends Doodad {
 	public SticksGroundClutter(int posX, int posY) {
 		super("sticks_clutter");
 		init(posX, posY, 64, 32);
-		tex = GroundClutterTextures.sticks.getRandVariant();
+		sprite = new Sprite(GroundClutterTextures.sticks.getRandVariant());
 		facing = (ERandomUtil.randomBool()) ? Rotation.LEFT : Rotation.RIGHT;
 		
 		setCollisionBox(0, 0, 0, 0);

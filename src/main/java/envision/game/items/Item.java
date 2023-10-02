@@ -1,6 +1,5 @@
 package envision.game.items;
 
-import envision.engine.rendering.textureSystem.GameTexture;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 
@@ -15,9 +14,9 @@ public abstract class Item extends GameObject {
 	protected boolean isDestroyedOnUse;
 	protected int damageBonus;
 
-	public Item(String nameIn, int idIn) { this(nameIn, 0, "", idIn); }
-	public Item(String nameIn, int basePriceIn, int idIn) { this(nameIn, basePriceIn, "", idIn); }
-	public Item(String nameIn, int basePriceIn, String descriptionIn, int idIn) {
+	protected Item(String nameIn, int idIn) { this(nameIn, 0, "", idIn); }
+	protected Item(String nameIn, int basePriceIn, int idIn) { this(nameIn, basePriceIn, "", idIn); }
+	protected Item(String nameIn, int basePriceIn, String descriptionIn, int idIn) {
 		name = nameIn;
 		basePrice = basePriceIn;
 		description = descriptionIn;

@@ -4,7 +4,6 @@ import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
@@ -17,7 +16,7 @@ public class CMD_ReloadTextures extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "reloadtextures"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("relt", "reltex"); }
+	@Override public EList<String> getAliases() { return EList.of("relt", "reltex"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Reloads every registered game texture."; }
 	@Override public String getUsage() { return "ex: relt"; }
 	

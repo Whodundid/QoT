@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.EntitySpawn;
 import envision.game.world.worldFileSystem.WorldSavingSystem;
 import envision.game.world.worldTiles.WorldTile;
@@ -294,13 +294,13 @@ public class WorldFileSystem {
 						sb.append(("n" + end).getBytes());
 					}
 					else {
-						GameTexture tex = t.getTexture();
+						Sprite tex = t.sprite;
 						if (tex == null) {
 							writer.print("n" + end);
 							sb.append(("n" + end).getBytes());
 						}
 						else {
-							String l = t.getID() + ((tex.hasParent()) ? ":" + tex.getChildID() : "") + end;
+							String l = t.getID() + ((tex.getTexture().hasParent()) ? ":" + tex.getTexture().getChildID() : "") + end;
 							writer.print(l);
 							sb.append(l.getBytes());
 						}

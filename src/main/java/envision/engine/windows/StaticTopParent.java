@@ -161,14 +161,14 @@ public class StaticTopParent extends EGui {
 	/** Debug method used to display topParent information in the top left corner of the screen. */
 	public static void drawDebugInfo(ITopParent objIn) {
 	    if (!Envision.isDebugMode()) return;
-	    if (objIn != Envision.getTopScreen()) return;
+	    if (objIn != Envision.getDeveloperDesktop()) return;
 	    
         var top = Envision.getActiveTopParent();
         
         double yPos = 40;
         double xPos = 3;
         
-        TaskBar bar = Envision.getTopScreen().getTaskBar();
+        TaskBar bar = Envision.getDeveloperDesktop().getTaskBar();
         if (bar != null && !bar.isHidden() && bar.willBeDrawn()) {
             yPos = bar.endY + 6;
         }

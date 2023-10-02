@@ -30,8 +30,8 @@ public class CMD_Lsblk extends AbstractFileCommand {
         writeln(EStringUtil.repeatString("-", title.length() - 22), 0xff2265f0);
         
         for (File f : drives) {
-            double total = ((double) f.getTotalSpace() / 1024d / 1024d / 1024d);
-            double free = ((double) f.getFreeSpace() / 1024d / 1024d / 1024d);
+            double total = (f.getTotalSpace() / 1024D / 1024D / 1024D);
+            double free = (f.getFreeSpace() / 1024D / 1024D / 1024D);
             
             String out = String.format("%-11s%-23.2f%-30.2f", f.getCanonicalPath(), total, free);
             writeln(out, 0xff2265f0);

@@ -9,17 +9,17 @@ import eutil.EUtil;
 
 public abstract class ActionWindowParent extends WindowParent implements IActionObject {
 
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
 	protected IWindowObject actionReceiver;
 	
-	//--------------
+	//==============
 	// Constructors
-	//--------------
+	//==============
 	
 	/** Instantiates this ActionWindowParent with the given parent. */
 	protected ActionWindowParent(IWindowObject parentIn) {
@@ -28,9 +28,9 @@ public abstract class ActionWindowParent extends WindowParent implements IAction
 		res = Envision.getWindowDims();
 	}
 	
-	//---------------------------
+	//===========================
 	// Overrides : IActionObject
-	//---------------------------
+	//===========================
 	
 	@Override
 	public void performAction(Object... args) {

@@ -129,9 +129,11 @@ public abstract class TerminalCommand {
 	public ITopParent getTopParent() { return term().getTopParent(); }
 	public GameScreen displayScreen(GameScreen screenIn) { return Envision.displayScreen(screenIn); }
 	public IWindowParent displayWindow(IWindowParent windowIn) { return getTopParent().displayWindow(windowIn); }
-	public IWindowParent displayWindow(IWindowParent windowIn, ObjectPosition position) {
-	    return getTopParent().displayWindow(windowIn, position);
-	}	
+	public IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus) { return getTopParent().displayWindow(windowIn, transferFocus); }
+	public IWindowParent displayWindow(IWindowParent windowIn, ObjectPosition position) { return getTopParent().displayWindow(windowIn, position); }
+	public IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus, ObjectPosition position) {
+	    return getTopParent().displayWindow(windowIn, transferFocus, position);
+	}
 	
 	public boolean showInHelp() { return true; }
 	public EList<String> getAliases() { return new EArrayList<>(); }
@@ -378,9 +380,9 @@ public abstract class TerminalCommand {
 	
 	protected int getLastUsed() { return term.getLastUsed(); }
 	protected int getHistoryLine() { return term.getHistoryLine(); }
-	protected WindowTextArea getTextArea() { return term.getTextArea(); }
+	protected WindowTextArea<String> getTextArea() { return term.getTextArea(); }
 	protected TerminalTextField getInputField() { return term.getInputField(); }
-	protected EList<TextAreaLine> getInfoLines() { return term.getInfoLines(); }
+	protected EList<TextAreaLine<String>> getInfoLines() { return term.getInfoLines(); }
 	protected int getTabPos() { return term.getTabPos(); }
 	protected boolean getTab1() { return term.getTab1(); }
 	protected String getTextTabBegin() { return term.getTextTabBegin(); }

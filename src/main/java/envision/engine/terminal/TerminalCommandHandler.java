@@ -10,6 +10,7 @@ import envision.engine.terminal.commands.categories.engine.CMD_CameraZoom;
 import envision.engine.terminal.commands.categories.engine.CMD_Config;
 import envision.engine.terminal.commands.categories.engine.CMD_CurScreenInfo;
 import envision.engine.terminal.commands.categories.engine.CMD_DebugControl;
+import envision.engine.terminal.commands.categories.engine.CMD_DesktopControl;
 import envision.engine.terminal.commands.categories.engine.CMD_DisplayScreen;
 import envision.engine.terminal.commands.categories.engine.CMD_Envision;
 import envision.engine.terminal.commands.categories.engine.CMD_FPS;
@@ -44,6 +45,7 @@ import envision.engine.terminal.commands.categories.game.CMD_LoadWorld;
 import envision.engine.terminal.commands.categories.game.CMD_NoClip;
 import envision.engine.terminal.commands.categories.game.CMD_PauseGame;
 import envision.engine.terminal.commands.categories.game.CMD_ReloadWorld;
+import envision.engine.terminal.commands.categories.game.CMD_Rules;
 import envision.engine.terminal.commands.categories.game.CMD_SaveWorld;
 import envision.engine.terminal.commands.categories.game.CMD_SetWorldUnderground;
 import envision.engine.terminal.commands.categories.game.CMD_SetXP;
@@ -93,16 +95,17 @@ import eutil.strings.EStringUtil;
 
 public class TerminalCommandHandler {
 
-	public static final String version = "1.0";
+	public static final String TERMINAL_HANDLER_VERSION = "1.0";
 	private static TerminalCommandHandler instance;
 	protected BoxList<String, TerminalCommand> commands;
 	public Map<String, String> commandAliases = new HashMap<>();
 	protected EList<TerminalCommand> commandList;
 	public static boolean drawSpace = true;
-	public static EList<String> cmdHistory = new EArrayList<>();
+	public static EList<String> cmdHistory = EList.newList();
 	
 	public static TerminalCommandHandler getInstance() {
-		return instance == null ? instance = new TerminalCommandHandler() : instance;
+	    if (instance == null) instance = new TerminalCommandHandler();
+	    return instance;
 	}
 	
 	private TerminalCommandHandler() {
@@ -122,7 +125,7 @@ public class TerminalCommandHandler {
 		String commandDir = "engine.terminal.terminalCommand";
 		
 		EList<Class<TerminalCommand>> getCommands = ClassFinder.findClassesOfType(commandDir, TerminalCommand.class);
-		EList<TerminalCommand> commands = new EArrayList();
+		EList<TerminalCommand> commands = EList.newList();
 		
 		for (Class<TerminalCommand> c : getCommands) {
 			EModifier mods = EModifier.of(c.getModifiers());
@@ -147,6 +150,7 @@ public class TerminalCommandHandler {
         registerCommand(new CMD_Config(), termIn, runVisually);
         registerCommand(new CMD_CurScreenInfo(), termIn, runVisually);
         registerCommand(new CMD_DebugControl(), termIn, runVisually);
+        registerCommand(new CMD_DesktopControl(), termIn, runVisually);
         registerCommand(new CMD_DisplayScreen(), termIn, runVisually);
         registerCommand(new CMD_Envision(), termIn, runVisually);
         registerCommand(new CMD_FPS(), termIn, runVisually);
@@ -185,6 +189,7 @@ public class TerminalCommandHandler {
         registerCommand(new CMD_NoClip(), termIn, runVisually);
         registerCommand(new CMD_PauseGame(), termIn, runVisually);
         registerCommand(new CMD_ReloadWorld(), termIn, runVisually);
+        registerCommand(new CMD_Rules(), termIn, runVisually);
         registerCommand(new CMD_SaveWorld(), termIn, runVisually);
         registerCommand(new CMD_SetWorldUnderground(), termIn, runVisually);
         registerCommand(new CMD_SetXP(), termIn, runVisually);
@@ -234,11 +239,11 @@ public class TerminalCommandHandler {
 		//add the command to the command map
 		commandList.add(command);
 		commands.put(command.getName(), command);
-		if (termIn != null & runVisually) termIn.writeln("Registering command call: " + command.getName(), 0xffffff00);
+		if (termIn != null && runVisually) termIn.writeln("Registering command call: " + command.getName(), 0xffffff00);
 		if (command.getAliases() != null) {
 			for (int i = 0; i < command.getAliases().size(); i++) {
 				commands.put(command.getAliases().get(i), command);
-				if (termIn != null & runVisually) termIn.writeln("Registering command alias: " + command.getAliases().get(i), 0xff55ff55);
+				if (termIn != null && runVisually) termIn.writeln("Registering command alias: " + command.getAliases().get(i), 0xff55ff55);
 			}
 		}
 	}
@@ -263,15 +268,17 @@ public class TerminalCommandHandler {
 	        
 	        // parse out arguments from input string
 	        baseCommand = commandParts[0].toLowerCase();
-	        for (int i = 1; i < commandParts.length; i++) {
-	            commandArguments.add(commandParts[i]);
-	        }
+	        commandArguments.addFrom(commandParts, 1);
 	        
-	        runCommand(termIn, baseCommand, commandArguments, tab);
+	        executeCommand(termIn, baseCommand, commandArguments, tab);
 		}
 	}
 	
-	private void runCommand(ETerminalWindow termIn, String baseCommand, EList<String> commandArguments, boolean tab) {
+    public void executeCommand(ETerminalWindow termIn, String commandName, EList<String> arguments) {
+        executeCommand(termIn, commandName, arguments, false);
+    }
+	
+	public void executeCommand(ETerminalWindow termIn, String baseCommand, EList<String> commandArguments, boolean tab) {
         // try to find a registered command that matches
         final var foundCommand = commands.getBoxWithA(baseCommand);
         
@@ -400,6 +407,10 @@ public class TerminalCommandHandler {
 		return null;
 	}
 	
+	public static TerminalCommand getRegisteredCommand(String commandName) {
+	    return getInstance().getCommand(commandName);
+	}
+	
 	public static TerminalCommand tabCompleteCommand(String input) {
 	    if (input == null || input.isBlank()) return null;
 	    
@@ -457,7 +468,7 @@ public class TerminalCommandHandler {
     }
     
 	public static EList<String> getSortedCommandNames() {
-		EList<String> cmds = new EArrayList();
+		EList<String> cmds = EList.newList();
 		BoxList<String, EList<TerminalCommand>> sortedAll = getSortedCommands();
 		
 		for (var box : sortedAll) {
@@ -531,6 +542,14 @@ public class TerminalCommandHandler {
 		return sortedCommands;
 	}
 	
+    public static void executeOnTerminal(ETerminalWindow termIn, String commandName, EList<String> arguments) {
+        instance.executeCommand(termIn, commandName, arguments);
+    }
+    
+    public static void executeOnTerminal(ETerminalWindow termIn, String commandName, EList<String> arguments, boolean tab) {
+        instance.executeCommand(termIn, commandName, arguments, tab);
+    }
+	
 	public void addCommandAlias(String aliasIn, String valueIn) {
 	    if (aliasIn == null || aliasIn.isBlank()) return;
 	    commandAliases.put(aliasIn, valueIn);
@@ -554,7 +573,7 @@ public class TerminalCommandHandler {
 	 * @return The active terminal instance on the top renderer
 	 */
 	public static ETerminalWindow getActiveTerminal() {
-		ETerminalWindow term = Envision.getTopScreen().getTerminalInstance();
+		ETerminalWindow term = Envision.getDeveloperDesktop().getTerminalInstance();
 		if (term == null) term = new ETerminalWindow();
 		return term;
 	}

@@ -5,12 +5,24 @@ import eutil.datatypes.util.EList;
 
 public abstract class ConfirmationCommand extends TerminalCommand {
 
+    //========
+    // Fields
+    //========
+    
 	protected boolean responseReceived = false;
 	protected boolean confirmed = false;
 	protected String confirmString = "Do you want to continue? (Yes, No)";
 	protected String yes = "y", no = "n";
 	
+	//==============
+	// Constructors
+	//==============
+	
 	protected ConfirmationCommand() {}
+	
+	//===========
+	// Overrides
+	//===========
 	
 	@Override
 	public void onConfirmation(String response) {
@@ -20,6 +32,16 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 			confirmed = response.equalsIgnoreCase(yes) || response.startsWith(firstYes);
 		}
 	}
+	
+	//===========
+	// Abstracts
+	//===========
+	
+	public abstract void runAction(ETerminalWindow termIn, EList<String> args, boolean runVisually);
+	
+	//=========
+	// Methods
+	//=========
 	
 	public boolean checkConfirm(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (responseReceived) {
@@ -34,7 +56,9 @@ public abstract class ConfirmationCommand extends TerminalCommand {
 		return false;
 	}
 	
-	public abstract void runAction(ETerminalWindow termIn, EList<String> args, boolean runVisually);
+	//=========
+	// Setters
+	//=========
 
 	public void setConfirmationString(String in) { setConfirmationString(in, "y", "n"); }
 	public void setConfirmationString(String in, String yesMessage, String noMessage) {

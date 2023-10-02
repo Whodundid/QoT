@@ -1,6 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
@@ -23,10 +24,10 @@ public class Goblin extends Enemy {
 		setBaseMeleeDamage(1);
 		setMaxHealth(10);
 		setHealth(10);
-		setSpeed(32 * 3);
+		setSpeed(32.0 * 3.0);
 		
 		init(posX, posY, 64, 64);
-		tex = EntityTextures.goblin;
+		sprite = new Sprite(EntityTextures.goblin);
 		
 		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
 		setExperienceRewardedOnKill(25);

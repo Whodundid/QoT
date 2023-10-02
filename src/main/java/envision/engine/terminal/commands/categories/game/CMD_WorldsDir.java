@@ -5,7 +5,6 @@ import java.io.File;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
 import qot.settings.QoTSettings;
@@ -19,7 +18,7 @@ public class CMD_WorldsDir extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "worldsdir"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("wdir"); }
+	@Override public EList<String> getAliases() { return EList.of("wdir"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "CDs to the directory where worlds are stored."; }
 	@Override public String getUsage() { return "ex: wdir"; }
 	

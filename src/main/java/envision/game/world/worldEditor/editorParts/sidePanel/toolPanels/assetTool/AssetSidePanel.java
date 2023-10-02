@@ -43,7 +43,7 @@ public class AssetSidePanel extends PaletteSidePanel {
 		int rowWidth = ((int) width - 10) / bw;
 		
 		for (GameObject t : GlobalAssetList.getAssets()) {
-			WindowButton<EditorObject> b = new WindowButton(panel) {
+			WindowButton<EditorObject> b = new WindowButton<>(panel) {
 				@Override
 				public void drawObject(int mXIn, int mYIn) {
 					super.drawObject(mXIn, mYIn);
@@ -66,7 +66,8 @@ public class AssetSidePanel extends PaletteSidePanel {
 			double by = pey + 17 + (bw * yPos) + (yPos * 2);
 			double bx = psx + (bw * xPos) + (xPos * 2);
 			
-			b.setButtonTexture(item.getTexture());
+			if (item.getSprite() != null) b.setButtonTexture(item.getSprite().getTexture());
+			else b.setButtonTexture(item.getSprite());
 			b.setHoverText(item.getName());
 			
 			//add to list first then dimension
@@ -82,7 +83,7 @@ public class AssetSidePanel extends PaletteSidePanel {
 
 	@Override
 	public void onAction(IActionObject object, Object... args) {
-		if (object instanceof WindowButton b && b.getGenericObject() instanceof EditorObject item) {
+		if (object instanceof WindowButton<?> b && b.getGenericObject() instanceof EditorObject item) {
 			int button = b.getPressedButton();
 			
 			MapEditorSettings s = editor.getSettings();

@@ -43,6 +43,7 @@ public interface IGameWorld {
 	void setPlayerSpawn(int x, int y);
 	
 	WorldCamera getCamera();
+	default double getInitialCameraZoom() { return 0.0; }
 	double getCameraZoom();
 	void setCameraZoom(double zoomIn);
 	EnvisionProgram getStartupScript();
@@ -56,6 +57,7 @@ public interface IGameWorld {
 	void onRenderTick(float partial);
 	WorldRenderer getWorldRenderer();
 	
+	default int getInitialTime() { return 0; }
 	int getTime();
 	int getDayLength();
 	void setTime(int timeInTicks);
@@ -71,8 +73,8 @@ public interface IGameWorld {
 	
 	default double getDistance(GameObject a, GameObject b) { return -1; }
 	default double distanceTo(GameObject ent, Point2d point) { return -1; }
-	default EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) { return null; }
-	default EList<GameObject> getAllGameObjectsWithinDistance(GameObject obj, double maxDistance) { return null; }
+	default EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) { return EList.newList(); }
+	default EList<GameObject> getAllGameObjectsWithinDistance(GameObject obj, double maxDistance) { return EList.newList(); }
 	default Direction getDirectionTo(GameObject start, GameObject dest) { return Direction.OUT; }
 	
 	default <E extends GameObject> E addObjectToWorld(E ent) { return null; }

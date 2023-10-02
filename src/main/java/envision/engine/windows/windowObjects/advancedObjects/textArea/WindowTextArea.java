@@ -29,6 +29,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	protected boolean drawLineNumbers = false;
 	protected boolean drawLineHighlight = true;
 	protected boolean drawLineNumberSeparator = true;
+	protected boolean newLinesTabToColumnStart = true;
 	protected int maxWidth = Integer.MAX_VALUE;
 	protected int lineHeight = 24;
 	protected int lineNumberSeparatorColor = 0xff000000;
@@ -170,22 +171,20 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				l.requestFocus();
 			}
 			else if (textDocument.isNotEmpty()) {
-				if (button == 0) {
-					var l = getLineMouseIsOver();
-					if (l != currentLine) {
-						if (l != null) {
-							setSelectedLine(l, FocusType.MOUSE_PRESS);
-						}
-						else {
-							if (currentLine != null) currentLine.setHighlighted(false);
-							setSelectedLine(null);
-						}
-					}
-					else if (l != null) {
-						if (!l.hasFocus()) l.requestFocus(FocusType.MOUSE_PRESS);
-						else l.mousePressed(mXIn, mYIn, button);
-					}
-				}
+			    var l = getLineMouseIsOver();
+                if (l != currentLine) {
+                    if (l != null) {
+                        setSelectedLine(l, FocusType.MOUSE_PRESS);
+                    }
+                    else {
+                        currentLine.setHighlighted(false);
+                        setSelectedLine(null);
+                    }
+                }
+                else if (l != null) {
+                    if (!l.hasFocus()) l.requestFocus(FocusType.MOUSE_PRESS);
+                    else l.mousePressed(mXIn, mYIn, button);
+                }
 			} //else if
 		}
 	}
@@ -196,8 +195,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	public TextAreaLine<E> createTextLine(String textIn, int colorIn) { return createTextLine(textIn, colorIn, null); }
 	public TextAreaLine<E> createTextLine(String textIn, EColors colorIn, E objectIn) { return createTextLine(textIn, colorIn.intVal, objectIn); }
 	public TextAreaLine<E> createTextLine(String textIn, int colorIn, E objectIn) {
-		var l = new TextAreaLine(this, textIn, colorIn, objectIn, 0);
-		return l;
+		return new TextAreaLine<>(this, textIn, colorIn, objectIn, 0);
 	}
 	
 	public TextAreaLine<E> addTextLine() { return addTextLine("", EColors.white, null, false); }
@@ -240,6 +238,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 		if (lineIn == null) { currentLine = null; }
 		if (textDocument.contains(lineIn)) {
 			currentLine = lineIn;
+			if (currentLine == null) return;
 			if (!currentLine.hasFocus()) currentLine.requestFocus(typeIn);
 		}
 	}
@@ -492,10 +491,12 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	public void setDrawLineNumberSeparator(boolean valIn) { drawLineNumberSeparator = valIn; }
 	public void setLineNumberSeparatorColor(EColors colorIn) { setLineNumberSeparatorColor(colorIn.intVal); }
 	public void setLineNumberSeparatorColor(int colorIn) { lineNumberSeparatorColor = colorIn; }
+	/** If enabled, new lines will automatically indent to the previous line's same indent level. */
+	public void setNewLinesTabToColumnStart(boolean val) { newLinesTabToColumnStart = val; }
 	
 	public void setTextDocument(EList<TextAreaLine<E>> docIn) {
 		clear();
-		docIn.forEach(l -> addTextLine(l));
+		docIn.forEach(this::addTextLine);
 	}
 	
 }

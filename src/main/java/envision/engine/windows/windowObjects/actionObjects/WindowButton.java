@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
@@ -296,6 +297,8 @@ public class WindowButton<E> extends ActionObject {
 	
 	public void setForceDrawHover(boolean val) { forceDrawHover = val; }
 	public void setTextures(GameTexture base, GameTexture sel) { setButtonTexture(base); setButtonSelTexture(sel); }
+	public void setButtonTexture(Sprite sprite) { btnTexture = sprite.getTexture(); checkForBaseTextures(); }
+	public void setButtonSelTexture(Sprite sprite) { btnSelTexture = sprite.getTexture(); checkForBaseTextures(); }
 	public void setButtonTexture(GameTexture loc) { btnTexture = loc; checkForBaseTextures(); }
 	public void setButtonSelTexture(GameTexture loc) { btnSelTexture = loc; checkForBaseTextures(); }
 	public void setString(String stringIn) { displayString = stringIn; }

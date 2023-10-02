@@ -1,7 +1,8 @@
 package envision.game.effects.animations;
 
 import envision.engine.rendering.textureSystem.GameTexture;
-import eutil.datatypes.EArrayList;
+import envision.engine.rendering.textureSystem.Sprite;
+import eutil.datatypes.util.EList;
 
 /**
  * An AnimationSet comprises a single set of keyframes that pertain to
@@ -21,7 +22,7 @@ public class AnimationSet {
 	/** The name of this animation set -- can be modified. */
 	private String setName = "My New Animation";
 	/** The set of frames for this animation. */
-	private final EArrayList<GameTexture> frames = new EArrayList<>();
+	private final EList<Sprite> frames = EList.newList();
 	/** 40 game ticks by default -- can be modified. */
 	private long updateInterval = 40;
 	
@@ -33,12 +34,12 @@ public class AnimationSet {
 		setName = setNameIn;
 	}
 	
-	public AnimationSet(String setNameIn, EArrayList<GameTexture> framesIn) {
+	public AnimationSet(String setNameIn, EList<Sprite> framesIn) {
 		setName = setNameIn;
 		frames.addAll(framesIn);
 	}
 	
-	public AnimationSet(String setNameIn, EArrayList<GameTexture> framesIn, long updateIntervalIn) {
+	public AnimationSet(String setNameIn, EList<Sprite> framesIn, long updateIntervalIn) {
 		setName = setNameIn;
 		frames.addAll(framesIn);
 		updateInterval = updateIntervalIn;
@@ -49,11 +50,19 @@ public class AnimationSet {
 	//---------
 	
 	public void addFrame(GameTexture tex) {
-		frames.add(tex);
+		addFrame(new Sprite(tex));
+	}
+	
+	public void addFrame(Sprite sprite) {
+	    frames.add(sprite);
 	}
 	
 	public void addFrameAtIndex(GameTexture tex, int index) {
-		frames.add(index, tex);
+		addFrameAtIndex(new Sprite(tex), index);
+	}
+	
+	public void addFrameAtIndex(Sprite sprite, int index) {
+	    frames.add(index, sprite);
 	}
 	
 	public void clearFrames() {
@@ -70,14 +79,15 @@ public class AnimationSet {
 	
 	public String getSetName() { return setName; }
 	public long getUpdateInterval() { return updateInterval; }
-	public EArrayList<GameTexture> getFrames() { return frames; }
-	public GameTexture getFrameAtIndex(int index) { return frames.get(index); }
+	public EList<Sprite> getFrames() { return frames; }
+	public Sprite getFrameAtIndex(int index) { return frames.get(index); }
 	
 	//---------
 	// Setters
 	//---------
 	
 	public void setSetName(String nameIn) { setName = nameIn; }
-	public void setFrameAtIndex(GameTexture tex, int index) { frames.set(index, tex); }
+	public void setFrameAtIndex(GameTexture tex, int index) { setFrameAtIndex(new Sprite(tex), index); }
+	public void setFrameAtIndex(Sprite sprite, int index) { frames.set(index, sprite); }
 	public void setUpdateInterval(long intervalIn) { updateInterval = intervalIn; }
 }

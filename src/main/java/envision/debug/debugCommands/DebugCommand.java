@@ -1,12 +1,11 @@
 package envision.debug.debugCommands;
 
 import envision.engine.terminal.window.ETerminalWindow;
-import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.EList;
+import eutil.datatypes.ValueMap;
 
 public abstract class DebugCommand {
 	
-	public EList<Object> list = new EArrayList<>();
+	public ValueMap values = new ValueMap();
 	public double dVal0 = 0;
 	public double dVal1 = 0;
 	public double dVal2 = 0;

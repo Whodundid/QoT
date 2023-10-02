@@ -38,8 +38,7 @@ public class FileHelper extends ArgHelper {
 	
 	private File generateFile(File cur, String path) {
 	    try {
-	        File f = new File(curDir, path).getCanonicalFile();
-	        return f;
+	        return new File(curDir, path).getCanonicalFile();
 	    }
 	    catch (Exception e) {
 	        return curDir;

@@ -1,5 +1,6 @@
 package qot.entities.house;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.doodads.house.HouseTextures;
@@ -12,7 +13,7 @@ public class Barrel extends BasicRenderedEntity {
 	public Barrel(int x, int y) {
 		super("Barrel");
 		init(x, y, 32, 32);
-		setTexture(HouseTextures.barrel);
+		sprite = new Sprite(HouseTextures.barrel);
 		setMaxHealth(5);
 		setHealth(5);
 		setExperienceRewardedOnKill(1);

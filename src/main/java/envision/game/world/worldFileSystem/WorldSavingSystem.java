@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.WorldFileSystem;
 import envision.game.world.WorldLayer;
 import eutil.strings.EStringBuilder;
@@ -87,13 +87,13 @@ public class WorldSavingSystem {
 			for (int x = 0; x < width; x++) {
 				final var tile = layer.getTileAt(x, y);
 				
-				if (tile == null || tile.getTexture() == null) {
+				if (tile == null || tile.sprite == null) {
 					lb.a("n ");
 					continue;
 				}
 				
-				GameTexture tex = tile.getTexture();
-				lb.a(tile.getID(), ((tex.hasParent()) ? ":" + tex.getChildID() : ""), ' ');
+				Sprite tex = tile.sprite;
+				lb.a(tile.getID(), ((tex.getTexture().hasParent()) ? ":" + tex.getTexture().getChildID() : ""), ' ');
 			}
 			
 			var trim = lb.toString().trim();

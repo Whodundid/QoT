@@ -74,6 +74,10 @@ public class GameTexture {
 	    minFilter = minFilterIn;
 	    magFilter = magFilterIn;
 	}
+//	
+//	public GameTexture(Sprite spriteIn) {
+//	    
+//	}
 	
 	//-------------------
 	// Protected Methods

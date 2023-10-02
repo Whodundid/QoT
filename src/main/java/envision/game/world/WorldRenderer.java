@@ -3,7 +3,7 @@ package envision.game.world;
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.RenderingManager;
-import envision.engine.screens.GameTopScreen;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowUtil.EGui;
 import envision.game.world.layerSystem.WorldDrawLayer;
 import envision.game.world.worldTiles.WorldTile;
@@ -31,8 +31,6 @@ public class WorldRenderer extends EGui {
 	public static boolean drawPosBox = false;
 	public static boolean drawEntityHitboxes = false;
 	public static boolean drawEntityOutlines = false;
-	
-	private int left, top, right, bot;
 	
 	/** Temporary list for testing world layers. */
 	private EList<WorldDrawLayer> worldLayers = EList.newList();
@@ -94,7 +92,7 @@ public class WorldRenderer extends EGui {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (!GameTopScreen.isTopFocused() && !(Keyboard.isCtrlDown() || Keyboard.isAltDown() || Keyboard.isShiftDown())) {
+		if (!DeveloperDesktop.isOpen() && !(Keyboard.isCtrlDown() || Keyboard.isAltDown() || Keyboard.isShiftDown())) {
 			if (typedChar == 'h') drawEntityHitboxes = !drawEntityHitboxes;
 			if (typedChar == 'p') drawPosBox = !drawPosBox;
 			if (typedChar == 'o') drawEntityOutlines = !drawEntityOutlines;
@@ -132,14 +130,14 @@ public class WorldRenderer extends EGui {
         drawRect(0xff000000);
         
         //pixel width of each tile
-        double w = (int) (world.getTileWidth() * world.getCameraZoom());
+        //double w = (int) (world.getTileWidth() * world.getCameraZoom());
         //pixel height of each tile
-        double h = (int) (world.getTileHeight() * world.getCameraZoom());
+        //double h = (int) (world.getTileHeight() * world.getCameraZoom());
         
         //the left most x coordinate for map drawing
-        double x = (int) (midX - (distX * w) - (w / 2));
+        //double x = (int) (midX - (distX * w) - (w / 2));
         //the top most y coordinate for map drawing
-        double y = (int) (midY - (distY * h) - (h / 2));
+        //double y = (int) (midY - (distY * h) - (h / 2));
         
         renderMapLayers();
         
@@ -175,10 +173,10 @@ public class WorldRenderer extends EGui {
 		midDrawY = cam.getWorldY();
 		
 		// calculations to determine how many tiles to draw out in each direction from the mid of the screen
-		left = ENumUtil.clamp(midDrawX - distX, 0, worldWidth - 1);
-		top = ENumUtil.clamp(midDrawY - distY, 0, worldHeight - 1);
-		right = ENumUtil.clamp(midDrawX + distX, left, worldWidth - 1);
-		bot = ENumUtil.clamp(midDrawY + distY, top, worldHeight - 1);
+		int left = ENumUtil.clamp(midDrawX - distX, 0, worldWidth - 1);
+		int top = ENumUtil.clamp(midDrawY - distY, 0, worldHeight - 1);
+		int right = ENumUtil.clamp(midDrawX + distX, left, worldWidth - 1);
+		int bot = ENumUtil.clamp(midDrawY + distY, top, worldHeight - 1);
 		
 		final int size = worldLayers.size();
 		for (int i = 0; i < size; i++) {

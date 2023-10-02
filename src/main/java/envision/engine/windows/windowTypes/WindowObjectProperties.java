@@ -18,9 +18,9 @@ import eutil.math.dimensions.Dimension_d;
  */
 public class WindowObjectProperties {
 	
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	/** The single WindowObject instance for which these properties pertain to. */
 	public final WindowObject instance;
@@ -63,18 +63,18 @@ public class WindowObjectProperties {
 	/** The header of this object. (if there is one) */
 	public WindowHeader objectHeader;
 	
-	//---------------------
+	//=====================
 	// Fields : Object IDs
-	//---------------------
+	//=====================
 	
 	/** The display name of this object. If a IWindowParent, this name is displayed on the window's header. */
 	public String objectName = "noname";
 	/** The ID of this object. */
 	public final long objectId;
 	
-	//----------------------------------
+	//==================================
 	// Fields : Basic Object Properties
-	//----------------------------------
+	//==================================
 	
 	/** True if this object is interact-able or not. */
 	public boolean isEnabled = true;
@@ -95,9 +95,9 @@ public class WindowObjectProperties {
 	/** Specifies whether or not this object can actually be closed. */
 	public boolean isClosable = true;
 	
-	//--------------------------------
+	//================================
 	// Fields : Tracked Object States
-	//--------------------------------
+	//================================
 	
 	/** Tracked state of whether or not this object has been initialized. */
 	public volatile boolean isInitialized = false;
@@ -120,9 +120,9 @@ public class WindowObjectProperties {
 	/** Tracked state of whether or not this object has been closed. */
 	public volatile boolean isClosed = false;
 	
-	//--------------
+	//==============
 	// Constructors
-	//--------------
+	//==============
 	
 	WindowObjectProperties(WindowObject instanceIn) {
 		instance = instanceIn;
@@ -140,9 +140,9 @@ public class WindowObjectProperties {
         boundaryDimension = (dimIn != null) ? new Dimension_d(dimIn) : null;
     }
 	
-	//----------------
+	//================
 	// Static Methods
-	//----------------
+	//================
 	
 	private static volatile int curObjectID = 0;
 	

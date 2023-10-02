@@ -72,6 +72,7 @@ public class TerminalRCM extends RightClickMenu {
 			case "Clear": clear(); break;
 			case "Clear History": clearHistory(); break;
 			case "Options": openOptions(); break;
+			default: break;
 			}
 		}
 	}
@@ -116,7 +117,7 @@ public class TerminalRCM extends RightClickMenu {
 	}
 	
 	private void search() {
-		
+		// LOL
 	}
 	
 	private void clear() {

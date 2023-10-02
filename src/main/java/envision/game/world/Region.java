@@ -18,11 +18,6 @@ import qot.settings.QoTSettings;
 
 public class Region extends GameObject {
 	
-	protected IGameWorld world;
-	protected String name;
-	public int startX, startY, endX, endY;
-	public int midX, midY;
-	public int width, height;
 	protected int regionColor;
 	protected boolean onlyRenderInEditor = true;
 	protected EList<Entity> entitiesInside = new EArrayList<>();
@@ -47,7 +42,10 @@ public class Region extends GameObject {
 		var it = entitiesInside.iterator();
 		while (it.hasNext()) {
 			var ent = it.next();
-			if (ent == null) it.remove();
+			if (ent == null) {
+			    it.remove();
+			    continue;
+			}
 			
 			Dimension_d entDims = ent.getCollisionDims();
 			if (!getRegionDimensions().partiallyContains(entDims)) {
@@ -57,8 +55,11 @@ public class Region extends GameObject {
 		}
 	}
 	
-	public void setDimensions(int widthIn, int heightIn) { setDimensions(startX, startY, startX + widthIn, startY + heightIn); }
-	public void setDimensions(int sX, int sY, int eX, int eY) {
+	public void setDimensions(double widthIn, double heightIn) {
+	    setDimensions(startX, startY, startX + widthIn, startY + heightIn);
+	}
+	
+	public void setDimensions(double sX, double sY, double eX, double eY) {
 		startX = sX;
 		startY = sY;
 		endX = eX;
@@ -92,30 +93,30 @@ public class Region extends GameObject {
 		if (in == Envision.thePlayer) {
 			//if (world.getWorldName().equals("new")) {
 				if (name.equals("Cave")) {
-					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")));
+					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "cave/cave.twld")), false);
 					Envision.theWorld.setUnderground(true);
 				}
 				else if (name.equals("MountainPass")) {
-					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")));
+					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")), false);
 				}
 				else if (name.equals("Mine")) {
-					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountain_dung/mountain_dung.twld")));
+					Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountain_dung/mountain_dung.twld")), false);
 				}
 				else if (name.equals("toRuins")) {
-				    Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "test/test.twld")));
+				    Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "test/test.twld")), false);
 				}
 			//}
 			else if (name.equals("exitCave")) {
-				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")), false);
 			}
 			else if (name.equals("Valley")) {
-				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")), false);
 			}
 			else if (name.equals("cave_entrance")) {
-				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")));
+				Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "mountains/mountains.twld")), false);
 			}
             else if (name.equals("toNew")) {
-                Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")));
+                Envision.loadWorld(new GameWorld(new File(QoTSettings.getEditorWorldsDir(), "new/new.twld")), false);
             }
 		}
 	}
@@ -141,27 +142,23 @@ public class Region extends GameObject {
 		return entitiesInside.contains(object);
 	}
 	
-	public String getName() { return name; }
 	public IGameWorld getWorld() { return world; }
 	public int getColor() { return regionColor; }
 	public boolean onlyRenderInEditor() { return onlyRenderInEditor; }
 	public Region setOnlyRenderInEditor(boolean val) { onlyRenderInEditor = val; return this; }
 	
-	public Region setName(String nameIn) { name = nameIn; return this; }
 	public Region setColor(EColors colorIn) { return setColor(colorIn.intVal); }
 	public Region setColor(int colorIn) { regionColor = colorIn; return this; }
 	
 	public static Region parseRegion(GameWorld world, String line) {
-		try {
-			Scanner lineReader = new Scanner(line.substring(2));
+		try (var lineReader = new Scanner(line.substring(2))) {
 			//int i = (parts.length == 7) ? 1 : 0;
-			int sX = Integer.valueOf(lineReader.next());
-			int sY = Integer.valueOf(lineReader.next());
-			int eX = Integer.valueOf(lineReader.next());
-			int eY = Integer.valueOf(lineReader.next());
-			int color = Integer.valueOf(lineReader.next());
+			int sX = Integer.parseInt(lineReader.next());
+			int sY = Integer.parseInt(lineReader.next());
+			int eX = Integer.parseInt(lineReader.next());
+			int eY = Integer.parseInt(lineReader.next());
+			int color = Integer.parseInt(lineReader.next());
 			String name = lineReader.nextLine().trim();
-			lineReader.close();
 			return new Region(world, name, sX, sY, eX, eY, color);
 		}
 		catch (Exception e) {

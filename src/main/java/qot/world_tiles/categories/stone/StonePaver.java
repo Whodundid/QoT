@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.stone;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
@@ -15,10 +16,10 @@ public class StonePaver extends WorldTile {
 		numVariants = StoneFloorTextures.stone_paver.getChildren().size();
 		
 		if (id < 0) {
-			setTexture(StoneFloorTextures.stone_paver.getRandVariant());
+		    setSprite(new Sprite(StoneFloorTextures.stone_paver.getRandVariant()));
 		}
 		else {
-			setTexture(StoneFloorTextures.stone_paver.getChild(id));
+		    setSprite(new Sprite(StoneFloorTextures.stone_paver.getChild(id)));
 		}
 	}
 	

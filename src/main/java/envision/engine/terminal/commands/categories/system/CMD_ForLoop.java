@@ -4,6 +4,7 @@ import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
+import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
 
 //Author: Hunter Bragg
@@ -37,19 +38,19 @@ public class CMD_ForLoop extends TerminalCommand {
         String secondParse = vals.substring(pos + 1);
         
         String secondArg = EStringUtil.subStringToString(secondParse, 0, "-");
-        System.out.println(secondArg);
+        //System.out.println(secondArg);
         
         
         String thirdArg = EStringUtil.subStringToString(secondParse, 0, "-", true);
         
-        System.out.println(thirdArg);
+        //System.out.println(thirdArg);
         
         boolean positive = true;
         int firstI = 0;
         int secondI = 0;
         int thirdI = 0;
         
-        Class type = checkClasses(firstArg, secondArg, thirdArg);
+        Class<?> type = checkClasses(firstArg, secondArg, thirdArg);
         
         if (type == null) { error("Could not parse range value types!"); return; }
         if (type == Exception.class) { error("Inconsistent range datatype values!"); return; }
@@ -87,11 +88,11 @@ public class CMD_ForLoop extends TerminalCommand {
         }
 	}
 	
-	private Class checkClasses(String firstArg, String secondArg, String thirdArg) {
+	private Class<?> checkClasses(String firstArg, String secondArg, String thirdArg) {
 		try {
-			Class first = String.class;
-			Class second = String.class;
-			Class third = String.class;
+			Class<?> first = String.class;
+			Class<?> second = String.class;
+			Class<?> third = String.class;
 			
 			if (ENumUtil.isInteger(firstArg, 10)) { first = Integer.class; }
 			if (ENumUtil.isInteger(secondArg, 10)) { second = Integer.class; }
@@ -99,7 +100,7 @@ public class CMD_ForLoop extends TerminalCommand {
 			
 			if (!first.equals(second) || !first.equals(third)) { return Exception.class; } //error and return if the parsed range types are not the same
 			else if (first == Integer.class) { return Integer.class; } //try for integer range
-			else if (first == Integer.class) { return String.class; } //try for character range instead
+			else if (first == String.class) { return String.class; } //try for character range instead
 			
 		}
 		catch (Exception e) {
@@ -115,17 +116,17 @@ public class CMD_ForLoop extends TerminalCommand {
 	}
 	
 	private String replaceValsInArgs(EList<String> argsIn, Object curVal) {
-		String cmd = "";
+		var cmd = new EStringBuilder();
 		for (String s : argsIn) {
-			s = s.replaceAll("\\#", "" + curVal);
-			cmd += s + " ";
+			s = s.replace("\\#", "" + curVal);
+			cmd.a(s + " ");
 		}
 		
-		if (argsIn.size() > 0 && cmd.length() > 0) {
-		    cmd = cmd.substring(0, cmd.length() - 1);
+		if (argsIn.isNotEmpty() && cmd.length() > 0) {
+		    cmd.setString(cmd.substring(0, cmd.length() - 1));
 		}
 		
-		return cmd;
+		return cmd.toString();
 	}
 	
 }

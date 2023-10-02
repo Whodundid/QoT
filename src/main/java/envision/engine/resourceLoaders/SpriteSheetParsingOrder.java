@@ -1,6 +1,6 @@
 package envision.engine.resourceLoaders;
 
-public enum TextureSheetParsingOrder {
+public enum SpriteSheetParsingOrder {
 	/** Left to right, top to bottom */
 	LR_TB,
 	/** right to left, top to bottom */

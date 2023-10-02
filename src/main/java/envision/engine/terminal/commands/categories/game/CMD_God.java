@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_God extends TerminalCommand {
@@ -13,7 +12,7 @@ public class CMD_God extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "god"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("godmode"); }
+	@Override public EList<String> getAliases() { return EList.of("godmode"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Toggles god mode on the player."; }
 	@Override public String getUsage() { return "ex: god"; }
 	

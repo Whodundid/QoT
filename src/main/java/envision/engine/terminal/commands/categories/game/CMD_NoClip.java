@@ -3,7 +3,6 @@ package envision.engine.terminal.commands.categories.game;
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.game.entities.player.Player;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_NoClip extends TerminalCommand {
@@ -14,7 +13,7 @@ public class CMD_NoClip extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "noclip"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("nc"); }
+	@Override public EList<String> getAliases() { return EList.of("nc"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Allows player no-clipping"; }
 	@Override public String getUsage() { return "ex: nc"; }
 	

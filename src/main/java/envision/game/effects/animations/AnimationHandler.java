@@ -1,10 +1,11 @@
 package envision.game.effects.animations;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Entity;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 /**
  * Simplistic keyframe animation system that uses game ticks to know
@@ -24,6 +25,11 @@ public class AnimationHandler {
 	public static final String WALKING_2 = "walk2";
 	public static final String WALKING_3 = "walk3";
 	
+	public static final String WALKING_UP_1 = "walkup1";
+	public static final String WALKING_LEFT_1 = "walkleft1";
+	public static final String WALKING_DOWN_1 = "walkdown1";
+	public static final String WALKING_RIGHT_1 = "walkright1";
+	
 	public static final String ATTACK_1 = "att1";
 	public static final String ATTACK_2 = "att2";
 	public static final String ATTACK_3 = "att3";
@@ -34,10 +40,10 @@ public class AnimationHandler {
 	
 	/** The entity for which this animation pertains to. */
 	private final Entity theEntity;
-	/** The original Entity's game texture. */
-	private final GameTexture origTex;
+	/** The Entity's base game texture. */
+	private Sprite origTex;
 	/** The set of all keyframes on this animation. */
-	private final HashMap<String, AnimationSet> animationSets = new HashMap<>();
+	private final Map<String, AnimationSet> animationSets = new HashMap<>();
 	/** The current game tick continuously counting up. */
 	private long curGameTick = 0;
 	/** Indicates whether or not the animation will continue to update over time. */
@@ -60,7 +66,7 @@ public class AnimationHandler {
 	
 	public AnimationHandler(Entity entIn) {
 		theEntity = entIn;
-		origTex = theEntity.getTexture();
+		origTex = theEntity.getSprite();
 	}
 	
 	//---------
@@ -73,10 +79,10 @@ public class AnimationHandler {
 	 */
 	public void onRenderTick() {
 		var t = update();
-		theEntity.setTexture(t);
+		theEntity.setSprite(t);
 	}
 	
-	private GameTexture update() {
+	private Sprite update() {
 		//If there is no animation to play, just return the entity's base texture
 		if (currentAnimation == null) return origTex;
 		
@@ -121,7 +127,7 @@ public class AnimationHandler {
 	
 	public boolean stop() {
 		if (currentAnimation == null || currentAnimation.isEmpty()) return false;
-		theEntity.setTexture(origTex);
+		theEntity.setSprite(origTex);
 		playing = false;
 		return true;
 	}
@@ -169,7 +175,7 @@ public class AnimationHandler {
 	/**
 	 * Returns the base texture of the entity.
 	 */
-	public GameTexture getEntitysBaseTexture() {
+	public Sprite getEntitysBaseTexture() {
 		return origTex;
 	}
 	
@@ -206,7 +212,7 @@ public class AnimationHandler {
 	/**
 	 * Returns the current texture associated with the immediate frame index.
 	 */
-	public GameTexture getCurrentFrameTexture() {
+	public Sprite getCurrentFrameTexture() {
 		if (currentAnimation == null) return null;
 		if (currentAnimation.isEmpty()) return null;
 		return currentAnimation.getFrameAtIndex(frameIndex);
@@ -251,10 +257,10 @@ public class AnimationHandler {
 	 * Returns a list containing every animation set stored within this
 	 * handler.
 	 */
-	public EArrayList<AnimationSet> getAllAnimations() {
-		EArrayList<AnimationSet> r = new EArrayList<>();
-		for (var s : animationSets.keySet())
-			r.add(animationSets.get(s));
+	public EList<AnimationSet> getAllAnimations() {
+		EList<AnimationSet> r = EList.newList();
+		for (var s : animationSets.entrySet())
+			r.add(s.getValue());
 		return r;
 	}
 	
@@ -305,8 +311,11 @@ public class AnimationHandler {
 	 * @return The animation set's game tick update interval
 	 */
 	public long getSetUpdateInterval(String setName) {
-		var set = getSetInternal(setName);
-		return (set != null) ? set.getUpdateInterval() : -1;
+		return getSetInternal(setName).getUpdateInterval();
+	}
+	
+	public void setEntityBaseTexture(Sprite spriteIn) {
+	    origTex = spriteIn;
 	}
 	
 	//------------------
@@ -319,14 +328,13 @@ public class AnimationHandler {
 	}
 	
 	private void unloadCurrentWorkingSet() {
-		theEntity.setTexture(origTex);
+		theEntity.setSprite(origTex);
 		currentAnimation = null;
 		frameIndex = -1;
 	}
 	
 	private boolean loadAnimationSet(String setName) {
 		var set = getSetInternal(setName);
-		if (set == null) return false;
 		
 		currentAnimation = set;
 		frameIndex = (currentAnimation.isNotEmpty()) ? 0 : -1;
@@ -360,7 +368,7 @@ public class AnimationHandler {
 		return set;
 	}
 	
-	private GameTexture getNextTexture() {
+	private Sprite getNextTexture() {
 		if (currentAnimation == null) return origTex;
 		return (currentAnimation.isNotEmpty()) ? currentAnimation.getFrameAtIndex(frameIndex) : null;
 	}

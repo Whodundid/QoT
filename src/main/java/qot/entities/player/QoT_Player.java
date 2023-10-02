@@ -2,6 +2,7 @@ package qot.entities.player;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
 import envision.game.entities.player.PlayerStats;
@@ -40,7 +41,7 @@ public class QoT_Player extends Player {
 		inventory.setItem(1, Items.lesserMana);
 		
 		setCollisionBox(midX - 8, endY - 10, midX + 8, endY);
-		tex = EntityTextures.player;
+		sprite = new Sprite(EntityTextures.player);
 		timeUntilNextAttack = 175l;
 
 		addComponent(new PlayerRenderer(this));

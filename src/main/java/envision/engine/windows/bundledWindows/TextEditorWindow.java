@@ -52,8 +52,10 @@ public class TextEditorWindow extends WindowParent {
 		path = pathIn;
 		windowIcon = TaskBarTextures.texteditor;
 		
-		new Thread(() -> loadFile()).start();
+		new Thread(this::loadFile).start();
 	}
+	
+	@Override public String getWindowName() { return "text-editor"; }
 	
 	//-----------
 	// Overrides
@@ -65,14 +67,14 @@ public class TextEditorWindow extends WindowParent {
 		setMinDims(125, 125);
 		setResizeable(true);
 		setMaximizable(true);
-		setObjectName("Editing: " + path != null ? path.getName() : "Unnamed File");
+		setObjectName("Editing: " + ((path != null) ? path.getName() : "Unnamed File"));
 	}
 	
 	@Override
 	public void initChildren() {
 		defaultHeader(this);
 		
-		document = new WindowTextArea(this, startX + 2, startY + 2, width - 4, height - 50);
+		document = new WindowTextArea<>(this, startX + 2, startY + 2, width - 4, height - 50);
 		document.setEditable(!failed);
 		document.setBackgroundColor(EColors.steel.intVal);
 		document.setResetDrawn(false);
@@ -82,9 +84,9 @@ public class TextEditorWindow extends WindowParent {
 		double w = ENumUtil.clamp((width - 30 - 24) / 2, 45, 200);
 		double h = document.endY + (endY - document.endY) / 2 - 20;
 		
-		cancel = new WindowButton(this, midX - 25 - w, h, w, 40, "Cancel");
-		save = new WindowButton(this, midX + 25, h, width % 2 == 1 ? w + 1 : w, 40, "Save");
-		reload = new WindowButton(this, midX - 20, h, 40, 40);
+		cancel = new WindowButton<>(this, midX - 25 - w, h, w, 40, "Cancel");
+		save = new WindowButton<>(this, midX + 25, h, width % 2 == 1 ? w + 1 : w, 40, "Save");
+		reload = new WindowButton<>(this, midX - 20, h, 40, 40);
 		reload.setButtonTexture(WindowTextures.refresh);
 		
 		reload.setHoverText("Reload");
@@ -134,7 +136,10 @@ public class TextEditorWindow extends WindowParent {
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
 		//tap into 'ctrl + s'
-		if (Keyboard.isCtrlS(keyCode)) saveFile();
+		if (Keyboard.isCtrlS(keyCode)) {
+		    saveFile();
+		    return;
+		}
 		
 		super.keyPressed(typedChar, keyCode);
 	}
@@ -169,7 +174,19 @@ public class TextEditorWindow extends WindowParent {
 		}
 		else if (!loaded) {
 			for (var l : lines) {
-				document.addTextLine(l, EColors.lgray);
+			    TextAreaLine<String> textLine = new TextAreaLine<>(document, l, EColors.white.intVal, null, 0) {
+			        @Override
+			        public void keyPressed(char typedChar, int keyCode) {
+			            //tap into 'ctrl + s'
+			            if (Keyboard.isCtrlS(keyCode)) {
+			                saveFile();
+			                return;
+			            }
+			            
+			            super.keyPressed(typedChar, keyCode);
+			        }
+			    };
+				document.addTextLine(textLine);
 			}
 			
 			loaded = true;
@@ -182,7 +199,19 @@ public class TextEditorWindow extends WindowParent {
 		if (!restored && !loading) {
 			
 			for (var l : lines) {
-				document.addTextLine(l, EColors.lgray);
+			    TextAreaLine<String> textLine = new TextAreaLine<>(document, l, EColors.white.intVal, null, 0) {
+                    @Override
+                    public void keyPressed(char typedChar, int keyCode) {
+                        //tap into 'ctrl + s'
+                        if (Keyboard.isCtrlS(keyCode)) {
+                            saveFile();
+                            return;
+                        }
+                        
+                        super.keyPressed(typedChar, keyCode);
+                    }
+                };
+                document.addTextLine(textLine);
 			}
 			
 			document.getVScrollBar().setScrollPos(vPos);
@@ -204,18 +233,19 @@ public class TextEditorWindow extends WindowParent {
 		//all parsed lines
 		lines = EList.newList();
 		
-		if (path.exists())
-		try (BufferedReader r = new BufferedReader(new FileReader(path))) {
-			String line;
-			while ((line = r.readLine()) != null) {
-				lines.add(line);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			failed = true;
-			document.addTextLine("Error: Cannot open file!", EColors.red);
-			document.setEditable(false);
+		if (path.exists()) {
+	      try (BufferedReader r = new BufferedReader(new FileReader(path))) {
+	            String line;
+	            while ((line = r.readLine()) != null) {
+	                lines.add(line);
+	            }
+	        }
+	        catch (Exception e) {
+	            e.printStackTrace();
+	            failed = true;
+	            document.addTextLine("Error: Cannot open file!", EColors.red);
+	            document.setEditable(false);
+	        }
 		}
 		
 		if (isInitialized()) {
@@ -258,7 +288,7 @@ public class TextEditorWindow extends WindowParent {
 	}
 	
 	private void openDialogue(boolean pass) {
-		var box = new WindowDialogueBox(this, DialogBoxTypes.OK);
+		var box = new WindowDialogueBox<>(this, DialogBoxTypes.OK);
 		
 		box.setTitle("Saving File");
 		box.setTitleColor(EColors.lgray.intVal);

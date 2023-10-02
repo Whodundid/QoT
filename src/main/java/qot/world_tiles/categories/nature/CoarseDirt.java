@@ -1,5 +1,6 @@
 package qot.world_tiles.categories.nature;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.NatureTextures;
 import qot.world_tiles.TileIDs;
@@ -8,7 +9,7 @@ public class CoarseDirt extends WorldTile {
 	
 	public CoarseDirt() {
 		super(TileIDs.COARSE_DIRT);
-		setTexture(NatureTextures.coarse_dirt);
+		setSprite(new Sprite(NatureTextures.coarse_dirt));
 	}
 	
 	@Override

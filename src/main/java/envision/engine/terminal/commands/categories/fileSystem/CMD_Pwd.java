@@ -2,9 +2,7 @@ package envision.engine.terminal.commands.categories.fileSystem;
 
 import java.io.File;
 
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_Pwd extends AbstractFileCommand {
@@ -14,10 +12,9 @@ public class CMD_Pwd extends AbstractFileCommand {
 	}
 	
 	@Override public String getName() { return "pwd"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("dir"); }
+	@Override public EList<String> getAliases() { return EList.of("dir"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Prints the current working directory."; }
 	@Override public String getUsage() { return "ex: pwd"; }
-	@Override public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {}
 	
 	@Override
 	public void runCommand() {

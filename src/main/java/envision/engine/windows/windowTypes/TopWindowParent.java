@@ -6,8 +6,8 @@ import java.util.Deque;
 import envision.Envision;
 import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.screens.GameTopScreen;
 import envision.engine.windows.StaticTopParent;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
@@ -25,9 +25,9 @@ import eutil.misc.ScreenLocation;
 
 public class TopWindowParent extends WindowObject implements ITopParent {
 	
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	protected IWindowObject modifyingObject;
 	protected IWindowObject objectRequestingFocus, focusedObject, focusLockObject;
@@ -52,9 +52,9 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	
 	private final EList<IWindowParent> highlightedWindows = EList.newList();
 	
-	//---------------------------
+	//===========================
 	// Overrides : IWindowObject
-	//---------------------------
+	//===========================
 	
 	//main draw
 	@Override
@@ -73,24 +73,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		
 		//now draw all child objects on top of parent
 		for (var o : getChildren()) {
-			if (!o.willBeDrawn()) continue;
-			
-			boolean draw = true;
-			
-			if (o instanceof IWindowParent wp) {
-				draw = (!wp.isMinimized() || wp.drawsWhileMinimized());
-				if (wp.isHighlighted()) highlightedWindows.add(wp);
-			}
-			
-			if (draw) {
-				if (!o.hasFirstDraw()) o.onFirstDraw_i();
-				o.drawObject_i(mX, mY);
-				
-				//draw grayed out overlay over everything if a focus lock object is present
-				if (focusLockObject != null && !o.equals(focusLockObject)) {
-					drawRect(o.getDimensions(), 0x77000000);
-				}
-			}
+		    drawWindowObject(o);
 		}
 		
 		//draw highlighted window borders
@@ -120,21 +103,21 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	@Override public double getMinHeight() { return res.height; }
 	@Override public double getMaxWidth() { return res.width; }
 	@Override public double getMaxHeight() { return res.height; }
-	@Override public void setMinDims(double widthIn, double heightIn) {}
-	@Override public void setMaxDims(double widthIn, double heightIn) {}
-	@Override public void setMinWidth(double widthIn) {}
-	@Override public void setMinHeight(double heightIn) {}
-	@Override public void setMaxWidth(double widthIn) {}
-	@Override public void setMaxHeight(double heightIn) {}
-	@Override public void setResizeable(boolean val) {}
-	@Override public void resize(double xIn, double yIn, ScreenLocation areaIn) {}
+	@Override public void setMinDims(double widthIn, double heightIn) { /* Empty because irrelevant. */ }
+	@Override public void setMaxDims(double widthIn, double heightIn) { /* Empty because irrelevant. */ }
+	@Override public void setMinWidth(double widthIn) { /* Empty because irrelevant. */ }
+	@Override public void setMinHeight(double heightIn) { /* Empty because irrelevant. */ }
+	@Override public void setMaxWidth(double widthIn) { /* Empty because irrelevant. */ }
+	@Override public void setMaxHeight(double heightIn) { /* Empty because irrelevant. */ }
+	@Override public void setResizeable(boolean val) { /* Empty because irrelevant. */ }
+	@Override public void resize(double xIn, double yIn, ScreenLocation areaIn) { /* Empty because irrelevant. */ }
 	
 	//objects
 	@Override public boolean isChildOf(IWindowObject objIn) { return false; }
 	
 	//parents
 	@Override public IWindowObject getParent() { return null; }
-	@Override public void setParent(IWindowObject parentIn) {}
+	@Override public void setParent(IWindowObject parentIn) { /* Empty because irrelevant. */ }
 	@Override public ITopParent getTopParent() { return this; }
 	@Override public IWindowParent getWindowParent() { return null; }
 	
@@ -146,10 +129,8 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 			clearFocusLockObject();
 		}
 		else if (hasFocus()) {
-			if (!isLock) {
-				setObjectRequestingFocus(this, FocusType.TRANSFER);
-				return true;
-			}
+		    setObjectRequestingFocus(this, FocusType.TRANSFER);
+            return true;
 		}
 		return false;
 	}
@@ -172,21 +153,21 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 			else setObjectRequestingFocus(this, FocusType.TRANSFER);
 		}
 	}
-	@Override public void drawFocusLockBorder() {}
+	@Override public void drawFocusLockBorder() { /* Empty because irrelevant. */ }
 	@Override
 	public void requestFocus() {
 		if (!hasFocus() && !doesFocusLockExist()) setObjectRequestingFocus(this, FocusType.TRANSFER);
 	}
 	
 	//mouse checks
-	@Override public void mouseEntered(int mX, int mY) {}
-	@Override public void mouseExited(int mX, int mY) {}
+	@Override public void mouseEntered(int mX, int mY) { /* Empty because irrelevant. */ }
+	@Override public void mouseExited(int mX, int mY) { /* Empty because irrelevant. */ }
 	@Override public boolean isMouseInside() { return false; }
 	@Override public boolean isMouseOver() { return !isMouseInsideObject(); }
-	@Override public void setBoundaryEnforcer(Dimension_d dimIn) {}
+	@Override public void setBoundaryEnforcer(Dimension_d dimIn) { /* Empty because irrelevant. */ }
 	@Override public Dimension_d getBoundaryEnforcer() { return getDimensions(); }
 	@Override public boolean isClickable() { return false; }
-	@Override public void setClickable(boolean valIn) {}
+	@Override public void setClickable(boolean valIn) { /* Empty because irrelevant. */ }
 	
 	//basic inputs
 	@Override public void parseMousePosition(int mX, int mY) { getChildren().filterForEach(o -> o.isMouseInside(), o -> o.parseMousePosition(mX, mY)); }
@@ -194,21 +175,21 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	@Override public void mouseReleased(int mX, int mY, int button) { StaticTopParent.mouseReleased(this, mX, mY, button); }
 	@Override public void mouseDragged(int mX, int mY, int button, long timeSinceLastClick) { StaticTopParent.mouseDragged(this, mX, mY, button, timeSinceLastClick); }
 	@Override public void mouseScrolled(int change) { StaticTopParent.mouseScrolled(this, mX, mY, change); }
-	@Override public void onDoubleClick() {}
+	@Override public void onDoubleClick() { /* Empty because irrelevant. */ }
 	@Override public void keyPressed(char typedChar, int keyCode) { StaticTopParent.keyPressed(this, typedChar, keyCode); }
 	@Override public void keyReleased(char typedChar, int keyCode) { StaticTopParent.keyReleased(this, typedChar, keyCode); }
-	public void keyHeld(char typedChar, int keyCode) {}
+	public void keyHeld(char typedChar, int keyCode) { /* Empty because irrelevant. */ }
 	
 	//close object
 	@Override public boolean isClosable() { return false; }
 	@Override public boolean isClosed() { return false; }
-	@Override public void setCloseable(boolean val) {}
+	@Override public void setCloseable(boolean val) { /* Empty because irrelevant. */ }
 	//@Override public void close() { removeAllObjects(); }
-	@Override public void setFocusedObjectOnClose(IWindowObject objIn) {}
+	@Override public void setFocusedObjectOnClose(IWindowObject objIn) { /* Empty because irrelevant. */ }
 	
-	//------------------------
+	//========================
 	// Overrides : ITopParent 
-	//------------------------
+	//========================
 	
 	//drawing
 	@Override public void drawDebugInfo() { StaticTopParent.drawDebugInfo(this); }
@@ -274,10 +255,10 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		mX = mXIn;
 		mY = mYIn;
 		
-		if (this == Envision.getTopScreen()) {
-			if (GameTopScreen.isTopFocused()) updateCursor();
+		if (this == Envision.getDeveloperDesktop()) {
+			if (DeveloperDesktop.isOpen()) updateCursor();
 		}
-		else if (!GameTopScreen.isTopFocused()) updateCursor();
+		else if (!DeveloperDesktop.isOpen()) updateCursor();
 		
 		//handle mouse hover stuff
 		checkMouseHover();
@@ -324,11 +305,11 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 			switch (modifyType) {
 			case MOVE:
 			case MOVE_ALREADY_CLICKED:
-				modifyingObject.move(mX - mousePos.x, mY - mousePos.y);
+				modifyingObject.move((double) mX - mousePos.x, (double) mY - mousePos.y);
 				mousePos.set(mX, mY);
 				break;
 			case RESIZE:
-				modifyingObject.resize(mX - mousePos.x, mY - mousePos.y, resizingDir);
+				modifyingObject.resize((double) mX - mousePos.x, (double) mY - mousePos.y, resizingDir);
 				mousePos.set(mX, mY);
 				break;
 			default: break;
@@ -460,6 +441,33 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 			if (p.isMaximized()) p.maximize();
 		}
 	}
+	
+   protected void drawWindowObject(IWindowObject o) {
+        //only draw if the object is actually visible
+        if (!o.willBeDrawn() || o.isHidden()) return;
+        boolean draw = true;
+        
+        if (o instanceof IWindowParent wp) {
+            draw = (wp.drawsWhileMinimized() || !wp.isMinimized());
+            if (wp.isHighlighted()) highlightedWindows.add(wp);
+        }
+        
+        if (!draw) return;
+        
+        //notify object on first draw
+        if (!o.hasFirstDraw()) o.onFirstDraw_i();
+        //actually draw the child object
+        o.drawObject_i(mX, mY);
+        
+        //draw grayed out overlay over everything if a focus lock object is present
+        if (focusLockObject != null && !o.equals(focusLockObject)) {
+            if (o.isVisible()) {
+                drawRect(o.getDimensions(), 0x77000000);
+                Dimension_d d = o.getDimensions();
+                drawRect(d.startX, d.startY, d.endX, d.endY, 0x77000000);
+            }
+        }
+    }
 	
 	//===============
 	// Drag and Drop

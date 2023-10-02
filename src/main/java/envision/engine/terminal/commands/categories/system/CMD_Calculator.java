@@ -3,7 +3,6 @@ package envision.engine.terminal.commands.categories.system;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.windows.bundledWindows.CalculatorWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_Calculator extends TerminalCommand {
@@ -14,7 +13,7 @@ public class CMD_Calculator extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "calculator"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("calc"); }
+	@Override public EList<String> getAliases() { return EList.of("calc"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Clears the terminal"; }
 	@Override public String getUsage() { return "ex: calc"; }
 	

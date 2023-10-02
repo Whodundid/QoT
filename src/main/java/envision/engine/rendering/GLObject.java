@@ -11,7 +11,7 @@ import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import eutil.colors.EColors;
 import eutil.math.dimensions.Dimension_d;
-import eutil.math.dimensions.Dimension_i;
+import eutil.math.dimensions.Dimension_l;
 import eutil.misc.Rotation;
 
 /** The base underlying object that all window objects are drawn from. */
@@ -297,13 +297,13 @@ public interface GLObject {
 	}
 	
 	/** Draws a filled rectangle within the given dimension bounds. */
-	static void drawRect(Dimension_i dims, EColors color) { drawRect(dims, color.intVal, 0); }
+	static void drawRect(Dimension_l dims, EColors color) { drawRect(dims, color.intVal, 0); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	static void drawRect(Dimension_i dims, int color) { drawRect(dims, color, 0); }
+	static void drawRect(Dimension_l dims, int color) { drawRect(dims, color, 0); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	static void drawRect(Dimension_i dims, EColors color, int offset) { drawRect(dims, color.intVal, offset); }
+	static void drawRect(Dimension_l dims, EColors color, int offset) { drawRect(dims, color.intVal, offset); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	static void drawRect(Dimension_i dims, int color, int offset) {
+	static void drawRect(Dimension_l dims, int color, int offset) {
 		drawRect((double) dims.startX + offset,
 				 (double) dims.startY + offset,
 				 (double) dims.endX - offset,

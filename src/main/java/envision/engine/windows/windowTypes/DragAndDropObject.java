@@ -22,7 +22,7 @@ public abstract class DragAndDropObject extends WindowParent {
     //==============
     
     protected DragAndDropObject() {
-        init(Envision.getTopScreen());
+        init(Envision.getDeveloperDesktop());
         
         getTopParent().registerListener(this);
         getTopParent().setDragAndDropObject(this);

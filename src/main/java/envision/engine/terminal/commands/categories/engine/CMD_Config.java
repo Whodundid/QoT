@@ -7,7 +7,6 @@ import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.bundledWindows.TextEditorWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
 import qot.settings.QoTSettings;
@@ -21,7 +20,7 @@ public class CMD_Config extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "config"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("conf"); }
+	@Override public EList<String> getAliases() { return EList.of("conf"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Provides a means for interfacing with the game's config file"; }
 	@Override public String getUsage() { return "ex: conf    -OR-    conf 'edit|reload|save|reset'"; }
 	

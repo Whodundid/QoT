@@ -4,7 +4,6 @@ import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision.game.effects.sounds.SoundEngine;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import qot.settings.QoTSettings;
@@ -17,7 +16,7 @@ public class CMD_SetVolume extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "volume"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("vol"); }
+	@Override public EList<String> getAliases() { return EList.of("vol"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Displays or changes the game volume"; }
 	@Override public String getUsage() { return "ex: vol 50"; }
 	

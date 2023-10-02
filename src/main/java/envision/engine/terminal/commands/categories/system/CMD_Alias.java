@@ -18,8 +18,8 @@ public class CMD_Alias extends ListableCommand {
     
     @Override
     public String getHelpInfo(boolean runVisually) {
-        return "Creates a string that can act as a substitue for another word or command when"
-            + "it is used at the beginning of user input";
+        return "Creates a string that can act as a substitue for another word or command when" +
+               "it is used at the beginning of user input";
     }
     
     @Override

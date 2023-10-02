@@ -6,7 +6,6 @@ import envision.game.effects.sounds.Audio;
 import envision.game.effects.sounds.SoundEngine;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import qot.assets.sounds.Songs;
@@ -20,7 +19,7 @@ public class CMD_PlaySong extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "song"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("play"); }
+	@Override public EList<String> getAliases() { return EList.of("play"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Plays the selected song."; }
 	@Override public String getUsage() { return "ex: song "; }
 	

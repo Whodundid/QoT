@@ -1,9 +1,10 @@
 package qot.screens.gameplay;
 
 import envision.Envision;
+import envision.debug.DebugSettings;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.screens.GameScreen;
-import envision.engine.screens.GameTopScreen;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowRect;
 import envision.engine.windows.windowObjects.basicObjects.WindowStatusBar;
@@ -13,6 +14,8 @@ import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
 import envision.game.world.IGameWorld;
 import eutil.colors.EColors;
+import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import qot.assets.sounds.Songs;
 import qot.entities.player.QoT_Player;
@@ -29,7 +32,7 @@ public class GamePlayScreen extends GameScreen {
 	WindowRect topHud;
 	WindowRect botHud; //don't know if actually want this one
 	WindowStatusBar health, mana;
-	WindowButton character;
+	WindowButton<?> character;
 	
 	public int midDrawX, midDrawY; //the world coordinates at the center of the screen
 	public int worldXPos, worldYPos; //the world coordinates under the mouse
@@ -47,7 +50,7 @@ public class GamePlayScreen extends GameScreen {
 		//screenHistory.push(new MainMenuScreen());
 		world = Envision.getWorld();
 		openPause = openPauseOnStart;
-		world.getCamera().setMinZoom(2);
+		if (world != null) world.getCamera().setMinZoom(2);
 	}
 	
 	@Override
@@ -76,7 +79,7 @@ public class GamePlayScreen extends GameScreen {
 		mana.setBarValue(player.getMana());
 		addObject(mana);
 		
-		character = new WindowButton(this, mana.endX + 5, 5, 125, 30, "Stats");
+		character = new WindowButton<>(this, mana.endX + 5, 5, 125, 30, "Stats");
 		
 		if (openPause) openPauseWindow();
 		
@@ -109,8 +112,8 @@ public class GamePlayScreen extends GameScreen {
 			}
 		}
 		
-		drawString("x" + world.getCameraZoom(), Envision.getWidth() - 250, 12, EColors.dsteel);
-		drawString("[" + player.worldX + ", " + player.worldY + "]", Envision.getWidth() - 900, 12, EColors.white);
+		drawString("x" + world.getCameraZoom(), Envision.getWidth() - 250.0, 12, EColors.dsteel);
+		drawString("[" + player.worldX + ", " + player.worldY + "]", Envision.getWidth() - 900.0, 12, EColors.white);
 		//drawString("[" + player.startX + ", " + player.startY + "]", Envision.getWidth() - 750, 12, EColors.white);
 		//drawString("[" + world.getPixelWidth() + ", " + world.getPixelHeight() + "]", Envision.getWidth() - 550, 12, EColors.hotpink);
 		
@@ -124,7 +127,7 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void onGameTick(float dt) {
-		if (!GameTopScreen.isTopFocused()) {
+		if (!DeveloperDesktop.isOpen()) {
 			QoT_Player p = (QoT_Player) Envision.thePlayer;
 			
 			double moveX = 0.0, moveY = 0.0;
@@ -171,6 +174,10 @@ public class GamePlayScreen extends GameScreen {
 			Envision.thePlayer.onKeyPress(typedChar, keyCode);
 		}
 		
+		if (keyCode == Keyboard.KEY_O) DebugSettings.drawEntityHitboxes = !DebugSettings.drawEntityHitboxes;
+		if (keyCode == Keyboard.KEY_H) DebugSettings.drawEntityCollisionBoxes = !DebugSettings.drawEntityCollisionBoxes;
+		if (keyCode == Keyboard.KEY_P) DebugSettings.drawEntityPositionTiles = !DebugSettings.drawEntityPositionTiles;
+		
 		//world.getWorldRenderer().keyPressed(typedChar, keyCode);
 		
 		//super.keyPressed(typedChar, keyCode);
@@ -180,10 +187,6 @@ public class GamePlayScreen extends GameScreen {
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
 		
-		if (Envision.thePlayer != null) {
-			Envision.thePlayer.onMousePress(mXIn, mYIn, button);
-		}
-		
 		double zoom = world.getCameraZoom();
 		double drawDistX = world.getWorldRenderer().getDistX();
 		double drawDistY = world.getWorldRenderer().getDistY();
@@ -192,10 +195,10 @@ public class GamePlayScreen extends GameScreen {
 		
 		double tileDrawWidth = (world.getTileWidth() * zoom); //pixel width of each tile
 		double tileDrawHeight = (world.getTileHeight() * zoom); //pixel height of each tile
-		double drawAreaMidX = Envision.getWidth() / 2; //the middle x of the map draw area
-		double drawAreaMidY = Envision.getHeight() / 2; //the middle y of the map draw area
-		double mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2)); //the left most x coordinate for map drawing
-		double mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2)); //the top most y coordinate for map drawing
+		double drawAreaMidX = Envision.getWidth() / 2.0; //the middle x of the map draw area
+		double drawAreaMidY = Envision.getHeight() / 2.0; //the middle y of the map draw area
+		double mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2.0)); //the left most x coordinate for map drawing
+		double mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2.0)); //the top most y coordinate for map drawing
 		
         //converting to shorthand to reduce footprint
         double x = mapDrawStartX;
@@ -209,29 +212,47 @@ public class GamePlayScreen extends GameScreen {
         int yWorldPixel = (int) Math.floor(mYIn - y - ((drawDistY - camY) * h));
         
         //The X world pixel under the mouse with zoom scaling removed
-        int xWorldPixelNoZoom = (int) (xWorldPixel / zoom);
+        double xWorldPixelNoZoom = (int) (xWorldPixel / zoom);
         //The Y world pixel under the mouse with zoom scaling removed
-        int yWorldPixelNoZoom = (int) (yWorldPixel / zoom);
+        double yWorldPixelNoZoom = (int) (yWorldPixel / zoom);
         
         //The X coordinate world tile under the mouse
         //double xMouseTile = xWorldPixel / w;
         //The Y coordinate world tile under the mouse
         //double yMouseTile = yWorldPixel / h;
         
+        EList<Entity> entitiesUnderMouse = new EArrayList<>(30);
+        
+        System.out.println((drawDistX - camX) + " : " + (drawDistY - camY));
+        
         // garbage
         for (var e : world.getEntitiesInWorld()) {
-            if (e.getCollisionDims().contains(xWorldPixelNoZoom, yWorldPixelNoZoom)) {
-                e.onMousePress(mXIn, mYIn, button);
+            if (e.getDimensions().contains(xWorldPixelNoZoom, yWorldPixelNoZoom)) {
+                entitiesUnderMouse.add(e);
             }
+        }
+        
+        // filter the entities under mouse to the ones closest to the actual mouse press location
+        for (var e : entitiesUnderMouse) {
+            final var dims = e.getDimensions();
+            final double midX = dims.midX;
+            final double midY = dims.midY;
+            final double dist = ENumUtil.distance(xWorldPixelNoZoom, yWorldPixelNoZoom, midX, midY);
+            e.onMousePress(mXIn, mYIn, button);
+            //System.out.println(dist + " : " + e);
+        }
+        
+        if (Envision.thePlayer != null) {
+            Envision.thePlayer.onMousePress(mXIn, mYIn, button);
         }
 	}
 	
 	@Override
 	public void mouseScrolled(int change) {
 		double c = Math.signum(change);
-		double z = 1.0;
+		double z;
 		
-		if (Keyboard.isCtrlDown()) {
+		//if (Keyboard.isCtrlDown()) {
 			if (c > 0 && world.getCameraZoom() == 0.25)      z = 0.05;		//if at 0.25 and zooming out -- 0.05x
 			else if (world.getCameraZoom() < 1.0)            z = c * 0.1;	//if less than 1 zoom by 0.1x
 			else if (c > 0)                                  z = 0.25;		//if greater than 1 zoom by 0.25x
@@ -240,7 +261,7 @@ public class GamePlayScreen extends GameScreen {
 			
 			z = ENumUtil.round(world.getCameraZoom() + z, 2);
 			world.setCameraZoom(z);
-		}
+		//}
 	}
 	
 	@Override
@@ -261,12 +282,14 @@ public class GamePlayScreen extends GameScreen {
 	
 	public void openPauseWindowIfNotOpen() {
 		if (pauseWindow != null && getChildren().contains(pauseWindow) && !pauseWindow.isClosed()) return;
-		displayWindow(pauseWindow = new GamePauseWindow(this, 30, 30));
+		pauseWindow = new GamePauseWindow(this, 30, 30);
+		displayWindow(pauseWindow);
 	}
 	
 	public void openPauseWindow() {
 		if (getChildren().notContains(pauseWindow) || pauseWindow == null) {
-			displayWindow(pauseWindow = new GamePauseWindow(this, 30, 30));
+		    pauseWindow = new GamePauseWindow(this, 30, 30);
+			displayWindow(pauseWindow);
 		}
 		else {
 			pauseWindow.close();

@@ -14,7 +14,7 @@ public class Envision_QoT_ErrorCallback implements EnvisionLangErrorCallBack {
 
 	@Override
 	public void handleException(Exception e) {
-		ETerminalWindow term = (ETerminalWindow) Envision.getTopScreen().getWindowInstance(ETerminalWindow.class);
+		ETerminalWindow term = (ETerminalWindow) Envision.getDeveloperDesktop().getWindowInstance(ETerminalWindow.class);
 		if (term != null) {
 			term.javaError(e.toString());
 		}

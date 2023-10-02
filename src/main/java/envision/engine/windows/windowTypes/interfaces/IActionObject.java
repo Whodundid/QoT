@@ -5,9 +5,9 @@ package envision.engine.windows.windowTypes.interfaces;
 /** An interface outlining behavior for IWindowObjects which can perform actions. */
 public interface IActionObject extends IWindowObject {
 	
-	//---------
+	//=========
 	// Actions
-	//---------
+	//=========
 	
 	/** Used to notify the action receiver object that this action object is performing its action. */
 	public void performAction(Object... args);
@@ -27,9 +27,9 @@ public interface IActionObject extends IWindowObject {
 	/** Returns the object that is receiving actions by this object. */
 	public IWindowObject getActionReceiver();
 	
-	//----------------
+	//================
 	// Static Setters
-	//----------------
+	//================
 	
 	/** Used to specify the action receiver for multiple IActionObjects at once. */
 	public static void setActionReceiver(IWindowObject receiver, IActionObject... objects) {

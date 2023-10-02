@@ -104,7 +104,7 @@ public class TextureDisplayer extends WindowParent {
 	
 	@Override
 	public void close() {
-		if (tex != null) tex.destroy();
+		//if (tex != null) tex.destroy();
 		super.close();
 	}
 	

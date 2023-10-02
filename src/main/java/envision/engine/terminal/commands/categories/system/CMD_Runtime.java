@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.system;
 
 import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_Runtime extends TerminalCommand {
@@ -13,7 +12,7 @@ public class CMD_Runtime extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "runtime"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("rt"); }
+	@Override public EList<String> getAliases() { return EList.of("rt"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Gets info on the current system run time"; }
 	@Override public String getUsage() { return "ex: runtime"; }
 	
@@ -23,9 +22,9 @@ public class CMD_Runtime extends TerminalCommand {
 	    
 	    Runtime rt = Runtime.getRuntime();
         
-        double memJVMTotal = (double) ((double) rt.maxMemory() / 1024d / 1024d / 1024d);
-        double memJVMUsed = (double) ((double) rt.totalMemory() / 1024d / 1024d / 1024d);
-        double memJVMFree = (double) ((double) rt.freeMemory() / 1024d / 1024d / 1024d);
+        double memJVMTotal = (rt.maxMemory() / 1024D / 1024D / 1024D);
+        double memJVMUsed = (rt.totalMemory() / 1024D / 1024D / 1024D);
+        double memJVMFree = (rt.freeMemory() / 1024D / 1024D / 1024D);
         
         String memJVMTotalString = String.format("%.2f gb", memJVMTotal);
         String memJVMUsedString = String.format("%.2f gb", memJVMUsed);

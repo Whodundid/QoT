@@ -1,5 +1,6 @@
 package envision.game.world.worldEditor.editorUtil;
 
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.GameObject;
 import envision.game.world.GameWorld;
 import eutil.datatypes.points.Point2i;
@@ -22,7 +23,7 @@ public class PlayerSpawnPoint extends GameObject {
 	public PlayerSpawnPoint(GameWorld worldIn, int xIn, int yIn) {
 		super("Spawn");
 		init(xIn, yIn, 32, 32);
-		setTexture(EditorTextures.player_spawn);
+		setSprite(new Sprite(EditorTextures.player_spawn));
 		
 		theWorld = worldIn;
 		xPos = xIn;

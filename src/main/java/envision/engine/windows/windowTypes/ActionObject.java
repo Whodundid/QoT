@@ -8,18 +8,18 @@ import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 
 public abstract class ActionObject extends WindowObject implements IActionObject {
 
-	//--------
+	//========
 	// Fields
-	//--------
+	//========
 	
 	protected boolean runActionOnPress = false;
 	protected boolean runActionOnRelease = false;
 	protected IWindowObject actionReceiver;
 	protected Runnable onPressAction = null;
 	
-	//--------------
+	//==============
 	// Constructors
-	//--------------
+	//==============
 	
 	/** Used for internal or highly specific purposes. */
 	protected ActionObject() {}
@@ -28,9 +28,9 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 		actionReceiver = parentIn;
 	}
 	
-	//--------------------------
+	//==========================
 	// Overrides : WindowObject
-	//--------------------------
+	//==========================
 	
 	@Override
 	public void init(IWindowObject objIn, double xIn, double yIn) {
@@ -52,14 +52,14 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 		if (runActionOnRelease) performAction();
 	}
 	
-	public void onPress(Runnable action) {
+	public void setAction(Runnable action) {
 	    runActionOnPress = true;
 	    onPressAction = action;
 	}
 	
-	//---------------------------
+	//===========================
 	// Overrides : IActionObject
-	//---------------------------
+	//===========================
 	
 	@Override
 	public void performAction(Object... args) {
@@ -67,12 +67,12 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 			IWindowParent p = actionReceiver.getWindowParent();
 			if (p != null) p.bringToFront();
 			actionReceiver.actionPerformed(this, args);
+			if (onPressAction != null) onPressAction.run();
 		}
 	}
 	
 	@Override
 	public void press(int button) {
-		if (onPressAction != null) onPressAction.run();
 		if (runActionOnPress) performAction(button);
 	}
 	

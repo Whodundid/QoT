@@ -109,7 +109,7 @@ public class RightClickMenu<E> extends ActionWindowParent {
 	}
 	
 	public void displayOnTop() {
-		Envision.getTopScreen().displayWindow(this, ObjectPosition.CURSOR_CORNER);
+		Envision.getDeveloperDesktop().displayWindow(this, ObjectPosition.CURSOR_CORNER);
 	}
 	
 	public void addOption(String... optionNames) { for (String s : optionNames) { addOption(s); } }

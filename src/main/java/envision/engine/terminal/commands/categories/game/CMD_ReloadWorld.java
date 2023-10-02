@@ -6,7 +6,6 @@ import envision.game.entities.player.Player;
 import envision.game.world.GameWorld;
 import envision.game.world.worldEditor.MapEditorScreen;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import qot.entities.player.QoT_Player;
 import qot.screens.gameplay.GamePlayScreen;
@@ -19,7 +18,7 @@ public class CMD_ReloadWorld extends TerminalCommand {
 	}
 
 	@Override public String getName() { return "reloadworld"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("relw"); }
+	@Override public EList<String> getAliases() { return EList.of("relw"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Reloads the current world instance"; }
 	@Override public String getUsage() { return "ex: relw"; }
 	

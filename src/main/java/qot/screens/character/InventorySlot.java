@@ -45,7 +45,7 @@ public class InventorySlot extends WindowObject {
 			Item theItem = renderer.getItemAtIndex(itemIndex);
 			
 			if (theItem != null) {
-				drawTexture(theItem.getTexture(), sx, sy, w, h);
+				drawSprite(theItem.sprite, sx, sy, w, h);
 			}
 		}
 	}

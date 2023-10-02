@@ -1,6 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;
@@ -20,7 +21,7 @@ public class Whodundid extends Enemy {
 	public Whodundid(int posX, int posY) {
 		super("Whodundid");
 		init(posX, posY, 64, 64);
-		tex = EntityTextures.whodundid;
+		sprite = new Sprite(EntityTextures.whodundid);
 		lastDir = ERandomUtil.randomDir();
 		
 		setBaseMeleeDamage(3);

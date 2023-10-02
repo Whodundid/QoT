@@ -1,7 +1,6 @@
-package envision.engine.windows.bundledWindows;
+package envision.engine.windows.windowObjects.utilityObjects;
 
 import envision.Envision;
-import envision.engine.windows.windowObjects.utilityObjects.WindowDialogueBox;
 import eutil.colors.EColors;
 
 /**

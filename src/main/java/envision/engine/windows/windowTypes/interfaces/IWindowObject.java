@@ -34,7 +34,6 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventObjects;
 import envision.engine.windows.windowUtil.windowEvents.events.EventRedraw;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.points.Point2d;
 import eutil.datatypes.util.EList;
@@ -43,23 +42,23 @@ import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 import qot.assets.textures.cursor.CursorTextures;
 
-//Author: Hunter Bragg
+// Author: Hunter Bragg
 
 /** An interface outlining the behavior for all WindowObjects. */
 public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor {
 	
-	//-------------------
+	//===================
 	// Object Properties
-	//-------------------
+	//===================
 	
 	/** Returns the current properties of this object. */
 	public WindowObjectProperties properties();
 	/** Returns the underlying object instance. */
 	public default WindowObject instance() { return properties().instance; }
 	
-	//------
+	//======
 	// Init
-	//------
+	//======
 
 	/** Internal event that happens right before initialization. */
 	public default void onPreInit() {}
@@ -81,7 +80,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		properties().areChildrenInit = false;
 		var p = getTopParent();
 		var children = getAllChildren();
-		if (!(p.getModifyType() == ObjectModifyType.RESIZE)) {
+		if (p.getModifyType() != ObjectModifyType.RESIZE) {
 			if (children.contains(p.getFocusedObject())) p.clearFocusedObject();
 			if (children.contains(p.getFocusLockObject())) p.clearFocusLockObject();
 			if (children.contains(p.getModifyingObject())) p.clearModifyingObject();
@@ -96,9 +95,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		properties().areChildrenInit = true;
 	}
 	
-	//-------------------------
+	//=========================
 	// Basic Object Properties
-	//-------------------------
+	//=========================
 	
 	/** Returns true if this object is currently enabled. */
 	public default boolean isEnabled() { return properties().isEnabled; }
@@ -138,9 +137,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Sets whether this object can be closed or not. */
 	public default void setCloseable(boolean val) { properties().isClosable = val; }
 	
-	//-----------------------
+	//=======================
 	// Tracked Object States
-	//-----------------------
+	//=======================
 	
 	/** Tracked state of whether or not this object has been initialized. */
 	public default boolean isInitialized() { return properties().isInitialized; }
@@ -163,9 +162,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Tracked state of whether or not this object has been closed. */
 	public default boolean isClosed() { return properties().isClosed; }
 	
-	//--------------
+	//==============
 	// Future Tasks
-	//--------------
+	//==============
 	
 	/** Returns this object's FutureTaskManager. */
 	public default FutureTaskManager getFutureTaskManager() {
@@ -340,9 +339,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Called immediately <b>AFTER</b> this object has been closed. */
 	public default void onClosed() {}
 	
-	//-----------
+	//===========
 	// Main Draw
-	//-----------
+	//===========
 	
 	/** Internal event fired from the top parent to draw this object. */
 	public default void drawObject_i(int mXIn, int mYIn) {
@@ -395,7 +394,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 			return;
 		}
 		
-		if (this != null && isResizeable() && getTopParent().getModifyType() != ObjectModifyType.RESIZE) {
+		if (isResizeable() && getTopParent().getModifyType() != ObjectModifyType.RESIZE) {
 			//double rStartY = obj.hasHeader() ? obj.getHeader().startY : obj.getDimensions().startY;
 			if (!Mouse.isButtonDown(0)) {
 				switch (getEdgeSideMouseIsOn()) {
@@ -410,9 +409,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		else if (!CursorHelper.isArrow()) CursorHelper.reset();
 	}
 	
-	//--------------------
+	//====================
 	// Mouse Hover Checks
-	//--------------------
+	//====================
 	
 	/** Gets the hover text. */
 	public default String getHoverText() { return properties().hoverText; }
@@ -432,7 +431,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		if (properties().hoverText == null || properties().hoverText.isEmpty()) return;
 			
 		int strWidth = FontRenderer.strWidth(properties().hoverText);
-		double sX = mX + 20;
+		double sX = mX + 20.0;
 		double sY = mY - FontRenderer.FONT_HEIGHT / 2;
 		
 		sX = sX < 0 ? 1 : sX;
@@ -510,9 +509,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		}
 	}
 	
-	//------------
+	//============
 	// Object IDs
-	//------------
+	//============
 	
 	/** Returns this object's set ID number. */
 	public default long getObjectID() { return properties().objectId; }
@@ -522,9 +521,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Sets the name of this object. */
 	public default void setObjectName(String nameIn) { properties().objectName = nameIn; }
 	
-	//----------------
+	//================
 	// Drawing Checks
-	//----------------
+	//================
 	
 	/** Returns true if this object will be drawn on the next draw cycle. */
 	public default boolean willBeDrawn() {
@@ -558,18 +557,18 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		return t.getModifyingObject() == this && t.getModifyType() == ObjectModifyType.MOVE;
 	}
 	
-	//--------
+	//========
 	// Header
-	//--------
+	//========
 	
 	/** Returns true if this object has a header. */
 	public default boolean hasHeader() { return properties().objectHeader != null; }
 	/** If this object has a header, returns the header object, otherwise returns null. */
 	public default WindowHeader getHeader() { return properties().objectHeader; }
 	
-	//-------------------
+	//===================
 	// Size And Position
-	//-------------------
+	//===================
 	
 	/** Returns the current dimensions of this object. */
 	public default Dimension_d getDimensions() { return instance().getDimensions(); }
@@ -749,7 +748,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		
 		Dimension_d d = getDimensions();
 		//the object's current position and relative clickArea for shorter code
-		var loc = new Box2<>(d.startX, d.startY);
+		//var loc = new Box2<>(d.startX, d.startY);
 		
 		//holder to store each object and their relative child locations
 		BoxList<IWindowObject, Point2d> previousLocations = new BoxList<>();
@@ -760,7 +759,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		//get each of the object's children's relative positions and click-able areas relative to each child
 		for (var o : objs) {
 			var dims = o.getDimensions();
-			var prev = new Point2d(dims.startX - loc.getA(), dims.startY - loc.getB());
+			var prev = new Point2d(dims.startX - d.startX, dims.startY - d.startY);
 			previousLocations.add(o, prev);
 		}
 		
@@ -778,9 +777,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		}
 	}
 	
-	//---------------
+	//===============
 	// Object Groups
-	//---------------
+	//===============
 	
 	/** Returns this object's object group, if any. */
 	public default EObjectGroup getObjectGroup() { return properties().objectGroup; }
@@ -789,9 +788,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Event fired when any object within the object group fires an event. */
 	public default void onGroupNotification(ObjectEvent e) {}
 	
-	//----------
+	//==========
 	// Children
-	//----------
+	//==========
 
 	/** Returns a list of all objects that are directly children of this object. */
 	public default EList<IWindowObject> getChildren() { return properties().children; }
@@ -890,8 +889,8 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	
 	/** Returns true if the specified object type is a child of the
 	 *  parent or is being added to the parent. */
-	public default boolean containsObject(Class objIn) {
-		return (objIn != null) ? getAllChildren().anyMatch(objIn::isInstance) : false;
+	public default boolean containsObject(Class<?> objIn) {
+		return (objIn != null) && getAllChildren().anyMatch(objIn::isInstance);
 	}
 	
 	/** Checks if this object is a child of the specified object. */
@@ -947,7 +946,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 				    else properties().objectHeader = h;
 				}
 				
-				// if it's a window, do it's init
+				// if it's a window, do its init
 				if (o instanceof WindowParent p && !o.isInitialized()) p.initWindow();
 				
 				// initialize all of the children's children
@@ -996,9 +995,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		return EList.combineLists(getChildren(), getAddingChildren());
 	}
 	
-	//---------
+	//=========
 	// Parents
-	//---------
+	//=========
 	
 	/** Returns this object's direct parent object. */
 	public default IWindowObject getParent() { return properties().parent; }
@@ -1031,9 +1030,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		return (this instanceof IWindowParent p) ? p : null;
 	}
 	
-	//-------
+	//=======
 	// Focus
-	//-------
+	//=======
 	
 	/**
 	 * Returns the object that will receive focus by default when the base
@@ -1058,7 +1057,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	 */
 	public default boolean hasFocus() {
 		var fo = getTopParent().getFocusedObject();
-		return (fo != null) ? fo.equals(this) : false;
+		return (fo != null) && fo.equals(this);
 	}
 	
 	/**
@@ -1173,9 +1172,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		getTopParent().setObjectRequestingFocus(this, typeIn);
 	}
 	
-	//--------------
+	//==============
 	// Mouse Checks
-	//--------------
+	//==============
 	
 	/** Specifies a region that this object will adhere to for mouse checks. */
 	public default void setBoundaryEnforcer(Dimension_d dimIn) { properties().setBoundaryEnforcer(dimIn); }
@@ -1238,30 +1237,30 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	 * will return true if the mouse is inside of the the specified
 	 * boundary.
 	 */
-	public default boolean isMouseInside() {
-		//if the top renderer is being drawn and this object is not a child of the top renderer -- ignore
-		//if (Envision.getTopScreen().hasFocus() && !isChildOf(Envision.getTopScreen())) return false;
-		
-	    final WindowObject instance = instance();
-		final double startX = instance.startX;
-		final double startY = instance.startY;
-		final double endX = instance.endX;
-		final double endY = instance.endY;
-		
-		final int mX = Mouse.getMx();
-		final int mY = Mouse.getMy();
-		
-		// check if there is a boundary enforcer limiting the overall area
-		if (isBoundaryEnforced()) {
-			final Dimension_d b = getBoundaryEnforcer();
-			return mX >= startX && mX >= b.startX &&
-				   mX <= endX && mX <= b.endX &&
-				   mY >= startY && mY >= b.startY &&
-				   mY <= endY && mY <= b.endY;
-		}
-		
-		// otherwise just check if the mouse is within the object's boundaries
-		return mX >= startX && mX <= endX && mY >= startY && mY <= endY;
+	public default boolean isMouseInside() { return isMouseInside(Mouse.getMx(), Mouse.getMy(), 0.0); }
+	public default boolean isMouseInside(double threshold) { return isMouseInside(Mouse.getMx(), Mouse.getMy(), threshold); }
+	public default boolean isMouseInside(int mX, int mY) { return isMouseInside(mX, mY, 0.0); }	
+	public default boolean isMouseInside(int mX, int mY, double threshold) {
+	       //if the top renderer is being drawn and this object is not a child of the top renderer -- ignore
+        //if (Envision.getTopScreen().hasFocus() && !isChildOf(Envision.getTopScreen())) return false;
+        
+        final WindowObject instance = instance();
+        final double startX = instance.startX - threshold;
+        final double startY = instance.startY - threshold;
+        final double endX = instance.endX + threshold;
+        final double endY = instance.endY + threshold;
+        
+        // check if there is a boundary enforcer limiting the overall area
+        if (isBoundaryEnforced()) {
+            final Dimension_d b = getBoundaryEnforcer();
+            return mX >= startX && mX >= b.startX &&
+                   mX <= endX && mX <= b.endX &&
+                   mY >= startY && mY >= b.startY &&
+                   mY <= endY && mY <= b.endY;
+        }
+        
+        // otherwise just check if the mouse is within the object's boundaries
+        return mX >= startX && mX <= endX && mY >= startY && mY <= endY;
 	}
 	
 	/**
@@ -1269,7 +1268,8 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	 * this is the top most object inside of the parent.
 	 */
 	public default boolean isMouseOver() {
-		return isMouseInside() && this.equals(getTopParent().getHighestZObjectUnderMouse());
+	    var h = getTopParent().getHighestZObjectUnderMouse();
+		return isMouseInside() && this.equals(h);
 	}
 	
 	/** Sets this object and every child to be click-able or not. */
@@ -1278,9 +1278,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		setClickable(val);
 	}
 	
-	//--------------
+	//==============
 	// Basic Inputs
-	//--------------
+	//==============
 	
 	/**
 	 * Event fired when the mouse has left clicked on this object at least
@@ -1288,15 +1288,15 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	 */
 	public default void onDoubleClick() {}
 	
-	//--------
+	//========
 	// Events
-	//--------
+	//========
 	
 	/** Used to send some kind of message to this object. */
 	public default void sendArgs(Object... args) {
 		if (args.length != 1) return;
 		if (args[0] instanceof String msg) {
-			if (!msg.toLowerCase().equals("reload")) return;
+			if (!msg.equalsIgnoreCase("reload")) return;
 			
 			boolean any = false;
 			for (var o : getAllChildren()) {
@@ -1338,9 +1338,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	/** Called on ObjectEvents. */
 	public default void onEvent(ObjectEvent e) {}
 	
-	//--------
+	//========
 	// Action
-	//--------
+	//========
 	
 	/** Event called whenever a child IActionObject's action is triggered. */
 	public default void actionPerformed(IActionObject object, Object... args) {
@@ -1390,9 +1390,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	    }
 	}
 	
-	//--------------
+	//==============
 	// Close Object
-	//--------------
+	//==============
 	
 	/** Returns true if this object will close when the hud closes. */
 	public default boolean closesWithHud() { return properties().closesWithHud; }
@@ -1435,9 +1435,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		onClosed_i();
 	}
 	
-	//-------------
+	//=============
 	// Debug Stuff
-	//-------------
+	//=============
 	
 	public default void printf(String toPrint, Object... args) { DebugToolKit.printf(toPrint, args); }
 	public default void printlnf(String toPrint, Object... args) { DebugToolKit.printlnf(toPrint, args); }
@@ -1445,9 +1445,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	public default void print(Object... toPrint) { DebugToolKit.print(toPrint); }
 	public default void println(Object... toPrint) { DebugToolKit.println(toPrint); }
 	
-	//----------------
+	//================
 	// Static Methods
-	//----------------
+	//================
 	
 	public static void setMoveable(boolean val, IWindowObject... objs) { setVal(o -> o.setMoveable(val), objs); }
 	public static void setResizeable(boolean val, IWindowObject... objs) { setVal(o -> o.setResizeable(val), objs); }

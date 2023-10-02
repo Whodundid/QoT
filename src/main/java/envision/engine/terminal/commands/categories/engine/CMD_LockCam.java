@@ -3,7 +3,6 @@ package envision.engine.terminal.commands.categories.engine;
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_LockCam extends TerminalCommand {
@@ -14,7 +13,7 @@ public class CMD_LockCam extends TerminalCommand {
     }
     
     @Override public String getName() { return "cameraedgelock"; }
-    @Override public EList<String> getAliases() { return new EArrayList<>("edgelock"); }
+    @Override public EList<String> getAliases() { return EList.of("edgelock"); }
     @Override
     public String getHelpInfo(boolean runVisually) {
         return "Specifies whether or not the camera is locked to the edge of the world.";

@@ -2,18 +2,22 @@ package envision.engine.rendering;
 
 import java.util.Objects;
 
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 
 import envision.Envision;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.EStringOutputFormatter;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import eutil.colors.EColors;
 import eutil.math.dimensions.IDimension;
 import eutil.misc.Rotation;
 
 public class RenderingManager {
 	
+    protected RenderingManager() {}
+    
 	//========================
 	// String Drawing Methods
 	//========================
@@ -162,17 +166,17 @@ public class RenderingManager {
 	}
 	
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public static void drawRect(IDimension dims, EColors color) { drawRect(dims, color.intVal, 0); }
+	public static void drawRect(IDimension<?> dims, EColors color) { drawRect(dims, color.intVal, 0); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public static void drawRect(IDimension dims, int color) { drawRect(dims, color, 0); }
+	public static void drawRect(IDimension<?> dims, int color) { drawRect(dims, color, 0); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public static void drawRect(IDimension dims, EColors color, int offset) { drawRect(dims, color.intVal, offset); }
+	public static void drawRect(IDimension<?> dims, EColors color, int offset) { drawRect(dims, color.intVal, offset); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public static void drawRect(IDimension dims, int color, int offset) {
-		drawRect(dims.startX_d() + offset,
-				 dims.startY_d() + offset,
-				 dims.endX_d() - offset,
-				 dims.endY_d() - offset,
+	public static void drawRect(IDimension<?> dims, int color, int offset) {
+		drawRect(dims.startX().doubleValue() + offset,
+				 dims.startY().doubleValue() + offset,
+				 dims.endX().doubleValue() - offset,
+				 dims.endY().doubleValue() - offset,
 				 color);
 	}
 	
@@ -198,16 +202,35 @@ public class RenderingManager {
 	}
 	
 	/** Draws a filled rectangle within the given dimension bounds. */
-    public static void drawHRect(IDimension dims, EColors color) { drawHRect(dims, color.intVal, 1); }
+    public static void drawHRect(IDimension<?> dims, EColors color) { drawHRect(dims, color.intVal, 1); }
     /** Draws a filled rectangle within the given dimension bounds. */
-    public static void drawHRect(IDimension dims, int color) { drawHRect(dims, color, 1); }
+    public static void drawHRect(IDimension<?> dims, int color) { drawHRect(dims, color, 1); }
     /** Draws a filled rectangle within the given dimension bounds. */
-    public static void drawHRect(IDimension dims, EColors color, int borderWidth) { drawHRect(dims, color.intVal, borderWidth); }
+    public static void drawHRect(IDimension<?> dims, EColors color, int borderWidth) { drawHRect(dims, color.intVal, borderWidth); }
     /** Draws a filled rectangle within the given dimension bounds. */
-    public static void drawHRect(IDimension dims, int color, int borderWidth) {
-        drawHRect(dims.startX_d(), dims.startY_d(), dims.endX_d(), dims.endY_d(), borderWidth, color);
+    public static void drawHRect(IDimension<?> dims, int color, int borderWidth) {
+        drawHRect(dims.startX().doubleValue(),
+                  dims.startY().doubleValue(),
+                  dims.endX().doubleValue(),
+                  dims.endY().doubleValue(),
+                  borderWidth,
+                  color);
     }
 	
+    public static void drawSprite(Sprite sprite, double x, double y, double w, double h) { drawSprite(sprite, x, y, w, h, false, Rotation.UP, 0xffffffff); }
+    public static void drawSprite(Sprite sprite, double x, double y, double w, double h, int color) { drawSprite(sprite, x, y, w, h, false, Rotation.UP, color); }
+    public static void drawSprite(Sprite sprite, double x, double y, double w, double h, Rotation rotation) { drawSprite(sprite, x, y, w, h, false, rotation, 0xffffffff); }
+    public static void drawSprite(Sprite sprite, double x, double y, double w, double h, boolean flip) { drawSprite(sprite, x, y, w, h, flip, Rotation.UP, 0xffffffff); }
+    public static void drawSprite(Sprite sprite, double x, double y, double w, double h, boolean flip, int color) { drawSprite(sprite, x, y, w, h, flip, Rotation.UP, color); }
+    public static void drawSprite(Sprite sprite, double x, double y, double w, double h, boolean flip, Rotation rotation) { drawSprite(sprite, x, y, w, h, flip, rotation, 0xffffffff); }
+    public static void drawSprite(Sprite sprite, double x, double y, double w, double h, boolean flip, Rotation rotation, int color) {
+        GameTexture tex = sprite.getTexture();
+        Vector2f[] coords = sprite.getTextureCoords();
+        
+        if (BatchManager.isEnabled()) BatchManager.drawTexture(tex, x, y, w, h, coords, color, rotation, flip);
+        else GLObject.drawTexture(tex, x, y, w, h, flip, rotation, color);
+    }
+    
 	/** Draws a texture with the given dimensions. */
 	//static void drawTexture(double x, double y, double w, double h) { drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, false, Rotation.UP, 0xffffffff); }
 	public static void drawTexture(GameTexture tex, double x, double y, double w, double h) { drawTexture(tex, x, y, w, h, false, Rotation.UP, 0xffffffff); }
@@ -234,7 +257,7 @@ public class RenderingManager {
 		drawTexture(texture, x, y, w, h, tX, tY, tW, tH, color.intVal, false);
 	}
 	public static void drawTexture(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, EColors color, boolean flip) {
-		drawTexture(texture, x, y, w, h, tX, tY, tW, tH, color.intVal, false);
+		drawTexture(texture, x, y, w, h, tX, tY, tW, tH, color.intVal, flip);
 	}
 	public static void drawTexture(GameTexture texture, double x, double y, double w, double h, double tX, double tY, double tW, double tH, int color, boolean flip) {
 		if (texture == null) return;

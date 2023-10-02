@@ -11,18 +11,18 @@ import eutil.misc.ScreenLocation;
 
 public interface IWindowParent extends IWindowObject {
 
-	//------
+	//======
 	// Init
-	//------
+	//======
 	
 	/** Call to initialize the window. THIS SHOULD ONLY BE CALLED INTERNALLY! */
 	public default void initWindow() {}
 	
 	public long getWindowID();
 	
-	//----------------
+	//================
 	// Drawing Checks
-	//----------------
+	//================
 	
 	/** Returns true if this object will draw even if minimized. */
 	public boolean drawsWhileMinimized();
@@ -39,9 +39,9 @@ public interface IWindowParent extends IWindowObject {
 	/** Specifies whether or not this window be displayed in the taskbar or not. */
 	public default boolean showInTaskBar() { return true; }
 	
-	//-------------------
+	//===================
 	// Size and Position
-	//-------------------
+	//===================
 	
 	/** Returns true if this object will remain drawn when the top overlay is closed. */
 	public boolean isPinned();
@@ -75,9 +75,9 @@ public interface IWindowParent extends IWindowObject {
 	/** Sets this object to draw even when minimized. Used for TaskBar previews. */
 	public void setDrawWhenMinimized(boolean val);
 	
-	//--------
+	//========
 	// zLevel
-	//--------
+	//========
 	
 	/** Returns this object's Z level added on top of all of it's combined parent's Z levels.*/
 	public int getZLevel();
@@ -88,9 +88,9 @@ public interface IWindowParent extends IWindowObject {
 	/** Signals the top parent to bring this object and it's children to the very back of the draw order on the next draw cycle. */
 	public void sendToBack();
 	
-	//--------------------
+	//====================
 	// Maximize Functions
-	//--------------------
+	//====================
 	
 	/** Runs functions to maximize the window to the currently specified maximized position. */
 	public void maximize();
@@ -102,9 +102,9 @@ public interface IWindowParent extends IWindowObject {
 	/** Specifies the dimensions this object had before it was maximized. */
 	public void setPreMax(Dimension_d dimIn);
 	
-	//-------------------------
+	//=========================
 	// Special Argument Checks
-	//-------------------------
+	//=========================
 	
 	/** Returns true if this window should only be accessible when in dev mode. */
 	public boolean isDevWindow();
@@ -113,25 +113,27 @@ public interface IWindowParent extends IWindowObject {
 	/** Returns true if this window will be shown in the taskbar and the HUD right click menu. */
 	public boolean showInLists();
 	
-	//----------------
+	//================
 	// Window History
-	//----------------
+	//================
 	
 	/** Returns the chain of windows that will be opened when pressing the 'back' or 'file up' button. */
 	public Stack<IWindowParent> getWindowHistory();
 	/** Sets the chain of windows that will be opened when pressing the 'back' or 'file up' button. */
 	public void setWindowHistory(Stack<IWindowParent> historyIn);
 	
-	//----------------
+	//================
 	// Window Aliases
-	//----------------
+	//================
 	
 	/** Returns a list of Strings this window can be referenced as within the EMC Terminal. */
 	public EList<String> getAliases();
+	/** Returns the internal name of this window. */
+	public String getWindowName();
 	
-	//--------------
+	//==============
 	// Window Debug
-	//--------------
+	//==============
 	
 	/** Returns the time this window was created as a long. */
 	public long getInitTime();

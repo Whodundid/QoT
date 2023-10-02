@@ -1,6 +1,7 @@
 package qot.world_tiles.categories.farm;
 
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.farmland.FarmTextures;
 import qot.assets.textures.world.floors.wood.WoodFloorTextures;
@@ -21,8 +22,8 @@ public class FarmPlot extends WorldTile {
 		blocksMovement = true;
 		setWall(true);
 		wallHeight = 0.20;
-		setTexture(FarmTextures.farm_0);
-		setSideTexture(WoodFloorTextures.wood_siding);
+		setSprite(new Sprite(FarmTextures.farm_0));
+		setSideSprite(new Sprite(WoodFloorTextures.wood_siding));
 	}
 	
 	//-----------
@@ -61,7 +62,7 @@ public class FarmPlot extends WorldTile {
 		default -> null;
 		};
 		
-		setTexture(tex);
+		setSprite(new Sprite(tex));
 	}
 	
 	//---------

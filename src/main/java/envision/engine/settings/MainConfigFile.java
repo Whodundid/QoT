@@ -17,7 +17,7 @@ public class MainConfigFile extends EnvisionConfigFile {
 	public boolean tryLoad() {
 		boolean good = true;
 		
-		EList<ConfigSetting> settings = QoTSettings.getSettings();
+		EList<ConfigSetting<?>> settings = QoTSettings.getSettings();
 		
 		if (!exists()) trySave(settings);
 		

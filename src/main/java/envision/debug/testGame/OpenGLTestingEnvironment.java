@@ -20,7 +20,7 @@ import envision.engine.rendering.renderingAPI.error.RendererErrorReporter;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.screens.GameScreen;
-import envision.engine.screens.GameTopScreen;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import qot.assets.textures.entity.EntityTextures;
@@ -96,7 +96,7 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 	public void onAttach() {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		
-		Envision.topScreen = GameTopScreen.getInstance();
+		Envision.developerDesktop = DeveloperDesktop.getInstance();
 		Envision.currentScreen = new GameScreen();
 		
 		//Envision.displayWindow(ScreenLevel.SCREEN, new ETerminalWindow());
@@ -126,7 +126,7 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 					RenderingManager.drawString("No Screens?", 256, 256);
 				}
 				
-				Envision.topScreen.onRenderTick();
+				Envision.developerDesktop.onRenderTick();
 				Envision.renderEngine.endFrame();
 				
 				sleepStart = System.currentTimeMillis();
@@ -474,19 +474,19 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 	
 	@Override
 	public void onMouseInput(int action, int mXIn, int mYIn, int button, int change) {
-		Envision.topScreen.handleMouseInput(action, mXIn, mYIn, button, change);
+		Envision.developerDesktop.handleMouseInput(action, mXIn, mYIn, button, change);
 	}
 	
 	@Override
 	public void onKeyboardInput(int action, char typedChar, int keyCode) {
-		Envision.topScreen.handleKeyboardInput(action, typedChar, keyCode);
+		Envision.developerDesktop.handleKeyboardInput(action, typedChar, keyCode);
 	}
 	
 	@Override
 	public void onWindowResized(long window, int newWidth, int newHeight) {
 		Envision.getRenderEngine().getRenderingContext().onWindowResized();
 		Envision.getGameWindow().onWindowResized(newWidth, newHeight);
-		Envision.topScreen.onScreenResized();
+		Envision.developerDesktop.onScreenResized();
 		if (Envision.currentScreen != null) {
 			Envision.currentScreen.onScreenResized();
 		}

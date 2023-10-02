@@ -3,6 +3,7 @@ package envision.game.shops;
 import static envision.game.shops.ShopTransactionResult.*;
 
 import envision.game.entities.Entity;
+import envision.game.entities.inventory.EntityInventory;
 import envision.game.items.Item;
 import eutil.datatypes.util.EList;
 
@@ -10,7 +11,7 @@ public class Shop {
 	
     private String shopName;
 	private int inventorySize = 10;
-	private EList<Item> shopInventory = EList.newList();
+	private EntityInventory shopInventory;
 	private EList<Shopkeeper> shopkeeper;
 	
 	//==============
@@ -39,7 +40,7 @@ public class Shop {
 	
 	public void addItem(Item in) {
 		if (in != null) {
-			shopInventory.add(in);
+			shopInventory.addItem(in);
 		}
 	}
 	
@@ -58,7 +59,7 @@ public class Shop {
 	}
 	
 	public Item getItem(String nameIn) {
-		for (Item i : shopInventory) {
+		for (Item i : shopInventory.getItems()) {
 			if (i.getName().contentEquals(nameIn)) {
 				return i;
 			}
@@ -66,22 +67,12 @@ public class Shop {
 		return null;
 	}
 	
-	public Item removeItem(String nameIn) {
-		Item theItem = null;
-		
-		for (Item i : shopInventory) {
-			if (i.getName().contentEquals(nameIn)) {
-				theItem = i;
-				break;
-			}
-		}
-		shopInventory.remove(theItem);
-		
-		return theItem;
+	public EntityInventory getInventory() {
+	    return shopInventory;
 	}
 	
 	public EList<Item> getItems() {
-		return shopInventory;
+		return shopInventory.getItems();
 	}
 	
 }

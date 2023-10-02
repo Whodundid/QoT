@@ -6,7 +6,6 @@ import envision.engine.terminal.commands.ListableCommand;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
 
@@ -20,7 +19,7 @@ public class CMD_Help extends ListableCommand {
 	}
 	
 	@Override public String getName() { return "help"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("h", "commands", "cmds"); }
+	@Override public EList<String> getAliases() { return EList.of("h", "commands", "cmds"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "List all commands with aliases and can display info on a specific command."; }
 	@Override public String getUsage() { return "ex: help deb"; }
 	

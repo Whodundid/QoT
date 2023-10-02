@@ -5,7 +5,6 @@ import envision.engine.screens.GameScreen;
 import envision.engine.screens.ScreenRepository;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 //Author: Hunter Bragg
@@ -18,7 +17,7 @@ public class CMD_DisplayScreen extends TerminalCommand {
 	}
 	
 	@Override public String getName() { return "openscreen"; }
-	@Override public EList<String> getAliases() { return new EArrayList<>("os"); }
+	@Override public EList<String> getAliases() { return EList.of("os"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Command used for opening game screens."; }
 	@Override public String getUsage() { return "ex: os MainMenuScreen"; }
 	

@@ -2,7 +2,7 @@ package envision.engine.scripting.envisionMappings.qot_package.objects;
 
 import envision.game.world.GameWorld;
 import envision_lang.interpreter.EnvisionInterpreter;
-import envision_lang.interpreter.util.creationUtil.ObjectCreator;
+import envision_lang.interpreter.util.creation_util.ObjectCreator;
 import envision_lang.interpreter.util.scope.Scope;
 import envision_lang.lang.EnvisionObject;
 import envision_lang.lang.classes.ClassInstance;
