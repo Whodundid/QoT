@@ -162,17 +162,17 @@ public class RenderingManager {
 	}
 	
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public static void drawRect(IDimension dims, EColors color) { drawRect(dims, color.intVal, 0); }
+	public static void drawRect(IDimension<?> dims, EColors color) { drawRect(dims, color.intVal, 0); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public static void drawRect(IDimension dims, int color) { drawRect(dims, color, 0); }
+	public static void drawRect(IDimension<?> dims, int color) { drawRect(dims, color, 0); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public static void drawRect(IDimension dims, EColors color, int offset) { drawRect(dims, color.intVal, offset); }
+	public static void drawRect(IDimension<?> dims, EColors color, int offset) { drawRect(dims, color.intVal, offset); }
 	/** Draws a filled rectangle within the given dimension bounds. */
-	public static void drawRect(IDimension dims, int color, int offset) {
-		drawRect(dims.startX_d() + offset,
-				 dims.startY_d() + offset,
-				 dims.endX_d() - offset,
-				 dims.endY_d() - offset,
+	public static void drawRect(IDimension<?> dims, int color, int offset) {
+		drawRect(dims.startX().doubleValue() + offset,
+				 dims.startY().doubleValue() + offset,
+				 dims.endX().doubleValue() - offset,
+				 dims.endY().doubleValue() - offset,
 				 color);
 	}
 	
@@ -198,14 +198,19 @@ public class RenderingManager {
 	}
 	
 	/** Draws a filled rectangle within the given dimension bounds. */
-    public static void drawHRect(IDimension dims, EColors color) { drawHRect(dims, color.intVal, 1); }
+    public static void drawHRect(IDimension<?> dims, EColors color) { drawHRect(dims, color.intVal, 1); }
     /** Draws a filled rectangle within the given dimension bounds. */
-    public static void drawHRect(IDimension dims, int color) { drawHRect(dims, color, 1); }
+    public static void drawHRect(IDimension<?> dims, int color) { drawHRect(dims, color, 1); }
     /** Draws a filled rectangle within the given dimension bounds. */
-    public static void drawHRect(IDimension dims, EColors color, int borderWidth) { drawHRect(dims, color.intVal, borderWidth); }
+    public static void drawHRect(IDimension<?> dims, EColors color, int borderWidth) { drawHRect(dims, color.intVal, borderWidth); }
     /** Draws a filled rectangle within the given dimension bounds. */
-    public static void drawHRect(IDimension dims, int color, int borderWidth) {
-        drawHRect(dims.startX_d(), dims.startY_d(), dims.endX_d(), dims.endY_d(), borderWidth, color);
+    public static void drawHRect(IDimension<?> dims, int color, int borderWidth) {
+        drawHRect(dims.startX().doubleValue(),
+        		dims.startY().doubleValue(),
+        		dims.endX().doubleValue(),
+        		dims.endY().doubleValue(),
+        		borderWidth,
+        		color);
     }
 	
 	/** Draws a texture with the given dimensions. */
