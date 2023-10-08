@@ -18,7 +18,7 @@ public class CMD_Edit extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: edit 'file'"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectExactly(1);
 	    
         String fileToEdit = firstArg();
@@ -30,7 +30,7 @@ public class CMD_Edit extends AbstractFileCommand {
         
         if (f.exists()) {
             check(f);
-            return null;
+            return;
         }
         
         f = new File(fileToEdit);
@@ -41,12 +41,11 @@ public class CMD_Edit extends AbstractFileCommand {
         
         if (f.exists()) {
             check(f);
-            return null;
+            return;
         }
         
         f = new File(dir(), fileToEdit);
         check(f);
-        return null;
 	}
 	
 	private void check(File path) {

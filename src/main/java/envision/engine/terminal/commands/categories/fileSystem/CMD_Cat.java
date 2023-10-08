@@ -17,13 +17,12 @@ public class CMD_Cat extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: cat '.txt'"; }
 	
 	@Override
-	public Object runCommand() throws IOException {
+	public void runCommand() throws IOException {
 	    expectAtLeast(1);
 	    
 	    File f = parseFilePath(dir(), firstArg());
 	    
 	    displayFile(f);
-	    return null;
 	}
 	
 	private void displayFile(File fileIn) throws IOException {

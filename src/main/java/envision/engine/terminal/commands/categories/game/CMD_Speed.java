@@ -16,25 +16,18 @@ public class CMD_Speed extends TerminalCommand {
 	@Override public String getUsage() { return "ex: speed 10"; }
 	
 	@Override
-	public Object runCommand() {
-	    expectNoMoreThan(1);
+	public void runCommand() {
+	    expectAtLeast(1);
 
 	    if (Envision.thePlayer == null) {
 			error("There is no player!");
-			return null;
+			return;
 		}
 		
-	    if (noArgs()) {
-	        writeln("Player speed: '", Envision.thePlayer.getSpeed() * 1000, "'");
-	        return Envision.thePlayer.getSpeed();
-	    }
-	    
 		//toggle
 		double s = ENumUtil.parseDouble(arg(0), 32.0 * 4.5);
 		Envision.thePlayer.setSpeed(s);
 		writeln("Set player speed to: '", Envision.thePlayer.getSpeed() * 1000, "' !");
-		
-		return s;
 	}
 	
 }

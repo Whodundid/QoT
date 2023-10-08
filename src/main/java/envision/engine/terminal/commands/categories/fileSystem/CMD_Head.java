@@ -18,7 +18,7 @@ public class CMD_Head extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: head 'file path' 10"; }
 	
 	@Override
-	public Object runCommand() throws IOException {
+	public void runCommand() throws IOException {
 	    expectBetween(1, 2);
 	    
 	    File theFile = parseFilePath(dir(), firstArg());
@@ -27,7 +27,6 @@ public class CMD_Head extends AbstractFileCommand {
 	    if (twoArgs()) amount = ENumUtil.parseInt(arg(1), 10);
 	    
 	    display(theFile, amount);
-	    return null;
 	}
 	
 	private void display(File fileIn, int len) throws IOException {

@@ -21,7 +21,7 @@ public class CMD_Mv extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: mv 'src' 'dest'"; }
 	
 	@Override
-	protected Object runCommand() throws Exception {
+	protected void runCommand() throws Exception {
 		expectExactly(2);
 		
 		boolean isFolder = false;
@@ -31,7 +31,7 @@ public class CMD_Mv extends AbstractFileCommand {
 		if (!f.exists()) f = fromFull();
 		if (!f.exists()) {
 			error("Error: Cannot find the object specified!");
-			return null;
+			return;
 		}
 		
 		//check if the file being moved is a directory
@@ -39,7 +39,7 @@ public class CMD_Mv extends AbstractFileCommand {
 		
 		if (arg(1).equals("wdir")) {
 			move(term, f, new File(QoTSettings.getEditorWorldsDir(), f.getName()));
-			return null;
+			return;
 		}
 		
 		//check relative path for destination			
@@ -50,7 +50,7 @@ public class CMD_Mv extends AbstractFileCommand {
 			//if full path still doesn't exist, fail
 			if (!dest.exists()) {
 				error("Error: Destination path: '" + arg(1) + "' cannot be found!");
-				return null;
+				return;
 			}
 		}
 		else if (!dest.exists()) {
@@ -69,7 +69,6 @@ public class CMD_Mv extends AbstractFileCommand {
 		move(term, f, dest);
 		
 		DeveloperDesktop.reloadFileExplorers();
-		return null;
 	}
 	
 	private void move(ETerminalWindow termIn, File src, File dest) {

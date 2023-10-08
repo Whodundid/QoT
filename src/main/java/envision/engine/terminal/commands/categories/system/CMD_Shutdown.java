@@ -1,9 +1,12 @@
 package envision.engine.terminal.commands.categories.system;
 
 import envision.Envision;
+import envision.engine.terminal.commands.CommandResult;
 import envision.engine.terminal.commands.ConfirmationCommand;
+import envision.engine.terminal.terminalUtil.ArgHelper;
+import envision.engine.terminal.terminalUtil.TermArgLengthException;
+import envision.engine.terminal.terminalUtil.TermArgParsingException;
 import envision.engine.terminal.window.ETerminalWindow;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class CMD_Shutdown extends ConfirmationCommand {
@@ -20,13 +23,33 @@ public class CMD_Shutdown extends ConfirmationCommand {
 	
 	@Override
 	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
-		basicTabComplete(termIn, args, new EArrayList<>("true", "false"));
+		basicTabComplete(termIn, args, EList.of("true", "false"));
 	}
 	
 	@Override
-	public Object runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) checkConfirm(termIn, args, runVisually);
-		return null;
+	public CommandResult runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+        result = new CommandResult(this, args, runVisually);
+        term = termIn;
+
+        try {
+            argHelper = new ArgHelper(termIn, args, runVisually);
+            if (args.isEmpty()) checkConfirm(termIn, args, runVisually);
+            //runCommand();
+        }
+        catch (TermArgParsingException e) {
+            var cause = e.getCause();
+            String errorString = e.getErrorString();
+            javaError(cause);
+            if (errorString != null) error(errorString);
+        }
+        catch (TermArgLengthException e) {
+            errorUsage(e.getMessage());
+        }
+        catch (Exception e) {
+            error(e);
+        }
+        
+        return result;
 	}
 
 	@Override

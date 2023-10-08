@@ -19,11 +19,11 @@ public class CMD_ClearObjects extends TerminalCommand {
 	@Override public String getUsage() { return "ex: clro"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoArgs();
 	    
 		EList<IWindowObject> objs = getTopParent().getCombinedChildren();
-		if (objs.isEmpty()) return null;
+		if (objs.isEmpty()) return;
 		
 		if (objs.contains(term())) objs.remove(term());
 		
@@ -36,7 +36,6 @@ public class CMD_ClearObjects extends TerminalCommand {
 		}
 		
 		if (runVisually()) writeln(objs.size() + " closed.", 0xffffaa00);
-		return null;
 	}
 	
 }

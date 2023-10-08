@@ -19,7 +19,7 @@ public class CMD_PinWindow extends TerminalCommand {
 	@Override public String getUsage() { return "ex: pin 4 (where 4 is the window pid)"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoMoreThan(1);
 	    
 	    if (noArgs()) {
@@ -36,7 +36,7 @@ public class CMD_PinWindow extends TerminalCommand {
                 term().getObjectID(),
                 val ? "un" : ""),
                 EColors.green);
-            return null;
+            return;
 	    }
 
 		try {
@@ -90,8 +90,6 @@ public class CMD_PinWindow extends TerminalCommand {
 				error(q);
 			}
 		}
-		
-		return null;
 	}
 	
 }

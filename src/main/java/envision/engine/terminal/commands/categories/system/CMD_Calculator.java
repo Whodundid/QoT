@@ -18,10 +18,9 @@ public class CMD_Calculator extends TerminalCommand {
 	@Override public String getUsage() { return "ex: calc"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 		writeln("Opening Calculator", EColors.lgreen);
 		displayWindow(new CalculatorWindow());
-		return null;
 	}
 	
 }

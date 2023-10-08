@@ -20,7 +20,7 @@ public class CMD_System extends TerminalCommand {
 	@Override public String getUsage() { return "ex: sys"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoArgs();
 	    
         //os
@@ -134,8 +134,6 @@ public class CMD_System extends TerminalCommand {
             error("Error fetching system drive values..");
             error(q);
         }
-        
-        return null;
 	}
 	
 }

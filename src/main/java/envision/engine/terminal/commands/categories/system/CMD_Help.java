@@ -30,7 +30,7 @@ public class CMD_Help extends TerminalCommand implements ListableCommand {
 	}
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoMoreThan(1);
 	    
 		if (noArgs()) {
@@ -38,7 +38,7 @@ public class CMD_Help extends TerminalCommand implements ListableCommand {
 			writeln();
 			writeln("To see help information on a specific command, type help followed by the command.", EColors.yellow);
 			writeln("To run a command with more information, add -i after the command. ex: list -i", EColors.yellow);
-			return null;
+			return;
 		}
 		
 		String commandName = firstArg();
@@ -46,21 +46,19 @@ public class CMD_Help extends TerminalCommand implements ListableCommand {
 		var cmds = Envision.getTerminalHandler().getCommandNames();
 		if (!cmds.contains(commandName)) {
 			error("Unrecognized command name");
-			return null;
+			return;
 		}
 		
 		TerminalCommand command = Envision.getTerminalHandler().getCommand(commandName);
 		if (!command.showInHelp()) {
 			error("Unrecognized command name");
-			return null;
+			return;
 		}
 		
 		writeln(command.getHelpInfo(runVisually()), 0xffffff00);
 		if (command.getUsage() != null && !command.getUsage().isEmpty()) {
 			writeln(command.getUsage(), 0xffffff00);
 		}
-		
-		return null;
 	}
 	
 	public void showHelp(ETerminalWindow termIn) {

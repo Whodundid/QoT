@@ -20,11 +20,10 @@ public class CMD_ReloadTextures extends TerminalCommand {
 	@Override public String getUsage() { return "ex: relt"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 		writeln("Reloading all textures..", 0xffffaa00);
 		TextureSystem.getInstance().reloadAllTextures();
 		writeln("Textures Reloaded!", EColors.green);
-		return null;
 	}
 	
 }

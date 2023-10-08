@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import envision.Envision;
+import envision.engine.terminal.commands.CommandResult;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.commands.categories.engine.CMD_CameraZoom;
 import envision.engine.terminal.commands.categories.engine.CMD_Config;
@@ -248,14 +249,14 @@ public class TerminalCommandHandler {
 		}
 	}
 	
-	public Object executeCommand(ETerminalWindow termIn, String cmd) { return executeCommand(termIn, cmd, false); }
-	public Object executeCommand(ETerminalWindow termIn, String cmd, boolean tab) {
+	public CommandResult executeCommand(ETerminalWindow termIn, String cmd) { return executeCommand(termIn, cmd, false); }
+	public CommandResult executeCommand(ETerminalWindow termIn, String cmd, boolean tab) {
 		cmd = cmd.trim();
 		
 		// separate multiple commands in one line from one another
 		EList<String> splitCommands = parseIndividualCommands(cmd);
 		
-		Object lastResult = null;
+		CommandResult lastResult = null;
 		
 		// run each command
 		for (String singleCommand : splitCommands) {
@@ -272,21 +273,27 @@ public class TerminalCommandHandler {
 	        baseCommand = commandParts[0].toLowerCase();
 	        commandArguments.addFrom(commandParts, 1);
 	        
+	        // search for '|' in arguments
+//	        for (int i = 0; i < commandArguments.size(); i++) {
+//	            String arg = commandArguments.get(i);
+//	            if (EUtil.isEqual("|", arg)) {
+//	                commandArguments = EList.of(commandArguments.subList(0, i));
+//	            }
+//	        }
+	        
 	        lastResult = executeCommand(termIn, baseCommand, commandArguments, tab);
 		}
 		
 		return lastResult;
 	}
 	
-    public String executeCommand(ETerminalWindow termIn, String commandName, EList<String> arguments) {
+    public CommandResult executeCommand(ETerminalWindow termIn, String commandName, EList<String> arguments) {
         return executeCommand(termIn, commandName, arguments, false);
     }
 	
-	public String executeCommand(ETerminalWindow termIn, String baseCommand, EList<String> commandArguments, boolean tab) {
+	public CommandResult executeCommand(ETerminalWindow termIn, String baseCommand, EList<String> commandArguments, boolean tab) {
         // try to find a registered command that matches
         final var foundCommand = commands.getBoxWithA(baseCommand);
-        
-        Object result = null;
         
         if (foundCommand == null) {
             // try to find a command alias instead
@@ -297,8 +304,7 @@ public class TerminalCommandHandler {
                 var aliasCommand = new EStringBuilder(foundAlias);
                 aliasCommand.a(" ");
                 aliasCommand.a(EStringUtil.combineAll(commandArguments));
-                result = executeCommand(termIn, aliasCommand.toString(), tab);
-                return (result != null) ? String.valueOf(result) : null;
+                return executeCommand(termIn, aliasCommand.toString(), tab);
             }
             
             termIn.writeln("Unrecognized command.\n", 0xffff5555);
@@ -325,14 +331,16 @@ public class TerminalCommandHandler {
             }
         }
         
+        CommandResult result = null;
+        
         if (tab) {
             if (command.showInHelp()) command.handleTabComplete(termIn, commandArguments);
         }
         else {
-            command.preRun(termIn, commandArguments, runVisually);
+            result = command.preRun(termIn, commandArguments, runVisually);
             
             if (!termIn.getDrawNewLineBetweenCommands()) {
-                return null;
+                return result;
             }
             
             if (drawSpace && !command.getName().equals("clear")) {
@@ -341,7 +349,7 @@ public class TerminalCommandHandler {
             }
         }
         
-        return null;
+        return result;
 	}
 	
     /**

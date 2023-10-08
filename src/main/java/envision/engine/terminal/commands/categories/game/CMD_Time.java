@@ -17,12 +17,12 @@ public class CMD_Time extends TerminalCommand {
 	@Override public String getUsage() { return "ex: time set 0"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoMoreThan(2);
 	    
 		if (Envision.theWorld == null) {
 			error("Current World is Null");
-			return null;
+			return;
 		}
 		
 		if (argLength() > 1) {
@@ -30,9 +30,8 @@ public class CMD_Time extends TerminalCommand {
 		}
 		
 		int curTime = Envision.theWorld.getTime() - 1;
-		writeln(EColors.yellow, "Current Time: ", EColors.lgreen, curTime);
 		
-		return curTime;
+		writeln(EColors.yellow, "Current Time: ", EColors.lgreen, curTime);
 	}
 	
 }

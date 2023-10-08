@@ -25,7 +25,7 @@ public class CMD_JavaTrace extends TerminalCommand {
 	}
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 		if (TracingPrintStream.isTracing()) {
 			TracingPrintStream.disableTrace();
 			writeln("Disabled tracing", EColors.lgray);
@@ -34,8 +34,6 @@ public class CMD_JavaTrace extends TerminalCommand {
 			TracingPrintStream.enableTrace();
 			writeln("Enabled tracing", EColors.lgreen);
 		}
-		
-		return null;
 	}
 	
 }

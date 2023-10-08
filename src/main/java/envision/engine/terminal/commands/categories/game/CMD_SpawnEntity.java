@@ -22,10 +22,8 @@ public class CMD_SpawnEntity extends TerminalCommand {
 	}
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectExactly(3);
-	    
-	    return null;
 	}
 	
 }

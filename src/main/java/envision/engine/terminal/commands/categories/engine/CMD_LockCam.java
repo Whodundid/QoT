@@ -21,12 +21,12 @@ public class CMD_LockCam extends TerminalCommand {
     @Override public String getUsage() { return "ex: edgelock"; }
     
     @Override
-    public Object runCommand() {
+    public void runCommand() {
         expectNoMoreThan(1);
         
         if (Envision.theWorld == null) {
             error("There is no world!");
-            return null;
+            return;
         }
         
         boolean val = false;
@@ -42,7 +42,7 @@ public class CMD_LockCam extends TerminalCommand {
             case "f", "false": val = false; break;
             default:
                 errorUsage("Expected either a [true|false|t|f] input!");
-                return null;
+                return;
             }
         }
         
@@ -52,7 +52,6 @@ public class CMD_LockCam extends TerminalCommand {
         if (val) displayString = EColors.lgreen + "Enabled";
         else displayString = EColors.lred + "Disabled";
         writeln(EColors.yellow, "Camera Edge Locking: " + displayString);
-        return null;
     }
     
 }

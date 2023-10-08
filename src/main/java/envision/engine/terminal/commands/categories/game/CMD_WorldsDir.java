@@ -23,7 +23,7 @@ public class CMD_WorldsDir extends TerminalCommand {
 	@Override public String getUsage() { return "ex: wdir"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoArgs();
 	    
 	    try {
@@ -40,15 +40,11 @@ public class CMD_WorldsDir extends TerminalCommand {
             
             if (copy) Keyboard.setClipboard(path);
             if (open) FileOpener.openFile(new File(path));
-            
-            return path;
         }
         catch (Exception e) {
             e.printStackTrace();
             error(e);
         }
-	    
-	    return null;
 	}
 	
 }
