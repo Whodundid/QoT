@@ -39,11 +39,11 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 	}
 	
     @Override
-    public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+    public Object runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
         try {
             term = termIn;
             argHelper = fileHelper = new FileHelper(termIn, args, runVisually);
-            runCommand();
+            return runCommand();
         }
         catch (TermArgParsingException e) {
             e.display(termIn);
@@ -54,6 +54,8 @@ public abstract class AbstractFileCommand extends TerminalCommand {
         catch (Exception e) {
             error(e);
         }
+        
+        return null;
     }
 	
 	//=========

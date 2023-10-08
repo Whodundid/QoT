@@ -34,18 +34,19 @@ public class CMD_PlaySong extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoMoreThan(1);
 	    
 	    if (noArgs()) {
 			displaySongList();
-			return;
+			return null;
 		}
 		
 		int song = ENumUtil.parseInt(args(), 0, -1);
 		SoundEngine.stopAll();
 		if (song >= 0) playSong(song);
 		else playSong(firstArg());
+		return null;
 	}
 	
 	private void displaySongList() {

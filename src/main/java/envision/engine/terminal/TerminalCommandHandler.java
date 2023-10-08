@@ -110,7 +110,7 @@ public class TerminalCommandHandler {
 	
 	private TerminalCommandHandler() {
 		commands = new BoxList<>();
-		commandList = new EArrayList<>();
+		commandList = EList.newList();
 	}
 	
 	public void initCommands() {
@@ -248,12 +248,14 @@ public class TerminalCommandHandler {
 		}
 	}
 	
-	public void executeCommand(ETerminalWindow termIn, String cmd) { executeCommand(termIn, cmd, false); }
-	public void executeCommand(ETerminalWindow termIn, String cmd, boolean tab) {
+	public Object executeCommand(ETerminalWindow termIn, String cmd) { return executeCommand(termIn, cmd, false); }
+	public Object executeCommand(ETerminalWindow termIn, String cmd, boolean tab) {
 		cmd = cmd.trim();
 		
 		// separate multiple commands in one line from one another
 		EList<String> splitCommands = parseIndividualCommands(cmd);
+		
+		Object lastResult = null;
 		
 		// run each command
 		for (String singleCommand : splitCommands) {
@@ -263,24 +265,28 @@ public class TerminalCommandHandler {
 	        
 	        if (commandParts.length == 0) {
 	            termIn.writeln("Unrecognized command.\n", 0xffff5555);
-	            return;
+	            return null;
 	        }
 	        
 	        // parse out arguments from input string
 	        baseCommand = commandParts[0].toLowerCase();
 	        commandArguments.addFrom(commandParts, 1);
 	        
-	        executeCommand(termIn, baseCommand, commandArguments, tab);
+	        lastResult = executeCommand(termIn, baseCommand, commandArguments, tab);
 		}
+		
+		return lastResult;
 	}
 	
-    public void executeCommand(ETerminalWindow termIn, String commandName, EList<String> arguments) {
-        executeCommand(termIn, commandName, arguments, false);
+    public String executeCommand(ETerminalWindow termIn, String commandName, EList<String> arguments) {
+        return executeCommand(termIn, commandName, arguments, false);
     }
 	
-	public void executeCommand(ETerminalWindow termIn, String baseCommand, EList<String> commandArguments, boolean tab) {
+	public String executeCommand(ETerminalWindow termIn, String baseCommand, EList<String> commandArguments, boolean tab) {
         // try to find a registered command that matches
         final var foundCommand = commands.getBoxWithA(baseCommand);
+        
+        Object result = null;
         
         if (foundCommand == null) {
             // try to find a command alias instead
@@ -291,12 +297,12 @@ public class TerminalCommandHandler {
                 var aliasCommand = new EStringBuilder(foundAlias);
                 aliasCommand.a(" ");
                 aliasCommand.a(EStringUtil.combineAll(commandArguments));
-                executeCommand(termIn, aliasCommand.toString(), tab);
-                return;
+                result = executeCommand(termIn, aliasCommand.toString(), tab);
+                return (result != null) ? String.valueOf(result) : null;
             }
             
             termIn.writeln("Unrecognized command.\n", 0xffff5555);
-            return;
+            return null;
         }
         
         // extract the associated command
@@ -305,7 +311,7 @@ public class TerminalCommandHandler {
         if (command == null) {
             termIn.error("Unrecognized command.");
             termIn.writeln();
-            return;
+            return null;
         }
         
         boolean runVisually = false;
@@ -324,12 +330,18 @@ public class TerminalCommandHandler {
         }
         else {
             command.preRun(termIn, commandArguments, runVisually);
-        
+            
+            if (!termIn.getDrawNewLineBetweenCommands()) {
+                return null;
+            }
+            
             if (drawSpace && !command.getName().equals("clear")) {
                 termIn.writeln();
                 drawSpace = true;
             }
         }
+        
+        return null;
 	}
 	
     /**

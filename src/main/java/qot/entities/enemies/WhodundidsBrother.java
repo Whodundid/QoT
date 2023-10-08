@@ -1,7 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.effects.animations.AnimationHandler;
 import envision.game.entities.Enemy;

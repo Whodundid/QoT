@@ -2,12 +2,13 @@ package envision.engine.terminal.commands.categories.system;
 
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.ListableCommand;
+import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
 
-public class CMD_Alias extends ListableCommand {
+public class CMD_Alias extends TerminalCommand implements ListableCommand {
     
     public CMD_Alias() {
         setCategory("System");
@@ -23,7 +24,7 @@ public class CMD_Alias extends ListableCommand {
     }
     
     @Override
-    public void runCommand() {
+    public Object runCommand() {
         expectAtLeast(1);
         
         // combine all args in the event that they type "alias banana = 'cat'"
@@ -34,13 +35,13 @@ public class CMD_Alias extends ListableCommand {
         // make sure input does not actually start with the 
         if (input.startsWith("=")) {
             errorUsage("Error! Alias name must not be empty!");
-            return;
+            return null;
         }
         
         // make sure input has a '='
         if (!input.contains("=")) {
             errorUsage("Expected a '=' to be present for an alias target!");
-            return;
+            return null;
         }
         
         String[] inputParts = input.split("=");
@@ -48,7 +49,7 @@ public class CMD_Alias extends ListableCommand {
         // ensure there are at least 2 values "banana | 'cat'"
         if (inputParts.length < 2) {
             errorUsage("Expected a valid alias replacement string!");
-            return;
+            return null;
         }
         
         // extract alias name
@@ -58,7 +59,7 @@ public class CMD_Alias extends ListableCommand {
         // ensure that the alias name starts with a letter
         if (!aliasName.matches("^[a-zA-Z].*$")) {
             errorUsage("Alias name must start with a letter!");
-            return;
+            return null;
         }
         
         // join all remaining parts to be the aliases value
@@ -77,6 +78,7 @@ public class CMD_Alias extends ListableCommand {
         TerminalCommandHandler.getInstance().addCommandAlias(aliasName, aliasValue);
         
         writeln(EColors.lgreen, "Added Alias '", EColors.mc_lightpurple, aliasName, EColors.lgreen, "'");
+        return null;
     }
     
     @Override

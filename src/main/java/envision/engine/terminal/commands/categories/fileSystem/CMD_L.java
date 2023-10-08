@@ -32,13 +32,13 @@ public class CMD_L extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: ll 'dir'"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoMoreThan(1);
 	    
 		//if empty -- ls current dir
 		if (args().isEmpty()) {
 			listDir(null);
-			return;
+			return null;
 		}
 		
 		File theFile = null;
@@ -69,6 +69,7 @@ public class CMD_L extends AbstractFileCommand {
 		}
 		
 		listDir(theFile);
+		return null;
 	}
 	
 	private void listDir(File dir) {

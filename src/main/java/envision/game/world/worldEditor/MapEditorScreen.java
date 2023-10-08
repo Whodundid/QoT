@@ -10,7 +10,7 @@ import envision.engine.events.GameEvent;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.utilityObjects.WindowDialogueBox;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
@@ -147,7 +147,7 @@ public class MapEditorScreen extends GameScreen {
 		firstPress = !Mouse.isButtonDown(0);
 		
 		loading = true;
-		Runnable loader = () -> loadWorld();
+		Runnable loader = this::loadWorld;
 		new Thread(loader).start();
 		
 		settings.currentTool = EditorToolType.PENCIL;
@@ -620,9 +620,10 @@ public class MapEditorScreen extends GameScreen {
 	
 	public void loadWorld() {
 		boolean center = actualWorld == null || !firstPress;
+		double zoomToSet = 1;
 		
 		if (mapFile != null) {
-			double oldZoom = 1;
+		    double oldZoom = 1;
 			if (actualWorld != null) oldZoom = actualWorld.getCameraZoom();
 			if (mapFile.isDirectory()) {
 				String mapName = mapFile.getName().replace(".twld", "");
@@ -630,15 +631,12 @@ public class MapEditorScreen extends GameScreen {
 				mapFile = new File(mapDir, mapName + "/" + mapName + ".twld");
 			}
 			actualWorld = new GameWorld(mapFile);
-			actualWorld.getCamera().setEdgeLocked(false);
-			actualWorld.getCamera().setMinZoom(0.25);
-			actualWorld.getCamera().setMaxZoom(10);
-			actualWorld.setCameraZoom(oldZoom);
+			zoomToSet = oldZoom;
 		}
 		else if (actualWorld != null) {
 			double oldZoom = actualWorld.getCameraZoom();
 			mapFile = actualWorld.getWorldFile();
-			actualWorld.setCameraZoom(oldZoom);
+			zoomToSet = oldZoom;
 		}
 		
 		//create editor world
@@ -650,6 +648,11 @@ public class MapEditorScreen extends GameScreen {
 			drawDistX = (int) (actualWorld.getWidth() / getCameraZoom());
 			drawDistY = (int) (actualWorld.getHeight() / getCameraZoom());
 		}
+		
+        actualWorld.getCamera().setEdgeLocked(false);
+        actualWorld.getCamera().setMinZoom(0.25);
+        actualWorld.getCamera().setMaxZoom(10);
+        actualWorld.setCameraZoom(zoomToSet);
 		
 		loading = false;
 	}

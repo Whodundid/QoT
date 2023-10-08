@@ -14,6 +14,7 @@ import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
 import eutil.strings.EStringBuilder;
+import eutil.strings.EStringUtil;
 
 public class EntityRenderer extends RenderingComponent {
 	
@@ -61,7 +62,7 @@ public class EntityRenderer extends RenderingComponent {
 					 int distX, int distY)
 	{
 		var sprite = theObject.getSprite();
-		if (sprite == null) return;
+		//if (sprite == null && EStringUtil.isNotPopulated(theEntity.getHeadText())) return;
 		
 		final double zoom = camera.getZoom();
 		
@@ -337,7 +338,7 @@ public class EntityRenderer extends RenderingComponent {
 		lastDrawBrightness = brightness;
 		lastDrawMouseOver = mouseOver;
 		
-		drawEntityTexture();
+		if (theObject.getSprite() != null) drawEntityTexture();
 		theEntity.healthBar.setDimensions(x, y - 7, w, 7);
 		theEntity.healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
 		

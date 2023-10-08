@@ -17,7 +17,7 @@ public class CMD_MkDir extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: mkdir 'name'"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectAtLeast(1);
 	    
 	    for (String input : args()) {
@@ -39,6 +39,7 @@ public class CMD_MkDir extends AbstractFileCommand {
 	    }
 	    
 	    Envision.getActiveTopParent().reloadAllWindowInstances(FileExplorerWindow.class);
+	    return null;
 	}
 	
 }

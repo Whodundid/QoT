@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
-import eutil.colors.EColors;
 
 public class CMD_Stats extends TerminalCommand {
 	
@@ -16,12 +15,12 @@ public class CMD_Stats extends TerminalCommand {
 	@Override public String getUsage() { return "ex: stats 5 (where 5 is the id of the entity)"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectExactly(1);
 	    
 		if (Envision.theWorld == null) {
 			error("Current World is Null");
-			return;
+			return null;
 		}
 		
 		var entities = Envision.theWorld.getEntitiesInWorld();
@@ -29,11 +28,13 @@ public class CMD_Stats extends TerminalCommand {
 		int id = parseInt(firstArg());
 		for (var e : entities) {
 			if (e.getWorldID() == id) {
-				Envision.theWorld.removeEntity(e);
-				writeln("Killed entity! " + id, EColors.lgreen);
+				//Envision.theWorld.removeEntity(e);
+				//writeln("Killed entity! " + id, EColors.lgreen);
 				break;
 			}
 		}
+		
+		return null;
 	}
 	
 }

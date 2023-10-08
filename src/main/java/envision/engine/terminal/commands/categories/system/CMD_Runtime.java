@@ -17,7 +17,7 @@ public class CMD_Runtime extends TerminalCommand {
 	@Override public String getUsage() { return "ex: runtime"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoArgs();
 	    
 	    Runtime rt = Runtime.getRuntime();
@@ -50,6 +50,7 @@ public class CMD_Runtime extends TerminalCommand {
         writeln(freeMem, EColors.cyan);
         //termIn.writeln(divider, EColors.lgray);
 		
+        return null;
 	}
 	
 }

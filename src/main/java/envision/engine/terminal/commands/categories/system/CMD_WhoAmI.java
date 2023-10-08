@@ -17,10 +17,11 @@ public class CMD_WhoAmI extends TerminalCommand {
 	@Override public String getHelpInfo(boolean runVisually) { return "Provides user info on the current player."; }
 
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoArgs();
 	    var user = Envision.getCurrentUser();
         writeln(((user.isDev()) ? EColors.purple : EColors.lgray), user);
+        return user;
 	}
 	
 }

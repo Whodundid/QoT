@@ -16,7 +16,7 @@ public class CMD_PauseGame extends TerminalCommand {
 	@Override public String getUsage() { return "ex: pause"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoArgs();
 	    
 		boolean paused = Envision.isPaused();
@@ -29,6 +29,8 @@ public class CMD_PauseGame extends TerminalCommand {
 			Envision.pause();
 			writeln("Game Paused", EColors.yellow);
 		}
+		
+		return null;
 	}
 	
 }

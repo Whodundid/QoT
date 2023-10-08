@@ -15,8 +15,9 @@ public class CMD_TermID extends TerminalCommand {
 	@Override public String getUsage() { return "ex: id"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 		writeln(EColors.yellow, term().getObjectName(), EColors.lgray, " Window ID: ", term().getObjectID());
+		return term().getObjectID();
 	}
 	
 }

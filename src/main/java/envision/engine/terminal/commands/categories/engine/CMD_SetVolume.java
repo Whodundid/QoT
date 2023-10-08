@@ -21,16 +21,16 @@ public class CMD_SetVolume extends TerminalCommand {
 	@Override public String getUsage() { return "ex: vol 50"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public Object runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) {
 			termIn.writeln(EColors.yellow, "Volume: " + QoTSettings.musicVolume.get());
-			return;
+			return null;
 		}
 		
 		int vol = ENumUtil.parseInt(args, 0, -1);
 		if (vol < 0) {
 			termIn.errorUsage("Expected an integer value!", getUsage());
-			return;
+			return null;
 		}
 		
 		QoTSettings.musicVolume.set(ENumUtil.clamp(vol, 0, 100));
@@ -39,6 +39,7 @@ public class CMD_SetVolume extends TerminalCommand {
 		else SoundEngine.getAllPlaying().forEach(s -> s.setVolume(QoTSettings.musicVolume.get() * 0.001));
 		
 		termIn.writeln(EColors.lgreen, "Set volume to: " + QoTSettings.musicVolume.get());
+		return null;
 	}
 	
 }

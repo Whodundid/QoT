@@ -17,17 +17,18 @@ public class CMD_God extends TerminalCommand {
 	@Override public String getUsage() { return "ex: god"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoArgs();
 		
 		if (Envision.thePlayer == null) {
 			error("There is no player!");
-			return;
+			return null;
 		}
 		
 		//toggle
 		Envision.thePlayer.setInvincible(!Envision.thePlayer.isInvincible());
 		writeln("Godmode ", (Envision.thePlayer.isInvincible()) ? "enabled!" : "disabled!");
+		return null;
 	}
 	
 }

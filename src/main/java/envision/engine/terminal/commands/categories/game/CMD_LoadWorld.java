@@ -31,7 +31,7 @@ public class CMD_LoadWorld extends AbstractFileCommand {
 	}
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectExactly(1, "Error: Map name empty!");
 		
 		String worldName = firstArg();
@@ -41,13 +41,15 @@ public class CMD_LoadWorld extends AbstractFileCommand {
 		
 		if (!world.getWorldFile().exists()) {
 		    error("World '" + worldName + "' does not exist!");
-		    return;
+		    return null;
 		}
 		
 		writeln("Loading world...", EColors.green);
         Envision.setPlayer(new QoT_Player("Test"));
         if (switchTo) Envision.displayScreen(new GamePlayScreen());
         Envision.loadWorld(world);
+        
+        return null;
 	}
 	
 	public static GameWorld buildWorld(String worldName) {

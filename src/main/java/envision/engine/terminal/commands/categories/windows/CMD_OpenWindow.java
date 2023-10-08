@@ -26,7 +26,7 @@ public class CMD_OpenWindow extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectAtLeast(1);
 	    
 	    var windows = WindowRegistry.getAllRegisteredWindows();
@@ -59,6 +59,8 @@ public class CMD_OpenWindow extends TerminalCommand {
 //	        default: error("Unrecognized screen name!");
 //	        }
 //	    }
+	    
+	    return null;
 	}
 	
 }

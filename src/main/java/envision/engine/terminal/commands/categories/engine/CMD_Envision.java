@@ -19,7 +19,7 @@ public class CMD_Envision extends TerminalCommand {
     @Override public String getUsage() { return "ex: envision 'file'"; }
     
     @Override
-    public void runCommand() {
+    public Object runCommand() {
         if (noArgs()) {
             writeln(EnvisionLang.getVersionString(), EColors.seafoam);
             info("""
@@ -27,7 +27,7 @@ public class CMD_Envision extends TerminalCommand {
                  along with any of its launch arguments to the end of this command.
                  """);
             usage();
-            return;
+            return null;
         }
         
         String fileName = firstArg();
@@ -52,6 +52,8 @@ public class CMD_Envision extends TerminalCommand {
             e.printStackTrace();
             error(e);
         }
+        
+        return null;
     }
     
 }

@@ -16,13 +16,13 @@ public class CMD_Lsblk extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: lsblk"; }
 	
 	@Override
-	public void runCommand() throws IOException {
+	public Object runCommand() throws IOException {
 	    expectNoArgs();
 	    
 	    File[] drives = File.listRoots();
 	    if (drives == null || drives.length == 0) {
 	        error("There appear to be no drives available on the system!");
-	        return;
+	        return null;
 	    }
 	    
 	    String title = String.format("%-10s%-22s%-30s", "Drive", "Total size (gb)", "Free Space (gb)");
@@ -36,6 +36,8 @@ public class CMD_Lsblk extends AbstractFileCommand {
             String out = String.format("%-11s%-23.2f%-30.2f", f.getCanonicalPath(), total, free);
             writeln(out, 0xff2265f0);
         }
+        
+        return null;
 	}
 	
 }

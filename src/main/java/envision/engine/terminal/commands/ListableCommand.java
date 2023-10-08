@@ -3,12 +3,12 @@ package envision.engine.terminal.commands;
 import envision.engine.terminal.window.ETerminalWindow;
 import eutil.datatypes.util.EList;
 
-public abstract class ListableCommand extends TerminalCommand {
+public interface ListableCommand {
     
     /**
      * @return the 'list' of values from this listable command.
      */
-    public abstract EList<String> getList();
+    EList<String> getList();
     
     /**
      * Returns true if this listable command has a customized list display
@@ -16,7 +16,7 @@ public abstract class ListableCommand extends TerminalCommand {
      * <p>
      * Returns false by default. Override in implementing instances.
      */
-    public boolean hasCustomizedListDisplay() {
+    default boolean hasCustomizedListDisplay() {
         return false;
     }
     
@@ -25,6 +25,6 @@ public abstract class ListableCommand extends TerminalCommand {
      * 
      * @param termIn The terminal to display to
      */
-    public void displayList(ETerminalWindow termIn) {}
+    default void displayList(ETerminalWindow termIn) {}
     
 }

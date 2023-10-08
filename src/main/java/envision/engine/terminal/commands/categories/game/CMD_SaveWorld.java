@@ -18,14 +18,15 @@ public class CMD_SaveWorld extends TerminalCommand {
 	@Override public String getUsage() { return "ex: sw"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    if (Envision.theWorld == null) {
 	        writeln("No world to save", EColors.yellow);
-	        return;
+	        return null;
 	    }
 	    
 	    writeln("Saving '" + Envision.theWorld.getWorldName() + "'", EColors.green);
         Envision.theWorld.saveWorldToFile();
+        return null;
 	}
 	
 }

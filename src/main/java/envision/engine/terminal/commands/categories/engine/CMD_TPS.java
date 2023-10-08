@@ -19,13 +19,13 @@ public class CMD_TPS extends TerminalCommand {
 	@Override public String getUsage() { return "ex: tps"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoMoreThan(1);
 	    
 		if (noArgs()) {
 	         writeln(EColors.yellow, "target: ", Envision.getTargetTPS());
 	         writeln(EColors.green, "actual: ", Envision.getTPS());
-	         return;
+	         return Envision.getTPS();
 		}
 		
         try {
@@ -38,6 +38,8 @@ public class CMD_TPS extends TerminalCommand {
             error(e);
             error("Expected a valid integer value!");
         }
+        
+        return null;
 	}
 	
 }

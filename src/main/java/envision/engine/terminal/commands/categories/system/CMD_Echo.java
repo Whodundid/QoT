@@ -16,7 +16,7 @@ public class CMD_Echo extends TerminalCommand {
 	@Override public String getUsage() { return "ex: echo 'hello world'"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 		expectAtLeast(1);
 		
 		String toPrint = EStringUtil.combineAll(args(), " ");
@@ -27,6 +27,7 @@ public class CMD_Echo extends TerminalCommand {
         }
 		
 		writeln(toPrint);
+		return toPrint;
 	}
 	
 }

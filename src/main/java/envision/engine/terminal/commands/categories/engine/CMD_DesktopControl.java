@@ -17,7 +17,7 @@ public class CMD_DesktopControl extends TerminalCommand {
 	@Override public String getUsage() { return "ex: desktop reload"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 		expectAtLeast(1);
 		
 		if (oneArg()) {
@@ -34,6 +34,8 @@ public class CMD_DesktopControl extends TerminalCommand {
                 errorUsage("Invalid action argument!");
 		    }
 		}
+		
+		return null;
 	}
 	
 	private void reloadDesktop() {

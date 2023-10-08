@@ -18,7 +18,7 @@ public class CMD_Rules extends TerminalCommand {
 	@Override public String getUsage() { return "ex: gr "; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectBetween(0, 2);
 	    
 	    var manager = Envision.levelManager;
@@ -37,6 +37,8 @@ public class CMD_Rules extends TerminalCommand {
 		        writeln("  ", i++, ": ", r.getRuleName(), " = ", r.getValue());
 		    }
 		}
+		
+		return null;
 	}
 	
 }

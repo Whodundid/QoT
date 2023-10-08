@@ -24,8 +24,9 @@ public class CMD_Shutdown extends ConfirmationCommand {
 	}
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public Object runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		if (args.isEmpty()) checkConfirm(termIn, args, runVisually);
+		return null;
 	}
 
 	@Override

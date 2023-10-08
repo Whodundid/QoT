@@ -27,7 +27,7 @@ public class CMD_Unalias extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectAtLeast(1);
 	    
 	    // attempt to unalias each argument
@@ -46,6 +46,8 @@ public class CMD_Unalias extends TerminalCommand {
 	        
 	        unalias(input.trim());
 	    }
+	    
+	    return null;
 	}
 	
 	private void unalias(String alias) {

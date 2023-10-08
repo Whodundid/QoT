@@ -17,16 +17,16 @@ public class CMD_HexToDec extends TerminalCommand {
 	@Override public String getUsage() { return "ex: h2d 0xff"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectAtLeast(1);
 	    
 		String s = firstArg();
 		s = (s.startsWith("0x")) ? s.substring(2) : s;
 		
-		System.out.println(0xff00ffff);
-		
 		long val = Long.parseLong(s, 16);
 		writeln(val, EColors.aquamarine);
+		
+		return val;
 	}
 	
 }

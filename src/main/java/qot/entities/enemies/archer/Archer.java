@@ -3,7 +3,7 @@ package qot.entities.enemies.archer;
 import java.text.DecimalFormat;
 
 import envision.Envision;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.world.GameWorld;

@@ -23,17 +23,17 @@ public class CMD_Ls extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: ls 'dir'"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 		//if empty -- ls current dir
 		if (args().isEmpty()) {
 			listDir(null);
-			return;
+			return null;
 		}
 		
 		//check if too many args
 		if (argLength() > 1) {
 			errorUsage(term, ERROR_TOO_MANY);
-			return;
+			return null;
 		}
 		
 		File theFile = null;
@@ -64,6 +64,7 @@ public class CMD_Ls extends AbstractFileCommand {
 		}
 		
 		listDir(theFile);
+		return null;
 	}
 	
 	private void listDir(File dir) {

@@ -24,14 +24,14 @@ public class CMD_WorldInfo extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoArgs();
 		
 		IGameWorld world = Envision.theWorld;
 		
 		if (world == null) {
 			error("No world loaded!");
-			return;
+			return null;
 		}
 		
 		String n = world.getWorldName();
@@ -42,6 +42,8 @@ public class CMD_WorldInfo extends TerminalCommand {
         writeln(EColors.yellow + "Name: " + EColors.green + n);
         writeln(EColors.yellow + "Dims: " + EColors.green + "[" + w + "x" + h + "]");
         writeln(EColors.yellow + "Underground: " + EColors.green + u);
+        
+        return null;
 	}
 	
 }

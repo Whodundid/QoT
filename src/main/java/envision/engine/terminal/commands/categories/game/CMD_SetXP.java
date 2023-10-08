@@ -18,12 +18,12 @@ public class CMD_SetXP extends TerminalCommand {
 	@Override public String getUsage() { return "ex: xp 1000"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectAtLeast(1);
 
 	    if (Envision.thePlayer == null) {
 			error("There is no player!");
-			return;
+			return null;
 		}
 		
 		var p = Envision.thePlayer;
@@ -31,6 +31,8 @@ public class CMD_SetXP extends TerminalCommand {
 		//toggle
 		p.experience = ENumUtil.parseLong(arg(0), p.getExperience());
 		writeln("Set player xp to: '", p.getExperience(), "' !");
+		
+		return null;
 	}
 	
 }

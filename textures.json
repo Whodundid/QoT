@@ -1,10 +1,224 @@
 {
-  "textureSheetName" : "Banana Sheet",
-  "textures" : [ {
-    "textureName" : "Grass 0",
-    "texturePath" : "textures/world/nature/grass/grass_0.png"
+  "name" : "sheet:baldric_walk_0",
+  "texture" : {
+    "name" : "texture:baldric_walk_0",
+    "path" : "textures/entities/walksheet.png"
+  },
+  "sprites" : [ {
+    "name" : "sprite:baldric_walk_0_north_0",
+    "sx" : 0,
+    "sy" : 0,
+    "ex" : 64,
+    "ey" : 64
   }, {
-    "textureName" : "Leafy Grass 0",
-    "texturePath" : "textures/world/nature/grass/leafy_grass_0.png"
+    "name" : "sprite:baldric_walk_0_north_1",
+    "sx" : 64,
+    "sy" : 0,
+    "ex" : 128,
+    "ey" : 64
+  }, {
+    "name" : "sprite:baldric_walk_0_north_2",
+    "sx" : 128,
+    "sy" : 0,
+    "ex" : 192,
+    "ey" : 64
+  }, {
+    "name" : "sprite:baldric_walk_0_north_3",
+    "sx" : 192,
+    "sy" : 0,
+    "ex" : 256,
+    "ey" : 64
+  }, {
+    "name" : "sprite:baldric_walk_0_north_4",
+    "sx" : 256,
+    "sy" : 0,
+    "ex" : 320,
+    "ey" : 64
+  }, {
+    "name" : "sprite:baldric_walk_0_north_5",
+    "sx" : 320,
+    "sy" : 0,
+    "ex" : 384,
+    "ey" : 64
+  }, {
+    "name" : "sprite:baldric_walk_0_north_6",
+    "sx" : 384,
+    "sy" : 0,
+    "ex" : 448,
+    "ey" : 64
+  }, {
+    "name" : "sprite:baldric_walk_0_north_7",
+    "sx" : 448,
+    "sy" : 0,
+    "ex" : 512,
+    "ey" : 64
+  }, {
+    "name" : "sprite:baldric_walk_0_north_8",
+    "sx" : 512,
+    "sy" : 0,
+    "ex" : 576,
+    "ey" : 64
+  }, {
+    "name" : "sprite:baldric_walk_0_west_0",
+    "sx" : 0,
+    "sy" : 64,
+    "ex" : 64,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_west_1",
+    "sx" : 64,
+    "sy" : 64,
+    "ex" : 128,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_west_2",
+    "sx" : 128,
+    "sy" : 64,
+    "ex" : 192,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_west_3",
+    "sx" : 192,
+    "sy" : 64,
+    "ex" : 256,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_west_4",
+    "sx" : 256,
+    "sy" : 64,
+    "ex" : 320,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_west_5",
+    "sx" : 320,
+    "sy" : 64,
+    "ex" : 384,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_west_6",
+    "sx" : 384,
+    "sy" : 64,
+    "ex" : 448,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_west_7",
+    "sx" : 448,
+    "sy" : 64,
+    "ex" : 512,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_west_8",
+    "sx" : 512,
+    "sy" : 64,
+    "ex" : 576,
+    "ey" : 128
+  }, {
+    "name" : "sprite:baldric_walk_0_south_0",
+    "sx" : 0,
+    "sy" : 128,
+    "ex" : 64,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_south_1",
+    "sx" : 64,
+    "sy" : 128,
+    "ex" : 128,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_south_2",
+    "sx" : 128,
+    "sy" : 128,
+    "ex" : 192,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_south_3",
+    "sx" : 192,
+    "sy" : 128,
+    "ex" : 256,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_south_4",
+    "sx" : 256,
+    "sy" : 128,
+    "ex" : 320,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_south_5",
+    "sx" : 320,
+    "sy" : 128,
+    "ex" : 384,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_south_6",
+    "sx" : 384,
+    "sy" : 128,
+    "ex" : 448,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_south_7",
+    "sx" : 448,
+    "sy" : 128,
+    "ex" : 512,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_south_8",
+    "sx" : 512,
+    "sy" : 128,
+    "ex" : 576,
+    "ey" : 192
+  }, {
+    "name" : "sprite:baldric_walk_0_east_0",
+    "sx" : 0,
+    "sy" : 192,
+    "ex" : 64,
+    "ey" : 256
+  }, {
+    "name" : "sprite:baldric_walk_0_east_1",
+    "sx" : 64,
+    "sy" : 192,
+    "ex" : 128,
+    "ey" : 256
+  }, {
+    "name" : "sprite:baldric_walk_0_east_2",
+    "sx" : 128,
+    "sy" : 192,
+    "ex" : 192,
+    "ey" : 256
+  }, {
+    "name" : "sprite:baldric_walk_0_east_3",
+    "sx" : 192,
+    "sy" : 192,
+    "ex" : 256,
+    "ey" : 256
+  }, {
+    "name" : "sprite:baldric_walk_0_east_4",
+    "sx" : 256,
+    "sy" : 192,
+    "ex" : 320,
+    "ey" : 256
+  }, {
+    "name" : "sprite:baldric_walk_0_east_5",
+    "sx" : 320,
+    "sy" : 192,
+    "ex" : 384,
+    "ey" : 256
+  }, {
+    "name" : "sprite:baldric_walk_0_east_6",
+    "sx" : 384,
+    "sy" : 192,
+    "ex" : 448,
+    "ey" : 256
+  }, {
+    "name" : "sprite:baldric_walk_0_east_7",
+    "sx" : 448,
+    "sy" : 192,
+    "ex" : 512,
+    "ey" : 256
+  }, {
+    "name" : "sprite:baldric_walk_0_east_8",
+    "sx" : 512,
+    "sy" : 192,
+    "ex" : 576,
+    "ey" : 256
   } ]
 }

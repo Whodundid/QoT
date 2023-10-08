@@ -17,12 +17,13 @@ public class CMD_Pwd extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: pwd"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoArgs();
 	    
 	    File path = dirFull();
         String colorPath = "" + EColors.mc_aqua + path;
         writeLink("Current Dir: " + colorPath, String.valueOf(path), path, false, EColors.yellow);
+        return path;
 	}
 	
 }

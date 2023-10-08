@@ -21,12 +21,12 @@ public class CMD_CameraZoom extends TerminalCommand {
     @Override public String getUsage() { return "ex: zoom [{empty}|min|max] 5"; }
     
     @Override
-    public void runCommand() {
+    public Object runCommand() {
         expectNoMoreThan(2);
         
         if (Envision.theWorld == null) {
             error("There is no world!");
-            return;
+            return null;
         }
         
         final var cam = Envision.theWorld.getCamera();
@@ -35,7 +35,7 @@ public class CMD_CameraZoom extends TerminalCommand {
         if (noArgs()) {
             writeln(EColors.yellow, "Current zoom: ", EColors.lgreen, cam.getZoom());
             writeln(EColors.yellow, "Zoom limits: ", EColors.lgreen, "[", cam.getMinZoom(), ", ", cam.getMaxZoom(), "]");
-            return;
+            return cam.getZoom();
         }
         
         // if one arg, it should be a number to set the current zoom
@@ -43,20 +43,21 @@ public class CMD_CameraZoom extends TerminalCommand {
             double zoom = parseDouble(firstArg());
             cam.setZoom(zoom);
             writeln(EColors.yellow, "Set camera zoom to: ", EColors.lgreen, cam.getZoom());
-            return;
+            return null;
         }
         
         // if two args, parse for either [min|max], then number to set
         String target = firstArg();
         if (!target.equals("min") && !target.equals("max")) {
             error("Expected either 'min' or 'max' for first argument!");
-            return;
+            return null;
         }
         
         double zoom = parseDouble(secondArg());
         if (target.equals("min")) cam.setMinZoom(zoom);
         else cam.setMaxZoom(zoom);
         writeln(EColors.yellow, "Set ", target, " camera zoom to: ", EColors.lgreen, zoom);
+        return null;
     }
     
 }

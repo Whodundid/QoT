@@ -18,8 +18,9 @@ public class CMD_ClearTerminal extends TerminalCommand {
 	@Override public String getUsage() { return "ex: clr"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 		clearTerm();
+		return null;
 	}
 	
 }

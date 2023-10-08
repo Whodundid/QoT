@@ -21,7 +21,7 @@ public class CMD_Tail extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: tail 'file path' 10"; }
 	
     @Override
-    public void runCommand() throws IOException {
+    public Object runCommand() throws IOException {
         expectBetween(1, 2);
         
         File theFile = parseFilePath(dir(), firstArg());
@@ -35,7 +35,7 @@ public class CMD_Tail extends AbstractFileCommand {
         
         try (var reader = new ReversedLinesFileReader(theFile, Charset.defaultCharset())) {            
             info("Displaying content:\n");
-            if (len <= 0) return;
+            if (len <= 0) return null;
             
             EList<String> lines = EList.newList();
             String line = "";
@@ -49,6 +49,8 @@ public class CMD_Tail extends AbstractFileCommand {
                 writeln(lines.get(i), EColors.lgray);
             }
         }
+        
+        return null;
     }
 
 }

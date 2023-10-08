@@ -4,7 +4,7 @@ import envision.Envision;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.engine.windows.windowUtil.input.KeyboardInputAcceptor;
 import envision.engine.windows.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;

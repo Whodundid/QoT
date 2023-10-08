@@ -11,7 +11,7 @@ import eutil.strings.EStringBuilder;
 
 //Author: Hunter Bragg
 
-public class CMD_Help extends ListableCommand {
+public class CMD_Help extends TerminalCommand implements ListableCommand {
 	
 	public CMD_Help() {
 		setCategory("System");
@@ -30,7 +30,7 @@ public class CMD_Help extends ListableCommand {
 	}
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoMoreThan(1);
 	    
 		if (noArgs()) {
@@ -38,7 +38,7 @@ public class CMD_Help extends ListableCommand {
 			writeln();
 			writeln("To see help information on a specific command, type help followed by the command.", EColors.yellow);
 			writeln("To run a command with more information, add -i after the command. ex: list -i", EColors.yellow);
-			return;
+			return null;
 		}
 		
 		String commandName = firstArg();
@@ -46,19 +46,21 @@ public class CMD_Help extends ListableCommand {
 		var cmds = Envision.getTerminalHandler().getCommandNames();
 		if (!cmds.contains(commandName)) {
 			error("Unrecognized command name");
-			return;
+			return null;
 		}
 		
 		TerminalCommand command = Envision.getTerminalHandler().getCommand(commandName);
 		if (!command.showInHelp()) {
 			error("Unrecognized command name");
-			return;
+			return null;
 		}
 		
 		writeln(command.getHelpInfo(runVisually()), 0xffffff00);
 		if (command.getUsage() != null && !command.getUsage().isEmpty()) {
 			writeln(command.getUsage(), 0xffffff00);
 		}
+		
+		return null;
 	}
 	
 	public void showHelp(ETerminalWindow termIn) {

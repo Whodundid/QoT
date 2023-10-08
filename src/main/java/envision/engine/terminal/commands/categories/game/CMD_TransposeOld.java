@@ -29,7 +29,7 @@ public class CMD_TransposeOld extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand() throws Exception {
+	public Object runCommand() throws Exception {
 		expectExactly(1);
 		
 		var path = arg(0);
@@ -39,7 +39,7 @@ public class CMD_TransposeOld extends TerminalCommand {
 		
 		if (!worldFile.exists()) {
 			error("Failed to find '" + worldFile + "' !");
-			return;
+			return null;
 		}
 		
 		try (var reader = new LineReader(worldFile)) {
@@ -145,6 +145,8 @@ public class CMD_TransposeOld extends TerminalCommand {
 		catch (Exception e) {
 			throw e;
 		}
+		
+		return null;
 	}
 	
 }

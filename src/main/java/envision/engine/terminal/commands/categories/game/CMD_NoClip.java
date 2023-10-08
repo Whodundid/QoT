@@ -18,18 +18,19 @@ public class CMD_NoClip extends TerminalCommand {
 	@Override public String getUsage() { return "ex: nc"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoArgs();
 	    
 	    final Player p = Envision.thePlayer;
 	    
 	    if (p == null) {
-	        error("There isn't a player!");
-	        return;
+	        error("There is no player!");
+	        return null;
 	    }
 	    
 	    p.setNoClipAllowed(!p.isNoClipping());
         writeln(((p.isNoClipping()) ? "Enabled" : "Disabled") + " no clipping");
+        return null;
 	}
 	
 }

@@ -1,6 +1,6 @@
 package envision.game.world.worldEditor.editorUtil;
 
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.GameObject;
 import envision.game.world.GameWorld;
 import eutil.datatypes.points.Point2i;

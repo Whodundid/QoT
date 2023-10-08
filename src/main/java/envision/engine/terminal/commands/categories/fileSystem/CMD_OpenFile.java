@@ -28,7 +28,7 @@ public class CMD_OpenFile extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: open 'file'"; }
 	
 	@Override
-	public void runCommand() throws Exception {
+	public Object runCommand() throws Exception {
 		expectExactly(1);
 		
 		boolean openA = hasModifier("-a");
@@ -37,6 +37,7 @@ public class CMD_OpenFile extends AbstractFileCommand {
 		File theFileToOpen = parseFilePath(dir(), toOpen);
 		
 		determineFileType(theFileToOpen, openA);
+		return null;
 	}
 	
 	private void determineFileType(File path, boolean openA) throws IOException {

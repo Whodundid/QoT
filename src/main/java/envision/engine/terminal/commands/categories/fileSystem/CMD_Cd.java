@@ -15,7 +15,7 @@ public class CMD_Cd extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: cd 'dir'"; }
 	
 	@Override
-	public void runCommand() throws Exception {
+	public Object runCommand() throws Exception {
 	    expectAtLeast(1);
 	    
 	    // build from relative dir
@@ -24,6 +24,7 @@ public class CMD_Cd extends AbstractFileCommand {
 	    if (!f.exists()) f = new File(firstArg());
         
         setDirectory(f);
+        return null;
 	}
 	
 	private void setDirectory(File dir) throws Exception {

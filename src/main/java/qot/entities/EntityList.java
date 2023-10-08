@@ -16,6 +16,7 @@ import qot.doodads.StoneGroundClutter;
 import qot.doodads.WeedsGroundClutter;
 import qot.entities.buildings.Spawner;
 import qot.entities.enemies.Goblin;
+import qot.entities.enemies.PathfindingTestEntity;
 import qot.entities.enemies.TrollBoar;
 import qot.entities.enemies.Whodundid;
 import qot.entities.enemies.WhodundidsBrother;
@@ -59,6 +60,7 @@ public enum EntityList {
 	
 	SPAWNER(22),
 	SHOPKEEPER(23), // please let this be the last damn one of these..
+	PATHFINDER_TEST(24),
 	;
 	
 	public final int ID;
@@ -107,6 +109,7 @@ public enum EntityList {
 		case ARCHER: return new Archer();
 		case SPAWNER: return new Spawner();
 		case SHOPKEEPER: return new ShopGuy();
+		case PATHFINDER_TEST: return new PathfindingTestEntity();
 		default: return null;
 		}
 	}

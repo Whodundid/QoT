@@ -19,15 +19,16 @@ public class CMD_UnloadWorld extends TerminalCommand {
 	@Override public String getUsage() { return "ex: uw"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 		if (Envision.theWorld == null) {
 		    writeln("No world to unload", EColors.yellow);
-		    return;
+		    return null;
 		}
 		
 		writeln("Unloading world '" + Envision.theWorld.getWorldName() + "'", EColors.green);
         Envision.loadWorld(null);
         displayScreen(new MainMenuScreen());
+        return null;
 	}
 	
 }

@@ -20,7 +20,7 @@ public class CMD_MinimizeWindow extends TerminalCommand {
 	@Override public String getUsage() { return "ex: minimize 4 (where 4 is the window pid)"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectAtLeast(1);
 	    
 	    try {
@@ -64,6 +64,8 @@ public class CMD_MinimizeWindow extends TerminalCommand {
                 error(q);
             }
         }
+	    
+	    return null;
 	}
 	
 }

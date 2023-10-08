@@ -1,10 +1,11 @@
 package qot.particles;
 
 import envision.Envision;
-import envision.game.entities.Entity;
+import envision.engine.resourceLoaders.Sprite;
+import envision.game.entities.BasicRenderedEntity;
 import eutil.colors.EColors;
 
-public class FloatingTextEntity extends Entity {
+public class FloatingTextEntity extends BasicRenderedEntity {
 
 	protected String text;
 	protected long creationTime;
@@ -15,6 +16,7 @@ public class FloatingTextEntity extends Entity {
 	public FloatingTextEntity(int x, int y, Object text) {
 		super("FloatingText: " + text);
 		this.text = text + "";
+		//this.headText = this.text;
 		creationTime = System.currentTimeMillis();
 		setInvincible(true);
 		world = Envision.theWorld;

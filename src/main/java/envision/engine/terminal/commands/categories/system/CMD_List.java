@@ -34,11 +34,11 @@ public class CMD_List extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 		if (args().isEmpty()) {
 			if (runVisually()) writeln("objects, windows, screens, commands, aliases", EColors.green);
 			else info(getUsage());
-			return;
+			return null;
 		}
 		
 		expectNoMoreThan(2);
@@ -68,7 +68,7 @@ public class CMD_List extends TerminalCommand {
                 
                 if (name == null) {
                     error("list type is somehow null!");
-                    return;
+                    return null;
                 }
 
                 //check if the input is a listable command
@@ -76,7 +76,7 @@ public class CMD_List extends TerminalCommand {
                     
                     if (c == null) continue;
                     if (!(c instanceof ListableCommand)) continue;
-                    if (!c.matchesNameOrAlias(name)) return;
+                    if (!c.matchesNameOrAlias(name)) return null;
                     
                     found = true;
                     
@@ -92,6 +92,8 @@ public class CMD_List extends TerminalCommand {
                 error(e);
             }
         }
+		
+		return null;
 	}
 	
 //	private ListableCommand findListableCommandFromInput(String input) {

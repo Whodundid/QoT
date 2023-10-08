@@ -20,12 +20,12 @@ public class CMD_GiveItem extends TerminalCommand {
 	@Override public String getUsage() { return "ex: giveitem player 0"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectAtLeast(1);
 
 	    if (Envision.thePlayer == null) {
 			error("There is no player!");
-			return;
+			return null;
 		}
 		
 		var items = Items.getAllItems();
@@ -36,7 +36,7 @@ public class CMD_GiveItem extends TerminalCommand {
 				term.writeln(EColors.skyblue + "" + i + EColors.yellow + " : " + EColors.green + item.getName());
 				i++;
 			}
-			return;
+			return null;
 		}
 		
 		var target = Envision.thePlayer;
@@ -44,7 +44,7 @@ public class CMD_GiveItem extends TerminalCommand {
 		
 		if (input < 0 || input >= items.size()) {
 			error("Item index out of range!");
-			return;
+			return null;
 		}
 		
 		//toggle
@@ -52,6 +52,8 @@ public class CMD_GiveItem extends TerminalCommand {
 		target.giveItem(item);
 		term.writeln(EColors.green + "Giving item: '" + EColors.mc_gold + item.getName() +
 					 EColors.green + "' to '" + EColors.mc_gold + target.getName() + EColors.green + "'");
+		
+		return null;
 	}
 	
 }

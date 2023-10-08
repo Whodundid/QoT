@@ -16,9 +16,10 @@ public class CMD_CurScreenInfo extends TerminalCommand {
 	@Override public String getUsage() { return "ex: screen"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoArgs();
 		writeln(EColors.lgreen, Envision.getCurrentScreen());
+		return null;
 	}
 	
 }

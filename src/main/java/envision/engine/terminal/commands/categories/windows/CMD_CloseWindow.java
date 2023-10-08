@@ -19,10 +19,10 @@ public class CMD_CloseWindow extends TerminalCommand {
 	@Override public String getUsage() { return "ex: close 23 (where 23 is the window pid)"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    if (noArgs()) {
 	        term().close();
-	        return;
+	        return null;
 	    }
 	    
 	    try {
@@ -75,6 +75,8 @@ public class CMD_CloseWindow extends TerminalCommand {
                 error(q);
             }
         }
+	    
+	    return null;
 	}
 	
 }

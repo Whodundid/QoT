@@ -25,7 +25,7 @@ public class CMD_SU extends TerminalCommand {
 	}
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 		expectExactly(1, "Error! No username specified!");
 		
 		final var username = firstArg();
@@ -36,6 +36,7 @@ public class CMD_SU extends TerminalCommand {
 		EColors color = Boolean.TRUE.equals(result.getA()) ? EColors.green : EColors.lred;
 		
 		term.writeln(color, result.getB());
+		return null;
 	}
 	
 }

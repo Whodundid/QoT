@@ -20,7 +20,7 @@ public class CMD_CreateDungeon extends TerminalCommand {
 	@Override public String getUsage() { return "ex: crdung small 'name'"; }
 	
 	@Override
-	public void runCommand() {
+	public Object runCommand() {
 	    expectNoMoreThan(2);
 	    
 		DungeonBuilder builder = new DungeonBuilder();
@@ -29,7 +29,7 @@ public class CMD_CreateDungeon extends TerminalCommand {
 		    GameWorld dung = builder.buildRandomDungeon();
             dung.setWorldName("rand_dung");
             dung.saveWorldToFile();
-            return;
+            return null;
 		}
 		
 		String size = (oneArg()) ? arg(0) : "small";
@@ -46,6 +46,8 @@ public class CMD_CreateDungeon extends TerminalCommand {
             dung.saveWorldToFile();
         }
         else error("Created map returned null!");
+        
+        return null;
 	}
 	
 }
