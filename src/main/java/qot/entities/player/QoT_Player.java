@@ -2,7 +2,7 @@ package qot.entities.player;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
 import envision.game.entities.player.PlayerStats;

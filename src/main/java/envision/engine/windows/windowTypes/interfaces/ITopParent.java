@@ -350,14 +350,11 @@ public interface ITopParent extends IWindowObject {
 //			                     .filter(o -> !o.isBeingRemoved())
 //			                     .forEach(windows::add);
 			
-			var last = windows.getFirst();
+			var last = windows.getLast();
 			
 			if (windows.isEmpty()) {
-			    // use TOP_LEFT positioning
-			    sX = 35.0;
-	            sY = 35.0 + headerHeight + tbH;
-				//sX = (Envision.getWidth() / 2.0) - (gDim.width / 2.0);
-				//sY = (Envision.getHeight() / 2.0) - (gDim.height / 2.0);
+	            sX = (Envision.getWidth() / 2.0) - (gDim.width / 2.0);
+	            sY = (Envision.getHeight() / 2.0) - (gDim.height / 2.0);
 			}
 			else if (last != null) {
 				Dimension_d objDim = last.getDimensions();

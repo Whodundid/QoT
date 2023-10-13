@@ -3,7 +3,7 @@ package envision.game.effects.animations;
 import java.util.HashMap;
 import java.util.Map;
 
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.entities.Entity;
 import eutil.datatypes.util.EList;
 

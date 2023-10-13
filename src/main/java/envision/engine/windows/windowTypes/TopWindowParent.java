@@ -430,12 +430,15 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		
 		for (var p : getAllActiveWindows()) {
 			
-			Dimension_d oldDims = p.getDimensions();
+			Dimension_d oldDims = p.getUnboundedDimensions();
 			
 			double newX = (oldDims.startX * newW) / oldW;
 			double newY = (oldDims.startY * newH) / oldH;
+			double windowW = (oldDims.width * newW) / oldW;
+			double windowH = (oldDims.height * newH) / oldH;
 			
 			p.setPosition(newX, newY);
+			p.setSize(windowW, windowH);
 			p.reInitChildren();
 			
 			if (p.isMaximized()) p.maximize();

@@ -116,9 +116,9 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	public void drawObject_i(int mXIn, int mYIn) {
 		if (drawDefaultBackground) drawDefaultBackground();
 		super.drawObject_i(mXIn, mYIn);
-		if (!willBeDrawn() && Envision.isDebugMode()) return;
 		
-		if (!Envision.isDebugMode() && !isMaximized()) return;
+		if (!willBeDrawn() && Envision.isDebugMode()) return;
+		if (!Envision.isDebugMode() || !isMaximized()) return;
 		
 		double y = hasHeader() ? getHeader().startY - FontRenderer.FONT_HEIGHT : startY - FontRenderer.FONT_HEIGHT;
         int pos = 0;
@@ -356,8 +356,18 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	//==================
 	
 	protected void defaultDims() { setDimensions(startX, startY, DEFAULT_WIDTH, DEFAULT_HEIGHT); }
-	protected void defaultHeader() { setHeader(new WindowHeader(this)); }
-	protected void defaultHeader(IWindowParent in) { setHeader(new WindowHeader(in)); }
+	
+    protected WindowHeader defaultHeader() {
+        var h = new WindowHeader(this);
+        setHeader(h);
+        return h;
+    }
+    
+    protected WindowHeader defaultHeader(IWindowParent in) {
+        var h = new WindowHeader(in);
+        setHeader(h);
+        return h;
+    }
 	
 	private void initDefaultPos(IWindowObject parentIn) {
 		init(parentIn);

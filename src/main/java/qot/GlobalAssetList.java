@@ -17,6 +17,7 @@ import qot.doodads.StoneGroundClutter;
 import qot.doodads.WeedsGroundClutter;
 import qot.entities.buildings.Spawner;
 import qot.entities.enemies.Goblin;
+import qot.entities.enemies.PathfindingTestEntity;
 import qot.entities.enemies.TrollBoar;
 import qot.entities.enemies.Whodundid;
 import qot.entities.enemies.WhodundidsBrother;
@@ -64,6 +65,7 @@ public class GlobalAssetList {
 		assets.add(new Archer());
 		assets.add(new Spawner());
 		assets.add(new ShopGuy());
+		assets.add(new PathfindingTestEntity());
 	}
 	
 	public static EList<GameObject> getAssets() {

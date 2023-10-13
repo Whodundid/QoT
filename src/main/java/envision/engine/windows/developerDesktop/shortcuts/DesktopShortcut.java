@@ -18,7 +18,6 @@ import eutil.colors.EColors;
 import eutil.datatypes.points.Point2d;
 import eutil.strings.EStringBuilder;
 import qot.assets.textures.taskbar.TaskBarTextures;
-import qot.assets.textures.window.WindowTextures;
 
 public abstract class DesktopShortcut extends WindowObject {
     
@@ -26,10 +25,10 @@ public abstract class DesktopShortcut extends WindowObject {
     // Fields
     //========
     
-    private String shortcutName = "New Shortcut";
-    private ShortcutType type;
-    private GameTexture icon;
-    private boolean selected = false;
+    protected String shortcutName = "New Shortcut";
+    protected ShortcutType type;
+    protected GameTexture icon;
+    protected boolean selected = false;
     
     protected final Map<String, String> additionalProperties = new HashMap<>();
     protected boolean isPressed;
@@ -66,8 +65,8 @@ public abstract class DesktopShortcut extends WindowObject {
     }
     
     public void init(double x, double y) {
-        double w = 80;
-        double h = 80;
+        double w = 60;
+        double h = 60;
         
         init(Envision.getDeveloperDesktop(), x, y, w, h);
     }
@@ -102,8 +101,9 @@ public abstract class DesktopShortcut extends WindowObject {
             else drawRect(color.opacity(60));
         }
         
-        double scale = 1;
-        double drawX = midX;
+        double scale = 0.8;
+        double nameWidth = strWidth(shortcutName);
+        double drawX = midX + (nameWidth - nameWidth * scale);
         
         //draw description text below icon
         drawStringC(shortcutName, drawX, endY + 6, scale, scale, EColors.chalk);

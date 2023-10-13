@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.entities.EntitySpawn;
 import envision.game.world.worldFileSystem.WorldSavingSystem;
 import envision.game.world.worldTiles.WorldTile;

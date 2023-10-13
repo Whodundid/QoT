@@ -3,7 +3,6 @@ package envision.engine.terminal.commands.categories.engine;
 import envision.Envision;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.bundledWindows.GameOptionsWindow;
 import eutil.datatypes.util.EList;
 
@@ -20,7 +19,7 @@ public class CMD_RenderSettings extends TerminalCommand {
 	@Override public String getUsage() { return "ex: rset'"; }
 
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public void runCommand() {
 		Envision.displayWindow(ScreenLevel.TOP, new GameOptionsWindow());
 	}
 	

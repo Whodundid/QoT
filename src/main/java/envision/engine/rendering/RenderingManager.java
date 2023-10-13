@@ -9,7 +9,7 @@ import envision.Envision;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.EStringOutputFormatter;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import eutil.colors.EColors;
 import eutil.math.dimensions.IDimension;
 import eutil.misc.Rotation;

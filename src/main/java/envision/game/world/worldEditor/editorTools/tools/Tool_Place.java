@@ -1,7 +1,7 @@
 package envision.game.world.worldEditor.editorTools.tools;
 
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision.game.world.worldEditor.MapEditorScreen;

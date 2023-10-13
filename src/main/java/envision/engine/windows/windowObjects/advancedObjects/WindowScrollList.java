@@ -39,6 +39,7 @@ public class WindowScrollList<E> extends WindowObject {
 	protected int backgroundColor = 0xff4D4D4D;
 	protected int borderColor = 0xff000000;
 	protected double heightToBeSet = 0, widthToBeSet = 0;
+	protected double vScrollRate = 20, hScrollRate = 20;
 	protected boolean vScrollVis = true;
 	protected boolean hScrollVis = true;
 	protected boolean resetVis = false;
@@ -72,6 +73,9 @@ public class WindowScrollList<E> extends WindowObject {
 		reset.setVisible(resetVis);
 
 		addObject(vScroll, hScroll, reset);
+		
+		vScroll.setScrollRate(vScrollRate);
+		hScroll.setScrollRate(hScrollRate);
 		
 		setListHeight(heightToBeSet);
 		setListWidth(widthToBeSet);
@@ -246,11 +250,11 @@ public class WindowScrollList<E> extends WindowObject {
 		if (allowScrolling) {
 			if (Keyboard.isShiftDown()) {
 				if (scrollableWidth - (width - 2) > 0) {
-				    hScroll.setScrollPos(hScroll.getScrollPos() - change * 18);
+				    hScroll.setScrollPos(hScroll.getScrollPos() - change * hScroll.getScrollRate());
 				}
 			}
 			else if (scrollableHeight - (height - 2) > 0) {
-			    vScroll.setScrollPos(vScroll.getScrollPos() - change * 18);
+			    vScroll.setScrollPos(vScroll.getScrollPos() - change * vScroll.getScrollRate());
 			}
 		}
 		super.mouseScrolled(change);
@@ -573,5 +577,8 @@ public class WindowScrollList<E> extends WindowObject {
 	public void setResetDrawn(boolean valIn) { resetVis = valIn; if (reset != null) { reset.setVisible(valIn); } updateVisuals(); }
 	public void renderVScrollBarThumb(boolean val) { if (vScroll != null) { vScroll.setRenderThumb(val); } else { vScrollVis = val; } }
 	public void renderHScrollBarThumb(boolean val) { if (hScroll != null) { hScroll.setRenderThumb(val); } else { hScrollVis = val; }  }
+	public void setScrollRate(double val) { setVScrollRate(val); setHScrollRate(val); }
+	public void setVScrollRate(double val) { vScrollRate = val; if (vScroll != null) vScroll.setScrollRate(val); }
+	public void setHScrollRate(double val) { hScrollRate = val; if (hScroll != null) hScroll.setScrollRate(val); }
 	
 }

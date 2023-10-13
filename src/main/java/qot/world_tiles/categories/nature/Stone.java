@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.nature;
 
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
