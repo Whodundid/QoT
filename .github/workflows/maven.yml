@@ -44,11 +44,10 @@ jobs:
         CI_COMMIT_AUTHOR: CICD-Boy
       shell: bash
       run: |
-        echo "//${GITHUB_ACTOR}" >> src/main/java/envision/Envision.java
-        if [ "${GITHUB_ACTOR}" != "CICD-Boy"]; then
+        #if [ "${GITHUB_ACTOR}" != "CICD-Boy"]; then
           sed -i "s|^[ \t]*public static final String VERSION_DATE.*|\tpublic static final String VERSION_DATE = \"$(date '+%b %d, %Y - %H:%M:%S')\";|g" src/main/java/envision/Envision.java
           perl -i -pe 's{VERSION_BUILD = "(\d+)";}{"VERSION_BUILD = \"${{ github.run_number }}\";"}e' src/main/java/envision/Envision.java
-        fi
+        #fi
         
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "CICD-Boy@placeholder.com"
