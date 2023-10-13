@@ -26,6 +26,7 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public FontRenderer fontRenderer = FontRenderer.getInstance();
 	public Dimension_i res = Envision.getWindowDims();
 	public double startXPos, startYPos, startWidth, startHeight;
+	public double unboundedWidth, unboundedHeight;
 	public double startX, startY, endX, endY;
 	public double width, height;
 	public double midX, midY;
@@ -183,6 +184,7 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public Point2d getGuiPosition() { return new Point2d(startX, startY); }
 	public Point2d getGuiInitialPosition() { return new Point2d(startXPos, startYPos); }
 	public Dimension_d getDimensions() { return new Dimension_d(startX, startY, endX, endY); }
+	public Dimension_d getUnboundedDimensions() { return new Dimension_d(startX, startY, startX + unboundedWidth, startY + unboundedHeight); }
 	
 	public Point2d getMinDims() { return new Point2d(minWidth, minHeight); }
 	public Point2d getMaxDims() { return new Point2d(maxWidth, maxHeight); }
@@ -203,6 +205,8 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public void setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
 		startX = startXIn;
 		startY = startYIn;
+		unboundedWidth = widthIn;
+		unboundedHeight = heightIn;
 		width = ENumUtil.clamp(widthIn, minWidth, maxWidth);
 		height = ENumUtil.clamp(heightIn, minHeight, maxHeight);
 		endX = startX + width;
