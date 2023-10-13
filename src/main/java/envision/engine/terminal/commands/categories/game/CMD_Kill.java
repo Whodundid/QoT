@@ -18,12 +18,12 @@ public class CMD_Kill extends TerminalCommand {
 	@Override public String getUsage() { return "ex: kill 0"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectExactly(1);
 	    
 		if (Envision.theWorld == null) {
 			error("Current World is Null");
-			return null;
+			return;
 		}
 		
 		var entities = Envision.theWorld.getEntitiesInWorld();
@@ -36,8 +36,6 @@ public class CMD_Kill extends TerminalCommand {
 				break;
 			}
 		}
-		
-		return null;
 	}
 	
 }

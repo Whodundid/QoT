@@ -24,7 +24,7 @@ public class CMD_Alias extends TerminalCommand implements ListableCommand {
     }
     
     @Override
-    public Object runCommand() {
+    public void runCommand() {
         expectAtLeast(1);
         
         // combine all args in the event that they type "alias banana = 'cat'"
@@ -35,13 +35,13 @@ public class CMD_Alias extends TerminalCommand implements ListableCommand {
         // make sure input does not actually start with the 
         if (input.startsWith("=")) {
             errorUsage("Error! Alias name must not be empty!");
-            return null;
+            return;
         }
         
         // make sure input has a '='
         if (!input.contains("=")) {
             errorUsage("Expected a '=' to be present for an alias target!");
-            return null;
+            return;
         }
         
         String[] inputParts = input.split("=");
@@ -49,7 +49,7 @@ public class CMD_Alias extends TerminalCommand implements ListableCommand {
         // ensure there are at least 2 values "banana | 'cat'"
         if (inputParts.length < 2) {
             errorUsage("Expected a valid alias replacement string!");
-            return null;
+            return;
         }
         
         // extract alias name
@@ -59,7 +59,7 @@ public class CMD_Alias extends TerminalCommand implements ListableCommand {
         // ensure that the alias name starts with a letter
         if (!aliasName.matches("^[a-zA-Z].*$")) {
             errorUsage("Alias name must start with a letter!");
-            return null;
+            return;
         }
         
         // join all remaining parts to be the aliases value
@@ -78,7 +78,6 @@ public class CMD_Alias extends TerminalCommand implements ListableCommand {
         TerminalCommandHandler.getInstance().addCommandAlias(aliasName, aliasValue);
         
         writeln(EColors.lgreen, "Added Alias '", EColors.mc_lightpurple, aliasName, EColors.lgreen, "'");
-        return null;
     }
     
     @Override

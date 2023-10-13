@@ -18,12 +18,12 @@ public class CMD_ListEntities extends TerminalCommand {
 	@Override public String getUsage() { return "ex: le"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoArgs();
 	    
 		if (Envision.theWorld == null) {
 			error("Current World is Null");
-			return null;
+			return;
 		}
 		
 		var entities = Envision.theWorld.getEntitiesInWorld();
@@ -33,8 +33,6 @@ public class CMD_ListEntities extends TerminalCommand {
 		for (var e : entities) {
 			writeln("  ", EColors.lgreen, e.getName(), EColors.white, " : ", EColors.lgray, e.getWorldID());
 		}
-		
-		return null;
 	}
 	
 }

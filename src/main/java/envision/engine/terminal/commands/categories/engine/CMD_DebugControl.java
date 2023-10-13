@@ -28,11 +28,11 @@ public class CMD_DebugControl extends TerminalCommand {
 	}
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    if (noArgs()) {
             Envision.setDebugMode(!Envision.isDebugMode());
             writeln(((Envision.isDebugMode()) ? "Enabled" : "Disabled") + " debug mode.", EColors.yellow);
-            return null;
+            return;
         }
 	    
 	    try {
@@ -132,8 +132,6 @@ public class CMD_DebugControl extends TerminalCommand {
             e.printStackTrace();
             error(term(), e);
         }
-	    
-	    return null;
 	}
 	
 }

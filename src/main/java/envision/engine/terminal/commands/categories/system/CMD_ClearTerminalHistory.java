@@ -20,11 +20,10 @@ public class CMD_ClearTerminalHistory extends TerminalCommand {
 	@Override public String getUsage() { return "ex: clrh"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoArgs();
 		Envision.getTerminalHandler().clearHistory();
 		writeln(EColors.green, "Terminal history cleared..");
-		return null;
 	}
 	
 }

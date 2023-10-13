@@ -21,7 +21,7 @@ public class CMD_Rm extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: rm 'dir'"; }
 	
 	@Override
-	public Object runCommand() throws IOException {
+	public void runCommand() throws IOException {
 	    expectAtLeast(1);
 	    
 	    boolean recursive = hasModifier("-r");
@@ -40,7 +40,6 @@ public class CMD_Rm extends AbstractFileCommand {
 	    }
 	    
 	    DeveloperDesktop.reloadFileExplorers();
-	    return null;
 	}
 	
 	private void deleteFile(File file, boolean recursive) throws TerminalCommandError, IOException {

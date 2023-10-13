@@ -241,6 +241,8 @@ public class MapEditorScreen extends GameScreen {
 		final var bot = (botHeader != null) ? botHeader.startY : 0;
 		
 		
+		//displays the world coordinates of the hovered tile
+		drawString("World: [" + worldXPos + "," + worldYPos + "]", 5, bot - fh * 4);
 		//displays the world tile (world) coordinates directly at the middle of the screen
 		drawString("Px: [" + worldPixelX + "," + worldPixelY + "]", 5, bot - fh * 3);
 		//displays the world tile (world) coordinates directly at the middle of the screen

@@ -20,11 +20,10 @@ public class CMD_Version extends TerminalCommand {
 	@Override public String getUsage() { return "ex: v"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 		writeln(EColors.seafoam, "Envision Game Engine");
 		writeln(EColors.yellow, "Build Date: ", EColors.skyblue, Envision.VERSION_DATE);
 		writeln(EColors.yellow, "Build Num: ", EColors.mc_lightpurple, Envision.VERSION_BUILD);
-		return Envision.VERSION_DATE + " " + Envision.VERSION_BUILD;
 	}
 	
 }

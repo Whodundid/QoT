@@ -19,11 +19,10 @@ public class CMD_ReregisterCommands extends TerminalCommand {
 	@Override public String getUsage() { return "ex: rrac -i"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoArgs();
 		writeln("Rebuilding command list..", 0xffffaa00);
 		Envision.getTerminalHandler().reregisterAllCommands(term(), runVisually());
-		return null;
 	}
 	
 }

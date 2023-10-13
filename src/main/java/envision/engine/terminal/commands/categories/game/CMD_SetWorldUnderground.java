@@ -24,18 +24,18 @@ public class CMD_SetWorldUnderground extends TerminalCommand {
 	}
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoMoreThan(1);
 	    
 		if (Envision.theWorld == null) {
 			error("No world loaded!");
-			return null;
+			return;
 		}
 		
 		//empty -- toggle
 		if (noArgs()) {
 			Envision.theWorld.setUnderground(!Envision.theWorld.isUnderground());
-			return null;
+			return;
 		}
 		
 		String val = firstArg().toLowerCase();
@@ -43,7 +43,5 @@ public class CMD_SetWorldUnderground extends TerminalCommand {
 		if (val.equals("true") || val.equals("t")) Envision.theWorld.setUnderground(true);
 		else if (val.equals("false") || val.equals("f")) Envision.theWorld.setUnderground(false);
 		else error(getUsage());
-		
-		return null;
 	}
 }

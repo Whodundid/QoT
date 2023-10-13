@@ -23,18 +23,18 @@ public class CMD_ReloadWorld extends TerminalCommand {
 	@Override public String getUsage() { return "ex: relw"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoArgs();
 		
 		if (Envision.currentScreen instanceof MapEditorScreen editor) {
 			writeln(EColors.yellow, "Reloading editor world '", editor.getActualWorld().getWorldName(), "..");
 			editor.loadWorld();
-			return null;
+			return;
 		}
 		
 		if (Envision.theWorld == null) {
 		    error("No world currently loaded!");
-		    return null;
+		    return;
 		}
 		
 		writeln(EColors.yellow, "Reloading game world '", Envision.theWorld.getWorldName(), "'..");
@@ -44,7 +44,6 @@ public class CMD_ReloadWorld extends TerminalCommand {
         w.addEntity(p);
         
         Envision.displayScreen(new GamePlayScreen());
-        return null;
 	}
 	
 }

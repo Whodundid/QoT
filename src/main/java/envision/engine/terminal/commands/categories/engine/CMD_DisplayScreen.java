@@ -27,24 +27,23 @@ public class CMD_DisplayScreen extends TerminalCommand {
 	}
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectAtLeast(1);
 		
 		if (firstArg().equals("null")) {
 			if (Envision.getWorld() != null) Envision.loadWorld(null);
 			Envision.displayScreen(null);
-			return null;
+			return;
 		}
 		
 		GameScreen s = ScreenRepository.getScreen(firstArg().toLowerCase());
         if (s == null) {
             error("Unrecognized screen name!");
-            return null;
+            return;
         }
         
         if (Envision.getWorld() != null) Envision.loadWorld(null);
         Envision.displayScreen(s);
-        return null;
 	}
 	
 }

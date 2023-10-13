@@ -15,9 +15,9 @@ public class CMD_Files extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: files"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 		displayWindow(new FileExplorerWindow(dir()), false);
-		return null;
+		//term.bringToFront();
 	}
 	
 }

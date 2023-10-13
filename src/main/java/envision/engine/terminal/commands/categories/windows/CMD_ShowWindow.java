@@ -19,7 +19,7 @@ public class CMD_ShowWindow extends TerminalCommand {
 	@Override public String getUsage() { return "ex: display 4 (where 4 is the window id)"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectExactly(1);
 		
 		try {
@@ -63,8 +63,6 @@ public class CMD_ShowWindow extends TerminalCommand {
 				error(q);
 			}
 		}
-		
-		return null;
 	}
 	
 }

@@ -21,7 +21,7 @@ public class CMD_ForLoop extends TerminalCommand {
 	@Override public String getUsage() { return "ex: for 0-9-1 'cmd'"; }
 	
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectExactly(3, "Expected at least 2 int arguments and one command target for loop!");
 	    
 	    String vals = firstArg();
@@ -30,7 +30,7 @@ public class CMD_ForLoop extends TerminalCommand {
         
         if (!vals.contains("-")) {
             error("Invalid for loop range argument!");
-            return null;
+            return;
         }
         
         int pos = EStringUtil.findStartingIndex(vals, "-");
@@ -52,8 +52,8 @@ public class CMD_ForLoop extends TerminalCommand {
         
         Class<?> type = checkClasses(firstArg, secondArg, thirdArg);
         
-        if (type == null) { error("Could not parse range value types!"); return null; }
-        if (type == Exception.class) { error("Inconsistent range datatype values!"); return null; }
+        if (type == null) { error("Could not parse range value types!"); return; }
+        if (type == Exception.class) { error("Inconsistent range datatype values!"); return; }
         
         if (type == Integer.class) {
             firstI = Integer.parseInt(firstArg);
@@ -86,8 +86,6 @@ public class CMD_ForLoop extends TerminalCommand {
         else if (type == String.class) {
             
         }
-        
-        return null;
 	}
 	
 	private Class<?> checkClasses(String firstArg, String secondArg, String thirdArg) {

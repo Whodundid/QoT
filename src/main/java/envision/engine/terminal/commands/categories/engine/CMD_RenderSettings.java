@@ -19,9 +19,8 @@ public class CMD_RenderSettings extends TerminalCommand {
 	@Override public String getUsage() { return "ex: rset'"; }
 
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 		Envision.displayWindow(ScreenLevel.TOP, new GameOptionsWindow());
-		return null;
 	}
 	
 }

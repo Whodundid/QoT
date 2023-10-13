@@ -1,7 +1,6 @@
 package envision.engine.terminal.commands.categories.engine;
 
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import envision.game.effects.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
@@ -21,16 +20,16 @@ public class CMD_SetVolume extends TerminalCommand {
 	@Override public String getUsage() { return "ex: vol 50"; }
 	
 	@Override
-	public Object runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		if (args.isEmpty()) {
-			termIn.writeln(EColors.yellow, "Volume: " + QoTSettings.musicVolume.get());
-			return null;
+	public void runCommand() {
+		if (noArgs()) {
+			writeln(EColors.yellow, "Volume: " + QoTSettings.musicVolume.get());
+			return;
 		}
 		
-		int vol = ENumUtil.parseInt(args, 0, -1);
+		int vol = ENumUtil.parseInt(args(), 0, -1);
 		if (vol < 0) {
-			termIn.errorUsage("Expected an integer value!", getUsage());
-			return null;
+			errorUsage("Expected an integer value!", getUsage());
+			return;
 		}
 		
 		QoTSettings.musicVolume.set(ENumUtil.clamp(vol, 0, 100));
@@ -38,8 +37,7 @@ public class CMD_SetVolume extends TerminalCommand {
 		if (QoTSettings.musicVolume.get() == 0) SoundEngine.stopAll();
 		else SoundEngine.getAllPlaying().forEach(s -> s.setVolume(QoTSettings.musicVolume.get() * 0.001));
 		
-		termIn.writeln(EColors.lgreen, "Set volume to: " + QoTSettings.musicVolume.get());
-		return null;
+		writeln(EColors.lgreen, "Set volume to: " + QoTSettings.musicVolume.get());
 	}
 	
 }

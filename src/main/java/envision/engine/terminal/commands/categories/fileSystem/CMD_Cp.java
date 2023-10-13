@@ -19,14 +19,14 @@ public class CMD_Cp extends AbstractFileCommand {
 	@Override public String getUsage() { return "ex: cp 'src' 'dest'"; }
 	
 	@Override
-	protected Object runCommand() throws Exception {
+	protected void runCommand() throws Exception {
 		expectExactly(2);
 		
 		File f = fromRelative();
 		if (!f.exists()) f = fromFull();
 		if (!f.exists()) {
 			error("Error: Cannot find the object specified!");
-			return null;
+			return;
 		}
 		
 		boolean isDir = f.isDirectory();
@@ -41,7 +41,6 @@ public class CMD_Cp extends AbstractFileCommand {
 		writeln("Copied object to: " + EColors.white + dest, EColors.green);
 		
 		DeveloperDesktop.reloadFileExplorers();
-		return null;
 	}
 	
 	private void move(ETerminalWindow termIn, File src, File dest) {

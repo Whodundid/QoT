@@ -19,13 +19,13 @@ public class CMD_FPS extends TerminalCommand {
     @Override public String getUsage() { return "ex: fps"; }
     
     @Override
-    public Object runCommand() {
+    public void runCommand() {
         expectNoMoreThan(1);
         
         if (noArgs()) {
             writeln(EColors.yellow, "target: ", Envision.getTargetFPS());
             writeln(EColors.green, "actual: ", Envision.getFPS());
-            return Envision.getFPS();
+            return;
         }
         
         try {
@@ -38,8 +38,6 @@ public class CMD_FPS extends TerminalCommand {
             error(e);
             error("Expected a valid integer value!");
         }
-        
-        return null;
     }
     
 }

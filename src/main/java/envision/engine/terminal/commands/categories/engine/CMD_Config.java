@@ -30,13 +30,13 @@ public class CMD_Config extends TerminalCommand {
 	}
 
 	@Override
-	public Object runCommand() {
+	public void runCommand() {
 	    expectNoMoreThan(1);
 	    
 		if (noArgs()) {
 			displayConfig();
 			if (hasModifier("-a")) FileOpener.openFile(QoTSettings.getGameConfig().getFile());
-			return null;
+			return;
 		}
 		
 		if (oneArg()) {
@@ -54,8 +54,6 @@ public class CMD_Config extends TerminalCommand {
                 errorUsage("Invalid action argument!");
             }
         }
-		
-		return null;
 	}
 	
 	private void displayConfig() {
