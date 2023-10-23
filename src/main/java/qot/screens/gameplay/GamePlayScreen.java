@@ -40,6 +40,7 @@ public class GamePlayScreen extends GameScreen {
 	
 	private GamePauseWindow pauseWindow;
 	private ConfirmationWindow confirmationWindow;
+	
 	//private DialogueCutscene currentCutscene;
 	
 	private boolean openPause = false;
@@ -90,7 +91,7 @@ public class GamePlayScreen extends GameScreen {
 		
 		if (openPause) openPauseWindow();
 		
-		//addObject(character);
+		addObject(character);
 	}
 	
 	@Override
@@ -161,47 +162,47 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (!openPause) {
-			// Other Screens
-			if (keyCode == Keyboard.KEY_TAB) openCharScreen();
-			if (keyCode == Keyboard.KEY_ESC) {
-				if (Keyboard.isKeyDown(Keyboard.KEY_LWIN)) {
-					Envision.displayScreen(new MainMenuScreen());
-				}
-				else {
-					openPauseWindow();
-				}
+		if (openPause && Keyboard.KEY_ESC != keyCode) { return; }
+		
+		// Other Screens
+		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
+		if (keyCode == Keyboard.KEY_ESC) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_LWIN)) {
+				Envision.displayScreen(new MainMenuScreen());
 			}
-			
-			// DEBUG FEATURES
-			if (keyCode == Keyboard.KEY_0) {
-				//currentCutscene.start();
+			else {
+				openPauseWindow();
 			}
-			
-			// Movement
-			if (keyCode == Keyboard.KEY_LEFT) Envision.thePlayer.movePixel(-1, 0);
-			if (keyCode == Keyboard.KEY_RIGHT) Envision.thePlayer.movePixel(1, 0);
-			if (keyCode == Keyboard.KEY_UP) Envision.thePlayer.movePixel(0, -1);
-			if (keyCode == Keyboard.KEY_DOWN) Envision.thePlayer.movePixel(0, 1);
-			
-			
-			// Utilities
-			if (keyCode == Keyboard.KEY_N) {
-				Entity obj = world.getEntitiesInWorld().getRandom();
-				world.getCamera().setFocusedObject(obj);
-			}
-			if (keyCode == Keyboard.KEY_M) {
-				world.getCamera().setFocusedObject(Envision.thePlayer);
-			}
-			
-			if (Envision.thePlayer != null) {
-				Envision.thePlayer.onKeyPress(typedChar, keyCode);
-			}
-			
-			if (keyCode == Keyboard.KEY_O) DebugSettings.drawEntityHitboxes = !DebugSettings.drawEntityHitboxes;
-			if (keyCode == Keyboard.KEY_H) DebugSettings.drawEntityCollisionBoxes = !DebugSettings.drawEntityCollisionBoxes;
-			if (keyCode == Keyboard.KEY_P) DebugSettings.drawEntityPositionTiles = !DebugSettings.drawEntityPositionTiles;
 		}
+			
+		// DEBUG FEATURES
+		if (keyCode == Keyboard.KEY_0) {
+			//currentCutscene.start();
+		}
+			
+		// Movement
+		if (keyCode == Keyboard.KEY_LEFT) Envision.thePlayer.movePixel(-1, 0);
+		if (keyCode == Keyboard.KEY_RIGHT) Envision.thePlayer.movePixel(1, 0);
+		if (keyCode == Keyboard.KEY_UP) Envision.thePlayer.movePixel(0, -1);
+		if (keyCode == Keyboard.KEY_DOWN) Envision.thePlayer.movePixel(0, 1);
+		
+		
+		// Utilities
+		if (keyCode == Keyboard.KEY_N) {
+			Entity obj = world.getEntitiesInWorld().getRandom();
+			world.getCamera().setFocusedObject(obj);
+		}
+		if (keyCode == Keyboard.KEY_M) {
+			world.getCamera().setFocusedObject(Envision.thePlayer);
+		}
+		
+		if (Envision.thePlayer != null) {
+			Envision.thePlayer.onKeyPress(typedChar, keyCode);
+		}
+		
+		if (keyCode == Keyboard.KEY_O) DebugSettings.drawEntityHitboxes = !DebugSettings.drawEntityHitboxes;
+		if (keyCode == Keyboard.KEY_H) DebugSettings.drawEntityCollisionBoxes = !DebugSettings.drawEntityCollisionBoxes;
+		if (keyCode == Keyboard.KEY_P) DebugSettings.drawEntityPositionTiles = !DebugSettings.drawEntityPositionTiles;
 		
 		
 		//world.getWorldRenderer().keyPressed(typedChar, keyCode);

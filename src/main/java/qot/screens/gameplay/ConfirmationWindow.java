@@ -28,6 +28,8 @@ public class ConfirmationWindow extends WindowParent {
 	public ConfirmationWindow(GamePlayScreen parentScreen, int x, int y, String confirmationTextIn) {
 		init(parentScreen, x, y, 550, 200);
 		
+		setObjectName("Confirmation Window");
+		
 		setMaxDims(800, 400);
 		setMinDims(400, 200);
 		
@@ -55,6 +57,8 @@ public class ConfirmationWindow extends WindowParent {
 		Envision.pause();
 		open = true;
 		
+		defaultHeader();
+		
 		var w = width - 460;
 		var sX = midX - (w / 2) - 30;
 		var gap = 5;
@@ -68,13 +72,19 @@ public class ConfirmationWindow extends WindowParent {
 		addObject(yes, no);
 	}
 	
+	@Override public void onFirstDraw() {
+		var top = getTopParent();
+		top.setFocusLockObject(this);
+		top.setEscapeStopper(this);
+	}
+	
 	/**
 	 * Draws the object rectangle, background, and String. Rendering of the button takes place in initChildren()
 	 */
 	@Override public void drawObject(int mXIn, int mYIn) {
 		drawRect(0, 0, Envision.getWidth(), Envision.getHeight(), EColors.vdgray.opacity(150));
 		drawDefaultBackground();
-		drawString(confirmationText, midX - FontRenderer.strWidth(confirmationText) / 2.0, startY - 40);
+		drawStringC(confirmationText, midX, startY, EColors.blue);
 	}
 	
 	/**

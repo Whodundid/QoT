@@ -430,10 +430,7 @@ public abstract class Entity extends ComponentBasedObject {
 	
 	/** Returns true if this entity had enough mana to use the given spell. */
 	public boolean manaCheck(int spellCost) {
-		if (mana >= spellCost) {
-			return true;
-		}
-		return false;
+		return (mana >= spellCost);
 	}
 	
 	public double getSpeed() { return speed; }

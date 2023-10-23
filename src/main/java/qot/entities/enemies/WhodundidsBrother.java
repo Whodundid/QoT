@@ -47,8 +47,8 @@ public class WhodundidsBrother extends Enemy {
 		att1.addFrame(EntityTextures.whobro1);
 		att1.addFrame(EntityTextures.whobro2);
 		att1.addFrame(EntityTextures.whobro3);
-		//att1.addFrame(EntityTextures.whobro2);
-		//att1.addFrame(EntityTextures.whobro1);
+		att1.addFrame(EntityTextures.whobro2);
+		att1.addFrame(EntityTextures.whobro1);
 
 		
 		var idle1 = animationHandler.createAnimationSet(AnimationHandler.IDLE_ANIMATION_1);

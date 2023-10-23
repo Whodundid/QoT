@@ -5,13 +5,14 @@ import java.util.Collections;
 
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.game.entities.Entity;
+import eutil.datatypes.util.EList;
 import qot.screens.gameplay.GamePlayScreen;
 
 public class DialogueCutscene extends GamePlayScreen {
 	private Entity playerCharacter;
 	private Entity otherSpeaker;
 	
-	private ArrayList<EntityDialogue> allDialogue;
+	private EList<EntityDialogue> allDialogue;
 	private int cutsceneId;
 	
 	/**
@@ -23,7 +24,7 @@ public class DialogueCutscene extends GamePlayScreen {
 		playerCharacter = playerCharacterIn;
 		otherSpeaker = otherSpeakerIn;
 		
-		allDialogue = new ArrayList<EntityDialogue>();
+		allDialogue = EList.newList();
 	}
 	
 	public DialogueCutscene(Entity playerCharacterIn) {
@@ -44,7 +45,7 @@ public class DialogueCutscene extends GamePlayScreen {
 	public Entity getPlayerCharacter() { return playerCharacter; }
 	public Entity getOtherSpeaker() { return otherSpeaker; }
 	
-	public ArrayList<EntityDialogue> getAllDialogue() { return allDialogue; }
+	public EList<EntityDialogue> getAllDialogue() { return allDialogue; }
 	public EntityDialogue getDialogue(int index) { return allDialogue.get(index); }
 	
 	public int getCutsceneId() { return cutsceneId; }
