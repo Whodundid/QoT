@@ -3,6 +3,7 @@ package qot.entities.enemies;
 import envision.Envision;
 import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
+import envision.game.effects.animations.AnimationHandler;
 import envision.game.entities.Enemy;
 import eutil.datatypes.points.Point2i;
 import eutil.misc.Direction;
@@ -39,6 +40,11 @@ public class TrollBoar extends Enemy {
 		waitAttackTime = ERandomUtil.getRoll(600, 4000);
 		
 		//this.setHeadText(doesWaitAttack + " : " + waitAttackTime);
+		
+		animationHandler = new AnimationHandler(this);
+		var idle1 = animationHandler.createAnimationSet(AnimationHandler.IDLE_ANIMATION_1);
+		idle1.setUpdateInterval(10);
+		
 		
         // item on death
         

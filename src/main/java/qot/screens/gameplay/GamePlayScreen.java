@@ -9,6 +9,7 @@ import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowRect;
 import envision.engine.windows.windowObjects.basicObjects.WindowStatusBar;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.game.dialog.DialogueCutscene;
 import envision.game.effects.sounds.SoundEngine;
 import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
@@ -30,7 +31,7 @@ public class GamePlayScreen extends GameScreen {
 	Player player;
 	IGameWorld world;
 	WindowRect topHud;
-	WindowRect botHud; //don't know if actually want this one
+	WindowRect botHud; //don't know if we actually want this one
 	WindowStatusBar health, mana;
 	WindowButton<?> character;
 	
@@ -38,6 +39,9 @@ public class GamePlayScreen extends GameScreen {
 	public int worldXPos, worldYPos; //the world coordinates under the mouse
 	
 	private GamePauseWindow pauseWindow;
+	private ConfirmationWindow confirmationWindow;
+	//private DialogueCutscene currentCutscene;
+	
 	private boolean openPause = false;
 	
 	//--------------
@@ -48,6 +52,9 @@ public class GamePlayScreen extends GameScreen {
 	public GamePlayScreen(boolean openPauseOnStart) {
 		super();
 		//screenHistory.push(new MainMenuScreen());
+		
+		//currentCutscene = new DialogueCutscene(player);
+		
 		world = Envision.getWorld();
 		openPause = openPauseOnStart;
 		if (world != null) world.getCamera().setMinZoom(2);
@@ -132,13 +139,16 @@ public class GamePlayScreen extends GameScreen {
 			
 			double moveX = 0.0, moveY = 0.0;
 			
-			if (Keyboard.isADown()) moveX -= 1;
-			if (Keyboard.isDDown()) moveX += 1;
-			if (Keyboard.isWDown()) moveY -= 1;
-			if (Keyboard.isSDown()) moveY += 1;
-			
-			if (Keyboard.isAnyKeyDown(Keyboard.KEY_A, Keyboard.KEY_D, Keyboard.KEY_W, Keyboard.KEY_S)) {
-				p.move(moveX, moveY);				
+			// Whenever pause menu is opened, player cannot move
+			if (!openPause) {
+				if (Keyboard.isADown()) moveX -= 1;
+				if (Keyboard.isDDown()) moveX += 1;
+				if (Keyboard.isWDown()) moveY -= 1;
+				if (Keyboard.isSDown()) moveY += 1;
+				
+				if (Keyboard.isAnyKeyDown(Keyboard.KEY_A, Keyboard.KEY_D, Keyboard.KEY_W, Keyboard.KEY_S)) {
+					p.move(moveX, moveY);				
+				}
 			}
 			
 //			double moveSpeed = 1;
@@ -151,32 +161,48 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void keyPressed(char typedChar, int keyCode) {
-		if (keyCode == Keyboard.KEY_TAB) openCharScreen();
-		if (keyCode == Keyboard.KEY_ESC) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_LWIN)) Envision.displayScreen(new MainMenuScreen());
-			else openPauseWindow();
+		if (!openPause) {
+			// Other Screens
+			if (keyCode == Keyboard.KEY_TAB) openCharScreen();
+			if (keyCode == Keyboard.KEY_ESC) {
+				if (Keyboard.isKeyDown(Keyboard.KEY_LWIN)) {
+					Envision.displayScreen(new MainMenuScreen());
+				}
+				else {
+					openPauseWindow();
+				}
+			}
+			
+			// DEBUG FEATURES
+			if (keyCode == Keyboard.KEY_0) {
+				//currentCutscene.start();
+			}
+			
+			// Movement
+			if (keyCode == Keyboard.KEY_LEFT) Envision.thePlayer.movePixel(-1, 0);
+			if (keyCode == Keyboard.KEY_RIGHT) Envision.thePlayer.movePixel(1, 0);
+			if (keyCode == Keyboard.KEY_UP) Envision.thePlayer.movePixel(0, -1);
+			if (keyCode == Keyboard.KEY_DOWN) Envision.thePlayer.movePixel(0, 1);
+			
+			
+			// Utilities
+			if (keyCode == Keyboard.KEY_N) {
+				Entity obj = world.getEntitiesInWorld().getRandom();
+				world.getCamera().setFocusedObject(obj);
+			}
+			if (keyCode == Keyboard.KEY_M) {
+				world.getCamera().setFocusedObject(Envision.thePlayer);
+			}
+			
+			if (Envision.thePlayer != null) {
+				Envision.thePlayer.onKeyPress(typedChar, keyCode);
+			}
+			
+			if (keyCode == Keyboard.KEY_O) DebugSettings.drawEntityHitboxes = !DebugSettings.drawEntityHitboxes;
+			if (keyCode == Keyboard.KEY_H) DebugSettings.drawEntityCollisionBoxes = !DebugSettings.drawEntityCollisionBoxes;
+			if (keyCode == Keyboard.KEY_P) DebugSettings.drawEntityPositionTiles = !DebugSettings.drawEntityPositionTiles;
 		}
 		
-		if (keyCode == Keyboard.KEY_LEFT) Envision.thePlayer.movePixel(-1, 0);
-		if (keyCode == Keyboard.KEY_RIGHT) Envision.thePlayer.movePixel(1, 0);
-		if (keyCode == Keyboard.KEY_UP) Envision.thePlayer.movePixel(0, -1);
-		if (keyCode == Keyboard.KEY_DOWN) Envision.thePlayer.movePixel(0, 1);
-		
-		if (keyCode == Keyboard.KEY_N) {
-			Entity obj = world.getEntitiesInWorld().getRandom();
-			world.getCamera().setFocusedObject(obj);
-		}
-		if (keyCode == Keyboard.KEY_M) {
-			world.getCamera().setFocusedObject(Envision.thePlayer);
-		}
-		
-		if (Envision.thePlayer != null) {
-			Envision.thePlayer.onKeyPress(typedChar, keyCode);
-		}
-		
-		if (keyCode == Keyboard.KEY_O) DebugSettings.drawEntityHitboxes = !DebugSettings.drawEntityHitboxes;
-		if (keyCode == Keyboard.KEY_H) DebugSettings.drawEntityCollisionBoxes = !DebugSettings.drawEntityCollisionBoxes;
-		if (keyCode == Keyboard.KEY_P) DebugSettings.drawEntityPositionTiles = !DebugSettings.drawEntityPositionTiles;
 		
 		//world.getWorldRenderer().keyPressed(typedChar, keyCode);
 		
@@ -252,7 +278,7 @@ public class GamePlayScreen extends GameScreen {
 		double c = Math.signum(change);
 		double z;
 		
-		//if (Keyboard.isCtrlDown()) {
+		if (Keyboard.isCtrlDown()) {
 			if (c > 0 && world.getCameraZoom() == 0.25)      z = 0.05;		//if at 0.25 and zooming out -- 0.05x
 			else if (world.getCameraZoom() < 1.0)            z = c * 0.1;	//if less than 1 zoom by 0.1x
 			else if (c > 0)                                  z = 0.25;		//if greater than 1 zoom by 0.25x
@@ -261,7 +287,7 @@ public class GamePlayScreen extends GameScreen {
 			
 			z = ENumUtil.round(world.getCameraZoom() + z, 2);
 			world.setCameraZoom(z);
-		//}
+		}
 	}
 	
 	@Override
@@ -286,7 +312,12 @@ public class GamePlayScreen extends GameScreen {
 		displayWindow(pauseWindow);
 	}
 	
+	/**
+	 * Opens the pause window
+	 */
 	public void openPauseWindow() {
+		Envision.pause();
+		openPause = true;
 		if (getChildren().notContains(pauseWindow) || pauseWindow == null) {
 		    pauseWindow = new GamePauseWindow(this, 30, 30);
 			displayWindow(pauseWindow);
@@ -297,9 +328,43 @@ public class GamePlayScreen extends GameScreen {
 		}
 	}
 	
+	public void openConfirmationWindowIfNotOpen() {
+		if (confirmationWindow != null && getChildren().contains(confirmationWindow) && !confirmationWindow.isClosed()) return;
+		confirmationWindow = new ConfirmationWindow(this, 25, 25);
+		displayWindow(confirmationWindow);
+	}
+	
+	/**
+	 * Opens a confirmation window with a Yes or No Button
+	 */
+	public void openConfirmationWindow() {
+		if (getChildren().notContains(confirmationWindow) || confirmationWindow == null) {
+			confirmationWindow = new ConfirmationWindow(this, 25, 25);
+			displayWindow(confirmationWindow);
+		}
+		else {
+			confirmationWindow.close();
+			confirmationWindow = null;
+		}
+	}
+	
 	@Override
 	public void onWorldLoaded() {
 		this.world = Envision.theWorld;
+	}
+	
+	/**
+	 * Sets the openPause boolean to true only if it is not currently open
+	 */
+	public void pause() {
+		if (!openPause) { openPause = true; }
+	}
+	
+	/**
+	 * Sets the openPause boolean to false only if it is currently open
+	 */
+	public void unpause() {
+		if (openPause) { openPause = false; }
 	}
 	
 }

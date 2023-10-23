@@ -13,6 +13,7 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.effects.sounds.SoundEngine;
 import envision.game.world.GameWorld;
 import envision.game.world.worldEditor.MapMenuScreen;
+import envision.game.world.worldEditor.NewMapCreatorScreen;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import eutil.random.ERandomUtil;
@@ -303,11 +304,13 @@ public class MainMenuScreen extends GameScreen {
 	//---------------------------------------------------
 	
 	private void newGame() {
-	    fadeOutAndDisplayScreen(new WorldSelectScreen());
+		//QoTSettings.lastEditorMap.set(nameField.getText());
+		QoTSettings.saveConfig();
+		fadeOutAndDisplayScreen(new NewMapCreatorScreen());
 	}
 	
 	private void load() {
-		
+		fadeOutAndDisplayScreen(new WorldSelectScreen());
 	}
 	
 	private void options() {
@@ -315,6 +318,7 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void closeGame() {
+		
 		SoundEngine.stopAll();
 		Envision.shutdown();
 	}

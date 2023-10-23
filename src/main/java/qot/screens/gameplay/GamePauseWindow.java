@@ -12,12 +12,12 @@ import qot.screens.main.OptionsScreen;
 
 public class GamePauseWindow extends WindowParent {
 	
-	private GameScreen parent;
+	private GamePlayScreen parent;
 	
 	private WindowButton<?> quit, resume;
 	private WindowButton<?> options;
 	
-	public GamePauseWindow(GameScreen parentScreen, int x, int y) {
+	public GamePauseWindow(GamePlayScreen parentScreen, int x, int y) {
 		init(parentScreen, x, y, 300, 200);
 		setMaxDims(400, 200);
 		setMinDims(200, 100);
@@ -57,8 +57,7 @@ public class GamePauseWindow extends WindowParent {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == quit) {
-			Envision.loadWorld(null); // Unload current world
-			Envision.displayScreen(new MainMenuScreen()); // Display main menu
+			parent.openConfirmationWindowIfNotOpen();
 		}
 		
 		if (object == options) {
@@ -68,12 +67,16 @@ public class GamePauseWindow extends WindowParent {
 			}
 		}
 		
-		if (object == resume) close();
+		if (object == resume) {
+			close();
+		}
 	}
+	
 	
 	@Override
 	public void onClosed() {
 		Envision.unpause();
+		parent.unpause();
 	}
 	
 }

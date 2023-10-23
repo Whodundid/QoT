@@ -1,5 +1,8 @@
 package qot.entities.enemies;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import envision.Envision;
 import envision.engine.rendering.textureSystem.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
@@ -42,9 +45,8 @@ public class WhodundidsBrother extends Enemy {
 		att1.setUpdateInterval(15);
 		att1.addFrame(EntityTextures.whobro);
 		att1.addFrame(EntityTextures.whobro1);
-		att1.addFrame(EntityTextures.whodundid);
-		//att1.addFrame(EntityTextures.whobro2);
-		//att1.addFrame(EntityTextures.whobro3);
+		att1.addFrame(EntityTextures.whobro2);
+		att1.addFrame(EntityTextures.whobro3);
 		//att1.addFrame(EntityTextures.whobro2);
 		//att1.addFrame(EntityTextures.whobro1);
 
