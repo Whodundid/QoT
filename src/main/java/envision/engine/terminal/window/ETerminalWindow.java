@@ -71,6 +71,8 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	protected boolean prevRunVisually = false;
 	protected TerminalCommand confirmationCommand = null;
 	
+	protected boolean drawNewLineBetweenCommands = true;
+	
 	//==============
 	// Constructors
 	//==============
@@ -750,6 +752,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	public String getTextTabBegin() { return textTabBegin; }
 	public int getTabArgStart() { return startArgPos; }
 	public String getTabBase() { return tabBase; }
+	public boolean getDrawNewLineBetweenCommands() { return drawNewLineBetweenCommands; }
 	
 	//=========
 	// Setters
@@ -786,5 +789,6 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	public ETerminalWindow setTab1(boolean val) { tab1 = val; return this; }
 	public ETerminalWindow setTextTabBeing(String in) { textTabBegin = in; return this; }
 	public ETerminalWindow setTabBase(String in) { tabBase = in; return this; }
+	public void setDrawsNewLineBetweenCommands(boolean val) { drawNewLineBetweenCommands = val; }
 	
 }

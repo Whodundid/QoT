@@ -1,6 +1,6 @@
 package envision.game.world.worldEditor.editorParts.util;
 
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision.game.util.IDrawable;

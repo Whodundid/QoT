@@ -23,6 +23,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
+import eutil.strings.EStringUtil;
 
 /**
  * The base terminal command for which all terminal commands extend from.
@@ -56,6 +57,7 @@ public abstract class TerminalCommand {
 	protected boolean shouldRegister = true;
 	protected boolean allowAnyModifier = false;
 	
+	protected CommandResult result;
 	protected ETerminalWindow term;
 	
 	//--------------
@@ -72,14 +74,19 @@ public abstract class TerminalCommand {
 	public abstract String getName();
 	
 	/** While overridable, this function is intended to only be called by the terminal command handler. */
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		try {
-			term = termIn;
+	public CommandResult runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	    result = new CommandResult(this, args, runVisually);
+	    term = termIn;
+
+	    try {
 			argHelper = new ArgHelper(termIn, args, runVisually);
 			runCommand();
 		}
 		catch (TermArgParsingException e) {
-		    e.display(termIn);
+		    var cause = e.getCause();
+		    String errorString = e.getErrorString();
+		    javaError(cause);
+		    if (errorString != null) error(errorString);
 		}
 		catch (TermArgLengthException e) {
 			errorUsage(e.getMessage());
@@ -87,6 +94,8 @@ public abstract class TerminalCommand {
 		catch (Exception e) {
 			error(e);
 		}
+		
+		return result;
 	}
 	
 	/** The intended override target for commands. */
@@ -141,9 +150,9 @@ public abstract class TerminalCommand {
 	public String getUsage() { return "(No usage info for '" + getName() + "'!"; }
 	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {}
 	
-	//---------
+	//=========
 	// Methods
-	//---------
+	//=========
 	
 	/**
 	 * Intended to be called by the TerminalHandler specifically to
@@ -153,7 +162,7 @@ public abstract class TerminalCommand {
 	 * @param args
 	 * @param runVisually
 	 */
-	public void preRun(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+	public CommandResult preRun(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
 		//clear out old modifiers
 		parsedModifiers.clear();
 		
@@ -177,12 +186,12 @@ public abstract class TerminalCommand {
 			}
 		}
 		
-		runCommand_i(termIn, args, runVisually);
+		return runCommand_i(termIn, args, runVisually);
 	}
 	
-	//---------
+	//=========
 	// Getters
-	//---------
+	//=========
 	
 	/** Returns the list of parsed modifiers when this command was executed. */
 	public EList<String> getParsedModifiers() { return parsedModifiers; }
@@ -195,17 +204,17 @@ public abstract class TerminalCommand {
 	/** Returns true if this command should actually be allowed to register within a TerminalHandler. */
 	public boolean shouldRegister() { return shouldRegister; }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public TerminalCommand setAcceptedModifiers(String... in) { acceptedModifiers.addA(in); return this; }
 	public TerminalCommand setCategory(String in) { category = in; return this; }
 	public TerminalCommand setShouldRegister(boolean val) { shouldRegister = val; return this; }
 	
-	//-------------------
+	//===================
 	// Protected Methods
-	//-------------------
+	//===================
 	
 	public void onConfirmation(String response) {}
 	
@@ -213,7 +222,10 @@ public abstract class TerminalCommand {
 	
 	protected void errorUsage(String errorReason) { errorUsage(term, errorReason); }
 	protected void errorUsage(ETerminalWindow term, String errorReason) {
-		term.errorUsage(errorReason, getUsage());
+	    String usage = getUsage();
+		term.errorUsage(errorReason, usage);
+		captureOutput(errorReason);
+		captureOutput(usage);
 	}
 	
 	/**
@@ -266,6 +278,7 @@ public abstract class TerminalCommand {
 		StackTraceElement[] trace = e.getStackTrace();
 		String errLoc = (trace != null && trace[0] != null) ? "\n" + trace[0].toString() : null;
 		termIn.javaError(e.toString() + errLoc);
+		captureOutput(e.toString() + errLoc);
 		e.printStackTrace();
 	}
 	
@@ -411,24 +424,32 @@ public abstract class TerminalCommand {
 	protected void requireConfirmation(String message) { term.setRequiresCommandConfirmation(this, message, args(), runVisually()); }
 	protected void clearConfirmation() { term.clearConfirmationRequirement(); }
 	
-	protected ETerminalWindow writeln() { return term.writeln(); }
-	protected ETerminalWindow writeln(Object objIn) { return term.writeln(objIn); }
-	protected ETerminalWindow writeln(Object objIn, EColors colorIn) { return term.writeln(objIn, colorIn); }
-	protected ETerminalWindow writeln(Object objIn, int colorIn) { return term.writeln(objIn, colorIn); }
-	protected ETerminalWindow writeln(EColors color, Object... arguments) { return term.writeln(color, arguments); }
-	protected ETerminalWindow writeln(Integer color, Object... arguments) { return term.writeln(color, arguments); }
-	protected ETerminalWindow writeln(Object... arguments) { return term.writeln(arguments); }
-	protected ETerminalWindow errorUsage(String error, String usage) { return term.errorUsage(error, usage); }
-	protected ETerminalWindow info(Object... msgIn) { return term.info(msgIn); }
-	protected ETerminalWindow warn(Object... msgIn) { return term.warn(msgIn); }
-	protected ETerminalWindow error(Object... msgIn) { return term.error(msgIn); }
-	protected ETerminalWindow javaError(Object... msgIn) { return term.javaError(msgIn); }
+	protected ETerminalWindow writeln() { captureNewLine(); return term.writeln(); }
+	protected ETerminalWindow writeln(Object objIn) { return term.writeln(captureOutput(objIn)); }
+	protected ETerminalWindow writeln(Object objIn, EColors colorIn) { return term.writeln(captureOutput(objIn), colorIn); }
+	protected ETerminalWindow writeln(Object objIn, int colorIn) { return term.writeln(captureOutput(objIn), colorIn); }
+	protected ETerminalWindow writeln(EColors color, Object... arguments) { return term.writeln(color, captureOutput(arguments)); }
+	protected ETerminalWindow writeln(Integer color, Object... arguments) { return term.writeln(color, captureOutput(arguments)); }
+	protected ETerminalWindow writeln(Object... arguments) { return term.writeln(captureOutput(arguments)); }
+	protected ETerminalWindow info(Object... msgIn) { return term.info(captureOutput(msgIn)); }
+	protected ETerminalWindow warn(Object... msgIn) { return term.warn(captureOutput(msgIn)); }
+	protected ETerminalWindow error(Object... msgIn) { return term.error(captureOutput(msgIn)); }
+	protected ETerminalWindow javaError(Object... msgIn) { return term.javaError(captureOutput(msgIn)); }
 	
-	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, EColors colorIn) { return term.writeLink(msgIn, linkTextIn, colorIn); }
-	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, int colorIn) { return term.writeLink(msgIn, linkTextIn, colorIn); }
-	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, boolean isWebLink, EColors colorIn) { return term.writeLink(msgIn, linkTextIn, isWebLink, colorIn); }
-	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, boolean isWebLink, int colorIn) { return term.writeLink(msgIn, linkTextIn, isWebLink, colorIn); }
-	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, Object linkObjectIn, boolean isWebLink, EColors colorIn) { return term.writeLink(msgIn, linkTextIn, linkObjectIn, isWebLink, colorIn); }
-	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, Object linkObjectIn, boolean isWebLink, int colorIn) { return term.writeLink(msgIn, linkTextIn, linkObjectIn, isWebLink, colorIn); }
+	protected ETerminalWindow errorUsage(String error, String usage) {
+	    captureOutput(error);
+	    captureOutput(usage);
+	    return term.errorUsage(error, usage);
+	}
+	
+	protected void captureNewLine() { result.addNewLine(); }
+	protected <T> T captureOutput(T output) { result.addLine(EStringUtil.toString(output)); return output; }
+	
+	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, EColors colorIn) { return term.writeLink(msgIn, captureOutput(linkTextIn), colorIn); }
+	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, int colorIn) { return term.writeLink(msgIn, captureOutput(linkTextIn), colorIn); }
+	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, boolean isWebLink, EColors colorIn) { return term.writeLink(msgIn, captureOutput(linkTextIn), isWebLink, colorIn); }
+	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, boolean isWebLink, int colorIn) { return term.writeLink(msgIn, captureOutput(linkTextIn), isWebLink, colorIn); }
+	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, Object linkObjectIn, boolean isWebLink, EColors colorIn) { return term.writeLink(msgIn, captureOutput(linkTextIn), linkObjectIn, isWebLink, colorIn); }
+	protected ETerminalWindow writeLink(String msgIn, String linkTextIn, Object linkObjectIn, boolean isWebLink, int colorIn) { return term.writeLink(msgIn, captureOutput(linkTextIn), linkObjectIn, isWebLink, colorIn); }
 	
 }

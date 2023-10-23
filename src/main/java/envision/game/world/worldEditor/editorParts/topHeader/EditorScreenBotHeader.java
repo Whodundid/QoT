@@ -50,7 +50,7 @@ public class EditorScreenBotHeader extends WindowObject {
 	@Override
 	public void drawObject(int mXIn, int mYIn) {
 		drawRect(EColors.black);
-		drawRect(startX, startY + 2, endX - 2, endY, EColors.pdgray);
+		drawRect(startX, startY + 2, endX - 2, endY - 2, EColors.pdgray);
 		
 		super.drawObject(mXIn, mYIn);
 	}

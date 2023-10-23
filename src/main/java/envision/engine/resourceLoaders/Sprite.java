@@ -1,7 +1,8 @@
-package envision.engine.rendering.textureSystem;
+package envision.engine.resourceLoaders;
 
 import org.joml.Vector2f;
 
+import envision.engine.rendering.textureSystem.GameTexture;
 import eutil.math.dimensions.Dimension_i;
 
 public class Sprite {

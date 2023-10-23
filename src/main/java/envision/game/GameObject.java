@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import envision.Envision;
 import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.effects.animations.AnimationHandler;
 import envision.game.util.IDrawable;
 import envision.game.world.IGameWorld;

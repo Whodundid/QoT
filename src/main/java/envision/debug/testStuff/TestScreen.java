@@ -2,7 +2,7 @@ package envision.debug.testStuff;
 
 import envision.engine.events.GameEvent;
 import envision.engine.rendering.GLObject;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.engine.screens.GameScreen;
 import eutil.colors.EColors;
 import eutil.datatypes.ValueMap;

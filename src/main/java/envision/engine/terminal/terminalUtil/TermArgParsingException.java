@@ -20,7 +20,8 @@ public class TermArgParsingException extends RuntimeException {
     }
     
     public void display(ETerminalWindow term) {
-        term.javaError(getCause());
+        var cause = getCause();
+        term.javaError(cause);
         if (errorString != null) term.error(errorString);
     }
     

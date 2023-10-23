@@ -79,6 +79,7 @@ public class TextEditorWindow extends WindowParent {
 		document.setBackgroundColor(EColors.steel.intVal);
 		document.setResetDrawn(false);
 		document.registerListener(this);
+		document.setScrollRate(60);
 		
 		if (!failed) document.setDrawLineNumbers(true);
 		double w = ENumUtil.clamp((width - 30 - 24) / 2, 45, 200);

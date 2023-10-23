@@ -1,6 +1,6 @@
 package qot.entities.shopkeepers;
 
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.component.ComponentType;
 import envision.game.component.types.OnClickComponent;
 import envision.game.effects.animations.AnimationHandler;

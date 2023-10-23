@@ -1,7 +1,7 @@
 package qot.world_tiles.categories.farm;
 
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.farmland.FarmTextures;
 import qot.assets.textures.world.floors.wood.WoodFloorTextures;

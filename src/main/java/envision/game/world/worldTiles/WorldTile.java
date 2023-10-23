@@ -1,7 +1,7 @@
 package envision.game.world.worldTiles;
 
 import envision.Envision;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.component.ComponentBasedObject;
 import envision.game.entities.Entity;
 import eutil.colors.EColors;
