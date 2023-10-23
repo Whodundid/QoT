@@ -31,6 +31,7 @@ public abstract class Entity extends ComponentBasedObject {
 	//========
 	
 	public String headText = "";
+	public String activeChat = "";
 	public boolean passable = false;
 	public boolean allowNoClip = false;
 	

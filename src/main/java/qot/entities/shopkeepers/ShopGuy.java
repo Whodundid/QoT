@@ -74,6 +74,7 @@ public class ShopGuy extends BasicRenderedEntity {
             lastDir = ERandomUtil.randomDir(false);
         }
         
+        this.activeChat = "What a wonderful day!";
         
         if (System.currentTimeMillis() - lastMove >= moveTime) {
             switch (lastDir) {

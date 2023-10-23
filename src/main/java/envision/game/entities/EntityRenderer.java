@@ -7,11 +7,13 @@ import envision.debug.DebugSettings;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.game.GameObject;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
+import eutil.math.ENumUtil;
 import eutil.misc.Rotation;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
@@ -65,6 +67,7 @@ public class EntityRenderer extends RenderingComponent {
 		//if (sprite == null && EStringUtil.isNotPopulated(theEntity.getHeadText())) return;
 		
 		final double zoom = camera.getZoom();
+		lastZoom = zoom;
 		
 		final int worldX = theObject.worldX;
         final int worldY = theObject.worldY;
@@ -352,8 +355,48 @@ public class EntityRenderer extends RenderingComponent {
 			theEntity.healthBar.keepDrawing();
 		}
 		
-		//headText = startX + " : " + startY;
+		// draw chat box (if there is one)
+		drawChatbox(x, y, w, h);
+        
+		// draw head text
 		RenderingManager.drawStringC(theEntity.headText, x + w * 0.5, y - h * 0.25);
+	}
+	
+	public void drawChatbox(double x, double y, double w, double h) {
+	    if (EStringUtil.isNotPopulated(theEntity.activeChat)) return;
+	    
+	    final String chat = theEntity.activeChat;
+	    final var world = theEntity.world;
+	    int chatWidth = FontRenderer.strWidth(chat);
+	    
+	    double midX = (x + w * 0.5);
+	    double dx = midX - (chatWidth * 0.6);
+        double dy = y - h * 0.10;
+        double dw = (chatWidth * 1.2);
+        double dh = 40;
+        
+        int ratio = 255 - ((255 * (world.getDayLength() / 2 - world.getTime()) / (world.getDayLength() / 2)));
+        ratio = ENumUtil.clamp(ratio, 100, 255);
+        int textRatio = ENumUtil.clamp(ratio, 220, 255);
+        
+        if (Envision.thePlayer != null) {
+            final double tw = world.getTileWidth();
+            double distToPlayer = world.getDistance(theEntity, Envision.thePlayer);
+            if (distToPlayer > (6 * tw)) return;
+            
+            int distRatio = (int) (255 - ((255 * distToPlayer) / (4 * tw)) + (10 * tw));
+            distRatio = ENumUtil.clamp(distRatio, 0, 255);
+            ratio = ENumUtil.clamp(ratio, 0, distRatio);
+            textRatio = ENumUtil.clamp(ratio, 0, distRatio);
+        }
+        
+        var blackBr = EColors.black.brightnessOpacity(ratio - 30, ratio);
+        var backBr = EColors.mgray.brightnessOpacity(ratio + 30, ratio);
+        var textBr = EColors.white.opacity(textRatio);
+	    
+	    RenderingManager.drawRect(dx, dy, dx + dw, dy + dh, blackBr);
+        RenderingManager.drawRect(dx + 1, dy + 1, dx + dw - 1, dy + dh - 1, backBr);
+        RenderingManager.drawStringC(chat, midX, dy + dh / 2 - FontRenderer.HALF_FH + 2, textBr);
 	}
 	
 	public void drawEntityTexture() {
