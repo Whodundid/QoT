@@ -13,6 +13,7 @@ public class Deb18 extends DebugCommand {
 
 	@Override
 	public void run(ETerminalWindow termIn, Object... args) {
+		// Tests the default cutscene
 		DialogueCutscene currentCutscene = new DialogueCutscene(Envision.thePlayer, new Whodundid());
 		currentCutscene.start();
 	}
