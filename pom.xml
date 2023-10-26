@@ -8,20 +8,21 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
-        <lwjgl.version>3.3.1</lwjgl.version>
+        <lwjgl.version>3.3.3</lwjgl.version>
         <lwjgl.natives>natives-windows</lwjgl.natives>
         <jackson.version>2.15.2</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <jdk-version>21</jdk-version>
     </properties>
 
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
-                    <release>18</release>
+                    <release>${jdk-version}</release>
                     <parameters>true</parameters>
                     <testCompilerArgument>-parameters</testCompilerArgument>
                 </configuration>
@@ -33,12 +34,12 @@
         <dependency>
             <groupId>whodundid</groupId>
             <artifactId>EUtil</artifactId>
-            <version>2.6.1</version>
+            <version>2.6.3</version>
         </dependency>
         <dependency>
             <groupId>whodundid</groupId>
             <artifactId>Envision-Lang</artifactId>
-            <version>0.0.2</version>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>

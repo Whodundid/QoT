@@ -83,10 +83,7 @@ public abstract class DesktopShortcut extends WindowObject {
     @Override
     public void drawObject(int mXIn, int mYIn) {
         // check if moving
-        if (isMoving) {
-            move(mXIn - oldPoint.x, mYIn - oldPoint.y);
-            oldPoint.set(mXIn, mYIn);
-        }
+        checkMoveShortcut(mXIn, mYIn);
         
         //draw icon
         GameTexture tex = icon;
@@ -116,7 +113,15 @@ public abstract class DesktopShortcut extends WindowObject {
         super.mousePressed(mXIn, mYIn, button);
         
         if (button == 0) {
-            selected = !selected;
+            var dd = DeveloperDesktop.getInstance();
+            
+            selected = true;
+            
+            if (!Keyboard.isCtrlDown()) {
+                dd.clearHighlightedShortcuts();
+            }
+            
+            dd.addToHighlighted(this);
             
             isPressed = true;
             pressPoint.set(mXIn, mYIn);
@@ -216,6 +221,24 @@ public abstract class DesktopShortcut extends WindowObject {
         if (pressPoint.distance(Mouse.getMx(), Mouse.getMy()) <= 10) return;
         
         isMoving = true;
+    }
+    
+    protected void checkMoveShortcut(int mXIn, int mYIn) {
+        if (!isMoving) return;
+        
+        double moveX = mXIn - oldPoint.x;
+        double moveY = mYIn - oldPoint.y;
+        
+        // move this shortcut
+        //move(moveX, moveY);
+        oldPoint.set(mXIn, mYIn);
+        
+        // move all other shortcuts that are highlighted
+        var shortcuts = DeveloperDesktop.getInstance().getHighlightedDesktopShortcuts();
+        for (var s : shortcuts) {
+            //if (s == this) continue;
+            s.move(moveX, moveY);
+        }
     }
     
     public void deleteShortcut() {
