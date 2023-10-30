@@ -7,6 +7,7 @@ import envision.game.GameObject;
 import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;
 import eutil.strings.EStringBuilder;
+import qot.settings.QoTSettings;
 
 public class WorldCamera {
 	
@@ -36,7 +37,6 @@ public class WorldCamera {
 	private long panStartTime;
 	private long panDuration;
 	private boolean isPanning;
-	private boolean isEdgeLocked = true;
 	
 	//--------------
 	// Constructors
@@ -126,7 +126,7 @@ public class WorldCamera {
         double topEdgeY = viewablePixelsForHalfHeight - th * 1;// - th * 3;
         double botEdgeY = (wh * th - viewablePixelsForHalfHeight) + (th - eh);
         
-        if (isEdgeLocked && vw <= ww && vh <= wh) {
+        if (QoTSettings.camreaEdgeLocking.getBoolean() && vw <= ww && vh <= wh) {
             xCoordToSet = Math.floor(ENumUtil.clamp(xCoordToSet, leftCoordEdge, rightCoordEdge));
             yCoordToSet = Math.floor(ENumUtil.clamp(yCoordToSet, topCoordEdge, botCoordEdge));
             xToSet = ENumUtil.clamp(xToSet, leftEdgeX, rightEdgeX);
@@ -200,7 +200,7 @@ public class WorldCamera {
 	    double min = minZoom;
 	    double max = maxZoom;
 	    
-	    if (isEdgeLocked) {
+	    if (QoTSettings.camreaEdgeLocking.getBoolean()) {
 	        min = calcMinEdgeLockZoom();
 	        min = ENumUtil.clamp(min, minZoom, 1000);
 	        max = ENumUtil.clamp(max, min, max);
@@ -230,8 +230,12 @@ public class WorldCamera {
 	public void setMinZoom(double zoomIn) { minZoom = zoomIn; }
 	public void setMaxZoom(double zoomIn) { maxZoom = zoomIn; }
 	
-	public void setEdgeLocked(boolean val) { isEdgeLocked = val; }
-	public boolean isEdgeLocked() { return isEdgeLocked; }
+	public void setEdgeLocked(boolean val) {
+	    QoTSettings.camreaEdgeLocking.set(val);
+	    QoTSettings.saveConfig();
+	}
+	
+	public boolean isEdgeLocked() { return QoTSettings.camreaEdgeLocking.getBoolean(); }
 	
 	/**
 	 * Sets an object that the camera will focus in on and follow.

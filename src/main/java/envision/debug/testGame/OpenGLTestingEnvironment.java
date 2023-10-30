@@ -67,12 +67,12 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 		
 		// hack this in
 		//Envision.renderEngine = renderer;
-		Envision.getRenderEngine().camera = new Camera();
+		Envision.getRenderEngine().orthoCamera = new Camera();
 		
 		RendererErrorReporter.setReceiver(this);
 		
 		var dims = Envision.getWindowDims();
-		Envision.getRenderEngine().camera.updateProjection(dims.width, dims.height);
+		Envision.getRenderEngine().orthoCamera.setupForOrtho(dims.width, dims.height);
 		
 		Keyboard.create(windowHandle, this);
 		Mouse.create(windowHandle, this);

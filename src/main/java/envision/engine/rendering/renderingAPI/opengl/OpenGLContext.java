@@ -46,7 +46,9 @@ public class OpenGLContext extends RenderingContext {
 		int width = WindowResizeListener.getWidth();
 		int height = WindowResizeListener.getHeight();
 		GL11.glViewport(0, 0, width, height);
-		Envision.getRenderEngine().getCamera().updateProjection(width, height);
+		
+		Envision.getRenderEngine().getPerspectiveCamera().setupForPerspective(width, height);
+		Envision.getRenderEngine().getOrthoCamrea().setupForOrtho(width, height);
 	}
 
 	@Override

@@ -379,9 +379,10 @@ public class EntityRenderer extends RenderingComponent {
         ratio = ENumUtil.clamp(ratio, 100, 255);
         int textRatio = ENumUtil.clamp(ratio, 220, 255);
         
-        if (Envision.thePlayer != null) {
+        final var camEntity = Envision.theWorld.getCamera().getFocusedObject();
+        if (camEntity != null) {
             final double tw = world.getTileWidth();
-            double distToPlayer = world.getDistance(theEntity, Envision.thePlayer);
+            double distToPlayer = world.getDistance(theEntity, camEntity);
             if (distToPlayer > (6 * tw)) return;
             
             int distRatio = (int) (255 - ((255 * distToPlayer) / (4 * tw)) + (10 * tw));

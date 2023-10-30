@@ -29,7 +29,8 @@ public class QoTSettings {
     vsync               = boolSetting("vSync", "V-Sync", false),
     termLineNumbers     = boolSetting("termLineNumbers", "Show Terminal Line Numbers", false),
     closeHudWhenEmpty   = boolSetting("closeHudWhenEmpty", "Close Hud when Empty", true),
-    batchRendering      = boolSetting("batchRendering", "Enable Batch Rendering", true);
+    batchRendering      = boolSetting("batchRendering", "Enable Batch Rendering", true),
+    camreaEdgeLocking   = boolSetting("cameraEdgeLocking", "Enable Camera Edge Locking", true);
     
     //-------------------------------------------------------------------------------
     
@@ -78,6 +79,7 @@ public class QoTSettings {
         settings.add(termLineNumbers);
         settings.add(closeHudWhenEmpty);
         settings.add(batchRendering);
+        settings.add(camreaEdgeLocking);
         
         // INTEGERS
         settings.add(musicVolume);

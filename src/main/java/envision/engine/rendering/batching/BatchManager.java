@@ -19,7 +19,13 @@ import eutil.misc.Rotation;
 //https://www.youtube.com/watch?v=oDh80Hmv7jM
 public class BatchManager implements IBatchManager {
 	
-	// 255.0F but in decimal form
+    /**
+     * 255.0F but in decimal form
+     * <p>
+     * Because division is inherently slower to process than multiplication,
+     * this value is used instead: both [value / 255F] and [value * F_255]
+     * produce the same result.
+     */
 	private static final float F_255 = 0.0039215686274509803921568627451f;
 	
 	public int maxLayers;
@@ -60,9 +66,27 @@ public class BatchManager implements IBatchManager {
 	public static void enable() { instance().isEnabled = true; }
 	public static void disable() { instance().isEnabled = false; }
 	
+	public static BatchLayer getCurrentLayer() {
+	    return instance().curLayer;
+	}
+	
+	public static void startLayer(int index) { instance().startLayer_i(index); }
+	protected void startLayer_i(int index) {
+	    var layer = availableLayers[index];
+	    curLayer = layer;
+	}
+	
+	public static void endLayer(int index) { instance().endLayer_i(index); }
+	protected void endLayer_i(int index) {
+	    var layer = availableLayers[index];
+        curLayer = null;
+        layer.closeLayer();
+	}
+	
 	protected void startBatch_i() {
-		var layer = getUnusedBatch();
+		var layer = getUnusedLayer();
 		curLayer = layer;
+		System.out.println("layerNum: " + curLayer.layerNum);
 		batchLayerStack.push(layer);
 		usedLayers += 1;
 	}
@@ -74,7 +98,7 @@ public class BatchManager implements IBatchManager {
 		if (layer != null) layer.closeLayer();
 	}
 	
-	protected BatchLayer getUnusedBatch() {
+	protected BatchLayer getUnusedLayer() {
 		for (int i = 0; i < availableLayers.length; i++) {
 			var batch = availableLayers[i];
 			if (!batch.isClosed && batch.isEmpty()) {

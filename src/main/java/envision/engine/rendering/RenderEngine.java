@@ -10,7 +10,8 @@ import qot.assets.textures.general.GeneralTextures;
 
 public class RenderEngine {
 	
-	public Camera camera;
+	public Camera orthoCamera;
+	public Camera perspectiveCamera;
 	
 	//==================
 	// Static Singleton
@@ -54,10 +55,12 @@ public class RenderEngine {
 		
 		renderingContext.init();
 		
-		var width = Envision.getWidth();
-		var height = Envision.getHeight();
-		camera = new Camera();
-		camera.updateProjection(width, height);
+		int width = Envision.getWidth();
+		int height = Envision.getHeight();
+		orthoCamera = new Camera();
+		orthoCamera.setupForOrtho(width, height);
+		perspectiveCamera = new Camera();
+		perspectiveCamera.setupForPerspective(width, height);
 		
 		init = true;
 	}
@@ -84,16 +87,18 @@ public class RenderEngine {
 		//-----------------------------------------
 		
 		// draw map and entities
+	    BatchManager.startLayer(0);
+	    //System.out.println("drawing: " + BatchManager.getCurrentLayer().getLayerNum());
 		if (Envision.theWorld != null && Envision.theWorld.isLoaded() && !Envision.isWorldRenderPaused()) {
-			BatchManager.startBatch();
 			Envision.theWorld.getWorldRenderer().onRenderTick(partialTicks);
-			BatchManager.endBatch();
 		}
+	    BatchManager.endLayer(0);
 		
 		//-----------------------------------------
 		
 		// draw current game screen
-		BatchManager.startBatch();
+	    BatchManager.startLayer(1);
+		//System.out.println("drawing: " + BatchManager.getCurrentLayer().getLayerNum());
 		if (Envision.currentScreen != null) {
 			Envision.currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
 		}
@@ -102,14 +107,15 @@ public class RenderEngine {
 			RenderingManager.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
 			RenderingManager.drawString("No Screens?", 256, 256);
 		}
-		BatchManager.endBatch();
+		BatchManager.endLayer(1);
 		
 		//-----------------------------------------
 		
 		// draw top overlay
-		BatchManager.startBatch();
+		BatchManager.startLayer(2);
+		//System.out.println("drawing: " + BatchManager.getCurrentLayer().getLayerNum());
 		Envision.developerDesktop.onRenderTick();
-		BatchManager.endBatch();
+		BatchManager.endLayer(2);
 		
 		//-----------------------------------------
 		
@@ -127,7 +133,8 @@ public class RenderEngine {
 	public boolean isInit() { return init; }
 	public boolean isContextInit() { return (renderingContext != null) ? renderingContext.isInit() : false; }
 	
-	public Camera getCamera() { return camera; }
+	public Camera getPerspectiveCamera() { return perspectiveCamera; }
+	public Camera getOrthoCamrea() { return orthoCamera; }
 	
 	/** Returns the actual rendering context in use. */
 	public RenderingContext getRenderingContext() { return renderingContext; }
