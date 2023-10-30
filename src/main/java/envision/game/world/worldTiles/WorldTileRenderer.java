@@ -5,7 +5,7 @@ import envision.debug.DebugSettings;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;

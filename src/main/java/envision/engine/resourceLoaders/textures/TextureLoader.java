@@ -3,6 +3,7 @@ package envision.engine.resourceLoaders.textures;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
@@ -12,8 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import envision.Envision;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.resourceLoaders.WorldTileDTO;
 import envision.engine.resourceLoaders.IResourceManager;
+import envision.engine.resourceLoaders.Sprite;
+import envision.engine.resourceLoaders.WorldTileDTO;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
@@ -173,16 +175,20 @@ public class TextureLoader implements IResourceManager {
 		
 		try {
 		    ObjectMapper mapper = new ObjectMapper();
-		    TextureSheet sheet = mapper.readValue(textureFile, TextureSheet.class);
 		    
-		    System.out.println(sheet.textureSheetName());
+		    TextureSheetDTO sheet = mapper.readValue(textureFile, TextureSheetDTO.class);
+		    GameTextureDTO texture = sheet.texture();
+		    List<SpriteDTO> sprites = sheet.sprites();
+		    
+		    toLoad.put(texture.name(), new GameTexture(QoTSettings.getResourcesDir() + "/" + texture.path()));
+		    
 		    
             //var parsedTextures = EList.of(mapper.readValue(textureFile, ExportableTexture[].class));
             
-            for (var t : sheet.textures()) {
-                GameTexture texture = new GameTexture(QoTSettings.getResourcesDir() + "/" + t.texturePath());
-                toLoad.put(t.textureName(), texture);
-            }
+//            for (var t : sheet.textures()) {
+//                GameTexture texture = new GameTexture(QoTSettings.getResourcesDir() + "/" + t.texturePath());
+//                toLoad.put(t.textureName(), texture);
+//            }
             
             isLoaded = true;
 		}
@@ -197,24 +203,56 @@ public class TextureLoader implements IResourceManager {
         }
 	}
 	
+	private void loadTextureFile(GameTextureDTO dto) {
+	    
+	}
+	
+	private EList<Sprite> parseSprites(List<SpriteDTO> dto) {
+	    EList<Sprite> sprites = EList.newList();
+	    
+	    return sprites;
+	}
+	
 	private void saveTextureFile() {
 	    if (textureFile == null) return;
 	    
 	    try {
-            var textures = EList.of(new ExportableTexture("Grass 0", "textures/world/nature/grass/grass_0.png"),
-                                    new ExportableTexture("Leafy Grass 0", "textures/world/nature/grass/leafy_grass_0.png"));
+	        var texture = new GameTextureDTO("texture:baldric_walk_0", "textures/entities/walksheet.png");
+	        List<SpriteDTO> sprites = EList.newList();
+	        
+	        for (int y = 0; y < 4; y++) {
+	            int sy = y * 64;
+                int ey = sy + 64;
+                
+	            for (int x = 0; x < 9; x++) {
+	                int sx = x * 64;
+	                int ex = sx + 64;
+	                
+	                switch (y) {
+	                case 0: sprites.add(new SpriteDTO("sprite:baldric_walk_0_north_" + x, sx, sy, ex, ey)); break;
+	                case 1: sprites.add(new SpriteDTO("sprite:baldric_walk_0_west_" + x, sx, sy, ex, ey)); break;
+	                case 2: sprites.add(new SpriteDTO("sprite:baldric_walk_0_south_" + x, sx, sy, ex, ey)); break;
+	                case 3: sprites.add(new SpriteDTO("sprite:baldric_walk_0_east_" + x, sx, sy, ex, ey)); break;
+	                default:
+	                    throw new RuntimeException("WhAT!");
+	                }
+	            }
+	        }
+	        
+//            var textures = EList.of(new GameTextureDTO("Grass 0", "textures/world/nature/grass/grass_0.png"),
+//                                    new GameTextureDTO("Leafy Grass 0", "textures/world/nature/grass/leafy_grass_0.png"));
             
 //            List<ExportableTexture> textures = new ArrayList<>();
 //            textures.add(new ExportableTexture("Grass 0", "textures/world/nature/grass/grass_0.png"));
 //            textures.add(new ExportableTexture("Leafy Grass 0", "textures/world/nature/grass/leafy_grass_0.png"));
             
-            TextureSheet sheet = new TextureSheet("Banana Sheet", textures);
+            TextureSheetDTO sheet = new TextureSheetDTO("sheet:baldric_walk_0", texture, sprites);
             
-            WorldTileDTO entity = new WorldTileDTO("The Cool Tile", sheet.textureSheetName(), 1);
+            WorldTileDTO entity = new WorldTileDTO("The Cool Tile", sheet.name(), 1);
             
             
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writerWithDefaultPrettyPrinter().writeValue(textureFile, entity);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(textureFile, sheet);
             //mapper.writerWithDefaultPrettyPrinter().writeValue(textureFile, sheet);
             //mapper.writerWithDefaultPrettyPrinter().writeValue(textureFile, textures);
             //Files.createFile(textureFile.toPath());

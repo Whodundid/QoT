@@ -146,6 +146,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         double faH = (((selectMode) ? cY : endY) - 2) - (fileUpBtn.endY + 8);
         fileArea = new WindowScrollList(this, startX + 2, fileUpBtn.endY + 8, width - 4, faH);
         fileArea.setBackgroundColor(EColors.pdgray);
+        fileArea.setVScrollRate(60);
         
         setObjectGroup(new EObjectGroup(this, fileArea, header, backBtn, forwardBtn, fileUpBtn));
         

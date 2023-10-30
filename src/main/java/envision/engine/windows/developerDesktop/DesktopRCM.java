@@ -3,6 +3,7 @@ package envision.engine.windows.developerDesktop;
 import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.windows.bundledWindows.CommandShortcutEditorWindow;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.engine.windows.developerDesktop.shortcuts.DesktopShortcut_Command;
 import envision.engine.windows.developerDesktop.shortcuts.DesktopShortcut_File;
@@ -18,7 +19,7 @@ public class DesktopRCM extends RightClickMenu {
         addOption("File Explorer", WindowTextures.file_folder, this::handle_openFileExplorer);
         addOption("New File", WindowTextures.file_txt, this::handle_newFile);
         addOption("New Folder", WindowTextures.new_folder, this::handle_newFolder);
-        //addOption("New Command", WindowTextures.forward, this::handle_newCommand);
+        addOption("New Command", WindowTextures.forward, this::handle_newCommand);
         addOption("Open Terminal", WindowTextures.terminal, this::handle_terminal);
         addOption("Open Desktop Directory", WindowTextures.file_folder, this::openDesktopDir);
     }
@@ -56,10 +57,10 @@ public class DesktopRCM extends RightClickMenu {
     }
     
     public void handle_newCommand() {
-        var shortcut = new DesktopShortcut_Command("My Command");
+        var shortcut = new DesktopShortcut_Command("New Command");
         shortcut.setPosition(Mouse.getMx(), Mouse.getMy());
-        shortcut.parseCommand("");
         DeveloperDesktop.addShortcut(shortcut);
+        DeveloperDesktop.openWindow(new CommandShortcutEditorWindow(shortcut));
     }
     
     public void handle_terminal() {

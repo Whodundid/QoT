@@ -3,7 +3,6 @@ package envision.engine.resourceLoaders;
 import org.joml.Vector2f;
 
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.Sprite;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_i;
 

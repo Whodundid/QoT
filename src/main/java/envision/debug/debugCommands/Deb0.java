@@ -17,7 +17,7 @@ public class Deb0 extends DebugCommand {
 		
 		loader.unload();
 		loader.save();
-//		loader.load();
+		loader.load();
 //		EList<GameTexture> textures = loader.getLoadedTextures();
 //		
 //		for (GameTexture t : textures) {

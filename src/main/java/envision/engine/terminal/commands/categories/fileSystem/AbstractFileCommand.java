@@ -3,6 +3,7 @@ package envision.engine.terminal.commands.categories.fileSystem;
 import java.io.File;
 import java.io.IOException;
 
+import envision.engine.terminal.commands.CommandResult;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.terminalUtil.FileHelper;
 import envision.engine.terminal.terminalUtil.TermArgLengthException;
@@ -39,14 +40,19 @@ public abstract class AbstractFileCommand extends TerminalCommand {
 	}
 	
     @Override
-    public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+    public CommandResult runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
+        result = new CommandResult(this, args, runVisually);
+        term = termIn;
+
         try {
-            term = termIn;
             argHelper = fileHelper = new FileHelper(termIn, args, runVisually);
             runCommand();
         }
         catch (TermArgParsingException e) {
-            e.display(termIn);
+            var cause = e.getCause();
+            String errorString = e.getErrorString();
+            javaError(cause);
+            if (errorString != null) error(errorString);
         }
         catch (TermArgLengthException e) {
             errorUsage(e.getMessage());
@@ -54,6 +60,8 @@ public abstract class AbstractFileCommand extends TerminalCommand {
         catch (Exception e) {
             error(e);
         }
+        
+        return result;
     }
 	
 	//=========

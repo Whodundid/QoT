@@ -11,7 +11,7 @@ import eutil.strings.EStringBuilder;
 
 //Author: Hunter Bragg
 
-public class CMD_Help extends ListableCommand {
+public class CMD_Help extends TerminalCommand implements ListableCommand {
 	
 	public CMD_Help() {
 		setCategory("System");

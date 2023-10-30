@@ -1,6 +1,6 @@
 package qot.items.weapons.melee.swords;
 
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.entities.Entity;
 import envision.game.items.Weapon;
 import qot.assets.textures.item.ItemTextures;

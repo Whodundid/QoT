@@ -7,23 +7,23 @@ import qot.settings.QoTSettings;
 
 public class GeneralTextures extends TextureLoader {
 	
-	//--------------------
+	//====================
 	// Singleton Instance
-	//--------------------
+	//====================
 	
 	private static final GeneralTextures t = new GeneralTextures();
 	public static GeneralTextures instance() { return t; }
 	
 	// Hide constructor
 	private GeneralTextures() {}
-	
-	//-------------------------------
+		
+	//===============================
 	
 	private static final String textureDir = QoTSettings.getResourcesDir().toString() + "\\textures\\general\\";
 	
-	//----------
+	//==========
 	// Textures
-	//----------
+	//==========
 	
 	public static final GameTexture
 	

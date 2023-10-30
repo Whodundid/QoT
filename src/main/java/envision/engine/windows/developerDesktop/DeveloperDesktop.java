@@ -22,7 +22,9 @@ import envision.engine.windows.developerDesktop.util.DesktopUtil;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
+import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
 import qot.settings.QoTSettings;
@@ -108,6 +110,9 @@ public class DeveloperDesktop extends TopWindowParent {
     private final EList<DesktopShortcut> shortcuts = EList.newList();
     private final EList<IWindowParent> highlightedWindows = EList.newList();
     
+    private boolean isDraggingSelection = false;
+    private final Point2i pressPoint = new Point2i();
+    
     public static DeveloperDesktop getInstance() {
         if (instance == null) {
             instance = new DeveloperDesktop();
@@ -164,6 +169,11 @@ public class DeveloperDesktop extends TopWindowParent {
                 drawWindowObject(s);
             }
             
+            // if dragging selection box, draw that next
+            if (isDraggingSelection) {
+                drawHRect(pressPoint.x, pressPoint.y, mX, mY, 1, EColors.lgray);
+            }
+            
             //now draw all child objects on top of parent
             for (var o : getChildren()) {
                 //don't draw this here
@@ -200,7 +210,12 @@ public class DeveloperDesktop extends TopWindowParent {
     @Override
     public void handleMouseInput(int action, int mXIn, int mYIn, int button, int change) {
         if (hasFocus) {
+            if (isDraggingSelection && action == 0 && button == 0) {
+                isDraggingSelection = false;
+            }
+            
             super.handleMouseInput(action, mXIn, mYIn, button, change);
+            
             //check if desktop rcm should open
             DesktopRCM.checkOpen(action, button);
         }
@@ -241,6 +256,24 @@ public class DeveloperDesktop extends TopWindowParent {
         else if (Envision.currentScreen != null) {
             Envision.currentScreen.handleKeyboardInput(action, typedChar, keyCode);
         }
+    }
+    
+    @Override
+    public void mousePressed(int mXIn, int mYIn, int button) {
+        var underMouse = this.getHighestZObjectUnderMouse();
+        if (button == 0 && underMouse == null) {
+            pressPoint.set(mXIn, mYIn);
+            isDraggingSelection = true;
+        }
+        super.mousePressed(mXIn, mYIn, button);
+    }
+    
+    @Override
+    public void mouseReleased(int mXIn, int mYIn, int button) {
+        if (button == 0) {
+            isDraggingSelection = false;
+        }
+        super.mouseReleased(mXIn, mYIn, button);
     }
     
     @Override
@@ -626,9 +659,24 @@ public class DeveloperDesktop extends TopWindowParent {
         return DesktopUtil.openFile(file, inSystemOS);
     }
     
+    //======================
+    // General Window Stuff
+    //======================
+    
+    public static ETerminalWindow findFirstTerminalInstance() {
+        var terms = instance.getAllWindowInstances(ETerminalWindow.class);
+        return terms.getLast();
+    }
+    
     /** {@link DesktopUtil#openTerminalWindow() openTerminalWindow} */
     public static ETerminalWindow openTerminal() {
         return DesktopUtil.openTerminalWindow();
+    }
+    
+    public static ETerminalWindow openTerminal(String command) {
+        var term = DesktopUtil.openTerminalWindow();
+        term.runCommand(command);
+        return term;
     }
     
     public static ETerminalWindow openTerminal(String command, String... arguments) {
@@ -655,4 +703,41 @@ public class DeveloperDesktop extends TopWindowParent {
         getInstance().reloadAllWindowInstances(FileExplorerWindow.class);
     }
     
+    //===========================
+    // Wrapped Window Displayers
+    //===========================
+    
+    /** Displays the specified window parent. */
+    public static <T extends IWindowParent> T openWindow(T windowIn) {
+        return instance.displayWindow(windowIn); }
+    /** Displays the specified window parent around a specific location on the screen. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, ObjectPosition loc) {
+        return instance.displayWindow(windowIn, loc); }
+    /** Displays the specified window parent and specifies whether focus should be transfered to it. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, boolean transferFocus) {
+        return instance.displayWindow(windowIn, transferFocus); }
+    /** Displays the specified window parent where focus transfer properties can be set along with where it is drawn. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, boolean transferFocus, ObjectPosition loc) {
+        return instance.displayWindow(windowIn, transferFocus, loc); }
+    /** Displays the specified window parent and passes a previous window for history traversal means. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, IWindowParent oldObject) {
+        return instance.displayWindow(windowIn, oldObject); }
+    /** Displays the specified window parent, passes a previous window, and sets where this window will be relatively positioned. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, IWindowParent oldObject, ObjectPosition loc) {
+        return instance.displayWindow(windowIn, oldObject, loc); }
+    /** Displays the specified window parent with variable arguments. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, IWindowParent oldObject, boolean transferFocus) {
+        return instance.displayWindow(windowIn, oldObject, transferFocus); }
+    /** Displays the specified window parent with variable arguments. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, ObjectPosition loc) {
+        return instance.displayWindow(windowIn, oldObject, transferFocus); }
+    /** Displays the specified window parent with variable arguments. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) {
+        return instance.displayWindow(windowIn, oldObject, transferFocus, closeOld); }
+    /** Displays the specified window parent with variable arguments. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) {
+        return instance.displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory); }
+    /** Displays the specified window parent with variable arguments. */
+    public static <T extends IWindowParent> T openWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
+        return instance.displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, loc); }
 }

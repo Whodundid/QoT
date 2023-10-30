@@ -570,6 +570,17 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	// Size And Position
 	//===================
 	
+    /**
+     * Returns the dimensions of this object without dimension boundary
+     * limitations.
+     * <p>
+     * Specifically useful for maintaining object aspect ratio when screen
+     * dimensions are changed.
+     */
+	public default Dimension_d getUnboundedDimensions() {
+	    return instance().getUnboundedDimensions();
+	}
+	
 	/** Returns the current dimensions of this object. */
 	public default Dimension_d getDimensions() { return instance().getDimensions(); }
 	/** Returns the current position of this object. */
@@ -644,7 +655,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 			else o.move(newX, newY);
 		}
 		
-		Dimension_d d = getDimensions();
+		Dimension_d d = getUnboundedDimensions();
 		//offset the original position by the specified offset
 		setDimensions(d.startX + newX, d.startY + newY, d.width, d.height);
 		
@@ -662,7 +673,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		//make sure that there is actually a change in the cursor position
 		if (xIn == 0 && yIn == 0) return;
 
-		Dimension_d d = getDimensions();
+		Dimension_d d = getUnboundedDimensions();
 		double minW = getMinWidth();
 		double minH = getMinHeight();
 		double maxW = getMaxWidth();

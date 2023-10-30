@@ -2,7 +2,6 @@ package envision.engine.terminal.commands.categories.engine;
 
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 
@@ -21,10 +20,10 @@ public class CMD_ReloadTextures extends TerminalCommand {
 	@Override public String getUsage() { return "ex: relt"; }
 	
 	@Override
-	public void runCommand_i(ETerminalWindow termIn, EList<String> args, boolean runVisually) {
-		termIn.writeln("Reloading all textures..", 0xffffaa00);
+	public void runCommand() {
+		writeln("Reloading all textures..", 0xffffaa00);
 		TextureSystem.getInstance().reloadAllTextures();
-		termIn.writeln("Textures Reloaded!", EColors.green);
+		writeln("Textures Reloaded!", EColors.green);
 	}
 	
 }

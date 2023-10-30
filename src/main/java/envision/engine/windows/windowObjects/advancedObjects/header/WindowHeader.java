@@ -624,8 +624,11 @@ public class WindowHeader extends WindowObject {
 	
 	public void setMoveable(boolean val) { headerMoveable = val; }
 	public void setAlwaysDrawFocused(boolean val) { alwaysDrawFocused = val; }
+	public void setTitleColor(EColors colorIn) { titleColor = colorIn.intVal; }
 	public void setTitleColor(int colorIn) { titleColor = colorIn; }
+	public void setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; }
 	public void setBorderColor(int colorIn) { borderColor = colorIn; }
+	public void setBackgroundColor(EColors colorIn) { mainColor = colorIn.intVal; }
 	public void setBackgroundColor(int colorIn) { mainColor = colorIn; }
 	public void setTitle(String stringIn) { title = stringIn; }
 	public void setTitleOffset(int offsetIn) { titleOffset = offsetIn; }

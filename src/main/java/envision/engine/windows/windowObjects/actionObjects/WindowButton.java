@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;

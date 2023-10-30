@@ -2,12 +2,13 @@ package envision.engine.terminal.commands.categories.system;
 
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.ListableCommand;
+import envision.engine.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
 
-public class CMD_Alias extends ListableCommand {
+public class CMD_Alias extends TerminalCommand implements ListableCommand {
     
     public CMD_Alias() {
         setCategory("System");

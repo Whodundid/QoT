@@ -1,7 +1,7 @@
 package qot.entities.enemies.archer;
 
 import envision.Envision;
-import envision.engine.rendering.textureSystem.Sprite;
+import envision.engine.resourceLoaders.Sprite;
 import envision.game.entities.BasicRenderedEntity;
 import envision.game.entities.Entity;
 import eutil.random.ERandomUtil;
