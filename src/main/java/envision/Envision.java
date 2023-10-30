@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.time.ZonedDateTime;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -48,7 +49,9 @@ import envision_lang.EnvisionLang;
 import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
+import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_i;
+import eutil.math.vectors.Vec3f;
 import qot.assets.textures.GameTextures;
 import qot.assets.textures.general.GeneralTextures;
 import qot.launcher.LauncherLogger;
@@ -68,9 +71,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	//========
 	
 	/** The auto-set date timestamp of when this version was built. */
-	public static final String VERSION_DATE = "Oct 13, 2023 - 15:08:03";
+	public static final String VERSION_DATE = "Oct 29, 2023 - 21:58:10";
 	/** The auto-set build number of the engine. */
-	public static final String VERSION_BUILD = "63";
+	public static final String VERSION_BUILD = "72";
 	
 	private static boolean gameCreated = false;
 	public static long updateCounter = 0;
@@ -435,6 +438,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 //		}
 	}
 	
+	private int mX_old, mY_old;
+	
 	private void runRenderTick(long partialTicks) {
 		if (!running) return;
 		if (!BatchManager.isEnabled()) {
@@ -457,6 +462,46 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 			renderEngine.endFrame();
 		}
 		else {
+		    if (!DeveloperDesktop.isOpen()) {
+	            final var pos = RenderEngine.getInstance().perspectiveCamera.position;
+	            final var rot = RenderEngine.getInstance().perspectiveCamera.rotation;
+	            final float speed = 6.0f;
+	            
+	            // press
+	            //if (Keyboard.isKeyDown(Keyboard.KEY_W)) pos.y -= speed;
+	            //if (Keyboard.isKeyDown(Keyboard.KEY_D)) pos.x += speed;
+	            //if (Keyboard.isKeyDown(Keyboard.KEY_S)) pos.y += speed;
+	            //if (Keyboard.isKeyDown(Keyboard.KEY_A)) pos.x -= speed;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_UP)) pos.y -= speed;
+                if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) pos.x += speed;
+                if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) pos.y += speed;
+                if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) pos.x -= speed;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) pos.z += speed;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) pos.z -= speed;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_PERIOD)) rot.x += 0.0025;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_COMMA)) rot.x -= 0.0025;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_K)) rot.y += 0.005;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_L)) rot.y -= 0.005;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_E)) rot.z += 0.005;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_Q)) rot.z -= 0.005;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+	                rot.set(0, 0, 0);
+	                pos.z = 0;
+	            }
+	            
+	            int mX = Mouse.getMx();
+	            int mY = Mouse.getMy();
+	            
+	            float dX = (float) (mX - mX_old);
+	            float dY = (float) (mY - mY_old);
+	            
+	            mX_old = mX;
+	            mY_old = mY;
+	            
+	            //rot.add(new Vector3f(dY * 0.001f, dX * 0.001f, 0), rot);
+	            //rot.set(ENumUtil.clamp(rot.x, -90, 90), rot.y, 0);
+		    }
+		    
 			renderEngine.draw(partialTicks);
 			renderEngine.endFrame();
 		}
@@ -466,6 +511,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	public void onKeyboardInput(int action, char typedChar, int keyCode) {
 		if (!renderEngine.isContextInit()) return;
 		developerDesktop.handleKeyboardInput(action, typedChar, keyCode);
+		
 		if (theWorld != null) {
 			if (action == 0) { theWorld.getWorldRenderer().keyReleased(typedChar, keyCode); }
 			if (action == 1 || action == 2) { theWorld.getWorldRenderer().keyPressed(typedChar, keyCode); }

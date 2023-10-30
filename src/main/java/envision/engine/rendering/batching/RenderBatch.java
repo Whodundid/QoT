@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL46;
 
 import envision.Envision;
+import envision.debug.DebugSettings;
 import envision.engine.rendering.Camera;
 import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.shaders.ShaderProgram;
@@ -255,7 +256,14 @@ public class RenderBatch {
 			TextureSystem.getInstance().bind(textures.get(i));
 		}
 		
-		Camera cam = Envision.getRenderEngine().getCamera();
+		
+		// some bullshit camera stuff
+		Camera cam = Envision.getRenderEngine().getOrthoCamrea();
+		
+		if (batchLayer == 0 && DebugSettings.draw3DCursed) {
+		    cam = Envision.getRenderEngine().getPerspectiveCamera();
+		}
+		
 		var player = Envision.thePlayer;
 		var world = Envision.theWorld;
 		boolean underground = (world != null) ? world.isUnderground() : false;
@@ -293,6 +301,14 @@ public class RenderBatch {
 			GLSettings.scissor();
 		}
 		
+		if (batchLayer == 0 && DebugSettings.draw3DCursed) {
+		    GL11.glEnable(GL11.GL_CULL_FACE);
+		    GL11.glCullFace(GL11.GL_FRONT);
+		    GL11.glFrontFace(GL11.GL_CW);
+		}
+		else {
+		    GL11.glDisable(GL11.GL_CULL_FACE);
+		}
 		GLCall(() -> GL30.glBindVertexArray(vao));
 		GLCall(() -> GL11.glDrawElements(GL11.GL_TRIANGLES, totalElements * 6, GL11.GL_UNSIGNED_INT, 0));
 		
@@ -300,10 +316,10 @@ public class RenderBatch {
 			GLSettings.disableScissor();
 		}
 		
-		for (int i = 0; i < textures.size(); i++) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
-			TextureSystem.getInstance().unbind(textures.get(i));
-		}
+//		for (int i = 0; i < textures.size(); i++) {
+//			GL13.glActiveTexture(GL13.GL_TEXTURE0 + i);
+//			TextureSystem.getInstance().unbind(textures.get(i));
+//		}
 		
 		GLSettings.disableAlpha();
 		GLSettings.disableBlend();
@@ -328,8 +344,8 @@ public class RenderBatch {
 		alreadyDrawn = false;
 		isScissorBatch = false;
 		isClosed = false;
-		batchLayer = 0;
-		batchLayerIndex = 0;
+		//batchLayer = 0;
+		//batchLayerIndex = 0;
 		
 		scissorX = 0;
 		scissorY = 0;

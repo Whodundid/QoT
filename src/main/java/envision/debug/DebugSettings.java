@@ -11,6 +11,8 @@ public class DebugSettings {
 	public static boolean drawEntityCollisionBoxes = false;
 	public static boolean drawEntityPositionTiles = false;
 	
+	public static boolean draw3DCursed = false;
+	
 	private DebugSettings() {}
 	
 }

@@ -8,6 +8,7 @@ import eutil.datatypes.util.EList;
 public class BatchLayer {
 	
 	protected String layerName;
+	protected int layerIndex;
 	protected EList<RenderBatch> batches = EList.newList();
 	protected EList<Integer> layerIndexes;
 	protected int layerNum;
@@ -28,6 +29,10 @@ public class BatchLayer {
 		
 		layerIndexes = new EArrayList<>(maxBatchesIn);
 		pushLayerIndex();
+	}
+	
+	public void setLayerIndex(int index) {
+	    layerIndex = index;
 	}
 	
 	public void pushLayerIndex() {

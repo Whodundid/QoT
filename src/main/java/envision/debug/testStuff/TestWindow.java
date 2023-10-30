@@ -60,6 +60,16 @@ public class TestWindow extends WindowParent {
 	}
 	
 	@Override
+	public void keyPressed(char typedChar, int keyCode) {
+	    super.keyPressed(typedChar, keyCode);
+	}
+	
+	@Override
+	public void mousePressed(int mXIn, int mYIn, int button) {
+	    super.mousePressed(mXIn, mYIn, button);
+	}
+	
+	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		System.out.println(object);
 	}
