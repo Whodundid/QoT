@@ -10,7 +10,7 @@ import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision_lang._launch.EnvisionProgram;
 import eutil.colors.EColors;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.points.Point2d;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;
 import eutil.math.dimensions.Dimension_i;
@@ -20,7 +20,7 @@ public class Region extends GameObject {
 	
 	protected int regionColor;
 	protected boolean onlyRenderInEditor = true;
-	protected EList<Entity> entitiesInside = new EArrayList<>();
+	protected EList<Entity> entitiesInside = EList.newList();
 	protected EnvisionProgram regionScript;
 	
 	public Region(IGameWorld worldIn, String nameIn) { this(worldIn, nameIn, 0, 0, 0, 0, 0xff55ff55); }
@@ -166,6 +166,8 @@ public class Region extends GameObject {
 		}
 		return null;
 	}
+	
+	public Point2d getMid() { return new Point2d(midX, midY); }
 	
 	public String toSaveString() {
 		return "r " + startX + " " + startY + " " + endX + " " + endY + " " + getColor() + " " + getName();

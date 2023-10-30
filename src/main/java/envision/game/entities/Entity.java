@@ -222,9 +222,9 @@ public abstract class Entity extends ComponentBasedObject {
 		}
 	}
 	
-	public void giveItem(Item item) {
-		if (item == null) return;
-		getInventory().addItem(item);
+	public boolean giveItem(Item item) {
+		if (item == null) return false;
+		return getInventory().addItem(item);
 	}
 	
 	public void dropItem(int index) {
@@ -359,6 +359,22 @@ public abstract class Entity extends ComponentBasedObject {
 			midY = startY + (height) / 2;
 		}
 		return this;
+	}
+	
+	public Entity setPixelPos(double x, double y) {
+	    startX = x;
+	    startY = y;
+	    endX = startX + width;
+	    endY = startY + height;
+	    midX = startX + width * 0.5;
+	    midY = startY + height * 0.5;
+	    
+	    if (world != null) {
+	        worldX = (int) (startX / world.getTileWidth());
+	        worldY = (int) (startY / world.getTileHeight());
+	    }
+	    
+	    return this;
 	}
 	
 	public Entity setMaxHealth(int maxHealthIn) { maxHealth = maxHealthIn; return this; }
