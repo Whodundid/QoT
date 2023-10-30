@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL46;
 
 import envision.Envision;
+import envision.debug.DebugSettings;
 import envision.engine.rendering.Camera;
 import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.shaders.ShaderProgram;
@@ -259,8 +260,8 @@ public class RenderBatch {
 		// some bullshit camera stuff
 		Camera cam = Envision.getRenderEngine().getOrthoCamrea();
 		
-		if (batchLayer == 0) {
-		    cam = Envision.getRenderEngine().getPerspectiveCamera();		    
+		if (batchLayer == 0 && DebugSettings.draw3DCursed) {
+		    cam = Envision.getRenderEngine().getPerspectiveCamera();
 		}
 		
 		var player = Envision.thePlayer;
@@ -300,7 +301,7 @@ public class RenderBatch {
 			GLSettings.scissor();
 		}
 		
-		if (batchLayer == 0) {
+		if (batchLayer == 0 && DebugSettings.draw3DCursed) {
 		    GL11.glEnable(GL11.GL_CULL_FACE);
 		    GL11.glCullFace(GL11.GL_FRONT);
 		    GL11.glFrontFace(GL11.GL_CW);
