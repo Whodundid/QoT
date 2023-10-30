@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
 
@@ -27,6 +28,7 @@ import eutil.colors.EColors;
 import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
+import eutil.math.dimensions.Dimension_d;
 import qot.settings.QoTSettings;
 
 public class DeveloperDesktop extends TopWindowParent {
@@ -108,7 +110,11 @@ public class DeveloperDesktop extends TopWindowParent {
     private static boolean hasFocus = false;
     private static TaskBar taskBar;
     private final EList<DesktopShortcut> shortcuts = EList.newList();
+    private final EList<DesktopShortcut> highlightedShortcuts = EList.newList();
     private final EList<IWindowParent> highlightedWindows = EList.newList();
+    
+    private static final Consumer<DesktopShortcut> SELECT_SHORTCUT = s -> s.setSelected(true);
+    private static final Consumer<DesktopShortcut> DESELECT_SHORTCUT = s -> s.setSelected(false);
     
     private boolean isDraggingSelection = false;
     private final Point2i pressPoint = new Point2i();
@@ -212,6 +218,7 @@ public class DeveloperDesktop extends TopWindowParent {
         if (hasFocus) {
             if (isDraggingSelection && action == 0 && button == 0) {
                 isDraggingSelection = false;
+                selectShortcuts(mXIn, mYIn);
             }
             
             super.handleMouseInput(action, mXIn, mYIn, button, change);
@@ -264,16 +271,40 @@ public class DeveloperDesktop extends TopWindowParent {
         if (button == 0 && underMouse == null) {
             pressPoint.set(mXIn, mYIn);
             isDraggingSelection = true;
+            clearHighlightedShortcuts();
         }
         super.mousePressed(mXIn, mYIn, button);
     }
     
     @Override
     public void mouseReleased(int mXIn, int mYIn, int button) {
-        if (button == 0) {
-            isDraggingSelection = false;
-        }
         super.mouseReleased(mXIn, mYIn, button);
+    }
+    
+    private void selectShortcuts(int mXIn, int mYIn) {
+        isDraggingSelection = false;
+        
+        int sx, sy, ex, ey;
+        
+        var pp = pressPoint;
+        int px = pp.x;
+        int py = pp.y;
+        
+        int mx = mXIn;
+        int my = mYIn;
+        
+        sx = (mx < px) ? mx : px;
+        sy = (my < py) ? my : py;
+        ex = (mx < px) ? px : mx;
+        ey = (mx < px) ? py : my;
+        
+        Dimension_d selectionRegion = new Dimension_d(sx, sy, ex, ey);
+        
+        var inRegion = shortcuts.stream()
+                 .filter(s -> selectionRegion.partiallyContains(s.getDimensions()))
+                 .collect(EList.toEList());
+        
+        inRegion.forEach(this::addToHighlighted);
     }
     
     @Override
@@ -334,6 +365,30 @@ public class DeveloperDesktop extends TopWindowParent {
     public void onScreenResized() {
         super.onScreenResized();
         if (taskBar != null) taskBar.onScreenResized();
+    }
+    
+    //================
+    // Shortcut Stuff
+    //================
+    
+    public void addToHighlighted(DesktopShortcut shortcut) {
+        highlightedShortcuts.addIfNotContains(shortcut);
+        highlightedShortcuts.forEach(SELECT_SHORTCUT);
+    }
+    
+    public void removeFromHighlighted(DesktopShortcut shortcut) {
+        highlightedShortcuts.forEach(DESELECT_SHORTCUT);
+        highlightedShortcuts.remove(shortcut);
+        highlightedShortcuts.forEach(SELECT_SHORTCUT);
+    }
+    
+    public void clearHighlightedShortcuts() {
+        highlightedShortcuts.forEach(DESELECT_SHORTCUT);
+        highlightedShortcuts.clear();
+    }
+    
+    public EList<DesktopShortcut> getHighlightedDesktopShortcuts() {
+        return highlightedShortcuts;
     }
     
     //=======================
