@@ -70,9 +70,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	//========
 	
 	/** The auto-set date timestamp of when this version was built. */
-	public static final String VERSION_DATE = "Oct 29, 2023 - 22:27:19";
+	public static final String VERSION_DATE = "Dec 16, 2023 - 18:55:26";
 	/** The auto-set build number of the engine. */
-	public static final String VERSION_BUILD = "74";
+	public static final String VERSION_BUILD = "77";
 	
 	private static boolean gameCreated = false;
 	public static long updateCounter = 0;
