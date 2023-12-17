@@ -111,40 +111,41 @@
             <artifactId>joml</artifactId>
             <version>1.10.4</version>
         </dependency>
-        <!--
-        https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.18.0</version>
         </dependency>
-        <!--
-        https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-        <!--
-        https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-        <!--
-        https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 
     <distributionManagement>
         <repository>
             <id>storm-repo</id>
-            <url>http://76.120.33.12:8080/repository/storm_repo/</url>
+            <url>${distUrl}</url>
         </repository>
     </distributionManagement>
 
@@ -152,7 +153,7 @@
         <repository>
             <id>storm_repo</id>
             <name>storm_repo</name>
-            <url>http://76.120.33.12:8080/repository/storm_repo/</url>
+            <url>${distUrl}</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -166,7 +167,7 @@
         <pluginRepository>
             <id>storm_repo</id>
             <name>storm_repo</name>
-            <url>http://76.120.33.12:8080/repository/storm_repo/</url>
+            <url>${distUrl}</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
