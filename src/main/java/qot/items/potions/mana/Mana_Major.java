@@ -14,7 +14,7 @@ public class Mana_Major extends Potion {
 		this.setIsDestroyedOnUse(true);
 		this.setSprite(new Sprite(ItemTextures.major_mana));
 		this.setDescription("This potion restores 25 MP");
-		this.setBasePrice(35);
+		this.setBasePrice(45);
 	}
 	
 	@Override

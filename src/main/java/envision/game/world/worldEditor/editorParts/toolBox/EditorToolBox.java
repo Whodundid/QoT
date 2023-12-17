@@ -52,7 +52,7 @@ public class EditorToolBox extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawRect(EColors.black);
 		drawRect(EColors.dgray, 1);
 		

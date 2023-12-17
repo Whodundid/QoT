@@ -30,7 +30,7 @@ public class WindowRadioButton extends ActionObject {
 	//-----------
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawFilledEllipse(midX, midY, width / 2, height / 2, 30, EColors.black);
 		drawFilledEllipse(midX, midY, width / 2 - 1, height / 2 - 1, 30, EColors.steel);
 		

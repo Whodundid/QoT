@@ -119,14 +119,14 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 				System.out.println("DRAW");
 				
 				if (Envision.currentScreen != null) {
-					Envision.currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
+					Envision.currentScreen.drawObject_i(0, Mouse.getMx(), Mouse.getMy());
 				}
 				else {
 					RenderingManager.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
 					RenderingManager.drawString("No Screens?", 256, 256);
 				}
 				
-				Envision.developerDesktop.onRenderTick();
+				Envision.developerDesktop.onRenderTick(0);
 				Envision.renderEngine.endFrame();
 				
 				sleepStart = System.currentTimeMillis();

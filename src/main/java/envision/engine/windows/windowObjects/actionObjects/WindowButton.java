@@ -90,7 +90,7 @@ public class WindowButton<E> extends ActionObject {
 	//-----------
 
 	@Override
-	public void drawObject(int mX, int mY) {
+	public void drawObject(long dt, int mX, int mY) {
 		boolean mouseHover = isClickable() && isMouseOver();
 		boolean mouseCheck = /*!Mouse.isButtonDown(0) && */mouseHover;
 		int stringColor = isEnabled() ? (mouseCheck ? textHoverColor : color) : (drawDisabledColor ? disabledColor : color + 0xbbbbbb);

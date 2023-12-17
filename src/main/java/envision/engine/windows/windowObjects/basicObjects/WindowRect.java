@@ -37,7 +37,7 @@ public class WindowRect extends WindowShape {
 	//-----------
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		if (filled) drawRect(startX, startY, endX, endY, color);
 		else drawHRect(startX, startY, endX, endY, 1, color);
 	}

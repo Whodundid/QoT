@@ -45,7 +45,7 @@ public class WindowTextBox extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		//draw background
 		if (drawBackground) {
 			drawRect(startX, startY, startX + width, startY + height, EColors.black);

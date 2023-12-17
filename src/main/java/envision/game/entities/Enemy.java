@@ -13,6 +13,8 @@ public abstract class Enemy extends BasicRenderedEntity {
 	protected long lastMove = 0l;
 	protected Direction lastDir = Direction.N;
 	
+	protected long timeSinceMoved = 0l;
+	
 	public Enemy(String nameIn) {
 		super(nameIn);
 	}

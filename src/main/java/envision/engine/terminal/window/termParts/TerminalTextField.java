@@ -23,8 +23,8 @@ public class TerminalTextField extends WindowTextField {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		super.drawObject(mXIn, mYIn);
+	public void drawObject(long dt, int mXIn, int mYIn) {
+		super.drawObject(dt, mXIn, mYIn);
 	}
 	
 	@Override
@@ -101,6 +101,11 @@ public class TerminalTextField extends WindowTextField {
 		}
 		
 		//if (text.isEmpty()) { term.resetTab(); }
+	}
+	
+	@Override
+	public void onMiddleClick() {
+	    super.onMiddleClick();
 	}
 	
 	public ETerminalWindow getTerminal() { return term; }

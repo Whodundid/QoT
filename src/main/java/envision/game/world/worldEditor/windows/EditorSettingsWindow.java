@@ -37,7 +37,7 @@ public class EditorSettingsWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawRect(EColors.black);
 		drawRect(startX + 1, startY, endX - 1, endY - 1, EColors.dgray);
 	}

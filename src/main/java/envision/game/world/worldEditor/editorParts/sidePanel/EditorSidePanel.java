@@ -69,14 +69,14 @@ public class EditorSidePanel extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject_i(int mXIn, int mYIn) {
+	public void drawObject_i(long dt, int mXIn, int mYIn) {
 		drawRect(EColors.black); //background & border
 		drawRect(EColors.mgray, 1); //inner
 		
 		EUtil.nullDo(getCurrentPanel(), p -> p.drawTool(mXIn, mYIn));
 		
-		super.drawObject_i(mXIn, mYIn);
-		miniMap.drawObject_i(mXIn, mYIn);
+		super.drawObject_i(dt, mXIn, mYIn);
+		miniMap.drawObject_i(dt, mXIn, mYIn);
 	}
 	
 	@Override

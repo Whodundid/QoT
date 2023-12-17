@@ -39,9 +39,9 @@ public class Keyboard extends GLFWKeyCallback {
 		return instance = (instance != null) ? instance : create();
 	}
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	private boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
 	private static char lastChar = '\u0000'; //empty char by default
@@ -53,9 +53,9 @@ public class Keyboard extends GLFWKeyCallback {
 	/** Stores String->Keycode mappings for select known keyboard characters. */
 	private static final Map<String, Integer> keyMapings = new HashMap<>();
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	//prevent outside instantiation
 	private Keyboard(long windowHandle, IKeyboardInputReceiver receiverIn) {
@@ -66,9 +66,9 @@ public class Keyboard extends GLFWKeyCallback {
 		}
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void invoke(long window, int key, int scancode, int action, int mods) {
@@ -100,9 +100,9 @@ public class Keyboard extends GLFWKeyCallback {
 		lastKey = key;
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	/**
 	 * Sends the new keyboard action to QoT.
@@ -120,9 +120,9 @@ public class Keyboard extends GLFWKeyCallback {
 		return this;
 	}
 
-	//----------------
+	//================
 	// Static Methods
-	//----------------
+	//================
 	
 	public static void destroy() {
 		if (instance != null) {
@@ -259,27 +259,52 @@ public class Keyboard extends GLFWKeyCallback {
 	 * @return True if the given char/int is has a typable character
 	 */
 	public static boolean isTypable(char in, int code) {
-		boolean typable = true;
-		
-		if (code >= 0) {
-			switch (code) {
-			case KEY_ESC:
-			case KEY_TAB:
-			case KEY_LCTRL:
-			case KEY_RCTRL:
-			case KEY_LALT:
-			case KEY_RALT:
-			case KEY_LSHIFT:
-			case KEY_RSHIFT:
-				typable = false;
-			}
-		}
-		
-		if (typable == true) {
-			typable = in != 167 && in >= 32 && in != 127;
-		}
-		
-		return typable;
+	    boolean typeable = true;
+	    
+	    typeable &= !isFunctionKey(code);
+	    
+	    switch (code) {
+	    case KEY_ESC:
+	    case KEY_TAB:
+	    case KEY_ENTER:
+	    case KEY_LSHIFT:
+	    case KEY_RSHIFT:
+	    case KEY_LCTRL:
+	    case KEY_RCTRL:
+	    case KEY_LALT:
+	    case KEY_RALT:
+	    case KEY_LSUPER:
+	    case KEY_RSUPER:
+	    case KEY_PAGEUP:
+	    case KEY_PAGEDOWN:
+	    case KEY_INSERT:
+	    case KEY_BACKSPACE:
+	    case KEY_DELETE:
+	    case KEY_PRINTSCREEN:
+	    case KEY_CAPS_LOCK:
+	    case KEY_SCROLL_LOCK:
+	    case KEY_NUM_LOCK:
+	    case KEY_END:
+	    case KEY_HOME:
+	    case KEY_PAUSE:
+	        typeable = false;
+	    }
+	    
+	    if (typeable) {
+	        typeable &= in >= 32 && in <= 126; // ACSII: ['SPACE', '~']
+	    }
+	    
+		return typeable;
+	}
+	
+	/**
+	 * Returns true if the given keycode is a function key: F1 - F25.
+	 * 
+	 * @param code The GLFW keycode
+	 * @return True if the keycode is a function key
+	 */
+	public static boolean isFunctionKey(int code) {
+	    return code >= KEY_F1 && code <= KEY_F25;
 	}
 	
 	/**
@@ -377,9 +402,9 @@ public class Keyboard extends GLFWKeyCallback {
 	
 	public static boolean isShiftDelete(int keyCode) { return keyCode == KEY_DELETE && isShiftDown(); }
 	
-	//-------------------
+	//===================
 	// Clipboard Methods
-	//-------------------
+	//===================
 	
 	/**
 	 * Sets the contents of the active system clipboard.
@@ -411,9 +436,9 @@ public class Keyboard extends GLFWKeyCallback {
 		return "";
 	}
 	
-	//-----------------------
+	//=======================
 	// Static Key References
-	//-----------------------
+	//=======================
 	
 	public static final int
 	KEY_A = GLFW.GLFW_KEY_A,
@@ -461,7 +486,7 @@ public class Keyboard extends GLFWKeyCallback {
 	KEY_LBRACKET = GLFW.GLFW_KEY_LEFT_BRACKET,
 	KEY_RBRACKET = GLFW.GLFW_KEY_RIGHT_BRACKET,
 	KEY_BSLASH = GLFW.GLFW_KEY_BACKSLASH,
-	KEY_CAPS = GLFW.GLFW_KEY_CAPS_LOCK,
+	KEY_CAPS_LOCK = GLFW.GLFW_KEY_CAPS_LOCK,
 	KEY_SEMICOLON = GLFW.GLFW_KEY_SEMICOLON,
 	KEY_APOSTROPHE = GLFW.GLFW_KEY_APOSTROPHE,
 	KEY_ENTER = GLFW.GLFW_KEY_ENTER,
@@ -475,7 +500,8 @@ public class Keyboard extends GLFWKeyCallback {
 	KEY_LALT = GLFW.GLFW_KEY_LEFT_ALT,
 	KEY_SPACE = GLFW.GLFW_KEY_SPACE,
 	KEY_RALT = GLFW.GLFW_KEY_RIGHT_ALT,
-	KEY_FUNC = GLFW.GLFW_KEY_RIGHT_SUPER,
+	KEY_LSUPER = GLFW.GLFW_KEY_LEFT_SUPER,
+	KEY_RSUPER = GLFW.GLFW_KEY_RIGHT_SUPER,
 	KEY_RCTRL = GLFW.GLFW_KEY_RIGHT_CONTROL,
 	KEY_F1 = GLFW.GLFW_KEY_F1,
 	KEY_F2 = GLFW.GLFW_KEY_F2,
@@ -489,8 +515,22 @@ public class Keyboard extends GLFWKeyCallback {
 	KEY_F10 = GLFW.GLFW_KEY_F10,
 	KEY_F11 = GLFW.GLFW_KEY_F11,
 	KEY_F12 = GLFW.GLFW_KEY_F12,
-	KEY_PRNTSCREEN = GLFW.GLFW_KEY_PRINT_SCREEN,
-	KEY_SCRLK = GLFW.GLFW_KEY_SCROLL_LOCK,
+	KEY_F13 = GLFW.GLFW_KEY_F13,
+	KEY_F14 = GLFW.GLFW_KEY_F14,
+	KEY_F15 = GLFW.GLFW_KEY_F15,
+	KEY_F16 = GLFW.GLFW_KEY_F16,
+	KEY_F17 = GLFW.GLFW_KEY_F17,
+	KEY_F18 = GLFW.GLFW_KEY_F18,
+	KEY_F19 = GLFW.GLFW_KEY_F19,
+	KEY_F20 = GLFW.GLFW_KEY_F20,
+	KEY_F21 = GLFW.GLFW_KEY_F21,
+	KEY_F22 = GLFW.GLFW_KEY_F22,
+	KEY_F23 = GLFW.GLFW_KEY_F23,
+	KEY_F24 = GLFW.GLFW_KEY_F24,
+	KEY_F25 = GLFW.GLFW_KEY_F25,
+	KEY_PRINTSCREEN = GLFW.GLFW_KEY_PRINT_SCREEN,
+	KEY_SCROLL_LOCK = GLFW.GLFW_KEY_SCROLL_LOCK,
+	KEY_NUM_LOCK = GLFW.GLFW_KEY_NUM_LOCK,
 	KEY_PAUSE = GLFW.GLFW_KEY_PAUSE,
 	KEY_INSERT = GLFW.GLFW_KEY_INSERT,
 	KEY_HOME = GLFW.GLFW_KEY_HOME,
@@ -554,7 +594,7 @@ public class Keyboard extends GLFWKeyCallback {
 		keyMapings.put("[", KEY_RBRACKET); keyMapings.put("{", KEY_RBRACKET);
 		keyMapings.put("]", KEY_LBRACKET); keyMapings.put("}", KEY_LBRACKET);
 		keyMapings.put("\\", KEY_BSLASH); keyMapings.put("|", KEY_BSLASH);
-		keyMapings.put("caps", KEY_CAPS); keyMapings.put("capslock", KEY_CAPS);
+		keyMapings.put("caps", KEY_CAPS_LOCK); keyMapings.put("capslock", KEY_CAPS_LOCK);
 		keyMapings.put(";", KEY_SEMICOLON); keyMapings.put(":", KEY_SEMICOLON);
 		keyMapings.put("'", KEY_APOSTROPHE); keyMapings.put("\"", KEY_APOSTROPHE);
 		keyMapings.put("enter", KEY_ENTER);

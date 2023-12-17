@@ -9,8 +9,12 @@ import qot.items.ItemList;
 public class BootsOfSpeed extends Item {
 
 	public BootsOfSpeed() {
-		super("Boots of Speed", 1000, "These boots bestow its wearer with unmatched swiftness", ItemList.BOOTS_OF_SPEED.ID);
-		sprite = new Sprite(ItemTextures.boots_of_speed);
+		super("Boots of Speed", ItemList.BOOTS_OF_SPEED.ID);
+		this.setUsable(true);
+        this.setIsDestroyedOnUse(true);
+        this.setSprite(new Sprite(ItemTextures.boots_of_speed));
+        this.setDescription("These boots bestow its wearer with unmatched swiftness");
+        this.setBasePrice(500);
 	}
 
 	@Override

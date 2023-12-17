@@ -66,7 +66,7 @@ public class WindowBuilderScreen extends GameScreen {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawRect(EColors.vdgray);
 		
 		super.drawScreen(mXIn, mYIn);

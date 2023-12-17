@@ -343,14 +343,15 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	// Main Draw
 	//===========
 	
-	/** Internal event fired from the top parent to draw this object. */
-	public default void drawObject_i(int mXIn, int mYIn) {
+	/** Internal event fired from the top parent to draw this object. 
+	 * @param dt TODO*/
+	public default void drawObject_i(long dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		try {
 			if (!willBeDrawn()) return;
 			
 			//draw this object first
-			drawObject(mXIn, mYIn);
+			drawObject(dt, mXIn, mYIn);
 			
 			//now draw all child objects on top of parent
 			for (var o : getChildren()) {
@@ -360,7 +361,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 				//notify object on first draw
 				if (!o.hasFirstDraw()) o.onFirstDraw_i();
 				//actually draw the child object
-				o.drawObject_i(mXIn, mYIn);
+				o.drawObject_i(dt, mXIn, mYIn);
 				
 				//draw grayed out overlay over everything if a focus lock object is present
 				var top = getTopParent();
@@ -380,8 +381,11 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		}
 	}
 	
-	/** Called when this object specifically (not children) is being drawn. */
-	public default void drawObject(int mXIn, int mYIn) {}
+	/**
+	 * Called when this object specifically (not children) is being drawn. 
+	 * @param dt TODO
+	 */
+	public default void drawObject(long dt, int mXIn, int mYIn) {}
 	
 	/**
 	 * Event fired from this object's pre draw setup to perform
@@ -1298,6 +1302,11 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	 * 2 times in quick succession.
 	 */
 	public default void onDoubleClick() {}
+	
+	/**
+	 * Event fired when the middle mouse button was pressed.
+	 */
+	public default void onMiddleClick() {}
 	
 	//========
 	// Events

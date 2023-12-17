@@ -3,7 +3,6 @@ package envision.engine.windows.developerDesktop.shortcuts;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.engine.windows.bundledWindows.CommandShortcutEditorWindow;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;

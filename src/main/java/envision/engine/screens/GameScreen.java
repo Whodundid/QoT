@@ -44,9 +44,9 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	//-----------
 	
     @Override
-    public void drawObject_i(int mXIn, int mYIn) {
+    public void drawObject_i(long dt, int mXIn, int mYIn) {
         drawScreen(mXIn, mYIn);
-        super.drawObject_i(mXIn, mYIn);
+        super.drawObject_i(dt, mXIn, mYIn);
         if (isFading && performFade) {
             drawFade();
         }

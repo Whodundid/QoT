@@ -46,7 +46,7 @@ public class WindowLine extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawLine(startX, startY, endX, endY, color);
 	}
 	

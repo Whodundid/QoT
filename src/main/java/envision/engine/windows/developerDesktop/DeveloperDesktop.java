@@ -39,6 +39,8 @@ public class DeveloperDesktop extends TopWindowParent {
     public static final File DESKTOP_CONFIG_FILE = new File(DeveloperDesktop.DESKTOP_DIR, "desktop_config.ini");
     /** The main config file for the developer desktop. */
     private static final DesktopConfig DESKTOP_CONFIG = new DesktopConfig();
+    /** A separate clipboard that is set by highlighting text and pasted by middle mouse click. */
+    private static String TERMINAL_CLIP_BOARD_STRING = "";
     
     // setup the desktop directory upfront
     static {
@@ -131,7 +133,7 @@ public class DeveloperDesktop extends TopWindowParent {
         initChildren();
     }
     
-    public void onRenderTick() {
+    public void onRenderTick(long dt) {
         updateBeforeNextDraw(Mouse.getMx(), Mouse.getMy());
         //if (getChildren().isEmpty()) hasFocus = false;
         
@@ -167,12 +169,12 @@ public class DeveloperDesktop extends TopWindowParent {
             
             if (!hasFirstDraw()) onFirstDraw_i();
             
-            //draw this object first
-            drawObject(mX, mY);
+            // draw this object first
+            drawObject(dt, mX, mY);
             
             // draw all shortcuts on desktop first
             for (var s : shortcuts) {
-                drawWindowObject(s);
+                drawWindowObject(dt, s);
             }
             
             // if dragging selection box, draw that next
@@ -185,7 +187,7 @@ public class DeveloperDesktop extends TopWindowParent {
                 //don't draw this here
                 if (o instanceof DesktopShortcut) continue;
                 
-                drawWindowObject(o);
+                drawWindowObject(dt, o);
             }
             
             //draw highlighted window borders
@@ -417,6 +419,16 @@ public class DeveloperDesktop extends TopWindowParent {
     /** Returns the list of all shortcuts actively on the desktop. */
     public EList<DesktopShortcut> getShortcuts() {
         return shortcuts;
+    }
+    
+    public static void setTerminalClipboard(final String in) {
+        String toSet = in;
+        if (toSet == null) toSet = "";
+        TERMINAL_CLIP_BOARD_STRING = toSet;
+    }
+    
+    public static String getTerminalClipboard() {
+        return TERMINAL_CLIP_BOARD_STRING;
     }
     
     //=====================================

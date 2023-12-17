@@ -3,8 +3,8 @@ package envision.engine.windows.developerDesktop;
 import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision.engine.windows.bundledWindows.CommandShortcutEditorWindow;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
+import envision.engine.windows.developerDesktop.shortcuts.CommandShortcutEditorWindow;
 import envision.engine.windows.developerDesktop.shortcuts.DesktopShortcut_Command;
 import envision.engine.windows.developerDesktop.shortcuts.DesktopShortcut_File;
 import envision.engine.windows.developerDesktop.util.DesktopUtil;
@@ -59,8 +59,7 @@ public class DesktopRCM extends RightClickMenu {
     public void handle_newCommand() {
         var shortcut = new DesktopShortcut_Command("New Command");
         shortcut.setPosition(Mouse.getMx(), Mouse.getMy());
-        DeveloperDesktop.addShortcut(shortcut);
-        DeveloperDesktop.openWindow(new CommandShortcutEditorWindow(shortcut));
+        DeveloperDesktop.openWindow(new CommandShortcutEditorWindow(shortcut, true));
     }
     
     public void handle_terminal() {

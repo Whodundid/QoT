@@ -175,7 +175,7 @@ public class FileExplorerWindow extends ActionWindowParent {
     }
     
     @Override
-    public void drawObject(int mXIn, int mYIn) {
+    public void drawObject(long dt, int mXIn, int mYIn) {
         drawDefaultBackground();
         
         drawVerticalLine(fileUpBtn.endX + 5, startY, backBtn.endY + 6, 1, EColors.black);
@@ -188,7 +188,7 @@ public class FileExplorerWindow extends ActionWindowParent {
             buildDir();
         }
         
-        super.drawObject(mXIn, mYIn);
+        super.drawObject(dt, mXIn, mYIn);
     }
     
     private void stopWatcher() {

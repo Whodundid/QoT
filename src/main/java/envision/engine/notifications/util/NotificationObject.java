@@ -48,7 +48,7 @@ public abstract class NotificationObject extends WindowParent {
 	}
 
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		if (onlyDrawOnHud && !Envision.developerDesktop.hasFocus()) close();
 		
 		drawRect(startX, startY, startX + 1, endY, 0xff000000); //left border
@@ -65,7 +65,7 @@ public abstract class NotificationObject extends WindowParent {
 		close.setVisible(isMouseInsideGui(mXIn, mYIn));
 		
 		calcPos();
-		super.drawObject(mXIn, mYIn);
+		super.drawObject(dt, mXIn, mYIn);
 	}
 	
 	protected void calcPos() {

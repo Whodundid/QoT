@@ -3,6 +3,7 @@ package envision.engine.windows.windowObjects.actionObjects;
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
@@ -14,9 +15,9 @@ import eutil.strings.EStringUtil;
 
 public class WindowTextField extends ActionObject {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	public String text = "", textWhenEmpty = "";
 	public int maxStringLength = 32;
@@ -42,9 +43,9 @@ public class WindowTextField extends ActionObject {
 	protected int cursorPosition;
 	protected int selectionEnd;
 
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	protected WindowTextField() {}
 	
@@ -53,12 +54,15 @@ public class WindowTextField extends ActionObject {
 		//Keyboard.enableRepeatEvents(true);
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
-	public void drawObject(int mX, int mY) {
+	public void drawObject(long dt, int mX, int mY) {
+	    final double CHAR_WIDTH = FontRenderer.getCharWidth();
+	    final double FONT_HEIGHT = FontRenderer.FH;
+	    
 		if (scissoring) scissor();
 		
 		if (getEnableBackgroundDrawing()) {
@@ -78,18 +82,43 @@ public class WindowTextField extends ActionObject {
 		if (hasFocus()) {
 			boolean cursor = Envision.getRunningTicks() / 50 % 2 == 0 || textRecentlyEntered;
 			
-			int curX = (int) (startX + 5 + (cursorPosition * FontRenderer.getCharWidth()));
+			int curX = (int) (startX + 5 + (cursorPosition * CHAR_WIDTH));
 			
 			if (cursorPosition == getText().length()) {
 				if (cursor) drawText += "_";
 			}
 			else {
-				drawRect(curX, startY + 3, curX + 1, startY + 1 + FontRenderer.FONT_HEIGHT, 0xffffffff);
+			    // vertical cursor
+				drawRect(curX, endY - FONT_HEIGHT - 4, curX + 1, endY - 2, 0xffffffff);
 			}
 		}
 		
 		if (drawText != null && !drawText.isEmpty()) {
-			drawString(drawText, startX + 5, endY - FontRenderer.FONT_HEIGHT, textColor);			
+		    // highlighting
+		    if (selectionEnd != cursorPosition) {
+		        double selX = startX + 3 + selectionEnd * CHAR_WIDTH;
+	            double selY = startY + 3;
+	            double selEndX = startX + 5 + cursorPosition * CHAR_WIDTH;
+	            double selEndY = endY - 3;
+	            drawRect(selX, selY, selEndX, selEndY, EColors.blue);
+		        
+		        final int len = getText().length();
+	            final double yPos = endY - FontRenderer.FONT_HEIGHT;
+	            for (int i = 0; i < len; i++) {
+	                final char c = getText().charAt(i);
+	                final double xPos = startX + 5 + (i * CHAR_WIDTH);
+	                // in highlighted portion
+	                if (i >= selectionEnd && i < cursorPosition) {
+	                    drawString(c, xPos, yPos, EColors.white);
+	                }
+	                else {
+	                    drawString(c, xPos, yPos, textColor);
+	                }
+	            }
+		    }
+		    else {
+		        drawString(drawText, startX + 5, endY - FontRenderer.FONT_HEIGHT, textColor);
+		    }
 		}
 		
 		if (scissoring) endScissor();
@@ -123,18 +152,15 @@ public class WindowTextField extends ActionObject {
 		if (!editable) return;
 		
 		startTextTimer();
-		if (Keyboard.isCtrlA(keyCode)) {
-			setCursorPositionEnd();
-			setSelPos(0);
-		}
+		if (Keyboard.isCtrlA(keyCode)) selectAllText();
 		else if (Keyboard.isCtrlC(keyCode)) Keyboard.setClipboard(getSelectedText());
 		else if (Keyboard.isCtrlV(keyCode) && isEnabled() && allowClipboardPastes) {
 			writeText(Keyboard.getClipboard());
 		}
-		//else if (isKeyComboCtrlX(keyCode)) {
-		//	GuiScreen.setClipboardString(getSelectedText());
-		//	if (isEnabled()) { writeText(""); }
-		//}
+		else if (Keyboard.isCtrlX(keyCode)) {
+			Keyboard.setClipboard(getSelectedText());
+			if (isEnabled()) { writeText(""); }
+		}
 		else {
 			switch (keyCode) {
 			case Keyboard.KEY_BACKSPACE: //backspace
@@ -213,9 +239,19 @@ public class WindowTextField extends ActionObject {
 		}
 	}
 	
-	//------------------
+	@Override
+	public void onDoubleClick() {
+	    selectAllText();
+	}
+	
+	@Override
+	public void onMiddleClick() {
+	    writeText(DeveloperDesktop.getTerminalClipboard());
+	}
+	
+	//==================
 	// Internal Methods
-	//------------------
+	//==================
 	
 	/** draws the vertical line cursor in the textbox */
 	protected void drawCursorVertical(double x, double y, double w, double h) {
@@ -250,9 +286,9 @@ public class WindowTextField extends ActionObject {
 		//GlStateManager.enableTexture2D();
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	public void moveCursorBy(int moveAmount) { setCursorPos(selectionEnd + moveAmount); }
 	public void clear() { setText(""); }
@@ -320,9 +356,24 @@ public class WindowTextField extends ActionObject {
         if (flag) moveCursorBy(amountToDelete);
 	}
 	
-	//---------
-	// Getters
-	//---------
+	public void selectAllText() {
+	    setCursorPositionEnd();
+        setSelPos(0);
+        
+        int start = selectionEnd;
+        int end = cursorPosition;
+        if (end < start) {
+            int temp = end;
+            end = start;
+            start = temp;
+        }
+        
+        DeveloperDesktop.setTerminalClipboard(getText().substring(start, end));
+	}
+	
+	//=========
+    // Getters
+    //=========
 
 	public int getMaxStringLength() { return maxStringLength; }
 	public int getCursorPosition() { return cursorPosition; }
@@ -379,9 +430,9 @@ public class WindowTextField extends ActionObject {
 		return text.substring(startPos, endPos);
 	}
 
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public void setCursorPosZero() { setCursorPos(0); }
 	public void setCursorPositionEnd() { setCursorPos(text.length()); }

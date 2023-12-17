@@ -45,7 +45,7 @@ public class GLKeyChecker extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		
 		drawHRect(EColors.black, 2);
@@ -59,7 +59,7 @@ public class GLKeyChecker extends WindowParent {
 			drawStringCS("GLKey: " + lastKeyCode, midX, midY + 3, EColors.cyan);
 		}
 		
-		super.drawObject(mXIn, mYIn);
+		super.drawObject(dt, mXIn, mYIn);
 	}
 	
 	@Override

@@ -82,7 +82,7 @@ public class RenderEngine {
 	// Internal Ticks
 	//================
 	
-	public void draw(long partialTicks) {
+	public void draw(long dt) {
 		
 		//-----------------------------------------
 		
@@ -90,7 +90,7 @@ public class RenderEngine {
 	    BatchManager.startLayer(0);
 	    //System.out.println("drawing: " + BatchManager.getCurrentLayer().getLayerNum());
 		if (Envision.theWorld != null && Envision.theWorld.isLoaded() && !Envision.isWorldRenderPaused()) {
-			Envision.theWorld.getWorldRenderer().onRenderTick(partialTicks);
+			Envision.theWorld.getWorldRenderer().onRenderTick(dt);
 		}
 	    BatchManager.endLayer(0);
 		
@@ -100,7 +100,7 @@ public class RenderEngine {
 	    BatchManager.startLayer(1);
 		//System.out.println("drawing: " + BatchManager.getCurrentLayer().getLayerNum());
 		if (Envision.currentScreen != null) {
-			Envision.currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
+			Envision.currentScreen.drawObject_i(dt, Mouse.getMx(), Mouse.getMy());
 		}
 		// if there wasn't a screen, draw the 'no screens' stuff
 		else {
@@ -114,7 +114,7 @@ public class RenderEngine {
 		// draw top overlay
 		BatchManager.startLayer(2);
 		//System.out.println("drawing: " + BatchManager.getCurrentLayer().getLayerNum());
-		Envision.developerDesktop.onRenderTick();
+		Envision.developerDesktop.onRenderTick(dt);
 		BatchManager.endLayer(2);
 		
 		//-----------------------------------------

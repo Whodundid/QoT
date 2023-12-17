@@ -54,7 +54,7 @@ public class EditorScreenTopHeader extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		double div = scripts.endX + 2;
 		
 		drawRect(EColors.black); //background

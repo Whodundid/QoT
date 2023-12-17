@@ -13,7 +13,6 @@ import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
-import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.EStringUtil;
 import qot.assets.textures.window.WindowTextures;
@@ -57,7 +56,7 @@ public class TaskBar extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		//validate buttons
 		updateLists();
 		
@@ -138,20 +137,21 @@ public class TaskBar extends WindowObject {
 					
 					if (windows.size() == 1) {
 						var p = windows.get(0);
-						var h = p.getHeader();
-						var b = Envision.getDeveloperDesktop().getTaskBar();
-						
-						double hh = (h != null) ? h.height : 0;
-						double bh = (b != null) ? b.height : 0;
-						double oH = hh + bh;
-						double maxW = ENumUtil.clamp(p.width, 0, res.width - 40);
-						double maxH = ENumUtil.clamp(p.height, 0, res.height - 40 - oH);
-						
-						p.setGuiSize(maxW, maxH);
-						p.centerObjectWithSize(maxW, maxH);
-						p.setPosition(p.startX, p.startY + hh);
-						p.reInitChildren();
-						p.bringToFront();
+						p.recenterOnScreen();
+//						var h = p.getHeader();
+//						var b = Envision.getDeveloperDesktop().getTaskBar();
+//						
+//						double hh = (h != null) ? h.height : 0;
+//						double bh = (b != null) ? b.height : 0;
+//						double oH = hh + bh;
+//						double maxW = ENumUtil.clamp(p.width, 0, res.width - 40);
+//						double maxH = ENumUtil.clamp(p.height, 0, res.height - 40 - oH);
+//						
+//						p.setGuiSize(maxW, maxH);
+//						p.centerObjectWithSize(maxW, maxH);
+//						p.setPosition(p.startX, p.startY + hh);
+//						p.reInitChildren();
+//						p.bringToFront();
 					}
 				} //recenter
 			}

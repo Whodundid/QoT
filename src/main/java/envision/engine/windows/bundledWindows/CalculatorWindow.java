@@ -181,7 +181,7 @@ public class CalculatorWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		//drawRect(0xffe4f4fc, 1);
 		
@@ -200,7 +200,7 @@ public class CalculatorWindow extends WindowParent {
 			second.drawRect(EColors.yellow, -1);
 		}
 		
-		super.drawObject(mXIn, mYIn);
+		super.drawObject(dt, mXIn, mYIn);
 	}
 	
 	@Override

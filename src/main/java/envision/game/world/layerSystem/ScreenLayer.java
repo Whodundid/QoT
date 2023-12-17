@@ -18,8 +18,8 @@ public class ScreenLayer {
 	
 	public EList<IWindowObject> getObjects() { return objects; }
 	
-	public void renderLayer(int mXIn, int mYIn) {
-		objects.forEach(o -> o.drawObject_i(mXIn, mYIn));
+	public void renderLayer(long dt, int mXIn, int mYIn) {
+		objects.forEach(o -> o.drawObject_i(dt, mXIn, mYIn));
 	}
 	
 }

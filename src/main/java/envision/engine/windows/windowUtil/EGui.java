@@ -42,7 +42,7 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public static void drawRect(EGui o, EColors color) { drawRect(o.startX, o.startY, o.endX, o.endY, color.intVal); }
 	public static void drawRect(EGui o, int color) { drawRect(o.startX, o.startY, o.endX, o.endY, color); }
 	
-	public static void drawRect(EGui o, EColors color, int offset) {
+	public static void drawRect(EGui o, EColors color, double offset) {
 		drawRect(o.startX + offset,
 			     		  		  o.startY + offset,
 			     		  		  o.endX - offset,
@@ -50,7 +50,7 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 			     		  		  color.intVal);
 	}
 	
-	public static void drawRect(EGui o, int color, int offset) {
+	public static void drawRect(EGui o, int color, double offset) {
 		drawRect(o.startX + offset,
 			     		  		  o.startY + offset,
 			     		  		  o.endX - offset,
@@ -64,31 +64,31 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public void drawHRect(EColors color) { drawHRect(color.intVal); }
 	public void drawHRect(int color) { drawHRect(startX, startY, endX, endY, 1, color); }
 	
-	public void drawRect(EColors color, int offset) { drawRect(color.intVal, offset); }
-	public void drawRect(int color, int offset) { drawRect(startX + offset, startY + offset, endX - offset, endY - offset, color); }
+	public void drawRect(EColors color, double offset) { drawRect(color.intVal, offset); }
+	public void drawRect(int color, double offset) { drawRect(startX + offset, startY + offset, endX - offset, endY - offset, color); }
 	
-	public void drawHRect(EColors color, int offset) { drawHRect(color.intVal, offset); }
-	public void drawHRect(EColors color, int size, int offset) { drawHRect(color.intVal, size, offset); }
-	public void drawHRect(int color, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, 1, color); }
-	public void drawHRect(int color, int size, int offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, size, color); }
+	public void drawHRect(EColors color, double offset) { drawHRect(color.intVal, offset); }
+	public void drawHRect(EColors color, int size, double offset) { drawHRect(color.intVal, size, offset); }
+	public void drawHRect(int color, double offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, 1, color); }
+	public void drawHRect(int color, int size, double offset) { drawHRect(startX + offset, startY + offset, endX - offset, endY - offset, size, color); }
 	
 	public void drawSprite(Sprite sprite) { drawSprite(sprite, startX, startY, width, height, false, Rotation.UP); }
 	public void drawSprite(Sprite sprite, boolean flip) { drawSprite(sprite, startX, startY, width, height, flip, Rotation.UP); }
-	public void drawSprite(Sprite sprite, int offset) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), false, Rotation.UP); }
+	public void drawSprite(Sprite sprite, double offset) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), false, Rotation.UP); }
 	public void drawSprite(Sprite sprite, Rotation rotation) { drawSprite(sprite, startX, startY, width, height, false, rotation); }
-	public void drawSprite(Sprite sprite, int offset, boolean flip) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), flip, Rotation.UP); }
-    public void drawSprite(Sprite sprite, int offset, Rotation rotation) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), false, rotation); }
-    public void drawSprite(Sprite sprite, int offset, boolean flip, Rotation rotation) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), flip, rotation); }
+	public void drawSprite(Sprite sprite, double offset, boolean flip) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), flip, Rotation.UP); }
+    public void drawSprite(Sprite sprite, double offset, Rotation rotation) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), false, rotation); }
+    public void drawSprite(Sprite sprite, double offset, boolean flip, Rotation rotation) { drawSprite(sprite, startX + offset, startY + offset, width - (offset * 2), height * (offset * 2), flip, rotation); }
 
     
 	public void drawTexture(GameTexture texture) { drawTexture(texture, startX, startY, width, height, false, Rotation.UP); }
 	public void drawTexture(GameTexture texture, Rotation rotation) { drawTexture(texture, startX, startY, width, height, false, rotation); }
 	public void drawTexture(GameTexture texture, boolean flip) { drawTexture(texture, startX, startY, width, height, flip, Rotation.UP); }
 	public void drawTexture(GameTexture texture, Rotation rotation, boolean flip) { drawTexture(texture, startX, startY, width, height, flip, rotation); }
-	public void drawTexture(GameTexture texture, int offset) { drawTexture(texture, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), false, Rotation.UP); }
-	public void drawTexture(GameTexture texture, int offset, Rotation rotation) { drawTexture(texture, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), false, rotation); }
-	public void drawTexture(GameTexture texture, int offset, boolean flip) { drawTexture(texture, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), flip); }
-	public void drawTexture(GameTexture texture, int offset, Rotation rotation, boolean flip) { drawTexture(texture, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), flip, rotation); }
+	public void drawTexture(GameTexture texture, double offset) { drawTexture(texture, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), false, Rotation.UP); }
+	public void drawTexture(GameTexture texture, double offset, Rotation rotation) { drawTexture(texture, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), false, rotation); }
+	public void drawTexture(GameTexture texture, double offset, boolean flip) { drawTexture(texture, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), flip); }
+	public void drawTexture(GameTexture texture, double offset, Rotation rotation, boolean flip) { drawTexture(texture, startX + offset, startY + offset, width - (offset * 2), height - (offset * 2), flip, rotation); }
 	
 	public double drawString(Object obj) { return drawString(obj, midX, midY, 0xffffffff); }
 	public double drawString(String str) { return drawString(str, midX, midY, 0xffffffff); }

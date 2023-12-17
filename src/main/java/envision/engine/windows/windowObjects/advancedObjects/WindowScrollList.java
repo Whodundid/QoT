@@ -23,9 +23,9 @@ import eutil.misc.ScreenLocation;
 
 public class WindowScrollList<E> extends WindowObject {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	protected EList<IWindowObject> listContents = EList.newList();
 	protected EList<IWindowObject> drawnListObjects = EList.newList();
@@ -46,9 +46,9 @@ public class WindowScrollList<E> extends WindowObject {
 	protected boolean allowScrolling = true;
 	protected boolean drawListObjects = true;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	protected WindowScrollList() {}
 	public WindowScrollList(IWindowObject parentIn, double xIn, double yIn, double widthIn, double heightIn) {
@@ -83,7 +83,7 @@ public class WindowScrollList<E> extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject_i(int mXIn, int mYIn) {
+	public void drawObject_i(long dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		drawHRect(borderColor);
 		
@@ -104,7 +104,7 @@ public class WindowScrollList<E> extends WindowObject {
 						if (o.willBeDrawn()) {
 							if (!o.hasFirstDraw()) o.onFirstDraw_i();
 							//EDimension d = o.getDimensions();
-							o.drawObject_i(mXIn, mYIn);
+							o.drawObject_i(dt, mXIn, mYIn);
 						}
 					}
 				}
@@ -117,7 +117,7 @@ public class WindowScrollList<E> extends WindowObject {
 				for (var o : getChildren()) {
 					if (o.willBeDrawn() && listContents.notContains(o)) {
 						if (!o.hasFirstDraw()) o.onFirstDraw_i();
-	    	        	o.drawObject_i(mXIn, mYIn);
+	    	        	o.drawObject_i(dt, mXIn, mYIn);
 	    			}
 				}
 			}

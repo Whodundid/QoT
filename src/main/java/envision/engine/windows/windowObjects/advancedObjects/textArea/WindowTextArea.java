@@ -59,7 +59,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	//---------------------------
 	
 	@Override
-	public void drawObject_i(int mXIn, int mYIn) {
+	public void drawObject_i(long dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		drawHRect(borderColor);
 		
@@ -87,7 +87,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 					for (var o : drawnListObjects) {
 						if (o.willBeDrawn()) {
 							if (!o.hasFirstDraw()) o.onFirstDraw_i();
-							o.drawObject_i(mXIn, mYIn);
+							o.drawObject_i(dt, mXIn, mYIn);
 						}
 					}
 				}
@@ -108,12 +108,12 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 				if (isVScrollDrawn()) drawRect(endX - vScroll.width - 2, startY + 1, endX - 1, endY - 1, borderColor);
 				if (isHScrollDrawn()) drawRect(startX + 1, endY - hScroll.height - 2, endX - 1, endY - 1, borderColor);
 				
-				//draw non list contents as normal (non scissored)
+				// draw non list contents as normal (non scissored)
 				for (var o : getChildren()) {
 					if (!o.willBeDrawn() || listContents.contains(o)) continue;
 					
 					if (!o.hasFirstDraw()) o.onFirstDraw_i();
-	    	        o.drawObject_i(mXIn, mYIn);
+	    	        o.drawObject_i(dt, mXIn, mYIn);
 				}
 			}
 		}

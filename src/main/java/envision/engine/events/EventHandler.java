@@ -1,9 +1,11 @@
 package envision.engine.events;
 
+import java.time.temporal.IsoFields;
 import java.util.HashMap;
 
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.BoxList;
+import eutil.datatypes.util.EList;
 
 public class EventHandler {
 	
@@ -16,18 +18,18 @@ public class EventHandler {
 	// Constructor -- private
 	private EventHandler() {}
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	/**
 	 * The queue of events that will be distributed to subscribers.
 	 */
-	private final EArrayList<GameEvent> eventQueue = new EArrayList<>();
+	private final EList<GameEvent> eventQueue = EList.newList();
 	/**
 	 * Maps event types to the subscriber(s) who are interested in them.
 	 */
-	private final HashMap<EventType, EArrayList<IEventListener>> subscriberMap = new HashMap<>();
+	private final HashMap<EventType, EList<IEventListener>> subscriberMap = new HashMap<>();
 	
 	private final BoxList<IEventListener, EventType> toSubscribe = new BoxList<>();
 	private final BoxList<IEventListener, EventType> toUnsubscribe = new BoxList<>();
@@ -53,7 +55,7 @@ public class EventHandler {
 		EventType type = e.getType();
 		
 		//grab subscriber list for the current event
-		EArrayList<IEventListener> subscribers = subscriberMap.get(type);
+		EList<IEventListener> subscribers = subscriberMap.get(type);
 		if (subscribers == null) return;
 		
 		//distribute event to subscribers
@@ -130,14 +132,14 @@ public class EventHandler {
 	 * @param type The event type
 	 * @return The list of subscribers listening in on the given event type.
 	 */
-	public EArrayList<IEventListener> getSubscriberList(EventType type) {
+	public EList<IEventListener> getSubscriberList(EventType type) {
 		return subscriberMap.getOrDefault(type, new EArrayList<IEventListener>());
 	}
 	
 	/**
 	 * Returns this EventHandler's entire subscriber map.
 	 */
-	public HashMap<EventType, EArrayList<IEventListener>> getSubscriberMap() {
+	public HashMap<EventType, EList<IEventListener>> getSubscriberMap() {
 		return subscriberMap;
 	}
 	

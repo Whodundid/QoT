@@ -41,8 +41,8 @@ public class WindowDropDown extends WindowDropDownList {
 	//-----------
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		super.drawObject(mXIn, mYIn);
+	public void drawObject(long dt, int mXIn, int mYIn) {
+		super.drawObject(dt, mXIn, mYIn);
 		
 		if (rcm != null) return;
 		

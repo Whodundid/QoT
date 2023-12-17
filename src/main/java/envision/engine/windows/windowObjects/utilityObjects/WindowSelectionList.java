@@ -102,7 +102,7 @@ public class WindowSelectionList extends ActionWindowParent {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		
 		if (select != null && list != null) {

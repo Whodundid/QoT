@@ -42,15 +42,17 @@ public class Goblin extends Enemy {
 	
 	@Override
 	public void onLivingUpdate(float dt) {
-		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
+	    timeSinceMoved += dt;
+	    
+		if (timeSinceMoved >= waitTime + waitDelay) {
 			waitTime = ERandomUtil.getRoll(randShort, randLong);
 			moveTime = ERandomUtil.getRoll(randShort, randLong);
 			waitDelay = ERandomUtil.getRoll(randShort, randLong);
-			lastMove = System.currentTimeMillis();
+			timeSinceMoved = 0l;
 			lastDir = ERandomUtil.randomDir();
 		}
 		
-		if (System.currentTimeMillis() - lastMove >= moveTime) {
+		if (timeSinceMoved >= moveTime) {
 			move(lastDir);
 		}
 		
@@ -66,7 +68,7 @@ public class Goblin extends Enemy {
 			return;
 		}
 		
-		double distToPlayer = ((GameWorld) world).getDistance(this, Envision.thePlayer);
+		double distToPlayer = world.getDistance(this, Envision.thePlayer);
 		
 		//check if distance to player is less than 200 pixels
 		if (Envision.thePlayer != null && distToPlayer <= 200) {

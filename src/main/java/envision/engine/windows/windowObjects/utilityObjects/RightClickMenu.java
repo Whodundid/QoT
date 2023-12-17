@@ -57,7 +57,7 @@ public class RightClickMenu<E> extends ActionWindowParent {
 	//-----------
 	
 	@Override
-	public void drawObject(int mX, int mY) {
+	public void drawObject(long dt, int mX, int mY) {
 		drawRect(startX + 1, useTitle ? startY + titleHeight : startY + 1, endX - 1, endY, backgroundColor); //background
 		drawRect(startX, startY, startX + 1, endY, borderColor); //left
 		drawRect(startX, startY, endX, startY + 1, borderColor); //top
@@ -105,10 +105,12 @@ public class RightClickMenu<E> extends ActionWindowParent {
 	
 	public void display() { displayOnCurrent(); }
 	public void displayOnCurrent() {
+	    this.setParent(Envision.getCurrentScreen());
 		Envision.getCurrentScreen().displayWindow(this, ObjectPosition.CURSOR_CORNER);
 	}
 	
 	public void displayOnTop() {
+	    this.setParent(Envision.getDeveloperDesktop());
 		Envision.getDeveloperDesktop().displayWindow(this, ObjectPosition.CURSOR_CORNER);
 	}
 	
@@ -132,7 +134,7 @@ public class RightClickMenu<E> extends ActionWindowParent {
 		
 		var b = new WindowButton(this, optionName) {
 			@Override
-			public void drawObject(int mX, int mY) {
+			public void drawObject(long dt, int mX, int mY) {
 				if (isMouseInside()) {
 					drawRect(startX + 41, startY, endX, endY + 1, 0x33adadad);
 				}
@@ -140,7 +142,7 @@ public class RightClickMenu<E> extends ActionWindowParent {
 					int color = (isMouseInside()) ? 0xffffffff : 0xdddddddd;
 					drawTexture(optionIcon, startX + 3, midY - 32 / 2, 32, 32, color);
 				}
-				super.drawObject(mX, mY);
+				super.drawObject(dt, mX, mY);
 			}
 			@Override
 			public void press(int button) {
@@ -172,7 +174,7 @@ public class RightClickMenu<E> extends ActionWindowParent {
 		
 		var b = new WindowButton(this, optionName) {
 			@Override
-			public void drawObject(int mX, int mY) {
+			public void drawObject(long dt, int mX, int mY) {
 				if (isMouseInside()) {
 					drawRect(startX + 41, startY, endX, endY + 1, 0x33adadad);
 				}
@@ -180,7 +182,7 @@ public class RightClickMenu<E> extends ActionWindowParent {
 					int color = (isMouseInside()) ? 0xffffffff : 0xdddddddd;
 					drawTexture(optionIcon, startX + 3, midY - 32 / 2, 32, 32, color);
 				}
-				super.drawObject(mX, mY);
+				super.drawObject(dt, mX, mY);
 			}
 			@Override
 			public void press(int button) {
@@ -209,7 +211,7 @@ public class RightClickMenu<E> extends ActionWindowParent {
 	public void addOptionAtPos(String optionName, GameTexture optionIcon, int posIn) {
 		var b = new WindowButton(this, optionName) {
 			@Override
-			public void drawObject(int mX, int mY) {
+			public void drawObject(long dt, int mX, int mY) {
 				if (isMouseInside()) {
 					drawRect(startX + 41, startY, endX, endY + 1, 0x33adadad);
 				}
@@ -217,7 +219,7 @@ public class RightClickMenu<E> extends ActionWindowParent {
 					int color = (isMouseInside()) ? 0xffffffff : 0xdddddddd;
 					drawTexture(optionIcon, startX + 3, midY - 32 / 2, 32, 32, color);
 				}
-				super.drawObject(mX, mY);
+				super.drawObject(dt, mX, mY);
 			}
 			@Override
 			public void press(int button) {

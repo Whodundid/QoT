@@ -26,6 +26,9 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
 import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import envision_lang._launch.EnvisionConsoleOutputReceiver;
+import envision_lang._launch.EnvisionLangErrorCallBack;
+import envision_lang.lang.java.annotations.EClass;
+import envision_lang.lang.language_errors.EnvisionLangError;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.Box3;
@@ -39,7 +42,8 @@ import qot.settings.QoTSettings;
 
 //Author: Hunter Bragg
 
-public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutputReceiver {
+@EClass
+public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutputReceiver, EnvisionLangErrorCallBack {
 	
 	public static final String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
 	
@@ -84,11 +88,9 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		windowIcon = TaskBarTextures.terminal;
 	}
 	
-	@Override public String getWindowName() { return "terminal"; }
-	
-	//--------------------------
+	//==========================
 	// Envision Terminal Output
-	//--------------------------
+	//==========================
 	
 	@Override
 	public void onEnvisionPrint(String line) {
@@ -100,9 +102,24 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		writeln(line);
 	}
 	
+	@Override
+	public void onEnvisionError(EnvisionLangError error) {
+	    error(error);
+	}
+	
+	@Override
+	public void onJavaException(Exception exception) {
+	    javaError(exception);
+	}
+	
 	//===========
 	// Overrides
 	//===========
+	
+    @Override
+    public String getWindowName() {
+        return "terminal";
+    }
 	
 	@Override
 	public void initWindow() {
@@ -194,7 +211,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		if (header != null) {
 			header.setTitleColor(-EColors.rainbow() + 0xff222222);
 			String dirS = "./" + dir.getName();
@@ -554,7 +571,10 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		catch (Exception e) { e.printStackTrace(); }
 	}
 	
-	public ETerminalWindow buildTabCompletions(String... dataIn) { return buildTabCompletions(EList.of(dataIn)); }
+	public ETerminalWindow buildTabCompletions(String... dataIn) {
+	    return buildTabCompletions(EList.of(dataIn));
+	}
+	
 	public ETerminalWindow buildTabCompletions(Collection<String> dataIn) {
 		clearTabCompletions();
 		

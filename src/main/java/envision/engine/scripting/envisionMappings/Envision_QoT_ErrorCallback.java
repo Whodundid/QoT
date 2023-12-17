@@ -8,12 +8,12 @@ import envision_lang.lang.language_errors.EnvisionLangError;
 public class Envision_QoT_ErrorCallback implements EnvisionLangErrorCallBack {
 
 	@Override
-	public void handleError(EnvisionLangError e) {
-		handleException(e);
+	public void onEnvisionError(EnvisionLangError e) {
+		onJavaException(e);
 	}
 
 	@Override
-	public void handleException(Exception e) {
+	public void onJavaException(Exception e) {
 		ETerminalWindow term = (ETerminalWindow) Envision.getDeveloperDesktop().getWindowInstance(ETerminalWindow.class);
 		if (term != null) {
 			term.javaError(e.toString());

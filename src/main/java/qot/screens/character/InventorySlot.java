@@ -3,7 +3,6 @@ package qot.screens.character;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.game.items.Item;
-import eutil.colors.EColors;
 
 public class InventorySlot extends WindowObject {
 	
@@ -18,7 +17,7 @@ public class InventorySlot extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		double s = width * 0.08; // 10% offset of w/h
 		double sx = startX + s;
 		double sy = startY + s;
@@ -28,27 +27,32 @@ public class InventorySlot extends WindowObject {
 		double h = w;
 		
 		boolean isMoving = renderer.getMovingSlot() == this;
+		boolean isInInventoryRange = renderer.getInventorySize() > itemIndex;
 		
 		// frame
-		drawHRect(EColors.black, 1, 0);
+		drawHRect(renderer.slotFrameColor, 1, 0);
 		
-		if (!isMoving) {
-			if (isMouseInsideGui(mXIn, mYIn)) {
-				if (renderer.getMovingSlot() != null) {
-					drawRect(sx, sy, ex, ey, EColors.chalk.opacity(50));
-				}
-				else {
-					drawHRect(EColors.yellow);
-				}
-				
-				renderer.setSlotInside(this);
-			}
-			
-			Item theItem = renderer.getItemAtIndex(itemIndex);
-			
-			if (theItem != null) {
-				drawSprite(theItem.sprite, sx, sy, w, h);
-			}
+		if (!isMoving && isInInventoryRange) {
+		    if (isMouseInsideGui(mXIn, mYIn)) {
+                if (renderer.getMovingSlot() != null) {
+                    drawRect(sx, sy, ex, ey, renderer.slotMovingItemColor);
+                }
+                else {
+                    drawHRect(renderer.slotHoverColor);
+                }
+                
+                renderer.setSlotInside(this);
+            }
+            
+            Item theItem = renderer.getItemAtIndex(itemIndex);
+            
+            if (theItem != null) {
+                drawSprite(theItem.sprite, sx, sy, w, h);
+            }
+		}
+		
+		if (!isInInventoryRange) {
+		    drawRect(sx, sy, ex, ey, renderer.slotFillerColor);
 		}
 	}
 	

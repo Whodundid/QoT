@@ -121,7 +121,7 @@ public class BattleScreen extends GameScreen {
 		}
 		
 		@Override
-		public void drawObject(int mXIn, int mYIn) {
+		public void drawObject(long dt, int mXIn, int mYIn) {
 			drawSprite(ent.sprite, teamA);
 			if (isMouseInside()) drawHRect(EColors.yellow);
 			

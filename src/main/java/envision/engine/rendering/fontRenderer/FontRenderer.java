@@ -74,7 +74,11 @@ public class FontRenderer {
 	
 	public static GameFont getCurrentFont() { return getInstance().currentFont; }
 	
-	public static int strWidth(String in) { return (int) (in.length() * (getCharWidth() * getScaleSpace() / Envision.getGameScale())); }
+	public static int strWidth(Object in) { return strWidth(String.valueOf(in)); }
+	public static int strWidth(String in) {
+	    return (int) (in.length() * (getCharWidth() * getScaleSpace() / Envision.getGameScale()));
+	}
+	
 	public static int getCharWidth() { return instance.currentFont.getWidth(); }
 	public static double getScaleW() { return instance.currentFont.getScaleW(); }
 	public static double getScaleH() { return instance.currentFont.getScaleH(); }

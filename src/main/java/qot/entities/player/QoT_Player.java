@@ -6,22 +6,15 @@ import envision.engine.resourceLoaders.Sprite;
 import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
 import envision.game.entities.player.PlayerStats;
-import envision.game.world.GameWorld;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
-import eutil.random.ERandomUtil;
 import qot.abilities.Abilities;
 import qot.assets.textures.entity.EntityTextures;
-import qot.entities.enemies.dragon.Thyrah;
 import qot.items.Items;
 
 public class QoT_Player extends Player {
 	
 	private PlayerStats stats;
-	
-	public long oldTime, curTime;
-	public boolean start;
-	float dt;
 	
 	public QoT_Player() { this("Player", 0, 0); }
 	public QoT_Player(String nameIn) { this(nameIn, 0, 0); }
@@ -64,7 +57,7 @@ public class QoT_Player extends Player {
 			for (var e : Envision.theWorld.getEntitiesInWorld()) {
 				if (e == this) continue;
 				if (e.isInvincible()) continue;
-				if (((GameWorld) Envision.theWorld).getDistance(e, this) < 50) inRange.add((Entity) e);
+				if ((Envision.theWorld).getDistance(e, this) < 50) inRange.add((Entity) e);
 			}
 			
 			for (var e : inRange) {

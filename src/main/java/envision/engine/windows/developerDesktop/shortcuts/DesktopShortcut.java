@@ -81,7 +81,7 @@ public abstract class DesktopShortcut extends WindowObject {
     }
     
     @Override
-    public void drawObject(int mXIn, int mYIn) {
+    public void drawObject(long dt, int mXIn, int mYIn) {
         // check if moving
         checkMoveShortcut(mXIn, mYIn);
         
@@ -132,12 +132,14 @@ public abstract class DesktopShortcut extends WindowObject {
         }
     }
     
+    @Override
     public void mouseReleased(int mXIn, int mYIn, int button) {
         super.mouseReleased(mXIn, mYIn, button);
         
         if (isMoving && button == 0) {
             isPressed = false;
             isMoving = false;
+            DeveloperDesktop.saveConfig();
         }
     }
     
@@ -162,10 +164,12 @@ public abstract class DesktopShortcut extends WindowObject {
     public void onEvent(ObjectEvent e) {
         if (e instanceof EventMouse em) {
             if (em.getMouseType() != MouseType.RELEASED) return;
+            if (isMoving && em.getMouseButton() == 0) {                
+                DeveloperDesktop.saveConfig();
+            }
             isPressed = false;
             isMoving = false;
             pressPoint.set(-1, -1);
-            DeveloperDesktop.saveConfig();
         }
     }
     

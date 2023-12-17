@@ -139,8 +139,8 @@ public class MapSettingsTab extends ContainerTab {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		super.drawObject(mXIn, mYIn);
+	public void drawObject(long dt, int mXIn, int mYIn) {
+		super.drawObject(dt, mXIn, mYIn);
 		if (this != tabbedContainer.getSelectedTab()) return;
 		
 		var dims = getTabDims();

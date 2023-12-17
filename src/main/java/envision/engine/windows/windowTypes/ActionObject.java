@@ -63,12 +63,11 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 	
 	@Override
 	public void performAction(Object... args) {
-		if (actionReceiver != null) {
-			IWindowParent p = actionReceiver.getWindowParent();
-			if (p != null) p.bringToFront();
-			actionReceiver.actionPerformed(this, args);
-			if (onPressAction != null) onPressAction.run();
-		}
+	    if (actionReceiver == null) return;
+	    IWindowParent p = actionReceiver.getWindowParent();
+        if (p != null) p.bringToFront();
+        actionReceiver.actionPerformed(this, args);
+        if (onPressAction != null) onPressAction.run();
 	}
 	
 	@Override

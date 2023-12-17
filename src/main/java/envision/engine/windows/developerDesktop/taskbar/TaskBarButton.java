@@ -61,7 +61,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		//draw a highlight overlay if the mouse is over the button
 		if (isMouseOver()) {
 			drawRect(0xaa505050);
@@ -102,7 +102,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 		sY = startY + 0.5 + (height - smaller) / 2.0;
 		drawTexture(icon, sX, sY, smaller, smaller);
 		
-		super.drawObject(mXIn, mYIn);
+		super.drawObject(dt, mXIn, mYIn);
 		
 		//draw number of windows
 		drawTotal();

@@ -124,8 +124,8 @@ public class DrawSettingsTab extends ContainerTab {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		super.drawObject(mXIn, mYIn);
+	public void drawObject(long dt, int mXIn, int mYIn) {
+		super.drawObject(dt, mXIn, mYIn);
 		
 		distX.setString("Draw Dist X: " + editor.drawDistX);
 		distY.setString("Draw Dist Y: " + editor.drawDistY);

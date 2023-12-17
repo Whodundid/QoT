@@ -1,18 +1,23 @@
 package qot.entities.shopkeepers;
 
+import envision.Envision;
 import envision.engine.resourceLoaders.Sprite;
+import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.game.component.ComponentType;
 import envision.game.component.types.OnClickComponent;
 import envision.game.effects.animations.AnimationHandler;
 import envision.game.entities.BasicRenderedEntity;
 import envision.game.entities.EntityRenderer;
+import envision.game.shops.Shop;
+import envision.game.shops.Shopkeeper;
 import eutil.datatypes.util.EList;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
 import qot.entities.EntityList;
+import qot.items.Items;
 
-public class ShopGuy extends BasicRenderedEntity {
+public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
     
     protected long randShort = 2000l;
     protected long randLong = 2500l;
@@ -21,6 +26,7 @@ public class ShopGuy extends BasicRenderedEntity {
     protected long waitTime = 0l;
     protected long lastMove = 0l;
     protected Direction lastDir = Direction.N;
+    protected Shop theShop = new Shop();
     
     public ShopGuy() { this(0, 0); }
     public ShopGuy(int posX, int posY) {
@@ -29,6 +35,11 @@ public class ShopGuy extends BasicRenderedEntity {
         setMaxHealth(50);
         setHealth(50);
         setSpeed(32.0 * 1.0);
+        this.baseInventorySize = 12;
+        this.getInventory().setSize(this.baseInventorySize);
+        this.getInventory().addItem(Items.random());
+        
+        theShop.addShopkeeper(this);
         
         init(posX, posY, 64, 64);
         setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
@@ -65,16 +76,17 @@ public class ShopGuy extends BasicRenderedEntity {
     @Override
     public void onLivingUpdate(float dt) {
         animationHandler.onRenderTick();
+        waitTime = ERandomUtil.getRoll(randShort, randLong);
         
+        if (isCurrentlySelling()) return;
+
         if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-            waitTime = ERandomUtil.getRoll(randShort, randLong);
+            this.activeChat = "What a wonderful day!";
             moveTime = ERandomUtil.getRoll(randShort, randLong);
             waitDelay = ERandomUtil.getRoll(800, 2000);
             lastMove = System.currentTimeMillis();
             lastDir = ERandomUtil.randomDir(false);
         }
-        
-        this.activeChat = "What a wonderful day!";
         
         if (System.currentTimeMillis() - lastMove >= moveTime) {
             switch (lastDir) {
@@ -110,12 +122,21 @@ public class ShopGuy extends BasicRenderedEntity {
     
     @Override
     public void onMousePress(int mXIn, int mYIn, int button) {
-        System.out.println("BANANA");
+        if (button == 1) {
+            RightClickMenu rcm = new RightClickMenu(getName());
+            rcm.addOption("Trade", () -> theShop.openShopWindow(this, Envision.thePlayer));
+            rcm.displayOnCurrent();
+        }
     }
     
     @Override
     public int getInternalSaveID() {
         return EntityList.SHOPKEEPER.ID;
     }
+    
+    @Override public Shop getShop() { return theShop; }
+    @Override public void setShop(Shop shopIn) { theShop = shopIn;}
+    @Override public boolean isCurrentlySelling() { return theShop.isShopOpen(); }
+    @Override public void setCurrentlySelling(boolean val) {}
     
 }

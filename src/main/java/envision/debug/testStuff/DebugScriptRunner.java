@@ -26,11 +26,11 @@ public class DebugScriptRunner {
 	}
 	
 	public void setErrorCallback(EnvisionLangErrorCallBack callback) {
-		EnvisionLang.setErrorCallback(callback);
+		//EnvisionLang.setErrorCallback(callback);
 	}
 	
 	public void setConsoleReceiver(EnvisionConsoleOutputReceiver receiverIn) {
-		EnvisionLang.setConsoleReceiver(receiverIn);
+		//EnvisionLang.setConsoleReceiver(receiverIn);
 	}
 	
 	public EnvisionProgram getScript() { return script; }

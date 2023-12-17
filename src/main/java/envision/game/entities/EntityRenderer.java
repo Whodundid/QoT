@@ -343,7 +343,7 @@ public class EntityRenderer extends RenderingComponent {
 		
 		if (theObject.getSprite() != null) drawEntityTexture();
 		theEntity.healthBar.setDimensions(x, y - 7, w, 7);
-		theEntity.healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
+		theEntity.healthBar.drawObject(0, Mouse.getMx(), Mouse.getMy());
 		
 		var recentlyAttacked = theEntity.recentlyAttacked;
 		var healthChanged = theEntity.healthChanged;

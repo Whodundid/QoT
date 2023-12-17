@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.time.ZonedDateTime;
 
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -46,18 +45,18 @@ import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.layerSystem.LayerSystem;
 import envision_lang.EnvisionLang;
+import envision_lang.lang.java.annotations.EClass;
 import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
-import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_i;
-import eutil.math.vectors.Vec3f;
 import qot.assets.textures.GameTextures;
 import qot.assets.textures.general.GeneralTextures;
 import qot.launcher.LauncherLogger;
 import qot.launcher.LauncherSettings;
 import qot.settings.QoTSettings;
 
+@EClass
 public final class Envision implements IRendererErrorReceiver, IEnvisionInputReceiver {
 	
 	//========
@@ -318,6 +317,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 			gameInstance.onPreGameUnload();
 		}
 		
+		running = false;
 		theWorld = null;
 		thePlayer = null;
 		currentScreen = null;
@@ -332,6 +332,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		WindowResizeListener.destroy();
 		RenderEngine.getInstance().destroy();
 		gameWindow.destroy();
+		
+		System.exit(0);
 	}
 	
 	//===================
@@ -426,7 +428,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		eventHandler.onGameTick();
 		
 		//update current screen (if there is one)
-		if (currentScreen != null) currentScreen.onGameTick(-1);
+		if (currentScreen != null) currentScreen.onGameTick(dt);
 		
 		//update current world (if there is one, and it's loaded, and the engine is not paused)
 		if (levelManager != null && !pause) {
@@ -440,15 +442,15 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	private int mX_old, mY_old;
 	
-	private void runRenderTick(long partialTicks) {
+	private void runRenderTick(long dt) {
 		if (!running) return;
 		if (!BatchManager.isEnabled()) {
 			if (theWorld != null && theWorld.isLoaded() && renderWorld) {
-				theWorld.onRenderTick(partialTicks);
+				theWorld.onRenderTick(dt);
 			}
 			
 			if (currentScreen != null) {
-				currentScreen.drawObject_i(Mouse.getMx(), Mouse.getMy());
+				currentScreen.drawObject_i(dt, Mouse.getMx(), Mouse.getMy());
 				//currentScreen.drawString("deltaF: " + deltaF, 0, currentScreen.endY - currentScreen.midY / 2, EColors.aquamarine);
 				//currentScreen.drawString("deltaU: " + deltaU, 0, currentScreen.endY - currentScreen.midY / 2 + 25, EColors.aquamarine);
 			}
@@ -457,7 +459,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 				RenderingManager.drawString("No Screens?", 256, 256);
 			}
 			
-			developerDesktop.onRenderTick();
+			developerDesktop.onRenderTick(dt);
 			//renderEngine.getRenderingContext().swapBuffers();
 			renderEngine.endFrame();
 		}
@@ -502,7 +504,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	            //rot.set(ENumUtil.clamp(rot.x, -90, 90), rot.y, 0);
 		    }
 		    
-			renderEngine.draw(partialTicks);
+			renderEngine.draw(dt);
 			renderEngine.endFrame();
 		}
 	}

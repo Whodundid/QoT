@@ -3,6 +3,7 @@ package envision.engine.rendering.fontRenderer;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.debug.Broken;
+import eutil.strings.EStringBuilder;
 
 /** Used to concatenate 'EColors' color codes within drawn Strings. */
 public class EStringOutputFormatter {
@@ -86,24 +87,30 @@ public class EStringOutputFormatter {
 		return lastX;
 	}
 	
+	public static String removeColorCodes(String in) {
+	    // remove EMC color codes
+        var sb = new EStringBuilder();
+        for (int i = 0, j = 0; i < in.length(); i++) {
+            char c = in.charAt(i);
+            
+            if (j > 0) {
+                if (++j >= 3) j = 0;
+            }
+            else if (c == 8750) { //the 'contour integral' character
+                j = 1;
+            }
+            else sb.a(c);
+        }
+        
+        return sb.toString();
+	}
+	
 	public static int getStringWidth(String in) {
 		if (in == null) return -1;
 		
-		//remove EMC color codes
-		String str = "";
-		for (int i = 0, j = 0; i < in.length(); i++) {
-			char c = in.charAt(i);
-			
-			if (j > 0) {
-				if (++j >= 3) j = 0;
-			}
-			else if (c == 8750) { //the 'contour integral' character
-				j = 1;
-			}
-			else str += c;
-		}
+		String removed = removeColorCodes(in);
 		
-		return FontRenderer.strWidth(str);
+		return FontRenderer.strWidth(removed);
 	}
 	
 	/** Breaks a String into a list of smaller strings based on a set maximum line width. */

@@ -65,7 +65,7 @@ public class GameOptionsWindow extends WindowParent {
     }
     
     @Override
-    public void drawObject(int mXIn, int mYIn) {
+    public void drawObject(long dt, int mXIn, int mYIn) {
         drawDefaultBackground();
         
         if (toggleBatchRendering != null) {
@@ -82,7 +82,7 @@ public class GameOptionsWindow extends WindowParent {
                        textColor);
         }
         
-        super.drawObject(mXIn, mYIn);
+        super.drawObject(dt, mXIn, mYIn);
     }
     
     protected void onLightChange() {

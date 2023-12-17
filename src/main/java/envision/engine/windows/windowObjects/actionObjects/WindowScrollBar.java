@@ -16,9 +16,9 @@ import eutil.misc.ScreenLocation;
 
 public class WindowScrollBar extends ActionObject {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	public boolean vertical = false;
 	public double scrollBarThickness = 3;
@@ -37,9 +37,21 @@ public class WindowScrollBar extends ActionObject {
 	protected IWindowParent window;
 	private Point2i mousePos = new Point2i(0, 0);
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
+	
+	public WindowScrollBar(IWindowObject parentIn) {
+	    this(parentIn, 0, 0, -1, -1, ScreenLocation.RIGHT, 3);
+	}
+	
+	public WindowScrollBar(IWindowObject parentIn, ScreenLocation sideIn) {
+	    this(parentIn, 0, 0, -1, -1, sideIn, 3);
+	}
+	
+    public WindowScrollBar(IWindowObject parentIn, ScreenLocation sideIn, int thicknessIn) {
+        this(parentIn, 0, 0, -1, -1, sideIn, thicknessIn);
+    }
 	
 	public WindowScrollBar(IWindowObject parentIn, double visibleAmountIn, double highValIn) {
 		this(parentIn, visibleAmountIn, highValIn, -1, -1, ScreenLocation.RIGHT, 3); 
@@ -87,9 +99,9 @@ public class WindowScrollBar extends ActionObject {
 		getTopParent().registerListener(this);
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void resetPosition() {
@@ -113,7 +125,7 @@ public class WindowScrollBar extends ActionObject {
 	}
 	
 	@Override
-	public void drawObject(int mX, int mY) {
+	public void drawObject(long dt, int mX, int mY) {
 		if (isScrolling && mousePos != null) {
 			if (vertical && mY - mousePos.y != 0) moveThumb(0, mY - mousePos.y);
 			else if (mX - mousePos.x != 0) moveThumb(mX - mousePos.x, 0);
@@ -166,9 +178,18 @@ public class WindowScrollBar extends ActionObject {
         }
     }
 	
-	//---------
-	// Methods
-	//---------
+    @Override
+    public void performAction(Object... args) {
+        if (actionReceiver != null) {
+            //IWindowParent p = actionReceiver.getWindowParent();
+            //if (p != null) p.bringToFront();
+            actionReceiver.actionPerformed(this, args);
+        }
+    }
+    
+	//=========
+    // Methods
+    //=========
 	
 	public void reset() { setScrollPos(0); }
 	
@@ -206,9 +227,9 @@ public class WindowScrollBar extends ActionObject {
 		setScrollPos((int) (val + (vertical ? vResizeVal : hResizeVal)));
 	}
 	
-	//------------------
-	// Internal Methods
-	//------------------
+	//==================
+    // Internal Methods
+    //==================
 	
 	private void setThumb() {
 		if (vertical) {
@@ -297,9 +318,9 @@ public class WindowScrollBar extends ActionObject {
 		setScrollPos(scrollPos);
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public boolean getDrawVertical() { return vertical; }
 	public boolean getIsThumbRendered() { return renderThumb; }
@@ -311,9 +332,9 @@ public class WindowScrollBar extends ActionObject {
 	public double getVisibleAmount() { return visibleAmount; }
 	public double getHighVal() { return highVal; }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public void setScrollPos(double pos) {
 		//lastScrollChange = scrollPos + -;
@@ -336,17 +357,8 @@ public class WindowScrollBar extends ActionObject {
 		performAction(this);
 	}
 	
-	@Override
-	public void performAction(Object... args) {
-		if (actionReceiver != null) {
-			//IWindowParent p = actionReceiver.getWindowParent();
-			//if (p != null) p.bringToFront();
-			actionReceiver.actionPerformed(this, args);
-		}
-	}
-	
 	public void setRenderThumb(boolean val) { renderThumb = val; }
-	public void setVisibleAmount(int sizeIn) { visibleAmount = sizeIn; setScrollBarValues(visibleAmount, highVal, (vertical ? height : width)); }
+	public void setVisibleAmount(double sizeIn) { visibleAmount = sizeIn; setScrollBarValues(visibleAmount, highVal, (vertical ? height : width)); }
 	public void setHighVal(double valIn) { setScrollBarValues(visibleAmount, valIn, (getDrawVertical() ? height : width)); }
 	public void setLowVal(double valIn) { setScrollBarValues(valIn, highVal, (getDrawVertical() ? height : width)); }
 	public void setScrollRate(double valIn) { scrollRate = valIn; }

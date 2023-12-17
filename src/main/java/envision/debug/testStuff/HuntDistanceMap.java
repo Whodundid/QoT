@@ -81,8 +81,8 @@ public class HuntDistanceMap extends GameScreen {
 	}
 	
 	@Override
-	public void drawObject_i(int mXIn, int mYIn) {
-		super.drawObject_i(mXIn, mYIn);
+	public void drawObject_i(long dt, int mXIn, int mYIn) {
+		super.drawObject_i(dt, mXIn, mYIn);
 		
 		if (pointA != null && pointB != null) {
 			RenderingManager.drawLine(pointA.x, pointA.y, pointB.x, pointB.y, 5, EColors.red);

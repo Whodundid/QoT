@@ -14,7 +14,7 @@ public class Mana_Lesser extends Potion {
 		this.setIsDestroyedOnUse(true);
 		this.setSprite(new Sprite(ItemTextures.lesser_mana));
 		this.setDescription("This potion restores 30 MP");
-		this.setBasePrice(100);
+		this.setBasePrice(10);
 	}
 	
 	@Override

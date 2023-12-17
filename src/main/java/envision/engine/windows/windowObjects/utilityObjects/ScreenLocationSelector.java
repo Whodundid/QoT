@@ -50,7 +50,7 @@ public class ScreenLocationSelector extends ActionObject {
 	}
 	
 	@Override
-	public void drawObject(int mX, int mY) {
+	public void drawObject(long dt, int mX, int mY) {
 		drawRect(startX, startY, endX, startY + heightRatio, EColors.black); //border
 		drawRect(startX + widthRatio - (widthRatio / 16), startY + heightRatio, startX + widthRatio + (widthRatio / 16), endY - (heightRatio / 8), EColors.black); //pole
 		drawRect(startX + widthRatio - (widthRatio / 2), endY - (heightRatio / 8), startX + widthRatio + (widthRatio / 2), endY - (heightRatio / 8) + 3, EColors.black); //base
@@ -71,7 +71,7 @@ public class ScreenLocationSelector extends ActionObject {
 		drawStringS("Current Location: ", midX - strWidth("Current Location: " + msg) / 2, startY - heightRatio / 5, 0xffd800);
 		drawStringS(msg, midX - strWidth("Current Location: " + msg) / 2 + strWidth("Current Location: "), startY - heightRatio / 5, 0x00ff00);
 		
-		super.drawObject(mX, mY);
+		super.drawObject(dt, mX, mY);
 	}
 	
 	@Override

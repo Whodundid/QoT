@@ -90,14 +90,14 @@ public class NotificationWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject_i(int mXIn, int mYIn) {
+	public void drawObject_i(long dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		
 		drawRect(startX + 2, startY + 2, endX - 2, startY + 20, EColors.black);
 		drawRect(startX + 3, startY + 3, endX - 3, startY + 20, EColors.steel);
 		drawStringCS("Select Enabled Notifications", midX, startY + 8, EColors.orange);
 		
-		super.drawObject(mXIn, mYIn);
+		super.drawObject(dt, mXIn, mYIn);
 	}
 	
 	@Override

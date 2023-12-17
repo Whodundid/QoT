@@ -52,7 +52,7 @@ public class TabbedContainer extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
+	public void drawObject(long dt, int mXIn, int mYIn) {
 		drawRect(startX, startY + 1 + tabHeight, endX, endY, EColors.black);
 		//drawRect(EColors.pdgray, 1);
 		drawRect(startX + 1, startY + 1 + tabHeight, endX - 1, startY + 2 + tabHeight, EColors.black);

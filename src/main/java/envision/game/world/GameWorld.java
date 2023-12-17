@@ -3,7 +3,6 @@ package envision.game.world;
 import java.io.File;
 
 import envision.Envision;
-import envision.debug.DebugSettings;
 import envision.engine.events.eventTypes.world.WorldAddedEntityEvent;
 import envision.game.GameObject;
 import envision.game.entities.Entity;

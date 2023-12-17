@@ -144,7 +144,7 @@ public class WindowHeader extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject_i(int mX, int mY) {
+	public void drawObject_i(long dt, int mX, int mY) {
 		//preventative logic to stop windows from moving while the left mouse button is not held down
 		if (moving && !Mouse.isButtonDown(0)) {
 			moving = false;
@@ -165,7 +165,7 @@ public class WindowHeader extends WindowObject {
 		//only true if the header itself should be drawn
 		if (drawHeader) {
 			drawHeader();
-			super.drawObject_i(mX, mY);
+			super.drawObject_i(dt, mX, mY);
 		}
 		
 		handleMaximizeDraw(mX, mY);
@@ -573,11 +573,11 @@ public class WindowHeader extends WindowObject {
 	protected void addPinButton() {
 		pinButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth) {
 			@Override
-			public void drawObject(int mXIn, int mYIn) {
+			public void drawObject(long dt, int mXIn, int mYIn) {
 				if (window != null && window.isPinnable()) {
 					setBackgroundColor(window.isPinned() ? 0xffbb0000 : EColors.dgray.c());
 				}
-				super.drawObject(mXIn, mYIn);
+				super.drawObject(dt, mXIn, mYIn);
 			}
 		};
 		if (window != null && window.isPinnable()) {

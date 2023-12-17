@@ -1,117 +1,74 @@
 package envision.debug.debugCommands;
 
-import java.io.File;
-import java.util.UUID;
-
 import envision.Envision;
 import envision.debug.testStuff.DebugScriptRunner;
 import envision.engine.scripting.LangAPI;
 import envision.engine.terminal.window.ETerminalWindow;
-import envision_lang.EnvisionLang;
-import envision_lang._launch.EnvisionCodeFile;
 import envision_lang._launch.EnvisionProgram;
-import envision_lang.interpreter.EnvisionInterpreter;
-import envision_lang.parser.EnvisionLangParser;
-import envision_lang.parser.statements.ParsedStatement;
-import envision_lang.tokenizer.Tokenizer;
-import eutil.datatypes.util.EList;
+import envision_lang._launch.EnvisionProgramRunner;
 
 @SuppressWarnings("unused")
 public class Deb8 extends DebugCommand {
 
-    private static boolean hasStarted = false;
-    public static EnvisionCodeFile codeFile;
-    public static EnvisionInterpreter interpreter;
+    private static EnvisionProgram program;
+    private static EnvisionProgramRunner runner;
     
     //================================================================================
     
     @Override
     public void run(ETerminalWindow termIn, Object... args) throws Exception {
-        var inst = DebugScriptRunner.getInstance();
-        
-        if (DebugScriptRunner.theScriptToUse == null) {
-            DebugScriptRunner.theScriptToUse = new EnvisionProgram("program");
+        long start = System.nanoTime();
+        if (program == null || runner == null || runner.hasFinished()) {
+            build(termIn, args);
+            runner.start();
         }
-        
-        inst.setScript(DebugScriptRunner.theScriptToUse);
-        inst.setConsoleReceiver(termIn);
-        
-        EnvisionLang.enableBlockingStatements = true;
-        EnvisionLang.enableBlockStatementParsing = true;
-        
-        if ((interpreter != null && !interpreter.hasNext())
-            || (interpreter != null && interpreter.hasError())
-            || !hasStarted)
-        {
-            start();
+        else {
+            runner.executeNextInstruction();
         }
-        
-        interpreter.executeNext();
+        System.out.println(System.nanoTime() - start);
     }
     
-    private static void start() {
-        setupCodeFile();
-        stmt("""
-                 paused = engine.isPaused()
-                 if (paused) engine.resumeGame()
-                 else engine.pauseGame()
-             
-             /*
-                class vec {
-                    int x, y
-                    init(x, y)
-                    func toString() -> "<{x}, {y}>"
-                    func add(vec v) -> vec(x + v.x, y + v.y)
-                    operator +(vec v) -> add(v)
-                }
-             
-                v1 = vec(10, 5)
-                v2 = vec(32, 43)
-             */
-             """);
+    private static void build(ETerminalWindow termIn, Object... args) throws Exception {
+        // add a '#' in front of envision functions to add a breakpoint
+        // this breakpoint breaks out of current script execution and
+        // preserves the last executed statement position in the script
+        String script = ("""
+                         
+                         //engine.loadWorld("new")
+                         playerID = api.getPlayerID()
+                         
+                         worldDims = api.getWorldDims()
+                         tileDims = api.getTileDims()
+                         
+                         worldWidth = worldDims[0]
+                         worldHeight = worldDims[1]
+                         tileWidth = tileDims[0]
+                         tileHeight = tileDims[1]
+                         
+                         println(worldWidth, worldHeight, tileWidth, tileHeight)
+                         println(worldHeight)
+                         println(tileWidth)
+                         println(tileHeight)
+                         
+                         api.tpEntity(playerID, 32 * 50, 20)
+                         
+                         """);
         
+        program = new EnvisionProgram("ETerminal_Script", script);
+        program.setEnableBlockStatements(true);
+        program.setEnableBlockStatementParsing(true);
+        
+        program.setConsoleReceiver(termIn);
+        program.setErrorCallback(termIn);
+        
+        // add the engine's API to the script
         LangAPI langAPI = LangAPI.getInstance();
-        interpreter.injectJavaObject("engine", langAPI);
+        program.addJavaObjectToProgram("api", langAPI);
+        program.addJavaObjectToProgram("term", termIn);
+        program.addJavaObjectToProgram("engine", Envision.getInstance());
         
-        interpreter.setupWithUserArguments(EList.newList());
-        hasStarted = true;
-    }
-    
-    //================================================================================
-    
-    private static void setupCodeFile() {       
-        try {
-            codeFile = new EnvisionCodeFile(new File(UUID.randomUUID().toString()));
-            interpreter = EnvisionInterpreter.build(codeFile, EList.newList());
-            
-            var validField = codeFile.getClass().getDeclaredField("isValid");
-            validField.setAccessible(true);
-            validField.set(codeFile, true);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private static void buildCodeFile(String lineToAdd) {
-        Tokenizer t = new Tokenizer(lineToAdd);
-        codeFile.getLineTokens().clearThenAddAll(t.getLineTokens());
-        codeFile.getTokens().clearThenAddAll(t.getTokens());
-        codeFile.getLines().clearThenAddAll(t.getLines());
-    }
-    
-    public static <E extends ParsedStatement> E stmt(String line) { return stmt(line, 0); }
-    public static <E extends ParsedStatement> E stmt(String line, int stmtIndex) {
-        buildCodeFile(line);
-        
-        var stmts = EnvisionLangParser.parse(codeFile);
-        codeFile.getStatements().clearThenAddAll(stmts);
-        
-        return (E) stmts.get(stmtIndex);
-    }
-    
-    public static void runNext() {
-        interpreter.executeNext();
+        // build the runner
+        runner = new EnvisionProgramRunner(program);
     }
 
 }

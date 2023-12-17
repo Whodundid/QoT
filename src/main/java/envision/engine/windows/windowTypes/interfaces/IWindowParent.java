@@ -2,8 +2,10 @@ package envision.engine.windows.windowTypes.interfaces;
 
 import java.util.Stack;
 
+import envision.Envision;
 import envision.engine.rendering.textureSystem.GameTexture;
 import eutil.datatypes.util.EList;
+import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
@@ -74,6 +76,26 @@ public interface IWindowParent extends IWindowObject {
 	public void setMinimizable(boolean val);
 	/** Sets this object to draw even when minimized. Used for TaskBar previews. */
 	public void setDrawWhenMinimized(boolean val);
+	
+	/** Repositions this screen to be in the center of the active screen. */
+	default void recenterOnScreen() {
+	    var dims = getDimensions();
+	    var res = Envision.getWindowDims();
+	    var h = getHeader();
+        var b = Envision.getDeveloperDesktop().getTaskBar();
+        
+        double hh = (h != null) ? h.height : 0;
+        double bh = (b != null) ? b.height : 0;
+        double oH = hh + bh;
+        double maxW = ENumUtil.clamp(dims.width, 0, res.width - 40);
+        double maxH = ENumUtil.clamp(dims.height, 0, res.height - 40 - oH);
+        
+        setSize(maxW, maxH);
+        centerObjectWithSize(maxW, maxH);
+        setPosition(dims.startX, dims.startY + hh);
+        reInitChildren();
+        bringToFront();
+	}
 	
 	//========
 	// zLevel

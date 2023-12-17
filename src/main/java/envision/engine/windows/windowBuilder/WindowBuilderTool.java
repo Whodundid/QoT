@@ -23,8 +23,8 @@ public class WindowBuilderTool extends WindowButton {
 	}
 	
 	@Override
-	public void drawObject(int mXIn, int mYIn) {
-		super.drawObject(mXIn, mYIn);
+	public void drawObject(long dt, int mXIn, int mYIn) {
+		super.drawObject(dt, mXIn, mYIn);
 		
 		if (parentScreen.getCurrentToolType() == toolType) {
 			drawHRect(EColors.red, 2, -2);

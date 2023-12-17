@@ -1,8 +1,7 @@
-package envision.engine.windows.bundledWindows;
+package envision.engine.windows.developerDesktop.shortcuts;
 
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
-import envision.engine.windows.developerDesktop.shortcuts.DesktopShortcut_Command;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
@@ -24,6 +23,7 @@ public class CommandShortcutEditorWindow extends WindowParent {
     protected WindowButton confirmButton, cancelButton;
     
     protected String enteredText;
+    protected boolean makeNew;
     
     //==============
     // Constructors
@@ -35,7 +35,12 @@ public class CommandShortcutEditorWindow extends WindowParent {
     }
     
     public CommandShortcutEditorWindow(DesktopShortcut_Command shortcutIn) {
+        this(shortcutIn, false);
+    }
+    
+    public CommandShortcutEditorWindow(DesktopShortcut_Command shortcutIn, boolean makeNewIn) {
         this.shortcut = shortcutIn;
+        this.makeNew = makeNewIn;
     }
     
     //===========================
@@ -50,6 +55,7 @@ public class CommandShortcutEditorWindow extends WindowParent {
         setMaxHeight(550);
         setResizeable(true);
         setMaximizable(false);
+        setMinimizable(false);
     }
     
     //===========================
@@ -116,7 +122,7 @@ public class CommandShortcutEditorWindow extends WindowParent {
     }
     
     @Override
-    public void drawObject(int mXIn, int mYIn) {
+    public void drawObject(long dt, int mXIn, int mYIn) {
         drawDefaultBackground();
         
     }
@@ -124,11 +130,17 @@ public class CommandShortcutEditorWindow extends WindowParent {
     protected void saveCommand() {
         if (EStringUtil.isNotPopulated(commandEntry.getText())) return;
         
+        System.out.println(shortcut);
         String text = commandEntry.getText();
         shortcut.parseCommand(text);
         
-        DeveloperDesktop.saveConfig();
-        DeveloperDesktop.reloadConfig();
+        if (makeNew) {
+            DeveloperDesktop.addShortcut(shortcut);
+        }
+        else {
+            DeveloperDesktop.saveConfig();
+            DeveloperDesktop.reloadConfig();            
+        }
         close();
     }
     

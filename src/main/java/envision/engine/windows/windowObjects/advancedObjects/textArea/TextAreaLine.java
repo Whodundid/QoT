@@ -71,7 +71,7 @@ public class TextAreaLine<E> extends WindowTextField {
 	//---------------------------
 	
 	@Override
-	public void drawObject_i(int mXIn, int mYIn) {
+	public void drawObject_i(long dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		updateValues();
 		//boolean current = parentTextArea.getCurrentLine() == this;
@@ -88,7 +88,7 @@ public class TextAreaLine<E> extends WindowTextField {
 		for (var o : getChildren()) {
 			if (o.willBeDrawn()) {
 				//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-	        	o.drawObject_i(mXIn, mYIn);
+	        	o.drawObject_i(dt, mXIn, mYIn);
 			}
 		}
 		

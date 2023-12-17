@@ -61,13 +61,13 @@ public class StaticTopParent extends EGui {
 		}
 		//if there is no lock, check if there was actually an object under the cursor
 		else if (underMouse != null) {
-			//check if the object is the focused object, if it is, pass the event to it, otherwise, start a focus request
+			// check if the object is the focused object, if it is, pass the event to it, otherwise, start a focus request
 			if (underMouse.equals(focusedObject)) {
 				
 			    focusedObject.mousePressed(mX, mY, button);
 				boolean dclicked = false;
 				
-				//check if the object was recently pressed and is eligible for a double click event
+				// check if the object was recently pressed and is eligible for a double click event
 				if (button == 0) {
 					var lastClicked = objIn.getLastClickedChild();
 					if (lastClicked == focusedObject) {
@@ -78,6 +78,10 @@ public class StaticTopParent extends EGui {
 							dclicked = true;
 						}
 					}
+				}
+				// check if eligible for middle click event
+				else if (button == 2) {
+				    focusedObject.onMiddleClick();
 				}
 				
 				objIn.setLastClickedChild(focusedObject);

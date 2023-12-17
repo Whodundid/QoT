@@ -58,7 +58,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	
 	//main draw
 	@Override
-	public void drawObject_i(int mXIn, int mYIn) {
+	public void drawObject_i(long dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		if (!willBeDrawn()) return;
 		
@@ -69,11 +69,11 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		if (!hasFirstDraw()) onFirstDraw_i();
 		
 		//draw this object first
-		drawObject(mX, mY);
+		drawObject(dt, mX, mY);
 		
 		//now draw all child objects on top of parent
 		for (var o : getChildren()) {
-		    drawWindowObject(o);
+		    drawWindowObject(dt, o);
 		}
 		
 		//draw highlighted window borders
@@ -85,7 +85,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		// draw object being dragged and dropped
 		if (dragAndDropObject != null) {
 		    if (!dragAndDropObject.hasFirstDraw()) dragAndDropObject.onFirstDraw();
-		    dragAndDropObject.drawObject_i(mX, mY);
+		    dragAndDropObject.drawObject_i(dt, mX, mY);
 		}
 		
 		//notify hover object
@@ -445,7 +445,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		}
 	}
 	
-   protected void drawWindowObject(IWindowObject o) {
+   protected void drawWindowObject(long dt, IWindowObject o) {
         //only draw if the object is actually visible
         if (!o.willBeDrawn() || o.isHidden()) return;
         boolean draw = true;
@@ -460,7 +460,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
         //notify object on first draw
         if (!o.hasFirstDraw()) o.onFirstDraw_i();
         //actually draw the child object
-        o.drawObject_i(mX, mY);
+        o.drawObject_i(dt, mX, mY);
         
         //draw grayed out overlay over everything if a focus lock object is present
         if (focusLockObject != null && !o.equals(focusLockObject)) {

@@ -35,10 +35,10 @@ public class LayerSystem implements Iterable<ScreenLayer> {
 	// Render
 	//--------
 	
-	public void onRenderTick() {
+	public void onRenderTick(long dt) {
 		for (int i = 0; i < layers.size(); i++) {
 			ScreenLayer l = layers.get(i);
-			l.renderLayer(Mouse.getMx(), Mouse.getMy());
+			l.renderLayer(dt, Mouse.getMx(), Mouse.getMy());
 		}
 	}
 	

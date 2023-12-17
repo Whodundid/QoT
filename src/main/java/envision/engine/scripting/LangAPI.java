@@ -3,20 +3,23 @@ package envision.engine.scripting;
 import java.io.File;
 
 import envision.Envision;
-import envision.engine.screens.GameScreen;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.screens.ScreenRepository;
+import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.game.entities.Entity;
 import envision.game.items.Item;
 import envision.game.world.GameWorld;
 import envision.game.world.Region;
 import envision.game.world.worldTiles.WorldTile;
-import envision_lang.lang.java.annotations.EFunction;
+import envision_lang.lang.java.annotations.EClass;
 import eutil.EUtil;
 import eutil.datatypes.util.EList;
+import qot.entities.player.QoT_Player;
+import qot.screens.gameplay.GamePlayScreen;
 import qot.settings.QoTSettings;
 
+@EClass
 public class LangAPI {
     
     //=================
@@ -24,6 +27,7 @@ public class LangAPI {
     //=================
     
     private static LangAPI INSTANCE;
+    
     public static LangAPI getInstance() {
         if (INSTANCE == null) INSTANCE = new LangAPI();
         return INSTANCE;
@@ -47,79 +51,133 @@ public class LangAPI {
     // Methods
     //=========
     
-    @EFunction public void tpEntity(int entityID, int x, int y) { tpEntity_i(entityID, x, y); }
-    @EFunction public void tpEntity(int entityID, int toEntityID) { tpEntity_i(entityID, toEntityID); }
-    @EFunction public void tpEntity(int entityID, String regionName) { tpEntity_i(entityID, regionName); }
+    public int[] getWorldDims() {
+        var world = Envision.theWorld;
+        if (world == null) return null;
+        return new int[] { world.getWidth(), world.getHeight() };
+    }
     
-    @EFunction public EList<Entity> getEntitiesInRegion(String regionName) { return null; }
-    @EFunction public EList<Entity> getLivingEntities() { return Envision.theWorld.getEntitiesInWorld(); }
+    public int[] getTileDims() {
+        var world = Envision.theWorld;
+        if (world == null) return null;
+        return new int[] { world.getTileWidth(), world.getTileHeight() };
+    }
     
-    @EFunction
+    public void tpEntity(int entityID, int x, int y) { tpEntity_i(entityID, x, y); }
+    public void tpEntity(int entityID, int toEntityID) { tpEntity_i(entityID, toEntityID); }
+    public void tpEntity(int entityID, String regionName) { tpEntity_i(entityID, regionName); }
+    
+    public EList<Integer> getEntitiesInRegion(String regionName) {
+        var region = getRegionFromName(regionName);
+        if (region == null) return null;
+        return region.getEntitiesInside().map(e -> e.getWorldID());
+    }
+    
+    public EList<Integer> getLivingEntities() {
+        var world = Envision.theWorld;
+        if (world == null) return null;
+        return world.getEntitiesInWorld().map(e -> e.getWorldID());
+    }
+    
+    public int getPlayerID() {
+        var player = Envision.thePlayer;
+        if (player == null) return -1;
+        return player.getWorldID();
+    }
+    
+    public String getEntityNameFromID(int entityID) {
+        var entity = getEntityFromID(entityID);
+        if (entity == null) return "NULL";
+        return entity.getName();
+    }
+    
+    public int[] getEntityWorldPos(int entityID) {
+        var entity = getEntityFromID(entityID);
+        if (entity == null) return null;
+        return new int[] { entity.worldX, entity.worldY };
+    }
+    
+    public int[] getEntityPixelPos(int entityID) {
+        var entity = getEntityFromID(entityID);
+        if (entity == null) return null;
+        return new int[] { (int) entity.startX, (int) entity.startY };
+    }
+    
     public boolean giveEntityItem(Entity entity, Item item) {
         return entity.giveItem(item);
     }
     
-    @EFunction
     public boolean removeItemFromEntity(Entity entity, Item item) {
         return entity.getInventory().getItems().removeFirstOccurrence(item);
     }
     
-    @EFunction
     public Item getItemAtSlot(int entityID, int slot) {
-        var entity = getEntityFromID(entityID);
-        if (entity == null) return null;
-        return entity.getInventory().getItemAtIndex(slot);
-    }
-    
-    @EFunction public void spawnEntity(String entityType, int x, int y) {}
-    @EFunction public void spawnEntity(String entityType, int entityID) {}
-    @EFunction public void spawnEntity(String entityType, String regionName) {}
-    
-    @EFunction public boolean killEntity(int entityID) { return killEntityFromID(entityID); }
-    
-    @EFunction
-    public EList<Entity> killEntitiesInRegion(Region region) {
-//        var entities = getEntitiesInRegion(region);
-//        entities.forEach(this::killEntity_i);
-//        return entities;
+        //        var entity = getEntityFromID(entityID);
+        //        if (entity == null) return null;
+        //        return entity.getInventory().getItemAtIndex(slot);
         return null;
     }
     
-    @EFunction public void loadWorld(String worldName) { loadWorld_i(worldName); }
-    @EFunction public void unloadWorld() { Envision.loadWorld(null); }
+    public int spawnEntity(String entityType, int x, int y) { return -1; }
+    public int spawnEntity(String entityType, int entityID) { return -1; }
+    public int spawnEntity(String entityType, String regionName) { return -1; }
     
-    @EFunction public void setTileAt(WorldTile tile, int x, int y) { Envision.theWorld.setTileAt(tile, x, y); }
-    @EFunction public WorldTile getTileAt(int x, int y) { return Envision.theWorld.getTileAt(x, y); }
+    public boolean killEntity(int entityID) { return killEntityFromID(entityID); }
     
-    @EFunction public double getEntitySpeed(Entity entity) { return entity.getSpeed(); }
-    @EFunction public void setEntitySpeed(Entity entity, double speed) { entity.setSpeed(speed); }
+    public EList<Integer> killEntitiesInRegion(String regionName) {
+        var region = getRegionFromName(regionName);
+        if (region == null) return null;
+        var entities = region.getEntitiesInside();
+        entities.forEach(this::killEntity_i);
+        return entities.map(e -> e.getWorldID());
+    }
     
-    @EFunction
+    public void loadWorld(String worldName) { loadWorld_i(worldName); }
+    public void unloadWorld() { Envision.loadWorld(null); }
+    
+    public void setTileAt(WorldTile tile, int x, int y) { Envision.theWorld.setTileAt(tile, x, y); }
+    public WorldTile getTileAt(int x, int y) { return Envision.theWorld.getTileAt(x, y); }
+    
+    public double getEntitySpeed(Entity entity) { return entity.getSpeed(); }
+    public void setEntitySpeed(Entity entity, double speed) { entity.setSpeed(speed); }
+    
     public boolean createRegion(Region region) {
         return Envision.theWorld.getRegionData().add(region);
     }
     
-    @EFunction
     boolean deleteRegion(Region region) {
         return Envision.theWorld.getRegionData().remove(region);
     }
     
-    @EFunction public int getWorldTime() { return Envision.theWorld.getTime(); }
-    @EFunction public int getDayLength() { return Envision.theWorld.getDayLength(); }
-    @EFunction public boolean isNight() { return Envision.theWorld.isNight(); }
-    @EFunction public boolean isDay() { return !isNight(); }
+    public int getWorldTime() { return Envision.theWorld.getTime(); }
+    public int getDayLength() { return Envision.theWorld.getDayLength(); }
+    public boolean isNight() { return Envision.theWorld.isNight(); }
+    public boolean isDay() { return !isNight(); }
     
-    @EFunction public boolean isPaused() { return Envision.isPaused(); }
-    @EFunction public void pauseGame() { Envision.pause(); }
-    @EFunction public void resumeGame() { Envision.unpause(); }
+    public boolean isPaused() { return Envision.isPaused(); }
+    public void pauseGame() { Envision.pause(); }
+    public void resumeGame() { Envision.unpause(); }
     
-    @EFunction public void displayScreen(String screenName) { displayScreen_i(screenName); }
-    @EFunction public void displayWindow(WindowParent window) { Envision.displayWindow(ScreenLevel.SCREEN, window); }
-    @EFunction public GameScreen getCurrentScreen() { return Envision.getCurrentScreen(); }
+    public void displayScreen(String screenName) { displayScreen_i(screenName); }
     
-    @EFunction
-    public EList<WindowParent> getWindowsOnScreen() {
-        return getCurrentScreen().getAllActiveWindows().map(w -> (WindowParent) w);
+    public void displayWindow(WindowParent window) {
+        Envision.displayWindow(ScreenLevel.SCREEN, window);
+    }
+    
+    public void displayWindow(ETerminalWindow window) {
+        Envision.displayWindow(ScreenLevel.SCREEN, window);
+    }
+    
+    public String getCurrentScreen() {
+        var screen = Envision.getCurrentScreen();
+        if (screen == null) return null;
+        return screen.getObjectName();
+    }
+    
+    public EList<String> getWindowsOnScreen() {
+        var screen = Envision.getCurrentScreen();
+        if (screen == null) return null;
+        return screen.getAllActiveWindows().map(w -> w.getObjectName());
     }
     
     //==================
@@ -129,14 +187,14 @@ public class LangAPI {
     private void tpEntity_i(int entityID, int x, int y) {
         var entity = getEntityFromID(entityID);
         if (entity == null) return;
-        entity.setWorldPos(x, y);
+        entity.setPixelPos(x, y);
     }
     
     private void tpEntity_i(int entityID, int toEntityID) {
         var entity = getEntityFromID(entityID);
         var toEntity = getEntityFromID(toEntityID);
         if (entity == null || toEntity == null) return;
-        entity.setWorldPos(toEntity.worldX, toEntity.worldY);
+        entity.setPixelPos(toEntity.worldX, toEntity.worldY);
     }
     
     private void tpEntity_i(int entityID, String regionName) {
@@ -188,7 +246,15 @@ public class LangAPI {
     
     private void loadWorld_i(String worldName) {
         var world = getWorldFromName(worldName);
+        Envision.setPlayer(new QoT_Player("Test"));
+        Envision.displayScreen(new GamePlayScreen());
         Envision.loadWorld(world);
+    }
+    
+    private String getEntityNameFromID_i(int entityID) {
+        var entity = getEntityFromID(entityID);
+        if (entity == null) return "NULL";
+        return entity.getName();
     }
     
 }

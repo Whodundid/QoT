@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import envision.debug.testStuff.SpriteSheetBuilder;
 import envision.debug.testStuff.TestTextureSheetBuilder;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.bundledWindows.CalculatorWindow;
@@ -30,6 +31,7 @@ public class WindowRegistry {
         registerWindow("keys", GLKeyChecker.class);
         registerWindow("colors", ColorPickerSimple.class);
         registerWindow("test-texture-sheet-builder", TestTextureSheetBuilder.class);
+        registerWindow("sprite-sheet-builder", SpriteSheetBuilder.class);
         
         LOADED = true;
     }
