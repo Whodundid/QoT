@@ -270,19 +270,19 @@ public class RightClickMenu<E> extends ActionWindowParent {
 	//------------------
 	
 	private void resize() {
-		int longestOption = 0;
+		double longestOption = 0;
 		double newWidth = 0;
 		double newHeight = options.size() * optionHeight + options.size() + 4 + (useTitle ? titleHeight : 0);
 		double sX = startX;
 		double sY = startY;
 		
 		for (var s : options.getAVals()) {
-			int w = FontRenderer.strWidth(s);
+			double w = FontRenderer.strWidth(s);
 			if (w > longestOption) longestOption = w;
 		}
 		
 		if (useTitle) {
-			int len = FontRenderer.strWidth(title);
+			double len = FontRenderer.strWidth(title);
 			if (len > longestOption) longestOption = len;
 		}
 		

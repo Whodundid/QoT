@@ -84,6 +84,7 @@ public abstract class Entity extends ComponentBasedObject {
 	 */
 	public int baseMeleeDamage;
 	
+	// TODO: Remove these
 	// Stuff for keeping track of entity attacks
 	public boolean attacking = false;
 	public boolean recentlyAttacked = false;
@@ -92,6 +93,7 @@ public abstract class Entity extends ComponentBasedObject {
 	public long timeUntilNextAttack = 300;
 	public long recentlyAttackedTimeout = 3000l;
 	
+	// TODO: Remove these
 	// Stuff for keeping track of when an entity was last hit
 	public boolean healthChanged = false;
 	public int lastHealthChangeAmount = 0;
@@ -99,7 +101,12 @@ public abstract class Entity extends ComponentBasedObject {
 	public long healthChangedTime;
 	public long healthChangedTimeout = 3000l;
 	
-	public EntityHealthBar healthBar;
+	// TODO: Component-ize the health bar ?
+	public EntityHealthBar healthBar; 
+	public final EntityFavorTracker favorTracker = new EntityFavorTracker(this);
+	public final EntityFavorDecider favorDecider = new EntityFavorDecider(this);
+	
+	// TODO: What is this??
 	public EList<IWindowObject> drawnObjects = EList.newList();
 	
 	public final MovementCollisionHelper collisionHelper;
@@ -155,6 +162,12 @@ public abstract class Entity extends ComponentBasedObject {
 	/** Called from the world whenever an entity collides with another entity. */
 	public void onEntityCollide(Entity collidingEntity) {}
 	
+	@Override
+	public String toString() {
+	    if (name == null) return super.toString();
+	    return name;
+	}
+	
 	//---------
 	// Methods
 	//---------
@@ -184,9 +197,16 @@ public abstract class Entity extends ComponentBasedObject {
 		healthChanged(amount);
 	}
 	
+	public void attackedBy(Entity ent, int amount) {
+	    drainHealth(amount);
+	    favorTracker.decreaseFavorWithEntity(ent, 25);
+	}
+	
 	@Override
 	public void onGameTick(float dt) {
 		super.onGameTick(dt);
+		
+		favorTracker.updateFavorOverTime((long) dt);
 		
 		if (healthChanged && (System.currentTimeMillis() - healthChangedTime >= healthChangedTimeout)) {
 			healthChanged = false;
@@ -285,10 +305,26 @@ public abstract class Entity extends ComponentBasedObject {
 	public boolean isDead() {
 		return health <= 0;
 	}
+    
+    public boolean isNeutralWithPlayer() { return favorDecider.isNeutral(Envision.thePlayer); }
+    public boolean isFriendsWithPlayer() { return favorDecider.isGoodFavor(Envision.thePlayer); }
+    public boolean isGoodFriendsWithPlayer() { return favorDecider.isReallyGoodFavor(Envision.thePlayer); }
+    public boolean isAnnoyedWithPlayer() { return favorDecider.isBadFavor(Envision.thePlayer); }
+    public boolean isEnemiesWithPlayer() { return favorDecider.isReallyBadFavor(Envision.thePlayer); }
+    public boolean isPositiveFavorWithPlayer() { return favorDecider.isPositiveFavor(Envision.thePlayer); }
+    public boolean isNegativeFavorWithPlayer() { return favorDecider.isNegativeFavor(Envision.thePlayer); }
+    
+	public boolean isNeutralWith(Entity ent) { return favorDecider.isNeutral(ent); }
+	public boolean isFriendsWith(Entity ent) { return favorDecider.isGoodFavor(ent); }
+	public boolean isGoodFriendsWith(Entity ent) { return favorDecider.isReallyGoodFavor(ent); }
+	public boolean isAnnoyedWith(Entity ent) { return favorDecider.isBadFavor(ent); }
+	public boolean isEnemiesWith(Entity ent) { return favorDecider.isReallyBadFavor(ent); }
+	public boolean isPositiveFavorWith(Entity ent) { return favorDecider.isPositiveFavor(ent); }
+	public boolean isNegativeFavorWith(Entity ent) { return favorDecider.isNegativeFavor(ent); }
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public boolean isPassable() { return passable; }
 	public boolean isNoClipping() { return allowNoClip; }
@@ -326,10 +362,12 @@ public abstract class Entity extends ComponentBasedObject {
 	public MovementCollisionHelper getCollisionHelper() { return collisionHelper; }
 	public ActiveAbilityTracker getAbilityTracker() { return abilityTracker; }
 	public EntitySpellbook getSpellbook() { return spellbook; }
+	public EntityFavorTracker getFavorTracker() { return favorTracker; }
+	public EntityFavorDecider getFavorDecider() { return favorDecider; }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
 	public Entity setPassable(boolean val) { passable = val; return this; }

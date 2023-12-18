@@ -76,6 +76,7 @@ public interface IGameWorld {
 	default EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) { return EList.newList(); }
 	default EList<GameObject> getAllGameObjectsWithinDistance(GameObject obj, double maxDistance) { return EList.newList(); }
 	default Direction getDirectionTo(GameObject start, GameObject dest) { return Direction.OUT; }
+	default double getAngleInDegressTo(GameObject start, GameObject dest) { return 0.0; }
 	
 	default <E extends GameObject> E addObjectToWorld(E ent) { return null; }
 	default <E extends GameObject> void addObjectToWorld(E... ents) {}

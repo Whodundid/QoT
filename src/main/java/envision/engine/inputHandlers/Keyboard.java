@@ -20,9 +20,9 @@ import envision.Envision;
  */
 public class Keyboard extends GLFWKeyCallback {
 	
-	//--------------------
+	//====================
 	// Keyboard Singleton
-	//--------------------
+	//====================
 	
 	/** The managed singleton keyboard instance. */
 	private static Keyboard instance;

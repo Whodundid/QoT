@@ -13,7 +13,7 @@ import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.renderingAPI.RendererContextType;
 import envision.engine.rendering.renderingAPI.RenderingContext;
 import envision.engine.rendering.shaders.Shaders;
-import qot.launcher.LauncherLogger;
+import envision.launcher.LauncherLogger;
 
 public class OpenGLContext extends RenderingContext {
 	

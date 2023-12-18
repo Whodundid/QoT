@@ -434,7 +434,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	public default void onMouseHover(int mX, int mY) {
 		if (properties().hoverText == null || properties().hoverText.isEmpty()) return;
 			
-		int strWidth = FontRenderer.strWidth(properties().hoverText);
+		double strWidth = FontRenderer.strWidth(properties().hoverText);
 		double sX = mX + 20.0;
 		double sY = mY - FontRenderer.FONT_HEIGHT / 2;
 		

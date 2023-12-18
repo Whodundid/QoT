@@ -367,7 +367,7 @@ public class EntityRenderer extends RenderingComponent {
 	    
 	    final String chat = theEntity.activeChat;
 	    final var world = theEntity.world;
-	    int chatWidth = FontRenderer.strWidth(chat);
+	    double chatWidth = FontRenderer.strWidth(chat);
 	    
 	    double midX = (x + w * 0.5);
 	    double dx = midX - (chatWidth * 0.6);
@@ -383,7 +383,7 @@ public class EntityRenderer extends RenderingComponent {
         if (camEntity != null) {
             final double tw = world.getTileWidth();
             double distToPlayer = world.getDistance(theEntity, camEntity);
-            if (distToPlayer > (6 * tw)) return;
+            if (distToPlayer > (12 * tw)) return;
             
             int distRatio = (int) (255 - ((255 * distToPlayer) / (4 * tw)) + (10 * tw));
             distRatio = ENumUtil.clamp(distRatio, 0, 255);
@@ -391,11 +391,11 @@ public class EntityRenderer extends RenderingComponent {
             textRatio = ENumUtil.clamp(ratio, 0, distRatio);
         }
         
-        var blackBr = EColors.black.brightnessOpacity(ratio - 30, ratio);
-        var backBr = EColors.mgray.brightnessOpacity(ratio + 30, ratio);
+        var blackBr = EColors.white.brightnessOpacity(ratio - 30, ratio);
+        var backBr = EColors.dsteel.brightnessOpacity(ratio + 30, ratio);
         var textBr = EColors.white.opacity(textRatio);
 	    
-	    RenderingManager.drawRect(dx, dy, dx + dw, dy + dh, blackBr);
+	    RenderingManager.drawHRect(dx, dy, dx + dw, dy + dh, 2, blackBr);
         RenderingManager.drawRect(dx + 1, dy + 1, dx + dw - 1, dy + dh - 1, backBr);
         RenderingManager.drawStringC(chat, midX, dy + dh / 2 - FontRenderer.HALF_FH + 2, textBr);
 	}

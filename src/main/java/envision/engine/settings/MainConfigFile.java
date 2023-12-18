@@ -17,7 +17,7 @@ public class MainConfigFile extends EnvisionConfigFile {
 	public boolean tryLoad() {
 		boolean good = true;
 		
-		EList<ConfigSetting<?>> settings = QoTSettings.getSettings();
+		EList<ConfigSetting<?>> settings = QoTSettings.instance().getConfigSettings();
 		
 		if (!exists()) trySave(settings);
 		
@@ -32,7 +32,7 @@ public class MainConfigFile extends EnvisionConfigFile {
 	
 	@Override
 	public boolean trySave() {
-		return trySave(QoTSettings.getSettings());
+		return trySave(QoTSettings.instance().getConfigSettings());
 	}
 	
 }

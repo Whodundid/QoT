@@ -1,6 +1,7 @@
 package qot.screens.main;
 
 import envision.Envision;
+import envision.engine.EngineSettings;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.screens.GameScreen;
@@ -16,20 +17,30 @@ import qot.settings.QoTSettings;
 
 public class OptionsScreen extends GameScreen {
 	
-	WindowButton fullscreen;
-	WindowButton back;
-	WindowSlider volumeSlider, fpsSlider;
-	WindowTextField upsInput;
-	WindowCheckBox vSync, animatedMainMenu;
-	WindowButton resolution;
+    //========
+    // Fields
+    //========
+    
+	private WindowButton fullscreen;
+	private WindowButton back;
+	private WindowSlider volumeSlider, fpsSlider;
+	private WindowTextField upsInput;
+	private WindowCheckBox vSync, animatedMainMenu;
+	private WindowButton resolution;
 	private boolean changed = false;
+	
+	//==============
+    // Constructors
+    //==============
 	
 	public OptionsScreen() {
 		super();
 		aliases.add("options", "settings", "controls");
 	}
 	
-	@Override public void initScreen() {}
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void initChildren() {
@@ -48,12 +59,12 @@ public class OptionsScreen extends GameScreen {
 		upsInput = new WindowTextField(this, fpsSlider.startX, fpsSlider.endY + 60, 75, 35);
 		upsInput.setText(Envision.getTargetTPS());
 		
-		boolean fs = QoTSettings.fullscreen.get();
+		boolean fs = EngineSettings.fullscreen.get();
 		String fText = (fs) ? "Disable FullScreen" : "Enable FullScreen";
 		double fsW = FontRenderer.strWidth("Disable FullScreen") + 40;
 		fullscreen = new WindowButton(this, upsInput.startX, upsInput.endY + 20, fsW, 35, fText);
 		
-		boolean vS = QoTSettings.vsync.get();
+		boolean vS = EngineSettings.vsync.get();
 		vSync = new WindowCheckBox(this, fullscreen.startX, fullscreen.endY + 20, 50, 50, vS);
 		
 		boolean amm = QoTSettings.animatedMainMenu.get();
@@ -77,7 +88,8 @@ public class OptionsScreen extends GameScreen {
 		drawString("Animated Main Menu", animatedMainMenu.endX + 10, animatedMainMenu.midY - FontRenderer.HALF_FH);
 		
 		if (changed && !Mouse.isLeftDown()) {
-			QoTSettings.saveConfig();
+			Envision.saveEngineConfig();
+			Envision.saveGameConfig();
 			changed = false;
 		}
 	}
@@ -116,7 +128,7 @@ public class OptionsScreen extends GameScreen {
 	private void fpsSlider() {
 		double val = fpsSlider.getSliderValue();
 		
-		QoTSettings.targetFPS.set((int) val);
+		EngineSettings.targetFPS.set((int) val);
 		Envision.setTargetFPS((int) val);
 		changed = true;
 	}
@@ -136,7 +148,7 @@ public class OptionsScreen extends GameScreen {
 			ups = ENumUtil.clamp(ups, 30, 300);
 			upsInput.setText(ups);
 			
-			QoTSettings.targetUPS.set((int) ups);
+			EngineSettings.targetUPS.set((int) ups);
 			Envision.setTargetUPS(ups);
 			changed = true;
 		}
@@ -147,19 +159,19 @@ public class OptionsScreen extends GameScreen {
 	}
 	
 	private void vSync() {
-		Envision.enableVSync(QoTSettings.vsync.toggle());
+		Envision.enableVSync(EngineSettings.vsync.toggle());
 	}
 	
 	private void fullscreen() {
-		Envision.setFullscreen(QoTSettings.fullscreen.toggle());
+		Envision.setFullscreen(EngineSettings.fullscreen.toggle());
 	}
 	
 	private void resolution() {
-		int scale = QoTSettings.resolutionScale.get();
+		int scale = EngineSettings.resolutionScale.get();
 		scale++;
 		//TEMPORARY BECAUSE THERE AREN'T ANY OTHER RESOLUTIONS
 		if (scale >= 3) scale = 1;
-		QoTSettings.resolutionScale.set(scale);
+		EngineSettings.resolutionScale.set(scale);
 		
 		switch (scale) {
 		case 1:

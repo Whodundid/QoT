@@ -39,12 +39,12 @@ public class LinkConfirmationWindow extends WindowDialogueBox {
 		String prompt = "Confirm";
 		String warning = "Warning";
 		
-		int longestString = 0;
+		double longestString = 0;
 		longestString = FontRenderer.strWidth(prompt);
-		int linkLength = FontRenderer.strWidth(link);
+		double linkLength = FontRenderer.strWidth(link);
 		if (linkLength > longestString) { longestString = linkLength; }
-		int copyLength = FontRenderer.strWidth("Copy") + 8;
-		int buttonLength = copyLength + 232; //length of all buttons and gaps inbetween
+		double copyLength = FontRenderer.strWidth("Copy") + 8;
+		double buttonLength = copyLength + 232; //length of all buttons and gaps inbetween
 		if (buttonLength > longestString) { longestString = buttonLength; }
 		
 		double x = res.width / 2 - longestString / 2 - 15;

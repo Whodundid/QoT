@@ -89,7 +89,7 @@ public class Goblin extends Enemy {
 				else {
 					hit = true;
 					timeSinceLastHit = System.currentTimeMillis();
-					Envision.thePlayer.drainHealth(getBaseMeleeDamage());
+					Envision.thePlayer.attackedBy(this, getBaseMeleeDamage());
 				}
 			}
 			move(dirToPlayer);

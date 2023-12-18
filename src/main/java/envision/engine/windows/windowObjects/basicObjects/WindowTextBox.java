@@ -139,10 +139,10 @@ public class WindowTextBox extends WindowObject {
 	
 	private void redimension() {
 		if (lines.isNotEmpty()) {
-			int longest = 0;
+			double longest = 0;
 			for (var box : lines) {
 				String s = box.getA();
-				int len = FontRenderer.strWidth(s);
+				double len = FontRenderer.strWidth(s);
 				if (len > longest) longest = len;
 			}
 			
@@ -194,11 +194,11 @@ public class WindowTextBox extends WindowObject {
 	public static void drawBox(double xIn, double yIn, double borderIn, double lineGapIn, boolean centered, boolean shadowed, Box2<String, Integer>[] linesIn) {
 		if (linesIn != null) {
 			
-			int longest = 0;
+			double longest = 0;
 			for (var box : linesIn) {
 				String s = box.getA();
 				if (s != null) {
-					int len = FontRenderer.strWidth(s);
+					double len = FontRenderer.strWidth(s);
 					if (len > longest) longest = len;
 				}
 			}

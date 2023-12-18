@@ -6,6 +6,7 @@ import java.nio.file.FileSystems;
 import java.util.Collection;
 
 import envision.Envision;
+import envision.engine.EngineSettings;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.TerminalCommand;
@@ -38,7 +39,6 @@ import eutil.misc.ScreenLocation;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
 import qot.assets.textures.taskbar.TaskBarTextures;
-import qot.settings.QoTSettings;
 
 //Author: Hunter Bragg
 
@@ -152,9 +152,9 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 			}
 		};
 		
-		final boolean lineNumbers = QoTSettings.termLineNumbers.get();
-		final int background = QoTSettings.termBackground.get();
-		final int opacity = QoTSettings.termOpacity.get();
+		final boolean lineNumbers = EngineSettings.termLineNumbers.get();
+		final int background = EngineSettings.termBackground.get();
+		final int opacity = EngineSettings.termOpacity.get();
 		final int c = EColors.changeOpacity(background, opacity);
 		
 		inputField.setBackgroundColor(c);
@@ -218,7 +218,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 			header.setTitle("Terminal " + EColors.yellow + dirS);
 		}
 		
-		var opacity = QoTSettings.termOpacity.get();
+		var opacity = EngineSettings.termOpacity.get();
 		var c = EColors.changeOpacity(0xff000000, opacity);
 		drawRect(startX, inputField.startY - 1, endX, inputField.startY, EColors.black);
         drawHRect(EColors.black);
@@ -589,11 +589,11 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 		int textWidth = 0;
 		int maxData = 0;
 		int spaceAmount = 3;
-		int longest = 0;
+		double longest = 0;
 		int longestLen = 0;
 		
 		for (String s : dataIn) {
-			int len = FontRenderer.strWidth(s);
+			double len = FontRenderer.strWidth(s);
 			if (len > longest) {
 				longest = len;
 				longestLen = s.length();

@@ -2,6 +2,7 @@ package envision.engine.terminal.commands.categories.game;
 
 import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
+import eutil.EUtil;
 import eutil.colors.EColors;
 
 public class CMD_Stats extends TerminalCommand {
@@ -26,9 +27,9 @@ public class CMD_Stats extends TerminalCommand {
 		
 		var entities = Envision.theWorld.getEntitiesInWorld();
 		
-		int id = parseInt(firstArg());
+		String id = firstArg();
 		for (var e : entities) {
-			if (e.getWorldID() == id) {
+			if (EUtil.isEqual(e.getWorldID(), id)) {
 				Envision.theWorld.removeEntity(e);
 				writeln("Killed entity! " + id, EColors.lgreen);
 				break;

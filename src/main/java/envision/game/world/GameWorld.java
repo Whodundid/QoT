@@ -28,7 +28,7 @@ public class GameWorld implements IGameWorld {
 	//-------------------------------------------------------------
 	
 	private int nextEntityID = 0;
-	public int getNextEntityID() { return nextEntityID++; }
+	public String getNextEntityID() { return String.valueOf(nextEntityID++); }
 	
 	//-------------------------------------------------------------
 	
@@ -503,6 +503,18 @@ public class GameWorld implements IGameWorld {
 			else return Direction.NW;
 		
 		return Direction.OUT;
+	}
+	
+	@Override
+	public double getAngleInDegressTo(GameObject start, GameObject dest) {
+	    if (start == null || dest == null) return Double.NaN;
+        if (!worldObjects.containsEach(start, dest)) return Double.NaN;
+	    
+	    double y = start.midY - dest.midY;
+	    double x = start.midX - dest.midX;
+	    
+	    double angle = Math.abs(180.0 - Math.atan2(y, x) * (180.0 / Math.PI)) % 360.0;
+	    return angle;
 	}
 	
 	/**

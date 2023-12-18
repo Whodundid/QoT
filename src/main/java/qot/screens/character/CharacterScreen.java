@@ -116,6 +116,7 @@ public class CharacterScreen extends GameScreen {
 			}
 		}
 		
+		drawString("Gold: " + EColors.mc_gold + theEntity.getGold(), 50, midY + dH / 2 - 35);
 		drawString("Damage per hit: " + EColors.lred + theEntity.getBaseMeleeDamage(), 50, midY + dH / 2);
 	}
 	

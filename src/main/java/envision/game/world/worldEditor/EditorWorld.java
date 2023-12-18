@@ -34,7 +34,7 @@ public class EditorWorld implements IGameWorld {
 	//--------
 	
 	private int nextEntityID = 0;
-	public int getNextEntityID() { return nextEntityID++; }
+	public String getNextEntityID() { return String.valueOf(nextEntityID++); }
 	
 	private GameWorld actualWorld;
 	

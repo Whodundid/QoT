@@ -8,11 +8,11 @@ import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.resourceLoaders.Sprite;
 import envision.engine.settings.config.ConfigSetting;
+import envision.engine.settings.config.EnvisionConfigFile;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
-import qot.settings.QoTSettings;
 
 //Author: Hunter Bragg
 
@@ -213,20 +213,20 @@ public class WindowButton<E> extends ActionObject {
         }
     }
     
-    public void toggleTrueFalseDisplay(boolean val, boolean updateConfig) {
+    public void toggleTrueFalseDisplay(boolean val, EnvisionConfigFile configToUpdate) {
         if (trueFalseButton) {
             setString(val ? "True" : "False");
             setStringColor(val ? 0xff55ff55 : 0xffff5555);
-            if (updateConfig) QoTSettings.saveConfig();
+            if (configToUpdate != null) configToUpdate.saveConfig();
         }
     }
     
-    public void toggleTrueFalseDisplay(ConfigSetting<Boolean> setting, boolean updateConfig) {
+    public void toggleTrueFalseDisplay(ConfigSetting<Boolean> setting, EnvisionConfigFile configToUpdate) {
         if (trueFalseButton) {
             boolean val = setting.toggle();
             setString(val ? "True" : "False");
             setStringColor(val ? 0xff55ff55 : 0xffff5555);
-            if (updateConfig) QoTSettings.saveConfig();
+            if (configToUpdate != null) configToUpdate.saveConfig();
         }
     }
 	

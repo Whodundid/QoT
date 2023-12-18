@@ -121,7 +121,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 		if (!Envision.isDebugMode() || !isMaximized()) return;
 		
 		double y = hasHeader() ? getHeader().startY - FontRenderer.FONT_HEIGHT : startY - FontRenderer.FONT_HEIGHT;
-        int pos = 0;
+        double pos = 0;
         //int half = -1;
         String draw = "";
         String time = String.valueOf(initTime);
@@ -153,7 +153,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
         
         if (DebugFunctions.drawWindowDimensions) {
             String dims = "[" + (int) startX + ", " + (int) startY + ", " + (int) width + " " + (int) height + "]";
-            int eX = FontRenderer.strWidth(dims);
+            double eX = FontRenderer.strWidth(dims);
             var sX = startX + pos;
             pos += eX;
             draw += EColors.seafoam + dims;

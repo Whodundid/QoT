@@ -10,7 +10,7 @@ public class BootsOfSpeed extends Item {
 
 	public BootsOfSpeed() {
 		super("Boots of Speed", ItemList.BOOTS_OF_SPEED.ID);
-		this.setUsable(true);
+		this.setUsable(false);
         this.setIsDestroyedOnUse(true);
         this.setSprite(new Sprite(ItemTextures.boots_of_speed));
         this.setDescription("These boots bestow its wearer with unmatched swiftness");

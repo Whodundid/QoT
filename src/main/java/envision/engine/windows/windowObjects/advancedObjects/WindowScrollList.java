@@ -334,7 +334,7 @@ public class WindowScrollList<E> extends WindowObject {
 	}
 	
 	public void fitItemsInList() { fitItemsInList(0, 0); }
-	public void fitItemsInList(int overShootX, int overShootY) {
+	public void fitItemsInList(double overShootX, double overShootY) {
 		double right = 0;
 		double down = 0;
 		

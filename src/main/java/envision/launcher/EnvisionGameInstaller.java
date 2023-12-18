@@ -1,4 +1,4 @@
-package qot.launcher;
+package envision.launcher;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,36 +11,43 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.jar.JarFile;
 
+import envision.Envision;
 import envision.engine.terminal.terminalUtil.ESystemInfo;
 import eutil.sys.OSType;
-import qot.Main;
 
-public class QoTInstaller {
+public abstract class EnvisionGameInstaller {
 
 	public static final String DEFAULT_WINDOWS_INSTALL_DIR = "\\AppData\\Roaming";
+	public static final String DEFAULT_LINUX_INSTALL_DIR = "/opt";
 	
-	//-------------
+	//=============
 	// Helper Enum
-	//-------------
+	//=============
 	
 	protected enum InstallerStatus { SUCCESS, FAILED; }
 
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
-	private QoTInstaller() {}
+	private EnvisionGameInstaller() {}
 	
-	//----------------
+	//==================
+	// Abstract Methods
+	//==================
+	
+	public abstract File getInstallationDirectory();
+	
+	//================
 	// Static Methods
-	//----------------
+	//================
 	
 	/**
-	 * Returns the file system path for where QoT would be installed to given the
+	 * Returns the file system path for where the game would be installed to given the
 	 * user's OS.
 	 * <p>
-	 * Note: This only specifies the directory in which QoT will be installed to,
-	 * not the actual 'QoT Installation Directory' itself.
+	 * Note: This only specifies the directory in which the game will be installed to,
+	 * not the actual 'Game Installation Directory' itself.
 	 * 
 	 * @return The root installation path File
 	 */
@@ -75,17 +82,7 @@ public class QoTInstaller {
 	}
 	
 	/**
-	 * Builds and returns the default 'QoT Installation Directory' given the type of
-	 * operating system the game is being run from.
-	 * 
-	 * @return The file path to the default QoT installation location
-	 */
-	public static File getDefaultQoTInstallDir() {
-		return new File(QoTInstaller.getDefaultInstallDir() + "\\QoT");
-	}
-	
-	/**
-	 * Attempts to create the QoT installation directory on this computer's file
+	 * Attempts to create the game's installation directory on this computer's file
 	 * system.
 	 * <p>
 	 * If successful, InstallerStatus.SUCCESS will be returned. If the directory
@@ -96,12 +93,12 @@ public class QoTInstaller {
 	 * 
 	 * @return The resulting status of the creation attempt
 	 */
-	public static InstallerStatus createInstallDir(File customDir) throws Exception {
-		return createInstallDir(customDir, true);
+	public static InstallerStatus createInstallDir(LauncherSettings settings, File customDir) throws Exception {
+		return createInstallDir(settings, customDir, true);
 	}
 	
 	/**
-	 * Attempts to create the QoT installation directory on this computer's file
+	 * Attempts to create the game's installation directory on this computer's file
 	 * system.
 	 * <p>
 	 * If successful, InstallerStatus.SUCCESS will be returned. If the directory
@@ -112,12 +109,12 @@ public class QoTInstaller {
 	 * 
 	 * @return The resulting status of the creation attempt
 	 */
-	public static InstallerStatus createInstallDir(String customDir) throws Exception {
-		return createInstallDir(customDir, true);
+	public static InstallerStatus createInstallDir(LauncherSettings settings, String customDir) throws Exception {
+		return createInstallDir(settings, customDir, true);
 	}
 	
 	/**
-	 * Attempts to create the QoT installation directory on this computer's file
+	 * Attempts to create the game's installation directory on this computer's file
 	 * system.
 	 * <p>
 	 * If successful, InstallerStatus.SUCCESS will be returned. If the directory
@@ -129,13 +126,15 @@ public class QoTInstaller {
 	 * 
 	 * @return The resulting status of the creation attempt
 	 */
-	public static InstallerStatus createInstallDir(File customDir, boolean extractResources) throws Exception {
-		if (customDir == null) return createInstallDir((String) null, extractResources);
-		return createInstallDir(customDir.getAbsolutePath(), extractResources);
+	public static InstallerStatus createInstallDir(LauncherSettings settings, File customDir, boolean extractResources)
+	    throws Exception
+	{
+		if (customDir == null) return createInstallDir(settings, (String) null, extractResources);
+		return createInstallDir(settings, customDir.getAbsolutePath(), extractResources);
 	}
 	
 	/**
-	 * Attempts to create the QoT installation directory on this computer's file
+	 * Attempts to create the game's installation directory on this computer's file
 	 * system.
 	 * <p>
 	 * If successful, InstallerStatus.SUCCESS will be returned. If the directory
@@ -147,7 +146,9 @@ public class QoTInstaller {
 	 * 
 	 * @return The resulting status of the creation attempt
 	 */
-	public static InstallerStatus createInstallDir(String customDir, boolean extractResources) throws Exception {
+	public static InstallerStatus createInstallDir(LauncherSettings settings, String customDir, boolean extractResources)
+	    throws Exception
+	{
 		//determine installation path
 		String path = null;
 		if (customDir != null) {
@@ -179,7 +180,7 @@ public class QoTInstaller {
 		}
 		
 		//extract resources into installation directory
-		setupResourcesDir(dir, extractResources);
+		setupResourcesDir(settings, dir, extractResources);
 		
 		//setup successful
 		return InstallerStatus.SUCCESS;
@@ -191,37 +192,43 @@ public class QoTInstaller {
 	 * 
 	 * @param dir The QoT installation Directory to install to
 	 */
-	private static void setupResourcesDir(File dir, boolean extractResources) throws Exception {
+	private static void setupResourcesDir(LauncherSettings settings, File dir, boolean extractResources) throws Exception {
 		//create output directory for resources within install dir
 		File resourcesDir = new File(dir, "resources");
 		
 		//create game directories in install dir
-		File profilesDir = new File(dir, "saves");
-		File worldsDir = new File(dir, "editorWorlds");
+		//File profilesDir = new File(dir, "saves");
+		//File worldsDir = new File(dir, "editorWorlds");
 		
 		//create each dir if they don't already exist
 		LauncherLogger.log("Creating extraction points in install dir!");
 		if (!resourcesDir.exists()) resourcesDir.mkdirs();
-		if (!profilesDir.exists()) profilesDir.mkdirs();
-		if (!worldsDir.exists()) worldsDir.mkdirs();
+		//if (!profilesDir.exists()) profilesDir.mkdirs();
+		//if (!worldsDir.exists()) worldsDir.mkdirs();
 		
-		if (extractResources) {
-			//extract data from each internal dir into installation dir
-			try { extractDataToDir("font", resourcesDir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
-			try { extractDataToDir("sounds", resourcesDir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
-			try { extractDataToDir("textures", resourcesDir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
-			//try { extractDataToDir("shaders", resourcesDir); }
-			//catch (Exception e) { e.printStackTrace(); throw e; }
-			
-			//copy bundled maps into install map dir
-			//try { extractDataToDir("editorWorlds", dir); }
-			//catch (Exception e) { e.printStackTrace(); throw e; }
-			try { extractDataToDir("menuWorlds", dir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
-		}
+        if (extractResources) {
+            //extract data from each internal dir into installation dir
+            final var dirsToExtract = settings.getDirectoriesToExtract();
+            
+            for (String d : dirsToExtract) {
+                try { extractDataToDir(d, dir); }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+            
+            //extract data from each internal dir into installation dir
+            final var resourceDirsToExtract = settings.getResourceDirectoriesToExtract();
+            
+            for (String d : resourceDirsToExtract) {
+                try { extractDataToDir(d, resourcesDir); }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+        }
 	}
 	
 	/**
@@ -236,12 +243,12 @@ public class QoTInstaller {
 	 * 
 	 * @throws Exception Thrown if any error occurs during extraction
 	 */
-	private static void extractDataToDir(String fromPath, File toDir) throws Exception {
+	public static void extractDataToDir(String fromPath, File toDir) throws Exception {
 		LauncherLogger.log("Attempting to extract data from '" + fromPath + "' -> '" + toDir + "'");
 		
 		//this line is used to specifically grab the class system's file structure to determine
 		//what kind of environment the game is being executed from (an IDE or a Jar)
-		String path = Main.class.getResource(Main.class.getSimpleName() + ".class").getFile();
+		String path = Envision.class.getResource(Envision.class.getSimpleName() + ".class").getFile();
 		
 		//if path does not start with a '/' then it's very likely a jar file!
 		if (!path.startsWith("/")) {
@@ -255,13 +262,13 @@ public class QoTInstaller {
 			
 			//wrap as file and begin the attempt to extract data from jar file
 			File jarPath = new File(path);
-			extractDataFromJarDir(jarPath, QoTLauncher.resourcePath + fromPath, toDir);
+			extractDataFromJarDir(jarPath, EnvisionGameLauncher.resourcePath + fromPath, toDir);
 			return;
 		}
 		else {
 			//attempt to get path as resource from classpath
-			var das_path = QoTLauncher.resourcePath + fromPath;
-			var url = Main.class.getResource("/" + das_path); //append '/' to stop relative path
+			var das_path = EnvisionGameLauncher.resourcePath + fromPath;
+			var url = Envision.class.getResource("/" + das_path); //append '/' to stop relative path
 			File dir = null;
 			
 			//try to convert resource url to file
@@ -332,7 +339,7 @@ public class QoTInstaller {
 					if (!Files.exists(newFilePath)) Files.createDirectories(newFilePath.getParent());
 					
 					//because this is extracting from a jar, the resource must be extracted byte-by-byte
-					byte[] bytes = Main.class.getClassLoader().getResourceAsStream(name).readAllBytes();
+					byte[] bytes = Envision.class.getClassLoader().getResourceAsStream(name).readAllBytes();
 					LauncherLogger.log("Extracting '" + bytes.length + "' bytes to '" + newFile + "'!");
 					
 					//copy file to installation path
@@ -406,14 +413,14 @@ public class QoTInstaller {
 	 * 
 	 * @throws Exception Thrown if any error occurs during extraction
 	 */
-	private static boolean verifyDir(String fromPath, File toDir) throws IOException {
+	public static boolean verifyDir(String fromPath, File toDir) throws IOException {
 		//this line is used to specifically grab the class system's file structure to determine
 		//what kind of environment the game is being executed from (an IDE or a Jar)
-		String path = QoTLauncher.mainPath;
+		String path = EnvisionGameLauncher.mainPath;
 		//System.out.println("InJar: " + QoTLauncher.inJar + " : path: '" + path + "'");
 		
 		//if path does not start with a '/' then it's very likely a jar file!
-		if (QoTLauncher.inJar) {
+		if (EnvisionGameLauncher.inJar) {
 			//System.out.println("Attempting to read jar path of: '" + path + "'");
 			LauncherLogger.log("Attempting to read jar path of: '" + path + "'");
 			path = ClassLoader.getSystemResource(path).getFile();
@@ -425,11 +432,11 @@ public class QoTInstaller {
 			
 			//wrap as file and begin the attempt to extract data from jar file
 			File jarPath = new File(path);
-			return verifyJarDir(jarPath, QoTLauncher.resourcePath + fromPath, toDir);
+			return verifyJarDir(jarPath, EnvisionGameLauncher.resourcePath + fromPath, toDir);
 		}
 		else {
 			//attempt to get path as resource from classpath
-			var url = Main.class.getResource("/" + QoTLauncher.resourcePath + fromPath); //append '/' to stop relative path
+			var url = Envision.class.getResource("/" + EnvisionGameLauncher.resourcePath + fromPath); //append '/' to stop relative path
 			File dir = null;
 			
 			//try to convert resource url to file
@@ -534,7 +541,7 @@ public class QoTInstaller {
 	 */
 	private static boolean verifyDevDir(File fromDir, File toDir) throws IOException {
 		if (fromDir == null) {
-			System.err.println("QoTInstaller: 'verifyDevDir': fromDir is somehow null!");
+			System.err.println("Installer: 'verifyDevDir': fromDir is somehow null!");
 			return false;
 		}
 		for (File f : fromDir.listFiles()) {
@@ -569,9 +576,9 @@ public class QoTInstaller {
 	 * 
 	 * @return True if install directory exists on this computer
 	 */
-	public static boolean doesInstallDirExist(File dir) {
+	public static boolean doesInstallDirExist(LauncherSettings settings, File dir) {
 		if (dir == null) {
-			LauncherLogger.log("No current QoT dir exists");
+			LauncherLogger.log("No current '" + settings.getGameName() + "' dir exists");
 			return false;
 		}
 		return doesInstallDirExist(dir.getAbsolutePath());
@@ -595,12 +602,12 @@ public class QoTInstaller {
 	 * @param dirPath The installation dir
 	 * @return True if installation is valid
 	 */
-	public static boolean verifyActuallyInstalled(String dir) {
+	public static boolean verifyActuallyInstalled(LauncherSettings settings, String dir) {
 		if (dir == null) {
-			LauncherLogger.log("QoT dir null -- nothing to verify");
+			LauncherLogger.log("'" + settings.getGameName() + "' dir null -- nothing to verify");
 			return false;
 		}
-		return verifyActuallyInstalled(new File(dir));
+		return verifyActuallyInstalled(settings, new File(dir));
 	}
 	
 	/**
@@ -610,23 +617,23 @@ public class QoTInstaller {
 	 * @param dirPath The installation dir
 	 * @return True if installation is valid
 	 */
-	public static boolean verifyActuallyInstalled(File dir) {
+	public static boolean verifyActuallyInstalled(LauncherSettings settings, File dir) {
 		//if dir is null, then QoT is not installed!
 		if (dir == null) {
-			LauncherLogger.log("QoT dir null -- nothing to verify");
+			LauncherLogger.log("'" + settings.getGameName() + "' dir null -- nothing to verify");
 			return false;
 		}
 		
 		//if dir doesn't exist, then QoT is not installed!
 		if (!dir.exists()) {
-			LauncherLogger.log("QoT dir does not actually exist -- nothing to verify");
+			LauncherLogger.log("'" + settings.getGameName() + "' dir does not actually exist -- nothing to verify");
 			return false;
 		}
 		
 		//create output directory for resources within install dir
 		File resourcesDir = new File(dir, "resources");
 		if (!resourcesDir.exists()) {
-			LauncherLogger.log("QoT resources dir does not actually exist -- cannot verify!");
+			LauncherLogger.log("'" + settings.getGameName() + "' resources dir does not actually exist -- cannot verify!");
 			return false;
 		}
 		
@@ -635,20 +642,13 @@ public class QoTInstaller {
 		
 		LauncherLogger.log("\nVerifying install dir resources...");
 		try {
+		    final var dirs = settings.getDirectoriesToExtract();
+		    
 			//verify that data from each internal dir exists within the installation dir
-			try { verified &= verifyDir("font", resourcesDir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
-			try { verified &= verifyDir("sounds", resourcesDir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
-			try { verified &= verifyDir("textures", resourcesDir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
-			//try { verified &= verifyDir("shaders", resourcesDir); }
-			//catch (Exception e) { e.printStackTrace(); throw e; }
-			//verify bundled maps in install dir
-			//try { verified &= verifyDir("editorWorlds", dir); }
-			//catch (Exception e) { e.printStackTrace(); throw e; }
-			try { verified &= verifyDir("menuWorlds", dir); }
-			catch (Exception e) { e.printStackTrace(); throw e; }
+		    for (String d : dirs) {
+		        try { verified &= verifyDir(d, resourcesDir); }
+		        catch (Exception e) { e.printStackTrace(); throw e; }
+		    }
 		}
 		catch (Exception e) {
 			LauncherLogger.logErrorWithDialogBox(e, "Error reading install dir!", "Setup Error!");

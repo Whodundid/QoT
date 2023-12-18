@@ -3,6 +3,7 @@ package qot.screens.main;
 import java.io.File;
 
 import envision.Envision;
+import envision.engine.EngineSettings;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
@@ -41,8 +42,8 @@ public class WorldSelectScreen extends GameScreen {
 		
 		defaultWorld = new WindowButton(this, bw, midY - 200, w, 45, "Default Map");
 		loadWorld = new WindowButton(this, bw, defaultWorld.endY + 5, w, 45, "Load World");
-		lastWorld = new WindowButton(this, bw, loadWorld.endY + 100, w, 45, QoTSettings.lastMap.get().replace(".twld", ""));
-		lastEditor = new WindowButton(this, bw, lastWorld.endY + 40, w, 45, QoTSettings.lastEditorMap.get().replace(".twld", ""));
+		lastWorld = new WindowButton(this, bw, loadWorld.endY + 100, w, 45, EngineSettings.lastMap.get().replace(".twld", ""));
+		lastEditor = new WindowButton(this, bw, lastWorld.endY + 40, w, 45, EngineSettings.lastEditorMap.get().replace(".twld", ""));
 		
 		back = new WindowButton(this, 5, endY - 45, 150, 40, "Back");
 		
@@ -97,7 +98,7 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	private void loadLastEditor() {
-		String last = QoTSettings.lastEditorMap.get();
+		String last = EngineSettings.lastEditorMap.get();
 		if (last.isBlank() || last.isEmpty()) error = "There is no last editor map!";
 		else {
 			File worldFile = new File(QoTSettings.getEditorWorldsDir(), last);
@@ -106,7 +107,7 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	private void loadLastWorld() {
-		String last = QoTSettings.lastMap.get().replace(".twld", "");
+		String last = EngineSettings.lastMap.get().replace(".twld", "");
 		if (last.isBlank() || last.isEmpty()) error = "There is no last game map!";
 		else {
 			File worldFile = new File(QoTSettings.getEditorWorldsDir(), last);
@@ -134,8 +135,8 @@ public class WorldSelectScreen extends GameScreen {
 		Envision.setPlayer(new QoT_Player("Test"));
 		var world = new GameWorld(worldFile);
 		
-		QoTSettings.lastMap.set(worldFile.getName().replace(".twld", ""));
-		QoTSettings.saveConfig();
+		EngineSettings.lastMap.set(worldFile.getName().replace(".twld", ""));
+		Envision.saveEngineConfig();
 		
 		Envision.loadWorld(world);
 		world.setCameraZoom(3.5D);

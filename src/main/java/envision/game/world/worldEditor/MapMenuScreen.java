@@ -3,6 +3,7 @@ package envision.game.world.worldEditor;
 import java.io.File;
 
 import envision.Envision;
+import envision.engine.EngineSettings;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -47,7 +48,7 @@ public class MapMenuScreen extends GameScreen {
 		loadCur = new WindowButton(this, nameField.endX + 10, nameLabel.endY + 19, nameField.height + 1, nameField.height + 1);
 		loadCur.setButtonTexture(EditorTextures.play);
 		
-		nameField.setText(QoTSettings.lastEditorMap.get().replace(".twld", ""));
+		nameField.setText(EngineSettings.lastEditorMap.get().replace(".twld", ""));
 		
 		addObject(newMap, mapDir);
 		addObject(back);
@@ -84,8 +85,8 @@ public class MapMenuScreen extends GameScreen {
 	//--------------------------
 	
 	private void newMap() {
-		QoTSettings.lastEditorMap.set(nameField.getText());
-		QoTSettings.saveConfig();
+		EngineSettings.lastEditorMap.set(nameField.getText());
+		Envision.saveEngineConfig();
 		Envision.displayScreen(new NewMapCreatorScreen(), this);
 	}
 	
@@ -94,8 +95,8 @@ public class MapMenuScreen extends GameScreen {
 			String lastMap = nameField.getText();
 			//lastMap = (lastMap.endsWith(".twld")) ? lastMap : lastMap + ".twld";
 			
-			QoTSettings.lastEditorMap.set(lastMap);
-			QoTSettings.saveConfig();
+			EngineSettings.lastEditorMap.set(lastMap);
+			Envision.saveEngineConfig();
 			
 			File f = new File(QoTSettings.getEditorWorldsDir(), lastMap);
 			if (f.exists()) {
@@ -120,8 +121,8 @@ public class MapMenuScreen extends GameScreen {
 		File f = explorer.getSelectedFile();
 		
 		if (f != null && f.exists()) {
-			QoTSettings.lastEditorMap.set(f.getName());
-			QoTSettings.saveConfig();
+			EngineSettings.lastEditorMap.set(f.getName());
+            Envision.saveEngineConfig();
 			explorer.close();
 			Envision.displayScreen(new MapEditorScreen(f), this);
 		}

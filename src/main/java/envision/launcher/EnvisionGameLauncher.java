@@ -1,4 +1,4 @@
-package qot.launcher;
+package envision.launcher;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -22,39 +22,39 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import envision.Envision;
 import eutil.datatypes.boxes.Box2;
 import eutil.swing.ActionPerformer;
 import eutil.swing.LeftClick;
-import qot.Main;
-import qot.QoT;
 
-public class QoTLauncher extends JFrame {
+public abstract class EnvisionGameLauncher extends JFrame {
 	
-	private static QoTLauncher launcher;
-	
+    static EnvisionGameLauncher launcher;
+    
 	static String mainPath;
 	static boolean inJar = false;
 	static String resourcePath = "";
 	
-	//---------------
+	//===============
 	// Static Runner
-	//---------------
+	//===============
 	
 	/** The actual launcher runner. */
-	public static void runLauncher() {
-		//this line is used to specifically grab the class system's file structure to determine
-		//what kind of environment the game is being executed from (an IDE or a Jar)
-		String main = Main.class.getSimpleName() + ".class";
-		mainPath = Main.class.getResource(main).getFile();
+	public static void runLauncher(LauncherSettings settings) {
+		// this line is used to specifically grab the class system's file structure to determine
+		// what kind of environment the game is being executed from (an IDE or a Jar)
+		String main = Envision.class.getSimpleName() + ".class";
+		mainPath = Envision.class.getResource(main).getFile();
 		
 		//System.out.println("MAIN PATH: '" + mainPath);
 		
-		//if the main path starts with 'file:/' then the game is being run in a strange way
-		//remove 'file:' portion and attempt to continue and assume running in jar
+		// if the main path starts with 'file:/' then the game is being run in a strange way
+		// remove 'file:' portion and attempt to continue and assume running in jar
 		if (mainPath.startsWith("file:/")) {
 			// index 4 = '/' in main path
 			mainPath = mainPath.substring(5);
@@ -62,28 +62,34 @@ public class QoTLauncher extends JFrame {
 			inJar = true;
 		}
 		
-		//if path does not start with a '/' then it's very likely a jar file!
+		// if path does not start with a '/' then it's very likely a jar file!
 		else if (!mainPath.startsWith("/")) {
 			inJar = true;
 			resourcePath = "resources/";
 		}
 		
-		//attempt to create launcher directory
-		if (!LauncherDir.setupLauncherDir()) return;
+		// attempt to create launcher directory
+		if (!LauncherDir.setupLauncherDir(settings)) return;
 		
-		LauncherLogger.log("Starting QoT Launcher!");
+		ensureInstallationDirectoryName(settings);
+		
+		LauncherLogger.log("Starting '" + settings.getGameName() + "' Launcher!");
 		LauncherLogger.log("runLauncher=" + LauncherDir.runLauncher);
 		
 		if (LauncherDir.runLauncher) {
-			launcher = new QoTLauncher();
+		    var game = settings.getGame();
+			launcher = game.createGameLauncher(settings);
 		}
 	}
 	
-	public static QoTLauncher getLauncher() { return launcher; }
 	
-	//--------
+	//=====================================================================================
+	//=====================================================================================
+	
+	
+	//========
 	// Fields
-	//--------
+	//========
 	
 	/**
 	 * Keeps track of whether or not the game is actually installed to the current
@@ -92,7 +98,7 @@ public class QoTLauncher extends JFrame {
 	private boolean installed = false;
 	
 	/**
-	 * The active working settings for which QoT will be installed to and run with.
+	 * The active working settings for which the game will be installed using and run with.
 	 */
 	private LauncherSettings launcherSettings;
 	
@@ -117,41 +123,53 @@ public class QoTLauncher extends JFrame {
 	
 	private JFileChooser fileChooser;
 	
-	//-----------------
+	//=================
 	// image resources
+	//=================
+	
 	private BufferedImage
-		programIcon,
-		logo,
-		background,
-		selectionsBackground,
+	programIcon,
+	logo,
+	background,
+	selectionsBackground,
 	
-		playButton,
-		playButtonSel,
-		runText,
-		installText,
+	playButton,
+	playButtonSel,
+	runText,
+	installText,
 	
-		settingsButton,
-		settingsButtonSel,
-		settingsText,
+	settingsButton,
+	settingsButtonSel,
+	settingsText,
 	
-		folderButton,
-		folderButtonSel,
-		installDirText,
+	folderButton,
+	folderButtonSel,
+	installDirText,
 	
-		backButton,
-		backButtonSel,
-		backText;
-	//-----------------
+	backButton,
+	backButtonSel,
+	backText;
 	
-	//--------------
+	//==============
 	// Constructors
-	//--------------
+	//==============
 	
-	private QoTLauncher() {
-		//create launcher settings and grab the install dir from launcher settings
-		launcherSettings = new LauncherSettings();
-		launcherSettings.INSTALL_DIR = LauncherDir.getInstallDir();
-		launcherSettings.IN_JAR = inJar;
+//	private EnvisionGameLauncher() {
+//		//create launcher settings and grab the install dir from launcher settings
+//		launcherSettings = new LauncherSettings();
+//		launcherSettings.INSTALL_DIR = LauncherDir.getInstallDir();
+//		launcherSettings.IN_JAR = inJar;
+//		LauncherLogger.log("Parsed install dir of: '" + launcherSettings.INSTALL_DIR + "'");
+//		
+//		loadLauncherResources();
+//		
+//		//init launcher window
+//		init();
+//	}
+	
+	protected EnvisionGameLauncher(LauncherSettings settings) {
+		launcherSettings = settings;
+		
 		LauncherLogger.log("Parsed install dir of: '" + launcherSettings.INSTALL_DIR + "'");
 		
 		loadLauncherResources();
@@ -160,16 +178,11 @@ public class QoTLauncher extends JFrame {
 		init();
 	}
 	
-	private QoTLauncher(LauncherSettings settings) {
-		launcherSettings = settings;
-		
-		//init launcher window
-		init();
-	}
-	
-	//------------------
+	//==================
 	// Resource Helpers
-	//------------------
+	//==================
+	
+	protected abstract void launchGame(LauncherSettings settings);
 	
 	private void loadLauncherResources() {
 		try {
@@ -255,11 +268,11 @@ public class QoTLauncher extends JFrame {
 		return new Box2<>(dir, img);
 	}
 	
-	private BufferedImage loadResource(String base, String file) {
+	protected BufferedImage loadResource(String base, String file) {
 		return loadResource(base, file, true);
 	}
 	
-	private BufferedImage loadResource(String base, String file, boolean printError) {
+	protected BufferedImage loadResource(String base, String file, boolean printError) {
 		try {
 			if (base.endsWith("/") && file.startsWith("/")) file = file.substring(0, file.length() - 1);
 			if (!base.endsWith("/") && !file.startsWith("/")) base += "/";
@@ -275,19 +288,19 @@ public class QoTLauncher extends JFrame {
 		}
 	}
 	
-	//--------------
+	//==============
 	// Init Methods
-	//--------------
+	//==============
 	
 	private void init() {
 		LauncherLogger.log("Initializing launcher...");
 		
-		//populate with default path if null
+		// populate with default path if null
 		if (launcherSettings.INSTALL_DIR == null) {
-			launcherSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
+			launcherSettings.INSTALL_DIR = new File(EnvisionGameInstaller.getDefaultInstallDir());
 		}
 		
-		//check if QoT is actually installed at the given installation directory
+		// check if the game is already installed at the given installation directory
 		checkInstalled();
 		
 		//init
@@ -307,8 +320,8 @@ public class QoTLauncher extends JFrame {
 	private void initWindow() throws Exception {
 		setResizable(false);
 		setIconImage(programIcon);
-		setTitle("QoT Launcher");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setTitle(launcherSettings.getGameName() + " Launcher");
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		int width = 700;
 		int height = 550;
@@ -327,7 +340,7 @@ public class QoTLauncher extends JFrame {
 		logoLabel.setForeground(Color.WHITE);
 		logoLabel.setBackground(Color.LIGHT_GRAY);
 		logoLabel.setIcon(new ImageIcon(logo));
-		logoLabel.setBounds(236, 56, 211, 154);
+		logoLabel.setBounds(236, 56, 500, 154);
 		contentPane.add(logoLabel);
 		
 		mainSelectionPanel = new JPanel() {
@@ -342,7 +355,7 @@ public class QoTLauncher extends JFrame {
 		mainSelectionPanel.setLayout(null);
 		
 		changeInstallDir = new JButton();
-		changeInstallDir.addActionListener(ActionPerformer.of(() -> openDirSelection()));
+		ActionPerformer.applyOn(changeInstallDir, this::openDirSelection);
 		changeInstallDir.setToolTipText("Modify installation directory");
 		changeInstallDir.setIcon(new ImageIcon(folderButton));
 		changeInstallDir.setPressedIcon(new ImageIcon(folderButtonSel));
@@ -355,13 +368,13 @@ public class QoTLauncher extends JFrame {
 		mainSelectionPanel.add(changeInstallDir);
 		
 		installDirMenuLabel = new JLabel();
-		installDirMenuLabel.setBounds(20, 15, 233, 29);
+		installDirMenuLabel.setBounds(20, 15, 500, 29);
 		installDirMenuLabel.setIcon(new ImageIcon(installDirText));
 		installDirMenuLabel.setVisible(false);
 		mainSelectionPanel.add(installDirMenuLabel);
 		
 		runOrInstall = new JButton();
-		runOrInstall.addActionListener(ActionPerformer.of(() -> tryRunOrInstall()));
+		ActionPerformer.applyOn(runOrInstall, this::tryRunOrInstall);
 		runOrInstall.setBounds(50, 61, 40, 40);
 		runOrInstall.setOpaque(false);
 		runOrInstall.setFocusPainted(false);
@@ -372,7 +385,7 @@ public class QoTLauncher extends JFrame {
 		mainSelectionPanel.add(runOrInstall);
 		
 		runLabel = new JLabel();
-		runLabel.addMouseListener(LeftClick.of(() -> tryRunOrInstall()));
+		LeftClick.applyOn(runLabel, this::tryRunOrInstall);
 		runLabel.setBounds(100, 61, 129, 40);
 		if (installed) runLabel.setIcon(new ImageIcon(runText));
 		else runLabel.setIcon(new ImageIcon(installText));
@@ -380,7 +393,7 @@ public class QoTLauncher extends JFrame {
 		mainSelectionPanel.add(runLabel);
 		
 		settings = new JButton();
-		settings.addActionListener(ActionPerformer.of(() -> openSettingsMenu(true)));
+		ActionPerformer.applyOn(settings, () -> openSettingsMenu(true));
 		settings.setToolTipText("Modify installation properties");
 		settings.setBounds(50, 124, 40, 40);
 		settings.setOpaque(false);
@@ -392,15 +405,15 @@ public class QoTLauncher extends JFrame {
 		mainSelectionPanel.add(settings);
 		
 		lblSettings = new JLabel();
-		lblSettings.addMouseListener(LeftClick.of(() -> openSettingsMenu(true)));
+		LeftClick.applyOn(lblSettings, () -> openSettingsMenu(true));
 		lblSettings.setToolTipText("Modify installation properties");
-		lblSettings.setBounds(100, 124, 129, 40);
+		lblSettings.setBounds(100, 124, 500, 40);
 		lblSettings.setIcon(new ImageIcon(settingsText));
 		lblSettings.setForeground(Color.gray.brighter());
 		mainSelectionPanel.add(lblSettings);
 		
 		installDirOutputLabel = new JLabel(String.valueOf(launcherSettings.INSTALL_DIR));
-		installDirOutputLabel.addMouseListener(LeftClick.of(() -> openDirSelection()));
+		LeftClick.applyOn(installDirOutputLabel, this::openDirSelection);
 		installDirOutputLabel.setToolTipText(String.valueOf(launcherSettings.INSTALL_DIR));
 		installDirOutputLabel.setForeground(Color.LIGHT_GRAY);
 		installDirOutputLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -410,7 +423,7 @@ public class QoTLauncher extends JFrame {
 		mainSelectionPanel.add(installDirOutputLabel);
 		
 		settings_back = new JButton();
-		settings_back.addActionListener(ActionPerformer.of(() -> openSettingsMenu(false)));
+		ActionPerformer.applyOn(settings_back, () -> openSettingsMenu(false));
 		settings_back.setOpaque(false);
 		settings_back.setFocusPainted(false);
 		settings_back.setContentAreaFilled(false);
@@ -422,7 +435,7 @@ public class QoTLauncher extends JFrame {
 		mainSelectionPanel.add(settings_back);
 		
 		backLabel = new JLabel();
-		backLabel.addMouseListener(LeftClick.of(() -> openSettingsMenu(false)));
+		LeftClick.applyOn(backLabel, () -> openSettingsMenu(false));
 		backLabel.setIcon(new ImageIcon(backText));
 		backLabel.setBounds(100, 150, 129, 40);
 		backLabel.setVisible(false);
@@ -449,9 +462,9 @@ public class QoTLauncher extends JFrame {
 		updateForceReinstallVisibility();
 	}
 	
-	//-------------------------
+	//=========================
 	// Internal Window Methods
-	//-------------------------
+	//=========================
 	
 	/**
 	 * Garbage way of 'changing' the current """screen""". Smile :)
@@ -487,7 +500,7 @@ public class QoTLauncher extends JFrame {
 		File curDir = launcherSettings.INSTALL_DIR;
 		
 		//if the path already ends with 'QoT' use the parent directory instead
-		if (launcherSettings.INSTALL_DIR.getName().endsWith("QoT")) {
+		if (launcherSettings.INSTALL_DIR.getName().endsWith(launcherSettings.getGameName())) {
 			if (launcherSettings.INSTALL_DIR.getParentFile() != null) {
 				curDir = launcherSettings.INSTALL_DIR.getParentFile();
 			}
@@ -505,7 +518,7 @@ public class QoTLauncher extends JFrame {
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setApproveButtonText("Select");
 		fileChooser.setDialogTitle("Select Install Directory");
-		fileChooser.showOpenDialog(QoTLauncher.this);
+		fileChooser.showOpenDialog(EnvisionGameLauncher.this);
 		
 		File file = fileChooser.getSelectedFile();
 		if (file != null) {
@@ -535,9 +548,9 @@ public class QoTLauncher extends JFrame {
 		}
 	}
 	
-	//------------------
+	//==================
 	// Internal Methods
-	//------------------
+	//==================
 	
 	private void tryRunOrInstall() {
 		if (forceReinstall != null && forceReinstall.isSelected()) {
@@ -551,13 +564,13 @@ public class QoTLauncher extends JFrame {
 		else {
 			LauncherLogger.log("\nAttempting to launch game...");
 			closeLauncher();
-			QoT.startGame(launcherSettings);
+			launchGame(launcherSettings);
 		}
 	}
 	
 	private void tryInstall(boolean runAfter) {
 		try {
-			switch (QoTInstaller.createInstallDir(launcherSettings.INSTALL_DIR)) {
+			switch (EnvisionGameInstaller.createInstallDir(launcherSettings, launcherSettings.INSTALL_DIR)) {
 			case SUCCESS:
 				if (checkInstalled()) {
 					LauncherLogger.logWithDialogBox("Installation success", "Installation complete!");
@@ -566,7 +579,7 @@ public class QoTLauncher extends JFrame {
 					
 					if (runAfter) {
 						closeLauncher();
-						QoT.startGame(launcherSettings);
+						launchGame(launcherSettings);
 					}
 				}
 				else {
@@ -590,24 +603,26 @@ public class QoTLauncher extends JFrame {
 		updateForceReinstallVisibility();
 	}
 	
-	/**
-	 * Makes several checks against the mapped installation directory to confirm
-	 * that the chosen directory is actually valid and ends with 'QoT'.
-	 */
-	private void ensureInstallDirEndsWithQoT() {
-		//if any of the following checks regarding the current installation directory
-		//fail, then the install directory will be reset to the default one
+    /**
+     * Makes several checks against the mapped installation directory to
+     * confirm that the chosen directory is actually valid and ends with the
+     * name of the game being installed.
+     */
+	private static void ensureInstallationDirectoryName(LauncherSettings settings) {
+		// if any of the following checks regarding the current installation directory
+		// fail, then the install directory will be reset to the default one
 		
-		//grab the current directory
-		File dir = launcherSettings.INSTALL_DIR;
+	    File defaultDir = new File(EnvisionGameInstaller.getDefaultInstallDir(), settings.getGameName());
+	    
+		// grab the current directory && ensure the directory actually exists
+		if (settings.INSTALL_DIR == null) {
+		    settings.INSTALL_DIR = defaultDir;
+		}
 		
-		//ensure the directory actually exists
-		if (dir == null) launcherSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
-		
-		//ensure that the directory is not actually empty
-		String path = dir.getAbsolutePath();
+		// ensure that the directory is not actually empty
+		String path = settings.INSTALL_DIR.getAbsolutePath();
 		if (path.isBlank() || path.isEmpty()) {
-			launcherSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
+			settings.INSTALL_DIR = defaultDir;
 		}
 	}
 	
@@ -616,19 +631,20 @@ public class QoTLauncher extends JFrame {
 	 */
 	private boolean checkInstalled() {
 		//verify that the dir is valid -- to some extent..
-		ensureInstallDirEndsWithQoT();
+		ensureInstallationDirectoryName(launcherSettings);
 		
 		//check that dir exists and whether or not it is actually installed
-		if (QoTInstaller.doesInstallDirExist(launcherSettings.INSTALL_DIR)) {
-			return installed = QoTInstaller.verifyActuallyInstalled(launcherSettings.INSTALL_DIR);
+		if (EnvisionGameInstaller.doesInstallDirExist(launcherSettings, launcherSettings.INSTALL_DIR)) {
+			installed = EnvisionGameInstaller.verifyActuallyInstalled(launcherSettings, launcherSettings.INSTALL_DIR);
+			return installed;
 		}
 		
 		return false;
 	}
 	
-	//----------------
+	//================
 	// Static Methods
-	//----------------
+	//================
 	
 	/**
 	 * Closes the launcher.

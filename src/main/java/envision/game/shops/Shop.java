@@ -14,7 +14,7 @@ public class Shop {
 	private int inventorySize = 10;
 	private EntityInventory shopInventory;
 	private EList<Shopkeeper> shopkeepers = EList.newList();
-	private ShopWindow windowInstance;
+	private TradingWindow windowInstance;
 	
 	/** The modifier that a shop will add or remove to all item values on purchases. */
 	private double shopBuyFromModifier = 1.10;
@@ -43,7 +43,7 @@ public class Shop {
 	        windowInstance.close();
 	    }
 	    
-	    windowInstance = new ShopWindow(this, shopkeeper, tradingEntity);
+	    windowInstance = new TradingWindow(this, shopkeeper, tradingEntity);
 	    
 	    Envision.getActiveTopParent().displayWindow(windowInstance);
 	}

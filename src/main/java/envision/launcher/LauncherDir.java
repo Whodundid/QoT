@@ -1,13 +1,13 @@
-package qot.launcher;
+package envision.launcher;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 
+import envision.Envision;
 import eutil.file.LineReader;
 import eutil.strings.EStringUtil;
-import qot.QoT;
 
 /**
  * Manages the QoT Launcher dir that is installed to
@@ -63,20 +63,22 @@ public class LauncherDir {
 	 * 
 	 * @return
 	 */
-	static boolean setupLauncherDir() {
+	static boolean setupLauncherDir(LauncherSettings settings) {
+	    String name = settings.getGameName();
+	    
 		try {
-			String dir = QoTInstaller.getDefaultInstallDir();
+			String dir = EnvisionGameInstaller.getDefaultInstallDir();
 			//System.out.println("LauncherDir: installing launcher dir to: '" + dir + "'");
-			launcherDir = new File(dir + SEPARATOR + "QoT Launcher");
+			launcherDir = new File(dir + SEPARATOR + name + " Launcher");
 			
 			//check if launcher directory already exists
 			if (!launcherDir.exists() && !launcherDir.mkdirs()) {
-				LauncherLogger.logErrorWithDialogBox("Cannot create the QoT Launcher directory!", "Setup Error!");
+				LauncherLogger.logErrorWithDialogBox("Cannot create the " + name + " Launcher directory!", "Setup Error!");
 				return false;
 			}
 		}
 		catch (Exception e) {
-			LauncherLogger.logErrorWithDialogBox(e, "Cannot create the QoT Launcher directory!", "Setup Error!");
+			LauncherLogger.logErrorWithDialogBox(e, "Cannot create the " + name + " Launcher directory!", "Setup Error!");
 			return false;
 		}
 		
@@ -85,16 +87,14 @@ public class LauncherDir {
 			launcherSettingsFile = new File(launcherDir, SETTINGS_FILE_NAME);
 			//System.out.println("LauncherDir: Checking for settings file: '" + launcherSettingsFile + "'");
 			
-			//create default launcher settings file
+			// create default launcher settings file
 			if (!launcherSettingsFile.exists()) {
-				var defaultSettings = new LauncherSettings();
-				defaultSettings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
-				updateLauncherSettingsFile(defaultSettings);
+				updateLauncherSettingsFile(settings);
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			LauncherLogger.logErrorWithDialogBox(e, "Cannot create the QoT Launcher directory!", "Setup Error!");
+			LauncherLogger.logErrorWithDialogBox(e, "Cannot create the " + name + " Launcher directory!", "Setup Error!");
 			return false;
 		}
 		
@@ -118,8 +118,8 @@ public class LauncherDir {
 		//create settings file for which to store launcher specific setting in
 		launcherSettingsFile = new File(launcherDir, SETTINGS_FILE_NAME);
 		
-		try (var writer = new FileWriter(launcherSettingsFile, Charset.forName("UTF-8"))) {
-			String version = "# QoT Version: " + QoT.version;
+		try (var writer = new FileWriter(launcherSettingsFile, StandardCharsets.UTF_8)) {
+			String version = "# Envision Engine - build " + Envision.VERSION_BUILD + " - " + Envision.VERSION_DATE;
 			String dashes = EStringUtil.repeatString("-", version.length());
 			writer.write("#" + dashes + "\n");
 			writer.write(version);
@@ -130,7 +130,7 @@ public class LauncherDir {
 			String dirPath = (installDir != null) ? installDir.getAbsolutePath() : "";
 			LauncherLogger.log("Writing install path: " + dirPath);
 			
-			writer.write("\n# The directory QoT is or will be installed to");
+			writer.write("\n# The directory '" + settings.getGameName() + "' is (or will be) installed to");
 			writer.write("\n" + INSTALL_PATH_SETTING + dirPath);
 			writer.write("\n\n# Sets the level for logging -- if 'ONLY_ERRORS' then no debug outputs will be logged");
 			writer.write("\n" + LAUNCHER_LOG_LEVEL + logLevel);

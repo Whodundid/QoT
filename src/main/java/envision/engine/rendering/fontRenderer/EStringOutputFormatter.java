@@ -1,5 +1,6 @@
 package envision.engine.rendering.fontRenderer;
 
+import envision.Envision;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.debug.Broken;
@@ -105,12 +106,12 @@ public class EStringOutputFormatter {
         return sb.toString();
 	}
 	
-	public static int getStringWidth(String in) {
+	public static double getStringWidth(String in) {
 		if (in == null) return -1;
 		
 		String removed = removeColorCodes(in);
 		
-		return FontRenderer.strWidth(removed);
+		return removed.length() * (FontRenderer.getCharWidth() * FontRenderer.getScaleSpace() / Envision.getGameScale());
 	}
 	
 	/** Breaks a String into a list of smaller strings based on a set maximum line width. */

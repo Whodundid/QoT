@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import org.apache.commons.io.FileUtils;
 
 import envision.Envision;
+import envision.engine.EngineSettings;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
@@ -208,9 +209,9 @@ public class DeveloperDesktop extends TopWindowParent {
         //if (taskBar != null) taskBar.drawObject_i(mX, mY);
         
         //draw game fps
-        if (QoTSettings.drawFPS.getBoolean()) {
+        if (EngineSettings.drawFPS.getBoolean()) {
             String s = "FPS: " + Envision.getFPS();
-            int s_width = FontRenderer.strWidth(s);
+            double s_width = FontRenderer.strWidth(s);
             drawString(s, Envision.getWidth() - 10.0 - s_width, 10.0);
         }
     }
@@ -257,7 +258,7 @@ public class DeveloperDesktop extends TopWindowParent {
         }
         //display framerate
         else if (action == 1 && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
-            QoTSettings.drawFPS.set(!QoTSettings.drawFPS.get());
+            EngineSettings.drawFPS.toggle();
         }
         else if (hasFocus) {
             super.handleKeyboardInput(action, typedChar, keyCode);

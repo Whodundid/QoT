@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.glfw.GLFW;
 
 import envision.Envision;
+import envision.engine.assets.EngineTextures;
 import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
@@ -21,12 +22,13 @@ import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
+import envision.game.EnvisionGameTemplate;
+import envision.launcher.EnvisionGameLauncher;
+import envision.launcher.LauncherLogger;
+import envision.launcher.LauncherSettings;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
-import qot.assets.textures.entity.EntityTextures;
 import qot.assets.textures.general.GeneralTextures;
-import qot.launcher.LauncherLogger;
-import qot.launcher.LauncherSettings;
 
 public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisionInputReceiver {
 	
@@ -37,6 +39,8 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 	private static FontRenderer fontRenderer;
 	private static TextureSystem textureSystem;
 	private static BatchManager batch;
+	
+	public static EnvisionGameTemplate game;
 	
 	//private static EDimension windowSize;
 	
@@ -50,14 +54,32 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 	// OpenGL Back-end Setup
 	//---------------------------------------------------------------------------------------------
 	
-	public static void runTestingEnvironment(LauncherSettings settings) {
- 		Envision.createGame(new TestGame());
- 		Envision.getInstance().setIcon(EntityTextures.whodundid);
- 		Envision.setTargetFPS(240);
- 		Envision.setTargetUPS(150);
-		Envision.startGame(settings);
-		//new OpenGLTestingEnvironment();
-	}
+	public static void main(String[] args) {
+        game = new TestGame() {
+            @Override
+            public <T extends EnvisionGameLauncher> T createGameLauncher(LauncherSettings settings) {
+                return (T) new EnvisionGameLauncher(settings) {
+                    @Override
+                    protected void launchGame(LauncherSettings settings) {
+                        runTestingEnvironment(settings);
+                    }
+                };
+            }
+        };
+        
+        var settings = new LauncherSettings(game);
+        settings.setAdditionalDirectoriesToExtract();
+        
+        EnvisionGameLauncher.runLauncher(settings);
+    }
+    
+    public static void runTestingEnvironment(LauncherSettings settings) {
+        Envision.loadGame(settings);
+        Envision.setWindowIcon(EngineTextures.noscreens);
+        Envision.setTargetFPS(240);
+        Envision.setTargetUPS(150);
+        Envision.startGame();
+    }
 	
 	private OpenGLTestingEnvironment() {
 		GLFW.glfwInit();

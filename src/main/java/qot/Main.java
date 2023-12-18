@@ -1,9 +1,8 @@
 package qot;
 
+import envision.launcher.EnvisionGameLauncher;
+import envision.launcher.LauncherSettings;
 import eutil.sys.TracingPrintStream;
-import qot.launcher.LauncherSettings;
-import qot.launcher.QoTInstaller;
-import qot.launcher.QoTLauncher;
 
 public class Main {
 
@@ -43,12 +42,12 @@ public class Main {
 	 */
 	public static final boolean RUN_OPEN_GL_TESTING_ENVIRONMENT = false;
 	
-	//------
+	//======
 	// Main
-	//------
+	//======
 	
 	public static void main(String[] args) throws IllegalArgumentException {
-		//setup print tracing
+		// setup print tracing
 		TracingPrintStream.enableTrace();
 		TracingPrintStream.setTracePrimitives(true);
 		TracingPrintStream.enableTracingEmptyLines(true);
@@ -56,31 +55,36 @@ public class Main {
 		
 		//-------------------------------------------
 		
-		//if opting to use the launcher
-		if (RUN_LAUNCHER) {
-			QoTLauncher.runLauncher();
-		}
-		//otherwise if opting to run directly from a dev environment
-		else {
-			try {
-				//create fake launcher settings to bind resource paths
-				var settings = new LauncherSettings();
-				settings.INSTALL_DIR = QoTInstaller.getDefaultQoTInstallDir();
-				
-				//creates the base install directory for settings/resources/worlds/etc.
-				if (!QoTInstaller.verifyActuallyInstalled(settings.INSTALL_DIR)) {
-					QoTInstaller.createInstallDir(settings.INSTALL_DIR, EXTRACT_RESOURCES);
-				}
-				
-				settings.USE_INTERNAL_RESOURCES_PATH = USE_INTERNAL_RESOURCES;
-				
-				//start the game with the fake settings
-				QoT.startGame(settings);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+        var settings = new LauncherSettings(QoT.instance());
+        settings.setResourceDirectoriesToExtract("sounds", "shaders", "textures", "menuWorlds");
+        
+        EnvisionGameLauncher.runLauncher(settings);
+		
+//		// if opting to use the launcher
+//		if (RUN_LAUNCHER) {
+//			QoTLauncher.runLauncher();
+//		}
+//		// otherwise if opting to run directly from a dev environment
+//		else {
+//			try {
+//				// create fake launcher settings to bind resource paths
+//				var settings = new LauncherSettings();
+//				settings.INSTALL_DIR = EnvisionGameInstaller.getDefaultInstallDir();
+//				
+//				// creates the base install directory for settings/resources/worlds/etc.
+//				if (!EnvisionGameInstaller.verifyActuallyInstalled(settings, settings.INSTALL_DIR)) {
+//				    EnvisionGameInstaller.createInstallDir(settings.INSTALL_DIR, EXTRACT_RESOURCES);
+//				}
+//				
+//				settings.USE_INTERNAL_RESOURCES_PATH = USE_INTERNAL_RESOURCES;
+//				
+//				//start the game with the fake settings
+//				QoT.startGame(settings);
+//			}
+//			catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 }

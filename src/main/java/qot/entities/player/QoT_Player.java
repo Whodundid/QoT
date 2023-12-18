@@ -3,11 +3,14 @@ package qot.entities.player;
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.resourceLoaders.Sprite;
+import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
 import envision.game.entities.player.PlayerStats;
+import envision.game.shops.TradingWindow;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
+import eutil.random.ERandomUtil;
 import qot.abilities.Abilities;
 import qot.assets.textures.entity.EntityTextures;
 import qot.items.Items;
@@ -47,6 +50,9 @@ public class QoT_Player extends Player {
 	
 	@Override
 	public void onMousePress(int mXIn, int mYIn, int button) {
+	    if (Envision.getCurrentScreen().isWindowOpen(TradingWindow.class)) return;
+	    if (Envision.getCurrentScreen().isWindowOpen(RightClickMenu.class)) return;
+	    
 		if (!attacking && button == 0) {
 			attacking = true;
 			recentlyAttacked = true;
@@ -62,7 +68,7 @@ public class QoT_Player extends Player {
 			
 			for (var e : inRange) {
 				var damage = getBaseMeleeDamage();
-				e.drainHealth(damage);
+				e.attackedBy(this, damage);
 				//addObject(new DamageSplash(e.startX + e.midX, e.startY + e.midY, damage));
 				if (e.isDead()) {
 					//if (e instanceof Thyrah) giveItem(Items.random());
@@ -71,6 +77,7 @@ public class QoT_Player extends Player {
 					getStats().addKilled(1);
 					Envision.theWorld.removeEntity(e);
 					addXP(e.getExperienceRewardedOnKill());
+					if (ERandomUtil.roll(0, 0, 4)) setGold(getGold() + ERandomUtil.getRoll(1, 10));
 				}
 			}
 		}

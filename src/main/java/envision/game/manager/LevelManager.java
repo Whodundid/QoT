@@ -67,9 +67,9 @@ public class LevelManager {
 		if (activeWorld != null) activeWorld.setLoaded(false);
 		
 		// preserve current world time
-		int curTime = 0;
-		if (activeWorld != null) curTime = activeWorld.getTime();
-		else if (worldIn != null) curTime = worldIn.getInitialTime();
+//		int curTime = 0;
+//		if (activeWorld != null) curTime = activeWorld.getTime();
+//		else if (worldIn != null) curTime = worldIn.getInitialTime();
 		
 		// preserve current camera zoom
 		double curZoom = 2.0;
@@ -80,7 +80,7 @@ public class LevelManager {
 		Envision.theWorld = activeWorld; // this line should probably be removed long term
 		
 		if (activeWorld != null) {
-		    activeWorld.setTime(curTime);
+//		    activeWorld.setTime(curTime);
 		    activeWorld.setCameraZoom(curZoom);
 			activeWorld.onLoad();
 			activeWorld.setLoaded(true);

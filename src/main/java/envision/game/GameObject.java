@@ -27,9 +27,9 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	public Rotation facing = Rotation.LEFT;
 	
 	/** The internal ID that is exclusive to this entity regardless of world. */
-	public final int objectID;
+	public final String objectID;
 	/** The ID of this entity within the world. -1 by default. */
-	public int worldID = -1;
+	public String worldID = "NULL";
 	
 	/** The animation handler of this entity. */
 	public AnimationHandler animationHandler;
@@ -38,11 +38,11 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	public int renderLayer = 0;
 	
 	private static AtomicInteger internalIDCounter = new AtomicInteger();
-	public static int nextObjectID() { return internalIDCounter.getAndIncrement(); }
+	public static String nextObjectID() { return String.valueOf(internalIDCounter.getAndIncrement()); }
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	protected GameObject() { this(null); }
 	protected GameObject(String nameIn) {
@@ -101,11 +101,11 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	public abstract int getInternalSaveID();
 	
 	/** Returns the ID of this object in the world it is in. */
-	public int getWorldID() { return worldID; }
-	public void setWorldID(int idIn) { worldID = idIn; }
+	public String getWorldID() { return worldID; }
+	public void setWorldID(String idIn) { worldID = idIn; }
 	
 	/** Returns the internal unique ID of this object. */
-	public int getObjectID() { return objectID; }
+	public String getObjectID() { return objectID; }
 	
 	public String getName() { return name; }
 	public Sprite getSprite() { return sprite; }

@@ -117,9 +117,9 @@ public class WindowLabel extends WindowObject {
 		if (wordWrap) {
 			wordWrappedLines = EStringOutputFormatter.createWordWrapString(displayString, widthMax);
 			
-			int longest = 0;
+			double longest = 0;
 			for (String s : wordWrappedLines) {
-				int len = FontRenderer.strWidth(s);
+				double len = FontRenderer.strWidth(s);
 				if (len > longest) longest = len;
 			}
 			

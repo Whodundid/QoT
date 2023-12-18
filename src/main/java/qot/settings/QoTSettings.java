@@ -9,49 +9,44 @@ import envision.engine.settings.MainConfigFile;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.settings.config.setting_types.BooleanConfigSetting;
 import envision.engine.settings.config.setting_types.IntegerConfigSetting;
-import envision.engine.settings.config.setting_types.StringConfigSetting;
-import eutil.colors.EColors;
+import envision.game.EnvisionGameSettings;
 import eutil.datatypes.util.EList;
 
-public class QoTSettings {
+public class QoTSettings extends EnvisionGameSettings {
+    
+    //=================
+    // Static Instance
+    //=================
+    
+    private static QoTSettings instance;
+    
+    private QoTSettings() {}
+    public static QoTSettings instance() {
+        if (instance == null) instance = new QoTSettings();
+        return instance;
+    }
     
     //-----------------------
     //       settings
     //-----------------------
     
-    private QoTSettings() {}
-    
     public static final BooleanConfigSetting
     
     animatedMainMenu    = boolSetting("animatedMainMenu", "Animated Main Menu", true),
-    drawFPS             = boolSetting("drawFPS", "Draw FPS", false),
-    fullscreen          = boolSetting("fullscreen", "Fullscreen", false),
-    vsync               = boolSetting("vSync", "V-Sync", false),
-    termLineNumbers     = boolSetting("termLineNumbers", "Show Terminal Line Numbers", false),
-    closeHudWhenEmpty   = boolSetting("closeHudWhenEmpty", "Close Hud when Empty", true),
-    batchRendering      = boolSetting("batchRendering", "Enable Batch Rendering", true),
     camreaEdgeLocking   = boolSetting("cameraEdgeLocking", "Enable Camera Edge Locking", true);
     
     //-------------------------------------------------------------------------------
     
     public static final IntegerConfigSetting
     
-    musicVolume         = intSetting("musicVolume", "Music Volume", 50),
-    targetFPS           = intSetting("targetFPS", "Target FPS", 60),
-    targetUPS           = intSetting("targetUPS", "Target UPS", 150),
-    resolutionScale     = intSetting("resScale", "Resolution Scale", 1),
-    termBackground      = intSetting("termBackground", "Terminal Background Color", 0xff000000),
-    hoverTextColor      = intSetting("hoverTextColor", "Text Hover Color", EColors.aquamarine.intVal),
-    termOpacity         = intSetting("termOpacity", "Terminal Opacity", 255).setRange(0, 255);
+    musicVolume         = intSetting("musicVolume", "Music Volume", 30),
+    sfxVolume           = intSetting("sfxVolume", "SFX Volume", 50);
     
     //--------------------------------------------------------------------------------
     
-    public static final StringConfigSetting
+    //public static final StringConfigSetting
     
-    lastEditorMap       = stringSetting("lastEditorMap", "Last Editor Map", ""),
-    lastMap             = stringSetting("lastMap", "Last Map", ""),
-    taskBarSide         = stringSetting("taskBarSide", "Task Bar Side", "top").setValidOptions("top", "left", "right", "bottom"),
-    hudCloseMethod      = stringSetting("hudCloseMethod", "Hud Close Method", "hide").setValidOptions("hide", "close", "close all");
+    // ;
     
     //===============================================================================
     //===============================================================================
@@ -73,37 +68,26 @@ public class QoTSettings {
     static {
         // BOOLEANS
         settings.add(animatedMainMenu);
-        settings.add(drawFPS);
-        settings.add(fullscreen);
-        settings.add(vsync);
-        settings.add(termLineNumbers);
-        settings.add(closeHudWhenEmpty);
-        settings.add(batchRendering);
         settings.add(camreaEdgeLocking);
         
         // INTEGERS
         settings.add(musicVolume);
-        settings.add(targetFPS);
-        settings.add(targetUPS);
-        settings.add(resolutionScale);
-        settings.add(termBackground);
-        settings.add(hoverTextColor);
-        settings.add(termOpacity);
         
         // STRINGS
-        settings.add(lastEditorMap);
-        settings.add(lastMap);
-        settings.add(taskBarSide);
-        settings.add(hudCloseMethod);
+        // ;
     }
     
-    public static EList<ConfigSetting<?>> getSettings() { return settings; }
+    @Override
+    public EList<ConfigSetting<?>> getConfigSettings() {
+        return settings;
+    }
     
-    //--------------
+    //==============
     // initializers
-    //--------------
+    //==============
     
-    public static void init(File installDir, boolean useInternalResources) {
+    @Override
+    protected void initializeGameDirectories(File installDir, boolean useInternalResources) {
         //ensure installation directory actually exists
         if (!installDir.exists()) {
             throw new RuntimeException(String.format("Failed to bind to installation directory '%s'!", installDir));
@@ -161,9 +145,14 @@ public class QoTSettings {
         return mainConfig.trySave();
     }
     
+    @Override public File getInstallationDirectory() { return localGameDir; }
+    @Override public File getResourcesDirectory() { return resourcesDir; }
+    @Override public File getSavedGamesDirectory() { return savesDir; }
+    
     public static File getResourcesDir() { return resourcesDir; }
     public static File getLocalGameDir() { return localGameDir; }
     public static File getSavesDir() { return savesDir; }
+    
     public static File getEditorWorldsDir() { return editorWorldsDir; }
     public static File getMenuWorldsDir() { return menuWorldsDir; }
     

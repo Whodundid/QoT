@@ -161,7 +161,7 @@ public interface GLObject {
 	static double drawStringCS(String text, double x, double y, double scaleX, double scaleY, int color) { return drawCenteredStringWithShadow(text, x, y, scaleX, scaleY, color); }
 	
 	/** Wrapper for EStringBuilder's getStringWidth. */
-	static int getStringWidth(String text) { return EStringOutputFormatter.getStringWidth(text); }
+	static double getStringWidth(String text) { return EStringOutputFormatter.getStringWidth(text); }
 	
 	/** Returns a 'toString' representation of the given object. Accounts for null objets as well. */
 	private static String toStr(Object in) { return (in != null) ? in.toString() : "null"; }

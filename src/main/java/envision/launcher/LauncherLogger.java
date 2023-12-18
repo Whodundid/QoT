@@ -1,4 +1,4 @@
-package qot.launcher;
+package envision.launcher;
 
 import java.io.File;
 import java.io.FileOutputStream;

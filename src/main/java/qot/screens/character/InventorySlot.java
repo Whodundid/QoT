@@ -58,7 +58,10 @@ public class InventorySlot extends WindowObject {
 	
 	@Override
 	public void mousePressed(int mXIn, int mYIn, int button) {
-		if (button == 0) { renderer.onSlotLeftClick(this); System.out.println("LEFT"); }
+		if (button == 0) {
+		    renderer.onSlotLeftClick(this);
+		    //System.out.println("LEFT");
+		}
 		if (button == 1) {
 			var item = renderer.getItemAtIndex(itemIndex);
 			if (item != null) {
@@ -67,7 +70,7 @@ public class InventorySlot extends WindowObject {
 				if (item.isUsable()) rcm.addOption("Use", () -> renderer.useItem(this));
 				rcm.addOption("Drop", () -> renderer.dropItem(itemIndex));
 				rcm.display();
-				System.out.println("RIGHT");
+				//System.out.println("RIGHT");
 			}
 		}
 		super.mousePressed(mXIn, mYIn, button);
@@ -79,7 +82,8 @@ public class InventorySlot extends WindowObject {
 			var movingItem = renderer.getMovingSlot();
 			if (movingItem != null) {
 				renderer.swapItems(itemIndex, movingItem.itemIndex);
-				renderer.onSlotLeftClick(null);
+				renderer.clearSelectedItem();
+				renderer.setLastClickedSlot(this);
 			}
 		}
 		super.mouseReleased(mXIn, mYIn, button);

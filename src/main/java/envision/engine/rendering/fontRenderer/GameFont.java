@@ -7,10 +7,10 @@ import java.util.Scanner;
 
 import org.lwjgl.opengl.GL11;
 
+import envision.engine.EngineSettings;
 import envision.engine.rendering.textureSystem.GameTexture;
 import eutil.datatypes.boxes.Box2;
 import eutil.file.LineReader;
-import qot.settings.QoTSettings;
 
 /**
  * A font set which can be displayed in the Envision engine.
@@ -21,8 +21,9 @@ import qot.settings.QoTSettings;
  */
 public class GameFont {
 	
-	private static final String fontDir = QoTSettings.getResourcesDir().toString() + "\\font\\";
+	private static final String fontDir = EngineSettings.RESOURCES_DIR.toString() + "/font/";
 	
+	private String fontName;
 	private String mappingPath;
 	private String fontPath;
 	private GameTexture fontImage;
@@ -36,13 +37,15 @@ public class GameFont {
 	// Constructors
 	//--------------
 
-	private GameFont(String mappingPathIn, String fontPathIn) {
-		this(mappingPathIn, fontPathIn, GL11.GL_NEAREST, GL11.GL_NEAREST);
+	private GameFont(String nameIn, String mappingPathIn, String fontPathIn) {
+		this(nameIn, mappingPathIn, fontPathIn, GL11.GL_NEAREST, GL11.GL_NEAREST);
 	}
-	private GameFont(String mappingPathIn, String fontPathIn, int minFilter, int magFilter) {
+	private GameFont(String nameIn, String mappingPathIn, String fontPathIn, int minFilter, int magFilter) {
 		if (mappingPathIn == null || fontPathIn == null) {
 			throw new RuntimeException("Invalid font maping path! " + mappingPathIn);
 		}
+		
+		fontName = nameIn;
 		
 		mapping = new HashMap<>();
 		mappingPath = mappingPathIn;
@@ -109,6 +112,7 @@ public class GameFont {
 	public String getMapingFile() { return mappingPath; }
 	public String getFontFile() { return fontPath; }
 	
+	public String getFontName() { return fontName; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 	public double getScaleW() { return scaleW; }
@@ -119,20 +123,20 @@ public class GameFont {
 	// Static Methods
 	//----------------
 	
-	public static GameFont createCustomFont(String mappingPathIn, String fontPathIn) {
-		return new GameFont(mappingPathIn, fontPathIn);
+	public static GameFont createCustomFont(String nameIn, String mappingPathIn, String fontPathIn) {
+		return new GameFont(nameIn, mappingPathIn, fontPathIn);
 	}
 	
-	public static GameFont createCustomFont(String mappingPathIn, String fontPathIn, int minFilter, int magFilter) {
-		return new GameFont(mappingPathIn, fontPathIn, minFilter, magFilter);
+	public static GameFont createCustomFont(String nameIn, String mappingPathIn, String fontPathIn, int minFilter, int magFilter) {
+		return new GameFont(nameIn, mappingPathIn, fontPathIn, minFilter, magFilter);
 	}
 	
-	public static GameFont createFont(String mappingPathIn, String fontPathIn) {
-		return new GameFont(fontDir + mappingPathIn, fontDir + fontPathIn);
+	public static GameFont createFont(String nameIn, String mappingPathIn, String fontPathIn) {
+		return new GameFont(nameIn, fontDir + mappingPathIn, fontDir + fontPathIn);
 	}
 	
-	public static GameFont createFont(String mappingPathIn, String fontPathIn, int minFilter, int magFilter) {
-		return new GameFont(fontDir + mappingPathIn, fontDir + fontPathIn, minFilter, magFilter);
+	public static GameFont createFont(String nameIn, String mappingPathIn, String fontPathIn, int minFilter, int magFilter) {
+		return new GameFont(nameIn, fontDir + mappingPathIn, fontDir + fontPathIn, minFilter, magFilter);
 	}
 	
 }

@@ -33,7 +33,7 @@ public class TextAreaLine<E> extends WindowTextField {
 	public int lineNumberColor = 0xff555555;
 	protected int lineNumber = 0;
 	protected int drawnLineNumber = 0;
-	protected int lineNumberWidth = 0;
+	protected double lineNumberWidth = 0;
 	protected boolean lineEquals = false, drawCursor = false;
 	protected String linkText = "";
 	protected boolean webLink;
@@ -489,7 +489,7 @@ public class TextAreaLine<E> extends WindowTextField {
 				drawCursorVertical(xStart, startY + 1, xEnd - 1, startY + 1 + FontRenderer.FONT_HEIGHT);
 			}
 			else if ((textRecentlyEntered || drawCursor) && hasFocus()) { //draw vertical cursor
-				int textCursorPosLength = FontRenderer.strWidth(text.substring(0, cursorPosition));
+				double textCursorPosLength = FontRenderer.strWidth(text.substring(0, cursorPosition));
 				double sX = startX + parentTextArea.getLineNumberOffset() + textCursorPosLength;
 				drawRect(sX - 1, startY + 1, sX, endY, 0xffffffff);
 			}

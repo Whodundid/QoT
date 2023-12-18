@@ -396,7 +396,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	// Getters
 	//---------
 	
-	public int getLineNumberOffset() {
+	public double getLineNumberOffset() {
 		return hasLineNumbers() ? (6 + String.valueOf(textDocument.size()).length() * FontRenderer.strWidth("0")) : 2;
 	}
 
@@ -419,7 +419,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 		return l;
 	}
 	
-	public int getLongestLineLength() {
+	public double getLongestLineLength() {
 		longestLine = getLongestTextLine();
 		return longestLine != null ? FontRenderer.strWidth(longestLine.getText()) : - 1;
 	}
@@ -469,9 +469,9 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	
 	public TextAreaLine<E> getLongestTextLine() {
 		TextAreaLine<E> longest = null;
-		int longestLen = 0;
+		double longestLen = 0;
 		for (var l : textDocument) {
-			int len = FontRenderer.strWidth(l.getText());
+			double len = FontRenderer.strWidth(l.getText());
 			if (len > longestLen) {
 				longest = l;
 				longestLen = len;

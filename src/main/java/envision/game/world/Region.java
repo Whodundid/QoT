@@ -153,10 +153,10 @@ public class Region extends GameObject {
 	public static Region parseRegion(GameWorld world, String line) {
 		try (var lineReader = new Scanner(line.substring(2))) {
 			//int i = (parts.length == 7) ? 1 : 0;
-			int sX = Integer.parseInt(lineReader.next());
-			int sY = Integer.parseInt(lineReader.next());
-			int eX = Integer.parseInt(lineReader.next());
-			int eY = Integer.parseInt(lineReader.next());
+			int sX = (int) Double.parseDouble(lineReader.next());
+			int sY = (int) Double.parseDouble(lineReader.next());
+			int eX = (int) Double.parseDouble(lineReader.next());
+			int eY = (int) Double.parseDouble(lineReader.next());
 			int color = Integer.parseInt(lineReader.next());
 			String name = lineReader.nextLine().trim();
 			return new Region(world, name, sX, sY, eX, eY, color);
@@ -170,7 +170,7 @@ public class Region extends GameObject {
 	public Point2d getMid() { return new Point2d(midX, midY); }
 	
 	public String toSaveString() {
-		return "r " + startX + " " + startY + " " + endX + " " + endY + " " + getColor() + " " + getName();
+		return "r " + (int) startX + " " + (int) startY + " " + (int) endX + " " + (int) endY + " " + getColor() + " " + getName();
 	}
 	
 	/** Don't know for regions yet... */

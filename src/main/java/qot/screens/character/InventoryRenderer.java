@@ -22,28 +22,28 @@ public class InventoryRenderer extends WindowObject {
     //========
     
     /** The entity for which this inventory pertains to. */
-    private Entity theEntity;
-    private EntityInventory theInventory;
+    protected Entity theEntity;
+    protected EntityInventory theInventory;
     
-    private EList<InventorySlot> inventorySlots;
-    private int maxInventoryCols = 5;
-    private int slotSize = 70; // 30x30 px by default
-    private InventorySlot slotInside;
-    private InventorySlot clickedSlot; // keeping track of moving items between slots
+    protected EList<InventorySlot> inventorySlots;
+    protected int maxInventoryCols = 5;
+    protected int slotSize = 70; // 30x30 px by default
+    protected InventorySlot slotInside;
+    protected InventorySlot clickedSlot; // keeping track of moving items between slots
+    protected InventorySlot lastClickedSlot;
     
-    private int workingInventorySize;
-    private double itemTextX, itemTextY;
-    private double itemPriceX, itemPriceY;
-    private boolean drawItemPrice = false;
+    protected double itemTextX, itemTextY;
+    protected boolean drawItemName = false;
     
-    int borderColor = EColors.black.intVal;
-    int slotFrameColor = EColors.black.intVal;
-    int slotBackColor = EColors.dgray.intVal;
-    int slotHoverColor = EColors.yellow.intVal;
-    int slotMovingItemColor = EColors.chalk.opacity(50);
-    int slotFillerColor = EColors.pdgray.intVal;
+    protected boolean allowItemMoving = true;
+    protected int workingInventorySize;
     
-    private double priceModifier = 1.00;
+    public int borderColor = EColors.black.intVal;
+    public int slotFrameColor = EColors.black.intVal;
+    public int slotBackColor = EColors.dgray.intVal;
+    public int slotHoverColor = EColors.yellow.intVal;
+    public int slotMovingItemColor = EColors.chalk.opacity(50);
+    public int slotFillerColor = EColors.pdgray.intVal;
     
     //==============
     // Constructors
@@ -59,7 +59,9 @@ public class InventoryRenderer extends WindowObject {
         maxInventoryCols = columns;
         
         workingInventorySize = theInventory.size();
-        if (padToAmount > 0 && padToAmount > workingInventorySize) { workingInventorySize = padToAmount; }
+        if (padToAmount > 0 && padToAmount > workingInventorySize) {
+            workingInventorySize = padToAmount;
+        }
         
         double s = slotSize;
         double cols = ENumUtil.clamp(workingInventorySize, workingInventorySize, columns);
@@ -69,8 +71,7 @@ public class InventoryRenderer extends WindowObject {
         
         itemTextX = midX;
         itemTextY = startY - 40;
-        itemPriceX = midX;
-        itemPriceY = startY - 30;
+        
     }
     
     //===========
@@ -99,16 +100,7 @@ public class InventoryRenderer extends WindowObject {
             
             if (item != null) {
                 String name = item.getName();
-                drawString(name, itemTextX - FontRenderer.strWidth(name) / 2.0, itemTextY);
-                
-                if (drawItemPrice) {
-                    int price = item.getBasePrice();
-                    System.out.println(price + " : " + priceModifier);
-                    int modifiedPrice = (int) Math.ceil(((double) price) * priceModifier);
-                    price = ENumUtil.clamp(modifiedPrice, 0, Integer.MAX_VALUE);
-                    String priceString = price + " Gold";
-                    drawString(priceString, itemPriceX - FontRenderer.strWidth(priceString) / 2.0, itemPriceY);
-                }
+                if (drawItemName) drawString(name, itemTextX - FontRenderer.strWidth(name) / 2.0, itemTextY);
             }
         }
         
@@ -120,7 +112,6 @@ public class InventoryRenderer extends WindowObject {
                 drawSprite(item.getSprite(), mXIn - slotSize / 2, mYIn - slotSize / 2, slotSize, slotSize);
             }
         }
-        
     }
     
     @Override
@@ -133,7 +124,9 @@ public class InventoryRenderer extends WindowObject {
         if (e.getEventParent() == Envision.getCurrentScreen()) {
             if (e instanceof EventMouse me && me.getMouseType() == MouseType.RELEASED) {
                 var ms = getMovingSlot();
-                if (ms != null && !isMouseInside()) { onSlotLeftClick(null); }
+                if (ms != null && !isMouseInside()) {
+                    if (allowItemMoving) onSlotLeftClick(null);
+                }
             }
         }
     }
@@ -147,8 +140,6 @@ public class InventoryRenderer extends WindowObject {
         
         itemTextX += dx;
         itemTextY += dy;
-        itemPriceX += dx;
-        itemPriceY += dy;
     }
     
     @Override
@@ -157,8 +148,6 @@ public class InventoryRenderer extends WindowObject {
         
         itemTextX += newX;
         itemTextY += newY;
-        itemPriceX += newX;
-        itemPriceY += newY;
     }
     
     //=========
@@ -210,8 +199,15 @@ public class InventoryRenderer extends WindowObject {
         }
     }
     
-    public Item getItemAtIndex(int index) { return theInventory.getItemAtIndex(index); }
-    public void swapItems(int indexA, int indexB) { theInventory.swapItems(indexA, indexB); }
+    public Item getItemAtIndex(int index) {
+        return theInventory.getItemAtIndex(index);
+    }
+    
+    public void swapItems(int indexA, int indexB) {
+        if (!allowItemMoving) return;
+        theInventory.swapItems(indexA, indexB);
+    }
+    
     public void dropItem(int index) { theEntity.dropItem(index); }
     public void removeItem(int index) { theInventory.setItem(index, null); }
     public int getInventorySize() { return theInventory.size(); }
@@ -230,33 +226,35 @@ public class InventoryRenderer extends WindowObject {
     }
     
     public InventorySlot getMovingSlot() { return clickedSlot; }
+    public InventorySlot getLastClickedSlot() { return lastClickedSlot; }
     protected void setSlotInside(InventorySlot slot) { slotInside = slot; }
     
     protected void onSlotLeftClick(InventorySlot slot) {
-        clickedSlot = slot;
+        if (allowItemMoving) clickedSlot = slot;
+        lastClickedSlot = slot;
     }
+    
+    public void clearSelectedItem() {
+        clickedSlot = null;
+    }
+    
+    public void clearLastClickedSlot() {
+        lastClickedSlot = null;
+    }
+    
+    public void setLastClickedSlot(InventorySlot slot) {
+        lastClickedSlot = slot;
+    }
+    
+    public boolean isItemMovingAllowed() { return allowItemMoving; }
     
     public void setItemTextPosition(double xIn, double yIn) {
         itemTextX = xIn;
         itemTextY = yIn;
     }
     
-    public void setItemPriceTextPosition(double xIn, double yIn) {
-        itemPriceX = xIn;
-        itemPriceY = yIn;
-    }
-    
-    public void setDrawItemPrice(boolean val) {
-        this.drawItemPrice = val;
-    }
-    
-    public void setPriceModifier(double val) {
-        this.priceModifier = val;
-    }
-    
-    public double getPriceModifier() {
-        return this.priceModifier;
-    }
+    public void setDrawItemName(boolean val) { drawItemName = val; }
+    public void setItemMovingAllowed(boolean val) { allowItemMoving = val; }
     
     public void setBorderColor(EColors c) { setBorderColor(c.intVal); }
     public void setSlotFrameColor(EColors c) { setSlotFrameColor(c.intVal); }
