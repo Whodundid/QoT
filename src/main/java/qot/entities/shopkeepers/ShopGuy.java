@@ -89,7 +89,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         for (int i = 0; i < 9; i++) walkUp.addFrame(EntityTextures.walksheet.getSprite(i));
         for (int i = 9; i < 18; i++) walkLeft.addFrame(EntityTextures.walksheet.getSprite(i));
         for (int i = 18; i < 27; i++) walkDown.addFrame(EntityTextures.walksheet.getSprite(i));
-        for (int i = 27; i < 36; i++) walkRight.addFrame(EntityTextures.walksheet.getSprite(i));        
+        for (int i = 27; i < 36; i++) walkRight.addFrame(EntityTextures.walksheet.getSprite(i));
         
         addComponent(new OnClickComponent(this));
     }
@@ -326,6 +326,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         if (isNegativeFavorWithPlayer()) playerNearOptions.add("I should really put up a 'No Loitering' sign..");
         if (isNegativeFavorWithPlayer()) playerNearOptions.add("You're not going to rob me, are you?");
         if (isNegativeFavorWithPlayer()) playerNearOptions.add("Oh dear not you again..");
+        if (isNegativeFavorWithPlayer()) playerNearOptions.add("Stop staring at me..");
         if (isEnemiesWithPlayer()) playerNearOptions.add("You are not welcome here!");
         if (isEnemiesWithPlayer()) playerNearOptions.add("Get out of my shop, " + Envision.thePlayer + "!");
         if (isEnemiesWithPlayer()) playerNearOptions.add("Get out of here, " + Envision.thePlayer + "!");
@@ -349,7 +350,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
             textOptions.add("What a wonderful " + time + "!");
             textOptions.add("Maybe someone will actually trade today");
             textOptions.add("5 more years Horvic.. Just 5 more years...");
-            textOptions.add("Those dang kids keep making so much noise!");
+            //textOptions.add("Those dang kids keep making so much noise!");
             textOptions.add("I think the goblins stole a " + Items.random().getName().toLowerCase() + " of mine..");
             textOptions.add("I wonder what time it is...");
             textOptions.add("** Sigh **");            
@@ -423,6 +424,8 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         chat.add("Indeed");
         chat.add("Mhmmm");
         if (isAnnoyedWith(buyingEntity)) chat.add("Didn't really want that anyways..");
+        if (isFriendsWith(buyingEntity)) chat.add("Ahhhh, just what I was looking for!");
+        if (isFriendsWith(buyingEntity)) chat.add("This fit nicely in my collection!");
         
         speak(chat.getRandom());
         hasRecentlyBoughtItems = true;

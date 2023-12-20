@@ -10,6 +10,8 @@ public class DebugSettings {
 	public static boolean drawEntityHitboxes = false;
 	public static boolean drawEntityCollisionBoxes = false;
 	public static boolean drawEntityPositionTiles = false;
+	public static boolean drawScreenAxis = false;
+	public static boolean drawFocusedEntityAxis = false;
 	
 	public static boolean draw3DCursed = false;
 	

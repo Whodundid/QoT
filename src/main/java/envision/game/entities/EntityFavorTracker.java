@@ -53,6 +53,7 @@ public class EntityFavorTracker {
     }
     
     public int getFavorWithEntity(Entity entityIn) {
+        if (entityIn == null) return 0;
         return getFavorWithEntity(entityIn.getObjectID());
     }
     
@@ -66,6 +67,7 @@ public class EntityFavorTracker {
     }
     
     public int increaseFavorWithEntity(Entity entityIn, int amountToAdd) {
+        if (entityIn == null) return 0;
         return increaseFavorWithEntity(entityIn.getObjectID(), amountToAdd);
     }
     
@@ -78,6 +80,7 @@ public class EntityFavorTracker {
     }
     
     public int decreaseFavorWithEntity(Entity entityIn, int amountToRemove) {
+        if (entityIn == null) return 0;
         return decreaseFavorWithEntity(entityIn.getObjectID(), amountToRemove);
     }
     

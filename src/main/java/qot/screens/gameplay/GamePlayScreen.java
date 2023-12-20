@@ -3,6 +3,7 @@ package qot.screens.gameplay;
 import envision.Envision;
 import envision.debug.DebugSettings;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.rendering.RenderingManager;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -13,6 +14,7 @@ import envision.game.effects.sounds.SoundEngine;
 import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
 import envision.game.world.IGameWorld;
+import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -88,6 +90,13 @@ public class GamePlayScreen extends GameScreen {
 	
 	@Override
 	public void drawScreen(int mXIn, int mYIn) {
+        if (DebugSettings.drawScreenAxis) {
+            final double x = width * 0.5;
+            final double y = height * 0.5;
+            RenderingManager.drawRect(x, 0, x + 1, height, EColors.red);
+            RenderingManager.drawRect(0, y, width, y + 1, EColors.red);
+        }
+	    
 		//top hud
 		drawRect(0, 0, Envision.getWidth(), 39, EColors.lgray);
 		drawRect(0, 39, Envision.getWidth(), 44, EColors.gray);
@@ -111,6 +120,8 @@ public class GamePlayScreen extends GameScreen {
 				Envision.displayScreen(new DeathScreen());
 			}
 		}
+        
+
 		
 		drawString("x" + world.getCameraZoom(), Envision.getWidth() - 250.0, 12, EColors.dsteel);
 		drawString("[" + player.worldX + ", " + player.worldY + "]", Envision.getWidth() - 900.0, 12, EColors.white);
@@ -177,6 +188,8 @@ public class GamePlayScreen extends GameScreen {
 		if (keyCode == Keyboard.KEY_O) DebugSettings.drawEntityHitboxes = !DebugSettings.drawEntityHitboxes;
 		if (keyCode == Keyboard.KEY_H) DebugSettings.drawEntityCollisionBoxes = !DebugSettings.drawEntityCollisionBoxes;
 		if (keyCode == Keyboard.KEY_P) DebugSettings.drawEntityPositionTiles = !DebugSettings.drawEntityPositionTiles;
+		if (keyCode == Keyboard.KEY_Y) DebugSettings.drawScreenAxis = !DebugSettings.drawScreenAxis;
+		if (keyCode == Keyboard.KEY_U) DebugSettings.drawFocusedEntityAxis = !DebugSettings.drawFocusedEntityAxis;
 		
 		//world.getWorldRenderer().keyPressed(typedChar, keyCode);
 		
@@ -187,34 +200,9 @@ public class GamePlayScreen extends GameScreen {
 	public void mousePressed(int mXIn, int mYIn, int button) {
 		super.mousePressed(mXIn, mYIn, button);
 		
-		double zoom = world.getCameraZoom();
-		double drawDistX = world.getWorldRenderer().getDistX();
-		double drawDistY = world.getWorldRenderer().getDistY();
-		double camX = world.getCamera().getWorldX();
-		double camY = world.getCamera().getWorldY();
-		
-		double tileDrawWidth = (world.getTileWidth() * zoom); //pixel width of each tile
-		double tileDrawHeight = (world.getTileHeight() * zoom); //pixel height of each tile
-		double drawAreaMidX = Envision.getWidth() / 2.0; //the middle x of the map draw area
-		double drawAreaMidY = Envision.getHeight() / 2.0; //the middle y of the map draw area
-		double mapDrawStartX = (drawAreaMidX - (drawDistX * tileDrawWidth) - (tileDrawWidth / 2.0)); //the left most x coordinate for map drawing
-		double mapDrawStartY = (drawAreaMidY - (drawDistY * tileDrawHeight) - (tileDrawHeight / 2.0)); //the top most y coordinate for map drawing
-		
-        //converting to shorthand to reduce footprint
-        double x = mapDrawStartX;
-        double y = mapDrawStartY;
-        double w = tileDrawWidth;
-        double h = tileDrawHeight;
-		
-	    //The X world pixel under the mouse scaled by the render zoom
-        int xWorldPixel = (int) Math.floor(mXIn - x - ((drawDistX - camX) * w));
-        //The Y world pixel under the mouse scaled by the render zoom
-        int yWorldPixel = (int) Math.floor(mYIn - y - ((drawDistY - camY) * h));
-        
-        //The X world pixel under the mouse with zoom scaling removed
-        double xWorldPixelNoZoom = (int) (xWorldPixel / zoom);
-        //The Y world pixel under the mouse with zoom scaling removed
-        double yWorldPixelNoZoom = (int) (yWorldPixel / zoom);
+		final WorldCamera cam = world.getCamera();
+		double mouseX = cam.getMousePixelX();
+		double mouseY = cam.getMousePixelY();
         
         //The X coordinate world tile under the mouse
         //double xMouseTile = xWorldPixel / w;
@@ -223,11 +211,11 @@ public class GamePlayScreen extends GameScreen {
         
         EList<Entity> entitiesUnderMouse = new EArrayList<>(30);
         
-        System.out.println((drawDistX - camX) + " : " + (drawDistY - camY));
+        //System.out.println((drawDistX - camX) + " : " + (drawDistY - camY));
         
         // garbage
         for (var e : world.getEntitiesInWorld()) {
-            if (e.getDimensions().contains(xWorldPixelNoZoom, yWorldPixelNoZoom)) {
+            if (e.getDimensions().contains(mouseX, mouseY)) {
                 entitiesUnderMouse.add(e);
             }
         }
@@ -237,7 +225,7 @@ public class GamePlayScreen extends GameScreen {
             final var dims = e.getDimensions();
             final double midX = dims.midX;
             final double midY = dims.midY;
-            final double dist = ENumUtil.distance(xWorldPixelNoZoom, yWorldPixelNoZoom, midX, midY);
+   
             e.onMousePress(mXIn, mYIn, button);
             //System.out.println(dist + " : " + e);
         }

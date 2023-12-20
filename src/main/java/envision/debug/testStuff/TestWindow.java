@@ -51,7 +51,7 @@ public class TestWindow extends WindowParent {
 		
 		WindowTextArea2 ta = new WindowTextArea2(this, startX + 5, startY + 5, width - 10, height - 10, document);
 		document = ta.getDocument();
-		ta.setText(EColors.cyan + "Billy\n" + EColors.blue + "Bob\n" + EColors.green + "Nugget");
+		//ta.setText(EColors.cyan + "Billy\n" + EColors.blue + "Bob\n" + EColors.green + "Nugget");
 		
 		addObject(ta);
 	}

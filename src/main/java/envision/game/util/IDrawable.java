@@ -1,5 +1,7 @@
 package envision.game.util;
 
+import envision.game.world.WorldCamera;
+
 public interface IDrawable {
 	
 	/**
@@ -13,6 +15,6 @@ public interface IDrawable {
 	 * @param midX TODO
 	 * @param midY TODO
 	 */
-	//void draw(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver);
+	default void draw(WorldCamera camera, double x, double y, double w, double h, boolean mouseOver) {}
 	
 }

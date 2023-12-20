@@ -5,6 +5,7 @@ import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
 import envision.game.entities.EntityRenderer;
 import envision.game.world.IGameWorld;
+import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Rotation;
@@ -32,10 +33,11 @@ public class PlayerRenderer extends EntityRenderer {
 	//===========
 	
 	@Override
-	public void drawEntity(IGameWorld world, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void drawEntity(IGameWorld world, WorldCamera camera, double x, double y, double w, double h, int brightness, boolean mouseOver) {
 		boolean flip = player.facing == Rotation.RIGHT || player.facing == Rotation.DOWN;
 		
 		RenderingManager.drawSprite(player.sprite, x, y, w, h, flip, brightness);
+		player.draw(camera, x, y, w, h, mouseOver);
 		//healthBar.setDimensions(x, y - 7, w, 7);
 		//healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
 		

@@ -175,11 +175,14 @@ public class Mouse {
 	// Static Getters
 	//================
 	
-	public static int getMx() { return (int) mX; }
-	public static int getMy() { return (int) mY; }
+	public static int getMx() { return mX; }
+	public static int getMy() { return mY; }
 	public static int getButton() { return lastButton; }
 	public static Point2i getPos() { return new Point2i(mX, mY); }
 	public static EList<String> getLastDroppedFileNames() { return EList.newList(lastDroppedFiles); }
+	
+	public static double getMx_double() { return mX; }
+	public static double getMy_double() { return mY; }
 	
 	//==================
 	// Callback Getters

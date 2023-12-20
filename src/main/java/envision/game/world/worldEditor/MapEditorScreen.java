@@ -567,7 +567,7 @@ public class MapEditorScreen extends GameScreen {
 			//ent.renderObject(drawX, drawY, drawW, drawH);
 			//ent.draw(editorWorld, actualWorld.getCameraZoom(), midDrawX, midDrawY, drawDistX, drawDistY);
 			EntityRenderer renderer = ent.getComponent(ComponentType.RENDERING);
-			renderer.drawEntity(editorWorld, drawX, drawY, drawW, drawH, 0xffffffff, mouseOver);
+			renderer.drawEntity(editorWorld, actualWorld.getCamera(), drawX, drawY, drawW, drawH, 0xffffffff, mouseOver);
 			//drawTexture(tex, drawX, drawY, drawW, drawH);
 			
 			if (settings.drawEntityHitBoxes) {
