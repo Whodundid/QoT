@@ -106,7 +106,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
             }
         }
         else if (timeSinceItemWasLastSold >= (60000 * 1.5)) {
-            System.out.println(this + " RESTOCKED");
+            //System.out.println(this + " RESTOCKED");
             this.setGold(ERandomUtil.getRoll(125, 1250));
             for (int i = 0; i < inventory.size(); i++) {
                 inventory.setItem(i, null);
@@ -314,7 +314,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         if (isNegativeFavorWithPlayer()) sellingText.add("Please stop wasting my time..");
         if (isNegativeFavorWithPlayer()) sellingText.add("Either buy something or get out of my sight!");
         
-        System.out.println("FAVOR: " + getFavorTracker().getFavorWithEntity(Envision.thePlayer) + " : " + timeSinceItemWasLastSold);
+        //System.out.println("FAVOR: " + getFavorTracker().getFavorWithEntity(Envision.thePlayer) + " : " + timeSinceItemWasLastSold);
         
         EList<String> playerNearOptions = EList.newList();
         if (isNeutralWithPlayer()) playerNearOptions.add("Can I help you?");

@@ -390,7 +390,8 @@ public class EntityRenderer extends RenderingComponent {
         double dw = (chatWidth * 1.2);
         double dh = 40;
         
-        int ratio = 255 - ((255 * (world.getDayLength() / 2 - world.getTime()) / (world.getDayLength() / 2)));
+        //int ratio = 255 - ((255 * (world.getDayLength() / 2 - world.getTime()) / (world.getDayLength() / 2)));
+        int ratio = 220;
         ratio = ENumUtil.clamp(ratio, 100, 255);
         int textRatio = ENumUtil.clamp(ratio, 220, 255);
         

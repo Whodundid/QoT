@@ -78,6 +78,7 @@ public class CommandShortcutEditorWindow extends WindowParent {
         
         infoLabel = new WindowLabel(this, sx, sy, "Enter a command to be executed");
         commandEntry = new WindowTextField(this, sx, infoLabel.endY + 10, w, 30);
+        commandEntry.setMaxStringLength(10000);
         
         double bwidth = ENumUtil.clamp(width / 4, 120, 400);
         double bheight = 40.0;

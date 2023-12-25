@@ -4,14 +4,14 @@ import envision.game.entities.Entity;
 
 public abstract class Player extends Entity {
 
-	protected PlayerStats stats;
+	protected EntityStats stats;
 	
 	public Player(String nameIn) {
 		super(nameIn);
 		
-		stats = new PlayerStats(this);
+		stats = new EntityStats(this);
 	}
 	
-	public PlayerStats getStats() { return stats; }
+	public EntityStats getStats() { return stats; }
 	
 }

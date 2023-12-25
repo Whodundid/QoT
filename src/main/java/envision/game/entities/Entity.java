@@ -12,6 +12,7 @@ import envision.game.component.ComponentType;
 import envision.game.component.types.death.OnDeathComponent;
 import envision.game.entities.inventory.EntityInventory;
 import envision.game.entities.movement.MovementCollisionHelper;
+import envision.game.entities.player.EntityStats;
 import envision.game.entities.util.EntityHealthBar;
 import envision.game.entities.util.EntityLevel;
 import envision.game.items.Item;
@@ -20,6 +21,7 @@ import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
+import eutil.random.ERandomUtil;
 import eutil.strings.EStringBuilder;
 import qot.abilities.Abilities;
 import qot.particles.FloatingTextEntity;
@@ -71,6 +73,8 @@ public abstract class Entity extends ComponentBasedObject {
 	public int hpRegenAmount = 1;
 	/** The point in time that hp last regenerated. */
 	public long lastRegenUpdate = 0l;
+	/** Distance in world pixels. */
+	protected double maxRange = 50.0;
 	
 	public boolean invincible = false;
 	
@@ -120,6 +124,7 @@ public abstract class Entity extends ComponentBasedObject {
 	
 	public ActiveAbilityTracker abilityTracker;
 	public EntitySpellbook spellbook;
+	public EntityStats stats;
 	
 	/** Temp thing to test out stuff. */
 	public Map<String, Double> activeEffectsTracker = new HashMap<>();
@@ -132,6 +137,7 @@ public abstract class Entity extends ComponentBasedObject {
 	public Entity(String nameIn) {
 		super(nameIn);
 		
+		stats = new EntityStats(this);
 		inventory = new EntityInventory(this, baseInventorySize);
 		
 		//determine initial next level
@@ -200,6 +206,17 @@ public abstract class Entity extends ComponentBasedObject {
 	public void attackedBy(Entity ent, int amount) {
 	    drainHealth(amount);
 	    favorTracker.decreaseFavorWithEntity(ent, 25);
+	    
+	    if (isDead()) {
+            //if (e instanceof Thyrah) giveItem(Items.random());
+            //else if (ERandomUtil.roll(5, 0, 10)) giveItem(Items.random());
+            
+            ent.getStats().addKilled(1);
+            world.removeEntity(this);
+            ent.addXP(getExperienceRewardedOnKill());
+            // TODO: move this to an 'onKilled' component
+            if (ERandomUtil.roll(0, 0, 4)) ent.setGold(ent.getGold() + ERandomUtil.getRoll(1, 10));
+        }
 	}
 	
 	@Override
@@ -352,6 +369,7 @@ public abstract class Entity extends ComponentBasedObject {
 	}
 	
 	public int getStrengthLevel() { return strengthLevel; }
+	public double getMaxRange() { return maxRange; }
 	
 	public int getBaseInventorySize() { return baseInventorySize; }
 	public EntityInventory getInventory() { return inventory; }
@@ -364,6 +382,7 @@ public abstract class Entity extends ComponentBasedObject {
 	public EntitySpellbook getSpellbook() { return spellbook; }
 	public EntityFavorTracker getFavorTracker() { return favorTracker; }
 	public EntityFavorDecider getFavorDecider() { return favorDecider; }
+	public EntityStats getStats() { return stats; }
 	
 	//=========
     // Setters
@@ -440,6 +459,10 @@ public abstract class Entity extends ComponentBasedObject {
 			this.spellbook.learnAbility(Abilities.selfHeal);
 			this.abilityTracker.addAbility(Abilities.selfHeal);
 		}
+	}
+	
+	public void setMaxRange(double rangeIn) {
+	    maxRange = ENumUtil.clamp(rangeIn, 0.0, Double.MAX_VALUE);
 	}
 	
 	/**

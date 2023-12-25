@@ -3,6 +3,7 @@ package envision;
 import java.io.File;
 import java.time.ZonedDateTime;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -59,6 +60,7 @@ import envision_lang.lang.java.annotations.EClass;
 import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
+import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_i;
 import qot.assets.textures.general.GeneralTextures;
 
@@ -506,10 +508,10 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	            final float speed = 6.0f;
 	            
 	            // press
-	            //if (Keyboard.isKeyDown(Keyboard.KEY_W)) pos.y -= speed;
-	            //if (Keyboard.isKeyDown(Keyboard.KEY_D)) pos.x += speed;
-	            //if (Keyboard.isKeyDown(Keyboard.KEY_S)) pos.y += speed;
-	            //if (Keyboard.isKeyDown(Keyboard.KEY_A)) pos.x -= speed;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_W)) pos.y -= speed;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_D)) pos.x += speed;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_S)) pos.y += speed;
+	            if (Keyboard.isKeyDown(Keyboard.KEY_A)) pos.x -= speed;
 	            if (Keyboard.isKeyDown(Keyboard.KEY_UP)) pos.y -= speed;
                 if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) pos.x += speed;
                 if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) pos.y += speed;
@@ -523,21 +525,23 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	            if (Keyboard.isKeyDown(Keyboard.KEY_E)) rot.z += 0.005;
 	            if (Keyboard.isKeyDown(Keyboard.KEY_Q)) rot.z -= 0.005;
 	            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-	                rot.set(0, 0, 0);
+	                rot.set(0, 2, 0);
 	                pos.z = 0;
 	            }
+	            
+	            RenderingManager.drawString(pos, 50, 150);
 	            
 	            int mX = Mouse.getMx();
 	            int mY = Mouse.getMy();
 	            
-	            //float dX = (float) (mX - mX_old);
-	            //float dY = (float) (mY - mY_old);
+	            float dX = (float) (mX - mX_old);
+	            float dY = (float) (mY - mY_old);
 	            
 	            mX_old = mX;
 	            mY_old = mY;
 	            
-	            //rot.add(new Vector3f(dY * 0.001f, dX * 0.001f, 0), rot);
-	            //rot.set(ENumUtil.clamp(rot.x, -90, 90), rot.y, 0);
+	            rot.add(new Vector3f(dY * 0.001f, dX * 0.001f, 0), rot);
+	            rot.set(ENumUtil.clamp(rot.x, -90, 90), rot.y, 0);
 		    }
 		    
 			renderEngine.draw(dt);
