@@ -35,6 +35,8 @@ public class WorldRenderer extends EGui {
 	/** Temporary list for testing world layers. */
 	private EList<WorldDrawLayer> worldLayers = EList.newList();
 	
+	private boolean loaded = false;
+	
 	//--------------
 	// Constructors
 	//--------------
@@ -49,13 +51,14 @@ public class WorldRenderer extends EGui {
 	 */
 	public synchronized void onWorldLoaded() {
 		onWindowResized();
-		if (world != null) {
-			//load entities
-			world.spawnEntities();
+		if (world != null && !loaded) {
+			
 			
 			TEMP_createWorldLayers();
 			
 			//world.setCameraZoom(3);
+			
+			loaded = true;
 		}
 	}
 	
@@ -109,7 +112,7 @@ public class WorldRenderer extends EGui {
 	 * Should be called from main game render tick, every tick.
 	 */
 	public void onRenderTick(float partialTicks) {
-		world.camera.onRenderTick(partialTicks);
+		Envision.levelManager.getCamera().onRenderTick(partialTicks);
 		renderWorld(partialTicks);
 	}
 	
@@ -164,7 +167,7 @@ public class WorldRenderer extends EGui {
     }
 	
 	private void renderMapLayers() {
-		final var cam = world.camera;
+		final var cam = Envision.levelManager.getCamera();
 		final var worldWidth = world.getWidth();
 		final var worldHeight = world.getHeight();
 		

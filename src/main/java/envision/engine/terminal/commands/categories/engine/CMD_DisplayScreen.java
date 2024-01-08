@@ -31,7 +31,7 @@ public class CMD_DisplayScreen extends TerminalCommand {
 	    expectAtLeast(1);
 		
 		if (firstArg().equals("null")) {
-			if (Envision.getWorld() != null) Envision.loadWorld(null);
+			if (Envision.getWorld() != null) Envision.loadLevel(null);
 			Envision.displayScreen(null);
 			return;
 		}
@@ -42,7 +42,7 @@ public class CMD_DisplayScreen extends TerminalCommand {
             return;
         }
         
-        if (Envision.getWorld() != null) Envision.loadWorld(null);
+        if (Envision.getWorld() != null) Envision.loadLevel(null);
         Envision.displayScreen(s);
 	}
 	

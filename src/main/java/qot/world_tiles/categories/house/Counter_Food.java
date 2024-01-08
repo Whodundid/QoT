@@ -11,6 +11,7 @@ public class Counter_Food extends WorldTile {
 		super(TileIDs.COUNTER_FOOD);
 		setSprite(new Sprite(HouseTextures.counter_food));
 		blocksMovement = true;
+		setMiniMapColor(0xff6B7585);
 	}
 	
 	@Override

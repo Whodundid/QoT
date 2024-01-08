@@ -4,6 +4,7 @@ import java.io.File;
 
 import envision.Envision;
 import envision.engine.EngineSettings;
+import envision.engine.assets.EditorTextures;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -12,7 +13,6 @@ import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
-import qot.assets.textures.editor.EditorTextures;
 import qot.settings.QoTSettings;
 
 public class MapMenuScreen extends GameScreen {
@@ -59,7 +59,7 @@ public class MapMenuScreen extends GameScreen {
 	}
 
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.pdgray);
 		drawRect(midX - 252, midY - 252, midX + 252, midY + 82, EColors.black);
 		drawRect(midX - 250, midY - 250, midX + 250, midY + 80, EColors.dgray);

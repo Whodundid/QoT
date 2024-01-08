@@ -1,8 +1,9 @@
 package envision.game.world.worldEditor.editorTools.toolUtil;
 
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import envision.game.world.IGameWorld;
+import envision.game.world.worldTiles.WorldTile;
+import eutil.datatypes.util.EList;
 
 public class FloodFill {
 	
@@ -11,56 +12,62 @@ public class FloodFill {
 	private static final int[] row = { -1, -1, -1,  0, 0,  1, 1, 1 };
     private static final int[] col = { -1,  0,  1, -1, 1, -1, 0, 1 };
 	
-	public static void replace(int[][] arrayIn, int sX, int sY, int replacement) {
+	public static void floodFillReplace(IGameWorld world, WorldTile tileToFind, int sX, int sY, WorldTile replacement) {
 		
-		int w = arrayIn.length;
-		int h = arrayIn[0].length;
-		
-		// create a queue and enqueue starting pixel
-		Queue<Pair> q = new ArrayDeque();
-		q.add(new Pair(sX, sY));
-		
-		// get target color
-		int target = arrayIn[sX][sY];
-		
-		// loop till queue is empty
-		while (!q.isEmpty()) {
-			// pop front node from queue and process it
-			Pair node = q.poll();
-			
-			// (x, y) represents current pixel
-			sX = node.x;
-			sY = node.y;
-			
-			// replace current pixel color with that of replacement
-			arrayIn[sX][sY] = replacement;
-			
-			// process all 8 adjacent pixels of current pixel and
-			// enqueue each valid pixel
-			for (int k = 0; k < row.length; k++) {
-				
-				// if adjacent pixel at position (x + row[k], y + col[k]) is
-				// a valid pixel and have same color as that of current pixel
-				if (good(arrayIn, w, h, sX + row[k], sY + col[k], target)) {
-					// enqueue adjacent pixel
-					q.add(new Pair(sX + row[k], sY + col[k]));
-				}
-				
-			}
-		}
+	    EList<Point> tilesToReplace = EList.newList();
+	    EList<Point> unexploredStack = EList.newList();
+	    
+	    // find all matching adjacent tiles
+	    findSimilar(new Point(sX, sY), tileToFind, world, tilesToReplace, unexploredStack);
+	    
+	    for (Point p : tilesToReplace) {
+	        WorldTile t = replacement.copy();
+	        t.randomizeValues();
+	        world.setTileAt(t, p.x, p.y);
+	    }
 	}
 	
-	private static boolean good(int[][] arr, int w, int h, int x, int y, int target) {
-		return (x >= 0 && x < w && y >= 0 && y < h) && (arr[x][y] == target);
+	private static void findSimilar(Point startingPoint, WorldTile tileToSearchFor,
+	    IGameWorld world, EList<Point> tilesToReplace, EList<Point> unexploredStack)
+	{
+	    unexploredStack.add(startingPoint);
+	    final int tileID = (tileToSearchFor != null) ? tileToSearchFor.getID() : -1;
+	    
+	    while (unexploredStack.isNotEmpty()) {
+	        Point pos = unexploredStack.pop();
+	        final int x = pos.x;
+	        final int y = pos.y;
+	        
+	        if (tilesToReplace.contains(pos)) continue;
+	        if (x < 0 || x >= world.getWidth()) continue;
+	        if (y < 0 || y >= world.getHeight()) continue;
+	        
+	        WorldTile tile = world.getTileAt(x, y);
+	        if (tile == null && tileToSearchFor != null) continue;
+	        
+	        int id = tile.getID();
+	        if (id != tileID) continue;
+	        
+	        tilesToReplace.add(new Point(x, y));
+	        unexploredStack.add(new Point(x + 1, y));
+	        unexploredStack.add(new Point(x - 1, y));
+	        unexploredStack.add(new Point(x, y + 1));
+	        unexploredStack.add(new Point(x, y - 1));
+	    }
 	}
 	
-	private static class Pair {
-		int x, y;
-		
-		public Pair(int xIn, int yIn) {
-			x = xIn;
-			y = yIn;
-		}
+	private static class Point {
+	    final int x, y;
+	    public Point(int x, int y) {
+	        this.x = x;
+	        this.y = y;
+	    }
+	    @Override
+	    public boolean equals(Object o) {
+	        if (!(o instanceof Point)) return false;
+	        Point p = (Point) o;
+	        return p.x == x && p.y == y;
+	    }
 	}
 	
 }

@@ -125,7 +125,7 @@ public class WindowTextArea2 extends WindowObject {
     }
     
     @Override
-    public void drawObject_i(long dt, int mXIn, int mYIn) {
+    public void drawObject_i(float dt, int mXIn, int mYIn) {
         if (!Mouse.isLeftDown()) activelyHighlighting = false;
         if (activelyHighlighting && !clickPoint.compare(mXIn, mYIn)) determineHighlightEnd();
         
@@ -363,7 +363,7 @@ public class WindowTextArea2 extends WindowObject {
     // Drawing
     //=========
     
-    protected void handleTextDrawing(long dt) {
+    protected void handleTextDrawing(float dt) {
         // highlight current line
         drawCurrentLineBackground();
         
@@ -499,7 +499,7 @@ public class WindowTextArea2 extends WindowObject {
         }
     }
     
-    protected void drawCursor(long dt) {
+    protected void drawCursor(float dt) {
         cursorBlinkDelta += dt;
         
         // if input happened recently, don't blink the cursor

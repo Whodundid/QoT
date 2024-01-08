@@ -7,8 +7,6 @@ import envision.engine.events.eventTypes.world.WorldAddedEntityEvent;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
-import envision.game.manager.LevelManager;
-import envision.game.manager.rules.Rule_DoDaylightCycle;
 import envision.game.world.layerSystem.LayerSystem;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.worldTiles.WorldTile;
@@ -52,37 +50,25 @@ public class GameWorld implements IGameWorld {
 	/** The script to be executed when the world first gets loaded. */
 	protected EnvisionProgram worldLoadScript;
 	protected WorldRenderer worldRenderer;
-	protected WorldCamera camera;
 	protected boolean underground = false;
 	protected LayerSystem layers = new LayerSystem();
-	
-	/** The time of day that the world will start with if there wasn't a previous world to inherit from. */
-	protected int initialTime = 120000; // mid day
-	/** The current time of day measured in game ticks. */
-	protected int timeOfDay = 0;
-	/**
-	 * The full length of one day measured in game ticks. Default is 10 min
-	 * based on 60 tps.
-	 */
-	protected int lengthOfDay = 240000;
-	protected int ambientLightLevel = 255; // between [0-255]
-	protected boolean isDay = false;
-	protected boolean isNight = false;
-	protected boolean isSunrise = false;
-	protected boolean isSunset = false;
 	
 	protected final WorldFileSystem worldFileSystem;
 	
 	/** This one is true if this world is THE active world in the engine. */
 	private boolean loaded = false;
 	private boolean fileLoaded = false;
+	public boolean isFirstLoad = true;
 	
 	private EList<GameObject> toDelete = EList.newList();
 	private EList<GameObject> toAdd = EList.newList();
 	
-	//--------------
-	// Constructors
-	//--------------
+	public int lastPlayerWorldX, lastPlayerWorldY;
+	public double lastPlayerStartX, lastPlayerStartY;
+	
+	//==============
+    // Constructors
+    //==============
 	
 	public GameWorld(String nameIn, int widthIn, int heightIn) { this(nameIn, widthIn, heightIn, DEFAULT_TILE_WIDTH, DEFAULT_TILE_HEIGHT); }
 	public GameWorld(String nameIn, int widthIn, int heightIn, int tileWidthIn, int tileHeightIn) {
@@ -100,9 +86,6 @@ public class GameWorld implements IGameWorld {
 		fileLoaded = true;
 		worldFileSystem = new WorldFileSystem(this);
 		worldRenderer = new WorldRenderer(this);
-		camera = new WorldCamera(this);
-		
-		timeOfDay = lengthOfDay / 2;
 	}
 	
 	public GameWorld(File worldFile) {
@@ -118,9 +101,6 @@ public class GameWorld implements IGameWorld {
 		}
 		
 		worldRenderer = new WorldRenderer(this);
-		camera = new WorldCamera(this);
-		
-		timeOfDay = lengthOfDay / 2;
 	}
 	
 	/**
@@ -156,10 +136,7 @@ public class GameWorld implements IGameWorld {
 		
 		worldFileSystem = new WorldFileSystem(this);
 		worldRenderer = new WorldRenderer(this);
-		camera = new WorldCamera(this);
 		fileLoaded = true;
-		
-		timeOfDay = lengthOfDay / 2;
 	}
 	
 	public void setDefaultValues() {
@@ -175,13 +152,11 @@ public class GameWorld implements IGameWorld {
 		worldObjects = EList.newList();
 		entityData = EList.newList();
 		fileLoaded = false;
-		
-		timeOfDay = lengthOfDay / 2;
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	@Override
 	public void onLoad(String... args) {
@@ -194,6 +169,13 @@ public class GameWorld implements IGameWorld {
 			}
 		}
 		
+		if (isFirstLoad) {
+		    // load entities
+	        spawnEntities();
+		    
+		    isFirstLoad = false;
+		}
+		
 		worldRenderer.onWorldLoaded();
 		
 		if (Envision.thePlayer != null) {
@@ -201,7 +183,7 @@ public class GameWorld implements IGameWorld {
 				addEntity(Envision.thePlayer);
 			}
 			Envision.thePlayer.setWorldPos(playerSpawn.getX(), playerSpawn.getY());
-			camera.setFocusedObject(Envision.thePlayer);
+			Envision.levelManager.getCamera().setFocusedObject(Envision.thePlayer);
 		}
 	}
 	
@@ -306,52 +288,11 @@ public class GameWorld implements IGameWorld {
 	 * You BET your sweet BIPPY there is!
 	 */
 	protected void updateTime() {
-	    if (!LevelManager.isLoaded()) return;
-	    if (!LevelManager.rules().isRuleEnabledAndEquals(Rule_DoDaylightCycle.NAME, true)) return;
-	    
-        if (timeOfDay++ >= lengthOfDay) timeOfDay = 0;
-        
-        int minLight = 100; // the minimum brightness of the world
-        int maxLight = 255; // the maximum brightness of the world
-        int deltaLight = maxLight - minLight;
-
-        // if underground, don't bother doing daylight calculations
-        if (underground) {
-            ambientLightLevel = minLight;
-            return;
-        }
-        
-        int transitionPeriodLength = lengthOfDay / 4;
-        int sunrise = (int) (lengthOfDay * 0.2);
-        int sunriseEnd = sunrise + transitionPeriodLength;
-        int sunset = (int) (lengthOfDay * 0.6D);          
-        int sunsetEnd = sunset + transitionPeriodLength;
-        
-        // check still night
-        if (timeOfDay < sunrise) {
-            isNight = true; isDay = false; isSunrise = false; isSunset = false;
-            ambientLightLevel = minLight;
-        }
-        // check sunrise
-        else if (timeOfDay <= (sunrise + transitionPeriodLength)) {
-            isNight = false; isDay = false; isSunrise = true; isSunset = false;
-            ambientLightLevel = minLight + ((timeOfDay - sunrise) * deltaLight) / transitionPeriodLength;
-        }
-        // check sunset
-        else if (timeOfDay >= sunset && timeOfDay <= (sunset + transitionPeriodLength)) {
-            isNight = false; isDay = false; isSunrise = false; isSunset = true;
-            ambientLightLevel = minLight + (deltaLight - (((timeOfDay - sunset) * deltaLight) / transitionPeriodLength));
-        }
-        // check day
-        else if (timeOfDay >= sunriseEnd && timeOfDay < sunset) {
-            isNight = false; isDay = true; isSunrise = false; isSunset = false;
-            ambientLightLevel = maxLight;
-        }
-        // check night
-        else if (timeOfDay >= sunsetEnd) {
-            isNight = true; isDay = false; isSunrise = false; isSunset = false;
-            ambientLightLevel = minLight;
-        }
+	    // if underground, don't bother doing daylight calculations
+//        if (underground) {
+//            ambientLightLevel = minLight;
+//            return;
+//        }
 	}
 	
 	// Any GameObject
@@ -450,6 +391,31 @@ public class GameWorld implements IGameWorld {
 		
 		return r;
 	}
+	
+	@Override
+    public EList<Entity> getAllEntitiesWithinSquaredDistance(GameObject obj, double maxDistance) {
+	    if (!worldObjects.contains(obj)) return EList.newList();
+        if (maxDistance <= 0) return EList.newList();
+        
+        int arrLen = worldObjects.size() / 4;
+        if (arrLen <= 10) arrLen = 10;
+        EList<Entity> r = new EArrayList<>(arrLen);
+        
+        var list = worldObjects.stream()
+                               .filter(Entity.class::isInstance)
+                               .map(o -> (Entity) o)
+                               .collect(EList.toEList());
+        
+        final int size = list.size();
+        for (int i = 0; i < size; i++) {
+            final Entity o = list.get(i);
+            final double dist = o.midX * obj.midX + o.midY * obj.midY;
+            
+            if (dist < maxDistance) r.add(o);
+        }
+        
+        return r;
+    }
 	
 	@Override
 	public EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) {
@@ -567,8 +533,8 @@ public class GameWorld implements IGameWorld {
 	//---------
 	
 	@Override public EList<Region> getRegionData() { return regionData; }
-	public boolean isFileLoaded() { return fileLoaded; }
-	public boolean isLoaded() { return loaded; }
+	@Override public boolean isFileLoaded() { return fileLoaded; }
+	@Override public boolean isLoaded() { return loaded; }
 	@Override public String getWorldName() { return name; }
 	@Override public int getWidth() { return width; }
 	@Override public int getHeight() { return height; }
@@ -610,14 +576,16 @@ public class GameWorld implements IGameWorld {
 	
 	public LayerSystem getLayerSystem() { return layers; }
 	
-	@Override public WorldCamera getCamera() { return camera; }
-	@Override public double getInitialCameraZoom() { return 2.0; }
-	@Override public double getCameraZoom() { return camera.getZoom(); }
-	@Override public void setCameraZoom(double zoomIn) { camera.setZoom(zoomIn); }
+	@Override
+	public int getAmbientLightLevel() {
+	    int level = Envision.levelManager.getAmbientLightLevel();
+	    if (underground) return 100;
+	    return level;
+	}
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	@Override
 	public void setWorldName(String nameIn) {
@@ -627,6 +595,8 @@ public class GameWorld implements IGameWorld {
 	@Override
 	public void setTileAt(WorldTile in, int layerIn, int xIn, int yIn) {
 		if (in == null) in = new VoidTile();
+        in.setWidthHeight(tileWidth, tileHeight);
+        in.setWorldPos(xIn, yIn);
 		worldLayers.get(layerIn).setTileAt(in, xIn, yIn);
 	}
 	
@@ -655,18 +625,11 @@ public class GameWorld implements IGameWorld {
 	
 	public void fillWith(WorldTile t) { fillWith(0, t); }
 	public void fillWith(int layer, WorldTile t) {
-		worldLayers.get(layer).fillWith(t);
+	    for (int y = 0; y < height; y++) {
+	        for (int x = 0; x < width; x++) {
+	            this.setTileAt(t, x, y);
+	        }
+	    }
 	}
-    
-	@Override public int getInitialTime() { return initialTime; }
-    @Override public int getTime() { return timeOfDay; }
-    @Override public int getDayLength() { return lengthOfDay; }
-    @Override public void setTime(int timeInTicks) { timeOfDay = ENumUtil.clamp(timeInTicks, 0, lengthOfDay); updateTime(); }
-    @Override public void setDayLength(int timeInTicks) { lengthOfDay = ENumUtil.clamp(timeInTicks, 0, lengthOfDay); updateTime(); }
-    @Override public boolean isDay() { return isDay; }
-    @Override public boolean isNight() { return isNight; }
-    @Override public boolean isSunrise() { return isSunrise; }
-    @Override public boolean isSunset() { return isSunset; }
-    @Override public int getAmbientLightLevel() { return ambientLightLevel; }
-    
+	
 }

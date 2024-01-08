@@ -14,8 +14,16 @@ public class StonePad extends WorldTile {
 		setWall(true);
 		wallHeight = 0.1;
 		
-		rotation = Rotation.random();
+		randomizeValues();
+		setMiniMapColor(0xff808080);
 	}
+	
+	@Override
+	public void randomizeValues() {
+	    rotation = Rotation.random();
+	}
+	
+	@Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

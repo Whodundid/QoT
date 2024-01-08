@@ -1,144 +1,116 @@
 package envision.game.world;
 
-import java.util.Objects;
-
 import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.game.GameObject;
 import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;
+import eutil.math.dimensions.Dimension_d;
+import eutil.math.dimensions.Dimension_i;
 import qot.settings.QoTSettings;
 
 public class WorldCamera {
-	
-	//========
+    
+    //========
     // Fields
     //========
-	
-	/** The world that this camera is viewing. */
-	private GameWorld theWorld;
-	/** The object this camera is following. */
-	private GameObject focusedObject;
-	/** The world coordinates that this camera is focused around. */
-	private final Point2d focusedCoords = new Point2d(0.0, 0.0);
-	/** The pixel world coordinates that this camera is precisely focused on. */
-	private final Point2d focusedPoint = new Point2d(0.0, 0.0);
-	/** The zoom of the camera. Higher values are more zoomed in. */
-	private double zoom = 1.0;
-	
-	private double minZoom = 0.25;
-	private double maxZoom = 10;
-	
-	/** The number of pixels in the X dimension that the camera is offset by in world coordinates. */
-	private double offsetX;
-	/** The number of pixels in the Y dimension that the camera is offset by in world coordinates. */
-	private double offsetY;
-	
-	private int mXWorldPixel = 0;
-	private int mYWorldPixel = 0;
-	private int mXWorldTile = 0;
-	private int mYWorldTile = 0;
-	
-	private long panStartTime;
-	private long panDuration;
-	private boolean isPanning;
-	
-	//==============
+    
+    /** The world that this camera is viewing. */
+    private IGameWorld theWorld;
+    /** The object this camera is following. */
+    private GameObject focusedObject;
+    /** The world coordinates that this camera is focused around. */
+    private final Point2d focusedCoords = new Point2d(0.0, 0.0);
+    /**
+     * The pixel world coordinates that this camera is precisely focused on.
+     */
+    private final Point2d focusedPoint = new Point2d(0.0, 0.0);
+    /** The zoom of the camera. Higher values are more zoomed in. */
+    private double zoom = 1.0;
+    private double zoomi;
+    
+    private double minZoom = 0.25;
+    private double maxZoom = 10;
+    
+    /**
+     * The number of pixels in the X dimension that the camera is offset by in
+     * world coordinates.
+     */
+    private double offsetX;
+    /**
+     * The number of pixels in the Y dimension that the camera is offset by in
+     * world coordinates.
+     */
+    private double offsetY;
+    
+    /** A number of pixels to offset all rendering by in the X axis. */
+    private double pixelOffsetX;
+    /** A number of pixels to offset all rendering by in the Y axis. */
+    private double pixelOffsetY;
+    
+    private int mXWorldPixel = 0;
+    private int mYWorldPixel = 0;
+    private int mXWorldTile = 0;
+    private int mYWorldTile = 0;
+    
+    private long panStartTime;
+    private long panDuration;
+    private boolean isPanning;
+    
+    private int tileWidth;
+    private int tileHeight;
+    private double tileWidthInverse;
+    private double tileHeightInverse;
+    
+    /**
+     * The dimensions of the screen that can be drawn to. Affects center of the
+     * screen offsets.
+     */
+    private final Dimension_d drawArea = new Dimension_d();
+    
+    //==============
     // Constructors
     //==============
-	
-	public WorldCamera(GameWorld worldIn) {
-		//preventing this from being null for right now..
-		theWorld = Objects.requireNonNull(worldIn);
-	}
-	
-	//========================
-	// Implementation Methods
-	//========================
-	
-	/**
-	 * Called each frame to update camera position.
-	 */
-	public synchronized void onRenderTick(float partialTicks) {
-	    // update the mouse's position in the world for both pixel and world coordinates
-	    updateMousePositionInWorld();
-	    // if focused on an entity, update camera position and limits
-	    updateFocusedObjectCameraPositionAndLimits();
-	}
-	
+    
+    public WorldCamera() {
+        drawArea.setDimensions(0, 0, Envision.getWidth(), Envision.getHeight());
+    }
+    
+    //========================
+    // Implementation Methods
+    //========================
+    
+    /**
+     * Called each frame to update camera position.
+     */
+    public synchronized void onRenderTick(float partialTicks) {
+        if (theWorld == null) return;
+        
+        // update the mouse's position in the world for both pixel and world coordinates
+        updateMousePositionInWorld();
+        // if focused on an entity, update camera position and limits
+        updateFocusedObjectCameraPositionAndLimits();
+    }
+    
     /**
      * Determines the position of the mouse in the world in both pixel and
      * world coordinates.
      */
-	protected void updateMousePositionInWorld() {
-        // half game window width
-        final double halfScreenW = Envision.getWidth() >> 1;
-        // half game window height
-        final double halfScreenH = Envision.getHeight() >> 1;
-        // tile width
-        final double tw = theWorld.getTileWidth();
-        // tile height
-        final double th = theWorld.getTileHeight();
+    protected void updateMousePositionInWorld() {
         // x world pixel scaled by zoom
-        final double scaledWorldPixelX = (focusedPoint.x + tw * 0.5) * zoom - halfScreenW + Mouse.getMx_double();
+        final double x = (focusedPoint.x - pixelOffsetX) * zoom - drawArea.midX + Mouse.getMx_double();
         // y world pixel scaled by zoom
-        final double scaledWorldPixelY = (focusedPoint.y + th * 0.5) * zoom - halfScreenH + Mouse.getMy_double();
+        final double y = (focusedPoint.y - pixelOffsetY) * zoom - drawArea.midY + Mouse.getMy_double();
         // x world pixel under the mouse with zoom factored out
-        mXWorldPixel = (int) Math.floor(scaledWorldPixelX / zoom);
+        mXWorldPixel = (int) (x * zoomi);
         // y world pixel under the mouse with zoom factored out
-        mYWorldPixel = (int) Math.floor(scaledWorldPixelY / zoom);
+        mYWorldPixel = (int) (y * zoomi);
         // x world coordinate under the mouse
-        mXWorldTile = (int) Math.floor(mXWorldPixel / tw);
+        mXWorldTile = (int) (mXWorldPixel * tileWidthInverse);
         // y world coordinate under the mouse
-        mYWorldTile = (int) Math.floor(mYWorldPixel / th);
-	}
-	
-	public Point2d convertScreenPosToScaledWorldPixel(Point2d pos) {
-        // half game window width
-        final double halfScreenW = Envision.getWidth() >> 1;
-        // half game window height
-        final double halfScreenH = Envision.getHeight() >> 1;
-        // tile width
-        final double tw = theWorld.getTileWidth();
-        // tile height
-        final double th = theWorld.getTileHeight();
-        // decimal x world coordinate of the camera's position
-        final double camWorldX = focusedPoint.x / tw;
-        // decimal y world coordinate of the camera's position
-        final double camWorldY = focusedPoint.y / th;
-        // scaled pixel width of each tile
-        final double stw = tw * zoom;
-        // scaled pixel height of each tile
-        final double sth = th * zoom;
-        // x world pixel scaled by zoom
-        final double scaledWorldPixelX = (camWorldX + 0.5) * stw - halfScreenW + Mouse.getMx_double();
-        // y world pixel scaled by zoom
-        final double scaledWorldPixelY = (camWorldY + 0.5) * sth - halfScreenH + Mouse.getMy_double();
-        
-        return new Point2d(scaledWorldPixelX, scaledWorldPixelY);
-	}
-	
-	public Point2d convertWorldPixelPosToScreenPos(double worldPixelX, double worldPixelY) {
-        final double halfScreenW = Envision.getWidth() >> 1;
-        final double halfScreenH = Envision.getHeight() >> 1;
-        
-        final double camWorldX = getCameraCenterX();
-        final double camWorldY = getCameraCenterY();
-        
-        //pixel width of each tile
-        final double w = getScaledTileWidth();
-        //pixel height of each tile
-        final double h = getScaledTileHeight();
-        
-        final double tileX = worldPixelX / (double) theWorld.tileWidth;
-        final double tileY = worldPixelY / (double) theWorld.tileHeight;
-        
-        double drawX = (tileX - camWorldX - 0.5) * w + halfScreenW;
-        double drawY = (tileY - camWorldY - 0.5) * h + halfScreenH;
-        
-	    return new Point2d(drawX, drawY);
-	}
-	
+        mYWorldTile = (int) (mYWorldPixel * tileHeightInverse);
+    }
+    
     /**
      * Determines where to position the camera if it is currently focused
      * around a single object in the world.
@@ -146,8 +118,8 @@ public class WorldCamera {
      * Furthermore, calculates the limits on how the camera can move when
      * around edges of the world.
      */
-	protected void updateFocusedObjectCameraPositionAndLimits() {
-	    // if there isn't a focused object, then there's nothing to calculate here
+    protected void updateFocusedObjectCameraPositionAndLimits() {
+        // if there isn't a focused object, then there's nothing to calculate here
         if (focusedObject == null) return;
         
         //var s = new EStringBuilder();
@@ -174,7 +146,7 @@ public class WorldCamera {
         
         double halfTileWidth = tw / 2.0;
         double halfTileHeight = th / 2.0;
-
+        
         double halfEntityWidth = ew * 0.5;
         double halfEntityHeight = eh * 0.5;
         
@@ -240,92 +212,307 @@ public class WorldCamera {
         focusedPoint.y = yToSet;
         offsetX = entityPixelX;
         offsetY = entityPixelY;
-	}
-	
-	//=========
+    }
+    
+    //=========
     // Methods
     //=========
-	
-	public boolean isMouseInWorld() {
-	    return isScreenPositionInWorld(Mouse.getMx_double(), Mouse.getMy_double());
-	}
-	
-	public boolean isScreenPositionInWorld(double x, double y) {
-	    return false;
-	}
-	
-	//=========
+    
+    public boolean isMouseInWorld() {
+        return isScreenPositionInWorld(Mouse.getMx_double(), Mouse.getMy_double());
+    }
+    
+    /** Returns true if the given screen coordinates are within the rendered world. */
+    public boolean isScreenPositionInWorld(double x, double y) {
+        if (theWorld == null) return false;
+        final double[] area = convertWorldAreaToScreenArea(0, 0, theWorld.getPixelWidth() - 1, theWorld.getPixelHeight() - 1);
+        return (x >= area[0] && x <= area[2] && y >= area[1] && y <= area[3]);
+    }
+    
+    public void moveCameraByCoords(double x, double y) { moveCameraByCoords(x, y, true); }
+    public void moveCameraByCoords(double x, double y, boolean clampToWorld) {
+        moveCameraByPixels(x * tileWidth, y * tileWidth);
+    }
+    
+    public void moveCameraByPixels(double x, double y) { moveCameraByPixels(x, y, true); }
+    public void moveCameraByPixels(double x, double y, boolean clampToWorld) {
+        double newX = focusedPoint.x + x;
+        double newY = focusedPoint.y + y;
+        if (clampToWorld && theWorld != null) {
+            double maxX = theWorld.getWidth() * theWorld.getTileWidth();
+            double maxY = theWorld.getHeight() * theWorld.getTileHeight();
+            newX = ENumUtil.clamp(newX, pixelOffsetX * 2.0, maxX);
+            newY = ENumUtil.clamp(newY, pixelOffsetY * 2.0, maxY);
+        }
+        setFocusedPoint(newX, newY);
+    }
+    
+    public double[] convertScreenPxToWorldPx(Point2d pos) { return convertScreenPxToWorldPx(pos.x, pos.y); }
+    public double[] convertScreenPxToWorldPx(double x, double y) {
+        final double[] r = new double[2];
+        
+        r[0] = (focusedPoint.x - pixelOffsetX) * zoom - drawArea.midX + x;
+        r[1] = (focusedPoint.y - pixelOffsetY) * zoom - drawArea.midY + y;
+        
+        return r;
+    }
+    
+    public double[] convertWorldPxToScreenPx(Point2d pos) { return convertWorldPxToScreenPx(pos.x, pos.y); }
+    public double[] convertWorldPxToScreenPx(double x, double y) {
+        final double[] r = new double[2];
+        
+        r[0] = (x + pixelOffsetX - focusedPoint.x) * zoom + drawArea.midX;
+        r[1] = (y + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
+        
+        return r;
+    }
+    
+    public double[] convertWorldAreaToScreenArea(double startX, double startY, double endX, double endY) {
+        final double[] r = new double[4];
+        
+        r[0] = (startX + pixelOffsetX - focusedPoint.x) * zoom + drawArea.midX;
+        r[1] = (startY + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
+        r[2] = (endX + pixelOffsetX - focusedPoint.x) * zoom + drawArea.midX;
+        r[3] = (endY + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
+        
+        return r;
+    }
+    
+    //=========
     // Getters
     //=========
-	
-	/** @return the exact X pixel coordinate that camera is focused on in the world. */
-	public double getX() { return focusedPoint.x; }
-	/** @return the exact Y pixel coordinate that camera is focused on in the world. */
-	public double getY() { return focusedPoint.y; }
-	/** @return the X world coordinate that camera is focused on. */
-	public int getWorldX() { return (int) focusedCoords.x; }
-	/** @return the Y world coordinate that camera is focused on. */
-	public int getWorldY() { return (int) focusedCoords.y; }
-	/** @return the number of pixels in the X dimension that the camera is offset by in world coordinates. */
-	public double getOffsetX() { return offsetX; }
-	/** @return the number of pixels in the Y dimension that the camera is offset by in world coordinates. */
-	public double getOffsetY() { return offsetY; }
-	/** @return the current zoom of the camera. Higher values are more zoomed in! */
-	public double getZoom() { return zoom; }
-	/** @return the min zoom of the camera. */
-	public double getMinZoom() { return minZoom; }
-	/** @return the max zoom of the camera. */
-	public double getMaxZoom() { return maxZoom; }
-	
-	/** @return the object the camera is currently focused on. (Could be null) */
-	public synchronized GameObject getFocusedObject() { return focusedObject; }
-	
-	/** @return the size (in pixels) for the width of each tile in the world. */
-	public double getScaledTileWidth() { return theWorld.getTileWidth() * zoom; }
-	/** @return the size (in pixels) for the height of each tile in the world. */
-	public double getScaledTileHeight() { return theWorld.getTileHeight() * zoom; }
-	
-    /** @return the X location of where the camera is in terms of decimal world coordinates. */
-    public double getCameraCenterX() { return focusedPoint.x / theWorld.getTileWidth(); }
-    /** @return the Y location of where the camera is in terms of decimal world coordinates. */
-    public double getCameraCenterY() { return focusedPoint.y / theWorld.getTileHeight(); }
-	
-    /** @return the X pixel coordinate of where the mouse is in the world. (could be out of bounds) */
-    public double getMousePixelX() { return mXWorldPixel; }
-    /** @return the Y pixel coordinate of where the mouse is in the world. (could be out of bounds) */
-    public double getMousePixelY() { return mYWorldPixel; }
-    /** @return the X world coordinate of where the mouse is in the world. (could be out of bounds) */
-    public int getMouseTileX() { return mXWorldTile; }
-    /** @return the Y world coordinate of where the mouse is in the world. (could be out of bounds) */
-    public int getMouseTileY() { return mYWorldTile; }
-	
-	//=========
+    
+    /**
+     * @return the exact X pixel coordinate that camera is focused on in the
+     *         world.
+     */
+    public double getX() {
+        return focusedPoint.x;
+    }
+    /**
+     * @return the exact Y pixel coordinate that camera is focused on in the
+     *         world.
+     */
+    public double getY() {
+        return focusedPoint.y;
+    }
+    /** @return the X world coordinate that camera is focused on. */
+    public int getWorldX() {
+        return (int) focusedCoords.x;
+    }
+    /** @return the Y world coordinate that camera is focused on. */
+    public int getWorldY() {
+        return (int) focusedCoords.y;
+    }
+    /**
+     * @return the number of pixels in the X dimension that the camera is
+     *         offset by in world coordinates.
+     */
+    public double getOffsetX() {
+        return offsetX;
+    }
+    /**
+     * @return the number of pixels in the Y dimension that the camera is
+     *         offset by in world coordinates.
+     */
+    public double getOffsetY() {
+        return offsetY;
+    }
+    /**
+     * @return the current zoom of the camera. Higher values are more zoomed
+     *         in!
+     */
+    public double getZoom() {
+        return zoom;
+    }
+    /** @return the min zoom of the camera. */
+    public double getMinZoom() { return minZoom; }
+    /** @return the max zoom of the camera. */
+    public double getMaxZoom() { return maxZoom; }
+    
+    /**
+     * @return the object the camera is currently focused on. (Could be null)
+     */
+    public synchronized GameObject getFocusedObject() {
+        return focusedObject;
+    }
+    
+    /**
+     * @return the size (in pixels) for the width of each tile in the world.
+     */
+    //	public double getScaledTileWidth() { return theWorld.getTileWidth() * zoom; }
+    /**
+     * @return the size (in pixels) for the height of each tile in the world.
+     */
+    //	public double getScaledTileHeight() { return theWorld.getTileHeight() * zoom; }
+    
+    /**
+     * @return the X location of where the camera is in terms of decimal world
+     *         coordinates.
+     */
+    public double getCameraCenterX() {
+        if (theWorld == null) return Double.NaN;
+        return focusedPoint.x / theWorld.getTileWidth();
+    }
+    /**
+     * @return the Y location of where the camera is in terms of decimal world
+     *         coordinates.
+     */
+    public double getCameraCenterY() {
+        if (theWorld == null) return Double.NaN;
+        return focusedPoint.y / theWorld.getTileHeight();
+    }
+    
+    public double[] getCenteredTileDrawDimensions() {
+        return calculateDrawDimensions(focusedPoint.x - tileWidth, focusedPoint.y - tileHeight, tileWidth, tileHeight);
+    }
+    
+    /**
+     * @return the X pixel coordinate of where the mouse is in the world.
+     *         (could be out of bounds)
+     */
+    public double getMousePixelX() {
+        return mXWorldPixel;
+    }
+    /**
+     * @return the Y pixel coordinate of where the mouse is in the world.
+     *         (could be out of bounds)
+     */
+    public double getMousePixelY() {
+        return mYWorldPixel;
+    }
+    /**
+     * @return the X world coordinate of where the mouse is in the world.
+     *         (could be out of bounds)
+     */
+    public int getMouseTileX() {
+        return mXWorldTile;
+    }
+    /**
+     * @return the Y world coordinate of where the mouse is in the world.
+     *         (could be out of bounds)
+     */
+    public int getMouseTileY() {
+        return mYWorldTile;
+    }
+    
+    public Dimension_i getDrawableArea() { return new Dimension_i(drawArea); }
+    
+    public double getDrawableAreaStartX() { return drawArea.startX; }
+    public double getDrawableAreaStartY() { return drawArea.startY; }
+    public double getDrawableAreaEndX() { return drawArea.endX; }
+    public double getDrawableAreaEndY() { return drawArea.endY; }
+    
+    /** @return the width of the screen area that can be drawn to. */
+    public double getDrawableAreaWidth() { return drawArea.width; }
+    /** @return the height of the screen area that can be drawn to. */
+    public double getDrawableAreaHeight() { return drawArea.height; }
+    /** @return the width of the screen area that can be drawn to divided by 2. */
+    public double getDrawableAreaHalfWidth() { return drawArea.width * 0.5; }
+    /** @return the height of the screen area that can be drawn to divided by 2. */
+    public double getDrawableAreaHalfHeight() { return drawArea.height * 0.5; }
+    
+    public double getPixelOffsetX() { return pixelOffsetX; }
+    public double getPixelOffsetY() { return pixelOffsetY; }
+    
+    //===================
+    // Rendering Helpers
+    //===================
+    
+    public double calculateObjectDrawX(GameObject object) {
+        return calculateDrawX(object.startX);
+    }
+    public double calculateObjectDrawY(GameObject object) {
+        return calculateDrawY(object.startY);
+    }
+    
+    public double calculateDrawX(double x) {
+        return (x + pixelOffsetX - focusedPoint.x) * zoom + drawArea.midX;
+    }
+    
+    public double calculateDrawY(double y) {
+        return (y + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
+    }
+    
+    /**
+     * Returns an array containing the drawX, drawY, drawW, drawH in the form
+     * of [x, y, w, h].
+     * 
+     * @param tile The tile to get draw dimensions for
+     * 
+     * @return An array containing the object's screen drawing dimensions
+     */
+    public double[] calculateDrawDimensions(GameObject object) {
+        return calculateDrawDimensions(object.startX, object.startY, object.width, object.height);
+    }
+    
+    public double[] calculateDrawDimensions(double startX, double startY, double width, double height) {
+        // [x, y, w, h]
+        final double[] r = new double[4];
+        
+        //      world pixel coords                             screen cords
+        r[0] = (startX + pixelOffsetX - focusedPoint.x) * zoom + drawArea.midX;
+        r[1] = (startY + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
+        r[2] = width * zoom;
+        r[3] = height * zoom;
+        
+        return r;
+    }
+    
+    /**
+     * Checks if the mouse is hovering over the given game object.
+     * 
+     * @param object The object to check
+     * 
+     * @return True if mouse is over the object
+     */
+    public boolean isMouseOverObject(GameObject object) {
+        return isMouseInWorldArea(object.startX, object.startY, object.width, object.height);
+    }
+    
+    /**
+     * Checks if the mouse is hovering over the given dimension in world space.
+     * 
+     * @param startX The start X world pixel coordinate
+     * @param startY The start Y world pixel coordinate
+     * @param width  The width in world pixels
+     * @param height The height in world pixels
+     * 
+     * @return True if the mouse if over the given world area
+     */
+    public boolean isMouseInWorldArea(double startX, double startY, double width, double height) {
+        final double[] draw = calculateDrawDimensions(startX, startY, width, height);
+        int mX = Mouse.getMx();
+        int mY = Mouse.getMy();
+        return (mX >= draw[0] && mX <= draw[0] + draw[2] && mY >= draw[1] && mY <= draw[1] + draw[3]);
+    }
+    
+    //=========
     // Setters
     //=========
-	
-	/**
-	 * Sets this camera's zoom.
-	 * Default range: [0.25, 10]
-	 * 
-	 * @param zoomIn The zoom to set
-	 */
-	public void setZoom(double zoomIn) {
-	    double min = minZoom;
-	    double max = maxZoom;
-	    
-	    if (QoTSettings.camreaEdgeLocking.getBoolean()) {
-	        min = calcMinEdgeLockZoom();
-	        min = ENumUtil.clamp(min, minZoom, 1000);
-	        max = ENumUtil.clamp(max, min, max);
-	    }
-	    
-		zoom = zoomIn;
-		
-		zoom = ENumUtil.clamp(zoom, min, max);
-	}
-	
-	protected double calcMinEdgeLockZoom() {
-	    final int gameWidth = Envision.getWidth();
+    
+    /**
+     * Sets this camera's zoom. Default range: [0.25, 10]
+     * 
+     * @param zoomIn The zoom to set
+     */
+    public void setZoom(double zoomIn) {
+        double min = minZoom;
+        double max = maxZoom;
+        
+        if (QoTSettings.camreaEdgeLocking.getBoolean()) {
+            min = calcMinEdgeLockZoom();
+            min = ENumUtil.clamp(min, minZoom, 1000);
+            max = ENumUtil.clamp(max, min, max);
+        }
+        
+        zoom = zoomIn;
+        zoom = ENumUtil.clamp(zoom, min, max);
+        zoomi = 1.0 / zoom;
+    }
+    
+    protected double calcMinEdgeLockZoom() {
+        final int gameWidth = Envision.getWidth();
         final int gameHeight = Envision.getHeight();
         
         double pixelWidth = theWorld.getPixelWidth();
@@ -337,74 +524,97 @@ public class WorldCamera {
         minZoomWidth = Math.round(minZoomWidth * 4.0) / 4.0;
         minZoomHeight = Math.round(minZoomHeight * 4.0) / 4.0;
         
-	    return Math.max(minZoomWidth, minZoomHeight);
-	}
-	
-	public void setMinZoom(double zoomIn) { minZoom = zoomIn; }
-	public void setMaxZoom(double zoomIn) { maxZoom = zoomIn; }
-	
-	public void setEdgeLocked(boolean val) {
-	    QoTSettings.camreaEdgeLocking.set(val);
-	    QoTSettings.saveConfig();
-	}
-	
-	public boolean isEdgeLocked() { return QoTSettings.camreaEdgeLocking.getBoolean(); }
-	
-	/**
-	 * Sets an object that the camera will focus in on and follow.
-	 * <p>
-	 * If the given object is null, then the camera will be set to (0, 0)
-	 * instead.
-	 * 
-	 * @param object The object to focus
-	 */
-	public synchronized void setFocusedObject(GameObject object) {
-		focusedObject = object;
-		if (focusedObject == null) {
-			focusedPoint.set(0.0, 0.0);
-			offsetX = (focusedPoint.x % theWorld.getTileWidth()) * zoom;
-			offsetY = (focusedPoint.y % theWorld.getTileHeight()) * zoom;
-		}
-		else {
-			focusedCoords.set(focusedObject.worldX, focusedObject.worldY);
-			focusedPoint.set(focusedObject.startX, focusedObject.startY);
-			offsetX = (focusedObject.startX % theWorld.getTileWidth()) * zoom;
-			offsetY = (focusedObject.startY % theWorld.getTileHeight()) * zoom;
-		}
-	}
-	
-	/**
-	 * Specifies a location in world pixel coordinates that the camera will focus in on.
-	 * <p>
-	 * Note: The camera will not move from this point.
-	 * 
-	 * @param x The X pixel coordinate
-	 * @param y The Y pixel coordinate
-	 */
-	public synchronized void setFocusedPoint(double x, double y) {
-		focusedObject = null;
-		focusedCoords.set(x / theWorld.getTileWidth(), y / theWorld.getTileHeight());
-		focusedPoint.set(x, y);
-		offsetX = (focusedPoint.x % theWorld.getTileWidth()) * zoom;
-		offsetY = (focusedPoint.y % theWorld.getTileHeight()) * zoom;
-	}
-	
-	/**
-	 * Specifies a position in world coordinates that the camera will focus in on.
-	 * <p>
-	 * Note: The camera will not move from this point.
-	 * 
-	 * @param x The X pixel coordinate
-	 * @param y The Y pixel coordinate
-	 */
-	public synchronized void setFocusedCoords(double x, double y) {
-		focusedObject = null;
-		focusedCoords.set(x, y);
-		var tw = theWorld.getTileWidth();
-		var th = theWorld.getTileHeight();
-		focusedPoint.set(x * tw + tw / 2.0, y * th + th / 2.0);
-		offsetX = (focusedPoint.x % tw) * zoom;
-		offsetY = (focusedPoint.y % th) * zoom;
-	}
-	
+        return Math.max(minZoomWidth, minZoomHeight);
+    }
+    
+    public void setMinZoom(double zoomIn) { minZoom = zoomIn; }
+    public void setMaxZoom(double zoomIn) { maxZoom = zoomIn; }
+    
+    public void setEdgeLocked(boolean val) {
+        QoTSettings.camreaEdgeLocking.set(val);
+        QoTSettings.saveConfig();
+    }
+    
+    public boolean isEdgeLocked() { return QoTSettings.camreaEdgeLocking.getBoolean(); }
+    
+    public synchronized void setActiveWorld(IGameWorld world) {
+        this.theWorld = world;
+        if (theWorld != null) {
+            tileWidth = theWorld.getTileWidth();
+            tileHeight = theWorld.getTileHeight();
+            tileWidthInverse = 1.0 / tileWidth;
+            tileHeightInverse = 1.0 / tileHeight;
+        }
+    }
+    
+    /**
+     * Sets an object that the camera will focus in on and follow.
+     * <p>
+     * If the given object is null, then the camera will be set to (0, 0)
+     * instead.
+     * 
+     * @param object The object to focus
+     */
+    public synchronized void setFocusedObject(GameObject object) {
+        focusedObject = object;
+        if (focusedObject == null) {
+            focusedPoint.set(0.0, 0.0);
+            offsetX = (focusedPoint.x % theWorld.getTileWidth()) * zoom;
+            offsetY = (focusedPoint.y % theWorld.getTileHeight()) * zoom;
+        }
+        else {
+            focusedCoords.set(focusedObject.worldX, focusedObject.worldY);
+            focusedPoint.set(focusedObject.startX, focusedObject.startY);
+            offsetX = (focusedObject.startX % theWorld.getTileWidth()) * zoom;
+            offsetY = (focusedObject.startY % theWorld.getTileHeight()) * zoom;
+        }
+    }
+    
+    /**
+     * Specifies a location in world pixel coordinates that the camera will
+     * focus in on.
+     * <p>
+     * Note: The camera will not move from this point.
+     * 
+     * @param x The X pixel coordinate
+     * @param y The Y pixel coordinate
+     */
+    public synchronized void setFocusedPoint(double x, double y) {
+        focusedObject = null;
+        focusedCoords.set(x / (double) tileWidth, y / (double) tileHeight);
+        focusedPoint.set(x, y);
+        offsetX = (focusedPoint.x % (double) tileWidth) * zoom;
+        offsetY = (focusedPoint.y % (double) tileHeight) * zoom;
+    }
+    
+    /**
+     * Specifies a position in world coordinates that the camera will focus in
+     * on.
+     * <p>
+     * Note: The camera will not move from this point.
+     * 
+     * @param x The X pixel coordinate
+     * @param y The Y pixel coordinate
+     */
+    public synchronized void setFocusedCoords(double x, double y) {
+        focusedObject = null;
+        focusedCoords.set(x, y);
+        var tw = theWorld.getTileWidth();
+        var th = theWorld.getTileHeight();
+        focusedPoint.set(x * tw + tw / 2.0, y * th + th / 2.0);
+        offsetX = (focusedPoint.x % tw) * zoom;
+        offsetY = (focusedPoint.y % th) * zoom;
+    }
+    
+    public void setDrawableAreaDimensions(int startX, int startY, int endX, int endY) {
+        drawArea.setDimensions(startX, startY, endX, endY);
+    }
+    
+    public void setPixelOffsetX(double offsetX) { pixelOffsetX = offsetX; }
+    public void setPixelOffsetY(double offsetY) { pixelOffsetY = offsetY; }
+    public void setPixelOffset(double offsetX, double offsetY) {
+        pixelOffsetX = offsetX;
+        pixelOffsetY = offsetY;
+    }
+    
 }

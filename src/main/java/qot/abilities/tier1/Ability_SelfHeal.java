@@ -60,7 +60,7 @@ public class Ability_SelfHeal extends Ability {
 		if (!canEntityUse(e, tierIn)) return false;
 		
 		int level = e.getSpellbook().getAbilityLevel(this);
-		AbilityTier tier = tier(level - 1);
+		AbilityTier tier = tier(level);
 		
 		// if the tier is somehow null, return false, this is probably a broken ability though
 		if (tier == null) {
@@ -75,9 +75,9 @@ public class Ability_SelfHeal extends Ability {
 		
 		int maxHealth = e.getMaxHealth();
 		int amount = switch (level) {
-		case 1 -> (int) Math.ceil((double) maxHealth * 0.20);
-		case 2 -> (int) Math.ceil((double) maxHealth * 0.33);
-		case 3 -> (int) Math.ceil((double) maxHealth * 0.60);
+		case 0 -> (int) Math.ceil((double) maxHealth * 0.20);
+		case 1 -> (int) Math.ceil((double) maxHealth * 0.33);
+		case 2 -> (int) Math.ceil((double) maxHealth * 0.60);
 		default -> maxHealth;
 		};
 		e.replenishHealth(amount);
@@ -112,7 +112,7 @@ public class Ability_SelfHeal extends Ability {
 		var tier = tier(tierLevel + 1);
 		
 		// check level requirement
-		if (tier.requiresLevel() > e.getLevel()) return false;
+		if (tier.requiresLevel() > e.getMagicLevel()) return false;
 		//if (tier.requiresQuestCompletion())
 		
 		return true;

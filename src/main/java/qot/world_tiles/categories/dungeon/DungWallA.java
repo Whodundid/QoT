@@ -12,6 +12,7 @@ public class DungWallA extends WorldTile {
 		setBlocksMovement(true);
 		setWall(true);
 		setSprite(new Sprite(DungeonWallTextures.dung_wall_a));
+		setMiniMapColor(0xff161616);
 	}
 	
 	@Override

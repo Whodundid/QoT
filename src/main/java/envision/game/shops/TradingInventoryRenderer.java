@@ -49,7 +49,7 @@ public class TradingInventoryRenderer extends InventoryRenderer {
     //===========
     
     @Override
-    public void drawObject_i(long dt, int mXIn, int mYIn) {
+    public void drawObject_i(float dt, int mXIn, int mYIn) {
         slotInside = null;
         drawRect(borderColor);
         drawRect(slotBackColor, 2);
@@ -132,6 +132,9 @@ public class TradingInventoryRenderer extends InventoryRenderer {
             var slot = new TradingInventorySlot(this, i);
             inventorySlots.add(slot);
             addObject(slot);
+            if (getParent().getObjectGroup() != null) {
+                getParent().getObjectGroup().addObject(slot);
+            }
         }
         
         double s = slotSize;

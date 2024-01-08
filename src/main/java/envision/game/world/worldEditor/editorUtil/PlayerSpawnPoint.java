@@ -1,10 +1,10 @@
 package envision.game.world.worldEditor.editorUtil;
 
+import envision.engine.assets.EditorTextures;
 import envision.engine.resourceLoaders.Sprite;
 import envision.game.GameObject;
 import envision.game.world.GameWorld;
 import eutil.datatypes.points.Point2i;
-import qot.assets.textures.editor.EditorTextures;
 
 /**
  * A point in the world where the player will be positioned when being

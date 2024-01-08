@@ -6,6 +6,10 @@ import envision.engine.settings.config.ConfigSetting;
 
 public class ShortConfigSetting extends ConfigSetting<Short> {
 
+    public ShortConfigSetting(String name, String description) {
+        this(name, description, (short) 0);
+    }
+    
     public ShortConfigSetting(String settingNameIn, String descriptionIn, short initialValue) {
         super(Short.class, settingNameIn, descriptionIn, initialValue);
     }
@@ -17,10 +21,10 @@ public class ShortConfigSetting extends ConfigSetting<Short> {
     @Override public ShortConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public ShortConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public short getShort() { return val; }
-    public short getDefaultShort() { return defaultVal; }
+    public short getShort() { return value; }
+    public short getDefaultShort() { return defaultValue; }
     
-    public void setShort(short val) { this.val = val; }
-    public void setDefaultShort(short val) { this.defaultVal = val; }
+    public void setShort(short val) { this.value = val; }
+    public void setDefaultShort(short val) { this.defaultValue = val; }
     
 }

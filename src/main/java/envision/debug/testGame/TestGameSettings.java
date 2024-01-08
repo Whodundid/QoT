@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import envision.engine.loader.GameSettings;
 import envision.engine.settings.config.ConfigSetting;
-import envision.game.EnvisionGameSettings;
 import eutil.datatypes.util.EList;
 
-public class TestGameSettings extends EnvisionGameSettings {
+public class TestGameSettings extends GameSettings {
 
     private final EList<ConfigSetting<?>> settings = EList.newList();
     
@@ -17,9 +17,9 @@ public class TestGameSettings extends EnvisionGameSettings {
     private File dir;
     private File saved;
     
-    @Override public File getInstallationDirectory() { return dir; }
-    @Override public File getResourcesDirectory() { return resources; }
-    @Override public File getSavedGamesDirectory() { return saved; }
+    public File getInstallationDirectory() { return dir; }
+    public File getResourcesDirectory() { return resources; }
+    public File getSavedGamesDirectory() { return saved; }
 
     @Override public EList<ConfigSetting<?>> getConfigSettings() { return settings; }
     

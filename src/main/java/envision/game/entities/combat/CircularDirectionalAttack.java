@@ -36,8 +36,8 @@ public class CircularDirectionalAttack {
                                             double targetX, double targetY,
                                             double sectorDegrees)
     {
-        sectorDegrees -= 180.0;
-        sectorDegrees %= 360.0;
+        double rads = sectorDegrees * Math.PI / 180.0;
+        rads -= Math.PI;
         
         // determine offset from origin
         double x = startX - targetX;
@@ -47,15 +47,13 @@ public class CircularDirectionalAttack {
         // TODO: implement some kind of 'range' mechanic that is accessible through entity -> component ?
         double maxRange = entity.getMaxRange();
         // clamp range to entity's max attack range
-        if (mag > maxRange) {
+        //if (mag > maxRange) {
             x /= mag;
             y /= mag;
             x *= maxRange;
             y *= maxRange;
             mag = maxRange;
-        }
-        
-        double rads = sectorDegrees * Math.PI / 180.0;
+        //}
         
         double upperCos = Math.cos(rads);
         double upperSin = Math.sin(rads);
@@ -68,25 +66,27 @@ public class CircularDirectionalAttack {
         double lowerPX = x * lowerCos - y * lowerSin + startX;
         double lowerPY = x * lowerSin + y * lowerCos + startY;
         
-        final var camera = Envision.theWorld.getCamera();
-        var lower = camera.convertWorldPixelPosToScreenPos(upperPX, upperPY);
-        var upper = camera.convertWorldPixelPosToScreenPos(lowerPX, lowerPY);
         
-        double upperX = upper.x;
-        double upperY = upper.y;
-        double lowerX = lower.x;
-        double lowerY = lower.y;
+        final var camera = Envision.levelManager.getCamera();
+        double[] lower = camera.convertWorldPxToScreenPx(upperPX, upperPY);
+        double[] upper = camera.convertWorldPxToScreenPx(lowerPX, lowerPY);
         
-        var entityPos = camera.convertWorldPixelPosToScreenPos(entity.midX, entity.midY);
-        double midX = entityPos.x;
-        double midY = entityPos.y;
+        double upperX = upper[0];
+        double upperY = upper[1];
+        double lowerX = lower[0];
+        double lowerY = lower[1];
         
+        double[] entityPos = camera.convertWorldPxToScreenPx(entity.midX, entity.midY);
+        double midX = entityPos[0];
+        double midY = entityPos[1];
+        
+        int lightLevel = entity.world.getAmbientLightLevel();
         // could probably be more formalized..
-        RenderingManager.drawLine(midX, midY, lowerX, lowerY, 3, EColors.seafoam);
-        RenderingManager.drawStringCS((int) lowerPX/* + " : " + (int) lowerPY */, lowerX, lowerY, EColors.seafoam);
+        RenderingManager.drawLine(midX, midY, lowerX, lowerY, 2, EColors.lgray.brightness(lightLevel));
+        //RenderingManager.drawStringCS((int) lowerPX/* + " : " + (int) lowerPY */, lowerX, lowerY, EColors.lgray);
         
-        RenderingManager.drawLine(midX, midY, upperX, upperY, 3, EColors.yellow);
-        RenderingManager.drawStringCS((int) upperPX/* + " : " + (int) upperPY */, upperX, upperY, EColors.yellow);
+        RenderingManager.drawLine(midX, midY, upperX, upperY, 2, EColors.lgray.brightness(lightLevel));
+        //RenderingManager.drawStringCS((int) upperPX/* + " : " + (int) upperPY */, upperX, upperY, EColors.lgray);
     }
     
     /**
@@ -124,20 +124,22 @@ public class CircularDirectionalAttack {
         // determine offset from origin
         double x = startX - targetX;
         double y = startY - targetY;
+        double destX = x;
+        double destY = y;
         
         double mag = ENumUtil.distance(startX, startY, targetX, targetY);
         // TODO: implement some kind of 'range' mechanic that is accessible through entity -> component ?
         double maxRange = attackingEntity.getMaxRange();
         // clamp range to entity's max attack range
-        if (mag > maxRange) {
+        //if (mag > maxRange) {
             x /= mag;
             y /= mag;
-            x *= maxRange;
-            y *= maxRange;
+            destX *= maxRange;
+            destY *= maxRange;
             mag = maxRange;
-        }
+        //}
         
-        double angle = Math.abs(180.0 - Math.atan2(y, x) * (180.0 / Math.PI)) % 360.0;
+        double angle = Math.abs(180.0 - Math.atan2(destY, destX) * (180.0 / Math.PI)) % 360.0;
         double radiusSquared = mag * mag;
         
         EList<Entity> entities = findEntitiesWithinSector(world, attackingEntity,
@@ -146,9 +148,16 @@ public class CircularDirectionalAttack {
                                                           radiusSquared);
         
         // attack entities in range
-        final int damage = attackingEntity.getBaseMeleeDamage();
+        final int damage = EntityAttack.calculateMeleeAttackDamage(attackingEntity);
         for (var e : entities) {
-            e.attackedBy(e, damage);
+            e.attackedBy(attackingEntity, damage);
+//            if (!e.isDead()) {
+//                double kbMag = -KnockbackCalculator.calculateKnockbackForce(attackingEntity, e, AttackType.MELEE);
+//                double kbX = x * kbMag;
+//                double kbY = y * kbMag;
+//                //System.out.println(kbMag + " : " + kbX + " : " + kbY);
+//                e.getPhysicsHandler().applyImpulse(kbX, kbY);
+//            }
         }
     }
     
@@ -174,6 +183,10 @@ public class CircularDirectionalAttack {
         EList<Entity> entities = EList.newList();
         EList<Entity> inWorld = world.getEntitiesInWorld();
         
+        // distance that is close enough to the entity that it can always hit regardless of angle
+        double minDist = entityIn.width * 0.5;
+        double minDistSquared = minDist * minDist;
+        
         for (Entity e : inWorld) {
             if (e == entityIn) continue;
             if (e.isInvincible()) continue;
@@ -182,8 +195,16 @@ public class CircularDirectionalAttack {
             double pointX = cDims.midX - centerX;
             double pointY = cDims.midY - centerY;
             
-            boolean inSector = isPointWithinSector(pointX, pointY, angleToTarget, sectorDegrees, radiusSquared);
-            if (inSector) entities.add(e);
+            // if the distance to the entity is smaller than the min distance, always add it
+            double distSquared = pointX * pointX + pointY * pointY;
+            if (distSquared <= minDistSquared) {
+                entities.add(e);
+            }
+            // otherwise, check if its in the right angle
+            else {
+                boolean inSector = isPointWithinSector(pointX, pointY, angleToTarget, sectorDegrees, radiusSquared);
+                if (inSector) entities.add(e);
+            }
         }
         
         return entities;

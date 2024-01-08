@@ -11,6 +11,7 @@ public class Oven extends WorldTile {
 		super(TileIDs.OVEN);
 		setSprite(new Sprite(HouseTextures.oven));
 		blocksMovement = true;
+		setMiniMapColor(0xff6B7585);
 	}
 	
 	@Override

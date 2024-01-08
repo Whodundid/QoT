@@ -48,7 +48,7 @@ public class EditorScreenBotHeader extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.black);
 		drawRect(startX, startY + 2, endX - 2, endY - 2, EColors.pdgray);
 		
@@ -68,7 +68,7 @@ public class EditorScreenBotHeader extends WindowObject {
 		editor.saveWorld();
 		Envision.thePlayer = new QoT_Player();
 		Envision.displayScreen(new GamePlayScreen());
-		Envision.loadWorld(editor.getActualWorld());
+		Envision.loadLevel(editor.getActualWorld());
 	}
 	
 }

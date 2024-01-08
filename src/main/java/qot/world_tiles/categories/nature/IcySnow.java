@@ -10,6 +10,7 @@ public class IcySnow extends WorldTile {
 	public IcySnow() {
 		super(TileIDs.ICY_SNOW);
 		setSprite(new Sprite(NatureTextures.icy_snow));
+		setMiniMapColor(0xff9ADAF0);
 	}
 	
 	@Override

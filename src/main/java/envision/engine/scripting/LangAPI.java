@@ -133,7 +133,7 @@ public class LangAPI {
     }
     
     public void loadWorld(String worldName) { loadWorld_i(worldName); }
-    public void unloadWorld() { Envision.loadWorld(null); }
+    public void unloadWorld() { Envision.loadLevel(null); }
     
     public void setTileAt(WorldTile tile, int x, int y) { Envision.theWorld.setTileAt(tile, x, y); }
     public WorldTile getTileAt(int x, int y) { return Envision.theWorld.getTileAt(x, y); }
@@ -149,9 +149,9 @@ public class LangAPI {
         return Envision.theWorld.getRegionData().remove(region);
     }
     
-    public int getWorldTime() { return Envision.theWorld.getTime(); }
-    public int getDayLength() { return Envision.theWorld.getDayLength(); }
-    public boolean isNight() { return Envision.theWorld.isNight(); }
+    public int getWorldTime() { return Envision.levelManager.getCurrentTimeOfDay(); }
+    public int getDayLength() { return Envision.levelManager.getDayLength(); }
+    public boolean isNight() { return Envision.levelManager.isNight(); }
     public boolean isDay() { return !isNight(); }
     
     public boolean isPaused() { return Envision.isPaused(); }
@@ -248,7 +248,7 @@ public class LangAPI {
         var world = getWorldFromName(worldName);
         Envision.setPlayer(new QoT_Player("Test"));
         Envision.displayScreen(new GamePlayScreen());
-        Envision.loadWorld(world);
+        Envision.loadLevel(world);
     }
     
     private String getEntityNameFromID_i(String entityID) {

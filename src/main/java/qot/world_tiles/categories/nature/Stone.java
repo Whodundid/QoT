@@ -14,10 +14,18 @@ public class Stone extends WorldTile {
 		setSprite(new Sprite(StoneFloorTextures.stone_pad));
 		setBlocksMovement(true);
 		setWall(true);
-		wallHeight = ERandomUtil.getRoll(0.25, 0.75);
 		
-		rotation = Rotation.random();
+		randomizeValues();
+		setMiniMapColor(0xff707070);
 	}
+	
+	@Override
+	public void randomizeValues() {
+	    wallHeight = ERandomUtil.getRoll(0.25, 0.75);
+	    rotation = Rotation.random();
+	}
+	
+	@Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

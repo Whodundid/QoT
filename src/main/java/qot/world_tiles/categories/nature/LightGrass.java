@@ -9,16 +9,26 @@ public class LightGrass extends WorldTile {
 	
 	public LightGrass() { this(-1); }
 	public LightGrass(int id) {
-		super(TileIDs.LIGHT_GRASS);
+		super(TileIDs.LIGHT_GRASS, id);
 		numVariants = GrassTextures.light_grass.getChildren().size();
 		
-		if (id < 0) {
-		    setSprite(new Sprite(GrassTextures.light_grass.getRandVariant()));
-		}
-		else {
-		    setSprite(new Sprite((GrassTextures.light_grass.getChild(id))));
-		}
-	}
+        randomizeValues();
+        this.setMiniMapColor(0xff51C12C);
+    }
+    
+    @Override
+    public void randomizeValues() {
+        //rotation = Rotation.random();
+        
+        if (meta < 0) {
+            setSprite(new Sprite(GrassTextures.light_grass.getRandVariant()));
+        }
+        else {
+            setSprite(new Sprite((GrassTextures.light_grass.getChild(meta))));
+        }
+    }
+	
+    @Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

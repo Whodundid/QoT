@@ -17,8 +17,17 @@ public class CMD_CurScreenInfo extends TerminalCommand {
 	
 	@Override
 	public void runCommand() {
-	    expectNoArgs();
-		writeln(EColors.lgreen, Envision.getCurrentScreen());
+	    expectNoMoreThan(1);
+	    if (noArgs()) {
+	        writeln(EColors.lgreen, Envision.getCurrentScreen());	        
+	    }
+	    else {
+	        String cmd = firstArg();
+	        if (cmd.equalsIgnoreCase("close")) {
+	            Envision.getCurrentScreen().closeScreen();
+	        }
+	    }
+	    //expectNoArgs();
 	}
 	
 }

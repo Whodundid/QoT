@@ -46,7 +46,7 @@ public class WindowContainer extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject_i(long dt, int mXIn, int mYIn) {
+	public void drawObject_i(float dt, int mXIn, int mYIn) {
 		if (drawBorder) drawRect(startX, startY, endX, endY, borderColor); //border
 		if (drawBackground) drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor); //inner
 		if (drawTitle) {

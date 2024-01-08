@@ -50,7 +50,7 @@ public class ScreenLocationSelector extends ActionObject {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mX, int mY) {
+	public void drawObject(float dt, int mX, int mY) {
 		drawRect(startX, startY, endX, startY + heightRatio, EColors.black); //border
 		drawRect(startX + widthRatio - (widthRatio / 16), startY + heightRatio, startX + widthRatio + (widthRatio / 16), endY - (heightRatio / 8), EColors.black); //pole
 		drawRect(startX + widthRatio - (widthRatio / 2), endY - (heightRatio / 8), startX + widthRatio + (widthRatio / 2), endY - (heightRatio / 8) + 3, EColors.black); //base

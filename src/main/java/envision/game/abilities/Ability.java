@@ -53,11 +53,14 @@ public abstract class Ability {
 	//=========
 	
 	protected void setNumTiers(int tiersIn) {
-		this.maxTiers = tiersIn;
-		this.tiers = new AbilityTier[maxTiers];
+		this.maxTiers = tiersIn - 1;
+		this.tiers = new AbilityTier[tiersIn];
 	}
 	
 	protected AbilityTier tier(int tierIn) {
+	    if (tierIn >= tiers.length) {
+	        return tiers[tiers.length - 1];
+	    }
 		AbilityTier t = tiers[tierIn];
 		if (t != null) return t;
 		return tiers[tierIn] = new AbilityTier();
@@ -72,7 +75,7 @@ public abstract class Ability {
 	
 	public int getMaxTiers() { return maxTiers; }
 	public AbilityTier[] getAbilityTiers() { return tiers; }
-	public AbilityTier getDetailsForTier(int tier) { return tiers[tier];} 
+	public AbilityTier getDetailsForTier(int tier) { return tiers[tier];}
 	
 	public int getManaCostForTier(int tier) { return tiers[tier].manaCost(); }
 	public int getCooldownForTier(int tier) { return tiers[tier].cooldown(); }

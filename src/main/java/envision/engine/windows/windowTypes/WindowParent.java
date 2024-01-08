@@ -113,7 +113,7 @@ public class WindowParent extends WindowObject implements IWindowParent, Compara
 	}
 	
 	@Override
-	public void drawObject_i(long dt, int mXIn, int mYIn) {
+	public void drawObject_i(float dt, int mXIn, int mYIn) {
 		if (drawDefaultBackground) drawDefaultBackground();
 		super.drawObject_i(dt, mXIn, mYIn);
 		

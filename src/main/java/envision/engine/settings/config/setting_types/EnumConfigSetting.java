@@ -6,6 +6,10 @@ import envision.engine.settings.config.ConfigSetting;
 
 public class EnumConfigSetting<T extends Enum> extends ConfigSetting<T> {
 
+    public EnumConfigSetting(String enumClassName, String name, String description) {
+        super(enumClassName, name, description);
+    }
+    
     public EnumConfigSetting(String settingNameIn, String descriptionIn, T initialValue) {
         super((Class<T>) Enum.class, settingNameIn, descriptionIn, initialValue);
     }
@@ -17,10 +21,10 @@ public class EnumConfigSetting<T extends Enum> extends ConfigSetting<T> {
     @Override public EnumConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public EnumConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public T getEnum() { return val; }
-    public T getDefaultEnum() { return defaultVal; }
+    public T getEnum() { return value; }
+    public T getDefaultEnum() { return defaultValue; }
     
-    public void setEnum(T val) { this.val = val; }
-    public void setDefaultEnum(T val) { this.defaultVal = val; }
+    public void setEnum(T val) { this.value = val; }
+    public void setDefaultEnum(T val) { this.defaultValue = val; }
     
 }

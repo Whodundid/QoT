@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 
 import envision.Envision;
+import envision.engine.assets.TaskBarTextures;
+import envision.engine.assets.WindowTextures;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -19,14 +21,12 @@ import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
-import qot.assets.textures.taskbar.TaskBarTextures;
-import qot.assets.textures.window.WindowTextures;
 
 public class TextEditorWindow extends WindowParent {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	private File path = null;
 	private WindowTextArea<String> document;
@@ -43,9 +43,9 @@ public class TextEditorWindow extends WindowParent {
 	private volatile EList<TextAreaLine> parsed;
 	private boolean restored = false;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public TextEditorWindow(File pathIn) {
 		super(Envision.getActiveTopParent());
@@ -57,9 +57,9 @@ public class TextEditorWindow extends WindowParent {
 	
 	@Override public String getWindowName() { return "text-editor"; }
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void initWindow() {
@@ -127,7 +127,7 @@ public class TextEditorWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		super.drawObject(dt, mXIn, mYIn);
 		checkLoad();
@@ -165,9 +165,9 @@ public class TextEditorWindow extends WindowParent {
 		if (newFile) document.addTextLine().requestFocus();
 	}
 	
-	//------------------
-	// Internal Methods
-	//------------------
+	//==================
+    // Internal Methods
+    //==================
 	
 	private void checkLoad() {
 		if (loading) {
@@ -299,9 +299,9 @@ public class TextEditorWindow extends WindowParent {
 		getTopParent().displayWindow(box);
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public WindowTextArea getTextArea() { return document; }
 

@@ -29,7 +29,7 @@ public class Healing_Major extends Potion {
 
 	@Override
 	public int getInternalSaveID() {
-		return 0;
+		return ItemList.HEALING_MAJOR.ID;
 	}
 	
 }

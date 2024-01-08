@@ -6,6 +6,7 @@ import qot.assets.textures.ability.AbilityTextures;
 import qot.assets.textures.cursor.CursorTextures;
 import qot.assets.textures.doodads.DoodadTextures;
 import qot.assets.textures.editor.EditorTextures;
+import qot.assets.textures.effects.EffectsTextures;
 import qot.assets.textures.entity.EntityTextures;
 import qot.assets.textures.general.GeneralTextures;
 import qot.assets.textures.item.ItemTextures;
@@ -17,9 +18,9 @@ import qot.assets.textures.world.WorldTextures;
 /** Contains mappings to all of QoT's textures. */
 public class GameTextures extends TextureLoader {
 	
-	//--------------------
+	//====================
 	// Singleton Instance
-	//--------------------
+	//====================
 	
 	private static final GameTextures t = new GameTextures();
 	public static GameTextures instance() { return t; }
@@ -33,6 +34,7 @@ public class GameTextures extends TextureLoader {
 	public static CursorTextures cursorTextures = CursorTextures.instance();
 	public static DoodadTextures doodadTextures = DoodadTextures.instance();
 	public static EditorTextures editorTextures = EditorTextures.instance();
+	public static EffectsTextures effectsTextures = EffectsTextures.instance();
 	public static EntityTextures entityTextures = EntityTextures.instance();
 	public static GeneralTextures generalTextures = GeneralTextures.instance();
 	public static ItemTextures itemTextures = ItemTextures.instance();
@@ -43,9 +45,9 @@ public class GameTextures extends TextureLoader {
 	
 	//-------------------------------
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void onRegister(TextureSystem sys) {
@@ -53,6 +55,7 @@ public class GameTextures extends TextureLoader {
 		cursorTextures.onRegister(sys);
 		doodadTextures.onRegister(sys);
 		editorTextures.onRegister(sys);
+		effectsTextures.onRegister(sys);
 		entityTextures.onRegister(sys);
 		generalTextures.onRegister(sys);
 		itemTextures.onRegister(sys);

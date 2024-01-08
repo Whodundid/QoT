@@ -29,7 +29,7 @@ public class ColorButton extends WindowButton {
 	//-----------
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		super.drawObject(dt, mXIn, mYIn);
 		
 		if (drawBorder) {

@@ -17,7 +17,7 @@ public class InventorySlot extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		double s = width * 0.08; // 10% offset of w/h
 		double sx = startX + s;
 		double sy = startY + s;

@@ -24,15 +24,15 @@ public class CMD_LockCam extends TerminalCommand {
     public void runCommand() {
         expectNoMoreThan(1);
         
-        if (Envision.theWorld == null) {
-            error("There is no world!");
+        if (Envision.levelManager == null) {
+            error("There is no level!");
             return;
         }
         
         boolean val = false;
         
         if (noArgs()) {
-            val = !Envision.theWorld.getCamera().isEdgeLocked();
+            val = !Envision.levelManager.getCamera().isEdgeLocked();
         }
         else {
             String input = firstArg().toLowerCase();
@@ -46,7 +46,7 @@ public class CMD_LockCam extends TerminalCommand {
             }
         }
         
-        Envision.theWorld.getCamera().setEdgeLocked(val);
+        Envision.levelManager.getCamera().setEdgeLocked(val);
         
         String displayString = "";
         if (val) displayString = EColors.lgreen + "Enabled";

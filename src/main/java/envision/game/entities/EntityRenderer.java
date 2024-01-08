@@ -35,6 +35,11 @@ public class EntityRenderer extends RenderingComponent {
 	
 	protected boolean flipTextureWhenMoving = true;
 	
+	protected int flashColor;
+	protected long flashStart;
+	protected long flashDurration;
+	protected boolean drawFlash = false;
+	
 	//==============
 	// Constructors
 	//==============
@@ -63,7 +68,7 @@ public class EntityRenderer extends RenderingComponent {
 					 double midX, double midY,
 					 int distX, int distY)
 	{
-		var sprite = theObject.getSprite();
+		//var sprite = theObject.getSprite();
 		//if (sprite == null && EStringUtil.isNotPopulated(theEntity.getHeadText())) return;
 		
 		final double zoom = camera.getZoom();
@@ -72,11 +77,11 @@ public class EntityRenderer extends RenderingComponent {
 		final int worldX = theObject.worldX;
         final int worldY = theObject.worldY;
 		
-        final int screenWidth = Envision.getWidth();
-        final int screenHeight = Envision.getHeight();
-        
-        final double camWorldX = camera.getCameraCenterX();
-        final double camWorldY = camera.getCameraCenterY();
+//        final int screenWidth = Envision.getWidth();
+//        final int screenHeight = Envision.getHeight();
+//        
+//        final double camWorldX = camera.getCameraCenterX();
+//        final double camWorldY = camera.getCameraCenterY();
         
         //scaled pixel width of the entity
         double drawW = theObject.width * zoom;
@@ -102,7 +107,7 @@ public class EntityRenderer extends RenderingComponent {
 //            drawX -= camera.getScaledTileWidth() * 0.5;
 //            drawY -= camera.getScaledTileHeight() * 0.5;
             
-            old(world, camera);
+            newRenderingMethod(world, camera);
             return;
         }
         else {
@@ -198,47 +203,18 @@ public class EntityRenderer extends RenderingComponent {
         }
 	}
 	
-	protected void old(IGameWorld world, WorldCamera camera) {
-	    final int screenW = Envision.getWidth();
-	    final int screenH = Envision.getHeight();
-        final int halfScreenW = screenW >> 1;
-        final int halfScreenH = screenH >> 1;
-        
-        final double camWorldX = camera.getCameraCenterX();
-        final double camWorldY = camera.getCameraCenterY();
-        
-        final double zoom = camera.getZoom();
-        
-        //pixel width of each tile
-        final double w = camera.getScaledTileWidth();
-        //pixel height of each tile
-        final double h = camera.getScaledTileHeight();
-        
-        double entityOffsetX = (theEntity.startX % world.getTileWidth()) * zoom;
-        double entityOffsetY = (theEntity.startY % world.getTileWidth()) * zoom;
-        
-        //              world coordinates                   pixel coords        screen cords
-        double drawX = (theEntity.worldX - camWorldX - 0.5) * w + entityOffsetX + halfScreenW;
-        double drawY = (theEntity.worldY - camWorldY - 0.5) * h + entityOffsetY + halfScreenH;
-        
+	public void newRenderingMethod(IGameWorld world, WorldCamera camera) {
+	    final double zoom = camera.getZoom();
+	    final double[] draw = camera.calculateDrawDimensions(theEntity);
+        boolean mouseOver = camera.isMouseOverObject(theEntity);
+
         int worldBrightness = world.getAmbientLightLevel();
         int color = EColors.white.brightness(worldBrightness);
-        
-        double width = theObject.width;
-        double height = theObject.height;
-        
-        //calculate the entity's draw width and height based off of actual dims and zoom
-        double drawW = width * zoom;
-        double drawH = height * zoom;
-        
-        var collisionBox = theObject.collisionBox;
-        
-        int mX = Mouse.getMx();
-        int mY = Mouse.getMy();
-        boolean mouseOver = (mX >= drawX && mX <= drawX + drawW && mY >= drawY && mY <= drawY + drawH);
-        
         // check if camera should make the entity transparent if the camera target is behind it
         color = checkIfCameraTargetIsBehind(camera, color);
+        
+        var collisionBox = theObject.collisionBox;        
+        
         
         if (!BatchManager.isEnabled()) {
             double cmx = collisionBox.midX; //collision mid x
@@ -254,34 +230,36 @@ public class EntityRenderer extends RenderingComponent {
             int lightx = theEntity.worldX + mwcx;
             int lighty = theEntity.worldY + mwcy;
             
-            drawEntity(world, camera, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
+            drawEntity(world, camera, draw[0], draw[1], draw[2], draw[3], calcBrightness(lightx, lighty), mouseOver);
         }
         else {
-            drawEntity(world, camera, drawX, drawY, drawW, drawH, color, mouseOver);
+            drawEntity(world, camera, draw[0], draw[1], draw[2], draw[3], color, mouseOver);
         }
         
         if (DebugSettings.drawEntityHitboxes) {
-            RenderingManager.drawHRect(drawX, drawY, drawX + drawW, drawY + drawH, 1, EColors.blue);
+            RenderingManager.drawHRect(draw[0], draw[1], draw[0] + draw[2], draw[1] + draw[3], 1, EColors.blue);
         }
         
         if (DebugSettings.drawEntityCollisionBoxes) {
-            double colSX = drawX + (collisionBox.startX * zoom);
-            double colSY = drawY + (collisionBox.startY * zoom);
+            double colSX = draw[0] + (collisionBox.startX * zoom);
+            double colSY = draw[1] + (collisionBox.startY * zoom);
             double colEX = colSX + (collisionBox.width * zoom);
             double colEY = colSY + (collisionBox.height * zoom);
             RenderingManager.drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
         }
         
         if (DebugSettings.drawFocusedEntityAxis && camera.getFocusedObject() == theEntity) {
-            double midX = drawX + drawW * 0.5;
-            double midY = drawY + drawH * 0.5;
+            final double halfScreenW = camera.getDrawableAreaHalfWidth();
+            final double halfScreenH = camera.getDrawableAreaHalfHeight();
+            double midX = draw[0] + draw[2] * 0.5;
+            double midY = draw[1] + draw[3] * 0.5;
             double diffX = midX - halfScreenW;
             double diffY = midY - halfScreenH;
             double xPos = halfScreenW + diffX;
             double yPos = halfScreenH + diffY;
             
-            RenderingManager.drawRect(xPos, 0, xPos + 1, screenH, EColors.green);
-            RenderingManager.drawRect(0, yPos, screenW, yPos + 1, EColors.green);
+            RenderingManager.drawRect(xPos, 0, xPos + 1, camera.getDrawableAreaHeight(), EColors.green);
+            RenderingManager.drawRect(0, yPos, camera.getDrawableAreaWidth(), yPos + 1, EColors.green);
         }
 	}
 	
@@ -348,12 +326,14 @@ public class EntityRenderer extends RenderingComponent {
 	}
 	
 	public void drawEntity(IGameWorld world, WorldCamera camera, double x, double y, double w, double h, int brightness, boolean mouseOver) {
-		lastDrawX = x;
+	    lastDrawX = x;
 		lastDrawY = y;
 		lastDrawW = w;
 		lastDrawH = h;
 		lastDrawBrightness = brightness;
 		lastDrawMouseOver = mouseOver;
+		
+		drawFlash(brightness);
 		
 		if (theObject.getSprite() != null) drawEntityTexture();
 		theEntity.draw(camera, x, y, w, h, mouseOver);
@@ -395,7 +375,7 @@ public class EntityRenderer extends RenderingComponent {
         ratio = ENumUtil.clamp(ratio, 100, 255);
         int textRatio = ENumUtil.clamp(ratio, 220, 255);
         
-        final var camEntity = Envision.theWorld.getCamera().getFocusedObject();
+        final var camEntity = Envision.levelManager.getCamera().getFocusedObject();
         if (camEntity != null) {
             final double tw = world.getTileWidth();
             double distToPlayer = world.getDistance(theEntity, camEntity);
@@ -416,6 +396,18 @@ public class EntityRenderer extends RenderingComponent {
         RenderingManager.drawStringC(chat, midX, dy + dh / 2 - FontRenderer.HALF_FH + 2, textBr);
 	}
 	
+	public void drawFlash(int brightness) {
+	    if (!drawFlash) return;
+	    
+	    if (System.currentTimeMillis() - flashStart >= flashDurration) {
+	        drawFlash = false;
+	    }
+	    
+	    int color = flashColor;
+	    color = EColors.changeBrightness(color, theEntity.world.getAmbientLightLevel());
+	    lastDrawBrightness = color;
+	}
+	
 	public void drawEntityTexture() {
 	    boolean flip = false;
 	    
@@ -427,5 +419,16 @@ public class EntityRenderer extends RenderingComponent {
 	}
 	
 	public EntityRenderer setFlipTextureWhenMoving(boolean val) { flipTextureWhenMoving = val; return this; }
+	
+	
+	public void flashColor(EColors color, long durration) {
+	    flashColor(color.intVal, durration);
+	}
+	public void flashColor(int color, long durration) {
+	    flashColor = color;
+	    flashDurration = durration;
+	    flashStart = System.currentTimeMillis();
+	    drawFlash = true;
+	}
 	
 }

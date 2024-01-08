@@ -8,6 +8,7 @@ import qot.doodads.Bush0;
 import qot.doodads.BushyTree0;
 import qot.doodads.BushyTree1;
 import qot.doodads.BushyTree2;
+import qot.doodads.FallBirch;
 import qot.doodads.LeavesGroundClutter;
 import qot.doodads.PineTree;
 import qot.doodads.PineTree2;
@@ -61,6 +62,7 @@ public enum EntityList {
 	SPAWNER(22),
 	SHOPKEEPER(23), // please let this be the last damn one of these..
 	PATHFINDER_TEST(24),
+	FALL_BIRCH(25),
 	;
 	
 	public final int ID;
@@ -110,6 +112,7 @@ public enum EntityList {
 		case SPAWNER: return new Spawner();
 		case SHOPKEEPER: return new ShopGuy();
 		case PATHFINDER_TEST: return new PathfindingTestEntity();
+		case FALL_BIRCH: return new FallBirch();
 		default: return null;
 		}
 	}

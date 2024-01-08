@@ -2,7 +2,7 @@ package envision.debug.testGame;
 
 import java.io.File;
 
-import envision.game.AbstractWorldCreator;
+import envision.engine.loader.AbstractWorldCreator;
 import envision.game.world.GameWorld;
 
 public class TestGameWorldCreator extends AbstractWorldCreator {

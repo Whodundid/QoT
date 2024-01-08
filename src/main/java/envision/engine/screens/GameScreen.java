@@ -44,8 +44,8 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	//-----------
 	
     @Override
-    public void drawObject_i(long dt, int mXIn, int mYIn) {
-        drawScreen(mXIn, mYIn);
+    public void drawObject_i(float dt, int mXIn, int mYIn) {
+        drawScreen(dt, mXIn, mYIn);
         super.drawObject_i(dt, mXIn, mYIn);
         if (isFading && performFade) {
             drawFade();
@@ -57,7 +57,7 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
         long amount = 0;
         
         if (t - screenFadeStart >= screenFadeDuration) {
-            if (!isFadingIn) closeScreen_i(false);
+            if (!isFadingIn) closeScreen_i(true);
             isFading = false;
             isFadingIn = false;
         }
@@ -98,7 +98,7 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	/** Initializer method that is called before a screen is built. */
 	public void initScreen() {}
 	/** Called everytime this screen is about to be drawn. */
-	public void drawScreen(int mXIn, int mYIn) {}
+	public void drawScreen(float dt, int mXIn, int mYIn) {}
 	/** Called everytime a new game tick occurs. */
 	public void onGameTick(float dt) {}
 	/** Called whenever this screen is about to be closed. */
@@ -138,19 +138,22 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
     public void closeScreen_i(boolean hist) {
         Envision.getEventHandler().unsubscribeFromAll(this);
         
+        //System.out.println("SCREEN TO DISPLAY: " + screenToDisplay + " : " + this);
         if (screenToDisplay != null) {
-            screenHistory.clear();
+            //screenHistory.clear();
             Envision.displayScreen(screenToDisplay, this);
             return;
         }
         
         if (!screenHistory.isEmpty() && screenHistory.peek() != null) {
+            //System.out.println("IN SCREEN: " + screenHistory);
             var screen = screenHistory.pop();
-            screen.setScreenHistory(screenHistory);
+            //screen.setScreenHistory(screenHistory);
             
-            Envision.displayScreen(screen, (hist) ? this : new MainMenuScreen());
+            Envision.displayScreen(screen);
         }
         else {
+            //System.out.println("MAKING MAIN MENU");
             Envision.displayScreen(new MainMenuScreen());
         }
     }

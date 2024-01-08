@@ -67,7 +67,7 @@ public class WindowSlider extends ActionObject {
 	//-----------
 	
 	@Override
-	public void drawObject(long dt, int mX, int mY) {
+	public void drawObject(float dt, int mX, int mY) {
 		if (isSliding && mousePos != null) {
 			if (vertical) moveThumb(0, mY - mousePos.y);
 			else moveThumb(mX - mousePos.x, 0);

@@ -10,6 +10,7 @@ public class SmoothDirt extends WorldTile {
 	public SmoothDirt() {
 		super(TileIDs.SMOOTH_DIRT);
 		setSprite(new Sprite(NatureTextures.smooth_dirt));
+		setMiniMapColor(0xff88582D);
 	}
 	
 	@Override

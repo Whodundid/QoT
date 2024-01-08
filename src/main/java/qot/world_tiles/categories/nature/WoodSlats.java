@@ -9,16 +9,24 @@ public class WoodSlats extends WorldTile {
 	
 	public WoodSlats() { this(-1); }
 	public WoodSlats(int id) {
-		super(TileIDs.WOOD_SLATS);
+		super(TileIDs.WOOD_SLATS, id);
 		numVariants = WoodFloorTextures.wood_slats.getChildren().size();
 		
-		if (id < 0) {
-		    setSprite(new Sprite(WoodFloorTextures.wood_slats.getRandVariant()));
-		}
-		else {
-		    setSprite(new Sprite(WoodFloorTextures.wood_slats.getChild(id)));
-		}
+		randomizeValues();
+		setMiniMapColor(0xff5A3A0E);
 	}
+	
+	@Override
+	public void randomizeValues() {
+	    if (meta < 0) {
+            setSprite(new Sprite(WoodFloorTextures.wood_slats.getRandVariant()));
+        }
+        else {
+            setSprite(new Sprite(WoodFloorTextures.wood_slats.getChild(meta)));
+        }
+	}
+	
+	@Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

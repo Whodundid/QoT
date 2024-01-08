@@ -19,7 +19,7 @@ public class Mana_Major extends Potion {
 	
 	@Override
 	public void onItemUse(Entity user) {
-		user.replenishMana(25);
+		user.replenishMana(2500);
 	}
 	
 	@Override
@@ -29,7 +29,7 @@ public class Mana_Major extends Potion {
 
 	@Override
 	public int getInternalSaveID() {
-		return 0;
+		return ItemList.MANA_MAJOR.ID;
 	}
 	
 }

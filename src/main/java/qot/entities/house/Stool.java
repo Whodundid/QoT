@@ -14,6 +14,8 @@ public class Stool extends BasicRenderedEntity {
 		sprite = new Sprite(HouseTextures.stool);
 		invincible = true;
 		
+		setCollisionBox(startX + 6, startY + 14, endX - 6, endY - 3);
+		
 		setMaxHealth(10);
 		setHealth(10);
 	}

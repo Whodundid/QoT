@@ -6,6 +6,10 @@ import envision.engine.settings.config.ConfigSetting;
 
 public class LongConfigSetting extends ConfigSetting<Long> {
 
+    public LongConfigSetting(String name, String description) {
+        this(name, description, 0l);
+    }
+    
     public LongConfigSetting(String settingNameIn, String descriptionIn, long initialValue) {
         super(Long.class, settingNameIn, descriptionIn, initialValue);
     }
@@ -17,10 +21,10 @@ public class LongConfigSetting extends ConfigSetting<Long> {
     @Override public LongConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public LongConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public long getLong() { return val; }
-    public long getDefaultLong() { return defaultVal; }
+    public long getLong() { return value; }
+    public long getDefaultLong() { return defaultValue; }
     
-    public void setLong(long val) { this.val = val; }
-    public void setDefaultLong(long val) { this.defaultVal = val; }
+    public void setLong(long val) { this.value = val; }
+    public void setDefaultLong(long val) { this.defaultValue = val; }
     
 }

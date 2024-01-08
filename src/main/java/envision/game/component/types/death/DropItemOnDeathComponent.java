@@ -47,12 +47,10 @@ public class DropItemOnDeathComponent extends OnDeathComponent {
         
         IGameWorld world = theObject.world;
         for (Item item : toDrop) {
-            var loot = new ItemOnGround(item, 20000);
             var dims = theObject.getCollisionDims();
             int spawnX = (int) dims.midX / world.getTileWidth();
             int spawnY = (int) dims.midY / world.getTileHeight();
-            loot.setWorldPos(spawnX, spawnY);
-            world.addEntity(loot);
+            world.dropItemOnGround(item, spawnX, spawnY);
         }
     }
     

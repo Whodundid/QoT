@@ -70,8 +70,14 @@ public class SpriteSheet {
         return sprites.get(index);
     }
     
+    public Sprite getRandom() {
+        return sprites.getRandom();
+    }
+    
     public GameTexture getBaseTexture() {
         return baseTexture;
     }
+    
+    public int getNumberOfSprites() { return numSprites; }
 	
 }

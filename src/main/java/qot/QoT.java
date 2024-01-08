@@ -1,11 +1,16 @@
 package qot;
 
+import java.io.File;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import envision.Envision;
+import envision.engine.loader.GameSettings;
+import envision.engine.loader.AbstractWorldCreator;
+import envision.engine.loader.EnvisionGame;
+import envision.engine.loader.dtos.ConfigurationSettingsDTO;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.settings.config.EnvisionConfigFile;
-import envision.game.AbstractWorldCreator;
-import envision.game.EnvisionGameSettings;
-import envision.game.EnvisionGameTemplate;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherSettings;
 import qot.assets.textures.GameTextures;
@@ -13,7 +18,7 @@ import qot.assets.textures.entity.EntityTextures;
 import qot.screens.main.MainMenuScreen;
 import qot.settings.QoTSettings;
 
-public class QoT implements EnvisionGameTemplate {
+public class QoT extends EnvisionGame {
 	
 	//========
 	// Fields
@@ -42,6 +47,18 @@ public class QoT implements EnvisionGameTemplate {
 	@Override
 	public void onPostEngineLoad() {
 		Envision.displayScreen(new MainMenuScreen());
+//		
+//		var settings = QoTSettings.instance();
+//		File out = new File(settings.getInstallationDirectory(), "outout.json");
+//		ConfigurationSettingsDTO dto = ConfigurationSettingsDTO.fromConfigSettings(settings.getConfigSettings());
+//		
+//		ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            mapper.writerWithDefaultPrettyPrinter().writeValue(out, dto);
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
 	}
 	
     @Override
@@ -51,10 +68,10 @@ public class QoT implements EnvisionGameTemplate {
     public String getGameVersionString() { return version; }
 
     @Override
-    public EnvisionGameSettings getGameSettings() { return QoTSettings.instance(); }
+    public GameSettings getGameSettings() { return QoTSettings.instance(); }
 
     @Override
-    public EnvisionConfigFile getConfigFile() { return QoTSettings.getGameConfig(); }
+    public EnvisionConfigFile getGameConfig() { return QoTSettings.getGameConfig(); }
 
     @Override
     public AbstractWorldCreator getWorldCreator() { return null; }

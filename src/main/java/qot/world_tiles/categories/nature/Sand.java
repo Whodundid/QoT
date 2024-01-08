@@ -14,6 +14,7 @@ public class Sand extends WorldTile {
 		wallHeight = 0.025;
 		
 		setSprite(new Sprite(SandTextures.sand));
+		setMiniMapColor(0xffD8B668);
 	}
 	
 	@Override

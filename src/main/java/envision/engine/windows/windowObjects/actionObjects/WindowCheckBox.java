@@ -30,7 +30,7 @@ public class WindowCheckBox extends ActionObject {
 	//-----------
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawRect(startX, startY, endX, endY, EColors.black);
 		drawRect(startX + 1, startY + 1, endX - 1, endY - 1, EColors.steel);
 		

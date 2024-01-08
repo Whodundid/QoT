@@ -10,6 +10,7 @@ public class CrackedDirt extends WorldTile {
 	public CrackedDirt() {
 		super(TileIDs.CRACKED_DIRT);
 		setSprite(new Sprite(NatureTextures.cracked_dirt));
+		setMiniMapColor(0xff6D3A1E);
 	}
 	
 	@Override

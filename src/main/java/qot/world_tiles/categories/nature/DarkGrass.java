@@ -10,6 +10,7 @@ public class DarkGrass extends WorldTile {
 	public DarkGrass() {
 		super(TileIDs.DARK_GRASS);
 		setSprite(new Sprite(GrassTextures.dark_grass));
+		setMiniMapColor(0xff007800);
 	}
 	
 	@Override

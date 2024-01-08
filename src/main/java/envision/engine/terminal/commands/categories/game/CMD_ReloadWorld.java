@@ -39,7 +39,7 @@ public class CMD_ReloadWorld extends TerminalCommand {
 		
 		writeln(EColors.yellow, "Reloading game world '", Envision.theWorld.getWorldName(), "'..");
         
-        GameWorld w = Envision.loadWorld(new GameWorld(Envision.theWorld.getWorldFile()));
+        GameWorld w = Envision.loadLevel(new GameWorld(Envision.theWorld.getWorldFile()));
         Player p = Envision.setPlayer(new QoT_Player("Test"));
         w.addEntity(p);
         

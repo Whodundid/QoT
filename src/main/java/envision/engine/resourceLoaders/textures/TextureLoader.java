@@ -11,11 +11,14 @@ import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import envision.Envision;
+import envision.engine.loader.dtos.GameTextureDTO;
+import envision.engine.loader.dtos.SpriteDTO;
+import envision.engine.loader.dtos.TextureSheetDTO;
+import envision.engine.loader.dtos.WorldTileDTO;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.resourceLoaders.IResourceManager;
 import envision.engine.resourceLoaders.Sprite;
-import envision.engine.resourceLoaders.WorldTileDTO;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
@@ -29,6 +32,10 @@ import qot.settings.QoTSettings;
  */
 public class TextureLoader implements IResourceManager {
 	
+    //========
+    // Fields
+    //========
+    
 	/** The active record of all loaded game textures. Maps name to texture. */
 	private final Map<String, GameTexture> loadedTextures = new HashMap<>();
 	/** Keeps track of textures that have been parsed but not yet loaded. */
@@ -99,9 +106,9 @@ public class TextureLoader implements IResourceManager {
 		return false;
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	/** Deletes and removes each texture entry within this list. */
 	private void unloadAll() {

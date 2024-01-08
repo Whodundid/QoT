@@ -1,5 +1,6 @@
 package qot;
 
+import envision.Envision;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherSettings;
 import eutil.sys.TracingPrintStream;
@@ -46,7 +47,7 @@ public class Main {
 	// Main
 	//======
 	
-	public static void main(String[] args) throws IllegalArgumentException {
+	public static void main(String[] args) throws Exception {
 		// setup print tracing
 		TracingPrintStream.enableTrace();
 		TracingPrintStream.setTracePrimitives(true);
@@ -54,6 +55,8 @@ public class Main {
 		TracingPrintStream.disableTrace();
 		
 		//-------------------------------------------
+		
+//		Envision.loadGame("C:/Users/Hunter/AppData/Roaming/Quest of Thyrah");
 		
         var settings = new LauncherSettings(QoT.instance());
         settings.setResourceDirectoriesToExtract("sounds", "shaders", "textures", "menuWorlds");

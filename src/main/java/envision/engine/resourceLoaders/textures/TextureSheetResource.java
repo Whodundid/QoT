@@ -2,6 +2,9 @@ package envision.engine.resourceLoaders.textures;
 
 import java.util.List;
 
+import envision.engine.loader.dtos.GameTextureDTO;
+import envision.engine.loader.dtos.SpriteDTO;
+import envision.engine.loader.dtos.TextureSheetDTO;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.resourceLoaders.IGameResource;
 import envision.engine.resourceLoaders.ResourceType;

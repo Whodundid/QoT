@@ -19,7 +19,7 @@ public class DeathScreen extends GameScreen {
 	public void initScreen() {
 		SoundEngine.stopAll();
 		SoundEngine.loopIfNotPlaying(Songs.lithinburg);
-		Envision.loadWorld(null);
+		Envision.loadLevel(null);
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public class DeathScreen extends GameScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.dsteel);
 		if (Envision.thePlayer == null) return;
 		

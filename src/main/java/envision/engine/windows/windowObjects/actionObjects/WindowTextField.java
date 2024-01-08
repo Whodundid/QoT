@@ -59,7 +59,7 @@ public class WindowTextField extends ActionObject {
     //===========
 	
 	@Override
-	public void drawObject(long dt, int mX, int mY) {
+	public void drawObject(float dt, int mX, int mY) {
 	    final double CHAR_WIDTH = FontRenderer.getCharWidth();
 	    final double FONT_HEIGHT = FontRenderer.FH;
 	    

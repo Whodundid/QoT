@@ -129,7 +129,7 @@ public class ToolHandler {
 		case LINE: break;
 		case MAGICWAND: break; //always press
 		case MOVE: break;
-		case PAINTBUCKET: break;
+		case PAINTBUCKET: paintBucketTool.distributeEvent(event, button); break;
 		case PENCIL: pencilTool.distributeEvent(event, button); break;
 		case RECTSELECT: break;
 		case SHAPE: break;

@@ -1,12 +1,12 @@
 package envision.engine.windows.bundledWindows;
 
+import envision.engine.assets.TaskBarTextures;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import eutil.colors.EColors;
-import qot.assets.textures.taskbar.TaskBarTextures;
 
 public class CalculatorWindow extends WindowParent {
 
@@ -181,7 +181,7 @@ public class CalculatorWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		//drawRect(0xffe4f4fc, 1);
 		

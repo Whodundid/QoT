@@ -23,8 +23,10 @@ public class EntitySpawn {
 	// Constructors
 	//--------------
 	
-	private EntitySpawn() {}
-	public EntitySpawn(int xIn, int yIn, Entity entIn) { this(xIn, yIn, entIn.getInternalSaveID()); }
+	protected EntitySpawn() {}
+	public EntitySpawn(int xIn, int yIn, Entity entIn) {
+	    this(xIn, yIn, entIn.getInternalSaveID());
+	}
 	public EntitySpawn(int xIn, int yIn, int typeIn) {
 		x = xIn;
 		y = yIn;
@@ -43,8 +45,8 @@ public class EntitySpawn {
 		in = in.substring(4);
 		
 		String[] tokens = in.split(" ");
-		spawn.x = Integer.parseInt(tokens[0]);
-		spawn.y = Integer.parseInt(tokens[1]);
+		spawn.x = (int) Double.parseDouble(tokens[0]);
+		spawn.y = (int) Double.parseDouble(tokens[1]);
 		spawn.type = Integer.parseInt(tokens[2]);
 		
 		if (tokens.length > 3) {
@@ -69,7 +71,8 @@ public class EntitySpawn {
 	public Entity getEntity(IGameWorld world) {
 		var ent = EntityList.getEntity(type);
 		ent.world = world;
-		ent.setWorldPos(x, y);
+		ent.setPixelPos(x, y);
+		//ent.setWorldPos(x, y);
 		return ent;
 	}
 	

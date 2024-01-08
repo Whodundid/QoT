@@ -1,6 +1,7 @@
 package envision.engine.windows.bundledWindows;
 
 import envision.debug.DebugSettings;
+import envision.engine.assets.TaskBarTextures;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -8,7 +9,6 @@ import envision.engine.windows.windowObjects.actionObjects.WindowSlider;
 import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.WindowParent;
 import eutil.colors.EColors;
-import qot.assets.textures.taskbar.TaskBarTextures;
 
 public class GameOptionsWindow extends WindowParent {
     
@@ -65,7 +65,7 @@ public class GameOptionsWindow extends WindowParent {
     }
     
     @Override
-    public void drawObject(long dt, int mXIn, int mYIn) {
+    public void drawObject(float dt, int mXIn, int mYIn) {
         drawDefaultBackground();
         
         if (toggleBatchRendering != null) {

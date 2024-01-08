@@ -52,7 +52,7 @@ public abstract class RenderingComponent extends EntityComponent {
         
         int viewDist = 18;
         int lightx, lighty;
-        var obj = world.getCamera().getFocusedObject();
+        var obj = Envision.levelManager.getCamera().getFocusedObject();
         
         if (obj != null) {
             var p = obj;
@@ -71,8 +71,8 @@ public abstract class RenderingComponent extends EntityComponent {
             lighty = p.worldY + mwcy;
         }
         else {
-            lightx = world.getCamera().getWorldX();
-            lighty = world.getCamera().getWorldY();
+            lightx = Envision.levelManager.getCamera().getWorldX();
+            lighty = Envision.levelManager.getCamera().getWorldY();
         }
         
         final int viewDistSquared = viewDist * viewDist;

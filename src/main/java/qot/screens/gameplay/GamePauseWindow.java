@@ -49,7 +49,7 @@ public class GamePauseWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawRect(0, 0, Envision.getWidth(), Envision.getHeight(), EColors.vdgray.opacity(150));
 		drawDefaultBackground();
 	}
@@ -57,12 +57,12 @@ public class GamePauseWindow extends WindowParent {
 	@Override
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == quit) {
-			Envision.loadWorld(null); // Unload current world
+			Envision.loadLevel(null); // Unload current world
 			Envision.displayScreen(new MainMenuScreen()); // Display main menu
 		}
 		
 		if (object == options) {
-			var opScreen = Envision.displayScreen(new OptionsScreen(), parent);
+			var opScreen = Envision.displayScreen(new OptionsScreen());
 			if (parent instanceof GamePlayScreen g) {
 				opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, g::openPauseWindowIfNotOpen);
 			}

@@ -35,7 +35,7 @@ public class ToolCategory {
 		for (EditorToolType t : tools) {
 			WindowButton<EditorToolType> b = new WindowButton(parentIn) {
 				@Override
-				public void drawObject(long dt, int mXIn, int mYIn) {
+				public void drawObject(float dt, int mXIn, int mYIn) {
 					super.drawObject(dt, mXIn, mYIn);
 					
 					//compare this tool button's type to the active one

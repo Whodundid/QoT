@@ -273,7 +273,7 @@ public class RenderBatch {
 		Vec2f playerPos = new Vec2f(); // default to (0, 0)
 		
 		float tileSize = (world != null) ? world.getTileWidth() : 32.0f;
-		float camZoom = (float) ((world != null) ? world.getCameraZoom() : 1.0f);
+		float camZoom = (float) ((world != null) ? Envision.levelManager.getCameraZoom() : 1.0f);
 		float lightDist = 100000f; // really high because baller~
 		float viewDist = 1000f; // the number of tiles that the entity can see out from it
 		

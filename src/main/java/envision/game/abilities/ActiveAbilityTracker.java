@@ -106,7 +106,7 @@ public class ActiveAbilityTracker {
 
 		var box = cooldownTracker[slot];
 		// check if still on cooldown -- don't use if so
-		if (box.getA()) return false;
+		//if (box.getA()) return false;
 		
 		boolean used = a.use(theEntity);
 		

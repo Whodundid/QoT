@@ -16,6 +16,10 @@ import qot.assets.textures.window.WindowTextures;
 
 public class CharacterScreen extends GameScreen {
 	
+    //========
+    // Fields
+    //========
+    
 	private Entity theEntity;
 	
 	//character texture draw dimensions
@@ -29,12 +33,13 @@ public class CharacterScreen extends GameScreen {
 	//upgrade buttons
 	private WindowButton back;
 	private WindowButton upHealth, upStrength, upMana;
+	private WindowButton abilities;
 	
 	private InventoryRenderer inventory;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public CharacterScreen(Entity entIn) {
 		theEntity = entIn;
@@ -64,6 +69,10 @@ public class CharacterScreen extends GameScreen {
 		fY = midY - (fH / 2) - (height / 10);
 	}
 	
+	//===========
+    // Overrides
+    //===========
+	
 	@Override
 	public void initScreen() {
 		Envision.pause();
@@ -83,6 +92,7 @@ public class CharacterScreen extends GameScreen {
 		WindowButton.setTextures(WindowTextures.plus, WindowTextures.plus_sel, upHealth, upStrength, upMana);
 		
 		inventory = new InventoryRenderer(theEntity);
+		inventory.setDrawItemName(true);
 		
 		double inventoryWidth = inventory.width;
 		double inventoryHeight = inventory.height;
@@ -90,8 +100,14 @@ public class CharacterScreen extends GameScreen {
 		double inventoryY = endY - (midY / 4) - inventoryHeight / 2;
 		inventory.setPosition(inventoryX, inventoryY);
 		
+		inventory.setItemTextPosition(inventory.midX, inventory.startY - 30);
+		
+		abilities = new WindowButton(this, 5, endY - 40, 200, 35, "Abilities");
+		abilities.setAction(() -> Envision.displayScreen(new AbilityScreen(theEntity), this));
+		
 		addObject(inventory);
 		addObject(upHealth, upStrength, upMana);
+		addObject(abilities);
 	}
 	
 	@Override
@@ -100,7 +116,7 @@ public class CharacterScreen extends GameScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.pdgray);
 		drawChar();
 		drawStats();
@@ -118,6 +134,15 @@ public class CharacterScreen extends GameScreen {
 		
 		drawString("Gold: " + EColors.mc_gold + theEntity.getGold(), 50, midY + dH / 2 - 35);
 		drawString("Damage per hit: " + EColors.lred + theEntity.getBaseMeleeDamage(), 50, midY + dH / 2);
+		
+		var effects = theEntity.activeEffectsTracker.keySet();
+		int i = 0;
+		for (var effect : effects) {
+		    String name = effect;
+		    String value = String.valueOf(theEntity.activeEffectsTracker.get(effect));
+		    drawString(name + ": " + value, fX + fW + 20, midY - 200 + i * 30);
+		    i++;
+		}
 	}
 	
 	private void drawChar() {

@@ -7,6 +7,9 @@ public abstract class Building extends Entity {
 
 	protected Building() {
 		addComponent(new EntityRenderer(this));
+		
+        this.canRegenHealth = false;
+        this.canRegenMana = false;
 	}
 	
 }

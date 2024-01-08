@@ -11,14 +11,17 @@ import qot.world_tiles.TileIDs;
 
 public abstract class WorldTile extends ComponentBasedObject implements Comparable<WorldTile> {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	/**
 	 * The id of this tile which is primarily used for saving/loading world data.
 	 */
 	protected TileIDs id;
+	
+	/** The metadata id of this tile. */
+	protected int meta;
 	
 	/**
 	 * The human-readable name of this tile.
@@ -117,21 +120,23 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	
 	protected int miniMapColor = 0xff000000;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	protected WorldTile() {}
-	protected WorldTile(TileIDs idIn) {
-		id = idIn;
-		name = id.name;
-		
-		addComponent(new WorldTileRenderer(this));
+	protected WorldTile(TileIDs idIn) { this(idIn, -1); }
+	protected WorldTile(TileIDs idIn, int metaIn) {
+	    id = idIn;
+	    meta = metaIn;
+	    name = id.name;
+	    
+	    addComponent(new WorldTileRenderer(this));
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public String toString() {
@@ -153,9 +158,9 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 		return (worldY + 1) * Envision.theWorld.getTileHeight();
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	/**
 	 * Called every time the world updates.
@@ -170,9 +175,13 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	 */
 	public void onTileClicked(Entity entity, int button) {}
 	
-	//---------
-	// Getters
-	//---------
+	public void randomizeValues() {}
+	
+	public boolean hasVariation() { return false; }
+	
+	//=========
+    // Getters
+    //=========
 	
 	public boolean hasSprite() { return sprite != null; }
 	public boolean blocksMovement() { return blocksMovement; }
@@ -186,12 +195,9 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	public int getMapColor() { return miniMapColor; }
 	public int getNumVariants() { return numVariants; }
 	
-	public int getWorldX() { return worldX; }
-	public int getWorldY() { return worldY; }
-	
 	public String getAdditionalValues() {
 		String r = "";
-		
+		 
 		r += (blocksMovement) ? "true " : "false ";
 		r += (material != null) ? material.name : "";
 		
@@ -201,9 +207,9 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	public boolean isOutside() { return isOutside; }
 	public int getLightLevel() { return lightLevel; }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public WorldTile setSprite(Sprite texIn) { sprite = texIn; return this; }
 	public WorldTile setSideSprite(Sprite texIn) { sideTex = texIn; return this; }
@@ -214,9 +220,20 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	public void setMiniMapColor(EColors colorIn) { setMiniMapColor(colorIn.intVal); }
 	public void setMiniMapColor(int colorIn) { miniMapColor = colorIn; }
 	
+	public void setWidthHeight(int width, int height) {
+	    this.width = width;
+	    this.height = height;
+	}
+	
 	public WorldTile setWorldPos(int x, int y) {
 		worldX = x;
 		worldY = y;
+		startX = x * width;
+		startY = y * height;
+		endX = startX + width;
+		endY = startY + height;
+		midX = startX + width * 0.5;
+		midY = startY + height * 0.5;
 		return this;
 	}
 	
@@ -238,9 +255,9 @@ public abstract class WorldTile extends ComponentBasedObject implements Comparab
 	public void setOutside(boolean val) { isOutside = val; }
 	public void setLightLevel(int level) { lightLevel = level; }
 	
-	//----------------
-	// Static Methods
-	//----------------
+	//================
+    // Static Methods
+    //================
 	
 	public static WorldTile getTileFromID(int id) { return getTileFromID(id, 0); }
 	public static WorldTile getTileFromID(int id, int texNum) {

@@ -17,6 +17,11 @@ public abstract class Enemy extends BasicRenderedEntity {
 	
 	public Enemy(String nameIn) {
 		super(nameIn);
+		
+		canBeMoved = false;
+		canMoveEntities = true;
+        this.canRegenHealth = true;
+        this.canRegenMana = false;
 	}
 
 }

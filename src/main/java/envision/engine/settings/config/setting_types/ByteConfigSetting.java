@@ -6,6 +6,10 @@ import envision.engine.settings.config.ConfigSetting;
 
 public class ByteConfigSetting extends ConfigSetting<Byte> {
 
+    public ByteConfigSetting(String name, String description) {
+       this(name, description, (byte) 0);
+    }
+    
     public ByteConfigSetting(String settingNameIn, String descriptionIn, byte initialValue) {
         super(Byte.class, settingNameIn, descriptionIn, initialValue);
     }
@@ -17,10 +21,10 @@ public class ByteConfigSetting extends ConfigSetting<Byte> {
     @Override public ByteConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public ByteConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public byte getByte() { return val; }
-    public byte getDefaultByte() { return defaultVal; }
+    public byte getByte() { return value; }
+    public byte getDefaultByte() { return defaultValue; }
     
-    public void setByte(byte val) { this.val = val; }
-    public void setDefaultByte(byte val) { this.defaultVal = val; }
+    public void setByte(byte val) { this.value = val; }
+    public void setDefaultByte(byte val) { this.defaultValue = val; }
     
 }

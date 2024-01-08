@@ -40,8 +40,8 @@ public class WorldSavingSystem {
 		writer.println("mapName=" + world.getWorldName());
 		writer.println("spawn=" + world.getPlayerSpawn());
 		writer.println("underground=" + world.isUnderground());
-		writer.println("timeOfDay=" + world.getTime());
-		writer.println("lengthOfDay=" + world.getDayLength());
+//		writer.println("timeOfDay=" + world.getTime());
+//		writer.println("lengthOfDay=" + world.getDayLength());
 		
 		writer.close();
 	}

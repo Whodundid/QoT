@@ -1,10 +1,10 @@
 package envision.engine.windows.developerDesktop.shortcuts;
 
+import envision.engine.assets.WindowTextures;
 import envision.engine.scripting.EnvisionScript;
 import envision.engine.windows.developerDesktop.util.DesktopUtil;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
-import qot.assets.textures.window.WindowTextures;
 
 public class DesktopShortcut_Script extends DesktopShortcut {
     

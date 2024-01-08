@@ -143,7 +143,7 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 		
 		int viewDist = 18;
 		int lightx, lighty;
-		var obj = world.getCamera().getFocusedObject();
+		var obj = Envision.levelManager.getCamera().getFocusedObject();
 		
 		if (obj != null) {
 			var p = obj;
@@ -162,8 +162,8 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 			lighty = p.worldY + mwcy;
 		}
 		else {
-			lightx = world.getCamera().getWorldX();
-			lighty = world.getCamera().getWorldY();
+			lightx = Envision.levelManager.getCamera().getWorldX();
+			lighty = Envision.levelManager.getCamera().getWorldY();
 		}
 		
 		int distToPlayer = viewDist - (int) (ENumUtil.distance(x, y, lightx, lighty));

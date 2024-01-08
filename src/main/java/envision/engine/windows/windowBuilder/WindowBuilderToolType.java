@@ -1,7 +1,7 @@
 package envision.engine.windows.windowBuilder;
 
+import envision.engine.assets.WindowBuilderTextures;
 import envision.engine.rendering.textureSystem.GameTexture;
-import qot.assets.textures.windowbuilder.WindowBuilderTextures;
 
 public enum WindowBuilderToolType {
 	

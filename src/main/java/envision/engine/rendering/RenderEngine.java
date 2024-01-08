@@ -1,12 +1,12 @@
 package envision.engine.rendering;
 
 import envision.Envision;
+import envision.engine.assets.EngineTextures;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.renderingAPI.RendererContextType;
 import envision.engine.rendering.renderingAPI.RenderingContext;
 import envision.engine.rendering.renderingAPI.opengl.OpenGLContext;
-import qot.assets.textures.general.GeneralTextures;
 
 public class RenderEngine {
 	
@@ -104,8 +104,8 @@ public class RenderEngine {
 		}
 		// if there wasn't a screen, draw the 'no screens' stuff
 		else {
-			RenderingManager.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
-			RenderingManager.drawString("No Screens?", 256, 256);
+            RenderingManager.drawTexture(EngineTextures.noscreens, 128, 128, 384, 384);
+            RenderingManager.drawString("No Screens?", 256, 256);
 		}
 		BatchManager.endLayer(1);
 		

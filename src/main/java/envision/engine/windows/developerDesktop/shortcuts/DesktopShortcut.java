@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import envision.Envision;
+import envision.engine.assets.TaskBarTextures;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.textureSystem.GameTexture;
@@ -17,7 +18,6 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.colors.EColors;
 import eutil.datatypes.points.Point2d;
 import eutil.strings.EStringBuilder;
-import qot.assets.textures.taskbar.TaskBarTextures;
 
 public abstract class DesktopShortcut extends WindowObject {
     
@@ -81,7 +81,7 @@ public abstract class DesktopShortcut extends WindowObject {
     }
     
     @Override
-    public void drawObject(long dt, int mXIn, int mYIn) {
+    public void drawObject(float dt, int mXIn, int mYIn) {
         // check if moving
         checkMoveShortcut(mXIn, mYIn);
         

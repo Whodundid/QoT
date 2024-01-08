@@ -37,20 +37,20 @@ public class Deb8 extends DebugCommand {
                          //engine.loadWorld("new")
                          playerID = api.getPlayerID()
                          
-                         worldDims = api.getWorldDims()
-                         tileDims = api.getTileDims()
+                         //worldDims = api.getWorldDims()
+                         //tileDims = api.getTileDims()
                          
-                         worldWidth = worldDims[0]
-                         worldHeight = worldDims[1]
-                         tileWidth = tileDims[0]
-                         tileHeight = tileDims[1]
+                         //worldWidth = worldDims[0]
+                         //worldHeight = worldDims[1]
+                         //tileWidth = tileDims[0]
+                         //tileHeight = tileDims[1]
                          
-                         println(worldWidth, worldHeight, tileWidth, tileHeight)
-                         println(worldHeight)
-                         println(tileWidth)
-                         println(tileHeight)
+                         //println(worldWidth, worldHeight, tileWidth, tileHeight)
+                         //println(worldHeight)
+                         //println(tileWidth)
+                         //println(tileHeight)
                          
-                         api.tpEntity(playerID, 32 * 50, 20)
+                         //api.tpEntity(playerID, 32 * 50, 20)
                          
                          """);
         

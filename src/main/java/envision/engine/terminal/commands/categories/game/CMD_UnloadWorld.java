@@ -26,7 +26,7 @@ public class CMD_UnloadWorld extends TerminalCommand {
 		}
 		
 		writeln("Unloading world '" + Envision.theWorld.getWorldName() + "'", EColors.green);
-        Envision.loadWorld(null);
+        Envision.loadLevel(null);
         displayScreen(new MainMenuScreen());
 	}
 	

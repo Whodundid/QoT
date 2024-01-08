@@ -177,7 +177,7 @@ public class ColorPickerSimple extends ActionWindowParent {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		//drawRect(0xff3b3b3b, 1);
 		

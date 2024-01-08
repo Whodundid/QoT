@@ -27,7 +27,7 @@ public class LevelUpScreen extends GameScreen {
 	@Override public void onScreenClosed() {}
 	
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.dgray);
 	}
 	

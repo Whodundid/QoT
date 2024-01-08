@@ -10,25 +10,40 @@ import eutil.EUtil;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
+import eutil.debug.PlannedForRefactor;
 import eutil.file.LineReader;
 
+@PlannedForRefactor(reason="This class is super legacy and not very well written")
 public class EnvisionConfigFile {
 	
+    //========
+    // Fields
+    //========
+    
 	protected File configPath;
 	protected String configName = "";
 	protected String configTitleLine = null;
-	protected BoxList<String, EList<String>> configValues;
+	protected BoxList<String, EList<String>> configValues = new BoxList<>();
 	
 	/** temp list used for saving */
-	private EList<ConfigBlock> config = new EArrayList();
+	private EList<ConfigBlock> config = new EArrayList<>();
+	
+	//==============
+    // Constructors
+    //==============
+	
+	public EnvisionConfigFile() {}
 	
 	public EnvisionConfigFile(File path, String name) { this(path, name, null); }
 	public EnvisionConfigFile(File path, String name, String configTitleIn) {
 		configPath = path;
 		configName = name;
 		configTitleLine = configTitleIn;
-		configValues = new BoxList<>();
 	}
+	
+	//=========
+    // Methods
+    //=========
 	
 	public boolean saveConfig() { return trySave(); }
 	public boolean loadConfig() { return tryLoad(); }

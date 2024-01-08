@@ -52,9 +52,9 @@ public class WindowStatusBar extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
-		drawRect(EColors.black);
-		drawRect(EColors.dsteel, 5);
+	public void drawObject(float dt, int mXIn, int mYIn) {
+		//drawRect(EColors.black);
+		drawRect(EColors.dsteel);
 		
 		drawRect(x, y, ex, ey, color);
 		if (isMouseInsideGui(mXIn, mYIn)) {
@@ -67,13 +67,13 @@ public class WindowStatusBar extends WindowObject {
 	//------------------
 	
 	private void updateDrawing() {
-		x = startX + 5;
-		y = startY + 5;
-		w = width - 10;
+		x = startX;
+		y = startY;
+		w = width;
 		percent = current / max;
 		pw = w * percent;
 		ex = x + pw;
-		ey = endY - 5;
+		ey = endY;
 	}
 	
 	//---------
@@ -97,5 +97,8 @@ public class WindowStatusBar extends WindowObject {
 		current = ENumUtil.clamp(val, min, max);
 		updateDrawing();
 	}
+	
+	public void setColor(EColors colorIn) { color = colorIn.intVal; }
+	public void setColor(int colorIn) { color = colorIn; }
 	
 }

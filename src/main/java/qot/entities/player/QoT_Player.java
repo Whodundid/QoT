@@ -4,15 +4,11 @@ import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.resourceLoaders.Sprite;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
-import envision.game.entities.Entity;
 import envision.game.entities.combat.CircularDirectionalAttack;
 import envision.game.entities.player.EntityStats;
 import envision.game.entities.player.Player;
 import envision.game.shops.TradingWindow;
 import envision.game.world.WorldCamera;
-import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.EList;
-import eutil.random.ERandomUtil;
 import qot.abilities.Abilities;
 import qot.assets.textures.entity.EntityTextures;
 import qot.items.Items;
@@ -45,6 +41,9 @@ public class QoT_Player extends Player {
         timeUntilNextAttack = 175l;
         
         addComponent(new PlayerRenderer(this));
+        canMoveEntities = true;
+        canBeMoved = false;
+        canRegenHealth = true;
     }
     
     //===========
@@ -53,19 +52,20 @@ public class QoT_Player extends Player {
     
     @Override
     public void onMousePress(int mXIn, int mYIn, int button) {
+        if (world == null) return;
         if (Envision.getCurrentScreen().isWindowOpen(TradingWindow.class)) return;
         if (Envision.getCurrentScreen().isWindowOpen(RightClickMenu.class)) return;
-        
-        final var cam = world.getCamera();
-        final double mpx = cam.getMousePixelX();
-        final double mpy = cam.getMousePixelY();
-        CircularDirectionalAttack.attackAt(world, this, midX, midY, mpx, mpy, 45.0);
         
         if (!attacking && button == 0) {
             attacking = true;
             recentlyAttacked = true;
             attackDrawStart = System.currentTimeMillis();
             attackStart = System.currentTimeMillis();
+            
+            final var cam = Envision.levelManager.getCamera();
+            final double mpx = cam.getMousePixelX();
+            final double mpy = cam.getMousePixelY();
+            CircularDirectionalAttack.attackAt(world, this, midX, midY, mpx, mpy, 45.0);
         }
     }
     
@@ -91,9 +91,9 @@ public class QoT_Player extends Player {
     
     @Override
     public void draw(WorldCamera camera, double x, double y, double w, double h, boolean mouseOver) {
-        final var cam = world.getCamera();
-        final double mpx = cam.getMousePixelX();
-        final double mpy = cam.getMousePixelY();
+        if (this != Envision.thePlayer) return;
+        final double mpx = camera.getMousePixelX();
+        final double mpy = camera.getMousePixelY();
         CircularDirectionalAttack.drawAttackAreaSector(this, this.midX, this.midY, mpx, mpy, 45);
     }
     

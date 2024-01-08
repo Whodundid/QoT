@@ -47,7 +47,7 @@ public class CMD_LoadWorld extends AbstractFileCommand {
 		writeln("Loading world...", EColors.green);
         Envision.setPlayer(new QoT_Player("Test"));
         if (switchTo) Envision.displayScreen(new GamePlayScreen());
-        Envision.loadWorld(world);
+        Envision.loadLevel(world);
 	}
 	
 	public static GameWorld buildWorld(String worldName) {

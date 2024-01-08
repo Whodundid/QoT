@@ -25,7 +25,7 @@ import qot.items.Items;
 public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
     
     protected long randShort = 2000l;
-    protected long randLong = 2500l;
+    protected long randLong = 8000l;
     protected long waitDelay = 0l;
     protected long moveTime = 0l;
     protected long waitTime = 0l;
@@ -50,6 +50,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         setMaxHealth(50);
         setHealth(50);
         setSpeed(32.0 * 1.0);
+        setStrengthLevel(4);
         setBaseMeleeDamage(2);
         
         this.baseInventorySize = 12;
@@ -92,6 +93,10 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         for (int i = 27; i < 36; i++) walkRight.addFrame(EntityTextures.walksheet.getSprite(i));
         
         addComponent(new OnClickComponent(this));
+        
+        canBeMoved = false;
+        canBeCarried = false;
+        canRegenHealth = true;
     }
 
     @Override
@@ -185,6 +190,12 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
             if (dist < 60 && Envision.thePlayer != null) {
                 double angle = world.getAngleInDegressTo(this, Envision.thePlayer);
                 faceTowards(angle);
+                
+//                if (!theShop.isShopOpen()) {
+//                    if (System.currentTimeMillis() - lastMove >= moveTime) {
+//                        moveTowards(lastDir);
+//                    }
+//                }
             }
             else if (System.currentTimeMillis() - lastMove >= moveTime) {
                 moveTowards(lastDir);
@@ -268,11 +279,11 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
             chat.add("I don't want to die!");
         }
         else {
-            if (isPositiveFavorWith(ent)) chat.add("Please be careful!");
-            if (isPositiveFavorWith(ent)) chat.add("Could you by chance NOT do that?!");
+            if (isPositiveFavorWith(ent)) chat.add("Ack! Hey, can you please be careful!");
+            if (isPositiveFavorWith(ent)) chat.add("OW! ..Hey buddy.. could you by chance NOT do that?!");
             if (isNeutralWith(ent)) chat.add("Whoa! What have I done to you?!");
-            if (isNeutralWith(ent)) chat.add("You looking for a fight!?");
-            if (isNeutralWith(ent)) chat.add("Stop that!");
+            if (isNeutralWith(ent)) chat.add("Oofff.. HEY! What the hell, are you looking for a fight!?");
+            if (isNeutralWith(ent)) chat.add("AAHh.. Stop that!");
             if (isNegativeFavorWith(ent)) chat.add("WATCH IT, ASSHOLE!");
             if (isEnemiesWith(ent)) chat.add("I'll kill you I swear!");
             if (isEnemiesWith(ent)) chat.add("You'll pay for that!");
@@ -318,25 +329,28 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         
         EList<String> playerNearOptions = EList.newList();
         if (isNeutralWithPlayer()) playerNearOptions.add("Can I help you?");
-        if (isNeutralWithPlayer()) playerNearOptions.add("Hey, you want to trade?");
-        if (isPositiveFavorWithPlayer()) playerNearOptions.add("You there, I've got a favor to ask!");
-        if (isFriendsWithPlayer()) playerNearOptions.add("Hey there friend, want to trade?");
+        if (isNeutralWithPlayer()) playerNearOptions.add("Hey, you looking to trade a few things?");
+        //if (isPositiveFavorWithPlayer()) playerNearOptions.add("You there, I've got a favor to ask!");
+        if (isFriendsWithPlayer()) playerNearOptions.add("Hey there, friend.");
         if (isFriendsWithPlayer()) playerNearOptions.add("Ahhh, my favorite customer!");
-        if (isNegativeFavorWithPlayer()) playerNearOptions.add("What are you doing?");
         if (isNegativeFavorWithPlayer()) playerNearOptions.add("I should really put up a 'No Loitering' sign..");
         if (isNegativeFavorWithPlayer()) playerNearOptions.add("You're not going to rob me, are you?");
         if (isNegativeFavorWithPlayer()) playerNearOptions.add("Oh dear not you again..");
-        if (isNegativeFavorWithPlayer()) playerNearOptions.add("Stop staring at me..");
         if (isEnemiesWithPlayer()) playerNearOptions.add("You are not welcome here!");
         if (isEnemiesWithPlayer()) playerNearOptions.add("Get out of my shop, " + Envision.thePlayer + "!");
         if (isEnemiesWithPlayer()) playerNearOptions.add("Get out of here, " + Envision.thePlayer + "!");
         if (isEnemiesWithPlayer()) playerNearOptions.add("You looking for a fight, asshole?");
+        playerNearOptions.add("What are you doing?");
+        playerNearOptions.add("Stop staring at me..");
+        playerNearOptions.add("Do you.. normally just stare at people like this.. or just me?");
+        for (int i = 0; i < 4; i++) playerNearOptions.add("");
         
         String time = "day";
-        if (world.isDay()) time = "day";
-        else if (world.isNight()) time = "night";
-        else if (world.isSunrise()) time = "morning";
-        else if (world.isSunset()) time = "evening";
+        var level = Envision.levelManager;
+        if (level.isDay()) time = "day";
+        else if (level.isNight()) time = "night";
+        else if (level.isSunrise()) time = "morning";
+        else if (level.isSunset()) time = "evening";
         
         EList<String> textOptions = EList.newList();
         if (health <= (maxHealth * 0.25)) {
@@ -348,12 +362,12 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         }
         else {
             textOptions.add("What a wonderful " + time + "!");
-            textOptions.add("Maybe someone will actually trade today");
-            textOptions.add("5 more years Horvic.. Just 5 more years...");
+            textOptions.add("Five more years.. Just five more years...");
             //textOptions.add("Those dang kids keep making so much noise!");
             textOptions.add("I think the goblins stole a " + Items.random().getName().toLowerCase() + " of mine..");
             textOptions.add("I wonder what time it is...");
-            textOptions.add("** Sigh **");            
+            textOptions.add("** Sigh **");
+            for (int i = 0; i < 10; i++) textOptions.add("");
         }
         
         EList<String> enemyNearOptions = EList.newList();
@@ -394,7 +408,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         activeChat = text;
         lastDialogTime = 0l;
         dialogTimeOut = ERandomUtil.getRoll(minTime, maxTime);
-        dialogWaitTime = ERandomUtil.getRoll(dialogTimeOut + 2000, dialogTimeOut + 8000);
+        dialogWaitTime = ERandomUtil.getRoll(dialogTimeOut + 2000, dialogTimeOut + 15000);
     }
     
     @Override

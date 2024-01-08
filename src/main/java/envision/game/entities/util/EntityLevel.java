@@ -26,7 +26,8 @@ public class EntityLevel {
 	 */
 	public static long getXPNeededForNextLevel(int level) {
 		//return (long) (((Math.pow(2, (double) level / 5) * 300 + level)) * 1.25) - 375;
-		return (long) (((Math.pow(2, (double) level / 8.5) * 300 + level)) * 1.25) - 375;
+	    //return (long) (((Math.pow(2, (double) level / 8.5) * 300 + level)) * 1.25) - 375;
+		return (long) (((Math.pow(2, (double) level / 12.5) * 50 + level)) * 1.05) - 10;
 	}
 	
 	/**

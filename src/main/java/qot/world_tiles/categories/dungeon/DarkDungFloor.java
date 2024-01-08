@@ -10,6 +10,7 @@ public class DarkDungFloor extends WorldTile {
 	public DarkDungFloor() {
 		super(TileIDs.DARK_DUNG_FLOOR);
 		setSprite(new Sprite(StoneFloorTextures.dark_dung_floor));
+		setMiniMapColor(0xff0B191A);
 	}
 	
 	@Override

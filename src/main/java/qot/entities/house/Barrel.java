@@ -16,6 +16,8 @@ public class Barrel extends BasicRenderedEntity {
 		sprite = new Sprite(HouseTextures.barrel);
 		setMaxHealth(5);
 		setHealth(5);
+		
+		setCollisionBox(startX + 6, startY + 14, endX - 6, endY - 1);
 		setExperienceRewardedOnKill(1);
 		
         // item on death

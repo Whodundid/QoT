@@ -2,24 +2,23 @@ package envision.game.entities.inventory;
 
 import envision.game.entities.Entity;
 import envision.game.items.Item;
-import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class EntityInventory {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
-	private EList<Item> inventory = new EArrayList<>();
+	private EList<Item> inventory = EList.newList();
 	private int inventorySize = 3; // 3 by default
 	private int maxCarryWeight = -1;
 	private boolean usesCarryWeight = false;
 	private Entity theEntity;
 
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public EntityInventory(Entity theEntityIn) {
 		theEntity = theEntityIn;
@@ -49,9 +48,9 @@ public class EntityInventory {
 		return false;
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public Item getItemAtIndex(int index) {
 		if (index >= 0 && index < inventorySize) {
@@ -60,6 +59,20 @@ public class EntityInventory {
 			}
 		}
 		return null;
+	}
+	
+	public Item removeItemAtIndex(int index) {
+	    if (index >= 0 && index < inventorySize) {
+            synchronized (inventory) {
+                var item = inventory.get(index);
+                if (item != null) {
+                    inventory.set(index, null);
+                    item.onItemUnequip(theEntity);                    
+                }
+                return item;
+            }
+	    }
+	    return null;
 	}
 	
 	public EList<Item> getItems() {
@@ -91,9 +104,9 @@ public class EntityInventory {
 	public int getMaxCarryWeight() { return maxCarryWeight; }
 	public int getWeight() { return -1; }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public void setSize(int sizeIn) {
 		inventorySize = sizeIn;

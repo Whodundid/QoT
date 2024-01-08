@@ -1,5 +1,6 @@
 package envision.game.world.worldEditor.windows;
 
+import envision.engine.assets.WindowTextures;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
 import envision.engine.windows.windowObjects.advancedObjects.tabbedContainer.ContainerTab;
@@ -9,13 +10,12 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import eutil.colors.EColors;
 import eutil.misc.Direction;
-import qot.assets.textures.window.WindowTextures;
 
 public class MapSettingsTab extends ContainerTab {
 
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	private MapEditorScreen editor;
 	private EditorTabs tabbedContainer;
@@ -29,9 +29,9 @@ public class MapSettingsTab extends ContainerTab {
 	private WindowButton iN, iNE, iE, iSE, iS, iSW, iW, iNW;
 	private WindowButton dN, dNE, dE, dSE, dS, dSW, dW, dNW;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public MapSettingsTab(EditorTabs parent, MapEditorScreen editorIn) {
 		super(parent, "Map");
@@ -40,9 +40,9 @@ public class MapSettingsTab extends ContainerTab {
 		tabTextColor = EColors.seafoam.intVal;
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void initChildren() {
@@ -139,7 +139,7 @@ public class MapSettingsTab extends ContainerTab {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		super.drawObject(dt, mXIn, mYIn);
 		if (this != tabbedContainer.getSelectedTab()) return;
 		
@@ -205,11 +205,13 @@ public class MapSettingsTab extends ContainerTab {
 	
 	private void resizeW(Direction dir, int w) {
 		editor.getEditorWorld().expandWorld(dir, w);
+		editor.markUnsaved();
 		mapWidth.setString("Map Width: " + editor.getEditorWorld().getWidth());
 	}
 	
 	private void resizeH(Direction dir, int h) {
 		editor.getEditorWorld().expandWorld(dir, h);
+		editor.markUnsaved();
 		mapHeight.setString("Map Height: " + editor.getEditorWorld().getHeight());
 	}
 	

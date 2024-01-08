@@ -10,6 +10,7 @@ public class DungOldWallB extends WorldTile {
 	public DungOldWallB() {
 		super(TileIDs.DUNG_FLOOR_Bb);
 		setSprite(new Sprite(DungeonWallTextures.dung_wall_m_b));
+		setMiniMapColor(0xff3B463B);
 	}
 	
 	@Override

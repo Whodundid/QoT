@@ -11,6 +11,7 @@ public class Counter extends WorldTile {
 		super(TileIDs.COUNTER);
 		setSprite(new Sprite(HouseTextures.counter));
 		blocksMovement = true;
+		setMiniMapColor(0xff6B7585);
 	}
 	
 	@Override

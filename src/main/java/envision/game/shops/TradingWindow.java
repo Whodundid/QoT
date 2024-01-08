@@ -1,5 +1,6 @@
 package envision.game.shops;
 
+import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowImageBox;
@@ -7,6 +8,10 @@ import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
+import envision.engine.windows.windowUtil.windowEvents.eventUtil.EventType;
+import envision.engine.windows.windowUtil.windowEvents.events.EventKeyboard;
 import envision.game.entities.Entity;
 import envision.game.items.Item;
 import eutil.EUtil;
@@ -69,6 +74,8 @@ public class TradingWindow extends WindowParent {
         setResizeable(false);
         setMinimizable(false);
         setMaximizable(false);
+        EObjectGroup group = new EObjectGroup();
+        this.setObjectGroup(group);
     }
     
     //===========================
@@ -140,10 +147,14 @@ public class TradingWindow extends WindowParent {
         IWindowObject.setEnabled(false, buy, sell);
         sell.setVisible(false);
         addObject(sell, buy);
+        
+        getObjectGroup().clear();
+        getObjectGroup().addObject(this);
+        getObjectGroup().addObject(pir, sir, buy, sell);
     }
     
     @Override
-    public void drawObject(long dt, int mXIn, int mYIn) {
+    public void drawObject(float dt, int mXIn, int mYIn) {
         drawDefaultBackground();
         checkMouseHover();
         
@@ -250,6 +261,35 @@ public class TradingWindow extends WindowParent {
     }
     
     @Override
+    public void onGroupNotification(ObjectEvent e) {
+        if (e.getEventType() == EventType.KEYBOARD) {
+            EventKeyboard keyEvent = (EventKeyboard) e;
+            int keyCode = keyEvent.getEventKey();
+            
+            if (Keyboard.KEY_ENTER == keyCode) {
+                if (buy.isVisible() && buy.isEnabled()) {
+                    buyItem();
+                }
+                else if (sell.isVisible() && sell.isEnabled()) {
+                    sellItem();
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void keyPressed(char typedChar, int keyCode) {
+        if (Keyboard.KEY_ENTER == keyCode) {
+            if (buy.isVisible() && buy.isEnabled()) {
+                buyItem();
+            }
+            else if (sell.isVisible() && sell.isEnabled()) {
+                sellItem();
+            }
+        }
+    }
+    
+    @Override
     public void onClosed() {
         if (shopkeeper != null) shopkeeper.setCurrentlySelling(false);
     }
@@ -270,7 +310,7 @@ public class TradingWindow extends WindowParent {
         
         tradingEntity.setGold(entityGold - selectedItemPrice);
         shopkeeperEntity.setGold(shopkeeperEntity.getGold() + selectedItemPrice);
-        Item item = shopkeeperEntity.getInventory().setItem(lastClickedSlot, null);
+        Item item = shopkeeperEntity.getInventory().removeItemAtIndex(lastClickedSlot);
         tradingEntity.getInventory().addItem(item);
         shopkeeperEntity.getFavorTracker().increaseFavorWithEntity(tradingEntity, 20);
         
@@ -294,7 +334,7 @@ public class TradingWindow extends WindowParent {
         
         shopkeeperEntity.setGold(entityGold - sellPrice);
         tradingEntity.setGold(tradingEntity.getGold() + sellPrice);
-        Item item = tradingEntity.getInventory().setItem(lastClickedSlot, null);
+        Item item = tradingEntity.getInventory().removeItemAtIndex(lastClickedSlot);
         shopkeeperEntity.getInventory().addItem(item);
         shopkeeperEntity.getFavorTracker().increaseFavorWithEntity(tradingEntity, 5);
         

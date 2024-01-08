@@ -12,6 +12,7 @@ public class DungOldWallA extends WorldTile {
 		setSprite(new Sprite(DungeonWallTextures.dung_wall_b));
 		setWall(true);
 		this.wallHeight = 0.05;
+		setMiniMapColor(0xff222222);
 	}
 	
 	@Override

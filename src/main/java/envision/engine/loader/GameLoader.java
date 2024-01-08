@@ -4,10 +4,12 @@ import java.io.File;
 
 public class GameLoader {
     
-    public static void loadGameFromDirectory(File directory) {
-        EnvisionGameDirectory dir = new EnvisionGameDirectory(directory);
+    public static LoadedGameDirectory loadGameFromDirectory(File directory) {
+        LoadedGameDirectory dir = new LoadedGameDirectory(directory);
         
         dir.getGameLoadFile();
+        
+        return dir;
     }
     
 }

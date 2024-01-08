@@ -11,6 +11,7 @@ public class Sink extends WorldTile {
 		super(TileIDs.SINK);
 		setSprite(new Sprite(HouseTextures.sink));
 		blocksMovement = true;
+		setMiniMapColor(0xff6B7585);
 	}
 	
 	@Override

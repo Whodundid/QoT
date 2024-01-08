@@ -2,13 +2,13 @@ package envision.debug.testGame;
 
 import envision.Envision;
 import envision.debug.testStuff.TestWindow;
+import envision.engine.loader.EnvisionGame;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.windows.windowUtil.ObjectPosition;
-import envision.game.EnvisionGameTemplate;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherSettings;
 
-public class TestGame implements EnvisionGameTemplate {
+public class TestGame extends EnvisionGame {
 	
     private TestGameSettings settings = new TestGameSettings();
     private TestGameWorldCreator worldCreator = new TestGameWorldCreator(this);
@@ -35,11 +35,11 @@ public class TestGame implements EnvisionGameTemplate {
     public TestGameWorldCreator getWorldCreator() { return worldCreator; }
 
     @Override
-    public TestGameConfig getConfigFile() { return null; }
+    public TestGameConfig getGameConfig() { return null; }
     
     @Override
-    public <T extends EnvisionGameLauncher> T createGameLauncher(LauncherSettings settings) {
-        return (T) new EnvisionGameLauncher(settings) {
+    public EnvisionGameLauncher createGameLauncher(LauncherSettings settings) {
+        return new EnvisionGameLauncher(settings) {
             @Override
             protected void launchGame(LauncherSettings settings) {
                 

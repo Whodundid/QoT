@@ -37,7 +37,7 @@ public class LoadWorld_ENV extends EnvisionFunction {
 			if (world.getWorldFile().exists()) {
 				Player p = Envision.setPlayer(new QoT_Player("Test"));
 				Envision.displayScreen(new GamePlayScreen());
-				Envision.loadWorld(world);
+				Envision.loadLevel(world);
 				world.addObjectToWorld(p);
 			}
 			else throw new EnvisionLangError("The world '" + worldName + "' does not exist!");
@@ -50,7 +50,7 @@ public class LoadWorld_ENV extends EnvisionFunction {
 					System.out.println("loading...");
 					QoT_Player p = (QoT_Player) Envision.setPlayer(new QoT_Player("Test"));
 					Envision.displayScreen(new GamePlayScreen());
-					Envision.loadWorld(world);
+					Envision.loadLevel(world);
 					world.addObjectToWorld(p);
 				}
 			}

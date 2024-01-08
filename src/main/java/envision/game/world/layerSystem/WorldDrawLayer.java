@@ -13,6 +13,7 @@ import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.ExpandableGrid;
 import eutil.datatypes.util.EList;
+import qot.particles.FloatingTextEntity;
 
 public class WorldDrawLayer {
 	
@@ -86,6 +87,7 @@ public class WorldDrawLayer {
 		double w_bot = bot * world.getTileHeight();
 		
 		if (layer == 1) {
+		    EList<GameObject> text = EList.newList();
 			//add all objects within the specified area
 			for (var obj : gameObjects) {
 				if (obj == Envision.thePlayer) {

@@ -86,7 +86,7 @@ public class InventoryRenderer extends WindowObject {
     }
     
     @Override
-    public void drawObject_i(long dt, int mXIn, int mYIn) {
+    public void drawObject_i(float dt, int mXIn, int mYIn) {
         slotInside = null;
         drawRect(borderColor);
         drawRect(slotBackColor, 2);
@@ -167,6 +167,9 @@ public class InventoryRenderer extends WindowObject {
             var slot = new InventorySlot(this, i);
             inventorySlots.add(slot);
             addObject(slot);
+            if (getParent().getObjectGroup() != null) {
+                getParent().getObjectGroup().addObject(slot);
+            }
         }
         
         double s = slotSize;

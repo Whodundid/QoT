@@ -1,12 +1,12 @@
 package envision.engine.windows.bundledWindows.fileExplorer;
 
+import envision.engine.assets.WindowTextures;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
-import qot.assets.textures.window.WindowTextures;
 
 public class MovingFileObject extends DragAndDropObject {
     
@@ -41,7 +41,7 @@ public class MovingFileObject extends DragAndDropObject {
     //===========================
     
     @Override
-    public void drawObject(long dt, int mXIn, int mYIn) {
+    public void drawObject(float dt, int mXIn, int mYIn) {
         drawTexture(icon, mXIn - width * 0.5, mYIn - height * 0.5, width, height);
         drawString(sizeString, mXIn - sizeStringLen * 0.5, mYIn - FontRenderer.HALF_FH, EColors.lred);
     }

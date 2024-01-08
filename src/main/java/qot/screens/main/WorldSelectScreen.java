@@ -56,7 +56,7 @@ public class WorldSelectScreen extends GameScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.pdgray);
 		drawRect(midX - 252, midY - 252, midX + 252, midY + 178, EColors.black);
 		drawRect(midX - 250, midY - 250, midX + 250, midY + 176, EColors.steel);
@@ -138,9 +138,9 @@ public class WorldSelectScreen extends GameScreen {
 		EngineSettings.lastMap.set(worldFile.getName().replace(".twld", ""));
 		Envision.saveEngineConfig();
 		
-		Envision.loadWorld(world);
-		world.setCameraZoom(3.5D);
-		Envision.displayScreen(new GamePlayScreen(), new MainMenuScreen());
+		Envision.loadLevel(world);
+	    Envision.levelManager.setCameraZoom(3.5D);
+		Envision.displayScreen(new GamePlayScreen());
 	}
 	
 }

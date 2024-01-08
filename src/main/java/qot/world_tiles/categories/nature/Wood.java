@@ -10,6 +10,7 @@ public class Wood extends WorldTile {
 	public Wood() {
 		super(TileIDs.WOOD);
 		setSprite(new Sprite(WoodFloorTextures.wood_floor));
+		setMiniMapColor(0xff987839);
 	}
 	
 	@Override

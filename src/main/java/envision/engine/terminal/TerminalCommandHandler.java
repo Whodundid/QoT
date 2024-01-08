@@ -13,6 +13,7 @@ import envision.engine.terminal.commands.categories.engine.CMD_CurScreenInfo;
 import envision.engine.terminal.commands.categories.engine.CMD_DebugControl;
 import envision.engine.terminal.commands.categories.engine.CMD_DesktopControl;
 import envision.engine.terminal.commands.categories.engine.CMD_DisplayScreen;
+import envision.engine.terminal.commands.categories.engine.CMD_EditWorld;
 import envision.engine.terminal.commands.categories.engine.CMD_Envision;
 import envision.engine.terminal.commands.categories.engine.CMD_FPS;
 import envision.engine.terminal.commands.categories.engine.CMD_LockCam;
@@ -153,6 +154,7 @@ public class TerminalCommandHandler {
         registerCommand(new CMD_DebugControl(), termIn, runVisually);
         registerCommand(new CMD_DesktopControl(), termIn, runVisually);
         registerCommand(new CMD_DisplayScreen(), termIn, runVisually);
+        registerCommand(new CMD_EditWorld(), termIn, runVisually);
         registerCommand(new CMD_Envision(), termIn, runVisually);
         registerCommand(new CMD_FPS(), termIn, runVisually);
         registerCommand(new CMD_LockCam(), termIn, runVisually);

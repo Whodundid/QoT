@@ -9,6 +9,7 @@ import qot.doodads.Bush0;
 import qot.doodads.BushyTree0;
 import qot.doodads.BushyTree1;
 import qot.doodads.BushyTree2;
+import qot.doodads.FallBirch;
 import qot.doodads.LeavesGroundClutter;
 import qot.doodads.PineTree;
 import qot.doodads.PineTree2;
@@ -66,6 +67,7 @@ public class GlobalAssetList {
 		assets.add(new Spawner());
 		assets.add(new ShopGuy());
 		assets.add(new PathfindingTestEntity());
+		assets.add(new FallBirch());
 	}
 	
 	public static EList<GameObject> getAssets() {

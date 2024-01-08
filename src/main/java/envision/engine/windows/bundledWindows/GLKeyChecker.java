@@ -1,23 +1,23 @@
 package envision.engine.windows.bundledWindows;
 
+import envision.engine.assets.TaskBarTextures;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.windows.windowTypes.WindowParent;
 import eutil.colors.EColors;
-import qot.assets.textures.taskbar.TaskBarTextures;
 
 public class GLKeyChecker extends WindowParent {
     
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	private int lastKeyCode = -1;
 	private char lastKey = '\u0000';
 	private boolean typed = false;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public GLKeyChecker() {
 		super();
@@ -25,9 +25,9 @@ public class GLKeyChecker extends WindowParent {
 		windowIcon = TaskBarTextures.experiment;
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void initWindow() {
@@ -45,7 +45,7 @@ public class GLKeyChecker extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		
 		drawHRect(EColors.black, 2);

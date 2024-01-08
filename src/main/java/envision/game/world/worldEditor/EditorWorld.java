@@ -8,7 +8,6 @@ import envision.game.entities.EntitySpawn;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.Region;
-import envision.game.world.WorldCamera;
 import envision.game.world.WorldRenderer;
 import envision.game.world.layerSystem.LayerSystem;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
@@ -29,9 +28,9 @@ import qot.world_tiles.VoidTile;
  */
 public class EditorWorld implements IGameWorld {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	private int nextEntityID = 0;
 	public String getNextEntityID() { return String.valueOf(nextEntityID++); }
@@ -41,7 +40,7 @@ public class EditorWorld implements IGameWorld {
 	private String worldName;
 	private int width, height;
 	private int tileWidth, tileHeight;
-	private EList<ExpandableGrid<EditorObject>> worldLayers = EList.newList();
+	public EList<ExpandableGrid<EditorObject>> worldLayers = EList.newList();
 	private final EList<EditorObject> objectsInWorld = new EArrayList<>();
 	private final EList<EditorObject> entitiesInWorld = new EArrayList<>();
 //	private final EList<EntitySpawn> entitySpawns = new EArrayList<>();
@@ -50,9 +49,9 @@ public class EditorWorld implements IGameWorld {
 	private boolean underground = false;
 	protected LayerSystem layers = new LayerSystem();
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public EditorWorld(String nameIn, int widthIn, int heightIn) {
 		this(nameIn, widthIn, heightIn, GameWorld.DEFAULT_TILE_WIDTH, GameWorld.DEFAULT_TILE_HEIGHT);
@@ -74,9 +73,9 @@ public class EditorWorld implements IGameWorld {
 		loadWorld();
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override public boolean isLoaded() { return true; }
 	@Override public void onGameTick(float dt) {}
@@ -85,19 +84,19 @@ public class EditorWorld implements IGameWorld {
 	
 	@Override public File getWorldFile() { return actualWorld.getWorldFile(); }
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	public EditorWorld fillWith(WorldTile t) { return fillWith(0, t, true); }
 	public EditorWorld fillWith(WorldTile t, boolean randomize) { return fillWith(0, t, randomize); }
 	public EditorWorld fillWith(int layer, WorldTile t) { return fillWith(t, true); }
 	public EditorWorld fillWith(int layer, WorldTile t, boolean randomize) {
 		if (t == null) t = new VoidTile();
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				var tile = WorldTile.randVariant(t).setWorldPos(j, i);
-				worldLayers.get(i).set(EditorObject.of(tile), j, i);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				var tile = WorldTile.randVariant(t);
+				setTileAt(tile, layer, x, y);
 			}
 		}
 		return this;
@@ -218,9 +217,9 @@ public class EditorWorld implements IGameWorld {
 //		entitySpawns.add(spawnIn);
 //	}
 	
-	//--------
+	//========
 	// Saving
-	//--------
+	//========
 	
 	@Override
 	public boolean loadWorld() {
@@ -240,8 +239,7 @@ public class EditorWorld implements IGameWorld {
 				for (int j = 0; j < width; j++) {
 					WorldTile t = actualWorld.getTileAt(layerIndex, j, i);
 					if (t == null) t = new VoidTile();
-					EditorObject obj = EditorObject.of(t);
-					layerData.set(obj, j, i);
+					setTileAt(t, j, i);
 				}
 			}
 			
@@ -273,7 +271,7 @@ public class EditorWorld implements IGameWorld {
 		
 		EList<EntitySpawn> spawns = new EArrayList<>();
 		for (var ent : getEntitiesInWorld()) {
-			spawns.add(new EntitySpawn(ent.worldX, ent.worldY, ent));
+			spawns.add(new EntitySpawn((int) ent.startX, (int) ent.startY, ent));
 		}
 		
 		actualWorld.setEntitySpawns(spawns);
@@ -295,9 +293,9 @@ public class EditorWorld implements IGameWorld {
 		return actualWorld.saveWorldToFile();
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	@Override
 	public WorldTile getTileAt(int layerIn, int xIn, int yIn) {
@@ -336,20 +334,22 @@ public class EditorWorld implements IGameWorld {
 	@Override public boolean isUnderground() { return underground; }
 	@Override public void setUnderground(boolean val) { underground = val; }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	@Override
 	public void setTileAt(WorldTile in, int layerIn, int xIn, int yIn) {
 		if (in == null) in = new VoidTile();
-		if (in != null) in.setWorldPos(xIn, yIn);
-		worldLayers.get(layerIn).set(EditorObject.of(in), xIn, yIn);
+		setTileAt(EditorObject.of(in.copy()), layerIn, xIn, yIn);
 	}
 	
 	public void setTileAt(EditorObject in, int layerIn, int xIn, int yIn) {
-		if (in == null || !in.isTile()) return;
-		in.getTile().setWorldPos(xIn, yIn);
+	    if (in == null) in = EditorObject.of(new VoidTile());
+		if (!in.isTile()) return;
+		WorldTile t = in.getTile();
+		t.setWidthHeight(tileWidth, tileHeight);
+		t.setWorldPos(xIn, yIn);
 		worldLayers.get(layerIn).set(in, xIn, yIn);
 	}
 	
@@ -366,16 +366,7 @@ public class EditorWorld implements IGameWorld {
 	@Override public void onLoad(String... args) {}
 	@Override public void setLoaded(boolean val) {}
 
-	@Override public WorldCamera getCamera() { return null; }
-	@Override public double getCameraZoom() { return 0; }
-	@Override public void setCameraZoom(double zoomIn) {}
-
 	@Override public EnvisionProgram getStartupScript() { return actualWorld.getStartupScript(); }
 	@Override public void setStartupScript(EnvisionProgram program) { actualWorld.setStartupScript(program); }
-	
-    @Override public int getTime() { return 0; }
-    @Override public int getDayLength() { return 0; }
-    @Override public void setTime(int timeInTicks) {}
-    @Override public void setDayLength(int timeInTicks) {}
 	
 }

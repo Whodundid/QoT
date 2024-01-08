@@ -1,12 +1,12 @@
 package envision.engine.windows.developerDesktop.shortcuts;
 
 import envision.Envision;
+import envision.engine.assets.WindowTextures;
 import envision.engine.windows.WindowRegistry;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
-import qot.assets.textures.window.WindowTextures;
 
 public class DesktopShortcut_Window extends DesktopShortcut {
     

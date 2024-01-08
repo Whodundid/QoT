@@ -6,6 +6,7 @@ import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.screens.GameScreen;
 import envision.game.entities.Entity;
 import eutil.colors.EColors;
+import eutil.datatypes.Result;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
 
@@ -68,12 +69,12 @@ public class EntitySpellbook {
 			var full = white.brightness(255);
 			var low = white.brightness(127);
 			int color = full;
-			color = (theEntity.getMana() >= knownAbility.getA().getManaCostForTier(level - 1)) ? color : low;
+			color = (theEntity.getMana() >= knownAbility.getA().getManaCostForTier(level)) ? color : low;
 			RenderingManager.drawTexture(tex, sx, sy, width, height, color);
 			
 			if (cooldown.getA()) {
 				int amount = cooldown.getB();
-				int max = ability.getCooldownForTier(level - 1);
+				int max = ability.getCooldownForTier(level);
 				
 				double ratio = (double) amount / (double) max;
 //				System.out.println(amount + " : " + max + " : " + ratio + " : " + (sy + height - (height * ratio)));
@@ -92,7 +93,7 @@ public class EntitySpellbook {
 	
 	public boolean learnAbility(Ability abilityIn) {
 		if (unlockedAbilities.containsA(abilityIn)) return false;
-		unlockedAbilities.add(abilityIn, 1);
+		unlockedAbilities.add(abilityIn, 0);
 		return true;
 	}
 	
@@ -118,7 +119,7 @@ public class EntitySpellbook {
 		return unlockedAbilities.getBoxWithA(abilityIn);
 	}
 	
-	public Box2<Boolean, String> upgradeAbility(Ability abilityIn) {
+	public Result<Boolean> upgradeAbility(Ability abilityIn) {
 		if (abilityIn == null) return ret(false, "Null ability given!");
 		var box = getKnownAbility(abilityIn);
 		if (box == null) return ret(false, theEntity + " doesn't know the ability '" + abilityIn.getAbilityName() + "'");
@@ -134,7 +135,7 @@ public class EntitySpellbook {
 		return ret(false, ability.getAbilityName() + " Can't be upgraded for some reason!");
 	}
 	
-	private static Box2<Boolean, String> ret(boolean val) { return ret(val, ""); }
-	private static Box2<Boolean, String> ret(boolean val, String reason) { return new Box2<>(val, reason); }
+	private static Result<Boolean> ret(boolean val) { return ret(val, ""); }
+	private static Result<Boolean> ret(boolean val, String reason) { return Result.wrap(val, reason); }
 	
 }

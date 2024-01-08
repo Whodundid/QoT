@@ -87,8 +87,8 @@ public class WorldFileSystem {
 		writer.println("# " + EStringUtil.repeatString("-", theWorld.getWorldName().length() + " config".length()));
 		writer.println();
 		writer.println("underground=" + theWorld.isUnderground());
-		writer.println("timeOfDay=" + theWorld.getTime());
-		writer.println("lengthOfDay=" + theWorld.getDayLength());
+//		writer.println("timeOfDay=" + theWorld.getTime());
+//		writer.println("lengthOfDay=" + theWorld.getDayLength());
 		
 		writer.close();
 	}
@@ -195,6 +195,7 @@ public class WorldFileSystem {
 							if (t == null) System.out.println("NULL: " + tileID + " : " + childID);
 							if (t != null) {
 								if (parts.length == 1) t.setWildCard(true);
+								t.setWidthHeight(mapTileWidth, mapTileHeight);
 								t.setWorldPos(j, i);
 							}
 							layer.setTileAt(t, j, i);

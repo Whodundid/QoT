@@ -23,7 +23,7 @@ public class PointerPress extends Particle {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		if (System.currentTimeMillis() - curTime >= 1) {
 			rad -= 1;
 			curTime = System.currentTimeMillis();

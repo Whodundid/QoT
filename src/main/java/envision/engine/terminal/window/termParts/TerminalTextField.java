@@ -23,7 +23,7 @@ public class TerminalTextField extends WindowTextField {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		super.drawObject(dt, mXIn, mYIn);
 	}
 	

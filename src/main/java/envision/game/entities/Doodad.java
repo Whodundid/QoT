@@ -8,6 +8,11 @@ public abstract class Doodad extends Entity {
         super(nameIn);
         
         addComponent(new EntityRenderer(this, true));
+        this.canBeMoved = false;
+        this.canBeCarried = false;
+        this.canMoveEntities = false;
+        this.canRegenHealth = false;
+        this.canRegenMana = false;
     }
     
 }

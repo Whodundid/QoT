@@ -4,6 +4,7 @@ import envision.Envision;
 import envision.engine.resourceLoaders.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
+import envision.game.entities.combat.EntityAttack;
 import eutil.datatypes.points.Point2i;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
@@ -153,7 +154,9 @@ public class TrollBoar extends Enemy {
 				bonus -= 5;
 			}
 			
-			p.drainHealth(baseMeleeDamage + bonus);
+			int amount = EntityAttack.calculateMeleeAttackDamage(this);
+			amount += bonus;
+            Envision.thePlayer.attackedBy(this, amount);
 		}
 	}
 	

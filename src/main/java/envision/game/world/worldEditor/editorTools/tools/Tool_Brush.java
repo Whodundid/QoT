@@ -4,6 +4,7 @@ import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
 import envision.game.world.worldEditor.editorTools.EditorTool;
 import envision.game.world.worldTiles.WorldTile;
+import eutil.math.ENumUtil;
 
 public class Tool_Brush extends EditorTool {
 	
@@ -30,9 +31,8 @@ public class Tool_Brush extends EditorTool {
 	}
 	
 	private void set(int x, int y) {
-		final int tx = wx + x;
-		final int ty = wy + y;
-		if (tx < 0 || tx >= getWorldWidth() || ty < 0 || ty >= getWorldHeight()) return;
+		final int tx = ENumUtil.clamp(wx + x, 0, getWorldWidth() - 1);
+		final int ty = ENumUtil.clamp(wy + y, 0, getWorldHeight() - 1);
 		setTile(tx, ty, WorldTile.randVariant(tile));
 	}
 	

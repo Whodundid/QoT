@@ -50,7 +50,7 @@ public class WindowImageBox extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		if (drawBorder) drawRect(startX, startY, endX, endY, borderColor);
 		if (drawBackground) drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor);
 		if (drawImage) {

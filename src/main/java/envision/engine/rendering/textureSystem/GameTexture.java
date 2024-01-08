@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
 
+import envision.engine.EngineSettings;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;
@@ -13,8 +14,12 @@ import qot.settings.QoTSettings;
 
 public class GameTexture {
 	
-	public static final String rDir = QoTSettings.getResourcesDir().toString();
-	public static final String tDir = rDir + "\\textures\\";
+    public static final String rDir = EngineSettings.RESOURCES_DIR.toString();
+    public static final String tDir = rDir + "/textures/";
+	
+	//========
+    // Fields
+    //========
 	
 	/** If this texture is a child variant, this is the parent for which it relates. If this value is null, there is no parent and this is not a child texture. */
 	private GameTexture parentTexture;
@@ -43,9 +48,9 @@ public class GameTexture {
 	
 	private BufferedImage image;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public GameTexture(String filePathIn) { this(null, "", filePathIn); }
 	public GameTexture(String basePath, String filePathIn) { this(null, basePath, filePathIn); }
@@ -79,9 +84,9 @@ public class GameTexture {
 //	    
 //	}
 	
-	//-------------------
-	// Protected Methods
-	//-------------------
+	//=========================
+    // Internal Helper Methods
+    //=========================
 	
 	protected void registerChildTextures(TextureSystem systemIn) {
 		for (GameTexture t : children.getAVals()) {
@@ -89,9 +94,9 @@ public class GameTexture {
 		}
 	}
 	
-	//----------------
-	// Public Methods
-	//----------------
+	//=========
+    // Methods
+    //=========
 	
 	public GameTexture setChildID(int id) { childID = id; return this; }
 	public GameTexture addChild(String path) { return addChild(new GameTexture(path)); }
@@ -121,9 +126,9 @@ public class GameTexture {
 		return textureID != -1;
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public GameTexture getParent() { return parentTexture; }
 	public EList<GameTexture> getChildren() { return children.getAVals(); }

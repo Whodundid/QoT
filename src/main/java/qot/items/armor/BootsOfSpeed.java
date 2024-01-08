@@ -14,7 +14,7 @@ public class BootsOfSpeed extends Item {
         this.setIsDestroyedOnUse(true);
         this.setSprite(new Sprite(ItemTextures.boots_of_speed));
         this.setDescription("These boots bestow its wearer with unmatched swiftness");
-        this.setBasePrice(500);
+        this.setBasePrice(100);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class BootsOfSpeed extends Item {
 	}
 
 	@Override
-	public int getInternalSaveID() { return 0; }
+	public int getInternalSaveID() { return ItemList.BOOTS_OF_SPEED.ID; }
 	
 	@Override
 	public void onItemEquip(Entity user) {

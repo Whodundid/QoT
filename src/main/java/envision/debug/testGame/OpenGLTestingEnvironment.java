@@ -11,6 +11,7 @@ import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
+import envision.engine.loader.EnvisionGame;
 import envision.engine.rendering.Camera;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
@@ -22,7 +23,6 @@ import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
-import envision.game.EnvisionGameTemplate;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherLogger;
 import envision.launcher.LauncherSettings;
@@ -40,7 +40,7 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 	private static TextureSystem textureSystem;
 	private static BatchManager batch;
 	
-	public static EnvisionGameTemplate game;
+	public static EnvisionGame game;
 	
 	//private static EDimension windowSize;
 	
@@ -57,8 +57,8 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 	public static void main(String[] args) {
         game = new TestGame() {
             @Override
-            public <T extends EnvisionGameLauncher> T createGameLauncher(LauncherSettings settings) {
-                return (T) new EnvisionGameLauncher(settings) {
+            public EnvisionGameLauncher createGameLauncher(LauncherSettings settings) {
+                return new EnvisionGameLauncher(settings) {
                     @Override
                     protected void launchGame(LauncherSettings settings) {
                         runTestingEnvironment(settings);

@@ -1,6 +1,7 @@
 package envision.game.world.worldEditor.editorParts.topHeader;
 
 import envision.Envision;
+import envision.engine.assets.WindowTextures;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowObject;
@@ -13,7 +14,6 @@ import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.windows.EditorSettingsWindow;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
-import qot.assets.textures.window.WindowTextures;
 
 public class EditorScreenTopHeader extends WindowObject {
 	
@@ -54,7 +54,7 @@ public class EditorScreenTopHeader extends WindowObject {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		double div = scripts.endX + 2;
 		
 		drawRect(EColors.black); //background

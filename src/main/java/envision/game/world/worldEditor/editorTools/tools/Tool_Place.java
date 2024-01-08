@@ -1,5 +1,6 @@
 package envision.game.world.worldEditor.editorTools.tools;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.resourceLoaders.Sprite;
 import envision.game.GameObject;
@@ -14,17 +15,17 @@ public class Tool_Place extends EditorTool {
 	
 	private EditorObject object;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public Tool_Place(MapEditorScreen in) {
 		super(in);
 	}
 
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void drawTool(double x, double y, double w, double h) {
@@ -33,13 +34,15 @@ public class Tool_Place extends EditorTool {
 		//COMPLETELY HASHED TOGETHER :)
 		EditorObject primary = settings.getPrimaryPalette();
 		if (primary == null) return;
+		var camera = Envision.levelManager.getCamera();
+		double zoom = camera.getZoom();
 		Sprite tex = primary.getSprite();
 		double tW = primary.getGameObject().width;
 		double tH = primary.getGameObject().height;
-		double tDrawW = tW * editor.getActualWorld().getCameraZoom();
-		double tDrawH = tH * editor.getActualWorld().getCameraZoom();
-		double tmx = primary.getGameObject().collisionBox.midX * editor.getActualWorld().getCameraZoom();
-		double tmy = primary.getGameObject().collisionBox.midY * editor.getActualWorld().getCameraZoom();
+		double tDrawW = tW * zoom;
+		double tDrawH = tH * zoom;
+		double tmx = primary.getGameObject().collisionBox.midX * zoom;
+		double tmy = primary.getGameObject().collisionBox.midY * zoom;
 		
 		drawSprite(tex, Mouse.getMx() - tmx, Mouse.getMy() - tmy, tDrawW, tDrawH, 0x99ffffff);
 		//drawTexture(tex, mX, mY, tDrawW, tDrawH, 0x99ffffff);
@@ -56,9 +59,9 @@ public class Tool_Place extends EditorTool {
 		else placeObject();
 	}
 	
-	//------------------
-	// Internal Methods
-	//------------------
+	//==================
+    // Internal Methods
+    //==================
 	
 	private void placeTile() {
 		

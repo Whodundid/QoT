@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 
+import envision.engine.assets.WindowTextures;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
@@ -22,13 +23,12 @@ import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
 import eutil.colors.EColors;
 import eutil.datatypes.points.Point2d;
 import eutil.file.FileOpener;
-import qot.assets.textures.window.WindowTextures;
 
 public class FilePreview extends WindowObject {
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     private FileExplorerWindow explorer;
     private File theFile;
@@ -44,9 +44,9 @@ public class FilePreview extends WindowObject {
     private boolean createdMovingFile = false;
     private boolean isRenaming = false;
     
-    //--------------
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public FilePreview(FileExplorerWindow windowIn, File pathIn, int orderPosIn) {
         init(windowIn);
@@ -72,9 +72,9 @@ public class FilePreview extends WindowObject {
         }
     }
     
-    //-----------
+    //===========
     // Overrides
-    //-----------
+    //===========
     
     @Override
     public String toString() {
@@ -105,7 +105,7 @@ public class FilePreview extends WindowObject {
     }
     
     @Override
-    public void drawObject(long dt, int mXIn, int mYIn) {
+    public void drawObject(float dt, int mXIn, int mYIn) {
         super.drawObject(dt, mXIn, mYIn);
         
         int color;

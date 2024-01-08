@@ -24,12 +24,12 @@ public class CMD_CameraZoom extends TerminalCommand {
     public void runCommand() {
         expectNoMoreThan(2);
         
-        if (Envision.theWorld == null) {
-            error("There is no world!");
+        if (Envision.levelManager == null) {
+            error("There is no level!");
             return;
         }
         
-        final var cam = Envision.theWorld.getCamera();
+        final var cam = Envision.levelManager.getCamera();
         
         // if no args -- display current zoom
         if (noArgs()) {

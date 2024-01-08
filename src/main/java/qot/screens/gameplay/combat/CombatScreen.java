@@ -31,7 +31,7 @@ public class CombatScreen extends GameScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.vdgray);
 		
 		drawString("HAHAHAA", midX, midY);

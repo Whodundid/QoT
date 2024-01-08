@@ -2,6 +2,7 @@ package envision.engine.windows.windowObjects.advancedObjects.header;
 
 import envision.Envision;
 import envision.debug.DebugFunctions;
+import envision.engine.assets.WindowTextures;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -18,7 +19,6 @@ import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
-import qot.assets.textures.window.WindowTextures;
 
 //Author: Hunter Bragg
 
@@ -144,7 +144,7 @@ public class WindowHeader extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject_i(long dt, int mX, int mY) {
+	public void drawObject_i(float dt, int mX, int mY) {
 		//preventative logic to stop windows from moving while the left mouse button is not held down
 		if (moving && !Mouse.isButtonDown(0)) {
 			moving = false;
@@ -573,7 +573,7 @@ public class WindowHeader extends WindowObject {
 	protected void addPinButton() {
 		pinButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth) {
 			@Override
-			public void drawObject(long dt, int mXIn, int mYIn) {
+			public void drawObject(float dt, int mXIn, int mYIn) {
 				if (window != null && window.isPinnable()) {
 					setBackgroundColor(window.isPinned() ? 0xffbb0000 : EColors.dgray.c());
 				}

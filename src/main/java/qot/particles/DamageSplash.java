@@ -24,7 +24,7 @@ public class DamageSplash extends Particle {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		if (System.currentTimeMillis() - creationTime >= timeOnScreen) {
 			getParent().removeObject();
 		}

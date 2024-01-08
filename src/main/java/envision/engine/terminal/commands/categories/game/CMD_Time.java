@@ -20,8 +20,8 @@ public class CMD_Time extends TerminalCommand {
 	public void runCommand() {
 	    expectNoMoreThan(2);
 	    
-		if (Envision.theWorld == null) {
-			error("Current World is Null");
+		if (Envision.levelManager == null) {
+			error("Current level is Null");
 			return;
 		}
 		
@@ -53,11 +53,11 @@ public class CMD_Time extends TerminalCommand {
 		    // 12:00 am
 		    case "midnight":
 		    }
-		    Envision.theWorld.setTime(ENumUtil.parseInt(arg(1), 0));
+		    Envision.levelManager.setTime(ENumUtil.parseInt(arg(1), 0));
 		}
 		
-		int curTime = Envision.theWorld.getTime() - 1;
-		int maxTime = Envision.theWorld.getDayLength();
+		int curTime = Envision.levelManager.getTime() - 1;
+		int maxTime = Envision.levelManager.getDayLength();
 		
 		writeln(EColors.yellow, "Current Time: ", EColors.lgreen, curTime, "/", maxTime);
 	}

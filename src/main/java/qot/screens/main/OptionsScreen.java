@@ -78,7 +78,7 @@ public class OptionsScreen extends GameScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.dsteel);
 		
 		drawString("Music Volume", volumeSlider.startX, volumeSlider.startY - 30);

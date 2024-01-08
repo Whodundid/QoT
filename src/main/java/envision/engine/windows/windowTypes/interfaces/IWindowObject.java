@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 import envision.Envision;
+import envision.engine.assets.CursorTextures;
 import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.RenderingManager;
@@ -40,7 +41,6 @@ import eutil.datatypes.util.EList;
 import eutil.debug.DebugToolKit;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
-import qot.assets.textures.cursor.CursorTextures;
 
 // Author: Hunter Bragg
 
@@ -222,7 +222,6 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		var ftm = getFutureTaskManager();
 		if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_INIT);
 		onInit();
-		onPostInit();
 	}
 	
 	/**
@@ -345,7 +344,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	
 	/** Internal event fired from the top parent to draw this object. 
 	 * @param dt TODO*/
-	public default void drawObject_i(long dt, int mXIn, int mYIn) {
+	public default void drawObject_i(float dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		try {
 			if (!willBeDrawn()) return;
@@ -383,9 +382,9 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 	
 	/**
 	 * Called when this object specifically (not children) is being drawn. 
-	 * @param dt TODO
+	 * @param dt The change in
 	 */
-	public default void drawObject(long dt, int mXIn, int mYIn) {}
+	public default void drawObject(float dt, int mXIn, int mYIn) {}
 	
 	/**
 	 * Event fired from this object's pre draw setup to perform
@@ -977,6 +976,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 				getAddingChildren().add(o);
 				// tell the child that it has been fully initialized and that it is ready to be added on the next draw cycle
 				o.onInit_i();
+				o.onPostInit();
 			}
 			catch (Exception e) {
 				e.printStackTrace();

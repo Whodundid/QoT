@@ -79,7 +79,7 @@ public class TestTextureSheetBuilder extends WindowParent {
     }
     
     @Override
-    public void drawObject(long dt, int mXIn, int mYIn) {
+    public void drawObject(float dt, int mXIn, int mYIn) {
         drawDefaultBackground();
         
     }

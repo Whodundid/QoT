@@ -10,6 +10,7 @@ public class Dirt extends WorldTile {
 	public Dirt() {
 		super(TileIDs.DIRT);
 		setSprite(new Sprite(NatureTextures.dirt));
+		setMiniMapColor(0xffAD6637);
 	}
 	
 	@Override

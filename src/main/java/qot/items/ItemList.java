@@ -8,6 +8,8 @@ public enum ItemList {
 	HEALING_MAJOR(3),
 	MANA_MAJOR(4),
 	BOOTS_OF_SPEED(5),
+	WOODEN_STICK(6),
+	DRAGON_SHIELD(7),
 	
 	;
 	

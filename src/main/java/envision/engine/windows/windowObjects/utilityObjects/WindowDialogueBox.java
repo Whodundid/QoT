@@ -92,7 +92,7 @@ public class WindowDialogueBox<E> extends ActionWindowParent {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		
 		if (wordWrappedLines != null) {

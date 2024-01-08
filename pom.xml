@@ -3,6 +3,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>placeholder</groupId>
+        <artifactId>placeholder-bom</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
     <groupId>whodundid</groupId>
     <artifactId>QoT</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -11,35 +18,16 @@
         <lwjgl.version>3.3.3</lwjgl.version>
         <lwjgl.natives>natives-windows</lwjgl.natives>
         <jackson.version>2.15.2</jackson.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jdk-version>21</jdk-version>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <release>${jdk-version}</release>
-                    <parameters>true</parameters>
-                    <testCompilerArgument>-parameters</testCompilerArgument>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>
             <groupId>whodundid</groupId>
             <artifactId>EUtil</artifactId>
-            <version>2.6.6</version>
         </dependency>
         <dependency>
             <groupId>whodundid</groupId>
             <artifactId>Envision-Lang</artifactId>
-            <version>0.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
@@ -141,41 +129,6 @@
             <version>1.1.1</version>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>storm-repo</id>
-            <url>${distUrl}</url>
-        </repository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>storm_repo</id>
-            <name>storm_repo</name>
-            <url>${distUrl}</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>storm_repo</id>
-            <name>storm_repo</name>
-            <url>${distUrl}</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>

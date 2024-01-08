@@ -1,8 +1,12 @@
 package qot.world_tiles.categories.farm;
 
+import envision.Envision;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.resourceLoaders.Sprite;
+import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
+import envision.game.entities.Entity;
 import envision.game.world.worldTiles.WorldTile;
+import eutil.random.ERandomUtil;
 import qot.assets.textures.world.farmland.FarmTextures;
 import qot.assets.textures.world.floors.wood.WoodFloorTextures;
 import qot.world_tiles.TileIDs;
@@ -11,11 +15,12 @@ public class FarmPlot extends WorldTile {
 
 	private int growState;
 	private int curGrowAmount = 0;
-	private int nextGrowStage = 600;
+	private int nextGrowStage = 5000;
+	private boolean fullyGrown = false;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public FarmPlot() {
 		super(TileIDs.FARM_PLOT);
@@ -24,11 +29,14 @@ public class FarmPlot extends WorldTile {
 		wallHeight = 0.20;
 		setSprite(new Sprite(FarmTextures.farm_0));
 		setSideSprite(new Sprite(WoodFloorTextures.wood_siding));
+		
+		growState = ERandomUtil.getRoll(0, 3);
+		setMiniMapColor(0xff8E5C39);
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void onWorldTick() {
@@ -37,23 +45,36 @@ public class FarmPlot extends WorldTile {
 		
 		curGrowAmount++;
 		if (curGrowAmount >= nextGrowStage) {
+		    growState++;
 			update();
 			curGrowAmount = 0;
 		}
 	}
 	
 	@Override
+	public void onMousePress(int mXIn, int mYIn, int button) {
+        if (button == 1) {
+            RightClickMenu rcm = new RightClickMenu(getName());
+            
+            if (fullyGrown) rcm.addOption("Harvest", () -> harvest(Envision.thePlayer));
+            else            rcm.addOption("Plant Crops", this::plantCrops);
+            
+            rcm.displayOnCurrent();
+        }
+	}
+	
+	@Override public boolean hasVariation() { return true; }
+	
+	@Override
 	public WorldTile copy() {
 		return copyFields(this, new FarmPlot());
 	}
 	
-	//------------------
-	// Internal Methods
-	//------------------
+	//=========================
+    // Internal Helper Methods
+    //=========================
 	
 	private void update() {
-		growState++;
-		
 		GameTexture tex = switch (growState) {
 		case 0 -> FarmTextures.farm_0;
 		case 1 -> FarmTextures.farm_1;
@@ -62,16 +83,28 @@ public class FarmPlot extends WorldTile {
 		default -> null;
 		};
 		
+		if (growState >= 3) {
+		    fullyGrown = true;
+		}
+		
 		setSprite(new Sprite(tex));
 	}
 	
-	//---------
+	//=========
 	// Methods
-	//---------
+	//=========
 	
 	public void plantCrops() {
-		growState = 0;
+		growState = 1;
+		curGrowAmount = 0;
 		update();
+	}
+	
+	public void harvest(Entity harvestingEntity) {
+	    if (!fullyGrown) return;
+	    growState = 0;
+	    curGrowAmount = 0;
+	    update();
 	}
 	
 }

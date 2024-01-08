@@ -4,6 +4,7 @@ import envision.engine.inputHandlers.Mouse;
 import envision.engine.rendering.RenderingManager;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
+import envision.game.world.WorldCamera;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.MapEditorSettings;
 import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
@@ -14,6 +15,10 @@ import eutil.datatypes.points.Point2i;
 
 public abstract class EditorTool extends RenderingManager {
 	
+    //========
+    // Fields
+    //========
+    
 	protected MapEditorScreen editor;
 	protected MapEditorSettings settings;
 	protected boolean isSelected = false;
@@ -23,26 +28,26 @@ public abstract class EditorTool extends RenderingManager {
 	protected boolean pressed = false;
 	protected int wx, wy;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	protected EditorTool(MapEditorScreen in) {
 		editor = in;
 		settings = in.getSettings();
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	public void setSelected(boolean val) { isSelected = val; }
 	public boolean isSelected() { return isSelected; }
 	
-	protected WorldTile getTile() { return editor.getActualWorld().getTileAt(wx, wy); }
-	protected WorldTile getTile(int x, int y) { return editor.getActualWorld().getTileAt(x, y); }
-	public int getWorldWidth() { return editor.getActualWorld().getWidth(); }
-	public int getWorldHeight() { return editor.getActualWorld().getHeight(); }
+	protected WorldTile getTile() { return editor.getEditorWorld().getTileAt(wx, wy); }
+	protected WorldTile getTile(int x, int y) { return editor.getEditorWorld().getTileAt(x, y); }
+	public int getWorldWidth() { return editor.getEditorWorld().getWidth(); }
+	public int getWorldHeight() { return editor.getEditorWorld().getHeight(); }
 	protected Point2i getHoverTileCoords() { return editor.getHoverTileCoords(); }
 	protected Point2i getHoverPixelCoords() { return editor.getHoverPixelCoords(); }
 	
@@ -56,18 +61,24 @@ public abstract class EditorTool extends RenderingManager {
 		double tw = editor.getEditorWorld().getTileWidth(); //tile width
 		double th = editor.getEditorWorld().getTileHeight(); //tile height
 		
+		double px = editor.mouseWorldPX;
+		double py = editor.mouseWorldPY;
+		
+		px -= obj.collisionBox.midX;
+		py -= obj.collisionBox.midY;
+		
 		//need to -, - using difference of world coords of middle of collision box
 		int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
 		int mwcy = (int) Math.floor(cmy / th); //mid world coords y
 		
-		return new int[] { wx - mwcx, wy - mwcy };
+		return new int[] { (int) px, (int) py };
 	}
 	
 	protected void addEntityToWorld(Entity ent) {
 		var placement = getPlacementPosition(ent);
 		
 		ent.world = editor.getEditorWorld();
-		ent.setWorldPos(placement[0], placement[1]);
+		ent.setPixelPos(placement[0], placement[1]);
 		
 		//System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
 		editor.getEditorWorld().addEntity(ent);
@@ -87,18 +98,16 @@ public abstract class EditorTool extends RenderingManager {
 	protected void setSecondary(WorldTile t) { editor.getSettings().setSecondaryPalette(EditorObject.of(t)); }
 	protected void setSecondary(Entity t) { editor.getSettings().setSecondaryPalette(EditorObject.of(t)); }
 	
-	//------------------
-	// Abstract Methods
-	//------------------
+	protected WorldCamera camera() { return editor.camera; }
 	
 	protected void drawTool(double x, double y, double w, double h) {}
 	protected void onPress() {}
 	protected void onRelease() {}
 	protected void onUpdate() {}
 	
-	//----------
+	//==========
 	// Internal
-	//----------
+	//==========
 	
 	public void distributeEvent(ToolEvent event, int button) {
 		switch (event) {
@@ -130,8 +139,8 @@ public abstract class EditorTool extends RenderingManager {
 	
 	private void onUpdateI() {
 		if (editor.getCurrentSidePanel() == SidePanelType.TERRAIN) {
-			if (!oldPoint.compare(editor.worldXPos, editor.worldYPos)) {
-				oldPoint.set(editor.worldXPos, editor.worldYPos); //update the old point
+			if (!oldPoint.compare(editor.mouseWorldX, editor.mouseWorldY)) {
+				oldPoint.set(editor.mouseWorldX, editor.mouseWorldY); //update the old point
 				if (editor.isMouseInMap()) {
 					updateWorldPoint();
 					onUpdate();
@@ -139,7 +148,7 @@ public abstract class EditorTool extends RenderingManager {
 			}
 		}
 		else {
-			oldPoint.set(editor.worldXPos, editor.worldYPos); //update the old point
+			oldPoint.set(editor.mouseWorldX, editor.mouseWorldY); //update the old point
 			if (editor.isMouseInMap()) {
 				updateWorldPoint();
 				onUpdate();
@@ -153,8 +162,8 @@ public abstract class EditorTool extends RenderingManager {
 	}
 	
 	private void updateWorldPoint() {
-		wx = editor.worldXPos;
-		wy = editor.worldYPos;
+		wx = editor.mouseWorldX;
+		wy = editor.mouseWorldY;
 	}
 	
 }

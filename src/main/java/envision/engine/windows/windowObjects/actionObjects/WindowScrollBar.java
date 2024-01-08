@@ -125,7 +125,7 @@ public class WindowScrollBar extends ActionObject {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mX, int mY) {
+	public void drawObject(float dt, int mX, int mY) {
 		if (isScrolling && mousePos != null) {
 			if (vertical && mY - mousePos.y != 0) moveThumb(0, mY - mousePos.y);
 			else if (mX - mousePos.x != 0) moveThumb(mX - mousePos.x, 0);

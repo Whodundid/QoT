@@ -58,7 +58,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 	
 	//main draw
 	@Override
-	public void drawObject_i(long dt, int mXIn, int mYIn) {
+	public void drawObject_i(float dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		if (!willBeDrawn()) return;
 		
@@ -445,7 +445,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		}
 	}
 	
-   protected void drawWindowObject(long dt, IWindowObject o) {
+   protected void drawWindowObject(float dt, IWindowObject o) {
         //only draw if the object is actually visible
         if (!o.willBeDrawn() || o.isHidden()) return;
         boolean draw = true;

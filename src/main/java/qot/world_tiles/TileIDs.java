@@ -17,6 +17,7 @@ public enum TileIDs {
 	RED_SAND(8, "Red Sand"),
 	ROCKY_STONE(9, "Rocky Stone"),
 	MUD(10, "Mud"),
+	DARK_WATER(11, "DARK_WATER", EColors.mc_darkblue),
 	
 	DUNG_WALL_A(12, "Dung Wall A"),
 	DUNG_WALL_B(13, "Dung Wall B"),
@@ -56,6 +57,8 @@ public enum TileIDs {
 	
 	BLUE_DUNG_TILE(40, "Blue Dungeon Tile"),
 	DARK_DUNG_FLOOR(41, "Dark Dungeon Floor"),
+	
+	BLUE_WATER(42, "Blue Water"),
 	;
 	
 	public final int tileID;

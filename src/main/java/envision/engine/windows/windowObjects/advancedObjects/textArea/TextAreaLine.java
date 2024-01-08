@@ -71,7 +71,7 @@ public class TextAreaLine<E> extends WindowTextField {
 	//---------------------------
 	
 	@Override
-	public void drawObject_i(long dt, int mXIn, int mYIn) {
+	public void drawObject_i(float dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		updateValues();
 		//boolean current = parentTextArea.getCurrentLine() == this;

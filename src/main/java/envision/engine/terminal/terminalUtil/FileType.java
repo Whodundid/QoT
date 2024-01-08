@@ -2,8 +2,8 @@ package envision.engine.terminal.terminalUtil;
 
 import java.io.File;
 
+import envision.engine.assets.WindowTextures;
 import envision.engine.rendering.textureSystem.GameTexture;
-import qot.assets.textures.window.WindowTextures;
 
 public enum FileType {
 	FILE,

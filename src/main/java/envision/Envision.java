@@ -1,6 +1,7 @@
 package envision;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.ZonedDateTime;
 
 import org.joml.Vector3f;
@@ -20,6 +21,11 @@ import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
+import envision.engine.loader.GameSettings;
+import envision.engine.loader.AbstractWorldCreator;
+import envision.engine.loader.EnvisionGame;
+import envision.engine.loader.GameLoader;
+import envision.engine.loader.LoadedGameDirectory;
 import envision.engine.notifications.NotificationHandler;
 import envision.engine.notifications.util.NotificationType;
 import envision.engine.rendering.GameWindow;
@@ -44,9 +50,6 @@ import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
-import envision.game.AbstractWorldCreator;
-import envision.game.EnvisionGameSettings;
-import envision.game.EnvisionGameTemplate;
 import envision.game.effects.sounds.SoundEngine;
 import envision.game.entities.player.Player;
 import envision.game.manager.LevelManager;
@@ -62,7 +65,6 @@ import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_i;
-import qot.assets.textures.general.GeneralTextures;
 
 @EClass
 public final class Envision implements IRendererErrorReceiver, IEnvisionInputReceiver {
@@ -82,10 +84,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** The auto-set build number of the engine. */
 	public static final String VERSION_BUILD = "82";
 	
-	private static boolean gameCreated = false;
 	public static long updateCounter = 0;
 	
-	public static EnvisionGameTemplate gameInstance;
+	public static EnvisionGame currentGameInstance;
 	public static GameWindow gameWindow;
 	public static String gameName;
 	private static GameScreen startScreen;
@@ -217,35 +218,59 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     
     private static final void createEngineInstance() {
         if (instance != null) {
-            if (gameInstance != null) gameInstance.onPostEngineLoad();
+            if (currentGameInstance != null) currentGameInstance.onPostEngineLoad();
             return;
         }
         
-        if (instance != null || gameCreated) {
+        if (instance != null) {
             throw new IllegalStateException("Engine already created! Only one instance of the Envision Engine may be created per JVM!");
         }
         
         // init game
-        if (gameInstance != null) gameInstance.onPreEngineLoad();
+        if (currentGameInstance != null) currentGameInstance.onPreEngineLoad();
         instance = new Envision();
-        if (gameInstance != null) gameInstance.onPostEngineLoad();
+        if (currentGameInstance != null) currentGameInstance.onPostEngineLoad();
+    }
+    
+    public static void loadGame(String gameJsonPath) throws Exception {
+        File path = new File(gameJsonPath);
+        
+        if (!path.exists()) throw new FileNotFoundException(gameJsonPath);
+        
+        LoadedGameDirectory dir = GameLoader.loadGameFromDirectory(path);
+        
+        if (dir == null) throw new IllegalStateException("Loaded game directory returned null!");
+        
+        EnvisionGame game = new EnvisionGame(dir);
+        currentGameInstance = game;
+        gameName = currentGameInstance.getGameName();
+        
+        if (instance == null) createEngineInstance();
+        
+        LauncherLogger.log("========================");
+        LauncherLogger.log(" Loading game from JSON");
+        LauncherLogger.log("========================");
+        
+        startGame();
     }
     
     public static void loadGame(LauncherSettings settings) {
-        gameInstance = settings.getGame();
-        gameName = gameInstance.getGameName();
+        currentGameInstance = settings.getGame();
+        gameName = currentGameInstance.getGameName();
         
-        var gameSettings = gameInstance.getGameSettings();
+        var gameSettings = currentGameInstance.getGameSettings();
         gameSettings.initializeSettings(settings.INSTALL_DIR, settings.USE_INTERNAL_RESOURCES_PATH);
         
-        createEngineInstance();
+        if (instance == null) createEngineInstance();
         
-        LauncherLogger.log("============================");
-        LauncherLogger.log(" Running game with settings:\n" + settings);
-        LauncherLogger.log("============================\n");
-        
-        gameCreated = true;
+        LauncherLogger.log("=============================");
+        LauncherLogger.log(" Loading game with settings:\n" + settings);
+        LauncherLogger.log("=============================\n");
     }
+    
+//    public static void switchToGame(String gameName) {
+//        
+//    }
     
     public static void setWindowIcon(GameTexture textureIn) {
         if (!init) return;
@@ -317,7 +342,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
         // register internal engine textures first
         EngineTextures.instance().onRegister(textureSystem);
         // then register the game instance's textures
-        gameInstance.onRegisterInternalTextures(textureSystem);
+        currentGameInstance.onRegisterInternalTextures(textureSystem);
 	}
 	
 	private void setupEngine() {
@@ -350,8 +375,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
 	private void onShutdown() {
 		info("Shutting down engine!");
-		if (gameInstance != null) {
-			gameInstance.onPreGameUnload();
+		if (currentGameInstance != null) {
+			currentGameInstance.onPreGameUnload();
 		}
 		
 		running = false;
@@ -359,8 +384,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		thePlayer = null;
 		currentScreen = null;
 		
-		if (gameInstance != null) {
-			gameInstance.onPostGameUnload();
+		if (currentGameInstance != null) {
+			currentGameInstance.onPostGameUnload();
 		}
 		
 		TextureSystem.getInstance().destroyAllTextures();
@@ -493,7 +518,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 				//currentScreen.drawString("deltaU: " + deltaU, 0, currentScreen.endY - currentScreen.midY / 2 + 25, EColors.aquamarine);
 			}
 			else {
-				RenderingManager.drawTexture(GeneralTextures.noscreens, 128, 128, 384, 384);
+				RenderingManager.drawTexture(EngineTextures.noscreens, 128, 128, 384, 384);
 				RenderingManager.drawString("No Screens?", 256, 256);
 			}
 			
@@ -680,23 +705,29 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 			}
 			
 			if (previous != null) {
-				old.getScreenHistory().push(previous);
-				currentScreen.setScreenHistory(old.getScreenHistory());
+			    currentScreen.setScreenHistory(old.getScreenHistory());
+				//System.out.println("PRE: " + screenIn + " : " + currentScreen.getScreenHistory());
+			    currentScreen.getScreenHistory().push(old);
+				//System.out.println("POST: " + screenIn + " : " + currentScreen.getScreenHistory());
 			}
 			
 			if (init) {
 				try {
+				    currentScreen.onPreInit();
 					currentScreen.setWindowSize();
 					currentScreen.initScreen();
-					currentScreen.initChildren();
+					currentScreen.reInitChildren();
+					currentScreen.onPostInit();
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 					currentScreen = old;
 					
-					old.setWindowSize();
-					currentScreen.initScreen();
-					currentScreen.initChildren();
+					currentScreen.onPreInit();
+                    currentScreen.setWindowSize();
+                    currentScreen.initScreen();
+                    currentScreen.reInitChildren();
+                    currentScreen.onPostInit();
 				}
 			}
 		}
@@ -723,11 +754,11 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	 * @param worldIn The game world to load
 	 * @return The game world to be loaded
 	 */
-	public static GameWorld loadWorld(GameWorld worldIn) {
-	    return loadWorld(worldIn, true);
+	public static GameWorld loadLevel(GameWorld worldIn) {
+	    return loadLevel(worldIn, true);
 	}
     
-    public static GameWorld loadWorld(GameWorld worldIn, boolean isNewLevel) {
+    public static GameWorld loadLevel(GameWorld worldIn, boolean isNewLevel) {
 //        if (theWorld != null) {
 //            QoTSettings.lastMap.set(theWorld.getWorldName().replace(".twld", ""));            
 //        }
@@ -750,6 +781,14 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
         
         return worldIn;
     }
+    
+    public static void loadWorld(File worldFile) {
+        if (levelManager == null) {
+            levelManager = new LevelManager();
+            levelManager.loadDefaultRules();
+        }
+        levelManager.tryLoadWorld(worldFile);
+    }
 	
 	public static boolean isPaused() { return pause; }
 	public static boolean isWorldRenderPaused() { return !renderWorld; }
@@ -766,7 +805,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	/** Returns the name of the game object that the engine is running. */
 	public static String getGameName() { return gameName; }
 	/** Returns the game object that the engine is running. */
-	public static EnvisionGameTemplate getGame() { return gameInstance; }
+	public static EnvisionGame getGame() { return currentGameInstance; }
 	
 	/** Returns true if the Envision Engine has been fully initialized. */
 	public static boolean isInit() { return init; }
@@ -865,17 +904,17 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     // Static Game Instance Wrappers
     //===============================
     
-    public static GameScreen getStartScreen() { return gameInstance.getStartScreen(); }
-    public static GameScreen getMainMenuScreen() { return gameInstance.getMainMenuScreen(); }
-    public static GameScreen getNewGameScreen() { return gameInstance.getNewGameScreen(); }
-    public static EnvisionGameSettings getGameSettings() { return gameInstance.getGameSettings(); }
+    public static GameScreen getStartScreen() { return currentGameInstance.getStartScreen(); }
+    public static GameScreen getMainMenuScreen() { return currentGameInstance.getMainMenuScreen(); }
+    public static GameScreen getNewGameScreen() { return currentGameInstance.getNewGameScreen(); }
+    public static GameSettings getGameSettings() { return currentGameInstance.getGameSettings(); }
     public static EList<ConfigSetting<?>> getGameConfigSettings() { return getGameSettings().getConfigSettings(); }
-    public static EnvisionConfigFile getGameConfig() { return gameInstance.getConfigFile(); }
+    public static EnvisionConfigFile getGameConfig() { return currentGameInstance.getGameConfig(); }
     public static boolean reloadGameConfig() { var c = getGameConfig(); return (c != null) && c.loadConfig(); }
     public static boolean saveGameConfig() { var c = getGameConfig(); return (c != null) && c.saveConfig(); }
-    public static File getGameResourcesDirectory() { return getGameSettings().getResourcesDirectory(); }
-    public static File getGameInstallationDirectory() { return getGameSettings().getInstallationDirectory(); }
-    public static File getGameSavedGamesDirectory() { return getGameSettings().getSavedGamesDirectory(); }
-    public static AbstractWorldCreator getGameWorldCreator() { return gameInstance.getWorldCreator(); }
+    public static File getGameResourcesDirectory() { return currentGameInstance.getResourcesDirectory(); }
+    public static File getGameInstallationDirectory() { return currentGameInstance.getInstallationDirectory(); }
+    public static File getGameSavedGamesDirectory() { return currentGameInstance.getSavedGamesDirectory(); }
+    public static AbstractWorldCreator getGameWorldCreator() { return currentGameInstance.getWorldCreator(); }
 	
 }

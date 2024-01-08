@@ -1,7 +1,6 @@
 package envision.debug.testStuff;
 
 import envision.engine.events.GameEvent;
-import envision.engine.rendering.GLObject;
 import envision.engine.resourceLoaders.Sprite;
 import envision.engine.screens.GameScreen;
 import eutil.colors.EColors;
@@ -32,7 +31,7 @@ public class TestScreen extends GameScreen {
     
     /** Called everytime this screen is about to be drawn. */
     @Override
-    public void drawScreen(int mXIn, int mYIn) {
+    public void drawScreen(float dt, int mXIn, int mYIn) {
         Sprite s = fields.get("sprite");
         Rotation r = fields.get("rot");
         drawRect(100, 300, 400, 600, EColors.skyblue);

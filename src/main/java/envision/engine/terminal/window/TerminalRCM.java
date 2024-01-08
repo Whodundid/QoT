@@ -1,12 +1,12 @@
 package envision.engine.terminal.window;
 
+import envision.engine.assets.WindowTextures;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.window.termParts.TerminalTextField;
 import envision.engine.terminal.window.termParts.TerminalTextLine;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import qot.assets.textures.window.WindowTextures;
 
 public class TerminalRCM extends RightClickMenu {
 

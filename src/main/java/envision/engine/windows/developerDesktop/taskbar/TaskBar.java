@@ -3,6 +3,7 @@ package envision.engine.windows.developerDesktop.taskbar;
 import java.util.Collections;
 
 import envision.Envision;
+import envision.engine.assets.WindowTextures;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.WindowParent;
@@ -15,7 +16,6 @@ import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.misc.ScreenLocation;
 import eutil.strings.EStringUtil;
-import qot.assets.textures.window.WindowTextures;
 
 public class TaskBar extends WindowObject {
 	
@@ -25,18 +25,18 @@ public class TaskBar extends WindowObject {
 	
 	//----------------------------------------------
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	public static EList<TaskBarButton> buttons = EList.newList();
 	protected static EList<IWindowParent> toAdd = EList.newList();
 	protected static EList<IWindowParent> toRemove = EList.newList();
 	ScreenLocation drawSide = ScreenLocation.TOP;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public TaskBar() { this(false); }
 	public TaskBar(boolean fromScratch) {
@@ -44,19 +44,19 @@ public class TaskBar extends WindowObject {
 		if (fromScratch) buildFromScratch();
 	}
 	
-	//----------------
-	// Static Methods
-	//----------------
+	//================
+    // Static Methods
+    //================
 	
 	public static synchronized void windowOpened(IWindowParent window) { toAdd.add(window); }
 	public static synchronized void windowClosed(IWindowParent window) { toRemove.add(window); }
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		//validate buttons
 		updateLists();
 		
@@ -174,17 +174,17 @@ public class TaskBar extends WindowObject {
 		updateLists();
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public boolean isVertical() {
 		return drawSide == ScreenLocation.LEFT || drawSide == ScreenLocation.RIGHT;
 	}
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public void setDrawSide(ScreenLocation sideIn) {
 		if (sideIn != ScreenLocation.OUT) {

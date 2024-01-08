@@ -17,11 +17,12 @@ public class ConfigSetting<T> {
 	protected String settingName = "";
 	protected String description = "";
 	protected boolean requiresDev = false;
-	protected T val = null;
-	protected T defaultVal = null;
+	protected T value = null;
+	protected T defaultValue = null;
 	protected JavaDatatype type;
 	protected EList<T> validOptions = EList.newList();
-	protected final Class<T> cType;
+	protected String className;
+	protected Class<T> cType;
 	protected boolean ignoreConfigRead = false;
 	protected boolean ignoreConfigWrite = false;
 	protected boolean hasRange = false;
@@ -32,11 +33,24 @@ public class ConfigSetting<T> {
 	// Constructors
 	//==============
 	
+	public ConfigSetting(String classNameIn, String settingNameIn, String descriptionIn) {
+	    settingName = settingNameIn;
+	    className = classNameIn;
+	    try {
+	        cType = (Class<T>) Class.forName(className);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    description = (settingNameIn != null && descriptionIn == null) ? settingNameIn : descriptionIn;
+	    parseDataType();
+	}
+	
 	public ConfigSetting(Class<T> cTypeIn, String settingNameIn, String descriptionIn, T initialValue) {
 		settingName = settingNameIn;
-		val = initialValue;
-		defaultVal = initialValue;
+		value = initialValue;
+		defaultValue = initialValue;
 		cType = cTypeIn;
+		className = cType.getName();
 		description = (settingNameIn != null && descriptionIn == null) ? settingNameIn : descriptionIn;
 		parseDataType();
 	}
@@ -47,22 +61,26 @@ public class ConfigSetting<T> {
 	
 	@Override
 	public String toString() {
-	    return "{" + settingName + ":" + val + "}";
+	    return "{" + settingName + ":" + value + "}";
 	}
 	
 	//=========
 	// Methods
 	//=========
 	
-	public ConfigSetting<T> reset() { set(defaultVal); return this; }
+	public ConfigSetting<T> reset() { set(defaultValue); return this; }
 	
 	public T toggle() {
 		if (cType.isAssignableFrom(Boolean.class)) {
-			Boolean b = (Boolean) cType.cast(val);
+			Boolean b = (Boolean) cType.cast(value);
 			b = !b;
 			set(cType.cast(b));
 		}
-		return val;
+		return value;
+	}
+	
+	public ConfigSettingDTO convertToDTO() {
+	    return new ConfigSettingDTO(settingName, description, cType.getName(), String.valueOf(defaultValue));
 	}
 	
 	//=========
@@ -71,16 +89,16 @@ public class ConfigSetting<T> {
 	
 	public String getName() { return settingName; }
 	public String getDescription() { return description; }
-	public String asString() { return String.valueOf(val); }
-	public String defAsString() { return String.valueOf(defaultVal); }
+	public String asString() { return String.valueOf(value); }
+	public String defAsString() { return String.valueOf(defaultValue); }
 	public JavaDatatype getType() { return type; }
 	public Class<T> getClassType() { return cType; }
-	public T get() { return val; }
+	public T get() { return value; }
 	public boolean getRequiresDev() { return requiresDev; }
 	public EList<T> getValidOptions() { return validOptions; }
 	public T getMinValue() { return minValue; }
 	public T getMaxValue() { return maxValue; }
-	public T getDefault() { return defaultVal; }
+	public T getDefault() { return defaultValue; }
 	public boolean getIgnoreConfigRead() { return ignoreConfigRead; }
 	public boolean getIgnoreConfigWrite() { return ignoreConfigWrite; }
 	public boolean hasRange() { return hasRange; }
@@ -102,18 +120,33 @@ public class ConfigSetting<T> {
                 throw new RuntimeException("No idea how to cast '" + valIn + "' to a '" + cType + "'");
             };
             
-            val = cType.cast(obj);
-            return val;
+            value = cType.cast(obj);
+            return value;
         }
         
-        val = valIn;
-        return val;
+        value = valIn;
+        return value;
 	}
 	
+    /**
+     * Sets the default value and immediately applies it as this config
+     * setting's value.
+     * 
+     * @param value The default value to set
+     * 
+     * @return This config setting
+     */
+    public ConfigSetting<T> setDefaultAndApply(T value) {
+        defaultValue = value;
+        this.value = defaultValue;
+        return this;
+    }
+    
 	public ConfigSetting<T> setValidOptions(T... argsIn) { validOptions.add(argsIn); return this; }
 	public ConfigSetting<T> setValidOptions(Collection<T> argsIn) { validOptions.addAll(argsIn); return this; }
 	public ConfigSetting<T> setRange(T min, T max) { minValue = min; maxValue = max; hasRange = true; return this; }
 	public ConfigSetting<T> setDevSetting(boolean val) { requiresDev = val; return this; }
+	public ConfigSetting<T> setDefaultValue(T value) { defaultValue = value; return this; }
 	public ConfigSetting<T> setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
 	public ConfigSetting<T> setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
 	
@@ -122,12 +155,12 @@ public class ConfigSetting<T> {
 	//==================
 	
 	private void parseDataType() {
-		if (val == null) {
+		if (value == null) {
 		    type = OBJECT;
 		    return;
 		}
 		
-		Class<?> c = val.getClass();
+		Class<?> c = value.getClass();
 		try {
 			if (c.isAssignableFrom(Boolean.class))           type = BOOLEAN;
 			else if (c.isAssignableFrom(Character.class))    type = CHAR;

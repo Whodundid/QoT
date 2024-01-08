@@ -10,6 +10,7 @@ public class SandyDirt extends WorldTile {
 	public SandyDirt() {
 		super(TileIDs.SANDY_DIRT);
 		setSprite(new Sprite(NatureTextures.sandy_dirt));
+		setMiniMapColor(0xff48421C);
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ public class Water extends WorldTile {
 		setSprite(new Sprite(WaterTextures.water));
 		setWall(true);
 		wallHeight = -0.05;
+		setMiniMapColor(0xff0062A8);
 	}
 	
 	@Override

@@ -1,11 +1,11 @@
 package envision.engine.notifications.window;
 
 import envision.Envision;
+import envision.engine.assets.WindowTextures;
 import envision.engine.notifications.util.NotificationObject;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.ObjectPosition;
-import qot.assets.textures.window.WindowTextures;
 
 //Author: Hunter Bragg
 

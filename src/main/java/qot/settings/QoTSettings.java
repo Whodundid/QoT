@@ -5,14 +5,13 @@ import static envision.engine.settings.config.ConfigSetting.*;
 import java.io.File;
 
 import envision.Envision;
-import envision.engine.settings.MainConfigFile;
+import envision.engine.loader.GameSettings;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.settings.config.setting_types.BooleanConfigSetting;
 import envision.engine.settings.config.setting_types.IntegerConfigSetting;
-import envision.game.EnvisionGameSettings;
 import eutil.datatypes.util.EList;
 
-public class QoTSettings extends EnvisionGameSettings {
+public class QoTSettings extends GameSettings {
     
     //=================
     // Static Instance
@@ -145,9 +144,9 @@ public class QoTSettings extends EnvisionGameSettings {
         return mainConfig.trySave();
     }
     
-    @Override public File getInstallationDirectory() { return localGameDir; }
-    @Override public File getResourcesDirectory() { return resourcesDir; }
-    @Override public File getSavedGamesDirectory() { return savesDir; }
+    public File getInstallationDirectory() { return localGameDir; }
+    public File getResourcesDirectory() { return resourcesDir; }
+    public File getSavedGamesDirectory() { return savesDir; }
     
     public static File getResourcesDir() { return resourcesDir; }
     public static File getLocalGameDir() { return localGameDir; }

@@ -14,10 +14,18 @@ public class RoughRocky extends WorldTile {
 		setSprite(new Sprite(RockTextures.rough_rocky));
 		setBlocksMovement(true);
 		setWall(true);
-		wallHeight = ERandomUtil.getRoll(0.25, 0.75);
 		
-		rotation = Rotation.random();
+		randomizeValues();
+		setMiniMapColor(0xff646443);
 	}
+	
+	@Override
+	public void randomizeValues() {
+	    wallHeight = ERandomUtil.getRoll(0.25, 0.75);
+	    rotation = Rotation.random();
+	}
+	
+	@Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

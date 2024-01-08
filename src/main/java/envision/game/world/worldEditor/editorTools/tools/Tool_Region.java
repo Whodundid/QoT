@@ -1,5 +1,6 @@
 package envision.game.world.worldEditor.editorTools.tools;
 
+import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
 import envision.game.world.Region;
 import envision.game.world.worldEditor.MapEditorScreen;
@@ -38,7 +39,7 @@ public class Tool_Region extends EditorTool {
 			double drawDistX = editor.drawDistX;
 			double drawDistY = editor.drawDistY;
 			
-			double z = editor.getActualWorld().getCameraZoom();
+			double z = Envision.levelManager.getCameraZoom();
 			double sX = (r.startX * z);
 			double sY = (r.startY * z);
 			double rw = (r.width * z);

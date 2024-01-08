@@ -180,6 +180,15 @@ public class RenderingManager {
 				 color);
 	}
 	
+    /** Draws a filled rectangle. [startX, startY, endX, endY] */
+    public static void drawRect(double[] area, EColors colorIn) {
+        drawRect(area[0], area[1], area[2], area[3], colorIn.intVal);
+    }
+    /** Draws a filled rectangle. [startX, startY, endX, endY] */
+    public static void drawRect(double[] area, int colorIn) {
+        drawRect(area[0], area[1], area[2], area[3], colorIn);
+    }
+	
 	/** Draws a filled rectangle. */
 	public static void drawRect(double left, double top, double right, double bottom, EColors colorIn) {
 		drawRect(left, top, right, bottom, colorIn.intVal);
@@ -189,8 +198,25 @@ public class RenderingManager {
 		if (BatchManager.isEnabled()) BatchManager.drawRect(left, top, right, bottom, color);
 		else GLObject.drawRect(left, top, right, bottom, color);
 	}
+
+    /** Draws a filled rectangle. [x, y, w, h] */
+    public static void drawRectDimsArray(double[] xywh, EColors colorIn) {
+        drawRect(xywh[0], xywh[1], xywh[0] + xywh[2], xywh[1] + xywh[3], colorIn.intVal);
+    }
+    /** Draws a filled rectangle. [x, y, w, h] */
+    public static void drawRectDimsArray(double[] xywh, int colorIn) {
+        drawRect(xywh[0], xywh[1], xywh[0] + xywh[2], xywh[1] + xywh[3], colorIn);
+    }
 	
-	
+    /** Draws a hollow rectangle. [startX, startY, endX, endY] */
+    public static void drawHRect(double[] area, double borderWidth, EColors colorIn) {
+        drawHRect(area[0], area[1], area[2], area[3], borderWidth, colorIn.intVal);
+    }
+    /** Draws a hollow rectangle. [startX, startY, endX, endY] */
+    public static void drawHRect(double[] area, double borderWidth, int colorIn) {
+        drawHRect(area[0], area[1], area[2], area[3], borderWidth, colorIn);
+    }
+
 	/** Draws a hollow rectangle with variable line width. */
 	public static void drawHRect(double left, double top, double right, double bottom, double borderWidth, EColors colorIn) { drawHRect(left, top, right, bottom, borderWidth, colorIn.intVal); }
 	/** Draws a hollow rectangle with variable line width. */
@@ -200,6 +226,15 @@ public class RenderingManager {
 		drawRect(right - borderWidth, top, right, bottom, color); //right
 		drawRect(left, bottom - borderWidth, right, bottom, color); //bottom
 	}
+	
+	/** Draws a hollow rectangle. [x, y, w, h] */
+    public static void drawHRectDimsArray(double[] xywh, double borderWidth, EColors colorIn) {
+        drawHRect(xywh[0], xywh[1], xywh[0] + xywh[2], xywh[1] + xywh[3], borderWidth, colorIn.intVal);
+    }
+    /** Draws a hollow rectangle. [x, y, w, h] */
+    public static void drawHRectDimsArray(double[] xywh, double borderWidth, int colorIn) {
+        drawHRect(xywh[0], xywh[1], xywh[0] + xywh[2], xywh[1] + xywh[3], borderWidth, colorIn);
+    }
 	
 	/** Draws a filled rectangle within the given dimension bounds. */
     public static void drawHRect(IDimension<?> dims, EColors color) { drawHRect(dims, color.intVal, 1); }
@@ -230,6 +265,14 @@ public class RenderingManager {
         if (BatchManager.isEnabled()) BatchManager.drawTexture(tex, x, y, w, h, coords, color, rotation, flip);
         else GLObject.drawTexture(tex, x, y, w, h, flip, rotation, color);
     }
+    
+    public static void drawTextureDimsArray(GameTexture tex, double[] area) { drawTexture(tex, area[0], area[1], area[2], area[3], false, Rotation.UP, 0xffffffff); }
+    public static void drawTextureDimsArray(GameTexture tex, double[] area, int color) { drawTexture(tex, area[0], area[1], area[2], area[3], false, Rotation.UP, color); }
+    public static void drawTextureDimsArray(GameTexture tex, double[] area, Rotation rotation) { drawTexture(tex, area[0], area[1], area[2], area[3], false, rotation, 0xffffffff); }
+    public static void drawTextureDimsArray(GameTexture tex, double[] area, boolean flip) { drawTexture(tex, area[0], area[1], area[2], area[3], flip, Rotation.UP, 0xffffffff); }
+    public static void drawTextureDimsArray(GameTexture tex, double[] area, boolean flip, int color) { drawTexture(tex, area[0], area[1], area[2], area[3], flip, Rotation.UP, color); }
+    public static void drawTextureDimsArray(GameTexture tex, double[] area, boolean flip, Rotation rotation) { drawTexture(tex, area[0], area[1], area[2], area[3], flip, rotation, 0xffffffff); }
+    public static void drawTextureDimsArray(GameTexture tex, double[] area, boolean flip, Rotation rotation, int color) { drawTexture(tex, area[0], area[1], area[2], area[3], flip, rotation, color); }
     
 	/** Draws a texture with the given dimensions. */
 	//static void drawTexture(double x, double y, double w, double h) { drawTexture(TextureSystem.getInstance().getBoundTexture(), x, y, w, h, false, Rotation.UP, 0xffffffff); }

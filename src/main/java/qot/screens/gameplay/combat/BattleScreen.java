@@ -64,7 +64,7 @@ public class BattleScreen extends GameScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.pdgray);
 		drawLine(startX, endY - 175, endX, endY - 174, EColors.black);
 		drawRect(startX, endY - 174, endX, endY, EColors.vdgray);
@@ -121,7 +121,7 @@ public class BattleScreen extends GameScreen {
 		}
 		
 		@Override
-		public void drawObject(long dt, int mXIn, int mYIn) {
+		public void drawObject(float dt, int mXIn, int mYIn) {
 			drawSprite(ent.sprite, teamA);
 			if (isMouseInside()) drawHRect(EColors.yellow);
 			

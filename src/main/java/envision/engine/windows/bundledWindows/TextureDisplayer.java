@@ -4,6 +4,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import envision.engine.assets.TaskBarTextures;
+import envision.engine.assets.WindowTextures;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
@@ -14,14 +16,12 @@ import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
 import eutil.math.ENumUtil;
-import qot.assets.textures.taskbar.TaskBarTextures;
-import qot.assets.textures.window.WindowTextures;
 
 public class TextureDisplayer extends WindowParent {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	private WindowButton previous, next, open;
 	private WindowImageBox imageBox;
@@ -37,18 +37,18 @@ public class TextureDisplayer extends WindowParent {
 	private boolean centered = false;
 	private boolean navigationDrawn = false;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public TextureDisplayer() { this((GameTexture) null); }
 	public TextureDisplayer(Path pathIn) { path = pathIn; }
 	public TextureDisplayer(File fileIn) { file = fileIn; }
 	public TextureDisplayer(GameTexture textureIn) { tex = textureIn; }
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void initWindow() {
@@ -90,7 +90,7 @@ public class TextureDisplayer extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		super.drawObject(dt, mXIn, mYIn);
 	}
@@ -108,9 +108,9 @@ public class TextureDisplayer extends WindowParent {
 		super.close();
 	}
 	
-	//------------------
-	// Internal Methods
-	//------------------
+	//==================
+    // Internal Methods
+    //==================
 	
 	private void parseForImage() {
 		if (tex != null) {

@@ -4,6 +4,7 @@ import envision.Envision;
 import envision.engine.resourceLoaders.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
+import envision.game.entities.combat.EntityAttack;
 import envision.game.world.GameWorld;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
@@ -71,7 +72,8 @@ public class Whodundid extends Enemy {
 			else {
 				hit = true;
 				timeSinceLastHit = System.currentTimeMillis();
-				Envision.thePlayer.drainHealth(getBaseMeleeDamage());
+				int amount = EntityAttack.calculateMeleeAttackDamage(this);
+                Envision.thePlayer.attackedBy(this, amount);
 			}
 		}
 		

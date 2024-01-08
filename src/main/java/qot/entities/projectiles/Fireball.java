@@ -33,6 +33,8 @@ public class Fireball extends BasicRenderedEntity {
 		
 		this.spawningObject = spawningObject;
 		setSpeed(270);
+		canBeCarried = false;
+        canBeMoved = false;
 	}
 	
 	/**
@@ -40,7 +42,8 @@ public class Fireball extends BasicRenderedEntity {
 	 * towards the cursor. If it touches Enemy Entities, it will do damage to them accordingly. If they are below the minimum health
 	 * they will be destroyed 
 	 */
-	@Override public void onLivingUpdate(float dt) {
+	@Override
+	public void onLivingUpdate(float dt) {
 		var cur = System.currentTimeMillis();
 		
 		if (!spawned) {
@@ -85,7 +88,6 @@ public class Fireball extends BasicRenderedEntity {
 	}
 	
 	private void damageGround(int x, int y) { damageGround(x, y, 1); }
-	
 	private void damageGround(int x, int y, int amount) {
 		if (!(x >= 0 && x < world.getWidth() && y >= 0 && y < world.getHeight())) return;
 		

@@ -5,6 +5,8 @@ import java.io.File;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
+import envision.game.items.Item;
+import envision.game.items.ItemOnGround;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.worldTiles.WorldTile;
 import envision_lang._launch.EnvisionProgram;
@@ -20,6 +22,7 @@ public interface IGameWorld {
 	
 	boolean saveWorldToFile();
 	boolean loadWorld();
+	default boolean isFileLoaded() { return false; }
 	
 	int getWidth();
 	int getHeight();
@@ -42,10 +45,6 @@ public interface IGameWorld {
 	PlayerSpawnPoint getPlayerSpawn();
 	void setPlayerSpawn(int x, int y);
 	
-	WorldCamera getCamera();
-	default double getInitialCameraZoom() { return 0.0; }
-	double getCameraZoom();
-	void setCameraZoom(double zoomIn);
 	EnvisionProgram getStartupScript();
 	void setStartupScript(EnvisionProgram program); 
 	
@@ -57,15 +56,6 @@ public interface IGameWorld {
 	void onRenderTick(float partial);
 	WorldRenderer getWorldRenderer();
 	
-	default int getInitialTime() { return 0; }
-	int getTime();
-	int getDayLength();
-	void setTime(int timeInTicks);
-	void setDayLength(int lengthInTicks);
-	default boolean isDay() { return true; }
-	default boolean isNight() { return false; }
-	default boolean isSunrise() { return false; }
-	default boolean isSunset() { return false; }
 	default int getAmbientLightLevel() { return 255; }
 	
 	boolean isUnderground();
@@ -74,6 +64,7 @@ public interface IGameWorld {
 	default double getDistance(GameObject a, GameObject b) { return -1; }
 	default double distanceTo(GameObject ent, Point2d point) { return -1; }
 	default EList<Entity> getAllEntitiesWithinDistance(GameObject obj, double maxDistance) { return EList.newList(); }
+	default EList<Entity> getAllEntitiesWithinSquaredDistance(GameObject obj, double distSquared) { return EList.newList(); }
 	default EList<GameObject> getAllGameObjectsWithinDistance(GameObject obj, double maxDistance) { return EList.newList(); }
 	default Direction getDirectionTo(GameObject start, GameObject dest) { return Direction.OUT; }
 	default double getAngleInDegressTo(GameObject start, GameObject dest) { return 0.0; }
@@ -86,5 +77,10 @@ public interface IGameWorld {
 	default void addEntity(Entity... ents) { addObjectToWorld(ents); }
 	default void removeEntity(Entity... ents) { removeObjectFromWorld(ents); }
 	
+	default void dropItemOnGround(Item item, double x, double y) {
+	    var loot = new ItemOnGround(item, 20000);
+	    loot.setWorldPos((int) x, (int) y);
+	    addEntity(loot);
+	}
 	
 }

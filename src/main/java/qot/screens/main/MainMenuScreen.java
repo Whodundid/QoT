@@ -2,15 +2,19 @@ package qot.screens.main;
 
 import java.io.File;
 
+import org.joml.Vector2f;
+
 import envision.Envision;
 import envision.debug.DebugSettings;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.resourceLoaders.Sprite;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.effects.sounds.SoundEngine;
+import envision.game.manager.LevelManager;
 import envision.game.world.GameWorld;
 import envision.game.world.worldEditor.MapMenuScreen;
 import eutil.colors.EColors;
@@ -18,8 +22,10 @@ import eutil.math.ENumUtil;
 import eutil.random.ERandomUtil;
 import eutil.timing.ESimpleTimer;
 import qot.assets.sounds.Songs;
+import qot.assets.textures.effects.EffectsTextures;
 import qot.assets.textures.general.GeneralTextures;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
+import qot.assets.textures.world.walls.dungeon.DungeonWallTextures;
 import qot.settings.QoTSettings;
 
 public class MainMenuScreen extends GameScreen {
@@ -29,12 +35,18 @@ public class MainMenuScreen extends GameScreen {
 	private boolean secret = false;
 	
 	private volatile GameWorld menuWorld = null;
-	private ESimpleTimer fadeInTimer = new ESimpleTimer(1300l);
+	private int fromX, fromY;
+	private int toX, toY;
+	private Vector2f camMoveDir;
+	
+	private ESimpleTimer fadeInTimer = new ESimpleTimer(2000l);
 	private ESimpleTimer nextWorldTimer = new ESimpleTimer(5000l);
-	private ESimpleTimer fadeOutTimer = new ESimpleTimer(1300l);
-	private ESimpleTimer fadeDelayTimer = new ESimpleTimer(100l);
+	private ESimpleTimer fadeOutTimer = new ESimpleTimer(2000l);
+	private ESimpleTimer fadeDelayTimer = new ESimpleTimer(500l);
 	private ESimpleTimer waitForLoadTimer = new ESimpleTimer(300l);
 	private long timeLoaded = -1;
+	private long curTime = 0;
+	private long timeBetweenMaps = 2000;
 	private int lastGameTick = -1;
 	private volatile boolean loaded = false;
 	
@@ -52,13 +64,13 @@ public class MainMenuScreen extends GameScreen {
 		Envision.thePlayer = null;
 		
 		if (Envision.theWorld != null) {
-			Envision.loadWorld(null);
+			Envision.loadLevel(null);
 		}
 		
-		if (!SoundEngine.isPlaying(Songs.theme) && SoundEngine.getAllPlaying().size() == 1) {
+		if (!SoundEngine.isPlaying(Songs.menu) && SoundEngine.getAllPlaying().size() == 1) {
 			SoundEngine.stopAll();
 		}
-		SoundEngine.loopIfNotPlaying(Songs.theme);
+		SoundEngine.loopIfNotPlaying(Songs.menu);
 		setObjectName("Main Menu Screen");
 		
 		if (QoTSettings.animatedMainMenu.getBoolean()) loadMenuWorld();
@@ -73,6 +85,8 @@ public class MainMenuScreen extends GameScreen {
 		fadeInTimer.reset();
 		fadeDelayTimer.reset();
 		
+		Envision.levelManager = new LevelManager();
+		
 		String[] maps = QoTSettings.getMenuWorldsDir().list();
 		if (maps.length > 0) {
 			int theMap = ERandomUtil.getRoll(0, maps.length - 1);
@@ -83,18 +97,24 @@ public class MainMenuScreen extends GameScreen {
 				GameWorld world = menuWorld;
 				world = new GameWorld(new File(QoTSettings.getMenuWorldsDir(), selected));
                 var w = Envision.theWorld = world;
+                Envision.levelManager.setActiveWorld(w);
+                w.onLoad();
                 w.getWorldRenderer().onWorldLoaded();
-                w.setCameraZoom(ERandomUtil.getRoll(2.5, 3));
-                w.setTime(ERandomUtil.getRoll(0, w.getDayLength()));
+                Envision.levelManager.setCameraZoom(ERandomUtil.getRoll(2.5, 3));
+                Envision.levelManager.setTime(ERandomUtil.getRoll(0, Envision.levelManager.getDayLength()));
                 int ww = w.getWidth();
                 int wh = w.getHeight();
                 int lowerX = (ww / 2) - ww / 4;
                 int lowerY = (wh / 2) - wh / 4;
                 int upperX = (ww / 2) + ww / 4;
                 int upperY = (wh / 2) + wh / 4;
-                int wx = ERandomUtil.getRoll(lowerX, upperX);
-                int wy = ERandomUtil.getRoll(lowerY, upperY);
-                w.getCamera().setFocusedCoords(wx, wy);
+                fromX = ERandomUtil.getRoll(lowerX, upperX);
+                fromY = ERandomUtil.getRoll(lowerY, upperY);
+                toX = ERandomUtil.getRoll(lowerX, upperX);
+                toY = ERandomUtil.getRoll(lowerY, upperY);
+                camMoveDir = new Vector2f(toX - fromX, toY - fromY);
+                camMoveDir.normalize();
+                Envision.levelManager.getCamera().setFocusedCoords(fromX, fromY);
 				
 				menuWorld = world;
 				loaded = true;
@@ -106,44 +126,82 @@ public class MainMenuScreen extends GameScreen {
 	
 	@Override
 	public void initChildren() {
-		double w = ENumUtil.clamp(Envision.getWidth() / 4, 200, 320);
-		double x = midX - w / 2;
-		double y = midY - 50;
+		//double w = ENumUtil.clamp(Envision.getWidth() / 4, 200, 320);
+		double w = 290;
+	    double x = 15;
+		double y = 310;
+		//double x = midX - w / 2;
+		//double y = midY - 50;
 		double h = 40;
 		double gap = 5;
 		
 		newGame = new WindowButton(this, x, y, w, h, "New Game");
 		loadGame = new WindowButton(this, x, y + (gap + h), w, h, "Load Game");
 		options = new WindowButton(this, x, y + (gap + h) * 2, w, h, "Options");
-		closeGame = new WindowButton(this, x, y + (gap + h) * 3, w, h, "Quit Game");
+		mapTest = new WindowButton(this, x, y + (gap + h) * 3, w, h, "Map Editor");
+		closeGame = new WindowButton(this, x, endY - 80, w, h, "Quit Game");
 		
 		var tex = StoneFloorTextures.stone_pad;
-		WindowButton.setTextures(tex, tex, newGame, loadGame, options, closeGame);
-		
-		mapTest = new WindowButton(this, 10, 10, w, h, "Map Editor");
+		WindowButton.setTextures(tex, tex, newGame, loadGame, options, mapTest, closeGame);		
 		
 		addObject(newGame, loadGame, options, closeGame);
 		addObject(mapTest);
 	}
 	
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
-	    updateBackground();
+	public void drawScreen(float dt, int mXIn, int mYIn) {
+	    updateBackground(dt);
         
-        drawRect(newGame.startX - 10, newGame.startY - 10, newGame.endX + 10, closeGame.endY + 10, EColors.dsteel);
-        double w = 250;
+	    int sx = (int) newGame.startX - 5;
+	    int sy = (int) newGame.startY - 20;
+	    int ex = (int) newGame.endX + 5;
+	    int ey = (int) closeGame.endY + 10;
+	    
+        //drawRect(newGame.startX - 10, newGame.startY - 10, newGame.endX + 10, closeGame.endY + 10, EColors.dsteel);
+        //drawRect(0, 0, ex + 10, endY, EColors.steel);
+	    drawTexture(DungeonWallTextures.dung_wall_a, 0, 0, ex + 10, height);
         
-        drawFilledEllipse(midX, midY - 220, 156, 106, 10, EColors.vdgray);
-        drawFilledEllipse(midX, midY - 220, 150, 100, 10, EColors.rainbow());
-        drawTexture(GeneralTextures.logo, midX - w / 2, midY - 320, w, 200);
+        //for (int i = 0; i < )
+        drawRect(sx, sy + 10, ex, ey, EColors.gray);
+        drawTexture(DungeonWallTextures.dung_wall_a, sx, sy + 10, ex - sx, endY - (sy + 10));
+        
+        // logo background
+        for (int i = 0; i < 12; i++) {
+            int c = EColors.changeBrightness(EColors.skyblue.brightness(ERandomUtil.getRoll(230, 255)), 255 - i * 9);
+            double offset = (i * 0.75) + 1;
+            drawRect(sx + offset, 10 + offset, ex - offset, sy - offset, c);
+        }
+        
+        Sprite staticSprite = EffectsTextures.static_effect_spritesheet.getRandom();
+        drawSprite(staticSprite, sx, 10, (ex - sx), sy - 10, EColors.white.opacity(20));
+        drawSprite(staticSprite, ex + 13, 0, endX - (ex + 13), height, EColors.white.opacity(10));
+        
+        // side fade
+        drawRect(ex + 10, 0, ex + 13, endY, EColors.black);
+        drawRect(ex + 13, 0, endX, endY, EColors.mgray.opacity(ERandomUtil.getRoll(70, 90)));
+        
+        for (int i = 0; i < 12; i++) {
+            int c = EColors.changeOpacity(EColors.black.intVal, 100 - i * 9);
+            int offset = (i * 9) + ERandomUtil.getRoll(1, 4);
+            drawRect(ex + 13, 0, ex + 16 + offset, endY, c);
+            drawRect(endX - offset, 0, endX, endY, c);
+            drawRect(ex + 13, 0, endX, offset, c);
+            drawRect(ex + 13, endY - offset, endX, endY, c);
+        }
+//        
+//        //drawFilledEllipse(midX, midY - 220, 156, 106, 10, EColors.vdgray);
+//        //drawFilledEllipse(midX, midY - 220, 150, 100, 10, EColors.rainbow());
+//        //drawTexture(GeneralTextures.logo, midX - w / 2, midY - 320, w, 200);
+//        
+        drawTexture(GeneralTextures.logo, 5, 5, 290, 290);
         
         //draw copyright
         {
             var text = FontRenderer.COPYRIGHT + "Placeholder Studios";
             var sc = 0.7;
-            var dx = 3;
+            var dx = newGame.endX - 98;
             var dy = height - FontRenderer.FH * sc - 3;
-            drawStringS(text, dx, dy, sc, sc, EColors.lgray);
+            drawStringCS(text, dx, dy, sc, sc, EColors.lgray);
         }
 	}
 	
@@ -157,14 +215,17 @@ public class MainMenuScreen extends GameScreen {
 		double z = 1.0;
 		
 		if (Keyboard.isCtrlDown()) {
-			if (c > 0 && menuWorld.getCameraZoom() == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
-			else if (menuWorld.getCameraZoom() < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
+		    var cam = Envision.levelManager.getCamera();
+		    double zoom = cam.getZoom();
+		    
+			if (c > 0 && zoom == 0.25) 	z = 0.05;		//if at 0.25 and zooming out -- 0.05x
+			else if (zoom < 1.0) 		z = c * 0.1;	//if less than 1 zoom by 0.1x
 			else if (c > 0) 						z = 0.25;		//if greater than 1 zoom by 0.25x
-			else if (menuWorld.getCameraZoom() == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
+			else if (zoom == 1.0) 		z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
 			else 									z = c * 0.25;	//otherwise always zoom by 0.25x
 			
-			z = ENumUtil.round(menuWorld.getCameraZoom() + z, 2);
-			menuWorld.setCameraZoom(z);
+			z = ENumUtil.round(zoom + z, 2);
+			cam.setZoom(z);
 		}
 	}
 	
@@ -172,14 +233,19 @@ public class MainMenuScreen extends GameScreen {
 	public void onGameTick(float dt) {
 		if (isWorldLoaded()) {
 			menuWorld.onGameTick(dt);
+			
+			final var cam = Envision.levelManager.getCamera();
+			Vector2f curPos = new Vector2f((float) cam.getX(), (float) cam.getY());
+			curPos.add(camMoveDir.mul(0.11f, new Vector2f()));
+			cam.setFocusedPoint(curPos.x, curPos.y);
 		}
 	}
 	
-	private void updateBackground() {
+	private void updateBackground(float dt) {
 	    boolean banana = false;
 	    
         //draw underlying background image
-        drawBackground();
+        drawBackground(dt);
 	    
 		//check if delay timer has finished -- if so, start fade timer
 		if (fadeDelayTimer.isFinished()) fadeInTimer.start();
@@ -232,9 +298,9 @@ public class MainMenuScreen extends GameScreen {
 	    return loaded && menuWorld != null && menuWorld.isFileLoaded();
 	}
 	
-	private void drawBackground() {
+	private void drawBackground(float dt) {
 		//if (fadeDelayTimer.isStarted()) return;
-		
+	    
 		if (secret) {
 			drawTexture(GeneralTextures.noscreens);
 		}

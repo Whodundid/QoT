@@ -6,6 +6,10 @@ import envision.engine.settings.config.ConfigSetting;
 
 public class BooleanConfigSetting extends ConfigSetting<Boolean> {
 
+    public BooleanConfigSetting(String nameIn, String descriptionIn) {
+        this(nameIn, descriptionIn, false);
+    }
+    
     public BooleanConfigSetting(String settingNameIn, String descriptionIn, boolean initialValue) {
         super(Boolean.class, settingNameIn, descriptionIn, initialValue);
     }
@@ -17,10 +21,10 @@ public class BooleanConfigSetting extends ConfigSetting<Boolean> {
     @Override public BooleanConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public BooleanConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public boolean getBoolean() { return val; }
-    public boolean getDefaultBoolean() { return defaultVal; }
+    public boolean getBoolean() { return value; }
+    public boolean getDefaultBoolean() { return defaultValue; }
     
-    public void setBoolean(boolean val) { this.val = val; }
-    public void setDefaultBoolean(boolean val) { this.defaultVal = val; }
+    public void setBoolean(boolean val) { this.value = val; }
+    public void setDefaultBoolean(boolean val) { this.defaultValue = val; }
     
 }

@@ -10,6 +10,7 @@ public class CoarseDirt extends WorldTile {
 	public CoarseDirt() {
 		super(TileIDs.COARSE_DIRT);
 		setSprite(new Sprite(NatureTextures.coarse_dirt));
+		setMiniMapColor(0xff3E3F1D);
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package envision.engine.notifications.util;
 
 import envision.Envision;
+import envision.engine.assets.WindowTextures;
 import envision.engine.notifications.window.NotificationRCM;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.windows.WindowSize;
@@ -8,7 +9,6 @@ import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.ObjectPosition;
-import qot.assets.textures.window.WindowTextures;
 
 //Author: Hunter Bragg
 
@@ -48,7 +48,7 @@ public abstract class NotificationObject extends WindowParent {
 	}
 
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		if (onlyDrawOnHud && !Envision.developerDesktop.hasFocus()) close();
 		
 		drawRect(startX, startY, startX + 1, endY, 0xff000000); //left border

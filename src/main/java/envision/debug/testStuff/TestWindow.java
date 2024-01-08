@@ -57,13 +57,13 @@ public class TestWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject_i(long dt, int mXIn, int mYIn) {
+	public void drawObject_i(float dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		super.drawObject_i(dt, mXIn, mYIn);
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		
 	}
 	

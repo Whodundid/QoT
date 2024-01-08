@@ -65,18 +65,17 @@ public class EditorSidePanel extends WindowObject {
 	
 	@Override
 	public void initChildren() {
-		
+		addObject(miniMap);
 	}
 	
 	@Override
-	public void drawObject_i(long dt, int mXIn, int mYIn) {
+	public void drawObject_i(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.black); //background & border
-		drawRect(EColors.mgray, 1); //inner
+		drawRect(EColors.dgray, 1); //inner
 		
 		EUtil.nullDo(getCurrentPanel(), p -> p.drawTool(mXIn, mYIn));
 		
 		super.drawObject_i(dt, mXIn, mYIn);
-		miniMap.drawObject_i(dt, mXIn, mYIn);
 	}
 	
 	@Override
@@ -135,7 +134,10 @@ public class EditorSidePanel extends WindowObject {
 		currentPanel = theTool;
 		
 		//load the currentTool (if not null)
-		if (currentPanel != null) currentPanel.loadTool();
+		if (currentPanel != null) {
+		    reInitChildren();
+		    currentPanel.loadTool();
+		}
 	}
 	
 }

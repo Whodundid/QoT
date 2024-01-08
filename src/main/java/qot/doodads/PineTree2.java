@@ -38,6 +38,7 @@ public class PineTree2 extends Doodad {
 	
 	@Override
 	public void onLivingUpdate(float dt) {
+	    super.onLivingUpdate(dt);
 		//System.out.println(facing);
 		/*
 		double distToPlayer = world.getDistance(this, QoT.thePlayer);

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import envision.engine.resourceLoaders.Sprite;
-import envision.game.entities.Entity;
+import envision.game.GameObject;
 import eutil.datatypes.util.EList;
 
 /**
@@ -39,7 +39,7 @@ public class AnimationHandler {
 	//--------
 	
 	/** The entity for which this animation pertains to. */
-	private final Entity theEntity;
+	private final GameObject theObject;
 	/** The Entity's base game texture. */
 	private Sprite origTex;
 	/** The set of all keyframes on this animation. */
@@ -64,9 +64,9 @@ public class AnimationHandler {
 	// Constructors
 	//--------------
 	
-	public AnimationHandler(Entity entIn) {
-		theEntity = entIn;
-		origTex = theEntity.getSprite();
+	public AnimationHandler(GameObject entIn) {
+		theObject = entIn;
+		origTex = theObject.getSprite();
 	}
 	
 	//---------
@@ -79,7 +79,7 @@ public class AnimationHandler {
 	 */
 	public void onRenderTick() {
 		var t = update();
-		theEntity.setSprite(t);
+		theObject.setSprite(t);
 	}
 	
 	private Sprite update() {
@@ -127,7 +127,7 @@ public class AnimationHandler {
 	
 	public boolean stop() {
 		if (currentAnimation == null || currentAnimation.isEmpty()) return false;
-		theEntity.setSprite(origTex);
+		theObject.setSprite(origTex);
 		playing = false;
 		return true;
 	}
@@ -168,14 +168,14 @@ public class AnimationHandler {
 	 * 
 	 * @return The entity
 	 */
-	public Entity getEntity() {
-		return theEntity;
+	public GameObject getObject() {
+		return theObject;
 	}
 	
 	/**
 	 * Returns the base texture of the entity.
 	 */
-	public Sprite getEntitysBaseTexture() {
+	public Sprite getObjectsBaseTexture() {
 		return origTex;
 	}
 	
@@ -328,7 +328,7 @@ public class AnimationHandler {
 	}
 	
 	private void unloadCurrentWorkingSet() {
-		theEntity.setSprite(origTex);
+		theObject.setSprite(origTex);
 		currentAnimation = null;
 		frameIndex = -1;
 	}

@@ -2,7 +2,7 @@ package envision.launcher;
 
 import java.io.File;
 
-import envision.game.EnvisionGameTemplate;
+import envision.engine.loader.EnvisionGame;
 import eutil.datatypes.util.EList;
 
 public class LauncherSettings {
@@ -10,7 +10,7 @@ public class LauncherSettings {
     /**
      * The name of the game being installed.
      */
-    public final EnvisionGameTemplate game;
+    public final EnvisionGame game;
     
 	/**
 	 * The directory for which the game will be installed to.
@@ -37,7 +37,7 @@ public class LauncherSettings {
 	// Constructors
 	//==============
 	
-	public LauncherSettings(EnvisionGameTemplate gameIn) {
+	public LauncherSettings(EnvisionGame gameIn) {
 	    this.game = gameIn;
 	}
 	
@@ -52,7 +52,7 @@ public class LauncherSettings {
 			   "IN_JAR=" + IN_JAR;
 	}
 	
-	public EnvisionGameTemplate getGame() { return game; }
+	public EnvisionGame getGame() { return game; }
 	public String getGameName() { return game.getGameName(); }
 	public String getGameVersionString() { return game.getGameVersionString(); }
 	

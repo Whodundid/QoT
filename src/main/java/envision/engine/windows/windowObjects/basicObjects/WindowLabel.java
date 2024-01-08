@@ -43,7 +43,7 @@ public class WindowLabel extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject(long dt, int mX, int mY) {
+	public void drawObject(float dt, int mX, int mY) {
 		if (wordWrap && wordWrappedLines != null) {
 			int i = 0;
 			

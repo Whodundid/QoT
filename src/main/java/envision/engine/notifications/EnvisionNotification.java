@@ -29,7 +29,7 @@ public class EnvisionNotification extends NotificationObject {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		super.drawObject(dt, mXIn, mYIn);
 		
 		//GlStateManager.color(1f, 1f, 1f, 0.75f);

@@ -6,6 +6,10 @@ import envision.engine.settings.config.ConfigSetting;
 
 public class DoubleConfigSetting extends ConfigSetting<Double> {
 
+    public DoubleConfigSetting(String name, String description) {
+        this(name, description, 0.0);
+    }
+    
     public DoubleConfigSetting(String settingNameIn, String descriptionIn, double initialValue) {
         super(Double.class, settingNameIn, descriptionIn, initialValue);
     }
@@ -17,10 +21,10 @@ public class DoubleConfigSetting extends ConfigSetting<Double> {
     @Override public DoubleConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public DoubleConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public double getDouble() { return val; }
-    public double getDefaultDouble() { return defaultVal; }
+    public double getDouble() { return value; }
+    public double getDefaultDouble() { return defaultValue; }
     
-    public void setDouble(double val) { this.val = val; }
-    public void setDefaultDouble(double val) { this.defaultVal = val; }
+    public void setDouble(double val) { this.value = val; }
+    public void setDefaultDouble(double val) { this.defaultValue = val; }
     
 }

@@ -2,7 +2,33 @@ package qot.world_tiles.categories;
 
 import envision.game.world.worldTiles.TileCategory;
 import envision.game.world.worldTiles.WorldTile;
-import qot.world_tiles.categories.nature.*;
+import qot.world_tiles.categories.nature.BlueWater;
+import qot.world_tiles.categories.nature.CoarseDirt;
+import qot.world_tiles.categories.nature.CoarseSand;
+import qot.world_tiles.categories.nature.CrackedDirt;
+import qot.world_tiles.categories.nature.DarkGrass;
+import qot.world_tiles.categories.nature.DarkWater;
+import qot.world_tiles.categories.nature.Dirt;
+import qot.world_tiles.categories.nature.DryCrackedDirt;
+import qot.world_tiles.categories.nature.DryGrass;
+import qot.world_tiles.categories.nature.DryPlainsGrass;
+import qot.world_tiles.categories.nature.Grass;
+import qot.world_tiles.categories.nature.IcySnow;
+import qot.world_tiles.categories.nature.LeafyGrass;
+import qot.world_tiles.categories.nature.LightGrass;
+import qot.world_tiles.categories.nature.Mud;
+import qot.world_tiles.categories.nature.RedSand;
+import qot.world_tiles.categories.nature.RockyDirt;
+import qot.world_tiles.categories.nature.RockyStone;
+import qot.world_tiles.categories.nature.RoughRocky;
+import qot.world_tiles.categories.nature.Sand;
+import qot.world_tiles.categories.nature.SandyDirt;
+import qot.world_tiles.categories.nature.SmoothDirt;
+import qot.world_tiles.categories.nature.Stone;
+import qot.world_tiles.categories.nature.Water;
+import qot.world_tiles.categories.nature.WetSand;
+import qot.world_tiles.categories.nature.Wood;
+import qot.world_tiles.categories.nature.WoodSlats;
 
 public class NatureTiles implements TileCategory {
 	
@@ -19,6 +45,7 @@ public class NatureTiles implements TileCategory {
 	public static final WorldTile coarseSand = new CoarseSand();
 	public static final WorldTile stone = new Stone();
 	public static final WorldTile water = new Water();
+	public static final WorldTile darkWater = new DarkWater();
 	public static final WorldTile wood = new Wood();
 	public static final WorldTile woodSlats = new WoodSlats();
 	public static final WorldTile dryGrass = new DryGrass();
@@ -33,5 +60,6 @@ public class NatureTiles implements TileCategory {
 	public static final WorldTile sandyDirt = new SandyDirt();
 	public static final WorldTile smoothDirt = new SmoothDirt();
 	public static final WorldTile wetSand = new WetSand();
+	public static final WorldTile blueWater = new BlueWater();
 	
 }

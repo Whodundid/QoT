@@ -25,6 +25,8 @@ public class ItemOnGround extends BasicRenderedEntity {
         invincible = true;
         doesDecay = false;
         ignoreClick = Mouse.isLeftDown();
+        
+        canBeMoved = false;
     }
     
     public ItemOnGround(Item item, long timeToLiveIn) {
@@ -36,6 +38,8 @@ public class ItemOnGround extends BasicRenderedEntity {
         invincible = true;
         timeToLive = timeToLiveIn;
         ignoreClick = Mouse.isLeftDown();
+        
+        canBeMoved = false;
     }
     
     @Override
@@ -62,6 +66,7 @@ public class ItemOnGround extends BasicRenderedEntity {
             }
             
             var p = Envision.thePlayer;
+            if (p == null) return;
             var cb = getCollisionDims();
             var pcb = p.getCollisionDims();
             

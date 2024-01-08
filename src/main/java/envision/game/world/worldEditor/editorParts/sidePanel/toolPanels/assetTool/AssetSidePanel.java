@@ -45,7 +45,7 @@ public class AssetSidePanel extends PaletteSidePanel {
 		for (GameObject t : GlobalAssetList.getAssets()) {
 			WindowButton<EditorObject> b = new WindowButton<>(panel) {
 				@Override
-				public void drawObject(long dt, int mXIn, int mYIn) {
+				public void drawObject(float dt, int mXIn, int mYIn) {
 					super.drawObject(dt, mXIn, mYIn);
 					drawHRect(EColors.black);
 				}

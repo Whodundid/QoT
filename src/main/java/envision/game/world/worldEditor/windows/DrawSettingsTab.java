@@ -1,6 +1,7 @@
 package envision.game.world.worldEditor.windows;
 
 import envision.debug.DebugSettings;
+import envision.engine.assets.WindowTextures;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowCheckBox;
@@ -10,14 +11,13 @@ import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import eutil.colors.EColors;
-import qot.assets.textures.window.WindowTextures;
 
 public class DrawSettingsTab extends ContainerTab {
 
-	//--------
-	// Fields
-	//--------
-	
+	//========
+    // Fields
+    //========
+    
 	private MapEditorScreen editor;
 	
 	private WindowScrollList list;
@@ -29,9 +29,9 @@ public class DrawSettingsTab extends ContainerTab {
 	private WindowCheckBox drawEntityOutlines, drawEntityHitBoxes, drawWallBox, drawFlatWalls;
 	private WindowCheckBox drawTileGrid;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public DrawSettingsTab(EditorTabs parent, MapEditorScreen editorIn) {
 		super(parent, "Draw");
@@ -39,9 +39,9 @@ public class DrawSettingsTab extends ContainerTab {
 		tabTextColor = EColors.seafoam.intVal;
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void initChildren() {
@@ -124,7 +124,7 @@ public class DrawSettingsTab extends ContainerTab {
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		super.drawObject(dt, mXIn, mYIn);
 		
 		distX.setString("Draw Dist X: " + editor.drawDistX);

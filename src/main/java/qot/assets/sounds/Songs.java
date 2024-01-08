@@ -22,6 +22,7 @@ public class Songs {
 	public static Audio battleTheme = new Audio("battle_theme", soundsDir, "Uplifting.wav");
 	public static Audio varthums = new Audio("varthums", soundsDir, "Varthums.wav");
 	public static Audio zarus = new Audio("zarus", soundsDir, "Zarus.wav");
+	public static Audio menu = new Audio("menu", soundsDir, "q3452.mid");
 	
 	static {
 		SoundEngine.register(darkCave);
@@ -35,6 +36,7 @@ public class Songs {
 		SoundEngine.register(battleTheme);
 		SoundEngine.register(varthums);
 		SoundEngine.register(zarus);
+		SoundEngine.register(menu);
 		
 		songList.add(darkCave);
 		songList.add(field);
@@ -47,6 +49,7 @@ public class Songs {
 		songList.add(battleTheme);
 		songList.add(varthums);
 		songList.add(zarus);
+		songList.add(menu);
 	}
 	
 }

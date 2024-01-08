@@ -88,7 +88,7 @@ public class NewMapCreatorScreen extends GameScreen {
 	}
 
 	@Override
-	public void drawScreen(int mXIn, int mYIn) {
+	public void drawScreen(float dt, int mXIn, int mYIn) {
 		drawRect(EColors.dsteel);
 		
 		drawStringC("Create New Map", midX, startY + 50);

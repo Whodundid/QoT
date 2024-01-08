@@ -63,6 +63,10 @@ public class EObjectGroup {
 		return this;
 	}
 	
+	public void clear() {
+	    objects.clear();
+	}
+	
 	public void notifyGroup(ObjectEvent e) {
 		objects.forEach((o) -> {
 			//System.out.println("group parent: " + e.getEventParent() + " " + o.equals(e.getEventParent()));

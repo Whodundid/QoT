@@ -13,6 +13,7 @@ public abstract class Item extends GameObject {
 	protected boolean isUsable;
 	protected boolean isDestroyedOnUse;
 	protected int damageBonus;
+	protected ArmorSlotType armorSlotType = ArmorSlotType.NA;
 
 	protected Item(String nameIn, int idIn) { this(nameIn, 0, "", idIn); }
 	protected Item(String nameIn, int basePriceIn, int idIn) { this(nameIn, basePriceIn, "", idIn); }
@@ -44,6 +45,7 @@ public abstract class Item extends GameObject {
 	public boolean isUsable() { return isUsable; }
 	public boolean isDestroyedOnUse() { return isDestroyedOnUse; }
 	public int getDamageBonus() { return damageBonus; }
+	public ArmorSlotType getArmorSlotType() { return armorSlotType; }
 	
 	public Item setDescription(String in) { description = in; return this; }
 	public Item setBasePrice(int in) { basePrice = in; return this; }
@@ -51,5 +53,6 @@ public abstract class Item extends GameObject {
 	public void setUsable(boolean val) { isUsable = val; }
 	public void setIsDestroyedOnUse(boolean val) { isDestroyedOnUse = val; }
 	public void setDamageBonus(int val) { damageBonus = val; }
+	public void setArmorSlotType(ArmorSlotType typeIn) { armorSlotType = typeIn; }
 	
 }

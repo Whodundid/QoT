@@ -1,6 +1,8 @@
 package envision.engine.windows.developerDesktop.taskbar;
 
 import envision.Envision;
+import envision.engine.assets.TaskBarTextures;
+import envision.engine.assets.WindowTextures;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
@@ -10,14 +12,12 @@ import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
-import qot.assets.textures.taskbar.TaskBarTextures;
-import qot.assets.textures.window.WindowTextures;
 
 public class TaskBarButton extends WindowButton implements Comparable<TaskBarButton> {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	private TaskBar parentBar;
 	private IWindowParent base;
@@ -29,9 +29,9 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 	private boolean listMade = false;
 	private WindowDropDown dropDown;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public TaskBarButton(TaskBar barIn, IWindowParent baseIn) {
 		super(barIn);
@@ -51,9 +51,9 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 		setImage();
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public int compareTo(TaskBarButton b) {
@@ -61,7 +61,7 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		//draw a highlight overlay if the mouse is over the button
 		if (isMouseOver()) {
 			drawRect(0xaa505050);
@@ -182,9 +182,9 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 		System.out.println(object);
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	/** Updates the visible number of window instances represented by this button. */
 	public void update() {
@@ -203,9 +203,9 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 		listMade = false;
 	}
 	
-	//------------------
-	// Internal Methods
-	//------------------
+	//==================
+    // Internal Methods
+    //==================
 	
 	/** Sets the image of the window that this button represents. */
 	private void setImage() {
@@ -235,9 +235,9 @@ public class TaskBarButton extends WindowButton implements Comparable<TaskBarBut
 		listMade = true;
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public IWindowParent getWindowType() { return base; }
 	public TaskBarButton setPinned(boolean val) { pinned = val; return this; }

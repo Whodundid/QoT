@@ -10,6 +10,7 @@ public class RockyDirt extends WorldTile {
 	public RockyDirt() {
 		super(TileIDs.ROCKY_DIRT);
 		setSprite(new Sprite(NatureTextures.rocky_dirt));
+		setMiniMapColor(0xff6A3D1B);
 	}
 	
 	@Override

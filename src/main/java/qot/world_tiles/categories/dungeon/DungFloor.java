@@ -10,6 +10,7 @@ public class DungFloor extends WorldTile {
 	public DungFloor() {
 		super(TileIDs.DUNG_FLOOR);
 		setSprite(new Sprite(StoneFloorTextures.dung_floor));
+		setMiniMapColor(0xff363636);
 	}
 	
 	@Override

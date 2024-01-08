@@ -1,6 +1,7 @@
 package envision.engine.notifications.window;
 
 import envision.Envision;
+import envision.engine.assets.TaskBarTextures;
 import envision.engine.notifications.util.NotificationType;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
@@ -12,7 +13,6 @@ import eutil.colors.EColors;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
-import qot.assets.textures.taskbar.TaskBarTextures;
 
 public class NotificationWindow extends WindowParent {
 	
@@ -90,7 +90,7 @@ public class NotificationWindow extends WindowParent {
 	}
 	
 	@Override
-	public void drawObject_i(long dt, int mXIn, int mYIn) {
+	public void drawObject_i(float dt, int mXIn, int mYIn) {
 		drawDefaultBackground();
 		
 		drawRect(startX + 2, startY + 2, endX - 2, startY + 20, EColors.black);

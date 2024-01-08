@@ -14,7 +14,7 @@ import eutil.misc.Rotation;
 
 public class WorldTileRenderer extends RenderingComponent {
 	
-	protected WorldTile theTile;
+	public WorldTile theTile;
 	
 	//==============
 	// Constructors
@@ -49,14 +49,14 @@ public class WorldTileRenderer extends RenderingComponent {
 		if (!theTile.hasSprite()) return;
 		
 		if (DebugSettings.fixingCamera) {
-		    old(world, camera);
+		    newRenderingMethod(world, camera);
 		    return;
 		}
 		
         //pixel width of each tile
-        final double w = camera.getScaledTileWidth();
+        final double w = world.getTileWidth() * camera.getZoom();
         //pixel height of each tile
-        final double h = camera.getScaledTileHeight();
+        final double h = world.getTileHeight() * camera.getZoom();
 
         //the left most x pixel for map drawing
         double x = (int) (midX - (distX * w) - (w * 0.5));
@@ -83,28 +83,15 @@ public class WorldTileRenderer extends RenderingComponent {
 	}
 	
 	/** This is actually newer, but still need to work out kinks. */
-    private void old(IGameWorld world, WorldCamera camera)
+    public void newRenderingMethod(IGameWorld world, WorldCamera camera)
     {
-        final int halfScreenW = Envision.getWidth() >> 1;
-        final int halfScreenH = Envision.getHeight() >> 1;
-        
-        final double camWorldX = camera.getCameraCenterX();
-        final double camWorldY = camera.getCameraCenterY();
-        
-        //pixel width of each tile
-        final double w = camera.getScaledTileWidth();
-        //pixel height of each tile
-        final double h = camera.getScaledTileHeight();
-        
-        //              world coordinates                 pixel coords    screen cords
-        double drawX = (theTile.worldX - camWorldX - 0.5) * w             + halfScreenW;
-        double drawY = (theTile.worldY - camWorldY - 0.5) * h             + halfScreenH;
+        double[] draw = camera.calculateDrawDimensions(theTile);
         
         int worldBrightness = world.getAmbientLightLevel();
         int color = EColors.white.brightness(worldBrightness);
         
-        if (BatchManager.isEnabled()) drawTile(world, drawX, drawY, w, h, color, false);
-        else drawTile(world, drawX, drawY, w, h, calcBrightness(theTile.worldX, theTile.worldY), false);
+        if (BatchManager.isEnabled()) drawTile(world, draw[0], draw[1], draw[2], draw[3], color, false);
+        else drawTile(world, draw[0], draw[1], draw[2], draw[3], calcBrightness(theTile.worldX, theTile.worldY), false);
     }
 	
 	//-----------------------------------------------------------------------------------------------------------

@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import envision.Envision;
 import envision.engine.EngineSettings;
+import envision.engine.assets.TaskBarTextures;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.TerminalCommand;
@@ -38,7 +39,6 @@ import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
-import qot.assets.textures.taskbar.TaskBarTextures;
 
 //Author: Hunter Bragg
 
@@ -211,7 +211,7 @@ public class ETerminalWindow extends WindowParent implements EnvisionConsoleOutp
 	}
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		if (header != null) {
 			header.setTitleColor(-EColors.rainbow() + 0xff222222);
 			String dirS = "./" + dir.getName();

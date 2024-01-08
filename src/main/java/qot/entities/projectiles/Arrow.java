@@ -25,6 +25,8 @@ public class Arrow extends BasicRenderedEntity {
 		setCollisionBox(startX - 8, startY - 8, endX + 8, endY + 8);
 		
 		setSpeed(270);
+		canBeCarried = false;
+		canBeMoved = false;
 	}
 	
 	@Override

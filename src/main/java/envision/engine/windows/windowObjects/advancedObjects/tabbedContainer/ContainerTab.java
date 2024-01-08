@@ -72,7 +72,7 @@ public class ContainerTab extends WindowObject {
 	//-----------
 	
 	@Override
-	public void drawObject(long dt, int mXIn, int mYIn) {
+	public void drawObject(float dt, int mXIn, int mYIn) {
 		if (isSelected()) {
 			drawRect(tabSelectedColor);
 			drawRect(EColors.black, 7);
@@ -162,7 +162,7 @@ public class ContainerTab extends WindowObject {
 		}
 		
 		@Override
-		public void drawObject(long dt, int mXIn, int mYIn) {
+		public void drawObject(float dt, int mXIn, int mYIn) {
 			int o = (tab.isSelected()) ? 2 : 0;
 			
 			//println(this, getDimensions());

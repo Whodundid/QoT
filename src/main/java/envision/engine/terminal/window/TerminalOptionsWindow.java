@@ -56,7 +56,7 @@ public class TerminalOptionsWindow extends WindowParent {
         drawLineNumbers = new WindowButton(settings, startX + 12, visual.endY + 20, 130, 30, EngineSettings.termLineNumbers);
         backColor = new WindowButton(settings, startX + 13, drawLineNumbers.endY + 15, 20, 20) {
             @Override
-            public void drawObject(long dt, int mXIn, int mYIn) {
+            public void drawObject(float dt, int mXIn, int mYIn) {
                 super.drawObject(dt, mXIn, mYIn);
                 RenderingManager.drawHRect(backColor.startX - 1, backColor.startY - 1, backColor.endX + 1, backColor.endY + 1, 1, EColors.black);
                 RenderingManager.drawHRect(backColor.startX, backColor.startY, backColor.endX, backColor.endY, 1, EColors.lgray);
@@ -94,7 +94,7 @@ public class TerminalOptionsWindow extends WindowParent {
     }
     
     @Override
-    public void drawObject(long dt, int mXIn, int mYIn) {
+    public void drawObject(float dt, int mXIn, int mYIn) {
         drawDefaultBackground();
         //System.out.println(this.getDimensions());
     }

@@ -1,5 +1,6 @@
 package envision.engine.windows.developerDesktop.shortcuts;
 
+import envision.engine.assets.WindowTextures;
 import envision.engine.terminal.TerminalCommandHandler;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
@@ -7,7 +8,6 @@ import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringBuilder;
-import qot.assets.textures.window.WindowTextures;
 
 public class DesktopShortcut_Command extends DesktopShortcut {
     

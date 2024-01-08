@@ -10,6 +10,7 @@ public class BlueDungTile extends WorldTile {
 	public BlueDungTile() {
 		super(TileIDs.BLUE_DUNG_TILE);
 		setSprite(new Sprite(StoneFloorTextures.blue_dung_tile));
+		setMiniMapColor(0xff004748);
 	}
 	
 	@Override

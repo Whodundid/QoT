@@ -10,6 +10,7 @@ public class WetSand extends WorldTile {
 	public WetSand() {
 		super(TileIDs.WET_SAND);
 		setSprite(new Sprite(SandTextures.wet_sand));
+		setMiniMapColor(0xff75753A);
 	}
 	
 	@Override

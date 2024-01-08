@@ -6,6 +6,10 @@ import envision.engine.settings.config.ConfigSetting;
 
 public class StringConfigSetting extends ConfigSetting<String> {
 
+    public StringConfigSetting(String name, String description) {
+        this(name, description, "");
+    }
+    
     public StringConfigSetting(String settingNameIn, String descriptionIn, String initialValue) {
         super(String.class, settingNameIn, descriptionIn, initialValue);
     }
@@ -17,10 +21,10 @@ public class StringConfigSetting extends ConfigSetting<String> {
     @Override public StringConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public StringConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public String getString() { return val; }
-    public String getDefaultString() { return defaultVal; }
+    public String getString() { return value; }
+    public String getDefaultString() { return defaultValue; }
     
-    public void setString(String val) { this.val = val; }
-    public void setDefaultString(String val) { this.defaultVal = val; }
+    public void setString(String val) { this.value = val; }
+    public void setDefaultString(String val) { this.defaultValue = val; }
     
 }

@@ -59,7 +59,7 @@ public class WindowTextArea<E> extends WindowScrollList<E> {
 	//---------------------------
 	
 	@Override
-	public void drawObject_i(long dt, int mXIn, int mYIn) {
+	public void drawObject_i(float dt, int mXIn, int mYIn) {
 		updateBeforeNextDraw(mXIn, mYIn);
 		drawHRect(borderColor);
 		
