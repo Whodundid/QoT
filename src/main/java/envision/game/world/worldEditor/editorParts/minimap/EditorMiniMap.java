@@ -10,6 +10,7 @@ import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.IGameWorld;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
+import envision.game.world.worldTiles.VoidTile;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 
@@ -175,15 +176,18 @@ public class EditorMiniMap extends WindowObject {
         mapPxHeight = dh / imgHeight;
 		
 		mapImage = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
+		int layer = editor.camera.getCurrentLayer();
 		
-		for (int y = 0, iy = (imgHeight - h) / 2; y < h; y++, iy++) {
-			for (int x = 0, ix = (imgWidth - w) / 2; x < w; x++, ix++) {
-				var tile = world.getTileAt(x, y);
-				if (tile == null) continue;
-				
-				//System.out.println(ix + " : " + iy);
-				mapImage.setRGB(ix, iy, tile.getMapColor());
-			}
+		for (int i = 0; i <= layer; i++) {
+		    for (int y = 0, iy = (imgHeight - h) / 2; y < h; y++, iy++) {
+	            for (int x = 0, ix = (imgWidth - w) / 2; x < w; x++, ix++) {
+	                var tile = world.getTileAt(i, x, y);
+	                if (tile == null || tile == VoidTile.instance) continue;
+	                
+	                //System.out.println(ix + " : " + iy);
+	                mapImage.setRGB(ix, iy, tile.getMapColor());
+	            }
+	        }
 		}
 		
 		mapTexture = new GameTexture(mapImage);

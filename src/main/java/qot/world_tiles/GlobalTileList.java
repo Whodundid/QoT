@@ -96,20 +96,21 @@ public class GlobalTileList {
 	}
 	
 	public static WorldTile createNewTileInstance(WorldTile tile, int texID) {
-	    if (tile == null) {
-	        return null;
-	    }
+	    if (tile == null) return null;
+	    WorldTile t = tile.copy();
+	    t.randomizeValues();
+	    return t;
 	    
 	    //if (tile.hasVariation()) {
-	        try {
-	            Class<? extends WorldTile> c = tile.getClass();
-	            if (hasConstructor(tile, Integer.class)) return c.getConstructor(Integer.class).newInstance(texID);
-	            else return c.getConstructor().newInstance();
-	        }
-	        catch (Exception e) {
-	            e.printStackTrace();
-	            return null;
-	        }
+//	        try {
+//	            Class<? extends WorldTile> c = tile.getClass();
+//	            if (hasConstructor(tile, Integer.class)) return c.getConstructor(Integer.class).newInstance(texID);
+//	            else return c.getConstructor().newInstance();
+//	        }
+//	        catch (Exception e) {
+//	            e.printStackTrace();
+//	            return null;
+//	        }
 	    //}
 	    
 	    //return tile;

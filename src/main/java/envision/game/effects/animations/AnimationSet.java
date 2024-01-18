@@ -1,7 +1,7 @@
 package envision.game.effects.animations;
 
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.resourceLoaders.Sprite;
 import eutil.datatypes.util.EList;
 
 /**

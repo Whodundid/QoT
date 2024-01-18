@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.house;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.entities.Entity;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.doodads.house.HouseTextures;

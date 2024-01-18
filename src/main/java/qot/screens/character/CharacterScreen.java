@@ -2,8 +2,8 @@ package qot.screens.character;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.resourceLoaders.Sprite;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;

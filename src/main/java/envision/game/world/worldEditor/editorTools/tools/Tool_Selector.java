@@ -1,6 +1,7 @@
 package envision.game.world.worldEditor.editorTools.tools;
 
 import envision.Envision;
+import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.game.entities.Entity;
 import envision.game.world.Region;
@@ -98,8 +99,9 @@ public class Tool_Selector extends EditorTool {
 		toSelect = underMouse.getFirst();
 		
 		if (toSelect != null) {
-			editor.clearSelected();
-			editor.addToSelected(toSelect);
+	        if (Keyboard.isCtrlDown()) editor.addToSelected(toSelect);
+	        else if (Keyboard.isAltDown()) editor.removeFromSelected(toSelect);
+	        else editor.setSelectedObjects(toSelect);
 		}
 	}
 	

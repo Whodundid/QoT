@@ -205,6 +205,11 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     // Start
     //=======
     
+    public static void startEngine() {
+        createEngineInstance();
+        instance.runGameLoop();
+    }
+    
     public static void startGame() {
         try {
             instance.runGameLoop();
@@ -342,7 +347,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
         // register internal engine textures first
         EngineTextures.instance().onRegister(textureSystem);
         // then register the game instance's textures
-        currentGameInstance.onRegisterInternalTextures(textureSystem);
+        if (currentGameInstance != null) currentGameInstance.onRegisterInternalTextures(textureSystem);
 	}
 	
 	private void setupEngine() {
@@ -428,11 +433,8 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 					
 					// 'dt' is ms :)
 					dt = curTime - oldTime;
-					//dt /= 1000.0f;
 					
-					//if (dt < 0.006f) dt = 0.006f;
-					//if (dt > 0.015f) dt = 0.015f;
-					//if (dt > 15.0f) dt = 15.0f;
+					if (dt > 15.0f) dt = 15.0f;
 					
 					//update inputs
 					GLFW.glfwPollEvents();
@@ -491,6 +493,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		
 		//update current screen (if there is one)
 		if (currentScreen != null) currentScreen.onGameTick(dt);
+		developerDesktop.onTickUpdate_i(dt);
 		
 		//update current world (if there is one, and it's loaded, and the engine is not paused)
 		if (levelManager != null && !pause) {

@@ -1,8 +1,7 @@
 package qot.world_tiles.categories.stone;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
-import eutil.misc.Rotation;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
 import qot.world_tiles.TileIDs;
 
@@ -12,18 +11,12 @@ public class StonePad extends WorldTile {
 		super(TileIDs.STONE_PAD);
 		setSprite(new Sprite(StoneFloorTextures.stone_pad));
 		setWall(true);
-		wallHeight = 0.1;
+		wallHeight = 0.1f;
+		randomizeRotation = true;
 		
 		randomizeValues();
 		setMiniMapColor(0xff808080);
 	}
-	
-	@Override
-	public void randomizeValues() {
-	    rotation = Rotation.random();
-	}
-	
-	@Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

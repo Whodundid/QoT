@@ -5,10 +5,10 @@ import java.util.List;
 import envision.engine.loader.dtos.GameTextureDTO;
 import envision.engine.loader.dtos.SpriteDTO;
 import envision.engine.loader.dtos.TextureSheetDTO;
+import envision.engine.registry.IGameResource;
+import envision.engine.registry.ResourceType;
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.resourceLoaders.IGameResource;
-import envision.engine.resourceLoaders.ResourceType;
-import envision.engine.resourceLoaders.Sprite;
 import eutil.datatypes.util.EList;
 
 public class TextureSheetResource implements IGameResource {
@@ -40,7 +40,7 @@ public class TextureSheetResource implements IGameResource {
     
     @Override public String getResourceName() { return textureSheetName; }
     @Override public boolean isLoaded() { return isLoaded; }
-    @Override public ResourceType getResourceType() { return ResourceType.TEXTURE_SHEET; }
+    @Override public ResourceType getResourceType() { return ResourceType.TEXTURE; }
     
     @Override public void setLoaded(boolean value) { isLoaded = value; }
     

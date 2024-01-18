@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.test_tiles;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.colors.EColors;
 import eutil.random.ERandomUtil;

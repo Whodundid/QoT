@@ -5,9 +5,9 @@ import envision.engine.rendering.textureSystem.TextureSystem;
 
 public class WindowTextures extends EngineTextureLoader {
 	
-	//--------------------
+	//====================
 	// Singleton Instance
-	//--------------------
+	//====================
 	
 	private static final WindowTextures t = new WindowTextures();
 	public static WindowTextures instance() { return t; }
@@ -19,12 +19,14 @@ public class WindowTextures extends EngineTextureLoader {
 	
 	private static final String textureDir = rDir + "\\textures\\window\\";
 	
-	//----------
+	//==========
 	// Textures
-	//----------
+	//==========
 	
 	public static final GameTexture
 	
+	arrow_down      = new GameTexture(textureDir, "arrow_down.png"),
+	arrow_down_sel  = new GameTexture(textureDir, "arrow_down_sel.png"),
 	checkmark 		= new GameTexture(textureDir, "checkmark.png"),
 	red_x           = new GameTexture(textureDir, "x_image.png"),
 	close 			= new GameTexture(textureDir, "close.png"),
@@ -67,12 +69,14 @@ public class WindowTextures extends EngineTextureLoader {
 	terminal 		= new GameTexture(textureDir, "terminal.png"),
 	terminal_sel 	= new GameTexture(textureDir, "terminal_sel.png");
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void onRegister(TextureSystem sys) {
+	    reg(sys, arrow_down);
+	    reg(sys, arrow_down_sel);
 		reg(sys, checkmark);
 		reg(sys, red_x);
 		reg(sys, close);

@@ -1,8 +1,7 @@
 package qot.world_tiles.categories.stone;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
-import eutil.random.ERandomUtil;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
 import qot.world_tiles.TileIDs;
 
@@ -13,6 +12,7 @@ public class StonePaver extends WorldTile {
         super(TileIDs.STONE_PAVER, id);
         
         numVariants = StoneFloorTextures.stone_paver.getChildren().size();
+        randomizeDrawFlipped = true;
         
         randomizeValues();
         setMiniMapColor(0xff686868);
@@ -20,7 +20,7 @@ public class StonePaver extends WorldTile {
     
     @Override
     public void randomizeValues() {
-        drawFlipped = ERandomUtil.randomBool();
+        super.randomizeValues();
         
         if (meta < 0) {
             setSprite(new Sprite(StoneFloorTextures.stone_paver.getRandVariant()));
@@ -29,8 +29,6 @@ public class StonePaver extends WorldTile {
             setSprite(new Sprite(StoneFloorTextures.stone_paver.getChild(meta)));
         }
     }
-    
-    @Override public boolean hasVariation() { return true; }
     
     @Override
     public WorldTile copy() {

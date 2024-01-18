@@ -1,7 +1,7 @@
 package qot.entities.shopkeepers;
 
 import envision.Envision;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.game.component.ComponentType;
 import envision.game.component.types.OnClickComponent;

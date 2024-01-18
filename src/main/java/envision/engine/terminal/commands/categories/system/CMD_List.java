@@ -29,8 +29,8 @@ public class CMD_List extends TerminalCommand {
 	
 	@Override
 	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
-		String[] types = {"objects, windows, screens, commands, aliases"};
-		super.basicTabComplete(termIn, args, EList.of(types));
+		var types = EList.of("objects", "windows", "screens", "commands", "aliases");
+		super.basicTabComplete(termIn, args, types);
 	}
 	
 	@Override

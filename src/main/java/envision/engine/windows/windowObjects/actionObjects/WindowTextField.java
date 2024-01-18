@@ -36,6 +36,7 @@ public class WindowTextField extends ActionObject {
 	protected boolean drawShadowed = true;
 	protected boolean textRecentlyEntered = false;
 	protected boolean scissoring = true;
+	protected boolean performActionOnTextChange = false;
 	protected long startTime = 0l;
 	protected int clickStartPos = -1;
 	protected int cursorCounter;
@@ -297,6 +298,7 @@ public class WindowTextField extends ActionObject {
 	public void startTextTimer() {
 		startTime = System.currentTimeMillis();
 		textRecentlyEntered = true;
+		if (performActionOnTextChange) performAction();
 	}
 	
 	public void writeText(String textIn) {
@@ -354,6 +356,7 @@ public class WindowTextField extends ActionObject {
         if (j < text.length()) s = s + text.substring(j);
         text = s;
         if (flag) moveCursorBy(amountToDelete);
+        startTextTimer();
 	}
 	
 	public void selectAllText() {
@@ -382,6 +385,7 @@ public class WindowTextField extends ActionObject {
 	public boolean onlyAcceptsNumbers() { return onlyAcceptNumbers; }
 	public boolean drawsShadowed() { return drawShadowed; }
 	public boolean allowsClipboardPastes() { return allowClipboardPastes; }
+	public boolean performActionOnTextChange() { return performActionOnTextChange; }
 	public int getSelEnd() { return selectionEnd; }
 	public double getWidth() { return getEnableBackgroundDrawing() ? width - 8 : width; }
 	public String getText() { return text; }
@@ -456,6 +460,7 @@ public class WindowTextField extends ActionObject {
 	public void setBorderColor(EColors colorIn) { borderColor = colorIn.intVal; }
 	public void setDrawShadowed(boolean val) { drawShadowed = val; }
 	public void setScissoringEnabled(boolean val) { scissoring = val; }
+	public void setPerformActionOnTextChange(boolean val) { performActionOnTextChange = val; }
 	
 	public void setCursorPos(int posIn) {
 		cursorPosition = posIn;

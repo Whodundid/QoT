@@ -86,7 +86,7 @@ public class GameWindow {
 		GLFW.glfwGetWindowPos(windowHandle, x, y);
 		windowX = x.get();
 		windowY = y.get();
-		windowDims.set(windowX, windowY, windowX + width, windowY + height);
+		windowDims.setArea(windowX, windowY, windowX + width, windowY + height);
 	}
 	
 	/**

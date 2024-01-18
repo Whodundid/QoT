@@ -9,9 +9,9 @@ import envision.game.world.worldEditor.editorTools.EditorToolType;
 /** A holder that keeps track of active map editor properties. */
 public class MapEditorSettings {
 	
-	//----------
+	//==========
 	// Settings
-	//----------
+	//==========
 	
 	protected final MapEditorScreen editor;
 	
@@ -26,20 +26,21 @@ public class MapEditorSettings {
 	public boolean drawFlatWalls = false;
 	public boolean drawTileGrid = false;
 	public boolean drawEntityHitBoxes = false;
+	public boolean lockToTileGrid = false;
 	
 	public EditorToolType currentTool;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public MapEditorSettings(MapEditorScreen editorIn) {
 		editor = editorIn;
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public File getMapFile() { return editor.mapFile; }
 	public GameWorld getGameWorld() { return editor.actualWorld; }
@@ -49,9 +50,9 @@ public class MapEditorSettings {
 	
 	public EditorToolType getCurrentTool() { return currentTool; }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public void setPrimaryPalette(EditorObject itemIn) { primaryPalette = itemIn; }
 	public void setSecondaryPalette(EditorObject itemIn) { secondaryPalette = itemIn; }

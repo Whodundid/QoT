@@ -1,7 +1,7 @@
 package qot.entities.enemies.dragon;
 
 import envision.Envision;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.GameObject;
 import envision.game.entities.BasicRenderedEntity;
 import eutil.EUtil;

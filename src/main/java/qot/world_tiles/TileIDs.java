@@ -59,6 +59,7 @@ public enum TileIDs {
 	DARK_DUNG_FLOOR(41, "Dark Dungeon Floor"),
 	
 	BLUE_WATER(42, "Blue Water"),
+	ROOF(43, "Roof"),
 	;
 	
 	public final int tileID;

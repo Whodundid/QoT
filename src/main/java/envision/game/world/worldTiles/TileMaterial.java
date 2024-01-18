@@ -1,26 +1,22 @@
 package envision.game.world.worldTiles;
 
 /** Tile material indicates what kind of sound is played when the tile is stepped on. */
-public enum TileMaterial {
+public class TileMaterial {
 	
-	GRASS("grass"),
-	DIRT("dirt"),
-	STONE("stone"),
-	WOOD("wood"),
-	WATER("water"),
-	VOID("void"); //nothing
+    //========
+    // Fields
+    //========
+    
+    private String materialName;
+    private String walkSoundEffectName;
+    private String walkParticleEffectName;
+    private float materialFriction;
+    private float movementModifier;
+    
+    //=========
+    // Getters
+    //=========
 	
-	public String name;
-	
-	TileMaterial(String nameIn) {
-		name = nameIn;
-	}
-	
-	public static TileMaterial getMaterial(String name) {
-		for (TileMaterial t : values()) {
-			if (t.name.equals(name)) return t;
-		}
-		return null;
-	}
-	
+    public String getMaterialName() { return materialName; }
+    
 }

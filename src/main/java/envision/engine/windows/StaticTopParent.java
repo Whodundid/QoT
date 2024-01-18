@@ -4,13 +4,14 @@ import java.util.Deque;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.rendering.RenderingManager;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.developerDesktop.taskbar.TaskBar;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
-import envision.engine.windows.windowUtil.EGui;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.KeyboardType;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
@@ -25,7 +26,7 @@ import eutil.misc.ScreenLocation;
 
 //Author: Hunter Bragg
 
-public class StaticTopParent extends EGui {
+public class StaticTopParent extends RenderingManager {
 	
 	public static final EList<IWindowObject> EMPTY_OBJECT_LIST = EList.emptyUnmodifiableList();
 	
@@ -209,15 +210,15 @@ public class StaticTopParent extends EGui {
         
         if (ho != null) out = ho.getClass().getName();
         
-        double longestX = strWidth(topParent);
+        double longestX = FontRenderer.strWidth(topParent);
         
-        if (strWidth(focusedObject) > longestX)         longestX = strWidth(focusedObject);
-        if (strWidth(focusLockObject) > longestX)   longestX = strWidth(focusLockObject);
+        if (FontRenderer.strWidth(focusedObject) > longestX)         longestX = FontRenderer.strWidth(focusedObject);
+        if (FontRenderer.strWidth(focusLockObject) > longestX)   longestX = FontRenderer.strWidth(focusLockObject);
         //if (stringWidth(objects) > longestX)      longestX = stringWidth(objects);
-        if (strWidth(modifyType) > longestX)            longestX = strWidth(modifyType);
-        if (strWidth(underMouse) > longestX)            longestX = strWidth(underMouse);
-        if (strWidth(lastClicked) > longestX)       longestX = strWidth(lastClicked);
-        if (strWidth(mousePos) > longestX)          longestX = strWidth(mousePos);
+        if (FontRenderer.strWidth(modifyType) > longestX)            longestX = FontRenderer.strWidth(modifyType);
+        if (FontRenderer.strWidth(underMouse) > longestX)            longestX = FontRenderer.strWidth(underMouse);
+        if (FontRenderer.strWidth(lastClicked) > longestX)       longestX = FontRenderer.strWidth(lastClicked);
+        if (FontRenderer.strWidth(mousePos) > longestX)          longestX = FontRenderer.strWidth(mousePos);
         
         longestX += 5;
         

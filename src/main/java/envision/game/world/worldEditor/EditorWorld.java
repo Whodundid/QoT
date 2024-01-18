@@ -12,6 +12,7 @@ import envision.game.world.WorldRenderer;
 import envision.game.world.layerSystem.LayerSystem;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
+import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import envision_lang._launch.EnvisionProgram;
 import eutil.datatypes.EArrayList;
@@ -19,7 +20,6 @@ import eutil.datatypes.ExpandableGrid;
 import eutil.datatypes.util.AnchorPoint;
 import eutil.datatypes.util.EList;
 import eutil.misc.Direction;
-import qot.world_tiles.VoidTile;
 
 /**
  * A game world that is used within the map editor.
@@ -36,14 +36,12 @@ public class EditorWorld implements IGameWorld {
 	public String getNextEntityID() { return String.valueOf(nextEntityID++); }
 	
 	private GameWorld actualWorld;
-	
 	private String worldName;
 	private int width, height;
 	private int tileWidth, tileHeight;
 	public EList<ExpandableGrid<EditorObject>> worldLayers = EList.newList();
 	private final EList<EditorObject> objectsInWorld = new EArrayList<>();
 	private final EList<EditorObject> entitiesInWorld = new EArrayList<>();
-//	private final EList<EntitySpawn> entitySpawns = new EArrayList<>();
 	private final EList<Region> regionData = new EArrayList<>();
 	private PlayerSpawnPoint playerSpawn;
 	private boolean underground = false;
@@ -81,7 +79,6 @@ public class EditorWorld implements IGameWorld {
 	@Override public void onGameTick(float dt) {}
 	@Override public void onRenderTick(float partialTicks) {}
 	@Override public WorldRenderer getWorldRenderer() { return null; }
-	
 	@Override public File getWorldFile() { return actualWorld.getWorldFile(); }
 	
 	//=========
@@ -105,7 +102,7 @@ public class EditorWorld implements IGameWorld {
 	public void expandWorld(AnchorPoint anchor, int amount) { expandWorld(anchor, amount, null); }
 	public void expandWorld(AnchorPoint anchor, int amount, WorldTile tile) {
 		for (int i = 0; i < worldLayers.size(); i++) {
-			worldLayers.get(0).expand(anchor, amount, EditorObject.of(tile));
+			worldLayers.get(i).expand(anchor, amount, EditorObject.of(tile));
 		}
 		width = worldLayers.get(0).getWidth();
 		height = worldLayers.get(0).getHeight();
@@ -119,7 +116,7 @@ public class EditorWorld implements IGameWorld {
 		
 		// resize the world
 		for (int i = 0; i < layerSize; i++) {
-			worldLayers.get(0).expand(dir, amount, eoTile);
+			worldLayers.get(i).expand(dir, amount, eoTile);
 		}
 		
 		// update tile positions
@@ -161,12 +158,6 @@ public class EditorWorld implements IGameWorld {
 	}
 	
 	private void moveObjects(int xOffset, int yOffset) {
-//		for (var e : entitySpawns) {
-//			var x = e.getX();
-//			var y = e.getY();
-//			e.setPosition(x + xOffset, y + yOffset);
-//		}
-		
 		for (var e : getEntitiesInWorld()) {
 			var x = e.worldX;
 			var y = e.worldY;
@@ -192,8 +183,8 @@ public class EditorWorld implements IGameWorld {
 		}
 		
 		{
-			var x = playerSpawn.getX();
-			var y = playerSpawn.getY();
+			var x = playerSpawn.startX;
+			var y = playerSpawn.startY;
 			setPlayerSpawn(x + xOffset, y + yOffset);
 		}
 	}
@@ -209,13 +200,27 @@ public class EditorWorld implements IGameWorld {
 		return objIn;
 	}
 	
-//	public void addEntitySpawn(Entity entIn) {
-//		entitySpawns.add(new EntitySpawn(entIn.worldX, entIn.worldY, entIn));
-//	}
-//	
-//	public void addEntitySpawn(EntitySpawn spawnIn) {
-//		entitySpawns.add(spawnIn);
-//	}
+	public void addLayerAbove(int layer) {
+	    if (layer < 0 || layer > worldLayers.size()) return;
+	    ExpandableGrid<EditorObject> newLayer = new ExpandableGrid<>(width, height);
+	    if (layer == worldLayers.size()) worldLayers.add(newLayer);
+	    else worldLayers.add(layer + 1, newLayer);
+	}
+	
+	public void addLayerBelow(int layer) {
+	    if (layer < 0 || layer >= worldLayers.size()) return;
+	    ExpandableGrid<EditorObject> newLayer = new ExpandableGrid<>(width, height);
+	    worldLayers.add(layer, newLayer);
+	}
+	
+	public void removeLayer(int layer) {
+	    if (layer < 0 || layer >= worldLayers.size()) return;
+	    if (layer == 0 && worldLayers.size() == 1) {
+	        System.out.println("Can't delete only layer!");
+	        return;
+	    }
+	    worldLayers.remove(layer);
+	}
 	
 	//========
 	// Saving
@@ -230,20 +235,19 @@ public class EditorWorld implements IGameWorld {
 		tileHeight = actualWorld.getTileWidth();
 		playerSpawn = actualWorld.getPlayerSpawn();
 		underground = actualWorld.isUnderground();
+		int numLayers = actualWorld.getWorldLayers().size();
 		
-		for (int layerIndex = 0; layerIndex < actualWorld.getWorldLayers().size(); layerIndex++) {
+		for (int layerIndex = 0; layerIndex < numLayers; layerIndex++) {
 			ExpandableGrid<EditorObject> layerData = new ExpandableGrid<>(width, height);
 			worldLayers.add(layerData);
 			
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
 					WorldTile t = actualWorld.getTileAt(layerIndex, j, i);
-					if (t == null) t = new VoidTile();
-					setTileAt(t, j, i);
+					if (t == null) t = VoidTile.instance;
+					setTileAt(t, layerIndex, j, i);
 				}
 			}
-			
-			layerIndex++;
 		}
 		
 		for (var spawn : actualWorld.getEntitySpawns()) {
@@ -275,10 +279,9 @@ public class EditorWorld implements IGameWorld {
 		}
 		
 		actualWorld.setEntitySpawns(spawns);
-		actualWorld.setNumWorldLayers(1);
+		actualWorld.setNumWorldLayers(worldLayers.size());
 		
 		for (int i = 0; i < worldLayers.size(); i++) {
-			if (i > 0) break;
 			var layer = worldLayers.get(i);
 			
 			for (int y = 0; y < height; y++) {
@@ -306,6 +309,8 @@ public class EditorWorld implements IGameWorld {
 	public EditorObject getEditorTile(int layerIn, int xIn, int yIn) {
 		return worldLayers.get(layerIn).get(xIn, yIn);
 	}
+	
+	@Override public int getNumberOfLayers() { return worldLayers.size(); }
 	
 	@Override
 	public EList<GameObject> getObjectsInWorld() {
@@ -350,11 +355,12 @@ public class EditorWorld implements IGameWorld {
 		WorldTile t = in.getTile();
 		t.setWidthHeight(tileWidth, tileHeight);
 		t.setWorldPos(xIn, yIn);
+		t.setCameraLayer(layerIn);
 		worldLayers.get(layerIn).set(in, xIn, yIn);
 	}
 	
 	@Override
-	public void setPlayerSpawn(int x, int y) {
+	public void setPlayerSpawn(double x, double y) {
 		playerSpawn = new PlayerSpawnPoint(actualWorld, x, y);
 	}
 	

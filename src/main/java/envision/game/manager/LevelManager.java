@@ -67,11 +67,7 @@ public class LevelManager {
     public LevelManager(IGameWorld startingWorld) {
         this.startingWorld = startingWorld;
         
-        timeOfDay = 0;
-        dayLength = 500; // laughably low to test with
-        
         rules = new GameRules();
-        
         worlds.addIfNotNull(startingWorld);
         
         camera = new WorldCamera();
@@ -108,10 +104,10 @@ public class LevelManager {
 
         
         
-        int transitionPeriodLength = lengthOfDay / 3;
-        int sunrise = (int) (lengthOfDay * 0.2);
+        int transitionPeriodLength = (int) (lengthOfDay * 0.15);
+        int sunrise = (int) (lengthOfDay * 0.15);
         int sunriseEnd = sunrise + transitionPeriodLength;
-        int sunset = (int) (lengthOfDay * 0.6D);
+        int sunset = (int) (lengthOfDay * 0.85D);
         int sunsetEnd = sunset + transitionPeriodLength;
         
         // check still night
@@ -173,7 +169,7 @@ public class LevelManager {
     
     public void loadWorld(IGameWorld worldIn) {
         if (activeWorld == null) {
-            setTime(lengthOfDay / 3);
+            setTime((int) (lengthOfDay / 2.2));
         }
         
         if (activeWorld != null) {

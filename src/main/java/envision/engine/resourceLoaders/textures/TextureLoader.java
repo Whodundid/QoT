@@ -14,11 +14,10 @@ import envision.Envision;
 import envision.engine.loader.dtos.GameTextureDTO;
 import envision.engine.loader.dtos.SpriteDTO;
 import envision.engine.loader.dtos.TextureSheetDTO;
-import envision.engine.loader.dtos.WorldTileDTO;
+import envision.engine.registry.IResourceManager;
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.resourceLoaders.IResourceManager;
-import envision.engine.resourceLoaders.Sprite;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
@@ -255,7 +254,7 @@ public class TextureLoader implements IResourceManager {
             
             TextureSheetDTO sheet = new TextureSheetDTO("sheet:baldric_walk_0", texture, sprites);
             
-            WorldTileDTO entity = new WorldTileDTO("The Cool Tile", sheet.name(), 1);
+//            WorldTileDTO entity = new WorldTileDTO("The Cool Tile", sheet.name(), 1);
             
             
             ObjectMapper mapper = new ObjectMapper();

@@ -10,8 +10,6 @@ import envision.game.abilities.EntitySpellbook;
 import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
 import envision.game.component.types.death.OnDeathComponent;
-import envision.game.entities.combat.AttackType;
-import envision.game.entities.combat.KnockbackCalculator;
 import envision.game.entities.inventory.EntityInventory;
 import envision.game.entities.physics.EntityPhysicsHandler;
 import envision.game.entities.physics.MovementCollisionHelper;
@@ -266,7 +264,8 @@ public abstract class Entity extends ComponentBasedObject {
         if (drawDamageSplash && wasHigherDamage || ent != Envision.thePlayer) {
             String text = "" + amount;
             if (wasHigherDamage) text = amount + "!";
-            var dmg = new FloatingTextEntity(worldX, worldY, width, height, text, 1500);
+            var dmg = new FloatingTextEntity(midX, midY, 5, 5, text, 2500);
+            dmg.setPixelPos(midX - dmg.width * 0.5, midY - dmg.height * 0.5);
             if (wasHigherDamage) dmg.setColor(EColors.mc_darkred);
             else dmg.setColor(EColors.lred);
             world.addEntity(dmg);
@@ -330,7 +329,8 @@ public abstract class Entity extends ComponentBasedObject {
      */
     public void replenishHealth(int amount) {
         health = ENumUtil.clamp(health + amount, 0, maxHealth);
-        var text = new FloatingTextEntity(worldX, worldY, width, height, amount, 1500);
+        var text = new FloatingTextEntity(midX, midY, 5, 5, amount, 1500);
+        text.setPixelPos(midX - text.width * 0.5, midY - text.height * 0.5);
         text.setColor(EColors.green);
         world.addEntity(text);
         healthChanged(amount);
@@ -353,7 +353,8 @@ public abstract class Entity extends ComponentBasedObject {
     public void fullHeal() {
         int diff = maxHealth - health;
         health = maxHealth;
-        var text = new FloatingTextEntity(worldX, worldY, width, height, diff, 1500);
+        var text = new FloatingTextEntity(startX, startY, 5, 5, diff, 1500);
+        text.setPixelPos(midX - text.width * 0.5, midY - text.height * 0.5);
         text.setColor(EColors.green);
         world.addEntity(text);
         healthChanged(diff);
@@ -379,9 +380,7 @@ public abstract class Entity extends ComponentBasedObject {
     public void dropItem(int index) {
         Item i = inventory.removeItemAtIndex(index);
         var cDims = getCollisionDims();
-        int wx = (int) (cDims.midX / world.getTileWidth());
-        int wy = (int) (cDims.midY / world.getTileHeight());
-        world.dropItemOnGround(i, wx, wy);
+        world.dropItemOnGround(i, cDims.midX, cDims.midY);
     }
     
     public void move(Direction d) {
@@ -454,13 +453,14 @@ public abstract class Entity extends ComponentBasedObject {
                 var ecDims = e.getCollisionDims();
                 double dx = cDims.midX - ecDims.midX;
                 double dy = cDims.midY - ecDims.midY;
-                double mag = Math.sqrt(dist);
+                double mag = Math.sqrt(dx * dx + dy * dy);
                 dx /= mag;
                 dy /= mag;
-                double kb = -KnockbackCalculator.calculateKnockbackForce(this, e, AttackType.MAGIC);
+//                System.out.println(cDims.midX + " : " + ecDims.midX + " | " + dx + " : " + dy + " | " + speed);
+//                double kb = -KnockbackCalculator.calculateKnockbackForce(this, e, AttackType.MAGIC);
                 
-                dx *= kb;
-                dy *= kb;
+                dx *= -speed * Envision.getDeltaTime();
+                dy *= -speed * Envision.getDeltaTime();
                 e.getPhysicsHandler().applyImpulse(dx, dy);
             }
         }
@@ -468,6 +468,36 @@ public abstract class Entity extends ComponentBasedObject {
     
     public void movePixel(double x, double y) {
         collisionHelper.tryMovePixel(x, y);
+        
+        if (!canMoveEntities) return;
+        
+        var cDims = this.getCollisionDims();
+        
+        final int len = world.getEntitiesInWorld().size();
+        for (int i = 0; i < len; i++) {
+            var e = world.getEntitiesInWorld().get(i);
+            
+            if (e == this) continue;
+            if (!e.canBeMoved) continue;
+            if (e instanceof Doodad) continue;
+            //System.out.println(e + " : " + e.getDimensions());
+            
+            final double dist = world.getDistance(this, e);
+            if (dist < 15) {
+                var ecDims = e.getCollisionDims();
+                double dx = cDims.midX - ecDims.midX;
+                double dy = cDims.midY - ecDims.midY;
+                double mag = Math.sqrt(dx * dx + dy * dy);
+                dx /= mag;
+                dy /= mag;
+//                System.out.println(cDims.midX + " : " + ecDims.midX + " | " + dx + " : " + dy + " | " + speed);
+//                double kb = -KnockbackCalculator.calculateKnockbackForce(this, e, AttackType.MAGIC);
+                
+                dx *= -speed * Envision.getDeltaTime();
+                dy *= -speed * Envision.getDeltaTime();
+                e.getPhysicsHandler().applyImpulse(dx, dy);
+            }
+        }
     }
     
     public double distSquared(double x, double y) {
@@ -569,54 +599,13 @@ public abstract class Entity extends ComponentBasedObject {
     
     public Entity setNoClipAllowed(boolean val) { allowNoClip = val; return this; }
     public Entity setPassable(boolean val) { passable = val; return this; }
-    public Entity setCollisionBox(double sX, double sY, double eX, double eY) {
-        collisionBox = new Dimension_d(sX, sY, eX, eY);
-        return this;
-    }
+    
     public Entity setHeadText(Object... textIn) {
         var sb = new EStringBuilder();
         sb.a(textIn);
         return setHeadText(sb.toString());
     }
     public Entity setHeadText(String textIn) { headText = textIn; return this; }
-    
-    /**
-     * Instantaneously moves this entity to the target world coordinates. Note:
-     * the entity must actually exist in a world for this to have any effect.
-     */
-    public Entity setWorldPos(int x, int y) {
-        worldX = x;
-        worldY = y;
-        
-        if (world != null) {
-            startX = worldX * world.getTileWidth();
-            endX = startX + width;
-            startY = worldY * world.getTileHeight();
-            endY = startY + height;
-            
-            //collisionBox.setPosition(startX + 20, startY + 20);
-            
-            midX = startX + (width) / 2;
-            midY = startY + (height) / 2;
-        }
-        return this;
-    }
-    
-    public Entity setPixelPos(double x, double y) {
-        startX = x;
-        startY = y;
-        endX = startX + width;
-        endY = startY + height;
-        midX = startX + width * 0.5;
-        midY = startY + height * 0.5;
-        
-        if (world != null) {
-            worldX = (int) (startX / world.getTileWidth());
-            worldY = (int) (startY / world.getTileHeight());
-        }
-        
-        return this;
-    }
     
     public Entity setMaxHealth(int maxHealthIn) { maxHealth = maxHealthIn; return this; }
     public Entity setHealth(int healthIn) {

@@ -1,6 +1,6 @@
 package qot.items.weapons.magic;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.entities.Entity;
 import envision.game.items.Item;
 import envision.game.items.Weapon;

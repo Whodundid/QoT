@@ -20,6 +20,7 @@ public class FontRenderer {
     public static final double FONT_HEIGHT = 24;
     public static final double FH = FONT_HEIGHT;
     public static final double HALF_FH = FONT_HEIGHT / 2;
+    public static final double FONT_MID_Y = FONT_HEIGHT * 0.4;
     
     public static final char COPYRIGHT = '\u00A9';
     public static final char ERROR_CHAR = '\u0000';

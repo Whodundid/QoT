@@ -51,6 +51,8 @@ public class TextDocument {
      */
     private final EList<HighlightedPosition> highlightedPositions = EList.newList();
     
+    private final EList<DocumentChangeListener> listeners = EList.newList();
+    
     private EStringBuilder document;
     
     //==============
@@ -146,7 +148,9 @@ public class TextDocument {
     }
     
     public String getHighlightedText() {
-        return document.sub(highlightStartPos, highlightEndPos);
+        int end = ENumUtil.clamp(highlightEndPos, 0, length());
+        int start = ENumUtil.clamp(highlightStartPos, 0, end);
+        return document.sub(start, end);
     }
     
     public String getSection(int start, int end) {
@@ -177,30 +181,50 @@ public class TextDocument {
             s = e;
             e = temp;
         }
-         
+        
+        String str = document.sub(s, e);
         document.delete(s, e);
         updateLineNumberOffset();
         determineCurrentPosition();
         updateHighlightedTextPositions();
+        
+        listeners.forEach(l -> {
+            l.onDocumentChanged();
+            l.onStringDeleted(str, start);
+        });
     }
     
     public void backspaceAtCursor() {
         if (cursorPos < 1) return;
         if (document.isEmpty()) return;
-        document.deleteCharAt(cursorPos - 1);
+        int cPos = cursorPos - 1;
+        char c = document.charAt(cPos);
+        document.deleteCharAt(cPos);
         cursorPos--;
         updateLineNumberOffset();
         determineCurrentPosition();
         updateHighlightedTextPositions();
+        
+        listeners.forEach(l -> {
+            l.onDocumentChanged();
+            l.onStringDeleted("" + c, cPos);
+        });
     }
     
     public void deleteAtCursor() {
         if (document.isEmpty()) return;
         if (cursorPos >= length()) return;
+        int cPos = cursorPos;
+        char c = document.charAt(cursorPos);
         document.deleteCharAt(cursorPos);
         updateLineNumberOffset();
         determineCurrentPosition();
         updateHighlightedTextPositions();
+        
+        listeners.forEach(l -> {
+            l.onStringDeleted("" + c, cPos);
+            l.onDocumentChanged();
+        });
     }
     
     public void newLineAtCursor() {
@@ -247,6 +271,11 @@ public class TextDocument {
         moveToIndex = false;
         updateLineNumberOffset();
         updateHighlightedTextPositions();
+        
+        listeners.forEach(l -> {
+            l.onStringInserted("" + toInsert, position);
+            l.onDocumentChanged();
+        });
     }
     
     public void insertString(String toInsert) {
@@ -254,6 +283,8 @@ public class TextDocument {
     }
     
     public void insertString(String toInsert, int position) {
+        if (toInsert == null || toInsert.isEmpty()) return;
+        
         if (position == length()) {
             document.append(toInsert);
         }
@@ -267,11 +298,23 @@ public class TextDocument {
         updateLineNumberOffset();
         determineCurrentPosition();
         updateHighlightedTextPositions();
+        
+        listeners.forEach(l -> {
+            l.onStringInserted(toInsert, position);
+            l.onDocumentChanged();
+        });
     }
     
     public void pasteSection(String toPaste, int position) {
+        if (toPaste == null || toPaste.isEmpty()) return;
+        
         assertValidIndex(position);
         insertString(toPaste, position);
+        
+        listeners.forEach(l -> {
+            l.onStringInserted(toPaste, position);
+            l.onDocumentChanged();
+        });
     }
     
     public void copySection(int start, int end) {
@@ -427,6 +470,23 @@ public class TextDocument {
         }
         
         return document.substring(start, end);
+    }
+    
+    //===========
+    // Listeners
+    //===========
+    
+    public void registerListener(DocumentChangeListener listenerIn) {
+        listeners.addIfNotNull(listenerIn);
+    }
+    
+    public void unregisterListener(DocumentChangeListener listenerIn) {
+        if (listenerIn == null) return;
+        listeners.remove(listenerIn);
+    }
+    
+    public void clearListeners() {
+        listeners.clear();
     }
     
     //=========================

@@ -1,7 +1,7 @@
 package qot.entities.buildings;
 
 import envision.Envision;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.component.EntityComponent;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.component.types.timing.RandomTimeEventComponent;
@@ -34,6 +34,7 @@ public class Spawner extends Building {
 		setHealth(30);
 		setBaseMeleeDamage(1);
 		setExperienceRewardedOnKill(300);
+		setCollisionBox(startX + 10, midY + 10, endX - 10, endY - 5);
 		
 		addComponent(spawnerComponent = new RandomTimeEventComponent(this, "spawn_update", 2000, 8000));
 		addComponent(defenderComponent = new RandomTimeEventComponent(this, "defense", 3000, 5000));
@@ -56,6 +57,10 @@ public class Spawner extends Building {
 	
 	@Override
 	public void onLivingUpdate(float dt) {
+	    if (Envision.thePlayer == null) {
+	        defenderComponent.setPaused(true);
+	        return;
+	    }
 		var dist = world.getDistance(this, Envision.thePlayer);
 		var inRange = dist <= 300;
 		defenderComponent.setPaused(!inRange);
@@ -64,14 +69,13 @@ public class Spawner extends Building {
 	@Override
 	public Entity setWorldPos(int x, int y) {
 		super.setWorldPos(x, y);
-		entityToSpawn.setPosition(x, y + 1);
 		return this;
 	}
 	
 	protected void spawnFireBall() {
 		var fb = new Fireball(this);
-		fb.worldX = worldX + 1;
-		fb.worldY = worldY + 1;
+		fb.startX = midX - fb.width * 0.5;
+		fb.startY = midY - fb.height * 0.5;
 		fb.setSpeed(700);
 		world.addEntity(fb);
 	}
@@ -81,9 +85,10 @@ public class Spawner extends Building {
 			updateTrackedEntities();
 		}
 		else {
+		    entityToSpawn.setPosition((int) startX, (int) startY);
 			Entity e = entityToSpawn.spawnEntity(world);
-			e.worldX += ERandomUtil.getRoll(-2, 2);
-			e.worldY += ERandomUtil.getRoll(-2, 2);
+			e.startX += ERandomUtil.getRoll(-2, 2) * world.getTileWidth();
+			e.startY += ERandomUtil.getRoll(-2, 2) * world.getTileWidth();
 			trackedEntities.add(e);
 		}
 	}

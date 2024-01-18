@@ -1,10 +1,10 @@
 package envision.engine.windows.windowUtil;
 
 import envision.Envision;
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.resourceLoaders.Sprite;
 import envision.engine.windows.windowUtil.input.KeyboardInputAcceptor;
 import envision.engine.windows.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;
@@ -19,9 +19,9 @@ import eutil.misc.ScreenLocation;
 
 public abstract class EGui extends RenderingManager implements KeyboardInputAcceptor, MouseInputAcceptor {
 
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	public FontRenderer fontRenderer = FontRenderer.getInstance();
 	public Dimension_i res = Envision.getWindowDims();
@@ -35,9 +35,11 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public double maxWidth = Double.MAX_VALUE;
 	public double maxHeight = Double.MAX_VALUE;
 	
-	//-----------------
+	public static final double FONT_MID_Y = FontRenderer.FONT_MID_Y;
+	
+	//=================
 	// Drawing Helpers
-	//-----------------
+	//=================
 	
 	public static void drawRect(EGui o, EColors color) { drawRect(o.startX, o.startY, o.endX, o.endY, color.intVal); }
 	public static void drawRect(EGui o, int color) { drawRect(o.startX, o.startY, o.endX, o.endY, color); }
@@ -108,9 +110,9 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	
 	public static double strWidth(Object text) { return FontRenderer.strWidth(String.valueOf(text)); }
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	/** Centers the gui in the middle of the screen with the specified dimensions. */
 	public void centerGuiWithSize(double widthIn, double heightIn) {
@@ -193,9 +195,9 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public double getMaxWidth() { return maxWidth; }
 	public double getMaxHeight() { return maxHeight; }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public void setGuiPosition(double newX, double newY) { setDimensions(newX, newY, width, height); }
 	public void setGuiInitialPosition(double xIn, double yIn) { startXPos = xIn; startYPos = yIn; }

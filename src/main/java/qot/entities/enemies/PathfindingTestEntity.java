@@ -1,7 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.entity.EntityTextures;
 import qot.entities.EntityList;

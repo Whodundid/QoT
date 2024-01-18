@@ -35,8 +35,7 @@ public abstract class RenderingComponent extends EntityComponent {
     // Methods
     //=========
     
-    public abstract void draw(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX,
-        double midY, int distX, int distY);
+    public abstract void draw(IGameWorld world, WorldCamera camera);
     
     //=================
     // Utility Methods

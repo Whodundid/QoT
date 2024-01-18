@@ -109,7 +109,12 @@ public class MapMenuScreen extends GameScreen {
 	}
 	
 	private void openMapChooser() {
-		explorer = new FileExplorerWindow(this, QoTSettings.getEditorWorldsDir(), true);
+	    File dirToLoad = EngineSettings.EDITOR_WORLDS_DIR;
+	    if (Envision.getGame() != null) {
+	        dirToLoad = Envision.getGame().getEditorWorldsDirectory();
+	    }
+	    
+		explorer = new FileExplorerWindow(this, dirToLoad, true);
 		explorer.setTitle("Map Selection");
 		setDefaultFocusObject(null);
 		displayWindow(explorer, ObjectPosition.SCREEN_CENTER);

@@ -7,7 +7,7 @@ import envision.engine.windows.windowObjects.advancedObjects.textArea.TextDocume
 import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea2;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import eutil.colors.EColors;
+import envision.game.dialog.TextWriterOverTime;
 
 public class TestWindow extends WindowParent {
 	
@@ -15,6 +15,9 @@ public class TestWindow extends WindowParent {
 	private TabbedContainer container;
 	
 	private TextDocument document;
+	private TextWriterOverTime text;
+	
+	private String building = "";
 	
 	public TestWindow(double x, double y, double w, double h) {
 		init(Envision.getDeveloperDesktop(), x, y, w, h);
@@ -49,8 +52,15 @@ public class TestWindow extends WindowParent {
 //		
 //		IActionObject.setActionReceiver(this, bB);
 		
+		String toSay = "Have you ever heard the tale of Darth Plagius the Wise? " +
+		               TextWriterOverTime.addPause(50) + "I thought not..";
+		
+		text = new TextWriterOverTime(toSay, 7000);
+		
 		WindowTextArea2 ta = new WindowTextArea2(this, startX + 5, startY + 5, width - 10, height - 10, document);
 		document = ta.getDocument();
+		document.clearListeners();
+		document.registerListener(ta);
 		//ta.setText(EColors.cyan + "Billy\n" + EColors.blue + "Bob\n" + EColors.green + "Nugget");
 		
 		addObject(ta);
@@ -64,7 +74,24 @@ public class TestWindow extends WindowParent {
 	
 	@Override
 	public void drawObject(float dt, int mXIn, int mYIn) {
-		
+
+	}
+	
+	@Override
+	public void onTickUpdate_i(float dt) {
+	    super.onTickUpdate_i(dt);
+	}
+	
+	@Override
+	public void onTickUpdate(float dt) {
+        text.update(dt);
+        String s = text.getNextCharOverTime();
+        //	      building += s;
+        //	      drawString(text.getStringOverTime(), startX + 50, endY + 50);
+        //	      drawString(text.getLastChar(), startX + 50, endY + 70);
+        //	      drawString(building, startX + 50, endY + 90);
+        //	      
+        document.insertString(s);
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 package qot.entities.enemies.dragon;
 
 import envision.Envision;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.entities.combat.EntityAttack;
@@ -70,8 +70,9 @@ public class Thyrah extends Enemy {
 			if (System.currentTimeMillis() - timeSinceLastFireball >= fireballDelay) {
 				timeSinceLastFireball = System.currentTimeMillis();
 				var fb = new Fireball();
-				fb.worldX = (left) ? worldX : (int) (worldX + width / world.getTileWidth());
-				fb.worldY = worldY + 2;
+				fb.startX = (left) ? startX : endX;
+				fb.startY = midY;
+				
 				world.addEntity(fb);
 			}
 		}

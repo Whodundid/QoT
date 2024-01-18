@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.stone;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.walls.stone.StoneWallTextures;
 import qot.world_tiles.TileIDs;
@@ -12,7 +12,7 @@ public class StoneWall extends WorldTile {
 		super(TileIDs.STONE_WALL, id);
 		
 		setWall(true);
-		wallHeight = 0.75;
+		wallHeight = 0.75f;
 		blocksMovement = true;
 		numVariants = StoneWallTextures.stone_wall.getChildren().size();
 		
@@ -22,9 +22,6 @@ public class StoneWall extends WorldTile {
 	
 	@Override
 	public void randomizeValues() {
-	    //rotation = Rotation.random();
-        //drawFlipped = RandomUtil.randomBool();
-	    
 	    if (meta < 0) {
             setSprite(new Sprite(StoneWallTextures.stone_wall.getRandVariant()));
         }
@@ -32,8 +29,6 @@ public class StoneWall extends WorldTile {
             setSprite(new Sprite(StoneWallTextures.stone_wall.getChild(meta)));
         }
 	}
-	
-	@Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

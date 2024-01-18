@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.nature;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.water.WaterTextures;
 import qot.world_tiles.TileIDs;
@@ -12,7 +12,7 @@ public class Water extends WorldTile {
 		setBlocksMovement(true);
 		setSprite(new Sprite(WaterTextures.water));
 		setWall(true);
-		wallHeight = -0.05;
+		wallHeight = -0.05f;
 		setMiniMapColor(0xff0062A8);
 	}
 	

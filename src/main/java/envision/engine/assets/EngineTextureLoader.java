@@ -1,9 +1,9 @@
 package envision.engine.assets;
 
 import envision.engine.EngineSettings;
+import envision.engine.registry.types.SpriteSheet;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.resourceLoaders.SpriteSheet;
 
 public abstract class EngineTextureLoader {
 	

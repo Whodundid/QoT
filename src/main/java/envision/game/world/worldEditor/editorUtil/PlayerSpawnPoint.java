@@ -1,10 +1,9 @@
 package envision.game.world.worldEditor.editorUtil;
 
 import envision.engine.assets.EditorTextures;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.GameObject;
 import envision.game.world.GameWorld;
-import eutil.datatypes.points.Point2i;
 
 /**
  * A point in the world where the player will be positioned when being
@@ -15,35 +14,27 @@ public class PlayerSpawnPoint extends GameObject {
 	
 	/** The world for which this point is corresponding to. */
 	GameWorld theWorld;
-	int xPos = 0, yPos = 0;
 	int layerIndex = 0;
 	
 	public PlayerSpawnPoint() { this(null, -1, -1); }
 	public PlayerSpawnPoint(GameWorld worldIn) { this(worldIn, 0, 0); }
-	public PlayerSpawnPoint(GameWorld worldIn, int xIn, int yIn) {
+	public PlayerSpawnPoint(GameWorld worldIn, double xIn, double yIn) {
 		super("Spawn");
-		init(xIn, yIn, 32, 32);
+		init((int) xIn, (int) yIn, 32, 32);
+		setCollisionBox(0, 0, 0, 0);
 		setSprite(new Sprite(EditorTextures.player_spawn));
 		
 		theWorld = worldIn;
-		xPos = xIn;
-		yPos = yIn;
+		this.setPixelPos(xIn, yIn);
 	}
 	
 	@Override
 	public String toString() {
-		return layerIndex + "," + xPos + "," + yPos;
+		return layerIndex + "," + startX + "," + startY;
 	}
 	
 	public GameWorld getWorld() { return theWorld; }
-	public Point2i getPos() { return new Point2i(xPos, yPos); }
-	public int getX() { return xPos; }
-	public int getY() { return yPos; }
 	public int getLayerIndex() { return layerIndex; }
-	
-	public PlayerSpawnPoint setPos(int xIn, int yIn) { xPos = xIn; yPos = yIn; return this; }
-	public PlayerSpawnPoint setX(int xIn) { xPos = xIn; return this; }
-	public PlayerSpawnPoint setY(int yIn) { yPos = yIn; return this; }
 	public PlayerSpawnPoint setLayerIndex(int index) { layerIndex = index; return this; }
 	
 	@Override

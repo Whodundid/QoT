@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.nature;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.sand.SandTextures;
 import qot.world_tiles.TileIDs;
@@ -25,8 +25,6 @@ public class CoarseSand extends WorldTile {
             setSprite(new Sprite(SandTextures.coarse_sand.getChild(meta)));
         }
     }
-    
-    @Override public boolean hasVariation() { return true; }
     
     @Override
     public WorldTile copy() {

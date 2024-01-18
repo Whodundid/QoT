@@ -37,13 +37,15 @@ public interface IGameWorld {
 	default void setTileAt(WorldTile tile, int x, int y) { setTileAt(tile, 0, x, y); }
 	void setTileAt(WorldTile tile, int layerIn, int x, int y);
 	
+	int getNumberOfLayers();
+	
 	EList<Region> getRegionData();
 	EList<GameObject> getObjectsInWorld();
 	EList<Entity> getEntitiesInWorld();
 	EList<EntitySpawn> getEntitySpawns();
 	
 	PlayerSpawnPoint getPlayerSpawn();
-	void setPlayerSpawn(int x, int y);
+	void setPlayerSpawn(double x, double y);
 	
 	EnvisionProgram getStartupScript();
 	void setStartupScript(EnvisionProgram program); 
@@ -79,7 +81,7 @@ public interface IGameWorld {
 	
 	default void dropItemOnGround(Item item, double x, double y) {
 	    var loot = new ItemOnGround(item, 20000);
-	    loot.setWorldPos((int) x, (int) y);
+	    loot.setPixelPos(x - loot.width * 0.5, y);
 	    addEntity(loot);
 	}
 	

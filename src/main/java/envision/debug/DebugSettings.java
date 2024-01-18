@@ -1,8 +1,6 @@
 package envision.debug;
 
 public class DebugSettings {
-	
-    public static boolean fixingCamera = true;
     
 	public static boolean drawFlatWalls = false;
 	public static boolean drawTileInfo = false;

@@ -2,7 +2,7 @@ package qot.entities.player;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.game.entities.combat.CircularDirectionalAttack;
 import envision.game.entities.player.EntityStats;
@@ -90,7 +90,7 @@ public class QoT_Player extends Player {
     }
     
     @Override
-    public void draw(WorldCamera camera, double x, double y, double w, double h, boolean mouseOver) {
+    public void draw(WorldCamera camera, double[] dims, boolean mouseOver) {
         if (this != Envision.thePlayer) return;
         final double mpx = camera.getMousePixelX();
         final double mpy = camera.getMousePixelY();

@@ -1,7 +1,5 @@
 package envision.game.entities;
 
-import java.text.DecimalFormat;
-
 import envision.Envision;
 import envision.debug.DebugSettings;
 import envision.engine.inputHandlers.Mouse;
@@ -12,10 +10,11 @@ import envision.game.GameObject;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
+import envision.game.world.worldTiles.VoidTile;
+import envision.game.world.worldTiles.WorldTile;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import eutil.misc.Rotation;
-import eutil.strings.EStringBuilder;
 import eutil.strings.EStringUtil;
 
 public class EntityRenderer extends RenderingComponent {
@@ -63,149 +62,10 @@ public class EntityRenderer extends RenderingComponent {
 	 * Calculates screen drawing positions up front so that they can be
 	 * extracted out from the actual entity drawing logic.
 	 */
-	public void draw(IGameWorld world, WorldCamera camera,
-					 int midDrawX, int midDrawY,
-					 double midX, double midY,
-					 int distX, int distY)
-	{
-		//var sprite = theObject.getSprite();
-		//if (sprite == null && EStringUtil.isNotPopulated(theEntity.getHeadText())) return;
-		
-		final double zoom = camera.getZoom();
-		lastZoom = zoom;
-		
-		final int worldX = theObject.worldX;
-        final int worldY = theObject.worldY;
-		
-//        final int screenWidth = Envision.getWidth();
-//        final int screenHeight = Envision.getHeight();
-//        
-//        final double camWorldX = camera.getCameraCenterX();
-//        final double camWorldY = camera.getCameraCenterY();
-        
-        //scaled pixel width of the entity
-        double drawW = theObject.width * zoom;
-        //scaled pixel height of the entity
-        double drawH = theObject.height * zoom;
-        
-        final var df = new DecimalFormat("#.#####");
-        var sb = new EStringBuilder();
-        sb.a("xy[", df.format(theObject.startX), ", ", df.format(theObject.startY), "] | ");
-        sb.a("wh[", df.format(theObject.width), ", ", df.format(theObject.height), "] | ");
-//        sb.a("cwxy[", df.format(worldX), ", ", df.format(worldY), "] | ");
-//        sb.a("cwxy[", df.format(camWorldX), ", ", df.format(camWorldY), "] | ");
-//        sb.a("dwh[", df.format(drawW), ", ", df.format(drawH), "] | ");
-//        sb.a(df.format((worldX - camWorldX) * drawW + screenWidth / 2));
-        //System.out.println(sb);
-//      
-        double drawX, drawY;
-        
-        if (DebugSettings.fixingCamera) {
-//            drawX = ((camWorldX - worldX) * drawW) + screenWidth / 2.0;
-//            drawY = ((worldY - camWorldY) * drawH) + screenHeight / 2.0;
-//            
-//            drawX -= camera.getScaledTileWidth() * 0.5;
-//            drawY -= camera.getScaledTileHeight() * 0.5;
-            
-            newRenderingMethod(world, camera);
-            return;
-        }
-        else {
-            //pixel width of each tile
-            double w = (int) (world.getTileWidth() * zoom);
-            //pixel height of each tile
-            double h = (int) (world.getTileHeight() * zoom);
-            
-            //the left most x coordinate for map drawing
-            double x = (int) (midX - (distX * w) - (w / 2));
-            //the top most y coordinate for map drawing
-            double y = (int) (midY - (distY * h) - (h / 2));
-            
-            var startX = theObject.startX;
-            var startY = theObject.startY;
-            
-            double entityOffsetX = (startX % world.getTileWidth()) * zoom;
-            double entityOffsetY = (startY % world.getTileWidth()) * zoom;
-            
-            //transform the world coordinates of the entity to screen x/y coordinates
-            drawX = (worldX * w) + x;
-            drawY = (worldY * h) + y;
-            
-            //translate to the middle drawn world tile
-            drawX += (distX - midDrawX) * w;
-            drawY += (distY - midDrawY) * h;
-            
-            //System.out.println(entityOffsetX + " : " + camera.getOffsetX());
-            
-            drawX -= camera.getOffsetX();
-            drawY -= camera.getOffsetY();
-            //double tileX = drawX;
-            //double tileY = drawY;
-            
-            drawX += entityOffsetX;
-            drawY += entityOffsetY;
-        }
-        
-        
-        
-		
-
-		
-		var width = theObject.width;
-		var height = theObject.height;
-		
-		//calculate the entity's draw width and height based off of actual dims and zoom
-		drawW = width * zoom;
-		drawH = height * zoom;
-		
-		var collisionBox = theObject.collisionBox;
-		
-		int mX = Mouse.getMx();
-		int mY = Mouse.getMy();
-		boolean mouseOver = (mX >= drawX && mX <= drawX + drawW && mY >= drawY && mY <= drawY + drawH);
-		
-        int worldBrightness = world.getAmbientLightLevel();
-        int color = EColors.white.brightness(worldBrightness);
-        
-        // check if camera should make the entity transparent if the camera target is behind it
-        color = checkIfCameraTargetIsBehind(camera, color);
-		
-		if (!BatchManager.isEnabled()) {
-			double cmx = collisionBox.midX; //collision mid x
-			double cmy = collisionBox.midY; //collision mid y
-			double tw = world.getTileWidth(); //tile width
-			double th = world.getTileHeight(); //tile height
-			
-			//offset world coordinates to middle of collision box
-			int mwcx = (int) Math.floor(cmx / tw); //mid world coords x
-			int mwcy = (int) Math.floor(cmy / th); //mid world coords y
-			
-			//light render position
-			int lightx = worldX + mwcx;
-			int lighty = worldY + mwcy;
-			
-			drawEntity(world, camera, drawX, drawY, drawW, drawH, calcBrightness(lightx, lighty), mouseOver);
-		}
-		else {
-			drawEntity(world, camera, drawX, drawY, drawW, drawH, color, mouseOver);
-		}
-		
-		if (DebugSettings.drawEntityHitboxes) {
-		    RenderingManager.drawHRect(drawX, drawY, drawX + drawW, drawY + drawH, 1, EColors.blue);
-		}
-		
-        if (DebugSettings.drawEntityCollisionBoxes) {
-            double colSX = drawX + (collisionBox.startX * zoom);
-            double colSY = drawY + (collisionBox.startY * zoom);
-            double colEX = colSX + (collisionBox.width * zoom);
-            double colEY = colSY + (collisionBox.height * zoom);
-            RenderingManager.drawHRect(colSX, colSY, colEX, colEY, 1, EColors.yellow);
-        }
-	}
-	
-	public void newRenderingMethod(IGameWorld world, WorldCamera camera) {
+    @Override
+	public void draw(IGameWorld world, WorldCamera camera) {
 	    final double zoom = camera.getZoom();
-	    final double[] draw = camera.calculateDrawDimensions(theEntity);
+        final double[] draw = camera.calculateDrawDimensions(theEntity);
         boolean mouseOver = camera.isMouseOverObject(theEntity);
 
         int worldBrightness = world.getAmbientLightLevel();
@@ -230,14 +90,14 @@ public class EntityRenderer extends RenderingComponent {
             int lightx = theEntity.worldX + mwcx;
             int lighty = theEntity.worldY + mwcy;
             
-            drawEntity(world, camera, draw[0], draw[1], draw[2], draw[3], calcBrightness(lightx, lighty), mouseOver);
+            drawEntity(world, camera, draw, calcBrightness(lightx, lighty), mouseOver);
         }
         else {
-            drawEntity(world, camera, draw[0], draw[1], draw[2], draw[3], color, mouseOver);
+            drawEntity(world, camera, draw, color, mouseOver);
         }
         
         if (DebugSettings.drawEntityHitboxes) {
-            RenderingManager.drawHRect(draw[0], draw[1], draw[0] + draw[2], draw[1] + draw[3], 1, EColors.blue);
+            RenderingManager.drawHRectDimsArray(draw, 1, EColors.blue);
         }
         
         if (DebugSettings.drawEntityCollisionBoxes) {
@@ -325,7 +185,12 @@ public class EntityRenderer extends RenderingComponent {
         return color;
 	}
 	
-	public void drawEntity(IGameWorld world, WorldCamera camera, double x, double y, double w, double h, int brightness, boolean mouseOver) {
+	public void drawEntity(IGameWorld world, WorldCamera camera, double[] dims, int brightness, boolean mouseOver) {
+	    double x = dims[0];
+	    double y = dims[1];
+	    double w = dims[2];
+	    double h = dims[3];
+	    
 	    lastDrawX = x;
 		lastDrawY = y;
 		lastDrawW = w;
@@ -336,7 +201,7 @@ public class EntityRenderer extends RenderingComponent {
 		drawFlash(brightness);
 		
 		if (theObject.getSprite() != null) drawEntityTexture();
-		theEntity.draw(camera, x, y, w, h, mouseOver);
+		theEntity.draw(camera, dims, mouseOver);
 		theEntity.healthBar.setDimensions(x, y - 7, w, 7);
 		theEntity.healthBar.drawObject(0, Mouse.getMx(), Mouse.getMy());
 		
@@ -350,11 +215,39 @@ public class EntityRenderer extends RenderingComponent {
 			theEntity.healthBar.keepDrawing();
 		}
 		
+		// hide upper layers if under roof
+		checkIfCameraIsUnderRoof(world, camera);
+		
 		// draw chat box (if there is one)
 		drawChatbox(x, y, w, h);
         
 		// draw head text
 		RenderingManager.drawStringC(theEntity.headText, x + w * 0.5, y - h * 0.25);
+	}
+	
+	public void checkIfCameraIsUnderRoof(IGameWorld world, WorldCamera camera) {
+	    if (theEntity != camera.getFocusedObject()) return;
+	    
+	    int camLayer = theEntity.getCameraLayer();
+	    if (camLayer >= world.getNumberOfLayers() - 1) return;
+	    
+	    var colDims = theEntity.getCollisionDims();
+        int worldMidX = (int) (colDims.midX / world.getTileWidth());
+        int worldMidY = (int) (colDims.midY / world.getTileHeight());
+        WorldTile above = null;
+        while ((above == null || above == VoidTile.instance) && camLayer < world.getNumberOfLayers() - 1) {
+            above = world.getTileAt(camLayer + 1, worldMidX, worldMidY);
+            camLayer++;
+        }
+        
+        int upper = world.getNumberOfLayers() - 1;
+        
+        if (above != null && above != VoidTile.instance) {
+            upper = above.getCameraLayer() - 1;
+        }
+        RenderingManager.drawString(upper, 100, 100);
+        //System.out.println(above + " : " + upper);
+        camera.setUpperCameraLayer(upper);
 	}
 	
 	public void drawChatbox(double x, double y, double w, double h) {

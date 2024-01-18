@@ -63,30 +63,32 @@ public class WorldRenderer extends EGui {
 	}
 	
 	private void TEMP_createWorldLayers() {
-		WorldDrawLayer layerZero = new WorldDrawLayer(world, 0);
-		WorldDrawLayer layerOne = new WorldDrawLayer(world, 1);
-		//WorldLayer layerTwo = new WorldLayer(world, 2);
-		
-		for (int i = 0; i < world.getHeight(); i++) {
-			for (int j = 0; j < world.getWidth(); j++) {
-				WorldTile t = world.getTileAt(j, i);
-				if (t == null) continue;
-				else if (!t.isWall() || t.getWallHeight() < 0.20) {
-					t.setRenderLayer(0);
-				}
-				else {
-					t.setRenderLayer(1);
-				}
-			}
-		}
-		
-//		for (var ent : world.getEntitiesInWorld()) {
-//			ent.setRenderLayer(2);
-//		}
-		
-		worldLayers.add(layerZero);
-		worldLayers.add(layerOne);
-		//worldLayers.add(layerTwo);
+	    for (int l = 0; l < world.getNumberOfLayers(); l++) {
+	        WorldDrawLayer layerZero = new WorldDrawLayer(world, 0, l);
+	        WorldDrawLayer layerOne = new WorldDrawLayer(world, 1, l);
+	        //WorldLayer layerTwo = new WorldLayer(world, 2);
+	        
+	        for (int i = 0; i < world.getHeight(); i++) {
+	            for (int j = 0; j < world.getWidth(); j++) {
+	                WorldTile t = world.getTileAt(l, j, i);
+	                if (t == null) continue;
+	                else if (!t.isWall() || t.getWallHeight() < 0.20) {
+	                    t.setRenderLayer(0);
+	                }
+	                else {
+	                    t.setRenderLayer(1);
+	                }
+	            }
+	        }
+	        
+//	      for (var ent : world.getEntitiesInWorld()) {
+//	          ent.setRenderLayer(2);
+//	      }
+	        
+	        worldLayers.add(layerZero);
+	        worldLayers.add(layerOne);
+	        //worldLayers.add(layerTwo);
+	    }
 	}
 	
 	//------------------------
@@ -181,13 +183,15 @@ public class WorldRenderer extends EGui {
 		int right = ENumUtil.clamp(midDrawX + distX, left, worldWidth - 1);
 		int bot = ENumUtil.clamp(midDrawY + distY, top, worldHeight - 1);
 		
+		//int camLayer = 2 + cam.getUpperCameraLayer() * 2;
+		//System.out.println(camLayer);
+		
 		final int size = worldLayers.size();
-		for (int i = 0; i < size; i++) {
-			final var layer = worldLayers.get(i);
-			
-			layer.buildLayer(left, top, right, bot);
-			layer.renderLayer(world, cam, midDrawX, midDrawY, midX, midY, distX, distY);
-		}
+        for (int i = 0; i < size; i++) {
+            final var layer = worldLayers.get(i);
+            layer.buildLayer(left, top, right, bot);
+            layer.renderLayer(world, cam);
+        }
 	}
 	
 //	private void drawPosBox(double x, double y, double w, double h) {

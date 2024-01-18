@@ -1,6 +1,6 @@
 package qot.entities.projectiles;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.entities.Projectile;
 import eutil.EUtil;
 import qot.assets.textures.entity.EntityTextures;
@@ -19,7 +19,7 @@ public class FireballProjectile extends Projectile {
         
         init(0, 0, 32, 32);
         sprite = new Sprite(EntityTextures.fireBall_projectile);
-        setCollisionBox(startX - 8, startY - 8, endX + 8, endY + 8);
+        setCollisionBox(startX + 5, startY + 5, endX - 5, endY - 5);
         
         setSpeed(1000);
     }
@@ -32,7 +32,7 @@ public class FireballProjectile extends Projectile {
         int wx = (int) (cDims.midX / world.getTileWidth());
         int wy = (int) (cDims.midY / world.getTileHeight());
         
-        if (wx >= 0 && wx < world.getWidth() && wx >= 0 && wx < world.getHeight()) {
+        if (wx >= 0 && wx < world.getWidth() && wy >= 0 && wy < world.getHeight()) {
             damageGround(wx, wy, 2);
             damageGround(wx, wy - 1);
             damageGround(wx - 1, wy);

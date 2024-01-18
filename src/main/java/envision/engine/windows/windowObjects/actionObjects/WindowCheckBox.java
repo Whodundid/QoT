@@ -35,7 +35,7 @@ public class WindowCheckBox extends ActionObject {
 		drawRect(startX + 1, startY + 1, endX - 1, endY - 1, EColors.steel);
 		
 		if (checked) {
-			drawRect(EColors.green, 10);
+			drawRect(EColors.green, width - 5);
 			//drawTexture(startX - 2, startY - 5, width + 5, height + 6, EMCResources.guiCheck);
 		}
 		else if (drawX) {

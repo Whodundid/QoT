@@ -1,9 +1,7 @@
 package qot.world_tiles.categories.nature;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
-import eutil.misc.Rotation;
-import eutil.random.ERandomUtil;
 import qot.assets.textures.world.nature.rock.RockTextures;
 import qot.world_tiles.TileIDs;
 
@@ -14,18 +12,14 @@ public class RoughRocky extends WorldTile {
 		setSprite(new Sprite(RockTextures.rough_rocky));
 		setBlocksMovement(true);
 		setWall(true);
+		minWallHeight = 0.25f;
+        maxWallHeight = 0.75f;
+        randomizeRotation = true;
+        randomizeWallHeight = true;
 		
 		randomizeValues();
 		setMiniMapColor(0xff646443);
 	}
-	
-	@Override
-	public void randomizeValues() {
-	    wallHeight = ERandomUtil.getRoll(0.25, 0.75);
-	    rotation = Rotation.random();
-	}
-	
-	@Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

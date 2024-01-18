@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.nature;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.grass.GrassTextures;
 import qot.world_tiles.TileIDs;
@@ -17,8 +17,6 @@ public class Grass extends WorldTile {
     
     @Override
     public void randomizeValues() {
-        //rotation = Rotation.random();
-        
         if (meta  < 0) {
             setSprite(new Sprite(GrassTextures.grass.getRandVariant()));
         }
@@ -26,8 +24,6 @@ public class Grass extends WorldTile {
             setSprite(new Sprite(GrassTextures.grass.getChild(meta)));
         }
     }
-	
-    @Override public boolean hasVariation() { return true; }
     
 	@Override
 	public WorldTile copy() {

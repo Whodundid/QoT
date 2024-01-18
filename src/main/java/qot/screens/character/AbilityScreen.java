@@ -1,7 +1,7 @@
 package qot.screens.character;
 
 import envision.Envision;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;

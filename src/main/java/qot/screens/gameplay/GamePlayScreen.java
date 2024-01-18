@@ -302,4 +302,15 @@ public class GamePlayScreen extends GameScreen {
         this.world = Envision.theWorld;
     }
     
+    @Override
+    public void onScreenResized() {
+        super.onScreenResized();
+        
+        int sx = 0;
+        int sy = 44;
+        int ex = Envision.getWidth();
+        int ey = Envision.getHeight();
+        Envision.levelManager.getCamera().setDrawableAreaDimensions(sx, sy, ex, ey);
+    }
+    
 }

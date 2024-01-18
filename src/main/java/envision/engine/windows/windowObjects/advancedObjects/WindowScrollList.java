@@ -162,7 +162,7 @@ public class WindowScrollList<E> extends WindowObject {
         startX += newX;
         startY += newY;
         var boundary = getBoundaryEnforcer();
-        if (boundary != null) boundary.move(newX, newY);
+        if (boundary != null) boundary.translate(newX, newY);
         setDimensions(startX, startY, width, height);
 	}
 	

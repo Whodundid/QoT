@@ -412,6 +412,22 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
 		else if (!CursorHelper.isArrow()) CursorHelper.reset();
 	}
 	
+	public default void onTickUpdate_i(float dt) {
+	    if (!willBeDrawn()) return;
+	    
+	    onTickUpdate(dt);
+	    
+	    // update all children
+        for (var o : getChildren()) {
+            // only update if the object is actually visible
+            if (!o.willBeDrawn() || o.isHidden()) continue;
+            
+            o.onTickUpdate_i(dt);
+        }
+	}
+	
+	public default void onTickUpdate(float dt) {}
+	
 	//====================
 	// Mouse Hover Checks
 	//====================

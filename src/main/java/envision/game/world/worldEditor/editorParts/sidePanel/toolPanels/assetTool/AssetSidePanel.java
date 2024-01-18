@@ -33,7 +33,10 @@ public class AssetSidePanel extends PaletteSidePanel {
 		if (buttons.size() >= 1) editor.getSettings().setPrimaryPalette(buttons.get(0).getGenericObject());
 		if (buttons.size() >= 2) editor.getSettings().setSecondaryPalette(buttons.get(1).getGenericObject());
 		
-		editor.getSettings().setCurrentTool(EditorToolType.PLACE);
+		var tool = editor.getSettings().getCurrentTool();
+		if (tool != EditorToolType.SELECTOR && tool != EditorToolType.RECTSELECT) {
+		    editor.getSettings().setCurrentTool(EditorToolType.SELECTOR);		    
+		}
 	}
 	
 	private void buildPanel() {

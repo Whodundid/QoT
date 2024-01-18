@@ -1,12 +1,12 @@
 package envision.engine.registry;
 
-import envision.engine.registry.types.AbilityRegistry;
-import envision.engine.registry.types.EntityTypeRegistry;
-import envision.engine.registry.types.ItemRegistry;
-import envision.engine.registry.types.QuestRegistry;
-import envision.engine.registry.types.SoundRegistry;
-import envision.engine.registry.types.TextureRegistry;
-import envision.engine.registry.types.WorldTileRegistry;
+import envision.engine.registry.registries.AbilityRegistry;
+import envision.engine.registry.registries.EntityTypeRegistry;
+import envision.engine.registry.registries.ItemRegistry;
+import envision.engine.registry.registries.QuestRegistry;
+import envision.engine.registry.registries.SoundRegistry;
+import envision.engine.registry.registries.TextureRegistry;
+import envision.engine.registry.registries.WorldTileRegistry;
 
 public class ResourceRegistry {
     

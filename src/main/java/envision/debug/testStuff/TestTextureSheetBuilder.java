@@ -6,23 +6,28 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import envision.engine.creation.block.CreatorBlock;
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.terminal.terminalUtil.FileType;
 import envision.engine.windows.bundledWindows.fileExplorer.MovingFileObject;
 import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.basicObjects.WindowImageBox;
+import envision.engine.windows.windowObjects.utilityObjects.ErrorDialogBox;
+import envision.engine.windows.windowObjects.utilityObjects.InfoDialogBox;
 import envision.engine.windows.windowTypes.DragAndDropObject;
-import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.EObjectGroup;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
 import eutil.datatypes.Grid;
 import eutil.datatypes.util.EList;
+import eutil.math.ENumUtil;
 
-public class TestTextureSheetBuilder extends WindowParent {
+public class TestTextureSheetBuilder extends CreatorBlock {
     
     //========
     // Fields
@@ -36,9 +41,14 @@ public class TestTextureSheetBuilder extends WindowParent {
     private GameTexture texture;
     private WindowImageBox textureDisplayer;
     private EList<BufferedImage> textureList = EList.newList();
+    private WindowTextField saveNameField;
+    private WindowTextField txWidthField, txHeightField;
     
     private boolean isEditMode = true;
     private Grid<WindowImageBox> spriteGrid = new Grid<>();
+    
+    private int tw = 32;
+    private int th = 32;
     
     //===========================
     // Overrides : IWindowParent
@@ -47,8 +57,8 @@ public class TestTextureSheetBuilder extends WindowParent {
     @Override
     public void initWindow() {
         setObjectName("Texture Sheet Builder");
-        setGuiSize(400, 400);
-        setMinDims(400, 400);
+        setGuiSize(500, 500);
+        setMinDims(500, 500);
         setResizeable(true);
         setMaximizable(true);
         setMinimizable(true);
@@ -64,7 +74,25 @@ public class TestTextureSheetBuilder extends WindowParent {
         saveSheet = new WindowButton<>(this, midX + 10, endY - 50, 150, 40, "Save");
         saveSheet.setAction(this::saveSheet);
         
-        double texEY = height - clearButton.height - 25;
+        double vgap = 5;
+        double hgap = 10;
+        double w = saveSheet.endX - clearButton.startX;
+        double h = 30;
+        double sx = clearButton.startX;
+        double sy = clearButton.startY - h - vgap;
+        saveNameField = new WindowTextField(this, sx, sy, w, h);
+        saveNameField.setTextWhenEmpty("Save file name...");
+        saveNameField.setAction(this::saveSheet);
+        
+        double ex = (sx + w) - (w / 2 - hgap * 2);
+        txWidthField = new WindowTextField(this, sx, sy - vgap - h, w / 2 - hgap * 2, h);
+        txHeightField = new WindowTextField(this, ex, sy - vgap - h, w / 2 - hgap * 2, h);
+        txWidthField.setText(tw);
+        txHeightField.setText(th);
+        txWidthField.setTextWhenEmpty("width");
+        txHeightField.setTextWhenEmpty("height");
+        
+        double texEY = (txWidthField.startY - vgap) - (startY + 5);
         textureDisplayer = new WindowImageBox(this, startX + 5, startY + 5, width - 10, texEY);
         
         var group = new EObjectGroup(this);
@@ -75,13 +103,16 @@ public class TestTextureSheetBuilder extends WindowParent {
         
         addObject(clearButton);
         addObject(saveSheet);
+        addObject(saveNameField);
+        addObject(txWidthField, txHeightField);
         addObject(textureDisplayer);
     }
     
     @Override
     public void drawObject(float dt, int mXIn, int mYIn) {
         drawDefaultBackground();
-        
+        double x = txWidthField.endX + ((txHeightField.startX - txWidthField.endX) * 0.5);
+        drawStringCS("x", x, txWidthField.midY - FontRenderer.HALF_FH + 1);
     }
     
     @Override
@@ -108,7 +139,8 @@ public class TestTextureSheetBuilder extends WindowParent {
     public void onSystemDragAndDrop(EList<String> droppedFileNames) {
         for (String fileName : droppedFileNames) {
             try {
-                findTextures(EList.of(new File(fileName)));
+                var list = EList.of(new File(fileName));
+                findTextures(list);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -176,10 +208,15 @@ public class TestTextureSheetBuilder extends WindowParent {
         int i = 1;
         while (i * i < size) i++;
         
+        tw = ENumUtil.parseInt(txWidthField.getText(), 32);
+        th = ENumUtil.parseInt(txHeightField.getText(), 32);
+        
         w = i;
         h = i;
-        pw = i * textureList.getFirst().getWidth();
-        ph = i * textureList.getFirst().getHeight();
+        //pw = i * textureList.getFirst().getWidth();
+        //ph = i * textureList.getFirst().getHeight();
+        pw = i * tw;
+        ph = i * th;
         image = new BufferedImage(pw, ph, BufferedImage.TYPE_INT_ARGB);
         
         // set black background
@@ -191,11 +228,11 @@ public class TestTextureSheetBuilder extends WindowParent {
         
         // copy image data for each tile
         for (int j = 0; j < size; j++) {
-            int x = (j % w) * 32;
-            int y = (j / h) * 32;
+            int x = (j % w) * tw;
+            int y = (j / h) * th;
             
             var img = textureList.get(j);
-            image.getGraphics().drawImage(img, x, y, x + 32, y + 32, 0, 0, 32, 32, null);
+            image.getGraphics().drawImage(img, x, y, x + tw, y + th, 0, 0, tw, th, null);
         }
     }
     
@@ -216,16 +253,24 @@ public class TestTextureSheetBuilder extends WindowParent {
         saveSheet.setEnabled(false);
     }
     
-    private void saveSheet() {
+    private void saveSheet() { saveSheet(true); }
+    private void saveSheet(boolean showDialog) {
         if (image == null) return;
         
-        String fileName = DeveloperDesktop.generateUniqueFileName(DeveloperDesktop.DESKTOP_DIR, "SPRITE_SHEET.png");
+        String name = saveNameField.getText();
+        if (name.equals(saveNameField.textWhenEmpty)) name = "SPRITE_SHEET.png";
+        else if (!name.endsWith(".png")) name += ".png";
+        
+        String fileName = DeveloperDesktop.generateUniqueFileName(DeveloperDesktop.DESKTOP_DIR, name);
         File toCreate = new File(DeveloperDesktop.DESKTOP_DIR, fileName);
         try {
             ImageIO.write(image, "png", toCreate);
+            if (showDialog) InfoDialogBox.showDialog("Sprite Sheet Builder", "Sheet '" +
+                                                     fileName + "' successfully saved!");
         }
         catch (IOException e) {
             e.printStackTrace();
+            if (showDialog) ErrorDialogBox.showDialog("Failed to save sheet! " + e);
         }
     }
     

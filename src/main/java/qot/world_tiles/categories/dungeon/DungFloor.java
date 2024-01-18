@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.dungeon;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
 import qot.world_tiles.TileIDs;

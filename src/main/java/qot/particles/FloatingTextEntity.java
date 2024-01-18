@@ -33,7 +33,7 @@ public class FloatingTextEntity extends BasicRenderedEntity {
         setInvincible(true);
         this.timeToLive = timeToLive;
         dieAfterSpecifiedTime = true;
-        this.setWorldPos((int) x, (int) y);
+        this.setPixelPos((int) x, (int) y);
         canBeMoved = false;
         canMoveEntities = false;
     }
@@ -43,9 +43,14 @@ public class FloatingTextEntity extends BasicRenderedEntity {
     }
     
     @Override
-    public void draw(WorldCamera camera, double x, double y, double w, double h, boolean mouseOver) {
+    public void draw(WorldCamera camera, double[] dims, boolean mouseOver) {
+        double x = dims[0];
+        double y = dims[1];
+        double w = dims[2];
+        double h = dims[3];
+        
         if (dieAfterSpecifiedTime) {
-            double moveAmount = 100; // 200 px
+            double moveAmount = 200; // 200 px
             double moveY = ((double) timeAlive / (double) timeToLive) * moveAmount;
             drawStringCS(text, x + w * 0.5, y + h * 0.5 - moveY, drawColor);
         }

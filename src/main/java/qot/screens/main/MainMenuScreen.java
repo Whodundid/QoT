@@ -7,9 +7,9 @@ import org.joml.Vector2f;
 import envision.Envision;
 import envision.debug.DebugSettings;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.resourceLoaders.Sprite;
 import envision.engine.screens.GameScreen;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
@@ -236,7 +236,7 @@ public class MainMenuScreen extends GameScreen {
 			
 			final var cam = Envision.levelManager.getCamera();
 			Vector2f curPos = new Vector2f((float) cam.getX(), (float) cam.getY());
-			curPos.add(camMoveDir.mul(0.11f, new Vector2f()));
+			curPos.add(camMoveDir.mul(0.011f * dt, new Vector2f()));
 			cam.setFocusedPoint(curPos.x, curPos.y);
 		}
 	}

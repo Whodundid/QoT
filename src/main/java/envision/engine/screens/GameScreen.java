@@ -16,6 +16,10 @@ import qot.screens.main.MainMenuScreen;
 
 public class GameScreen extends TopWindowParent implements ITopParent, IEventListener {
 	
+    //========
+    // Fields
+    //========
+    
 	protected Stack<GameScreen> screenHistory = new Stack<>();
 	protected EList<String> aliases = new EArrayList<>();
 	
@@ -31,17 +35,17 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	protected boolean performFade = true;
 	protected GameScreen screenToDisplay = null;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public GameScreen() {
 		setDefaultDims();
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
     @Override
     public void drawObject_i(float dt, int mXIn, int mYIn) {
@@ -87,9 +91,9 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	
 	@Override public void onEvent(GameEvent e) {}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	protected void setDefaultDims() {
 		setDimensions(0, 0, Envision.getWidth(), Envision.getHeight());
@@ -100,7 +104,7 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 	/** Called everytime this screen is about to be drawn. */
 	public void drawScreen(float dt, int mXIn, int mYIn) {}
 	/** Called everytime a new game tick occurs. */
-	public void onGameTick(float dt) {}
+	public void onGameTick(float dt) { onTickUpdate_i(dt); }
 	/** Called whenever this screen is about to be closed. */
 	public void onScreenClosed() {}
 	/** Called whenever a world is loaded. */
@@ -171,9 +175,9 @@ public class GameScreen extends TopWindowParent implements ITopParent, IEventLis
 		return this;
 	}
 	
-	//---------------------
+	//=====================
 	// Screen Fade Methods
-	//---------------------
+	//=====================
 	
 	public void fadeIn() {
 		if (!performFade) return;

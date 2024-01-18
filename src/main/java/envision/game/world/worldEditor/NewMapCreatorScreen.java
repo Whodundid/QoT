@@ -8,9 +8,9 @@ import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.GameWorld;
+import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.colors.EColors;
-import qot.world_tiles.categories.NatureTiles;
 
 public class NewMapCreatorScreen extends GameScreen {
 
@@ -28,7 +28,7 @@ public class NewMapCreatorScreen extends GameScreen {
 	String name;
 	int width = 25, height = 25;
 	boolean empty;
-	WorldTile fillTile = NatureTiles.grass;
+	WorldTile fillTile = new VoidTile();
 	
 	public NewMapCreatorScreen() { this((String) null); }
 	public NewMapCreatorScreen(String nameIn) {

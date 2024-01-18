@@ -14,7 +14,7 @@ import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.EStringBuilder;
 
-public class WindowTextArea2 extends WindowObject {
+public class WindowTextArea2 extends WindowObject implements DocumentChangeListener {
     
     //========
     // Fields
@@ -282,6 +282,12 @@ public class WindowTextArea2 extends WindowObject {
         super.onFocusLost(eventIn);
     }
     
+    @Override
+    public void onDocumentChanged() {
+        determineTextAreaDimensions();
+        determineScrollableDimensions();
+    }
+    
     //========================
     // Dimension Calculations
     //========================
@@ -332,11 +338,22 @@ public class WindowTextArea2 extends WindowObject {
         double longestLineWidth = FontRenderer.strWidth(document.getLongestLine()) + FontRenderer.getCharWidth() * 4;
         double totalLineHeight = document.getNumberOfLines() * FontRenderer.FONT_HEIGHT;
         
-        scrollableWidth = ENumUtil.clamp(longestLineWidth, textAreaEndX - textAreaStartX, Integer.MAX_VALUE);
-        scrollableHeight = ENumUtil.clamp(totalLineHeight, textAreaEndY - textAreaStartY, Integer.MAX_VALUE);
+        double taw = textAreaEndX - textAreaStartX;
+        double tah = textAreaEndY - textAreaStartY;
+        
+        scrollableWidth = ENumUtil.clamp(longestLineWidth, taw, Integer.MAX_VALUE);
+        scrollableHeight = ENumUtil.clamp(totalLineHeight, tah, Integer.MAX_VALUE);
         
         vScroll.setHighVal(scrollableHeight);
         hScroll.setHighVal(scrollableWidth);
+        
+        String curLine = document.getLine(document.getCurrentLine());
+        int linePos = ENumUtil.clamp(document.getCurrentLineIndex(), 0, curLine.length());
+        String sub = (curLine.substring(0, linePos));
+        double subLength = FontRenderer.strWidth(sub);
+        
+        double diff = (subLength - taw);
+        hScroll.setScrollPos(taw + diff);
     }
     
     protected void determineHighlightEnd() {

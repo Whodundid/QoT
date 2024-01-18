@@ -22,6 +22,7 @@ public class WorldDrawLayer {
 	//--------
 	
 	private int layer = 0;
+	public int camLayer = 0;
 	
 	private IGameWorld world;
 	private ExpandableGrid<WorldTile> worldData;
@@ -34,9 +35,10 @@ public class WorldDrawLayer {
 	// Constructors
 	//--------------
 	
-	public WorldDrawLayer(IGameWorld worldIn, int layerIn) {
+	public WorldDrawLayer(IGameWorld worldIn, int layerIn, int camLayerIn) {
 		world = worldIn;
 		layer = layerIn;
+		camLayer = camLayerIn;
 		worldData = new ExpandableGrid<>(world.getWidth(), world.getHeight());
 		gameObjects = new EArrayList<>();
 	}
@@ -64,13 +66,34 @@ public class WorldDrawLayer {
 		worldData.clear();
 		gameObjects.clear();
 		
+		// this code should be completely rethought
+		// furthermore, world layers altogether need to be redesigned now that 3D is a thing..
+		
+		var camera = Envision.levelManager.getCamera();
+		int cameraUpper = camera.getUpperCameraLayer();
+		var theEntity = camera.getFocusedObject();
+		int entY = -1;
+		int entLayer = camLayer;
+		if (theEntity != null) {
+		    var colDims = theEntity.getCollisionDims();
+	        entY = (int) (colDims.midY / world.getTileHeight());
+	        entLayer = theEntity.getCameraLayer();
+		    //entY = theEntity.worldY;
+		}
+		int max = world.getNumberOfLayers() - 1;
+		
+		//System.out.println(entY + " : " + camLayer + " : " + cameraUpper);
+		
 		for (int i = 0; i < world.getHeight(); i++) {
-			for (int j = 0; j < world.getWidth(); j++) {
-				worldData.set(world.getTileAt(j, i), j, i);
-			}
+		    if (camLayer == 0 || camLayer < cameraUpper || camLayer <= entLayer || i < entY - 1) {
+                for (int j = 0; j < world.getWidth(); j++) {
+                    worldData.set(world.getTileAt(camLayer, j, i), j, i);
+                }
+            }
 		}
 		
-		gameObjects.addAll(world.getEntitiesInWorld());
+		var entities = world.getEntitiesInWorld().filter(e -> e.getCameraLayer() == camLayer);
+		gameObjects.addAll(entities);
 		
 		//add all world tiles within the specified area
 		for (int i = top; i <= bot; i++) {
@@ -118,7 +141,7 @@ public class WorldDrawLayer {
 	 * @param brightness
 	 * @param mouseOver
 	 */
-	public void renderLayer(IGameWorld world, WorldCamera camera, int midDrawX, int midDrawY, double midX, double midY, int distX, int distY) {
+	public void renderLayer(IGameWorld world, WorldCamera camera) {
 		if (!built) return;
 		
 		//sort the layer before draw
@@ -138,7 +161,7 @@ public class WorldDrawLayer {
 			var obj = builtLayer.get(i);
 			if (obj instanceof ComponentBasedObject e && e.hasComponent(ComponentType.RENDERING)) {
 				RenderingComponent r = e.getComponent(ComponentType.RENDERING);
-				r.draw(world, camera, midDrawX, midDrawY, midX, midY, distX, distY);
+				r.draw(world, camera);
 			}
 		}
 	}

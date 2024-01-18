@@ -68,6 +68,9 @@ public class WorldCamera {
      */
     private final Dimension_d drawArea = new Dimension_d();
     
+    private int currentLayer = -1;
+    private int upperCameraLayer = 0;
+    
     //==============
     // Constructors
     //==============
@@ -97,14 +100,10 @@ public class WorldCamera {
      * world coordinates.
      */
     protected void updateMousePositionInWorld() {
-        // x world pixel scaled by zoom
-        final double x = (focusedPoint.x - pixelOffsetX) * zoom - drawArea.midX + Mouse.getMx_double();
-        // y world pixel scaled by zoom
-        final double y = (focusedPoint.y - pixelOffsetY) * zoom - drawArea.midY + Mouse.getMy_double();
         // x world pixel under the mouse with zoom factored out
-        mXWorldPixel = (int) (x * zoomi);
+        mXWorldPixel = (int) ((Mouse.getMx_double() - drawArea.midX) * zoomi + (focusedPoint.x - pixelOffsetX));
         // y world pixel under the mouse with zoom factored out
-        mYWorldPixel = (int) (y * zoomi);
+        mYWorldPixel = (int) ((Mouse.getMy_double() - drawArea.midY) * zoomi + (focusedPoint.y - pixelOffsetY));
         // x world coordinate under the mouse
         mXWorldTile = (int) (mXWorldPixel * tileWidthInverse);
         // y world coordinate under the mouse
@@ -251,8 +250,24 @@ public class WorldCamera {
     public double[] convertScreenPxToWorldPx(double x, double y) {
         final double[] r = new double[2];
         
-        r[0] = (focusedPoint.x - pixelOffsetX) * zoom - drawArea.midX + x;
-        r[1] = (focusedPoint.y - pixelOffsetY) * zoom - drawArea.midY + y;
+        r[0] = (x - drawArea.midX) * zoomi + (focusedPoint.x - pixelOffsetX);
+        r[1] = (y - drawArea.midY) * zoomi + (focusedPoint.y - pixelOffsetY);
+        
+        return r;
+    }
+    
+    public double[] convertScreenAreaToWorldArea(double[] screenArea) {
+        if (screenArea.length != 4) throw new IllegalArgumentException("Given screen area dimension length != 4");
+        return convertScreenAreaToWorldArea(screenArea[0], screenArea[1], screenArea[2], screenArea[3]);
+    }
+    
+    public double[] convertScreenAreaToWorldArea(double startX, double startY, double endX, double endY) {
+        final double[] r = new double[4];
+        
+        r[0] = (startX - drawArea.midX) * zoomi + (focusedPoint.x - pixelOffsetX);
+        r[1] = (startY - drawArea.midY) * zoomi + (focusedPoint.y - pixelOffsetY);
+        r[2] = (endX - drawArea.midX) * zoomi + (focusedPoint.x - pixelOffsetX);
+        r[3] = (endY - drawArea.midY) * zoomi + (focusedPoint.y - pixelOffsetY);
         
         return r;
     }
@@ -265,6 +280,11 @@ public class WorldCamera {
         r[1] = (y + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
         
         return r;
+    }
+    
+    public double[] convertWorldAreaToScreenArea(double[] worldArea) {
+        if (worldArea.length != 4) throw new IllegalArgumentException("Given world area dimension length != 4");
+        return convertWorldAreaToScreenArea(worldArea[0], worldArea[1], worldArea[2], worldArea[3]);
     }
     
     public double[] convertWorldAreaToScreenArea(double startX, double startY, double endX, double endY) {
@@ -419,18 +439,17 @@ public class WorldCamera {
     // Rendering Helpers
     //===================
     
-    public double calculateObjectDrawX(GameObject object) {
-        return calculateDrawX(object.startX);
-    }
-    public double calculateObjectDrawY(GameObject object) {
-        return calculateDrawY(object.startY);
-    }
+    public double calculateObjectDrawX(GameObject object) { return calculateDrawX(object.startX, object.getCameraLayer()); }
+    public double calculateObjectDrawY(GameObject object) { return calculateDrawY(object.startY, object.getCameraLayer()); }
     
-    public double calculateDrawX(double x) {
+    public double calculateDrawX(double x) { return calculateDrawX(x, currentLayer); }
+    public double calculateDrawY(double y) { return calculateDrawY(y, currentLayer); }
+    
+    public double calculateDrawX(double x, int layer) {
         return (x + pixelOffsetX - focusedPoint.x) * zoom + drawArea.midX;
     }
     
-    public double calculateDrawY(double y) {
+    public double calculateDrawY(double y, int layer) {
         return (y + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
     }
     
@@ -443,10 +462,13 @@ public class WorldCamera {
      * @return An array containing the object's screen drawing dimensions
      */
     public double[] calculateDrawDimensions(GameObject object) {
-        return calculateDrawDimensions(object.startX, object.startY, object.width, object.height);
+        return calculateDrawDimensions(object.startX, object.startY, object.width, object.height, object.getCameraLayer());
     }
     
     public double[] calculateDrawDimensions(double startX, double startY, double width, double height) {
+        return calculateDrawDimensions(startX, startY, width, height, currentLayer);
+    }
+    public double[] calculateDrawDimensions(double startX, double startY, double width, double height, int layer) {
         // [x, y, w, h]
         final double[] r = new double[4];
         
@@ -455,6 +477,8 @@ public class WorldCamera {
         r[1] = (startY + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
         r[2] = width * zoom;
         r[3] = height * zoom;
+        
+        r[1] -= (layer - currentLayer) * tileHeight * 0.75 * zoom;
         
         return r;
     }
@@ -486,6 +510,13 @@ public class WorldCamera {
         int mY = Mouse.getMy();
         return (mX >= draw[0] && mX <= draw[0] + draw[2] && mY >= draw[1] && mY <= draw[1] + draw[3]);
     }
+    
+    //=========
+    // Getters
+    //=========
+    
+    public int getCurrentLayer() { return currentLayer; }
+    public int getUpperCameraLayer() { return upperCameraLayer; }
     
     //=========
     // Setters
@@ -547,6 +578,15 @@ public class WorldCamera {
         }
     }
     
+    public void setCurrentLayer(int layerIn) {
+        if (theWorld == null) currentLayer = -1;
+        currentLayer = ENumUtil.clamp(layerIn, 0, theWorld.getNumberOfLayers());
+    }
+    
+    public void setUpperCameraLayer(int layerIn) {
+        upperCameraLayer = layerIn;
+    }
+    
     /**
      * Sets an object that the camera will focus in on and follow.
      * <p>
@@ -567,6 +607,7 @@ public class WorldCamera {
             focusedPoint.set(focusedObject.startX, focusedObject.startY);
             offsetX = (focusedObject.startX % theWorld.getTileWidth()) * zoom;
             offsetY = (focusedObject.startY % theWorld.getTileHeight()) * zoom;
+            currentLayer = object.getCameraLayer();
         }
     }
     

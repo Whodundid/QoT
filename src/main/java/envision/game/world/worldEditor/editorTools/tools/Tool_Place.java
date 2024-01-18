@@ -2,7 +2,7 @@ package envision.game.world.worldEditor.editorTools.tools;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.GameObject;
 import envision.game.entities.Entity;
 import envision.game.world.worldEditor.MapEditorScreen;
@@ -35,16 +35,40 @@ public class Tool_Place extends EditorTool {
 		EditorObject primary = settings.getPrimaryPalette();
 		if (primary == null) return;
 		var camera = Envision.levelManager.getCamera();
+		var obj = primary.getGameObject();
 		double zoom = camera.getZoom();
 		Sprite tex = primary.getSprite();
-		double tW = primary.getGameObject().width;
-		double tH = primary.getGameObject().height;
+		double tW = obj.width;
+		double tH = obj.height;
 		double tDrawW = tW * zoom;
 		double tDrawH = tH * zoom;
-		double tmx = primary.getGameObject().collisionBox.midX * zoom;
-		double tmy = primary.getGameObject().collisionBox.midY * zoom;
+		double tw = editor.tileWidth;
+		double th = editor.tileHeight;
+		double tmx = obj.collisionBox.midX;
+		double tmy = obj.collisionBox.midY;
 		
-		drawSprite(tex, Mouse.getMx() - tmx, Mouse.getMy() - tmy, tDrawW, tDrawH, 0x99ffffff);
+		double xOffset = (obj.collisionBox.midX == 0) ? tW * 0.5 : tmx;
+		double yOffset = (obj.collisionBox.midY == 0) ? tH * 0.5 : tmy;
+		
+		//xOffset /= editor.tileWidth;
+		//yOffset /= editor.tileHeight;
+		
+		double dsx;
+		double dsy;
+		
+		if (editor.getSettings().lockToTileGrid) {
+		    double offsetX = (tmx == 0) ? obj.width * 0.5 : tmx;
+            double offsetY = (tmy == 0) ? obj.height * 0.5 : tmy;
+		    dsx = camera.calculateDrawX((editor.mouseWorldX - (int) (offsetX / tw)) * editor.tileWidth);
+		    dsy = camera.calculateDrawY((editor.mouseWorldY - (int) (offsetY / th)) * editor.tileHeight);
+		}
+		else {
+		    dsx = camera.calculateDrawX(editor.mouseWorldPX - xOffset);
+		    dsy = camera.calculateDrawY(editor.mouseWorldPY - yOffset);
+		    
+		}
+		
+		drawSprite(tex, dsx, dsy, tDrawW, tDrawH, 0x99ffffff);
 		//drawTexture(tex, mX, mY, tDrawW, tDrawH, 0x99ffffff);
 		//drawHRect(mX, mY, mX + tDrawW, mY + tDrawH, 1, EColors.blue);
 		//drawTexture(tex, mX, mY, tDrawW, tDrawH);
@@ -84,9 +108,8 @@ public class Tool_Place extends EditorTool {
 		GameObject obj = object.getGameObject();
 		System.out.println("PLACE OBJECT: " + obj);
 		
-		var placement = getPlacementPosition(obj);
-		
 		if (obj instanceof PlayerSpawnPoint p) {
+		    var placement = getPlacementPosition(obj);
 			this.editor.getEditorWorld().setPlayerSpawn(placement[0], placement[1]);
 		}
 		else if (obj instanceof Entity e) {

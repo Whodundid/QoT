@@ -125,8 +125,8 @@ public class Ability_Fireball extends Ability {
         fb.setMaxLifeSpan(maxLifeSpan);
         fb.setMaxDamageCount(maxDamageCount);
         
-        fb.worldX = (int) (e.worldX + e.width / e.world.getTileWidth());
-        fb.worldY = (int) (e.worldY + e.height / e.world.getTileHeight());
+        fb.startX = e.midX - fb.width * 0.5;
+        fb.startY = e.midY - fb.height * 0.5;
         fb.setFiredDirection(direction);
         fb.setFiringEntity(e);
         

@@ -5,9 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.entities.EntitySpawn;
 import envision.game.world.worldFileSystem.WorldSavingSystem;
+import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.EUtil;
 import eutil.datatypes.EArrayList;
@@ -17,13 +18,12 @@ import eutil.math.ENumUtil;
 import eutil.misc.EByteBuilder;
 import eutil.strings.EStringUtil;
 import qot.settings.QoTSettings;
-import qot.world_tiles.VoidTile;
 
 public class WorldFileSystem {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	/** The underlying game world for which this file system pertains to. */
 	private final GameWorld theWorld;
@@ -32,18 +32,18 @@ public class WorldFileSystem {
 	/** True if the world has been successfully loaded. */
 	private boolean fileLoaded = false;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public WorldFileSystem(GameWorld worldIn) {
 		if (worldIn == null) throw new RuntimeException("Null game world!");
 		theWorld = worldIn;
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	public void createWorldDir() {
 		created = false;
@@ -93,9 +93,9 @@ public class WorldFileSystem {
 		writer.close();
 	}
 	
-	//-------------
+	//=============
 	// Map Loading
-	//-------------
+	//=============
 	
 	protected synchronized boolean loadWorld() {
 		return loadWorldFromFile(getWorldFile());
@@ -197,11 +197,12 @@ public class WorldFileSystem {
 								if (parts.length == 1) t.setWildCard(true);
 								t.setWidthHeight(mapTileWidth, mapTileHeight);
 								t.setWorldPos(j, i);
+								t.setCameraLayer(layerNum);
 							}
 							layer.setTileAt(t, j, i);
 						}
 						else {
-							layer.setTileAt(new VoidTile(), j, i);
+							layer.setTileAt(VoidTile.instance, j, i);
 						}
 					}
 				}
@@ -229,8 +230,7 @@ public class WorldFileSystem {
 			theWorld.height = mapHeight;
 			theWorld.tileWidth = mapTileWidth;
 			theWorld.tileHeight = mapTileHeight;
-			theWorld.playerSpawn.setX(spawnX);
-			theWorld.playerSpawn.setY(spawnY);
+			theWorld.playerSpawn.setPixelPos(spawnX, spawnY);
 			theWorld.underground = underground;
 			theWorld.regionData = regions;
 			theWorld.entitySpawns = entitySpawnsIn;
@@ -251,9 +251,9 @@ public class WorldFileSystem {
 		
 	}
 	
-	//------------
+	//============
 	// Map Saving
-	//------------
+	//============
 	
 	protected synchronized boolean saveWorldToFile() {
 		return saveWorldToFile(getWorldFile());
@@ -276,14 +276,13 @@ public class WorldFileSystem {
 		//write map name and dimensions
 		writer.println(theWorld.name);
 		writer.println(theWorld.width + " " + theWorld.height + " " + theWorld.tileWidth + " " + theWorld.tileHeight);
-		writer.println(theWorld.playerSpawn.getX() + " " + theWorld.playerSpawn.getY());
+		writer.println((int) theWorld.playerSpawn.startX + " " + (int) theWorld.playerSpawn.startY);
 		writer.println(theWorld.underground ? 1 : 0);
-		//writer.println(theWorld.getWorldLayers().size());
-		writer.println(1); // layers
+		writer.println(theWorld.getWorldLayers().size());
+		//writer.println(1); // layers
 		
 		//write map data
 		for (int layerNum = 0; layerNum < theWorld.getWorldLayers().size(); layerNum++) {
-			if (layerNum > 0) break;
 			for (int i = 0; i < theWorld.height; i++) {
 				EByteBuilder sb = new EByteBuilder();
 				for (int j = 0; j < theWorld.width; j++) {
@@ -335,9 +334,9 @@ public class WorldFileSystem {
 		return true;
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public GameWorld getWorld() { return theWorld; }
 	

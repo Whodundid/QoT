@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.dungeon;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.walls.dungeon.DungeonWallTextures;
 import qot.world_tiles.TileIDs;
@@ -11,7 +11,7 @@ public class DungOldWallA extends WorldTile {
 		super(TileIDs.DUNG_FLOOR_Aa);
 		setSprite(new Sprite(DungeonWallTextures.dung_wall_b));
 		setWall(true);
-		this.wallHeight = 0.05;
+		this.wallHeight = 0.05f;
 		setMiniMapColor(0xff222222);
 	}
 	

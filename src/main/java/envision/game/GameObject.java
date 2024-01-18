@@ -3,8 +3,8 @@ package envision.game;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import envision.Envision;
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.RenderingManager;
-import envision.engine.resourceLoaders.Sprite;
 import envision.game.effects.animations.AnimationHandler;
 import envision.game.util.IDrawable;
 import envision.game.world.IGameWorld;
@@ -40,6 +40,8 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	private static AtomicInteger internalIDCounter = new AtomicInteger();
 	public static String nextObjectID() { return String.valueOf(internalIDCounter.getAndIncrement()); }
 	
+	private int cameraLayer = 0;
+	
 	//==============
     // Constructors
     //==============
@@ -54,9 +56,9 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 		}
 	}
 	
-	//------------------
+	//==================
 	// Back-end Methods
-	//------------------
+	//==================
 	
 	public void init(int posX, int posY, int widthIn, int heightIn) {
 		startX = posX;
@@ -117,6 +119,14 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	    return new Dimension_d(startX, startY, endX, endY);
 	}
 	
+    public GameObject setCollisionBox(double sX, double sY, double eX, double eY) {
+        collisionBox = new Dimension_d(sX, sY, eX, eY);
+        return this;
+    }
+	
+    public int getCameraLayer() { return cameraLayer; }
+    public void setCameraLayer(int layerIn) { cameraLayer = layerIn; }
+    
 	public GameObject setName(String nameIn) { name = nameIn; return this; }
 	public GameObject setSprite(Sprite in) { sprite = in; return this; }
 	//public GameObject setTexture(GameTexture in) { tex = in; return this; }
@@ -125,9 +135,9 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	public Dimension_d getCollision() { return collisionBox; }
 	public Dimension_d getCollisionDims() {
 		return new Dimension_d(startX + collisionBox.startX,
-							  startY + collisionBox.startY,
-							  startX + collisionBox.startX + collisionBox.width,
-							  startY + collisionBox.startY + collisionBox.height);
+							   startY + collisionBox.startY,
+							   startX + collisionBox.startX + collisionBox.width,
+							   startY + collisionBox.startY + collisionBox.height);
 	}
 	
 	@Override
@@ -173,5 +183,43 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	}
 	
 	public void setRenderLayer(int layerIn) { renderLayer = layerIn; }
+	
+    /**
+     * Instantaneously moves this entity to the target world coordinates. Note:
+     * the entity must actually exist in a world for this to have any effect.
+     */
+    public GameObject setWorldPos(int x, int y) {
+        worldX = x;
+        worldY = y;
+        
+        if (world != null) {
+            startX = worldX * world.getTileWidth();
+            endX = startX + width;
+            startY = worldY * world.getTileHeight();
+            endY = startY + height;
+            
+            //collisionBox.setPosition(startX + 20, startY + 20);
+            
+            midX = startX + (width) / 2;
+            midY = startY + (height) / 2;
+        }
+        return this;
+    }
+    
+    public GameObject setPixelPos(double x, double y) {
+        startX = x;
+        startY = y;
+        endX = startX + width;
+        endY = startY + height;
+        midX = startX + width * 0.5;
+        midY = startY + height * 0.5;
+        
+        if (world != null) {
+            worldX = (int) (startX / world.getTileWidth());
+            worldY = (int) (startY / world.getTileHeight());
+        }
+        
+        return this;
+    }
 	
 }

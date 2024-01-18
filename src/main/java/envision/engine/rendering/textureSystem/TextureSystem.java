@@ -14,7 +14,7 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import envision.Envision;
-import envision.engine.resourceLoaders.SpriteSheet;
+import envision.engine.registry.types.SpriteSheet;
 import eutil.datatypes.util.EList;
 import eutil.reflection.EReflectionUtil;
 

@@ -87,6 +87,7 @@ public class EnvisionGame implements IEventListener {
     public File getResourcesDirectory() { return resourcesDirectory; }
     public File getInstallationDirectory() { return installationDirectory; }
     public File getSavedGamesDirectory() { return savedGamesDirectory; }
+    public File getEditorWorldsDirectory() { return new File(installationDirectory, "editorWorlds"); }
     
     public String getResourcesPath() { return EStringUtil.toString(resourcesDirectory); }
     public String getInstallationPath() { return EStringUtil.toString(installationDirectory); }

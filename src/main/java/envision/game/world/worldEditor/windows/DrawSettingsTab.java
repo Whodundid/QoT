@@ -28,6 +28,7 @@ public class DrawSettingsTab extends ContainerTab {
 	private WindowCheckBox drawMapBorders, drawCenterPosition, drawEntities, drawRegions;
 	private WindowCheckBox drawEntityOutlines, drawEntityHitBoxes, drawWallBox, drawFlatWalls;
 	private WindowCheckBox drawTileGrid;
+	private WindowCheckBox lockToTileGrid;
 	
 	//==============
     // Constructors
@@ -80,6 +81,7 @@ public class DrawSettingsTab extends ContainerTab {
 			drawWallBox = new WindowCheckBox(list, checkX, drawEntityHitBoxes.endY + gap, 50, 50);
 			drawFlatWalls = new WindowCheckBox(list, checkX, drawWallBox.endY + gap, 50, 50);
 			drawTileGrid = new WindowCheckBox(list, checkX, drawFlatWalls.endY + gap, 50, 50);
+			lockToTileGrid = new WindowCheckBox(list, checkX, drawTileGrid.endY + gap, 50, 50);
 			
 			final double mfh = FontRenderer.FONT_HEIGHT / 2; // mid font height
 			
@@ -92,6 +94,7 @@ public class DrawSettingsTab extends ContainerTab {
 			var drawWallBoxLbl = new WindowLabel(list, drawWallBox.endX + 20, drawWallBox.midY - mfh, "Draw Wall Box");
 			var drawFlatWallsLbl = new WindowLabel(list, drawFlatWalls.endX + 20, drawFlatWalls.midY - mfh, "Draw Flat Walls");
 			var drawTileGridLbl = new WindowLabel(list, drawTileGrid.endX + 20, drawTileGrid.midY - mfh, "Draw Tile Grid");
+			var drawLockGridLbl = new WindowLabel(list, lockToTileGrid.endX + 20, lockToTileGrid.midY - mfh, "Lock to Tile Grid");
 			
 			final var settings = editor.getSettings();
 			
@@ -104,19 +107,20 @@ public class DrawSettingsTab extends ContainerTab {
 			drawWallBox.setIsChecked(settings.drawWallBox);
 			drawFlatWalls.setIsChecked(settings.drawFlatWalls);
 			drawTileGrid.setIsChecked(settings.drawTileGrid);
+			lockToTileGrid.setIsChecked(settings.lockToTileGrid);
 			
 			list.addObjectToList(drawMapBorders, drawCenterPosition, drawEntities, drawRegions);
 			list.addObjectToList(drawEntityOutlines, drawEntityHitBoxes, drawWallBox, drawFlatWalls);
-			list.addObjectToList(drawTileGrid);
+			list.addObjectToList(drawTileGrid, lockToTileGrid);
 			list.addObjectToList(drawMapBordersLbl, drawCenterPositionLbl, drawEntitiesLbl, drawRegionsLbl);
 			list.addObjectToList(drawEntityOutlinesLbl, drawEntityHitBoxesLbl, drawWallBoxLbl, drawFlatWallsLbl);
-			list.addObjectToList(drawTileGridLbl);
+			list.addObjectToList(drawTileGridLbl, drawLockGridLbl);
 		}
 		
 		IActionObject.setActionReceiver(this, incDistX, incDistY, decDistX, decDistY);
 		IActionObject.setActionReceiver(this, drawMapBorders, drawCenterPosition, drawEntities);
 		IActionObject.setActionReceiver(this, drawRegions, drawEntityOutlines, drawEntityHitBoxes);
-		IActionObject.setActionReceiver(this, drawWallBox, drawFlatWalls, drawTileGrid);
+		IActionObject.setActionReceiver(this, drawWallBox, drawFlatWalls, drawTileGrid, lockToTileGrid);
 		
 		list.fitItemsInList();
 		
@@ -157,6 +161,7 @@ public class DrawSettingsTab extends ContainerTab {
 		if (object == drawWallBox) s.drawWallBox = !s.drawWallBox;
 		if (object == drawFlatWalls) s.drawFlatWalls = !s.drawFlatWalls;
 		if (object == drawTileGrid) s.drawTileGrid = !s.drawTileGrid;
+		if (object == lockToTileGrid) s.lockToTileGrid = !s.lockToTileGrid;
 		
 //		if (object == drawFlatWalls) {
 //			s.drawFlatWalls = !s.drawFlatWalls;
@@ -177,6 +182,7 @@ public class DrawSettingsTab extends ContainerTab {
 		drawWallBox.setIsChecked(s.drawWallBox);
 		drawFlatWalls.setIsChecked(s.drawFlatWalls);
 		drawTileGrid.setIsChecked(s.drawTileGrid);
+		lockToTileGrid.setIsChecked(s.lockToTileGrid);
 		
 		DebugSettings.drawFlatWalls = s.drawFlatWalls;
 		DebugSettings.drawTileGrid = s.drawTileGrid;

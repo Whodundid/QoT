@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.nature;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.grass.GrassTextures;
 import qot.world_tiles.TileIDs;
@@ -12,13 +12,11 @@ public class LeafyGrass extends WorldTile {
 		super(TileIDs.LEAFY_GRASS, id);
 		numVariants = GrassTextures.leafy_grass.getChildren().size();
         randomizeValues();
-        setMiniMapColor(0xff504018);
+        setMiniMapColor(0xff605828);
     }
     
     @Override
     public void randomizeValues() {
-        //rotation = Rotation.random();
-        
         if (meta < 0) {
             setSprite(new Sprite(GrassTextures.leafy_grass.getRandVariant()));
         }
@@ -26,8 +24,6 @@ public class LeafyGrass extends WorldTile {
             setSprite(new Sprite(GrassTextures.leafy_grass.getChild(meta)));
         }
     }
-	
-    @Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

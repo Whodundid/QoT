@@ -1,13 +1,13 @@
 package envision.game.entities.physics;
 
 import envision.game.entities.Entity;
+import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.math.vectors.Vec2f;
 import eutil.misc.Rotation;
-import qot.world_tiles.VoidTile;
 
 public class MovementCollisionHelper {
 	

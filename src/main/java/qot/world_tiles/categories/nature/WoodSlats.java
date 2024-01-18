@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.nature;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.floors.wood.WoodFloorTextures;
 import qot.world_tiles.TileIDs;
@@ -25,8 +25,6 @@ public class WoodSlats extends WorldTile {
             setSprite(new Sprite(WoodFloorTextures.wood_slats.getChild(meta)));
         }
 	}
-	
-	@Override public boolean hasVariation() { return true; }
 	
 	@Override
 	public WorldTile copy() {

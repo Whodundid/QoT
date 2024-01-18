@@ -1,6 +1,6 @@
 package envision.engine.windows.windowObjects.advancedObjects.menuBar;
 
-import envision.engine.resourceLoaders.Sprite;
+import envision.engine.registry.types.Sprite;
 import envision.engine.windows.windowTypes.WindowObject;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;

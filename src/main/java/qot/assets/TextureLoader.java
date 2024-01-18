@@ -1,8 +1,8 @@
 package qot.assets;
 
+import envision.engine.registry.types.SpriteSheet;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.resourceLoaders.SpriteSheet;
 import qot.settings.QoTSettings;
 
 public abstract class TextureLoader {

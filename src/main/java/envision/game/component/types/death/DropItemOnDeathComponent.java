@@ -5,7 +5,6 @@ import java.util.Collection;
 import envision.game.component.ComponentBasedObject;
 import envision.game.entities.Entity;
 import envision.game.items.Item;
-import envision.game.items.ItemOnGround;
 import envision.game.world.IGameWorld;
 import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;
@@ -48,8 +47,8 @@ public class DropItemOnDeathComponent extends OnDeathComponent {
         IGameWorld world = theObject.world;
         for (Item item : toDrop) {
             var dims = theObject.getCollisionDims();
-            int spawnX = (int) dims.midX / world.getTileWidth();
-            int spawnY = (int) dims.midY / world.getTileHeight();
+            double spawnX = dims.midX;
+            double spawnY = dims.midY;
             world.dropItemOnGround(item, spawnX, spawnY);
         }
     }

@@ -1,6 +1,6 @@
 package envision.debug.testStuff;
 
-import envision.engine.resourceLoaders.SpriteSheet;
+import envision.engine.registry.types.SpriteSheet;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.advancedObjects.menuBar.WindowMenuBar;

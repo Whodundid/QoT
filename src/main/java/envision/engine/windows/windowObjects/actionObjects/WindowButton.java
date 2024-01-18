@@ -4,9 +4,9 @@ import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
 
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.resourceLoaders.Sprite;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.settings.config.EnvisionConfigFile;
 import envision.engine.windows.windowTypes.ActionObject;

@@ -6,10 +6,10 @@ import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 
 import envision.Envision;
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.EStringOutputFormatter;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.resourceLoaders.Sprite;
 import eutil.colors.EColors;
 import eutil.math.dimensions.IDimension;
 import eutil.misc.Rotation;
@@ -252,6 +252,13 @@ public class RenderingManager {
                   color);
     }
 	
+    public static void drawSprite(Sprite sprite, double[] dims, boolean flip, int color) {
+        drawSprite(sprite, dims, flip, Rotation.UP, color);
+    }
+    public static void drawSprite(Sprite sprite, double[] dims, boolean flip, Rotation rotation, int color) {
+        drawSprite(sprite, dims[0], dims[1], dims[2], dims[3], flip, rotation, color);
+    }
+    
     public static void drawSprite(Sprite sprite, double x, double y, double w, double h) { drawSprite(sprite, x, y, w, h, false, Rotation.UP, 0xffffffff); }
     public static void drawSprite(Sprite sprite, double x, double y, double w, double h, int color) { drawSprite(sprite, x, y, w, h, false, Rotation.UP, color); }
     public static void drawSprite(Sprite sprite, double x, double y, double w, double h, Rotation rotation) { drawSprite(sprite, x, y, w, h, false, rotation, 0xffffffff); }

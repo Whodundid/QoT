@@ -89,6 +89,10 @@ public class WindowDialogueBox<E> extends ActionWindowParent {
 			default: break;
 			}
 		}
+		
+		if (message != null) {
+		    wordWrappedLines = EStringOutputFormatter.createWordWrapString(message, (int) width - 20);		    
+		}
 	}
 	
 	@Override

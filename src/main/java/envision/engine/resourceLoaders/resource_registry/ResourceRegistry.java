@@ -3,7 +3,7 @@ package envision.engine.resourceLoaders.resource_registry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import envision.engine.resourceLoaders.IGameResource;
+import envision.engine.registry.IGameResource;
 import eutil.datatypes.util.EList;
 
 public abstract class ResourceRegistry<T extends IGameResource> {
