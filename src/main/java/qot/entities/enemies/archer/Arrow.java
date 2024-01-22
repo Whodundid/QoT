@@ -1,67 +1,22 @@
 package qot.entities.enemies.archer;
 
-import envision.Envision;
 import envision.engine.registry.types.Sprite;
-import envision.game.entities.BasicRenderedEntity;
-import envision.game.entities.Entity;
-import eutil.random.ERandomUtil;
+import envision.game.entities.Projectile;
 import qot.assets.textures.entity.EntityTextures;
 
-public class Arrow extends BasicRenderedEntity {
+public class Arrow extends Projectile {
 	
-	private boolean spawned = false;
-	private long timeToLive = 600;
-	private long timeSpawned;
-	
-	public Arrow() { this("Arrow", 0, 0); }
-	public Arrow(String nameIn, int x, int y) {
-		super(nameIn);
+	public Arrow() {
+		super("Arrow");
 		
-		setBaseMeleeDamage(2 + ERandomUtil.getRoll(0, 2));
-		setInvincible(true);
-		
-		init(x, y, 32, 32);
-		sprite = new Sprite(EntityTextures.arrow_projectile);
-		setCollisionBox(startX - 8, startY - 8, endX + 8, endY + 8);
-		
-		setSpeed(270);
-	}
-	
-	@Override
-	public void onLivingUpdate(float dt) {
-		var cur = System.currentTimeMillis();
-		
-		if (!spawned) {
-			spawned = true;
-			timeSpawned = cur;
-		}
-		
-		if (cur - timeSpawned >= timeToLive) {
-			killProjectile();
-			return;
-		}
-		
-		Entity target = null;
-		var p = Envision.thePlayer;
-		target = p;
-		if (target == null) return;
-		
-		// always move towards the player if alive
-		var dir = world.getDirectionTo(this, target);
-		move(dir);
-		
-		var cb = getCollisionDims();
-		var pcb = p.getCollisionDims();
-		
-		if (cb.partiallyContains(pcb)) {
-			target.drainHealth(getBaseMeleeDamage());
-			killProjectile();
-		}
-	}
-	
-	private void killProjectile() {
-		kill();
-		world.removeEntity(this);
+        // 1.5 seconds
+        this.maxLifeSpan = 400.0f;
+        
+        init(0, 0, 32, 32);
+        sprite = new Sprite(EntityTextures.arrow_projectile);
+        setCollisionBox(startX + 5, startY + 5, endX - 5, endY - 5);
+        
+        setSpeed(400);
 	}
 	
 	@Override

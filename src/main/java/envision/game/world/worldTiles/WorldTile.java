@@ -68,8 +68,8 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
      * <li>Note: This value is ignored unless 'isWall' is true
      * <li>Note: Standard height ranges from [-1.0, 1.0]
      */
-    public float wallHeight = 0.5f;
-    public float minWallHeight = 0.0f;
+    public float wallHeight = 0.0f;
+    public float minWallHeight = -1.0f;
     public float maxWallHeight = 1.0f;
     
 

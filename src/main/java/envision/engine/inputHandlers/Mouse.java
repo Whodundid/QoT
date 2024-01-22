@@ -183,6 +183,8 @@ public class Mouse {
 	
 	public static double getMx_double() { return mX; }
 	public static double getMy_double() { return mY; }
+	public static float getMx_float() { return mX; }
+	public static float getMy_float() { return mY; }
 	
 	//==================
 	// Callback Getters

@@ -44,7 +44,12 @@ public class PlayerRenderer extends EntityRenderer {
         // hide upper layers if under roof
         checkIfCameraIsUnderRoof(world, camera);
         
-        RenderingManager.drawSprite(player.sprite, dims, flip, brightness);
+        Rotation rot = (theObject.forcedRotation != null) ? theObject.forcedRotation : Rotation.UP;
+        flip = (theObject.forceFlip) ? true : flip;
+        
+        RenderingManager.drawSprite(theObject.sprite, dims, flip, rot, brightness);
+        
+        //RenderingManager.drawSprite(player.sprite, dims, flip, brightness);
         player.draw(camera, dims, mouseOver);
         //healthBar.setDimensions(x, y - 7, w, 7);
         //healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
@@ -92,8 +97,7 @@ public class PlayerRenderer extends EntityRenderer {
             
             if (BatchManager.isEnabled()) BatchManager.drawRect(draw.startX + pw, draw.startY, draw.endX - pw,
                                                                 draw.endY, EColors.mc_gold.opacity(180));
-            else GLObject.drawRect(draw.startX + pw, draw.startY, draw.endX - pw, draw.endY, EColors.mc_gold.opacity(
-                                                                                                                     180));
+            else GLObject.drawRect(draw.startX + pw, draw.startY, draw.endX - pw, draw.endY, EColors.mc_gold.opacity(180));
         }
     }
     

@@ -26,6 +26,10 @@ public class Barrel extends BasicRenderedEntity {
         itemOnDeath.setChance(10);
         
         addComponent(itemOnDeath);
+        
+        this.canBeMoved = true;
+        this.canBeCarried = true;
+        this.canMoveEntities = true;
 	}
 	
 	@Override

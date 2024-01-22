@@ -28,7 +28,9 @@ public class QoT_Player extends Player {
         setMaxHealth(10);
         setHealth(10);
         setBaseMeleeDamage(1);
-        setMaxRange(65.0);
+        setMaxRange(50.0);
+        maxStamina = 100;
+        stamina = 100;
         
         baseInventorySize = 20;
         inventory.setSize(baseInventorySize);
@@ -44,6 +46,7 @@ public class QoT_Player extends Player {
         canMoveEntities = true;
         canBeMoved = false;
         canRegenHealth = true;
+        canRegenStamina = true;
     }
     
     //===========
@@ -63,9 +66,9 @@ public class QoT_Player extends Player {
             attackStart = System.currentTimeMillis();
             
             final var cam = Envision.levelManager.getCamera();
-            final double mpx = cam.getMousePixelX();
-            final double mpy = cam.getMousePixelY();
-            CircularDirectionalAttack.attackAt(world, this, midX, midY, mpx, mpy, 45.0);
+            final double mpx = cam.getMxPixel();
+            final double mpy = cam.getMyPixel();
+            CircularDirectionalAttack.attackAt(world, this, midX, midY, mpx, mpy, 55.0);
         }
     }
     
@@ -82,6 +85,11 @@ public class QoT_Player extends Player {
     public void onLivingUpdate(float dt) {
         abilityTracker.onGameTick(dt);
         
+        if (!spellbook.knowsAbility(Abilities.dodgeroll)) {
+            this.spellbook.learnAbility(Abilities.dodgeroll);
+            this.abilityTracker.addAbility(Abilities.dodgeroll);
+        }
+        
         if (!spellbook.knowsAbility(Abilities.fireball) && magicLevel >= 5) {
             this.spellbook.learnAbility(Abilities.fireball);
             this.abilityTracker.addAbility(Abilities.fireball);
@@ -92,9 +100,37 @@ public class QoT_Player extends Player {
     @Override
     public void draw(WorldCamera camera, double[] dims, boolean mouseOver) {
         if (this != Envision.thePlayer) return;
-        final double mpx = camera.getMousePixelX();
-        final double mpy = camera.getMousePixelY();
-        CircularDirectionalAttack.drawAttackAreaSector(this, this.midX, this.midY, mpx, mpy, 45);
+        
+        final float mpx = camera.getMxPixelf();
+        final float mpy = camera.getMyPixelf();
+        
+        CircularDirectionalAttack.drawAttackAreaSector(this, this.midX, this.midY, mpx, mpy, 55);
+        
+//        int tw = world.getTileWidth();
+//        int th = world.getTileHeight();
+//        int tileX = camera.getMxTile();
+//        int tileY = camera.getMyTile();
+//        final double[] area = camera.convertWorldPxToScreenPx(tileX * tw, tileY * th);
+//        double x = area[0];
+//        double y = area[1];
+//        final double zoom = camera.getZoom();
+//        
+//        drawHRect(x, y, x + tw * zoom, y + th * zoom, 1, EColors.chalk);
+//        drawString(((int) mpx / tw) + " : " + ((int) mpy / th), 150, 60);
+        
+        //Vector3f player = new Vector3f((float) midX, (float) midY, 0.0f);
+       // Vector3f mouse = new Vector3f((float) mpx, (float) mpy, 0.0f);
+//        RayCaster.RayCastResult result = RayCaster.checkRaycastHit(world, player, mouse, 100, Mouse.isLeftDown());
+//        
+//        drawLine(dims[0] + dims[2] * 0.5, dims[1] + dims[3] * 0.5, Mouse.getMx_double(), Mouse.getMy_double(), 3, EColors.red);
+//        
+//        if (result.collided) {
+//            Vector3f intersection = result.intersection;
+//            intersection.x *= tw;
+//            intersection.y *= th;
+//            double[] px = camera.convertWorldPxToScreenPx(intersection.x, intersection.y);
+//            drawRect(px[0] - 5, px[1] - 5, px[0] + 5, px[1] + 5, EColors.yellow);
+//        }
     }
     
     @Override

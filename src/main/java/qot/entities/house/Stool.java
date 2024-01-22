@@ -18,6 +18,10 @@ public class Stool extends BasicRenderedEntity {
 		
 		setMaxHealth(10);
 		setHealth(10);
+		
+        this.canBeMoved = true;
+        this.canBeCarried = true;
+        this.canMoveEntities = true;
 	}
 	
 	@Override

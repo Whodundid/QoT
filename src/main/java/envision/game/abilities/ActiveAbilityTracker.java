@@ -3,6 +3,7 @@ package envision.game.abilities;
 import envision.game.entities.Entity;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.util.EList;
+import eutil.debug.Broken;
 
 /**
  * Keeps track of the abilities an entity currently has equipped, to which
@@ -43,8 +44,9 @@ public class ActiveAbilityTracker {
 	//=========
 	
 	public void onGameTick(float dt) {
+	    updateAbilities((long) dt);
+	    
 		if (!anyOnCooldown) return;
-		
 		int onCooldown = maxNumberOfAbilities;
 		
 		for (int i = 0; i < maxNumberOfAbilities; i++) {
@@ -78,6 +80,16 @@ public class ActiveAbilityTracker {
 		anyOnCooldown = onCooldown != 0;
 	}
 	
+	public void updateAbilities(long dt) {
+	    for (int i = 0; i < maxNumberOfAbilities; i++) {
+            Ability a = abilities[i];
+            
+            if (a != null) {
+                a.updateAbility(dt);
+            }
+	    }
+	}
+	
 	public Ability getAbilityAtSlot(int slot) {
 		if (slot < 0 || slot >= maxNumberOfAbilities) return null;
 		
@@ -101,17 +113,17 @@ public class ActiveAbilityTracker {
 		if (slot < 0 || slot >= maxNumberOfAbilities) return false;
 		
 		// get ability at specified slot
-		var a = abilities[slot];
-		if (a == null) return false;
+		var theAbility = abilities[slot];
+		if (theAbility == null) return false;
 
 		var box = cooldownTracker[slot];
 		// check if still on cooldown -- don't use if so
 		//if (box.getA()) return false;
 		
-		boolean used = a.use(theEntity);
+		boolean used = theAbility.use(theEntity);
 		
-		int level = box.getB();
-		int cooldown = a.getCooldownForTier(level);
+		int level = theEntity.spellbook.getAbilityLevel(theAbility);
+		int cooldown = theAbility.getCooldownForTier(level);
 		
 		if (used && cooldown > 0) {
 			// set this ability to be on cooldown

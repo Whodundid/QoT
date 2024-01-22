@@ -43,7 +43,7 @@ public class BatchManager implements IBatchManager {
 	//==============
 	
 	public BatchManager() {
-		this(30, 500, 32);
+		this(30, 400, 32);
 	}
 	
 	public BatchManager(int maxLayersIn, int maxBatchSizeIn, int texSlotsIn) {

@@ -30,11 +30,15 @@ import qot.screens.main.MainMenuScreen;
 
 public class GamePlayScreen extends GameScreen {
     
+    //========
+    // Fields
+    //========
+    
     Player player;
     IGameWorld world;
     WindowRect topHud;
     WindowRect botHud; //don't know if actually want this one
-    WindowStatusBar health, mana;
+    WindowStatusBar health, mana, stamina;
     WindowStatusBar healthRegen, manaRegen;
     WindowButton<?> character;
     
@@ -44,9 +48,9 @@ public class GamePlayScreen extends GameScreen {
     private GamePauseWindow pauseWindow;
     private boolean openPause = false;
     
-    //--------------
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public GamePlayScreen() { this(false); }
     public GamePlayScreen(boolean openPauseOnStart) {
@@ -56,6 +60,10 @@ public class GamePlayScreen extends GameScreen {
         openPause = openPauseOnStart;
         if (world != null) Envision.levelManager.getCamera().setMinZoom(2);
     }
+    
+    //===========
+    // Overrides
+    //===========
     
     @Override
     public void initScreen() {
@@ -83,6 +91,10 @@ public class GamePlayScreen extends GameScreen {
         mana.setBarValue(player.getMana());
         addObject(mana);
         
+        stamina = new WindowStatusBar(this, mana.endX + 10, 7, 190, 17, 0, player.getMaxStamina(), EColors.green);
+        stamina.setBarValue(player.getStamina());
+        addObject(stamina);
+
         healthRegen = new WindowStatusBar(this, health.startX, health.endY + 3, health.width, 6, 0, player.healthRegenTime, EColors.mc_darkred);
         if (player.health >= player.maxHealth) healthRegen.setBarValue(player.healthRegenTime);
         addObject(healthRegen);
@@ -128,11 +140,13 @@ public class GamePlayScreen extends GameScreen {
         
         drawRect(health.startX - 2, health.startY - 2, health.endX + 2, healthRegen.endY + 2, EColors.black);
         drawRect(mana.startX - 2, mana.startY - 2, mana.endX + 2, manaRegen.endY + 2, EColors.black);
+        drawRect(stamina.startX - 2, stamina.startY - 2, stamina.endX + 2, stamina.endY + 2, EColors.black);
         
         if (Envision.thePlayer != null) {
             final var p = Envision.thePlayer;
             health.setBarValue(p.getHealth());
             mana.setBarValue(p.getMana());
+            stamina.setBarValue(p.getStamina());
             
             if (p.health >= p.maxHealth) healthRegen.setBarValue(p.healthRegenTime);
             else healthRegen.setBarValue(p.healthRegenUpdate);
@@ -167,8 +181,10 @@ public class GamePlayScreen extends GameScreen {
             if (Keyboard.isWDown()) moveY -= 1;
             if (Keyboard.isSDown()) moveY += 1;
             
-            if (Keyboard.isAnyKeyDown(Keyboard.KEY_A, Keyboard.KEY_D, Keyboard.KEY_W, Keyboard.KEY_S)) {
-                p.move(moveX, moveY);
+            if (!p.preventMovementInputs) {
+                if (Keyboard.isAnyKeyDown(Keyboard.KEY_A, Keyboard.KEY_D, Keyboard.KEY_W, Keyboard.KEY_S)) {
+                    p.move(moveX, moveY);
+                }
             }
             
             //			double moveSpeed = 1;
@@ -191,6 +207,7 @@ public class GamePlayScreen extends GameScreen {
         if (keyCode == Keyboard.KEY_RIGHT) Envision.thePlayer.movePixel(1, 0);
         if (keyCode == Keyboard.KEY_UP) Envision.thePlayer.movePixel(0, -1);
         if (keyCode == Keyboard.KEY_DOWN) Envision.thePlayer.movePixel(0, 1);
+        if (keyCode == Keyboard.KEY_SPACE) Envision.thePlayer.abilityTracker.useAbility(0);
         
         if (keyCode == Keyboard.KEY_N) {
             Entity obj = world.getEntitiesInWorld().getRandom();
@@ -216,10 +233,10 @@ public class GamePlayScreen extends GameScreen {
         super.mousePressed(mXIn, mYIn, button);
         
         final WorldCamera cam = Envision.levelManager.getCamera();
-        double mouseX = cam.getMousePixelX();
-        double mouseY = cam.getMousePixelY();
-        int worldX = cam.getMouseTileX();
-        int worldY = cam.getMouseTileY();
+        double mouseX = cam.getMxPixel();
+        double mouseY = cam.getMyPixel();
+        int worldX = cam.getMxTile();
+        int worldY = cam.getMyTile();
         
         if (worldX >= 0 && worldX < world.getWidth() && worldY >= 0 && worldY < world.getHeight()) {
             WorldTile tile = world.getTileAt(worldX, worldY);

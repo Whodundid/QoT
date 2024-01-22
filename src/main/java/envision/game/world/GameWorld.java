@@ -5,6 +5,7 @@ import java.io.File;
 import envision.Envision;
 import envision.engine.events.eventTypes.world.WorldAddedEntityEvent;
 import envision.game.GameObject;
+import envision.game.entities.Doodad;
 import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
 import envision.game.world.layerSystem.LayerSystem;
@@ -389,7 +390,9 @@ public class GameWorld implements IGameWorld {
         EList<Entity> r = new EArrayList<>(arrLen);
         
         var list = worldObjects.stream()
+                               .filter(e -> e != obj)
                                .filter(Entity.class::isInstance)
+                               .filter(e -> !(e instanceof Doodad))
                                .map(o -> (Entity) o)
                                .collect(EList.toEList());
         
@@ -414,8 +417,10 @@ public class GameWorld implements IGameWorld {
 		EList<Entity> r = new EArrayList<>(arrLen);
 		
 		var list = worldObjects.stream()
+		                       .filter(e -> e != obj)
 							   .filter(Entity.class::isInstance)
 							   .map(o -> (Entity) o)
+							   .filter(e -> !(e instanceof Doodad))
 							   .collect(EList.toEList());
 		
 		final int size = list.size();

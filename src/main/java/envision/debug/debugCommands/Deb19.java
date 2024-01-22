@@ -1,6 +1,7 @@
 package envision.debug.debugCommands;
 
 import envision.Envision;
+import envision.engine.creation.EnvisionCodeBlock;
 import envision.engine.creation.block.blockTypes.AndBlock;
 import envision.engine.creation.block.blockTypes.BufferBlock;
 import envision.engine.creation.block.blockTypes.ConstBooleanBlock;
@@ -31,6 +32,7 @@ public class Deb19 extends DebugCommand {
 	        termIn.writeln("  7. and");
 	        termIn.writeln("  8. or");
 	        termIn.writeln("  9. xor");
+	        termIn.writeln(" 10. envision");
 	        return;
 	    }
 	    
@@ -51,6 +53,7 @@ public class Deb19 extends DebugCommand {
 		case 7: top.displayWindow(new AndBlock()); break;
 		case 8: top.displayWindow(new OrBlock()); break;
 		case 9: top.displayWindow(new XorBlock()); break;
+		case 10: top.displayWindow(new EnvisionCodeBlock()); break;
 		default:
 		    termIn.writeln("INVALID TYPE!");
 		}

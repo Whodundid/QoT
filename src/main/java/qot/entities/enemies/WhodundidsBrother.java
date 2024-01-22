@@ -1,12 +1,10 @@
 package qot.entities.enemies;
 
-import envision.Envision;
 import envision.engine.registry.types.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.effects.animations.AnimationHandler;
 import envision.game.entities.Enemy;
 import envision.game.entities.combat.EntityAttack;
-import envision.game.world.GameWorld;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
@@ -65,65 +63,69 @@ public class WhodundidsBrother extends Enemy {
         
         addComponent(itemOnDeath);
 	}
-
+	
 	@Override
 	public void onLivingUpdate(float dt) {
 		animationHandler.onRenderTick();
 		
-		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-			waitTime = ERandomUtil.getRoll(randShort, randLong);
-			moveTime = ERandomUtil.getRoll(randShort, randLong);
-			waitDelay = ERandomUtil.getRoll(randShort, randLong);
-			lastMove = System.currentTimeMillis();
-			lastDir = ERandomUtil.randomDir();
-		}
-		
-		if (System.currentTimeMillis() - lastMove >= moveTime) {
-			move(lastDir);
-		}
-		
-		if (Envision.thePlayer == null) return;
-		
-		Dimension_d testDim = getCollisionDims();
-		Dimension_d pDims = Envision.thePlayer.getCollisionDims();
-		
-		double distToPlayer = ((GameWorld) world).getDistance(this, Envision.thePlayer);
-		if (distToPlayer <= 50) {
-			animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.ATTACK_1);
-		}
-		else if (!animationHandler.isAnimationLoaded()) {
-			if (System.currentTimeMillis() - timeSinceLastBlink >= delayTillNextBlink) {
-				timeSinceLastBlink = System.currentTimeMillis();
-				delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
-				animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.IDLE_ANIMATION_1);
-			}
-		}
-		
-		if (testDim.partiallyContains(pDims)) {
-			if (hit) {
-				//System.out.println(System.currentTimeMillis() - timeSinceLastHit);
-				if ((System.currentTimeMillis() - timeSinceLastHit) >= 600) {
-					hit = false;
-				}
-			}
-			else {
-				hit = true;
-				timeSinceLastHit = System.currentTimeMillis();
-				int amount = EntityAttack.calculateMeleeAttackDamage(this);
-                Envision.thePlayer.attackedBy(this, amount);
-			}
-		}
-		
-		if (distToPlayer <= 300) {
-			headText = "" + health;
-			
-			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
-			move(dirToPlayer);
-		}
-		else {
-			headText = "";
-		}
+		super.onLivingUpdate(dt);
 	}
+	
+    @Override
+    protected void runPassiveAI(float dt) {
+        if (!animationHandler.isAnimationLoaded()) {
+            if (System.currentTimeMillis() - timeSinceLastBlink >= delayTillNextBlink) {
+                timeSinceLastBlink = System.currentTimeMillis();
+                delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
+                animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.IDLE_ANIMATION_1);
+            }
+        }
+        
+        wander();
+    }
+	
+    @Override
+    protected void runAggressiveAI(float dt) {
+        Dimension_d testDim = getCollisionDims();
+        Dimension_d pDims = currentTarget.getCollisionDims();
+        
+        double distToPlayer = world.getDistance(this, currentTarget);
+        if (distToPlayer <= 50) {
+            animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.ATTACK_1);
+        }
+        else if (!animationHandler.isAnimationLoaded()) {
+            if (System.currentTimeMillis() - timeSinceLastBlink >= delayTillNextBlink) {
+                timeSinceLastBlink = System.currentTimeMillis();
+                delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
+                animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.IDLE_ANIMATION_1);
+            }
+        }
+        
+        if (testDim.partiallyContains(pDims)) {
+            if (hit) {
+                //System.out.println(System.currentTimeMillis() - timeSinceLastHit);
+                if ((System.currentTimeMillis() - timeSinceLastHit) >= 600) {
+                    hit = false;
+                }
+            }
+            else {
+                hit = true;
+                timeSinceLastHit = System.currentTimeMillis();
+                int amount = EntityAttack.calculateMeleeAttackDamage(this);
+                currentTarget.attackedBy(this, amount);
+            }
+        }
+        
+        if (distToPlayer <= 300) {
+            //headText = "" + health;
+            
+            Direction dirToPlayer = world.getDirectionTo(this, currentTarget);
+            move(dirToPlayer);
+        }
+        else {
+            //headText = "";
+        }
+    }
 	
 	@Override
 	public int getInternalSaveID() {

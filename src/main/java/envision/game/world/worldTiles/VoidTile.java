@@ -28,4 +28,12 @@ public class VoidTile extends WorldTile {
 		//return copyFields(this, new VoidTile());
 	}
 	
+	public static boolean isVoid(WorldTile tile) {
+	    return tile == null || tile instanceof VoidTile;
+	}
+	
+	public static boolean notVoid(WorldTile tile) {
+	    return tile != null && !(tile instanceof VoidTile);
+	}
+	
 }

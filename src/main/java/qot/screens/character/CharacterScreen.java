@@ -135,14 +135,24 @@ public class CharacterScreen extends GameScreen {
 		drawString("Gold: " + EColors.mc_gold + theEntity.getGold(), 50, midY + dH / 2 - 35);
 		drawString("Damage per hit: " + EColors.lred + theEntity.getBaseMeleeDamage(), 50, midY + dH / 2);
 		
-		var effects = theEntity.activeEffectsTracker.keySet();
+		var effects = theEntity.activeEffectsTracker.getAllEffects();
 		int i = 0;
+		double lastEffectY = midY - 200;
 		for (var effect : effects) {
-		    String name = effect;
-		    String value = String.valueOf(theEntity.activeEffectsTracker.get(effect));
-		    drawString(name + ": " + value, fX + fW + 20, midY - 200 + i * 30);
+		    String name = effect.name;
+		    drawString(name, fX + fW + 20, midY - 200 + i * 30);
 		    i++;
+		    lastEffectY += 30;
 		}
+		
+        var effectTypes = theEntity.activeEffectsTracker.getAllEffectTypes();
+        i = 0;
+        for (var effectType : effectTypes) {
+            String name = effectType;
+            String value = String.valueOf(theEntity.activeEffectsTracker.getEffectTypeTotal(effectType));
+            drawString(name + ": " + value, fX + fW + 20, lastEffectY + i * 30);
+            i++;
+        }
 	}
 	
 	private void drawChar() {

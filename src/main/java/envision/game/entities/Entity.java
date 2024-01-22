@@ -1,15 +1,15 @@
 package envision.game.entities;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import envision.Envision;
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.game.GameObject;
 import envision.game.abilities.ActiveAbilityTracker;
 import envision.game.abilities.EntitySpellbook;
 import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
 import envision.game.component.types.death.OnDeathComponent;
+import envision.game.effects.OutOfStaminaEffect;
+import envision.game.entities.combat.RayCaster;
+import envision.game.entities.inventory.ActiveEffectsTracker;
 import envision.game.entities.inventory.EntityInventory;
 import envision.game.entities.physics.EntityPhysicsHandler;
 import envision.game.entities.physics.MovementCollisionHelper;
@@ -17,8 +17,8 @@ import envision.game.entities.player.EntityStats;
 import envision.game.entities.util.EntityHealthBar;
 import envision.game.entities.util.EntityLevel;
 import envision.game.items.Item;
+import envision.game.manager.LevelManager;
 import eutil.colors.EColors;
-import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.math.vectors.Vec3d;
@@ -64,7 +64,7 @@ public abstract class Entity extends ComponentBasedObject {
     /** The actual amount of mana this entity has. */
     public int mana;
     
-    public int stamina;
+    public int stamina = 100;
     public int maxStamina;
     public int staminaRechargeRate;
     public int staminaAttackDelay = 500;
@@ -130,9 +130,6 @@ public abstract class Entity extends ComponentBasedObject {
     public final EntityFavorTracker favorTracker = new EntityFavorTracker(this);
     public final EntityFavorDecider favorDecider = new EntityFavorDecider(this);
     
-    // TODO: What is this??
-    public EList<IWindowObject> drawnObjects = EList.newList();
-    
     public final MovementCollisionHelper collisionHelper;
     public final EntityPhysicsHandler physicsHandler;
     
@@ -142,24 +139,38 @@ public abstract class Entity extends ComponentBasedObject {
      * Measured in pixels per ms.
      */
     private double speed = (32 * 4.5) / 1000.0;
+    public boolean canMoveAcrossLowMovementBlockingWalls = false;
+    public boolean preventMovementInputs = false;
     
     public ActiveAbilityTracker abilityTracker;
     public EntitySpellbook spellbook;
     public EntityStats stats;
     
     /** Temp thing to test out stuff. */
-    public Map<String, Double> activeEffectsTracker = new HashMap<>();
+    //public Map<String, Double> activeEffectsTracker = new HashMap<>();
+    public ActiveEffectsTracker activeEffectsTracker = new ActiveEffectsTracker(this);
     
     public Item equipedWeapon;
     
     public boolean canRegenHealth = false;
     public boolean canRegenMana = false;
+    public boolean canRegenStamina = false;
     public float magicRegenTime = 5000;
     public float healthRegenTime = 30000;
+    public float staminaRegenTime = 100;
     public float magicRegenUpdate;
     public float healthRegenUpdate;
+    public float staminaRegenUpdate;
     public int magicRegenAmount = 1;
     public int healthRegenAmount = 1;
+    public int staminaRegenAmount = 1;
+    
+    public boolean staminaRegenDelayed = false;
+    public float staminaDelayStart;
+    public float staminaDelayUpdate;
+    public float staminaRegenDelayTime = 1500;
+    
+    public boolean canMove = true;
     
     //==============
     // Constructors
@@ -231,6 +242,14 @@ public abstract class Entity extends ComponentBasedObject {
         healthChangedTime = System.currentTimeMillis();
     }
     
+    protected void manaChanged(int amount) {
+        
+    }
+    
+    protected void staminaChanged(int amount) {
+        
+    }
+    
     /**
      * Reduces health by amount. If result is less than or equal to 0, the
      * entity dies.
@@ -238,9 +257,9 @@ public abstract class Entity extends ComponentBasedObject {
     public void drainHealth(int amount) {
         if (invincible) return;
         
-        if (activeEffectsTracker.containsKey("DEFENSE_MODIFIER")) {
-            double reduce = Math.floor((double) amount * activeEffectsTracker.get("DEFENSE_MODIFIER"));
-            System.out.println(reduce);
+        if (activeEffectsTracker.hasEffectType("DEFENSE_MODIFIER")) {
+            double effectTotal = activeEffectsTracker.getEffectTypeTotal("DEFENSE_MODIFIER");
+            double reduce = Math.floor((double) amount * effectTotal);
             amount += reduce;
         }
         
@@ -293,9 +312,12 @@ public abstract class Entity extends ComponentBasedObject {
         super.onGameTick(dt);
         
         favorTracker.updateFavorOverTime((long) dt);
+        activeEffectsTracker.update((long) dt);
         
         if (canRegenMana && mana < maxMana) magicRegenUpdate += dt;
         if (canRegenHealth && health < maxHealth) healthRegenUpdate += dt;
+        if (canRegenStamina && stamina < maxStamina) staminaRegenUpdate += dt;
+        if (staminaRegenDelayed) staminaDelayUpdate += dt;
         
         if (canRegenMana && magicLevel >= 1) {
             if (magicRegenUpdate >= magicRegenTime) {
@@ -309,6 +331,18 @@ public abstract class Entity extends ComponentBasedObject {
             if (health < maxHealth) replenishHealth(healthRegenAmount);
         }
         
+        if (staminaRegenDelayed && staminaDelayUpdate >= staminaRegenDelayTime) {
+            staminaRegenDelayed = false;
+            staminaDelayUpdate = 0;
+            canRegenStamina = true;
+            replenishStamina(staminaRegenAmount);
+        }
+        
+        if (canRegenStamina && staminaRegenUpdate >= staminaRegenTime) {
+            staminaRegenUpdate = 0;
+            if (stamina < maxStamina) replenishStamina(staminaRegenAmount);
+        }
+        
         if (healthChanged && (System.currentTimeMillis() - healthChangedTime >= healthChangedTimeout)) {
             healthChanged = false;
         }
@@ -318,7 +352,18 @@ public abstract class Entity extends ComponentBasedObject {
         }
     }
     
-    public void drainStamina(int amount) { stamina = ENumUtil.clamp(stamina - amount, 0, maxStamina); }
+    public void drainStamina(int amount) {
+        stamina = ENumUtil.clamp(stamina - amount, 0, maxStamina);
+        
+        if (stamina == 0) {
+            activeEffectsTracker.addEffect(new OutOfStaminaEffect());
+        }
+        
+        staminaDelayStart = System.currentTimeMillis();
+        canRegenStamina = false;
+        staminaRegenDelayed = true;
+        staminaDelayUpdate = 0;
+    }
     
     /** Reduces mana by amount. */
     public void drainMana(int amount) {
@@ -344,7 +389,14 @@ public abstract class Entity extends ComponentBasedObject {
 //        var text = new FloatingTextEntity(worldX, worldY, width, height, amount, 1500);
 //        text.setColor(EColors.blue);
 //        world.addEntity(text);
-        healthChanged(amount);
+        manaChanged(amount);
+    }
+    /**
+     * Restores stamina points by the given amount. Note: does not exceed max stamina.
+     */
+    public void replenishStamina(int amount) {
+        stamina = ENumUtil.clamp(stamina + amount, Integer.MIN_VALUE, maxStamina);
+        staminaChanged(amount);
     }
     /**
      * Completely restores all hitpoints back to max health. Note: if max
@@ -385,32 +437,15 @@ public abstract class Entity extends ComponentBasedObject {
     
     public void move(Direction d) {
         switch (d) {
-        case N:
-            move(0, -1);
-            break;
-        case E:
-            move(1, 0);
-            break;
-        case S:
-            move(0, 1);
-            break;
-        case W:
-            move(-1, 0);
-            break;
-        case NE:
-            move(1, -1);
-            break;
-        case NW:
-            move(-1, -1);
-            break;
-        case SE:
-            move(1, 1);
-            break;
-        case SW:
-            move(-1, 1);
-            break;
-        default:
-            break;
+        case N: move(0, -1); break;
+        case E: move(1, 0); break;
+        case S: move(0, 1); break;
+        case W: move(-1, 0); break;
+        case NE: move(1, -1); break;
+        case NW: move(-1, -1); break;
+        case SE: move(1, 1); break;
+        case SW: move(-1, 1); break;
+        default: break;
         }
     }
     
@@ -505,6 +540,25 @@ public abstract class Entity extends ComponentBasedObject {
         return midX * x + midY * y;
     }
     
+    public boolean hasDirectLineOfSightToObject(GameObject object) {
+        if (object == null) return false;
+        if (object.world != world) return false;
+        
+        var result = RayCaster.checkRaycastHit(world, this, object, 100.0);
+        
+        // if there was a collision, check if the distance of the collision is greater than
+        // the actual distance to the target
+        if (result.collided) {
+            var cDims = this.getCollisionDims();
+            var oDims = object.getCollisionDims();
+            double actualDist = ENumUtil.distance_squared(cDims.midX, cDims.midY, oDims.midX, oDims.midY);
+            double x = (result.distance * world.getTileWidth());
+            // this is probably conceptually wrong because it doesn't account for tile height, but IDK how to deal...
+            return (x * x) > actualDist;
+        }
+        return true;
+    }
+    
     /**
      * Returns true if this entity actually exists within a loaded world.
      * 
@@ -566,6 +620,9 @@ public abstract class Entity extends ComponentBasedObject {
     public int getMaxMana() { return maxMana; }
     public int getMana() { return mana; }
     public int getMagicLevel() { return magicLevel; }
+    
+    public int getMaxStamina() { return maxStamina; }
+    public int getStamina() { return stamina; }
     
     public int getBaseMeleeDamage() {
         int damage = baseMeleeDamage;
@@ -684,8 +741,13 @@ public abstract class Entity extends ComponentBasedObject {
     
     /** Returns true if this entity had enough mana to use the given spell. */
     public boolean manaCheck(int spellCost) {
-        if (mana >= spellCost) { return true; }
-        return false;
+        boolean rule = LevelManager.rules().getRuleValue("playerInfiniteMana", false);
+        return (rule || mana >= spellCost);
+    }
+    
+    public boolean staminaCheck(int staminaAmount) {
+        boolean rule = LevelManager.rules().getRuleValue("playerInfiniteStamina", false);
+        return (rule || stamina > 0);
     }
     
     public double getSpeed() { return speed; }

@@ -23,7 +23,14 @@ public class DisplayBlock extends BufferBlock {
     @Override
     public void drawObject(float dt, int mXIn, int mYIn) {
         drawDefaultBackground();
-        drawStringC(input.getValue(), midX, midY - FontRenderer.HALF_FH + 1);
+        
+        if (input.getValue() != null) {
+            drawStringC(input.getValue(), midX, midY - FontRenderer.HALF_FH + 1 - FontRenderer.HALF_FH);
+            drawStringC(input.getValue().getClass().getSimpleName(), midX, midY - FontRenderer.HALF_FH + 1 + FontRenderer.HALF_FH);
+        }
+        else {
+            drawStringC(input.getValue(), midX, midY - FontRenderer.HALF_FH + 1);
+        }
     }
     
 }

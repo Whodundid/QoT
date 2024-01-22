@@ -4,6 +4,7 @@ import envision.Envision;
 import envision.engine.terminal.commands.TerminalCommand;
 import envision.engine.terminal.window.ETerminalWindow;
 import envision.game.manager.rules.GameRule;
+import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 
 public class CMD_Rules extends TerminalCommand {
@@ -13,8 +14,8 @@ public class CMD_Rules extends TerminalCommand {
 		expectedArgLength = 0;
 	}
 
-	@Override public String getName() { return "rule"; }
-	@Override public EList<String> getAliases() { return EList.of("gr"); }
+	@Override public String getName() { return "rules"; }
+	@Override public EList<String> getAliases() { return EList.of("gr, rule"); }
 	@Override public String getHelpInfo(boolean runVisually) { return "Used to display or modify current game rules"; }
 	@Override public String getUsage() { return "ex: gr "; }
 	
@@ -54,19 +55,23 @@ public class CMD_Rules extends TerminalCommand {
 		    writeln("Displaying all rules:");
 		    int i = 0;
 		    for (GameRule<?> r : allRules) {
-		        writeln("  ", i++, ": ", r.getRuleName(), " = ", r.getValue());
+		        var color = EColors.blue;
+		        if (r.getValue() instanceof Boolean) color = (boolean) (r.getValue()) ? EColors.lgreen : EColors.lred;
+		        writeln("  ", EColors.seafoam, i++, " ", EColors.orange, r.getRuleName(), EColors.lime, " = ", color, r.getValue());
 		    }
 		}
 		else if (oneArg()) {
-		    
+		    GameRule<Boolean> rule = (GameRule<Boolean>) rules.getRule(arg(0));
+		    var color = (rule.getValue()) ? EColors.lgreen : EColors.lred;
+		    writeln("  ", EColors.orange, rule.getRuleName(), EColors.lime, ": ", color, rule.getValue());
 		}
 		else if (twoArgs()) {
-		    
 		    GameRule<Boolean> rule = (GameRule<Boolean>) rules.getRule(arg(0));
 		    // this should really be a boolean, but I don't want to take a lot of time on this right now
 		    boolean val = Boolean.parseBoolean(arg(1));
 		    rule.setValue(val);
-		    writeln("  ", rule.getRuleName(), " = ", rule.getValue());
+		    var color = (rule.getValue()) ? EColors.lgreen : EColors.lred;
+            writeln("  ", EColors.orange, rule.getRuleName(), EColors.lime, ": ", color, rule.getValue());
 		}
 	}
 	

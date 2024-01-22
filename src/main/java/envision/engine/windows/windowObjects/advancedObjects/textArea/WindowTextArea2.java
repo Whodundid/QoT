@@ -391,7 +391,7 @@ public class WindowTextArea2 extends WindowObject implements DocumentChangeListe
         drawDocumentText();
         
         // draw cursor
-        drawCursor(dt);
+        if (hasFocus()) drawCursor(dt);
         
         // draw lineNumber backdrop and separator
         if (drawLineNumbers) drawLineNumbers();

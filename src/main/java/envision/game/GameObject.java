@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import envision.Envision;
 import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.RenderingManager;
+import envision.engine.rendering.Transform;
 import envision.game.effects.animations.AnimationHandler;
 import envision.game.util.IDrawable;
 import envision.game.world.IGameWorld;
@@ -25,6 +26,8 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	public int worldX, worldY;
 	public String name;
 	public Rotation facing = Rotation.LEFT;
+	public Rotation forcedRotation;
+	public boolean forceFlip = false;
 	
 	/** The internal ID that is exclusive to this entity regardless of world. */
 	public final String objectID;
@@ -40,6 +43,7 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	private static AtomicInteger internalIDCounter = new AtomicInteger();
 	public static String nextObjectID() { return String.valueOf(internalIDCounter.getAndIncrement()); }
 	
+	public Transform transform;
 	private int cameraLayer = 0;
 	
 	//==============

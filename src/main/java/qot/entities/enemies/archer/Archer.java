@@ -1,6 +1,6 @@
 package qot.entities.enemies.archer;
 
-import java.text.DecimalFormat;
+import org.joml.Vector3f;
 
 import envision.Envision;
 import envision.engine.registry.types.Sprite;
@@ -48,13 +48,22 @@ public class Archer extends Enemy {
     
     @Override
     public void onLivingUpdate(float dt) {
-        var p = Envision.thePlayer;
-        if (p == null) {
-            wander();
+        super.onLivingUpdate(dt);
+    }
+    
+    @Override
+    protected void runPassiveAI(float dt) {
+        wander();
+    }
+    
+    @Override
+    protected void runAggressiveAI(float dt) {
+        if (currentTarget == null) {
+            runPassiveAI(dt);
             return;
         }
         
-        double dist = world.getDistance(this, p);
+        double dist = world.getDistance(this, currentTarget);
         //this.headText = "" + new DecimalFormat("#.00").format(dist);
         //this.headText = "";
         
@@ -76,18 +85,9 @@ public class Archer extends Enemy {
         }
     }
     
-    private void wander() {
-        if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-            waitTime = ERandomUtil.getRoll(randShort, randLong);
-            moveTime = ERandomUtil.getRoll(randShort, 800l);
-            waitDelay = ERandomUtil.getRoll(randShort, randLong);
-            lastMove = System.currentTimeMillis();
-            lastDir = ERandomUtil.randomDir(true);
-        }
-        
-        if (System.currentTimeMillis() - lastMove >= moveTime) {
-            move(lastDir);
-        }
+    @Override
+    protected void wander() {
+        super.wander();
     }
     
     private void moveTowardsPlayer() {
@@ -96,16 +96,29 @@ public class Archer extends Enemy {
     }
     
     private void shootArrow() {
-        var left = switch (facing) {
-        case LEFT, UP -> true;
-        default -> false;
-        };
+        if (Envision.thePlayer == null) return;
+        
+//        var left = switch (facing) {
+//        case LEFT, UP -> true;
+//        default -> false;
+//        };
         
         if (System.currentTimeMillis() - timeSinceLastFireball >= fireballDelay) {
             timeSinceLastFireball = System.currentTimeMillis();
+            
+            float diffX = (float) (midX - Envision.thePlayer.midX);
+            float diffY = (float) (midY - Envision.thePlayer.midY);
+            Vector3f dir = new Vector3f(diffX, diffY, 0.0f);
+            dir.normalize();
+            dir.mul(-1.0f);
+            
             var fb = new Arrow();
-            fb.worldX = (left) ? worldX : (int) (worldX + width / world.getTileWidth());
-            fb.worldY = worldY;
+            fb.setBaseMeleeDamage(3);
+            fb.setFiredDirection(dir);
+            fb.setFiringEntity(this);
+            fb.startX = midX - width * 0.5;
+            fb.startY = midY - height * 0.5;
+            
             world.addEntity(fb);
         }
     }
@@ -129,7 +142,7 @@ public class Archer extends Enemy {
             }
         }
         
-        Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
+        Direction dirToPlayer = world.getDirectionTo(this, Envision.thePlayer);
         move(dirToPlayer);
     }
     

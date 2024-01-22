@@ -27,7 +27,8 @@ public class AbilityTextures extends TextureLoader {
 	public static final GameTexture
 	
 	cast_heal = new GameTexture(textureDir, "Heal.png"),
-	cast_fireball = new GameTexture(textureDir, "Cast_Fireball.png");
+	cast_fireball = new GameTexture(textureDir, "Cast_Fireball.png"),
+	cast_kick = new GameTexture(textureDir, "kick.png");
 	
 	//-----------
 	// Overrides
@@ -37,6 +38,7 @@ public class AbilityTextures extends TextureLoader {
 	public void onRegister(TextureSystem sys) {
 		reg(sys, cast_heal);
 		reg(sys, cast_fireball);
+		reg(sys, cast_kick);
 	}
 	
 }

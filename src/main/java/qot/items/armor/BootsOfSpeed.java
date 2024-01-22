@@ -4,10 +4,13 @@ import envision.engine.registry.types.Sprite;
 import envision.game.entities.Entity;
 import envision.game.items.Item;
 import qot.assets.textures.item.ItemTextures;
+import qot.effects.SpeedEffect;
 import qot.items.ItemList;
 
 public class BootsOfSpeed extends Item {
 
+    public final SpeedEffect speedEffect = new SpeedEffect("BootsOfSpeed Effect", 750.0);
+    
 	public BootsOfSpeed() {
 		super("Boots of Speed", ItemList.BOOTS_OF_SPEED.ID);
 		this.setUsable(false);
@@ -27,16 +30,12 @@ public class BootsOfSpeed extends Item {
 	
 	@Override
 	public void onItemEquip(Entity user) {
-		if (!user.activeEffectsTracker.containsKey("SPEED_MODIFIER")) {
-			user.activeEffectsTracker.put("SPEED_MODIFIER", 750.0);
-		}
+	    user.activeEffectsTracker.addEffect(speedEffect);
 	}
 	
 	@Override
 	public void onItemUnequip(Entity user) {
-		if (!user.getInventory().containsItemType(this)) {
-			user.activeEffectsTracker.remove("SPEED_MODIFIER");
-		}
+	    user.activeEffectsTracker.removeEffect(speedEffect);
 	}
 	
 }

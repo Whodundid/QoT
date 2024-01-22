@@ -1,11 +1,11 @@
 package qot.particles;
 
 import envision.Envision;
-import envision.game.entities.BasicRenderedEntity;
+import envision.game.entities.Doodad;
 import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
 
-public class FloatingTextEntity extends BasicRenderedEntity {
+public class FloatingTextEntity extends Doodad {
     
     protected String text;
     protected long timeAlive;

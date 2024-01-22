@@ -48,8 +48,12 @@ public class WorldCamera {
     /** A number of pixels to offset all rendering by in the Y axis. */
     private double pixelOffsetY;
     
+    private float mXWorldPixelF = 0.0f;
+    private float mYWorldPixelF = 0.0f;
     private int mXWorldPixel = 0;
     private int mYWorldPixel = 0;
+    private float mXWorldTileF = 0.0f;
+    private float mYWorldTileF = 0.0f;
     private int mXWorldTile = 0;
     private int mYWorldTile = 0;
     
@@ -101,13 +105,17 @@ public class WorldCamera {
      */
     protected void updateMousePositionInWorld() {
         // x world pixel under the mouse with zoom factored out
-        mXWorldPixel = (int) ((Mouse.getMx_double() - drawArea.midX) * zoomi + (focusedPoint.x - pixelOffsetX));
+        mXWorldPixelF = (float) ((Mouse.getMx_float() - drawArea.midX) * zoomi + (focusedPoint.x - pixelOffsetX));
+        mXWorldPixel = (int) mXWorldPixelF;
         // y world pixel under the mouse with zoom factored out
-        mYWorldPixel = (int) ((Mouse.getMy_double() - drawArea.midY) * zoomi + (focusedPoint.y - pixelOffsetY));
+        mYWorldPixelF = (float) ((Mouse.getMy_float() - drawArea.midY) * zoomi + (focusedPoint.y - pixelOffsetY));
+        mYWorldPixel = (int) mYWorldPixelF;
         // x world coordinate under the mouse
-        mXWorldTile = (int) (mXWorldPixel * tileWidthInverse);
+        mXWorldTileF = (float) (mXWorldPixelF * tileWidthInverse);
+        mXWorldTile = (int) mXWorldTileF;
         // y world coordinate under the mouse
-        mYWorldTile = (int) (mYWorldPixel * tileHeightInverse);
+        mYWorldTileF = (float) (mYWorldPixelF * tileHeightInverse);
+        mYWorldTile = (int) mYWorldTileF;
     }
     
     /**
@@ -387,34 +395,22 @@ public class WorldCamera {
         return calculateDrawDimensions(focusedPoint.x - tileWidth, focusedPoint.y - tileHeight, tileWidth, tileHeight);
     }
     
-    /**
-     * @return the X pixel coordinate of where the mouse is in the world.
-     *         (could be out of bounds)
-     */
-    public double getMousePixelX() {
-        return mXWorldPixel;
-    }
-    /**
-     * @return the Y pixel coordinate of where the mouse is in the world.
-     *         (could be out of bounds)
-     */
-    public double getMousePixelY() {
-        return mYWorldPixel;
-    }
-    /**
-     * @return the X world coordinate of where the mouse is in the world.
-     *         (could be out of bounds)
-     */
-    public int getMouseTileX() {
-        return mXWorldTile;
-    }
-    /**
-     * @return the Y world coordinate of where the mouse is in the world.
-     *         (could be out of bounds)
-     */
-    public int getMouseTileY() {
-        return mYWorldTile;
-    }
+    /** @return the X decimal pixel coordinate of where the mouse is in the world. (could be out of bounds) */
+    public float getMxPixelf() { return mXWorldPixelF; }
+    /** @return the Y decimal pixel coordinate of where the mouse is in the world. (could be out of bounds) */
+    public float getMyPixelf() { return mYWorldPixelF; }
+    /** @return the X pixel coordinate of where the mouse is in the world. (could be out of bounds) */
+    public int getMxPixel() { return mXWorldPixel; }
+    /** @return the Y pixel coordinate of where the mouse is in the world. (could be out of bounds) */
+    public int getMyPixel() { return mYWorldPixel; }
+    /** @return the X decimal tile world coordinate of where the mouse is in the world. (could be out of bounds) */
+    public float getMxTilef() { return mXWorldTileF; }
+    /** @return the Y decimal tile world coordinate of where the mouse is in the world. (could be out of bounds) */
+    public float getMyTilef() { return mYWorldTileF; }
+    /** @return the X world tile coordinate of where the mouse is in the world. (could be out of bounds) */
+    public int getMxTile() { return mXWorldTile; }
+    /** @return the Y world tile coordinate of where the mouse is in the world. (could be out of bounds) */
+    public int getMyTile() { return mYWorldTile; }
     
     public Dimension_i getDrawableArea() { return new Dimension_i(drawArea); }
     
@@ -543,6 +539,8 @@ public class WorldCamera {
     }
     
     protected double calcMinEdgeLockZoom() {
+        if (theWorld == null) return 0;
+        
         final int gameWidth = Envision.getWidth();
         final int gameHeight = Envision.getHeight();
         

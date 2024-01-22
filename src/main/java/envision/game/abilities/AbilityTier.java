@@ -10,26 +10,18 @@ public class AbilityTier {
 	private String requiresQuestCompletion;
 	private String requiresQuestCompletionStage;
 	
-	/**
-	 * The amount of mana it takes to cast this ability.
-	 */
+	/** The amount of mana it takes to cast this ability. */
 	private int manaCost;
-	
-	/**
-	 * The number of game ticks that must pass before the ability can be used
-	 * again.
-	 */
+	/** The amount of stamina it takes to perform this ability. */
+	private int staminaCost;
+	/** The number of game ticks that must pass before the ability can be used again. */
 	private int cooldown;
-	
 	/**
 	 * The number of game ticks that must pass once casting has initiated
 	 * before the ability actually gets activated.
 	 */
 	private int castTime;
-	
-	/**
-	 * The amount of game ticks that this ability lasts for before going on cooldown.
-	 */
+	/** The amount of game ticks that this ability lasts for before going on cooldown. */
 	private int duration;
 	
 	//==============
@@ -65,6 +57,12 @@ public class AbilityTier {
 	public AbilityTier manaCost(int manaCost) {
 		this.manaCost = manaCost;
 		return this;
+	}
+	
+	public int staminaCost() { return staminaCost; }
+	public AbilityTier staminaCost(int staminaCost) {
+	    this.staminaCost = staminaCost;
+	    return this;
 	}
 	
 	public int cooldown() { return cooldown; }

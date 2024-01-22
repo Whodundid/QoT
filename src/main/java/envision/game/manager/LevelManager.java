@@ -5,6 +5,8 @@ import java.io.File;
 import envision.Envision;
 import envision.game.manager.rules.Rule_DoDaylightCycle;
 import envision.game.manager.rules.Rule_GodMode;
+import envision.game.manager.rules.Rule_PlayerInfiniteMana;
+import envision.game.manager.rules.Rule_PlayerInfiniteStamina;
 import envision.game.manager.rules.Rule_PlayerNoClip;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
@@ -71,7 +73,6 @@ public class LevelManager {
         worlds.addIfNotNull(startingWorld);
         
         camera = new WorldCamera();
-        camera.setZoom(2.0);
     }
     
     //=========
@@ -168,11 +169,13 @@ public class LevelManager {
     }
     
     public void loadWorld(IGameWorld worldIn) {
+        boolean hadWorld = false;
         if (activeWorld == null) {
             setTime((int) (lengthOfDay / 2.2));
         }
         
         if (activeWorld != null) {
+            hadWorld = true;
             activeWorld.setLoaded(false);
             
             if (Envision.thePlayer != null) {
@@ -204,6 +207,7 @@ public class LevelManager {
         Envision.theWorld = activeWorld; // this line should probably be removed long term
         
         camera.setActiveWorld(activeWorld);
+        if (!hadWorld) camera.setZoom(2.0);
         
         if (activeWorld != null) {
             boolean wasLoaded = !((GameWorld) activeWorld).isFirstLoad;
@@ -231,6 +235,8 @@ public class LevelManager {
         rules.addRule(new Rule_DoDaylightCycle());
         rules.addRule(new Rule_GodMode());
         rules.addRule(new Rule_PlayerNoClip());
+        rules.addRule(new Rule_PlayerInfiniteMana());
+        rules.addRule(new Rule_PlayerInfiniteStamina());
     }
     
     //===================

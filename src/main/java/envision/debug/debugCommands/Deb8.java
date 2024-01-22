@@ -52,6 +52,11 @@ public class Deb8 extends DebugCommand {
                          
                          //api.tpEntity(playerID, 32 * 50, 20)
                          
+                         class vec {
+                             int x, y
+                             init(x, y)
+                             func toString() -> "<{x}, {y}>"
+                         }
                          """);
         
         program = new EnvisionProgram("ETerminal_Script", script);

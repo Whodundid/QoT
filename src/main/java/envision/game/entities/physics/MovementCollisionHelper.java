@@ -1,6 +1,8 @@
 package envision.game.entities.physics;
 
+import envision.game.effects.OutOfStaminaEffect;
 import envision.game.entities.Entity;
+import envision.game.entities.Projectile;
 import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.util.EList;
@@ -171,9 +173,12 @@ public class MovementCollisionHelper {
 		
 		var speed = e.getSpeed();
 		
-		// TEMP -- add in modifiers
-		if (e.activeEffectsTracker.containsKey("SPEED_MODIFIER")) {
-			speed += (e.activeEffectsTracker.get("SPEED_MODIFIER") * 0.0001);
+		if (e.activeEffectsTracker.hasEffect(OutOfStaminaEffect.EFFECT_NAME)) {
+		    speed = (32.0 * 0.5) / 1000.0;
+		}
+		else if (e.activeEffectsTracker.hasEffectType("SPEED_MODIFIER")) {
+		    double effectTotal = e.activeEffectsTracker.getEffectTypeTotal("SPEED_MODIFIER");
+		    speed += effectTotal * 0.0001;
 		}
 		
 		normX *= speed;
@@ -200,8 +205,12 @@ public class MovementCollisionHelper {
 			boolean blockX = false;
 			double blockXCoords = 0.0;
 			
+			boolean isProjectile = e instanceof Projectile;
+			
 			if (isMovingX) {
 				for (var t : getCollidingTilesForXAxis(left)) {
+				    if (isProjectile && t.wallHeight <= 0.2) continue;
+				    
 					double tsx = t.worldX * world.getTileWidth();
 					double tsy = t.worldY * world.getTileWidth();
 					double tex = tsx + world.getTileWidth();
@@ -221,8 +230,8 @@ public class MovementCollisionHelper {
 			
 			if (isMovingY) {
 				for (var t : getCollidingTilesForYAxis(up)) {
-//					System.out.println("Y: " + t + " [" + t.worldX + ", " + t.worldY + "]");
-					
+				    if (isProjectile && t.wallHeight <= 0.2) continue;
+				    
 					double tsx = t.worldX * world.getTileWidth();
 					double tsy = t.worldY * world.getTileWidth();
 					double tex = tsx + world.getTileWidth();
@@ -264,8 +273,8 @@ public class MovementCollisionHelper {
 			e.startY = ENumUtil.clamp(e.startY, minY, maxY);
 		}
 		
-		e.midX = e.startX + (e.width / 2);
-		e.midY = e.startY + (e.height / 2);
+		e.midX = e.startX + (e.width / 2.0);
+		e.midY = e.startY + (e.height / 2.0);
 		
 		double valX = e.startX / world.getTileWidth();
 		double valY = e.startY / world.getTileHeight();
@@ -343,6 +352,11 @@ public class MovementCollisionHelper {
 			// ignore tiles that don't have collision restrictions
 			if (!t.blocksMovement()) continue;
 			
+			// if the entity can move across low walls, allow the movement
+            if (theEntity.canMoveAcrossLowMovementBlockingWalls) {
+                if (t.wallHeight < 0.0) continue;
+            }
+			
 			tiles.add(t);
 		}
 		
@@ -378,6 +392,11 @@ public class MovementCollisionHelper {
 			
 			// ignore tiles that don't have collision restrictions
 			if (!t.blocksMovement()) continue;
+			
+			// if the entity can move across low walls, allow the movement
+			if (theEntity.canMoveAcrossLowMovementBlockingWalls) {
+			    if (t.wallHeight < 0.0) continue;
+			}
 			
 			tiles.add(t);
 		}

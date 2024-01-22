@@ -1,11 +1,9 @@
 package qot.entities.enemies;
 
-import envision.Envision;
 import envision.engine.registry.types.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.entities.combat.EntityAttack;
-import envision.game.world.GameWorld;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
@@ -29,7 +27,7 @@ public class Whodundid extends Enemy {
 		setMaxHealth(20);
 		setHealth(20);
 		
-		setCollisionBox(startX + 6, endY - height / 2, endX - 6, endY);
+		setCollisionBox(midX - 12, endY - 30, midX + 12, endY);
 		setExperienceRewardedOnKill(50);
 		
 		randShort = 400l;
@@ -45,50 +43,46 @@ public class Whodundid extends Enemy {
 	
 	@Override
 	public void onLivingUpdate(float dt) {
-		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
-			waitTime = ERandomUtil.getRoll(randShort, randLong);
-			moveTime = ERandomUtil.getRoll(randShort, randLong);
-			waitDelay = ERandomUtil.getRoll(randShort, randLong);
-			lastMove = System.currentTimeMillis();
-			lastDir = ERandomUtil.randomDir();
-		}
-		
-		if (System.currentTimeMillis() - lastMove >= moveTime) {
-			move(lastDir);
-		}
-		
-		if (Envision.thePlayer == null) return;
-		
-		Dimension_d testDim = getCollisionDims();
-		Dimension_d pDims = Envision.thePlayer.getCollisionDims();
-		
-		if (testDim.partiallyContains(pDims)) {
-			if (hit) {
-				//System.out.println(System.currentTimeMillis() - timeSinceLastHit);
-				if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
-					hit = false;
-				}
-			}
-			else {
-				hit = true;
-				timeSinceLastHit = System.currentTimeMillis();
-				int amount = EntityAttack.calculateMeleeAttackDamage(this);
-                Envision.thePlayer.attackedBy(this, amount);
-			}
-		}
-		
-		double distToPlayer = ((GameWorld) world).getDistance(this, Envision.thePlayer);
-		if (Envision.thePlayer != null && distToPlayer <= 300) {
-			headText = "" + health;
-			
-			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
-			move(dirToPlayer);
-		}
-		else {
-			headText = "";
-		}
+		super.onLivingUpdate(dt);
 	}
 	
+    @Override
+    protected void runPassiveAI(float dt) {
+        wander();
+    }
+	
+    @Override
+    protected void runAggressiveAI(float dt) {
+        Dimension_d testDim = getCollisionDims();
+        Dimension_d pDims = currentTarget.getCollisionDims();
+        
+        if (testDim.partiallyContains(pDims)) {
+            if (hit) {
+                //System.out.println(System.currentTimeMillis() - timeSinceLastHit);
+                if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
+                    hit = false;
+                }
+            }
+            else {
+                hit = true;
+                timeSinceLastHit = System.currentTimeMillis();
+                int amount = EntityAttack.calculateMeleeAttackDamage(this);
+                currentTarget.attackedBy(this, amount);
+            }
+        }
+        
+        double distToPlayer = world.getDistance(this, currentTarget);
+        if (distToPlayer <= 300) {
+            //headText = "" + health;
+            
+            Direction dirToPlayer = world.getDirectionTo(this, currentTarget);
+            move(dirToPlayer);
+        }
+        else {
+            //headText = "";
+        }
+    }
+    
 	@Override
 	public int getInternalSaveID() {
 		return EntityList.WHODUNDID.ID;

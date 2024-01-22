@@ -9,11 +9,11 @@ import envision.game.util.IDrawable;
 import envision.game.util.InsertionSort;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
+import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.ExpandableGrid;
 import eutil.datatypes.util.EList;
-import qot.particles.FloatingTextEntity;
 
 public class WorldDrawLayer {
 	
@@ -72,34 +72,45 @@ public class WorldDrawLayer {
 		var camera = Envision.levelManager.getCamera();
 		int cameraUpper = camera.getUpperCameraLayer();
 		var theEntity = camera.getFocusedObject();
+		int entX = -1;
 		int entY = -1;
 		int entLayer = camLayer;
 		if (theEntity != null) {
 		    var colDims = theEntity.getCollisionDims();
+		    entX = (int) (colDims.midX / world.getTileWidth());
 	        entY = (int) (colDims.midY / world.getTileHeight());
 	        entLayer = theEntity.getCameraLayer();
+	        //entX = theEntity.worldX;
 		    //entY = theEntity.worldY;
 		}
 		int max = world.getNumberOfLayers() - 1;
 		
 		//System.out.println(entY + " : " + camLayer + " : " + cameraUpper);
+		boolean camLowerThanMax = cameraUpper != max;
+		//boolean isHigherThanCamera = camLayer > cameraUpper;
+		
+		//System.out.println(camLayer + " : " + cameraUpper + " | " + entLayer + " : " + camCheck);
 		
 		for (int i = 0; i < world.getHeight(); i++) {
-		    if (camLayer == 0 || camLayer < cameraUpper || camLayer <= entLayer || i < entY - 1) {
-                for (int j = 0; j < world.getWidth(); j++) {
-                    worldData.set(world.getTileAt(camLayer, j, i), j, i);
-                }
+		    for (int j = 0; j < world.getWidth(); j++) {
+		        if (camLowerThanMax) {
+		            if (camLayer <= entLayer || j > entX + 5 || j < entX - 5 || i > entY + 5 || i < entY - 5)
+                        worldData.set(world.getTileAt(camLayer, j, i), j, i);
+		        }
+		        else {
+		            worldData.set(world.getTileAt(camLayer, j, i), j, i);
+		        }
             }
 		}
 		
 		var entities = world.getEntitiesInWorld().filter(e -> e.getCameraLayer() == camLayer);
 		gameObjects.addAll(entities);
 		
-		//add all world tiles within the specified area
+		// add all world tiles within the specified area
 		for (int i = top; i <= bot; i++) {
 			for (int j = left; j <= right; j++) {
 				var tile = worldData.get(j, i);
-				if (tile == null) continue;
+				if (tile == null && tile != VoidTile.instance) continue;
 				if (tile.getRenderLayer() == layer) builtLayer.add(tile);
 			}
 		}
@@ -110,7 +121,7 @@ public class WorldDrawLayer {
 		double w_bot = bot * world.getTileHeight();
 		
 		if (layer == 1) {
-		    EList<GameObject> text = EList.newList();
+		    //EList<GameObject> text = EList.newList();
 			//add all objects within the specified area
 			for (var obj : gameObjects) {
 				if (obj == Envision.thePlayer) {

@@ -32,12 +32,16 @@ public abstract class Ability {
 	// Abstracts
 	//===========
 	
-	public boolean use(Entity e) { return use(e, -1); }
+	/** @return True if the ability was used by the entity. */
+	public boolean use(Entity e) { return use(e, 0); }
+	/** @return True if the ability was used by the entity. */
 	public abstract boolean use(Entity e, int tierIn);
 	
 	public abstract boolean canEntityUse(Entity e, int tierIn);
 	
 	public abstract boolean canEntityUpgrade(Entity e);
+	
+	public void updateAbility(long dt) {}
 	
 	//===========
 	// Overrides
@@ -81,5 +85,6 @@ public abstract class Ability {
 	public int getCooldownForTier(int tier) { return tiers[tier].cooldown(); }
 	public int getCastTimeForTier(int tier) { return tiers[tier].castTime(); }
 	public int getDurationForTier(int tier) { return tiers[tier].duration(); }
+	public int getStaminaCostForTier(int tier) { return tiers[tier].staminaCost(); }
 	
 }

@@ -13,6 +13,9 @@ public class Chair extends BasicRenderedEntity {
 		init(x, y, 32, 32);
 		sprite = new Sprite(HouseTextures.chair);
 		invincible = true;
+        this.canBeMoved = true;
+        this.canBeCarried = true;
+        this.canMoveEntities = true;
 	}
 	
 	@Override

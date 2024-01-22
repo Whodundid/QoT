@@ -66,7 +66,6 @@ public class CircularDirectionalAttack {
         double lowerPX = x * lowerCos - y * lowerSin + startX;
         double lowerPY = x * lowerSin + y * lowerCos + startY;
         
-        
         final var camera = Envision.levelManager.getCamera();
         double[] lower = camera.convertWorldPxToScreenPx(upperPX, upperPY);
         double[] upper = camera.convertWorldPxToScreenPx(lowerPX, lowerPY);
@@ -81,12 +80,10 @@ public class CircularDirectionalAttack {
         double midY = entityPos[1];
         
         int lightLevel = entity.world.getAmbientLightLevel();
+        int color = EColors.lgray.brightness(lightLevel);
         // could probably be more formalized..
-        RenderingManager.drawLine(midX, midY, lowerX, lowerY, 2, EColors.lgray.brightness(lightLevel));
-        //RenderingManager.drawStringCS((int) lowerPX/* + " : " + (int) lowerPY */, lowerX, lowerY, EColors.lgray);
-        
-        RenderingManager.drawLine(midX, midY, upperX, upperY, 2, EColors.lgray.brightness(lightLevel));
-        //RenderingManager.drawStringCS((int) upperPX/* + " : " + (int) upperPY */, upperX, upperY, EColors.lgray);
+        RenderingManager.drawLine(midX, midY, lowerX, lowerY, 2, color);
+        RenderingManager.drawLine(midX, midY, upperX, upperY, 2, color);
     }
     
     /**
@@ -142,14 +139,19 @@ public class CircularDirectionalAttack {
         double angle = Math.abs(180.0 - Math.atan2(destY, destX) * (180.0 / Math.PI)) % 360.0;
         double radiusSquared = mag * mag;
         
+        var cDims = attackingEntity.getCollisionDims();
+        startX = cDims.midX;
+        startY = cDims.midY;
+        
         EList<Entity> entities = findEntitiesWithinSector(world, attackingEntity,
                                                           startX, startY,
                                                           angle, angleDegress,
                                                           radiusSquared);
         
         // attack entities in range
-        final int damage = EntityAttack.calculateMeleeAttackDamage(attackingEntity);
+        int damage = EntityAttack.calculateMeleeAttackDamage(attackingEntity);
         for (var e : entities) {
+            if (!attackingEntity.hasDirectLineOfSightToObject(e)) continue;
             e.attackedBy(attackingEntity, damage);
 //            if (!e.isDead()) {
 //                double kbMag = -KnockbackCalculator.calculateKnockbackForce(attackingEntity, e, AttackType.MELEE);

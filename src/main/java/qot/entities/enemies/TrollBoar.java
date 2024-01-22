@@ -9,6 +9,7 @@ import eutil.datatypes.points.Point2i;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.entity.EntityTextures;
+import qot.effects.SpeedEffect;
 import qot.entities.EntityList;
 import qot.items.Items;
 
@@ -23,6 +24,8 @@ public class TrollBoar extends Enemy {
 	private long startWait = -1;
 	private long waitAttackTime;
 	private boolean passedMoveLogic;
+	
+	public static final SpeedEffect trollSpeed = new SpeedEffect("Troll Speed", 200);
 	
 	public TrollBoar() { this(0, 0); }
 	public TrollBoar(int posX, int posY) {
@@ -53,12 +56,21 @@ public class TrollBoar extends Enemy {
 	public void onLivingUpdate(float dt) {
 		provideSpeedAura();
 		
-		if (isPlayerClose()) doLogic();
-		else move(ERandomUtil.randomDir());
+		super.onLivingUpdate(dt);
 	}
 	
+    @Override
+    protected void runPassiveAI(float dt) {
+        move(ERandomUtil.randomDir());
+    }
+    
+    @Override
+    protected void runAggressiveAI(float dt) {
+        doLogic();
+    }
+	
 	private boolean isPlayerClose() {
-		var p = Envision.thePlayer;
+		var p = currentTarget;
 		var w = Envision.theWorld;
 		if (p == null || w == null) return false;
 		
@@ -84,7 +96,7 @@ public class TrollBoar extends Enemy {
 	
 	private void movementLogic() {
 		var cur = System.currentTimeMillis();
-		var p = Envision.thePlayer;
+		var p = currentTarget;
 		
 		if (!passedMoveLogic) {
 			if (doesWaitAttack) {
@@ -113,7 +125,7 @@ public class TrollBoar extends Enemy {
 			}
 		}
 		else {
-			var dir = world.getDirectionTo(this, Envision.thePlayer);
+			var dir = world.getDirectionTo(this, currentTarget);
 			if (dir != Direction.OUT) move(dir);			
 		}
 	}
@@ -134,10 +146,13 @@ public class TrollBoar extends Enemy {
 	}
 	
 	private void attack() {
-		var p = Envision.thePlayer;
+		var p = currentTarget;
 		if (p == null) return;
 		
-		p.drainMana(5);
+		var dist = world.getDistance(this, p);
+		if (dist < 200) {
+		    p.drainMana(5);		    
+		}
 		
 		var cb = getCollisionDims(); // collision box
 		var phb = p.getCollisionDims(); // player hitbox
@@ -156,7 +171,7 @@ public class TrollBoar extends Enemy {
 			
 			int amount = EntityAttack.calculateMeleeAttackDamage(this);
 			amount += bonus;
-            Envision.thePlayer.attackedBy(this, amount);
+            currentTarget.attackedBy(this, amount);
 		}
 	}
 	
@@ -168,7 +183,9 @@ public class TrollBoar extends Enemy {
 		 
 		 for (var e : closeEntities) {
 			 if (e.isDead()) continue;
-			 e.activeEffectsTracker.put("SPEED_MODIFIER", 200.0);
+			 if (!e.activeEffectsTracker.hasEffect(trollSpeed)) {
+			     e.activeEffectsTracker.addEffect(trollSpeed);
+			 }
 		 }
 	}
 	

@@ -314,8 +314,16 @@ public class MapEditorScreen extends GameScreen {
 			
 			updateDrawDist();
 		}
-		else if (Keyboard.isShiftDown()) camera.moveCameraByCoords(c * 2, 0);
-		else if (Keyboard.isAltDown()) camera.moveCameraByCoords(0, -c * 2);
+//	    else if (Keyboard.isShiftDown()) {
+//	        if (c > 0) moveUpLayer();
+//	        else if (c < 0) moveDownLayer();
+//	    }
+        else if (Keyboard.isAltDown()) {
+            if (c > 0) moveUpLayer();
+            else if (c < 0) moveDownLayer();
+        }
+		//else if (Keyboard.isShiftDown()) camera.moveCameraByCoords(c * 2, 0);
+		//else if (Keyboard.isAltDown()) camera.moveCameraByCoords(0, -c * 2);
 	}
 	
 	@Override
@@ -592,10 +600,10 @@ public class MapEditorScreen extends GameScreen {
     }
     
     private void updateMousePos() {
-        mouseWorldX = camera.getMouseTileX();
-        mouseWorldY = camera.getMouseTileY();
-        mouseWorldPX = (int) camera.getMousePixelX();
-        mouseWorldPY = (int) camera.getMousePixelY();
+        mouseWorldX = camera.getMxTile();
+        mouseWorldY = camera.getMyTile();
+        mouseWorldPX = (int) camera.getMxPixel();
+        mouseWorldPY = (int) camera.getMyPixel();
         mouseInMap = mouseOver && camera.isMouseInWorld();
     }
     
@@ -658,8 +666,8 @@ public class MapEditorScreen extends GameScreen {
         double dw = (((double) (Envision.getWidth() - sidePanel.width)) / w) * 0.5;
         double dh = ((Envision.getHeight() - topHeader.height) / h) * 0.5;
         
-        drawDistX = (int) Math.ceil(dw);
-        drawDistY = (int) Math.ceil(dh);
+        drawDistX = (int) Math.ceil(dw) + 1;
+        drawDistY = (int) Math.ceil(dh) + camera.getCurrentLayer() + 1;
         
         updateMap = true;
     }

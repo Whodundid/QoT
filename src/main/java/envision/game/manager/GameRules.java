@@ -19,6 +19,10 @@ public class GameRules {
     private boolean godMode = false;
     /** Specified whether or not the player character can actively no clip through terrain. */
     private boolean playerNoClip = false;
+    /** True if the player has infinite mana. */
+    private boolean infiniteMana = false;
+    /** True if the player has infinite stamina. */
+    private boolean infiniteStamina = false;
     
     private final Map<String, GameRule<?>> rules = new HashMap<>();
     

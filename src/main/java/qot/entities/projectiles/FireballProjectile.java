@@ -15,7 +15,6 @@ public class FireballProjectile extends Projectile {
         
         // 1.5 seconds
         this.maxLifeSpan = 400.0f;
-        this.sprite = new Sprite(EntityTextures.fireBall_projectile);
         
         init(0, 0, 32, 32);
         sprite = new Sprite(EntityTextures.fireBall_projectile);

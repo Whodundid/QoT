@@ -12,6 +12,7 @@ import qot.assets.textures.ability.AbilityTextures;
 import qot.entities.projectiles.FireballProjectile;
 
 public class Ability_Fireball extends Ability {
+    
 	public Ability_Fireball() {
 		super("Fireball", AbilityTextures.cast_fireball);
 		
@@ -19,7 +20,7 @@ public class Ability_Fireball extends Ability {
 		
 		tier(0).manaCost(4).castTime(3 * 60).cooldown(5 * 60).requiresLevel(5);
 		tier(1).manaCost(10).castTime(3 * 60).cooldown(5 * 60).requiresLevel(10);
-		tier(2).manaCost(0).castTime(1).cooldown(1).requiresLevel(20);
+		tier(2).manaCost(15).castTime(3 * 60).cooldown(5 * 60).requiresLevel(15);
 	}
 
 	@Override
@@ -41,8 +42,8 @@ public class Ability_Fireball extends Ability {
 		
 		final var cam = Envision.levelManager.getCamera();
         if (cam == null) return false;
-        final double mpx = cam.getMousePixelX();
-        final double mpy = cam.getMousePixelY();
+        final double mpx = cam.getMxPixel();
+        final double mpy = cam.getMyPixel();
         
         Vector3f dir = new Vector3f((float) (e.midX - mpx), (float) (e.midY - mpy), 0.0f);
         dir.normalize();
@@ -52,17 +53,21 @@ public class Ability_Fireball extends Ability {
             spawnFireball(e, dir, level);
         }
         else if (level == 1) {
-            spawnFireball(e, dir.rotateZ((float) (-25 * Math.PI / 180), new Vector3f()), level);
             spawnFireball(e, dir, level);
-            spawnFireball(e, dir.rotateZ((float) (25 * Math.PI / 180), new Vector3f()), level);
+//            spawnFireball(e, dir.rotateZ((float) (-25 * Math.PI / 180), new Vector3f()), level);
+//            spawnFireball(e, dir, level);
+//            spawnFireball(e, dir.rotateZ((float) (25 * Math.PI / 180), new Vector3f()), level);
         }
         else if (level == 2) {
+          spawnFireball(e, dir.rotateZ((float) (-15 * Math.PI / 180), new Vector3f()), level);
+          spawnFireball(e, dir, level);
+          spawnFireball(e, dir.rotateZ((float) (15 * Math.PI / 180), new Vector3f()), level);
             //spawnFireball(e, dir, level);
-            int num = 20;
-            double angle = 360.0 / num;
-            for (int i = 0; i < num; i++) {
-                spawnFireball(e, dir.rotateZ((float) (i * angle * Math.PI / 180), new Vector3f()), level);
-            }
+//            int num = 20;
+//            double angle = 360.0 / num;
+//            for (int i = 0; i < num; i++) {
+//                spawnFireball(e, dir.rotateZ((float) (i * angle * Math.PI / 180), new Vector3f()), level);
+//            }
 //            spawnFireball(e, dir.rotateZ((float) (-45 * Math.PI / 180), new Vector3f()), level);
 //            spawnFireball(e, dir.rotateZ((float) (-25 * Math.PI / 180), new Vector3f()), level);
 //            spawnFireball(e, dir.rotateZ((float) (-10 * Math.PI / 180), new Vector3f()), level);
@@ -93,9 +98,9 @@ public class Ability_Fireball extends Ability {
         
         int maxDamage = switch (level) {
         case 0 -> 10;
-        case 1 -> 15;
-        case 2 -> 20;
-        default -> 25;
+        case 1 -> 30;
+        case 2 -> 60;
+        default -> 60;
         };
         
         int maxLifeSpan = switch (level) {
@@ -113,8 +118,9 @@ public class Ability_Fireball extends Ability {
         };
         
         int damage = e.getMagicLevel();
-        if (e.activeEffectsTracker.containsKey("MAGIC_MODIFIER")) {
-            damage += e.activeEffectsTracker.get("MAGIC_MODIFIER");
+        if (e.activeEffectsTracker.hasEffectType("MAGIC_MODIFIER")) {
+            double effectTotal = e.activeEffectsTracker.getEffectTypeTotal("MAGIC_MODIFIER");
+            damage += damage * effectTotal;
         }
         damage = minDamage + ERandomUtil.getRoll(0, damage);
         damage = ENumUtil.clamp(damage, minDamage, maxDamage);

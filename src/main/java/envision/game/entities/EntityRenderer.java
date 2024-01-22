@@ -235,9 +235,11 @@ public class EntityRenderer extends RenderingComponent {
         int worldMidX = (int) (colDims.midX / world.getTileWidth());
         int worldMidY = (int) (colDims.midY / world.getTileHeight());
         WorldTile above = null;
-        while ((above == null || above == VoidTile.instance) && camLayer < world.getNumberOfLayers() - 1) {
-            above = world.getTileAt(camLayer + 1, worldMidX, worldMidY);
-            camLayer++;
+        if (worldMidX >= 0 && worldMidX < world.getWidth() && worldMidY >= 0 && worldMidY < world.getHeight()) {
+            while ((above == null || above == VoidTile.instance) && camLayer < world.getNumberOfLayers() - 1) {
+                above = world.getTileAt(camLayer + 1, worldMidX, worldMidY);
+                camLayer++;
+            }
         }
         
         int upper = world.getNumberOfLayers() - 1;
@@ -245,8 +247,7 @@ public class EntityRenderer extends RenderingComponent {
         if (above != null && above != VoidTile.instance) {
             upper = above.getCameraLayer() - 1;
         }
-        RenderingManager.drawString(upper, 100, 100);
-        //System.out.println(above + " : " + upper);
+        
         camera.setUpperCameraLayer(upper);
 	}
 	
@@ -308,7 +309,10 @@ public class EntityRenderer extends RenderingComponent {
 	        flip = theObject.facing == Rotation.RIGHT || theObject.facing == Rotation.DOWN;
 	    }
 	    
-		RenderingManager.drawSprite(theObject.sprite, lastDrawX, lastDrawY, lastDrawW, lastDrawH, flip, lastDrawBrightness);
+	    Rotation rot = (theObject.forcedRotation != null) ? theObject.forcedRotation : Rotation.UP;
+	    flip = (theObject.forceFlip) ? true : flip;
+	    
+	    RenderingManager.drawSprite(theObject.sprite, lastDrawX, lastDrawY, lastDrawW, lastDrawH, flip, rot, lastDrawBrightness);
 	}
 	
 	public EntityRenderer setFlipTextureWhenMoving(boolean val) { flipTextureWhenMoving = val; return this; }
