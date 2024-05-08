@@ -12,15 +12,17 @@ public class WindowMenuCategory extends WindowObject {
     // Fields
     //========
     
-    private String categoryName;
-    private final EList<WindowMenuEntry> entries = EList.newList();
+    protected String categoryName;
+    protected final EList<WindowMenuEntry> entries = EList.newList();
     
     public static final String DEFAULT_MENU_CATEGORY_NAME = "New Menu";
-    public static final int DEFAULT_MENU_CATEGORY_PIXEL_HEIGHT = 40;
+    public static final int DEFAULT_MENU_CATEGORY_PIXEL_HEIGHT = 30;
     public static final int DEFAULT_MENU_CATEGORY_MAX_PIXEL_WIDTH = 400;
     
-    private int entryHeight = DEFAULT_MENU_CATEGORY_PIXEL_HEIGHT;
-    private int entryMaxWidth = DEFAULT_MENU_CATEGORY_MAX_PIXEL_WIDTH;
+    protected int entryHeight = DEFAULT_MENU_CATEGORY_PIXEL_HEIGHT;
+    protected int entryMaxWidth = DEFAULT_MENU_CATEGORY_MAX_PIXEL_WIDTH;
+    
+    protected boolean isSelected = false;
     
     //==============
     // Constructors
@@ -28,6 +30,7 @@ public class WindowMenuCategory extends WindowObject {
     
     public WindowMenuCategory(String nameIn) {
         categoryName = nameIn;
+        setSelected(false);
     }
     
     //===========
@@ -45,7 +48,7 @@ public class WindowMenuCategory extends WindowObject {
         drawRect(EColors.black);
         drawRect(EColors.pdgray, 1);
         
-        super.drawObject(dt, mXIn, mYIn);
+        //super.drawObject(dt, mXIn, mYIn);
     }
     
     //=========
@@ -64,14 +67,20 @@ public class WindowMenuCategory extends WindowObject {
         if (entryIn == null) return;
         synchronized (entries) {
             entries.add(entryIn);
-            entryIn.setPosition(startX, startY + entries.size() * entryHeight);
+            entryIn.setPosition(startX, startY + (entries.size() - 1) * entryHeight);
+            entryIn.setVisible(false);
+            addObject(entryIn);
             double longestWidth = 0;
             for (var e : entries) {
-                if (e.width > longestWidth) longestWidth = e.width;
+                if (e.width > longestWidth) {
+                    longestWidth = e.width;
+                }
             }
-            longestWidth = ENumUtil.clamp(longestWidth, 100, entryMaxWidth);
+            longestWidth = ENumUtil.clamp(longestWidth, 10, entryMaxWidth);
+            for (var e : entries) {
+                e.width = longestWidth;
+            }
             setSize(longestWidth, entries.size() * entryHeight);
-            addObject(entryIn);
         }
     }
     
@@ -126,10 +135,20 @@ public class WindowMenuCategory extends WindowObject {
     /** Returns a shallow copy of this menu category's entries. */
     public EList<WindowMenuEntry> getMenuEntries() { return entries.copy(); }
     
+    public boolean isSelected() { return isSelected; }
+    
     //=========
     // Setters
     //=========
     
     public void setCategoryName(String nameIn) { categoryName = nameIn; }
+    
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+        setVisible(isSelected);
+        for (var e : entries) {
+            e.setVisible(isSelected);
+        }
+    }
     
 }

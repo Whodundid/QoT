@@ -46,7 +46,8 @@ public class EntityTextures extends TextureLoader {
 	fireBall_projectile = new GameTexture(textureDir + "../projectiles/", "fireball.png"),
 	arrow_projectile = new GameTexture(textureDir + "../projectiles/", "arrow.png"),
 	
-	walksheetTexture = new GameTexture(textureDir, "walksheet.png");
+	shopkeepWalksheetTexture = new GameTexture(textureDir, "walksheet.png"),
+	amyIdleWalkTexture = new GameTexture(textureDir, "amy/amy_idle_walk.png");
 	
     //===============
     // Sprite Sheets
@@ -54,7 +55,8 @@ public class EntityTextures extends TextureLoader {
 	
 	public static final SpriteSheet
 	
-	walksheet = new SpriteSheet(walksheetTexture, 64, 64, 36, 0);
+	walksheet = new SpriteSheet(shopkeepWalksheetTexture, 64, 64, 36, 0),
+	amyIdleWalkSheet = new SpriteSheet(amyIdleWalkTexture, 32, 32, 64, 0);
 	
 	//===========
 	// Overrides
@@ -80,11 +82,13 @@ public class EntityTextures extends TextureLoader {
 		reg(sys, fireBall_projectile);
 		reg(sys, arrow_projectile);
 		
-		reg(sys, walksheetTexture);
+		reg(sys, shopkeepWalksheetTexture);
+		reg(sys, amyIdleWalkTexture);
 		
 		//----------------------------
 		
 		reg(sys, "walksheet", walksheet);
+		reg(sys, "amy_idle_walk_sheet", amyIdleWalkSheet);
 	}
 	
 }

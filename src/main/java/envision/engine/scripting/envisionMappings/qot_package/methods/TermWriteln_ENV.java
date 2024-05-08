@@ -1,7 +1,7 @@
 package envision.engine.scripting.envisionMappings.qot_package.methods;
 
 import envision.Envision;
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision_lang.interpreter.EnvisionInterpreter;
 import envision_lang.interpreter.util.EnvisionStringFormatter;
 import envision_lang.lang.EnvisionObject;

@@ -44,7 +44,11 @@ public class EntityPathfinder {
     public EList<Cell> findPath(WorldTile destination, boolean adj_good_enough, double distance_limit) {
         setupCellGrid();
         
-        startCell = cellGrid.get(theEntity.worldX, theEntity.worldY);
+        var cdims = theEntity.getCollisionDims();
+        int x = (int) (cdims.midX / theWorld.getTileWidth());
+        int y = (int) (cdims.midY / theWorld.getTileHeight());
+        
+        startCell = cellGrid.get(x, y);
         endCell = cellGrid.get(destination.worldX, destination.worldY);
         
         queue.clear();

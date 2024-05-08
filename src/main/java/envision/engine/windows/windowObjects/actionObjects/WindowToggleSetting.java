@@ -31,7 +31,7 @@ public class WindowToggleSetting extends ActionObject {
         //label = new WindowLabel(this, checkbox.endX + 5, checkbox.midY - FontRenderer.FONT_HEIGHT * 0.4);
         
         if (wasValueSet) {
-            checkbox.setIsChecked(valueToSet);
+            checkbox.setChecked(valueToSet);
             wasValueSet = false;
         }
         
@@ -61,8 +61,8 @@ public class WindowToggleSetting extends ActionObject {
             return valueToSet;
         }
         
-        updateState(!checkbox.getIsChecked());
-        return checkbox.getIsChecked();
+        updateState(!checkbox.isChecked());
+        return checkbox.isChecked();
     }
     
     //=========
@@ -71,7 +71,7 @@ public class WindowToggleSetting extends ActionObject {
     
     public boolean getValue() {
         if (checkbox == null) return valueToSet;
-        return checkbox.getIsChecked();
+        return checkbox.isChecked();
     }
     
     //=========
@@ -89,7 +89,7 @@ public class WindowToggleSetting extends ActionObject {
             return;
         }
         
-        checkbox.setIsChecked(value);
+        checkbox.setChecked(value);
     }
     
     public void setString(String value) {

@@ -242,16 +242,18 @@ public class BatchManager implements IBatchManager {
 	}
 	
 	public static void drawRect(double sx, double sy, double ex, double ey, EColors color) {
-		instance().drawRect_i(sx, sy, ex, ey, color.intVal);
-		
-		System.out.println("CAT");
+		instance().drawRect_batch(sx, sy, ex, ey, color.intVal);
 	}
 	public static void drawRect(double sxIn, double syIn, double exIn, double eyIn, int colorIn) {
 		instance().drawRect_batch(sxIn, syIn, exIn, eyIn, colorIn);
 	}
 	
-	protected void drawRect_i(double sx, double sy, double ex, double ey, EColors color) { drawRect_i(sx, sy, ex, ey, color.intVal); }
-	protected void drawRect_i(double sxIn, double syIn, double exIn, double eyIn, int colorIn) { drawRect_batch(sxIn, syIn, exIn, eyIn, colorIn); }
+	protected void drawRect_i(double sx, double sy, double ex, double ey, EColors color) {
+	    drawRect_i(sx, sy, ex, ey, color.intVal);
+	}
+	protected void drawRect_i(double sxIn, double syIn, double exIn, double eyIn, int colorIn) {
+	    drawRect_batch(sxIn, syIn, exIn, eyIn, colorIn);
+	}
 	
 	private void drawRect_batch(double sxIn, double syIn, double exIn, double eyIn, int colorIn) {
 		RenderBatch curBatch = getCurLayerBatch();
@@ -397,10 +399,10 @@ public class BatchManager implements IBatchManager {
 			return;
 		}
 		
-		float xVal = (float) (tX / texture.getWidth());
-		float yVal = (float) (tY / texture.getHeight());
-		float wVal = (float) (tW / texture.getWidth());
-		float hVal = (float) (tH / texture.getHeight());
+		float xVal = ((float) tX / (float) texture.getWidth());
+		float yVal = ((float) tY / (float) texture.getHeight());
+		float wVal = ((float) tW / (float) texture.getWidth());
+		float hVal = ((float) tH / (float) texture.getHeight());
 		
 		float r = (color >> 16 & 255) * F_255;
 		float g = (color >> 8 & 255) * F_255;
@@ -460,6 +462,15 @@ public class BatchManager implements IBatchManager {
         float v2x = coords[1].x, v2y = coords[1].y;
         float v3x = coords[2].x, v3y = coords[2].y;
         float v4x = coords[3].x, v4y = coords[3].y;
+        
+        //garbage
+//        final int width = texture.getWidth();
+//        final int height = texture.getHeight();
+//        final float garbage = (width / height) * 0.0029f;
+//        v1x -= garbage; v1y -= garbage;
+//        v2x -= garbage; v2y += garbage;
+//        v3x += garbage; v3y += garbage;
+//        v4x += garbage; v4y -= garbage;
         
         float tID = texID;
         

@@ -11,7 +11,6 @@ public class StoneWall extends WorldTile {
 	public StoneWall(int id) {
 		super(TileIDs.STONE_WALL, id);
 		
-		setWall(true);
 		wallHeight = 0.75f;
 		blocksMovement = true;
 		numVariants = StoneWallTextures.stone_wall.getChildren().size();

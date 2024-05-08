@@ -4,6 +4,8 @@ import java.util.List;
 
 import envision.Envision;
 import envision.engine.loader.dtos.WorldTileDTO;
+import envision.engine.registry.IGameResource;
+import envision.engine.registry.ResourceType;
 import envision.engine.registry.types.Sprite;
 import envision.engine.registry.types.SpriteSheet;
 import envision.game.component.ComponentBasedObject;
@@ -46,7 +48,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
      * Note: Wall tiles do not inherently block movement as that modifier must
      * be specified separately.
      */
-    public boolean isWall = false;
+    //public boolean isWall = false;
     public boolean randomizeWallHeight;
     public boolean randomizeRotation;
     public boolean randomizeDrawFlipped;
@@ -181,7 +183,9 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
     
     @Override
     public double getSortPoint() {
-        return (worldY + 1) * Envision.theWorld.getTileHeight();
+        final double p = (worldY) * Envision.theWorld.getTileHeight();
+        //System.out.println(p);
+        return p;
     }
     
     //=========
@@ -200,7 +204,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         dto.setAnimated(isAnimated);
         dto.setSideAnimated(isSideAnimated);
         dto.setBlocksMovement(blocksMovement);
-        dto.setWall(isWall);
+        //dto.setWall(isWall);
         dto.setRandomizeWallHeight(randomizeWallHeight);
         dto.setRandomizeRotation(randomizeRotation);
         dto.setRandomizeDrawFlipped(randomizeDrawFlipped);
@@ -233,7 +237,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         tile.isSideAnimated = dto.isSideAnimated();
         tile.blocksMovement = dto.isBlocksMovement();
         tile.blocksLight = dto.isBlocksLight();
-        tile.isWall = dto.isWall();
+        //tile.isWall = dto.isWall();
         tile.randomizeWallHeight = dto.isRandomizeWallHeight();
         tile.randomizeRotation = dto.isRandomizeRotation();
         tile.randomizeDrawFlipped = dto.isRandomizeDrawFlipped();
@@ -256,7 +260,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
      * Called every time the world updates.
      */
     public void onWorldTick() {
-        if (isAnimated) animationHandler.onRenderTick();
+        if (isAnimated) animationHandler.onRenderTick((long) Envision.getDeltaTime());
     }
     
     /**
@@ -292,7 +296,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         return blocksMovement;
     }
     public boolean isWildCard() { return wildCardTexture; }
-    public boolean isWall() { return isWall; }
+    //public boolean isWall() { return isWall; }
     public double getWallHeight() { return wallHeight; }
     
     public int getID() { return id.tileID; }
@@ -332,10 +336,10 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         blocksMovement = val;
         return this;
     }
-    public WorldTile setWall(boolean val) {
-        isWall = val;
-        return this;
-    }
+//    public WorldTile setWall(boolean val) {
+//        isWall = val;
+//        return this;
+//    }
     public WorldTile setWildCard(boolean val) {
         wildCardTexture = val;
         return this;
@@ -439,7 +443,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         to.numVariants = from.numVariants;
         to.blocksMovement = from.blocksMovement;
         to.wildCardTexture = from.wildCardTexture;
-        to.isWall = from.isWall;
+        //to.isWall = from.isWall;
         to.wallHeight = from.wallHeight;
         to.material = from.material;
         to.worldX = from.worldX;

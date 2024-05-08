@@ -6,13 +6,16 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import envision.engine.creation.block.CreatorBlock;
+import envision.engine.creation.block.BlockConnectionPoint;
+import envision.engine.creation.block.FunctionBlock;
+import envision.engine.creation.block.PointLocation;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.kernel.terminal.terminalUtil.FileType;
+import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.terminal.terminalUtil.FileType;
 import envision.engine.windows.bundledWindows.fileExplorer.MovingFileObject;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.basicObjects.WindowImageBox;
@@ -20,14 +23,15 @@ import envision.engine.windows.windowObjects.utilityObjects.ErrorDialogBox;
 import envision.engine.windows.windowObjects.utilityObjects.InfoDialogBox;
 import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.WindowObjectGroup;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
+import eutil.colors.EColors;
 import eutil.datatypes.Grid;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
-public class TestTextureSheetBuilder extends CreatorBlock {
+public class TestTextureSheetBuilder extends FunctionBlock {
     
     //========
     // Fields
@@ -44,8 +48,16 @@ public class TestTextureSheetBuilder extends CreatorBlock {
     private WindowTextField saveNameField;
     private WindowTextField txWidthField, txHeightField;
     
+    protected final BlockConnectionPoint<Object> texturesInput;
+    protected final BlockConnectionPoint<Integer> widthInput;
+    protected final BlockConnectionPoint<Integer> heightInput;
+    protected final BlockConnectionPoint<GameTexture> imageOutput;
+    
     private boolean isEditMode = true;
     private Grid<WindowImageBox> spriteGrid = new Grid<>();
+    
+    private EList<GameTexture> texturesToProcess = EList.newList();
+    private EList<Sprite> spritesToProcess = EList.newList();
     
     private int tw = 32;
     private int th = 32;
@@ -54,19 +66,84 @@ public class TestTextureSheetBuilder extends CreatorBlock {
     // Overrides : IWindowParent
     //===========================
     
-    @Override
-    public void initWindow() {
+    public TestTextureSheetBuilder() {
+        super("Texture Sheet Builder");
+        
+        texturesInput = createInputPoint("Texture", PointLocation.LEFT);
+        imageOutput = createOutputPoint("Texture", PointLocation.RIGHT);
+        heightInput = createInputPoint("Sprite Height", PointLocation.BOT_LEFT);
+        widthInput = createInputPoint("Sprite Width", PointLocation.BOT_LEFT);
+        
+        widthInput.setPointColor(EColors.magenta);
+        heightInput.setPointColor(EColors.magenta);
+//    }
+//    
+//    @Override
+//    public void initWindow() {
         setObjectName("Texture Sheet Builder");
-        setGuiSize(500, 500);
-        setMinDims(500, 500);
+        setGuiSize(335, 300);
+        setMinDims(335, 200);
         setResizeable(true);
-        setMaximizable(true);
-        setMinimizable(true);
+//        setMaximizable(true);
+//        setMinimizable(true);
+    }
+    
+    @Override
+    public void evaluate() {
+        Integer wIn = widthInput.getValue();
+        Integer hIn = heightInput.getValue();
+        
+        if (wIn != null) {
+            tw = wIn;
+            txWidthField.setText(tw);
+        }
+        
+        if (hIn != null) {
+            th = hIn;
+            txHeightField.setText(th);
+        }
+        
+        var input = texturesInput.getValue();
+        if (input == null) return;
+        
+        textureList.clear();
+        spritesToProcess.clear();
+        texturesToProcess.clear();
+        
+        if (input instanceof Sprite s) {
+            spritesToProcess.add(s);
+        }
+        else if (input instanceof GameTexture t) {
+            texturesToProcess.add(t);
+        }
+        else if (input instanceof EList<?> list) {
+            if (list.isEmpty()) return;
+            
+            boolean allTextures = true;
+            boolean allSprites = true;
+            for (var o : list) {
+                if (!(o instanceof GameTexture)) allTextures = false;
+                if (!(o instanceof Sprite)) allSprites = false;
+            }
+            
+            if (allTextures) {
+                synchronized (texturesToProcess) {
+                    for (var o : list)
+                        texturesToProcess.add((GameTexture) o);                    
+                }
+            }
+            else if (allSprites) {
+                synchronized (spritesToProcess) {
+                    for (var o : list)
+                        spritesToProcess.add((Sprite) o);                    
+                }
+            }
+        }
     }
     
     @Override
     public void initChildren() {
-        defaultHeader();
+        super.initChildren();
         
         clearButton = new WindowButton<>(this, midX - 160, endY - 50, 150, 40, "Clear");
         clearButton.setAction(this::clearImage);
@@ -95,7 +172,7 @@ public class TestTextureSheetBuilder extends CreatorBlock {
         double texEY = (txWidthField.startY - vgap) - (startY + 5);
         textureDisplayer = new WindowImageBox(this, startX + 5, startY + 5, width - 10, texEY);
         
-        var group = new EObjectGroup(this);
+        var group = new WindowObjectGroup(this);
         group.addObject(textureDisplayer, clearButton);
         setObjectGroup(group);
         textureDisplayer.setObjectGroup(group);
@@ -113,15 +190,83 @@ public class TestTextureSheetBuilder extends CreatorBlock {
         drawDefaultBackground();
         double x = txWidthField.endX + ((txHeightField.startX - txWidthField.endX) * 0.5);
         drawStringCS("x", x, txWidthField.midY - FontRenderer.HALF_FH + 1);
+        
+        checkForUpdates();
+    }
+    
+    private void checkForUpdates() {
+        synchronized (texturesToProcess) {
+            if (texturesToProcess.isNotEmpty()) {
+                textureList.clear();
+                
+                for (GameTexture t : texturesToProcess) {
+                    BufferedImage image = t.convertToBufferedImage();
+                    textureList.add(image);
+                }
+                
+                updateImage();
+                updateTexture();
+                
+                texturesToProcess.clear();
+            }
+        }
+        synchronized (spritesToProcess) {
+            if (spritesToProcess.isNotEmpty()) {
+                textureList.clear();
+                
+                int size = spritesToProcess.size();
+                EList<BufferedImage> bufferedImages = EList.newList();
+                for (Sprite s : spritesToProcess) {
+                    BufferedImage image = s.convertToBufferedImage();
+                    bufferedImages.add(image);
+                }
+                
+                int i = 1;
+                while (i * i < size) i++;
+                
+                tw = ENumUtil.parseInt(txWidthField.getText(), 32);
+                th = ENumUtil.parseInt(txHeightField.getText(), 32);
+                
+                int w = i;
+                int h = i;
+                //pw = i * textureList.getFirst().getWidth();
+                //ph = i * textureList.getFirst().getHeight();
+                int pw = i * tw;
+                int ph = i * th;
+                
+                image = new BufferedImage(pw, ph, BufferedImage.TYPE_INT_ARGB);
+                // set black background
+                for (int y = 0; y < ph; y++) {
+                    for (int x = 0; x < pw; x++) {
+                        image.setRGB(x, y, 0xff000000);
+                    }
+                }
+                
+                // copy image data for each tile
+                for (int j = 0; j < size; j++) {
+                    int x = (j % w) * tw;
+                    int y = (j / h) * th;
+                    
+                    var img = bufferedImages.get(j);
+                    int ex = ENumUtil.clamp(tw, 0, img.getWidth());
+                    int ey = ENumUtil.clamp(th, 0, img.getHeight());
+                    image.getGraphics().drawImage(img, x, y, x + tw, y + th, 0, 0, ex, ey, null);
+                }
+                
+                updateTexture();
+                spritesToProcess.clear();
+            }
+        }
     }
     
     @Override
     public void preReInit() {
-        
+        super.preReInit();
     }
     
     @Override
     public void postReInit() {
+        super.postReInit();
         textureDisplayer.setImage(texture);
     }
     
@@ -150,7 +295,7 @@ public class TestTextureSheetBuilder extends CreatorBlock {
         updateImage();
         updateTexture();
         requestFocus();
-        bringToFront();
+        //bringToFront();
     }
     
     private void findTextures(EList<File> filesToProcess) {
@@ -240,6 +385,7 @@ public class TestTextureSheetBuilder extends CreatorBlock {
         texture = new GameTexture(image);
         TextureSystem.getInstance().reg(texture);
         textureDisplayer.setImage(texture);
+        imageOutput.setValue(texture);
         saveSheet.setEnabled(true);
     }
     

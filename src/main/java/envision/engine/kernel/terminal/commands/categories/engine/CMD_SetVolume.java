@@ -1,0 +1,43 @@
+package envision.engine.kernel.terminal.commands.categories.engine;
+
+import envision.engine.kernel.terminal.commands.TerminalCommand;
+import envision.game.sounds.SoundEngine;
+import eutil.colors.EColors;
+import eutil.datatypes.util.EList;
+import eutil.math.ENumUtil;
+import qot.settings.QoTSettings;
+
+public class CMD_SetVolume extends TerminalCommand {
+	
+	public CMD_SetVolume() {
+		setCategory("Engine");
+		expectedArgLength = 0;
+	}
+
+	@Override public String getName() { return "volume"; }
+	@Override public EList<String> getAliases() { return EList.of("vol"); }
+	@Override public String getHelpInfo(boolean runVisually) { return "Displays or changes the game volume"; }
+	@Override public String getUsage() { return "ex: vol 50"; }
+	
+	@Override
+	public void runCommand() {
+		if (noArgs()) {
+			writeln(EColors.yellow, "Volume: " + QoTSettings.musicVolume.get());
+			return;
+		}
+		
+		int vol = ENumUtil.parseInt(args(), 0, -1);
+		if (vol < 0) {
+			errorUsage("Expected an integer value!", getUsage());
+			return;
+		}
+		
+		QoTSettings.musicVolume.set(ENumUtil.clamp(vol, 0, 100));
+		
+		if (QoTSettings.musicVolume.get() == 0) SoundEngine.stopAll();
+		else SoundEngine.getAllPlaying().forEach(s -> s.setVolume(QoTSettings.musicVolume.get() * 0.001));
+		
+		writeln(EColors.lgreen, "Set volume to: " + QoTSettings.musicVolume.get());
+	}
+	
+}

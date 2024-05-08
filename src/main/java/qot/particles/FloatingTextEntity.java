@@ -43,7 +43,7 @@ public class FloatingTextEntity extends Doodad {
     }
     
     @Override
-    public void draw(WorldCamera camera, double[] dims, boolean mouseOver) {
+    public void preDraw(WorldCamera camera, double[] dims, boolean mouseOver) {
         double x = dims[0];
         double y = dims[1];
         double w = dims[2];
@@ -70,7 +70,7 @@ public class FloatingTextEntity extends Doodad {
         if (!dieAfterSpecifiedTime) return;
         if (timeAlive >= timeToLive) {
             kill();
-            Envision.theWorld.getEntitiesInWorld().remove(this);
+            Envision.theWorld.removeEntity(this);
         }
     }
     

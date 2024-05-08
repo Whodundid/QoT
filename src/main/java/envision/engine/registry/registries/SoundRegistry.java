@@ -1,6 +1,6 @@
 package envision.engine.registry.registries;
 
-import envision.game.effects.sounds.Audio;
+import envision.game.sounds.Audio;
 import eutil.datatypes.util.EList;
 
 public class SoundRegistry {

@@ -11,8 +11,8 @@ import java.nio.file.WatchService;
 import envision.Envision;
 import envision.engine.assets.WindowTextures;
 import envision.engine.inputHandlers.Keyboard;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
-import envision.engine.windows.developerDesktop.util.DesktopUtil;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.kernel.developerDesktop.util.DesktopUtil;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
@@ -23,7 +23,7 @@ import envision.engine.windows.windowTypes.ActionWindowParent;
 import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.WindowObjectGroup;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
 import envision.engine.windows.windowUtil.windowEvents.events.EventKeyboard;
@@ -32,11 +32,11 @@ import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
-public class FileExplorerWindow extends ActionWindowParent {
+public class FileExplorerWindow extends ActionWindowParent<File> {
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     private File curDir;
     private File selectedFile;
@@ -65,9 +65,9 @@ public class FileExplorerWindow extends ActionWindowParent {
     private Thread watcherThread;
     private volatile boolean updateDir = false;
     
-    //--------------
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public FileExplorerWindow() { this(Envision.getActiveTopParent()); }
     public FileExplorerWindow(String dirIn) { this(Envision.getActiveTopParent(), new File(dirIn), false); }
@@ -84,11 +84,14 @@ public class FileExplorerWindow extends ActionWindowParent {
         windowIcon = WindowTextures.file_folder;
     }
     
-    @Override public String getWindowName() { return "file-explorer"; }
-    
-    //-----------
+    //===========
     // Overrides
-    //-----------
+    //===========
+    
+    @Override
+    public String getWindowName() {
+        return "file-explorer";
+    }
     
     @Override
     public void initWindow() {
@@ -148,7 +151,7 @@ public class FileExplorerWindow extends ActionWindowParent {
         fileArea.setBackgroundColor(EColors.pdgray);
         fileArea.setVScrollRate(60);
         
-        setObjectGroup(new EObjectGroup(this, fileArea, header, backBtn, forwardBtn, fileUpBtn));
+        setObjectGroup(new WindowObjectGroup(this, fileArea, header, backBtn, forwardBtn, fileUpBtn));
         
         addObject(backBtn, forwardBtn, fileUpBtn);
         addObject(cancelBtn, selectBtn);
@@ -276,8 +279,7 @@ public class FileExplorerWindow extends ActionWindowParent {
     public void onDragAndDrop(DragAndDropObject objectBeingDropped) {
         if (!(objectBeingDropped instanceof MovingFileObject)) return;
         
-        var mfo = (MovingFileObject) objectBeingDropped;
-        var files = mfo.getFilesBeingMoved().map(f -> f.getFile());
+        var files = MovingFileObject.getFiles(objectBeingDropped);
         DeveloperDesktop.setFilesToCopy(files);
         DeveloperDesktop.performCut(curDir);
         DeveloperDesktop.reloadFileExplorers();
@@ -297,9 +299,9 @@ public class FileExplorerWindow extends ActionWindowParent {
         stopWatcher();
     }
     
-    //---------
+    //=========
     // Methods
-    //---------
+    //=========
     
     public void clearHighlighted() {
         highlighted.forEach(f -> f.setHighlighted(false));
@@ -322,9 +324,9 @@ public class FileExplorerWindow extends ActionWindowParent {
         folderRCM.showOnCurrent();
     }
     
-    //---------
+    //=========
     // Getters
-    //---------
+    //=========
     
     public File getSelectedFile() { return selectedFile; }
     
@@ -338,9 +340,9 @@ public class FileExplorerWindow extends ActionWindowParent {
         return EList.of(highlighted.map(f -> f.getFile()));
     }
     
-    //---------
+    //=========
     // Setters
-    //---------
+    //=========
     
     public void setDir(String dir) {
         setDir(new File(dir));
@@ -358,7 +360,7 @@ public class FileExplorerWindow extends ActionWindowParent {
     public void setSelectionMode(boolean val) {
         boolean prev = selectMode;
         selectMode = val;
-        if (prev != val) reInitChildren();
+        if (isInitialized() && prev != val) reInitChildren();
     }
     
     public void setTitle(String title) {
@@ -366,9 +368,9 @@ public class FileExplorerWindow extends ActionWindowParent {
         else titleToSet = title;
     }
     
-    //------------------
+    //==================
     // Internal Methods
-    //------------------
+    //==================
     
     private void updateDir() {
         dirField.setText(curDir);
@@ -445,7 +447,11 @@ public class FileExplorerWindow extends ActionWindowParent {
             
             if (highlighted.isEmpty()) low = 0;
             else {
-                for (var o : order) { if (o.isHighlighted() && o.getOrderPos() < low) { low = o.getOrderPos(); } }
+                for (var o : order) {
+                    if (o.isHighlighted() && o.getOrderPos() < low) {
+                        low = o.getOrderPos();
+                    }
+                }
             }
             
             //determine actual low/high indexes

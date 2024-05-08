@@ -5,7 +5,6 @@ import envision.engine.registry.types.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.entities.combat.EntityAttack;
-import envision.game.world.GameWorld;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
@@ -45,15 +44,16 @@ public class Thyrah extends Enemy {
 
 	@Override
 	public void onLivingUpdate(float dt) {
-		if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
+	    lastMove += dt;
+		if (lastMove >= waitTime + waitDelay) {
 			waitTime = ERandomUtil.getRoll(randShort, randLong);
 			//moveTime = RandomUtil.getRoll(randShort, 800l);
 			//waitDelay = RandomUtil.getRoll(randShort, randLong);
-			lastMove = System.currentTimeMillis();
+			lastMove = 0;
 			lastDir = ERandomUtil.randomDir(true);
 		}
 		
-		if (System.currentTimeMillis() - lastMove >= moveTime) {
+		if (lastMove >= moveTime) {
 			move(lastDir);
 		}
 		
@@ -67,8 +67,9 @@ public class Thyrah extends Enemy {
 		
 		// shoot fireballs at the player
 		if (world.getDistance(this, p) <= 150) {
-			if (System.currentTimeMillis() - timeSinceLastFireball >= fireballDelay) {
-				timeSinceLastFireball = System.currentTimeMillis();
+		    timeSinceLastFireball += dt;
+			if (timeSinceLastFireball >= fireballDelay) {
+				timeSinceLastFireball = 0;
 				var fb = new Fireball();
 				fb.startX = (left) ? startX : endX;
 				fb.startY = midY;
@@ -83,23 +84,24 @@ public class Thyrah extends Enemy {
 		if (testDim.partiallyContains(pDims)) {
 			if (hit) {
 				//System.out.println(System.currentTimeMillis() - timeSinceLastHit);
-				if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
+			    timeSinceLastHit += dt;
+				if ((timeSinceLastHit) >= 200) {
 					hit = false;
 				}
 			}
 			else {
 				hit = true;
-				timeSinceLastHit = System.currentTimeMillis();
+				timeSinceLastHit = 0;
 				int amount = EntityAttack.calculateMeleeAttackDamage(this);
                 Envision.thePlayer.attackedBy(this, amount);
 			}
 		}
 		
-		double distToPlayer = ((GameWorld) world).getDistance(this, Envision.thePlayer);
+		double distToPlayer = world.getDistance(this, Envision.thePlayer);
 		if (distToPlayer <= 300) {
 			headText = "" + health;
 			
-			Direction dirToPlayer = ((GameWorld) world).getDirectionTo(this, Envision.thePlayer);
+			Direction dirToPlayer = world.getDirectionTo(this, Envision.thePlayer);
 			move(dirToPlayer);
 		}
 		else {

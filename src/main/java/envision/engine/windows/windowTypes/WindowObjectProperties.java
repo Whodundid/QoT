@@ -2,7 +2,7 @@ package envision.engine.windows.windowTypes;
 
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.WindowObjectGroup;
 import envision.engine.windows.windowUtil.FutureTaskManager;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEventHandler;
 import eutil.colors.EColors;
@@ -58,7 +58,7 @@ public class WindowObjectProperties {
 	public boolean closesWithHud = false;
 	
 	/** The object group that this object belongs to (if there is one). */
-	public EObjectGroup objectGroup;
+	public WindowObjectGroup objectGroup;
 	
 	/** The header of this object. (if there is one) */
 	public WindowHeader objectHeader;

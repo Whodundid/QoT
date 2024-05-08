@@ -1,7 +1,7 @@
 package envision.debug.debugCommands;
 
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.terminal.window.ETerminalWindow;
 
 @SuppressWarnings("unused")
 public class Deb5 extends DebugCommand {
@@ -14,6 +14,7 @@ public class Deb5 extends DebugCommand {
 				if (s.equals("n")) FontRenderer.setCurrentFont(FontRenderer.newFont);
 				if (s.equals("d")) FontRenderer.setCurrentFont(FontRenderer.defaultFont);
 				if (s.equals("c")) FontRenderer.setCurrentFont(FontRenderer.courier);
+				if (s.equals("s")) FontRenderer.setCurrentFont(FontRenderer.smooth);
 			}
 		}
 		else {

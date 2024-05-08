@@ -310,49 +310,20 @@ public class WorldCamera {
     // Getters
     //=========
     
-    /**
-     * @return the exact X pixel coordinate that camera is focused on in the
-     *         world.
-     */
-    public double getX() {
-        return focusedPoint.x;
-    }
-    /**
-     * @return the exact Y pixel coordinate that camera is focused on in the
-     *         world.
-     */
-    public double getY() {
-        return focusedPoint.y;
-    }
+    /** @return the exact X pixel coordinate that camera is focused on in the world. */
+    public double getX() { return focusedPoint.x; }
+    /** @return the exact Y pixel coordinate that camera is focused on in the world. */
+    public double getY() { return focusedPoint.y; }
     /** @return the X world coordinate that camera is focused on. */
-    public int getWorldX() {
-        return (int) focusedCoords.x;
-    }
+    public int getWorldX() { return (int) focusedCoords.x; }
     /** @return the Y world coordinate that camera is focused on. */
-    public int getWorldY() {
-        return (int) focusedCoords.y;
-    }
-    /**
-     * @return the number of pixels in the X dimension that the camera is
-     *         offset by in world coordinates.
-     */
-    public double getOffsetX() {
-        return offsetX;
-    }
-    /**
-     * @return the number of pixels in the Y dimension that the camera is
-     *         offset by in world coordinates.
-     */
-    public double getOffsetY() {
-        return offsetY;
-    }
-    /**
-     * @return the current zoom of the camera. Higher values are more zoomed
-     *         in!
-     */
-    public double getZoom() {
-        return zoom;
-    }
+    public int getWorldY() { return (int) focusedCoords.y; }
+    /** @return the number of pixels in the X dimension that the camera is offset by in world coordinates. */
+    public double getOffsetX() { return offsetX; }
+    /** @return the number of pixels in the Y dimension that the camera is offset by in world coordinates. */
+    public double getOffsetY() { return offsetY; }
+    /** @return the current zoom of the camera. Higher values are more zoomed in! */
+    public double getZoom() { return zoom; }
     /** @return the min zoom of the camera. */
     public double getMinZoom() { return minZoom; }
     /** @return the max zoom of the camera. */

@@ -11,16 +11,16 @@ import envision.engine.assets.EditorTextures;
 import envision.engine.events.GameEvent;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.screens.GameScreen;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.utilityObjects.WindowDialogueBox;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.component.ComponentType;
-import envision.game.effects.sounds.SoundEngine;
 import envision.game.entities.Entity;
 import envision.game.entities.EntityRenderer;
 import envision.game.manager.LevelManager;
+import envision.game.sounds.SoundEngine;
 import envision.game.util.InsertionSort;
 import envision.game.world.GameWorld;
 import envision.game.world.Region;
@@ -256,6 +256,7 @@ public class MapEditorScreen extends GameScreen {
 		if (settings.drawEntities) renderEntities();
 		if (settings.drawRegions) drawRegions();
 		if (settings.drawCenterPositionBox) drawCenterPositionBox();
+		if (editorWorld != null) editorWorld.onRenderTick(dt);
 		
 		if (!DeveloperDesktop.isOpen()) updateMousePos();
 		drawingMousePos = mouseInMap;
@@ -677,6 +678,8 @@ public class MapEditorScreen extends GameScreen {
 	//============
 	
 	public void loadWorld() {
+	    Envision.loadWorld(null);
+	    
 		boolean center = actualWorld == null || !firstPress;
 		double zoomToSet = 1;
 		

@@ -10,7 +10,6 @@ public class Mud extends WorldTile {
 	public Mud() {
 		super(TileIDs.MUD);
 		setSprite(new Sprite(NatureTextures.mud));
-		setWall(true);
 		wallHeight = -0.025f;
 		setMiniMapColor(0xff653617);
 	}

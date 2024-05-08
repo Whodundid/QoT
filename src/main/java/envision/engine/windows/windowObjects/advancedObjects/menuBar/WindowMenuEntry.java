@@ -4,6 +4,7 @@ import envision.engine.registry.types.Sprite;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowImageBox;
 import envision.engine.windows.windowTypes.ActionObject;
+import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 
 public class WindowMenuEntry extends ActionObject {
@@ -19,7 +20,7 @@ public class WindowMenuEntry extends ActionObject {
     private Sprite entrySprite;
     
     public static final String DEFAULT_ENTRY_TITLE = "New Entry";
-    public static final int DEFAULT_ENTRY_PIXEL_HEIGHT = 40;
+    public static final int DEFAULT_ENTRY_PIXEL_HEIGHT = 30;
     
     //==============
     // Constructors
@@ -43,17 +44,20 @@ public class WindowMenuEntry extends ActionObject {
     
     @Override
     public void initChildren() {
-        var pd = getParent().getDimensions();
+        double h = DEFAULT_ENTRY_PIXEL_HEIGHT;
+        double w = ((entrySprite != null) ? DEFAULT_ENTRY_PIXEL_HEIGHT : 0) + strWidth(entryTitle) + 20;
+        setSize(w, h);
         
         entrySpriteDisplay = new WindowImageBox(this, startX, startY, height, height);
-        var d = entrySpriteDisplay.getDimensions();
+        if (entrySprite != null) entrySpriteDisplay.setSprite(entrySprite);
+        entrySpriteDisplay.setVisible(entrySprite != null);
         
-        double width = strWidth(entryTitle);
-        width = ENumUtil.clamp(width, pd.width - d.width, pd.width);
+        double bWidth = (entrySprite != null) ? endX - entrySpriteDisplay.endX : w;
+        double sx = (entrySprite != null) ? entrySpriteDisplay.endX : 0;
         
-        entryButton = new WindowButton(this, d.endX, startY, width, height, entryTitle);
+        entryButton = new WindowButton(this, sx, startY, bWidth, height, entryTitle);
+        entryButton.setDrawBackground(false);
         entryButton.setAction(onPressAction);
-        
         
         addObject(entrySpriteDisplay, entryButton);
     }
@@ -61,7 +65,9 @@ public class WindowMenuEntry extends ActionObject {
     @Override
     public void drawObject(float dt, int mXIn, int mYIn) {
         //System.out.println(entrySpriteDisplay.getDimensions());
-        
+        //System.out.println(getDimensions());
+        drawHRect(EColors.red);
+        //drawRect(endX, startY, endX + 1, endY, EColors.red);
     }
     
     //=========

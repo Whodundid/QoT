@@ -6,6 +6,7 @@ import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.game.GameObject;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
@@ -97,10 +98,11 @@ public class WorldTileRenderer extends RenderingComponent {
         //---------------------------------------------------------------------------------------------
         
         double yPos;
-        boolean northCheck = (VoidTile.notVoid(tn) && tn.wallHeight != theTile.wallHeight);
-        boolean southCheck = (VoidTile.isVoid(ts) || ts.wallHeight < theTile.wallHeight);
+        boolean northCheck = (VoidTile.notVoid(tn) && tn.wallHeight > theTile.wallHeight);
+        boolean southCheck = (VoidTile.isVoid(ts) || ts != null && ts.wallHeight < theTile.wallHeight);
         boolean aboveCheck = (VoidTile.isVoid(ta) || theTile.wallHeight < 1.0);
-        //boolean aboveAllCheck = (taa != null && taa != VoidTile.instance);
+        boolean darkerAboveCheck = (VoidTile.notVoid(ta));
+        boolean aboveAllCheck = (taa != null && taa != VoidTile.instance);
         
         int tileBrightness = brightness;
         int wallBrightness = EColors.changeBrightness(brightness, 145);
@@ -108,9 +110,30 @@ public class WorldTileRenderer extends RenderingComponent {
         // draw slightly darker if lower in ground
         if (wh < 0) tileBrightness = EColors.changeBrightness(brightness, 200);
         //if (aboveAllCheck) tileBrightness = EColors.changeBrightness(tileBrightness, 180);
+        //if (darkerAboveCheck) tileBrightness = EColors.changeBrightness(tileBrightness, 200);
+        
+        var focusedCameraObject = camera.getFocusedObject();
+        if (focusedCameraObject != null && focusedCameraObject.getCameraLayer() < camLayer) {
+            boolean drawTransparent = drawHigherTilesTransparentIfNear(world, camera, dims, tileBrightness, mouseOver);
+            if (drawTransparent) {
+                tileBrightness = EColors.changeOpacity(tileBrightness, 80);
+                wallBrightness = EColors.changeOpacity(wallBrightness, 80);
+            }
+        }
+        
+        //StackTraceElement[] elems = Thread.currentThread().getStackTrace();
+        //System.out.println(EStringUtil.toString(elems, " <- "));
+        
+//        var sb = new EStringBuilder();
+//        sb.a(theTile, "<", theTile.worldX, ",", theTile.worldY, "> ", theTile.wallHeight, ":");
+//        sb.a("       [N-" + tn + ":" + northCheck);
+//        if (tn != null) sb.a("|" + (tn.wallHeight > wallHeight) + ":" + tn.wallHeight + ":" + wallHeight + "]");
+//        sb.a("       [S-" + ts + ":" + southCheck);
+//        if (ts != null) sb.a("|" + (ts.wallHeight < theTile.wallHeight) + ":" + ts.wallHeight + ":" + wallHeight + "]");
+//        System.out.println(sb);
         
         // only draw side if necessary
-        if (wh != 0 && northCheck || southCheck) {
+        if (wallHeight != 0 && (northCheck || southCheck)) {
             // use the appropriate tile texture
             WorldTile tile = theTile;
             if (wh < 0 && tn != null) tile = tn;
@@ -127,7 +150,7 @@ public class WorldTileRenderer extends RenderingComponent {
             RenderingManager.drawSprite(theTile.sprite, x, yPos, w, h, theTile.drawFlipped, rot, tileBrightness);
         }
         
-        //draw bottom of map edge or if right above a tile with no texture/void
+        // draw bottom of map edge or if right above a tile with no texture/void
         if ((ts == null || !ts.hasSprite()) && theTile.getCameraLayer() == 0) {
             RenderingManager.drawSprite(theTile.sprite, x, y + h, w, h / 2, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
         }
@@ -247,7 +270,7 @@ public class WorldTileRenderer extends RenderingComponent {
 //        RenderingManager.drawSprite(side, x, yPos + h, w, h * 0.5, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
 //		
 		if (mouseOver) {
-			if (theTile.isWall) {
+			if (theTile.wallHeight != 0) {
 				RenderingManager.drawHRect(x, y - wh, x + w, y - wh + h, 1, EColors.chalk);
 				RenderingManager.drawHRect(x, y + h - wh - 1, x + w, y + h, 1, EColors.chalk);
 			}
@@ -265,6 +288,72 @@ public class WorldTileRenderer extends RenderingComponent {
 			RenderingManager.drawString(taText, x, y + FontRenderer.FONT_HEIGHT, 0.7, 0.7, EColors.green);
 			RenderingManager.drawString(tbText, x, y + FontRenderer.FONT_HEIGHT * 2, 0.7, 0.7, EColors.red);
 		}
+	}
+	
+    /**
+     * Determines if the tile's opacity should be changed (made
+     * transparent) if the player is near it. This is useful for figuring
+     * out if there is a doorway or window along the side of a wall near
+     * the player.
+     * 
+     * @param  world
+     * @param  camera
+     * @param  dims
+     * @param  inColor
+     * @param  mouseOver
+     * 
+     * @return The color the tile should draw with
+     */
+	public boolean drawHigherTilesTransparentIfNear(IGameWorld world, WorldCamera camera, double[] dims, int inColor, boolean mouseOver) {
+	    final int camLayer = theTile.getCameraLayer();
+	    
+	    // first check if there is even a world layer lower than this tile
+	    if (camLayer <= 0) return false;
+	    
+	    // check if this tile is even near the focused camera object
+	    var focusedCameraObject = camera.getFocusedObject();
+	    if (!isTileNearFocusedObject(world, focusedCameraObject)) return false;
+	    
+	    // check if the tile underneath this one is either void or transparent (we don't have that yet)
+	    WorldTile tileAtSameLayer = world.getTileAt(focusedCameraObject.getCameraLayer(), theTile.worldX, theTile.worldY);
+	    
+	    boolean drawTransparent = VoidTile.isVoid(tileAtSameLayer) || tileAtSameLayer.wallHeight <= 0.2;
+	    
+//	    System.out.println(camLayer + " : " + focusedCameraObject.renderLayer +
+//	                       " : " + theTile + " : " + tileAtSameLayer + " : " + tileAtSameLayer.wallHeight +
+//	                       " : " + (tileAtSameLayer.wallHeight <= 0.2) + " : " + drawTransparent);
+	    
+	    return drawTransparent;
+	}
+	
+	public boolean isTileNearFocusedObject(IGameWorld world, GameObject focusedObject) {
+	    return isTileNearFocusedObject(world, focusedObject, world.getTileWidth() * 1.55);
+	}
+	
+    /**
+     * Checks to see if the focused game object is within the given
+     * 'tileDistance' to this tile.
+     * 
+     * @param  focusedObject
+     * @param  tileDistance
+     * @return
+     */
+	public boolean isTileNearFocusedObject(IGameWorld world, GameObject focusedObject, double tileDistance) {
+	    if (focusedObject == null) return false;
+	    
+	    var colDims = focusedObject.getCollisionDims();
+	    
+	    double fx = colDims.midX;
+	    double fy = colDims.midY;
+	    double tx = theTile.midX;
+	    double ty = theTile.midY;
+	    
+	    double diffX = Math.abs(tx - fx);
+	    double diffY = Math.abs(ty - fy);
+	    
+	    //System.out.println(theTile + " : " + diffX + " : " + diffY);
+	    
+	    return diffX <= tileDistance && diffY <= tileDistance;
 	}
 	
 }

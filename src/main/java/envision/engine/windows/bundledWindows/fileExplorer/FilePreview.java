@@ -7,12 +7,12 @@ import org.apache.commons.io.FileUtils;
 import envision.engine.assets.WindowTextures;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.kernel.developerDesktop.util.DesktopUtil;
+import envision.engine.kernel.terminal.terminalUtil.FileType;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.terminal.terminalUtil.FileType;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
-import envision.engine.windows.developerDesktop.util.DesktopUtil;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
 import envision.engine.windows.windowTypes.DragAndDropObject;
@@ -185,7 +185,6 @@ public class FilePreview extends WindowObject {
     public void onClosed() {
         if (fileType == FileType.PICTURE) {
             try {
-                System.out.println("CLEARING");
                 // clean up image preview when no longer needed
                 TextureSystem.getInstance().destroyTexture(texture);
             }

@@ -1,5 +1,7 @@
 package envision.engine.windows.bundledWindows.fileExplorer;
 
+import java.io.File;
+
 import envision.engine.assets.WindowTextures;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
@@ -60,6 +62,48 @@ public class MovingFileObject extends DragAndDropObject {
     //=========
     
     public EList<FilePreview> getFilesBeingMoved() { return filesBeingMoved; }
+    
+    //=======================
+    // Static Helper Methods
+    //=======================
+    
+    /**
+     * Gets the file previews out of a DragAndDropObject assuming that it
+     * is a moving file object.
+     * <p>
+     * If the object is not an instance of a MovingFileObject, an empy list
+     * will be returned instead.
+     * 
+     * @param  object The object to potentially extract file previews from
+     * @return        A list of file previews
+     */
+    public static EList<FilePreview> getFilePreviews(DragAndDropObject object) {
+        EList<FilePreview> files = EList.newList();
+        if (object instanceof MovingFileObject mfo) {
+            files.addAll(mfo.filesBeingMoved);
+        }
+        return files;
+    }
+    
+    /**
+     * Gets the files out of a DragAndDropObject assuming that it is a
+     * moving file object.
+     * <p>
+     * If the object is not an instance of a MovingFileObject, an empy list
+     * will be returned instead.
+     * 
+     * @param  object The object to potentially extract files from
+     * @return        A list of files
+     */
+    public static EList<File> getFiles(DragAndDropObject object) {
+        EList<File> files = EList.newList();
+        if (object instanceof MovingFileObject mfo) {
+            for (FilePreview fp : mfo.filesBeingMoved) {
+                files.add(fp.getFile());
+            }
+        }
+        return files;
+    }
 
     
 }

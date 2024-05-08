@@ -26,10 +26,10 @@ public class TestGrass extends WorldTile {
 		}
 		
 		if (id < 0) {
-		    setSprite(new Sprite(GrassTextures.grass.getRandVariant()));
+		    setSprite(GrassTextures.grassSheet.getRandom(5, 7));
 		}
 		else {
-		    setSprite(new Sprite(GrassTextures.grass.getChild(id)));
+		    setSprite(GrassTextures.grassSheet.getRandom(5, 7));
 		}
 		
 		blocksMovement = false;

@@ -3,10 +3,11 @@ package envision.engine.creation.block;
 import java.util.HashMap;
 import java.util.Map;
 
-import envision.engine.windows.windowTypes.WindowParent;
+import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
+import envision.engine.windows.windowTypes.WindowObject;
 import eutil.datatypes.util.EList;
 
-public class CreatorBlock extends WindowParent {
+public class CreatorBlock extends WindowObject {
     
     //========
     // Fields
@@ -29,8 +30,8 @@ public class CreatorBlock extends WindowParent {
         
         setObjectName(blockName);
         setResizeable(false);
-        setMaximizable(false);
-        setMinimizable(false);
+        //setMaximizable(false);
+        //setMinimizable(false);
     }
     
     //===========
@@ -39,7 +40,9 @@ public class CreatorBlock extends WindowParent {
     
     @Override
     public void initChildren() {
-        defaultHeader();
+        var header = new WindowHeader(this);
+        header.updateButtonVisibility();
+        addObject(header);
     }
     
     @Override
@@ -139,7 +142,7 @@ public class CreatorBlock extends WindowParent {
     
     // Input Creators
     
-    public <T> BlockConnectionPoint<T> createInputPoint(String pointName) { 
+    public <T> BlockConnectionPoint<T> createInputPoint(String pointName) {
         return createInputPoint(pointName, Integer.MAX_VALUE, PointLocation.LEFT);
     }
     public <T> BlockConnectionPoint<T> createInputPoint(String pointName, int maxConnections) {
@@ -209,10 +212,10 @@ public class CreatorBlock extends WindowParent {
         
         final int pointWidth = 10;
         final int pointHeight = 10;
-        final double sx = startX;/* - pointWidth * 0.5;*/
-        final double sy = startY;/*  - pointHeight * 0.5;*/
-        final double ex = endX - pointWidth;/* * 0.5;*/
-        final double ey = endY - pointHeight;/* * 0.5;*/
+        final double sx = startX - pointWidth * 0.40;
+        final double sy = startY - pointHeight * 0.5;
+        final double ex = endX - pointWidth * 0.60;
+        final double ey = endY - pointHeight * 0.5;
         
         final double tsy = sy + 10; // top startY
         final double bsy = ey - 10; // bot startY
@@ -234,9 +237,10 @@ public class CreatorBlock extends WindowParent {
             case BOT_RIGHT: for (var p : list) p.setPosition(ex, bsy - (i++ * gap)); break;
             case LEFT: 
             case RIGHT: {
-                double x = (location == PointLocation.LEFT) ? sx : ex; // draw on left/right
-                double y = midY - ((list.size() % 2 == 0) ? gap * 0.5 : 0.0); // offset if even
-                y -= ((pointHeight * 0.5)); // move up to the size of the list
+                // draw on left/right
+                double x = (location == PointLocation.LEFT) ? sx : ex;
+                // offset if even
+                double y = (midY - getHeader().height / 2) - (list.size() * pointHeight - ((list.size() % 2 == 1) ? pointHeight * 0.5 : 0));
                 for (var p : list) p.setPosition(x, y + (i++ * gap));
                 break;
             }

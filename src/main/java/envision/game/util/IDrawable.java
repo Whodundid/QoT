@@ -15,6 +15,8 @@ public interface IDrawable {
 	 * @param midX TODO
 	 * @param midY TODO
 	 */
-	default void draw(WorldCamera camera, double[] dims, boolean mouseOver) {}
+	default void preDraw(WorldCamera camera, double[] dims, boolean mouseOver) {}
+	
+	default void postDraw(WorldCamera camera, double[] dims, boolean mouseOver) {}
 	
 }

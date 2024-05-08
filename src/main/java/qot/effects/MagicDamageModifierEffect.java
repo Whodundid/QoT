@@ -8,6 +8,11 @@ public class MagicDamageModifierEffect extends GenericMagicEffect {
         super(nameIn);
         this.setEffectValue(value);
     }
+
+    @Override
+    public Integer processEvent(Object... arguments) {
+        return null;
+    }
     
     
     

@@ -13,6 +13,12 @@ uniform vec2 u_playerPos;
 uniform float u_lightDist;
 uniform vec4 u_bezierVals;
 uniform sampler2D texSamplers[16];
+uniform uint numLights;
+
+struct light {
+    vec4 color;
+    vec3 position;
+};
 
 //============
 // Prototypes

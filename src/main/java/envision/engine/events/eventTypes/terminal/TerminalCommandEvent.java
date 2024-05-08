@@ -1,8 +1,8 @@
 package envision.engine.events.eventTypes.terminal;
 
 import envision.engine.events.EventType;
-import envision.engine.terminal.commands.TerminalCommand;
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.kernel.terminal.commands.TerminalCommand;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import eutil.datatypes.EArrayList;
 
 public class TerminalCommandEvent extends TerminalEvent {

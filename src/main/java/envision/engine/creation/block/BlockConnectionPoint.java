@@ -1,6 +1,10 @@
 package envision.engine.creation.block;
 
+import java.util.Collection;
+
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowTypes.WindowObject;
+import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
@@ -70,7 +74,20 @@ public class BlockConnectionPoint<T> extends WindowObject {
         else drawRect(EColors.vdgray, 2);
         
         if (isMouseInside()) {
-            drawString(connections, startX, endY + 5);
+            drawString(pointName, startX, endY + 5);
+            
+            String out;
+            if (value instanceof Collection<?>) out = EUtil.getSimpleClassNameForObject(value);
+            else out = String.valueOf(value);
+            
+            drawString(out, startX, endY + 5 + FontRenderer.FH + 5);
+            
+//            String out;
+//            if (values.size() == 0) out = "[]";
+//            else if (values.size() == 1) out = EUtil.getSimpleClassNameForObject(values.getFirst());
+//            else out = "ListSize[" + values.size() + "]";
+//            
+//            drawString(out, startX, endY + 5 + FontRenderer.FH + 5);
         }
     }
     
@@ -168,6 +185,41 @@ public class BlockConnectionPoint<T> extends WindowObject {
         
         return this;
     }
+    
+//  public BlockConnectionPoint<T> setValue(T... values) {
+//  EList<T> v = EList.newList();
+//  if (values == null) v.add((T) null);
+//  else v.addA(values);
+//  return setValues(v);
+//}
+//
+//public BlockConnectionPoint<T> setValues(EList<T> values) { return setValues(null, values); }
+//public BlockConnectionPoint<T> setValues(BlockConnectionPoint<T> updatingPoint, EList<T> values) {
+//  updateValues(updatingPoint);
+//  this.values.addAll(values);
+//  
+//  // REALLY ROUGH AND DIRTY WAY TO HANDLE THIS!
+//  for (var p : connections) {
+//      if (!p.isInput) continue;
+//      p.setValues(this, this.values);
+//      if (p.getParentBlock() instanceof FunctionBlock fb) {
+//          fb.evaluate();
+//      }
+//  }
+//  
+//  return this;
+//}
+//
+//protected void updateValues() { updateValues(null); }
+//protected void updateValues(BlockConnectionPoint<T> updatingPoint) {
+//  values.clear();
+//  
+//  for (var p : connections) {
+//      if (p.isInput) continue;
+//      if (p == updatingPoint) continue;
+//      values.addAll(p.getAllValues());
+//  }
+//}
     
     /**
      * Sets this point's maximum number of connections.

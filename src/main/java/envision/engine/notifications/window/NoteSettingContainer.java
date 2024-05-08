@@ -39,7 +39,7 @@ public class NoteSettingContainer extends WindowObject {
 				if (buttonIn == 0) {
 					WindowButton.playPressSound();
 					Envision.getNotificationHandler().toggleNotificationEnabled(type, true);
-					button.setIsChecked(Envision.getNotificationHandler().isNotificationTypeEnabled(type));
+					button.setChecked(Envision.getNotificationHandler().isNotificationTypeEnabled(type));
 				}
 			}
 		};
@@ -47,7 +47,7 @@ public class NoteSettingContainer extends WindowObject {
 		label.setColor(EColors.lgray);
 		label.setHoverText(type.getDescription() != null ? type.getDescription() : "No description");
 		
-		button.setIsChecked(Envision.getNotificationHandler().isNotificationTypeEnabled(type));
+		button.setChecked(Envision.getNotificationHandler().isNotificationTypeEnabled(type));
 		button.setActionReceiver(this);
 		
 		parent.addObjectToList(button, label);
@@ -59,7 +59,7 @@ public class NoteSettingContainer extends WindowObject {
 	public void actionPerformed(IActionObject object, Object... args) {
 		if (object == button) {
 		    Envision.getNotificationHandler().toggleNotificationEnabled(type, true);
-			button.setIsChecked(Envision.getNotificationHandler().isNotificationTypeEnabled(type));
+			button.setChecked(Envision.getNotificationHandler().isNotificationTypeEnabled(type));
 		}
 	}
 	

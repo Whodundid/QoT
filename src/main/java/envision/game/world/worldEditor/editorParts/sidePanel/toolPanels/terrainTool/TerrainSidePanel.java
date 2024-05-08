@@ -58,7 +58,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
                 @Override
                 public void drawObject(float dt, int mXIn, int mYIn) {
                     super.drawObject(dt, mXIn, mYIn);
-                    drawHRect(EColors.black);
+                    drawHRect((isMouseInside()) ? EColors.lgray : EColors.black);
                 }
             };
             
@@ -78,7 +78,7 @@ public class TerrainSidePanel extends PaletteSidePanel {
             double by = pey + 17 + (bw * yPos) + (yPos * 2);
             double bx = psx + (bw * xPos) + (xPos * 2);
             
-            b.setButtonTexture(tile.sprite);
+            b.setButtonSprite(tile.sprite);
             b.setHoverText(tile.getName());
             
             //add to list first then dimension

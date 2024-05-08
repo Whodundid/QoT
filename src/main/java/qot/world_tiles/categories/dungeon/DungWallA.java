@@ -10,7 +10,6 @@ public class DungWallA extends WorldTile {
 	public DungWallA() {
 		super(TileIDs.DUNG_WALL_A);
 		setBlocksMovement(true);
-		setWall(true);
 		wallHeight = 0.5f;
 		setSprite(new Sprite(DungeonWallTextures.dung_wall_a));
 		setMiniMapColor(0xff161616);

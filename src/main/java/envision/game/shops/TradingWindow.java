@@ -8,7 +8,7 @@ import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.WindowObjectGroup;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.EventType;
 import envision.engine.windows.windowUtil.windowEvents.events.EventKeyboard;
@@ -74,7 +74,7 @@ public class TradingWindow extends WindowParent {
         setResizeable(false);
         setMinimizable(false);
         setMaximizable(false);
-        EObjectGroup group = new EObjectGroup();
+        WindowObjectGroup group = new WindowObjectGroup();
         this.setObjectGroup(group);
     }
     

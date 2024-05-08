@@ -57,6 +57,8 @@ public class Spawner extends Building {
 	
 	@Override
 	public void onLivingUpdate(float dt) {
+	    this.setHeadText(EntityList.getEntity(entityToSpawn.getType()).getName() + " : " + trackedEntities.size());
+	    
 	    if (Envision.thePlayer == null) {
 	        defenderComponent.setPaused(true);
 	        return;

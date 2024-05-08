@@ -10,8 +10,8 @@ import envision.engine.rendering.renderingAPI.opengl.OpenGLContext;
 
 public class RenderEngine {
 	
-	public Camera orthoCamera;
-	public Camera perspectiveCamera;
+	public GLCamera orthoCamera;
+	public GLCamera perspectiveCamera;
 	
 	//==================
 	// Static Singleton
@@ -57,9 +57,9 @@ public class RenderEngine {
 		
 		int width = Envision.getWidth();
 		int height = Envision.getHeight();
-		orthoCamera = new Camera();
+		orthoCamera = new GLCamera();
 		orthoCamera.setupForOrtho(width, height);
-		perspectiveCamera = new Camera();
+		perspectiveCamera = new GLCamera();
 		perspectiveCamera.setupForPerspective(width, height);
 		
 		init = true;
@@ -115,6 +115,8 @@ public class RenderEngine {
 		BatchManager.startLayer(2);
 		//System.out.println("drawing: " + BatchManager.getCurrentLayer().getLayerNum());
 		Envision.developerDesktop.onRenderTick(dt);
+		RenderingManager.drawString("delta g: " + Envision.deltaGameTick / 100000f, 10, 80);
+        RenderingManager.drawString("delta f: " + Envision.deltaFrameTick / 100000f, 10, 100);
 		BatchManager.endLayer(2);
 		
 		//-----------------------------------------
@@ -133,8 +135,8 @@ public class RenderEngine {
 	public boolean isInit() { return init; }
 	public boolean isContextInit() { return (renderingContext != null) ? renderingContext.isInit() : false; }
 	
-	public Camera getPerspectiveCamera() { return perspectiveCamera; }
-	public Camera getOrthoCamrea() { return orthoCamera; }
+	public GLCamera getPerspectiveCamera() { return perspectiveCamera; }
+	public GLCamera getOrthoCamrea() { return orthoCamera; }
 	
 	/** Returns the actual rendering context in use. */
 	public RenderingContext getRenderingContext() { return renderingContext; }

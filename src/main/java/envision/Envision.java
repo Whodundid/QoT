@@ -17,14 +17,17 @@ import envision.engine.EngineSettings;
 import envision.engine.assets.EngineTextures;
 import envision.engine.events.EventHandler;
 import envision.engine.events.GameEvent;
+import envision.engine.events.eventTypes.engine.EngineLoadedEvent;
 import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
-import envision.engine.loader.GameSettings;
+import envision.engine.kernel.EnvisionKernel;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.loader.AbstractWorldCreator;
 import envision.engine.loader.EnvisionGame;
 import envision.engine.loader.GameLoader;
+import envision.engine.loader.GameSettings;
 import envision.engine.loader.LoadedGameDirectory;
 import envision.engine.notifications.NotificationHandler;
 import envision.engine.notifications.util.NotificationType;
@@ -38,21 +41,16 @@ import envision.engine.rendering.renderingAPI.error.IRendererErrorReceiver;
 import envision.engine.rendering.renderingAPI.error.RendererErrorReporter;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.resourceLoaders.textures.TextureLoader;
 import envision.engine.screens.GameScreen;
 import envision.engine.screens.ScreenLevel;
-import envision.engine.settings.UserProfile;
-import envision.engine.settings.UserProfileRegistry;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.settings.config.EnvisionConfigFile;
-import envision.engine.terminal.TerminalCommandHandler;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
-import envision.game.effects.sounds.SoundEngine;
 import envision.game.entities.player.Player;
 import envision.game.manager.LevelManager;
+import envision.game.sounds.SoundEngine;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.layerSystem.LayerSystem;
@@ -117,16 +115,12 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private static FontRenderer fontRenderer;
 	private static TextureSystem textureSystem;
 	
+	private static EnvisionKernel kernel;
 	private static EventHandler eventHandler;
-	private static TerminalCommandHandler terminalHandler;
 	private static LayerSystem layerHandler;
 	private static EnvisionLang envisionLang;
 	private static final NotificationHandler notificationHandler = NotificationHandler.getInstance();
 	public static final NotificationType envisionNotifaction = new NotificationType("envision", "General", "Envision", "Notifications received on general Envision events.");
-	
-	private static UserProfileRegistry profileRegistry = new UserProfileRegistry();
-	
-	private static TextureLoader textureLoader = new TextureLoader("");
 	
 	/** The top most rendered screen. */
 	public static DeveloperDesktop developerDesktop;
@@ -162,6 +156,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	private long runningTime = 0l;
 	private int frames = 0;
 	private int curFrameRate = 0;
+	
+	public static long deltaGameTick;
+	public static long deltaFrameTick;
 	
 	//===========
 	// Overrides
@@ -235,6 +232,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
         if (currentGameInstance != null) currentGameInstance.onPreEngineLoad();
         instance = new Envision();
         if (currentGameInstance != null) currentGameInstance.onPostEngineLoad();
+        eventHandler.postEvent(new EngineLoadedEvent());
     }
     
     public static void loadGame(String gameJsonPath) throws Exception {
@@ -295,11 +293,6 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	//==============
 	
     private Envision() {
-        var user = new UserProfile("user");
-        profileRegistry.registerProfile(user);
-        profileRegistry.registerProfile(new UserProfile("dev", true));
-        profileRegistry.setCurrentUser(user);
-        
         setupGLFW();
         setupRenderingContext();
         setupEngine();
@@ -351,14 +344,13 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	}
 	
 	private void setupEngine() {
+	    kernel = EnvisionKernel.getInstance();
 		soundEngine = SoundEngine.getInstance();
 		developerDesktop = DeveloperDesktop.getInstance();
 		eventHandler = EventHandler.getInstance();
 		layerHandler = new LayerSystem();
 		envisionLang = EnvisionLang.getInstance();
 		
-		terminalHandler = TerminalCommandHandler.getInstance();
-		terminalHandler.initCommands();
 		DeveloperDesktop.buildDesktopFromConfig();
 	}
 	
@@ -420,7 +412,10 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		
 		GLFW.glfwMakeContextCurrent(getGameWindow().getWindowHandle());
 		
-		while (running && !GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
+		while (running) {
+		    // check if the game should shutdown via window closed
+		    if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) break;
+		    
 			try {
 				long currentTime = System.currentTimeMillis();
 				deltaT += (currentTime - initialTime) / timeT;
@@ -443,7 +438,9 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 						break;
 					}
 					
+					long startGameTick = System.nanoTime();
 					runGameTick(dt);
+					deltaGameTick = System.nanoTime() - startGameTick;
 					
 					if (totalRunningTicks == Long.MAX_VALUE) totalRunningTicks = 0;
 					else totalRunningTicks++;
@@ -452,13 +449,15 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 				}
 				
 				if (deltaF >= 1) {
+				    long startRenderTick = System.nanoTime();
 					runRenderTick(currentTime - oldTime);
+					deltaFrameTick = System.nanoTime() - startRenderTick;
 					frames++;
 					deltaF--;
 				}
 				
 				// measures fps
-				if (System.currentTimeMillis() - timer > 1000) {
+				if (currentTime - timer > 1000) {
 					curFrameRate = frames;
 					curNumTicks = ticks;
 					frames = 0;
@@ -488,14 +487,17 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 		updateCounter++;
 		//if (updateCounter % 500 == 0 && BatchManager.isEnabled()) System.out.println(getFPS());
 		
-		//process game events
+		// update the kernel's process map
+		kernel.update();
+		
+		// process game events
 		eventHandler.onGameTick();
 		
-		//update current screen (if there is one)
+		// update current screen (if there is one)
 		if (currentScreen != null) currentScreen.onGameTick(dt);
 		developerDesktop.onTickUpdate_i(dt);
 		
-		//update current world (if there is one, and it's loaded, and the engine is not paused)
+		// update current world (if there is one, and it's loaded, and the engine is not paused)
 		if (levelManager != null && !pause) {
 		    levelManager.onGameTick(dt);
 		}
@@ -530,16 +532,17 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 			renderEngine.endFrame();
 		}
 		else {
+		    Vector3f pos = null;
 		    if (!DeveloperDesktop.isOpen()) {
-	            final var pos = RenderEngine.getInstance().perspectiveCamera.position;
+	            pos = RenderEngine.getInstance().perspectiveCamera.position;
 	            final var rot = RenderEngine.getInstance().perspectiveCamera.rotation;
 	            final float speed = 6.0f;
 	            
 	            // press
-	            if (Keyboard.isKeyDown(Keyboard.KEY_W)) pos.y -= speed;
-	            if (Keyboard.isKeyDown(Keyboard.KEY_D)) pos.x += speed;
-	            if (Keyboard.isKeyDown(Keyboard.KEY_S)) pos.y += speed;
-	            if (Keyboard.isKeyDown(Keyboard.KEY_A)) pos.x -= speed;
+	            //if (Keyboard.isKeyDown(Keyboard.KEY_W)) pos.y -= speed;
+	            //if (Keyboard.isKeyDown(Keyboard.KEY_D)) pos.x += speed;
+	            //if (Keyboard.isKeyDown(Keyboard.KEY_S)) pos.y += speed;
+	            //if (Keyboard.isKeyDown(Keyboard.KEY_A)) pos.x -= speed;
 	            if (Keyboard.isKeyDown(Keyboard.KEY_UP)) pos.y -= speed;
                 if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) pos.x += speed;
                 if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) pos.y += speed;
@@ -553,6 +556,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	            if (Keyboard.isKeyDown(Keyboard.KEY_E)) rot.z += 0.005;
 	            if (Keyboard.isKeyDown(Keyboard.KEY_Q)) rot.z -= 0.005;
 	            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+	                System.out.println("reset");
 	                rot.set(0, 2, 0);
 	                pos.z = 0;
 	            }
@@ -568,11 +572,13 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	            mX_old = mX;
 	            mY_old = mY;
 	            
-	            rot.add(new Vector3f(dY * 0.001f, dX * 0.001f, 0), rot);
+	            //rot.add(new Vector3f(dY * 0.001f, dX * 0.001f, 0), rot);
 	            rot.set(ENumUtil.clamp(rot.x, -90, 90), rot.y, 0);
 		    }
 		    
+		    
 			renderEngine.draw(dt);
+			if (pos != null) RenderingManager.drawString(pos, 50, 150);
 			renderEngine.endFrame();
 		}
 	}
@@ -665,6 +671,17 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	// Static Engine Functions
 	//=========================
 	
+	public static IWindowParent displayWindow(IWindowParent windowIn) { return displayWindow(ScreenLevel.ACTIVE, windowIn, null, true, false, false, ObjectPosition.SCREEN_CENTER); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, ObjectPosition loc) { return displayWindow(ScreenLevel.ACTIVE, windowIn, null, true, false, false, loc); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus) { return displayWindow(ScreenLevel.ACTIVE, windowIn, null, transferFocus, false, false, ObjectPosition.SCREEN_CENTER); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, boolean transferFocus, ObjectPosition loc) { return displayWindow(ScreenLevel.ACTIVE, windowIn, null, transferFocus, false, false, loc); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject) { return displayWindow(ScreenLevel.ACTIVE, windowIn, oldObject, true, true, true, ObjectPosition.OBJECT_CENTER); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, ObjectPosition loc) { return displayWindow(ScreenLevel.ACTIVE, windowIn, oldObject, true, true, true, loc); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus) { return displayWindow(ScreenLevel.ACTIVE, windowIn, oldObject, transferFocus, true, true, ObjectPosition.OBJECT_CENTER); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, ObjectPosition loc) { return displayWindow(ScreenLevel.ACTIVE, windowIn, oldObject, transferFocus, true, true, loc); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld) { return displayWindow(ScreenLevel.ACTIVE, windowIn, oldObject, transferFocus, closeOld, true, ObjectPosition.OBJECT_CENTER); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(ScreenLevel.ACTIVE, windowIn, oldObject, transferFocus, closeOld, transferHistory, ObjectPosition.OBJECT_CENTER); }
+    public static IWindowParent displayWindow(IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) { return displayWindow(ScreenLevel.ACTIVE, windowIn, oldObject, transferFocus, closeOld, transferHistory, loc); }
 	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn) { return displayWindow(level, windowIn, null, true, false, false, ObjectPosition.SCREEN_CENTER); }
 	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, ObjectPosition loc) { return displayWindow(level, windowIn, null, true, false, false, loc); }
 	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, boolean transferFocus) { return displayWindow(level, windowIn, null, transferFocus, false, false, ObjectPosition.SCREEN_CENTER); }
@@ -678,11 +695,14 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	public static IWindowParent displayWindow(ScreenLevel level, IWindowParent windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
 		switch (level) {
 		case TOP:
-			developerDesktop.displayWindow(windowIn);
+			developerDesktop.displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, loc);
 			break;
 		case SCREEN:
-			if (currentScreen != null) currentScreen.displayWindow(windowIn);
+			if (currentScreen != null) currentScreen.displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, loc);
 			break;
+		case ACTIVE:
+		    if (DeveloperDesktop.isOpen()) developerDesktop.displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, loc);
+		    else if (currentScreen != null) currentScreen.displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, loc);
 		}
 		return windowIn;
 	}
@@ -851,8 +871,6 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	public static DeveloperDesktop getDeveloperDesktop() { return developerDesktop; }
 	/** Returns the actively rendered screen. */
 	public static GameScreen getCurrentScreen() { return currentScreen; }
-	/** Returns this engine's terminal command handler. */
-	public static TerminalCommandHandler getTerminalHandler() { return terminalHandler; }
 	/** Returns this game's constant player object. */
 	public static Player getPlayer() { return thePlayer; }
 	/** Returns this game's active world. */
@@ -868,11 +886,6 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
 	
     public static void enableVSync(boolean val) { gameWindow.enableVSync(val); }
     public static void setFullscreen(boolean val) { gameWindow.setFullscreen(val); }
-    
-	/** Returns the current user. */
-	public static UserProfile getCurrentUser() { return profileRegistry.getCurrentUser(); }
-	/** Returns the user profile registry. */
-	public static UserProfileRegistry getProfileRegistry() { return profileRegistry; }
 	
 	//================================
 	// Game Screen Dimension Wrappers

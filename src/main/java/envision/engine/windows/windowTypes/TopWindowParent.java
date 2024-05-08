@@ -6,8 +6,8 @@ import java.util.Deque;
 import envision.Envision;
 import envision.engine.inputHandlers.CursorHelper;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.StaticTopParent;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
@@ -134,12 +134,37 @@ public class TopWindowParent extends WindowObject implements ITopParent {
 		}
 		return false;
 	}
+	
 	@Override
-	public void onFocusGained(EventFocus e) {
+	public void onFocusGained(EventFocus eventIn) {
 		postEvent(new EventFocus(this, this, FocusType.GAINED));
-		if (e.getFocusType().equals(FocusType.MOUSE_PRESS)) mousePressed(e.getMX(), e.getMY(), e.getActionCode());
-		if (getDefaultFocusObject() != null) getDefaultFocusObject().requestFocus();
+        //check if this is the first time this object has received parent focus
+        if (!hasReceivedFocus()) onInitialFocusGained_i();
+        
+        if (eventIn.getFocusType().equals(FocusType.MOUSE_PRESS)) {
+            mousePressed(eventIn.getMX(), eventIn.getMY(), eventIn.getActionCode());
+            var t = getTopParent();
+            
+            //check if eligible for a double click event
+            if (eventIn.getActionCode() == 0) {
+                var lastClicked = t.getLastClickedChild();
+                if (lastClicked == this) {
+                    long clickTime = t.getLastChildClickTime();
+                    
+                    if (System.currentTimeMillis() - clickTime <= 400) {
+                        onDoubleClick();
+                    }
+                }
+            }
+            
+            t.setLastClickedChild(this);
+            t.setLastChildClickTime(System.currentTimeMillis());
+        }
+        
+        var default_obj = getDefaultFocusObject();
+        if (default_obj != null) default_obj.requestFocus();
 	}
+	
 	@Override public void onFocusLost(EventFocus eventIn) { postEvent(new EventFocus(this, this, FocusType.LOST)); }
 	@Override
 	public void transferFocus(IWindowObject objIn) {

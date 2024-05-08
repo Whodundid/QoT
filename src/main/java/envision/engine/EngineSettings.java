@@ -6,11 +6,11 @@ import static envision.launcher.EnvisionGameInstaller.*;
 import java.io.File;
 import java.nio.file.Files;
 
+import envision.engine.kernel.terminal.terminalUtil.ESystemInfo;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.settings.config.setting_types.BooleanConfigSetting;
 import envision.engine.settings.config.setting_types.IntegerConfigSetting;
 import envision.engine.settings.config.setting_types.StringConfigSetting;
-import envision.engine.terminal.terminalUtil.ESystemInfo;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.sys.OSType;

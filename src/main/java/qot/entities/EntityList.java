@@ -25,6 +25,7 @@ import qot.entities.enemies.archer.Archer;
 import qot.entities.enemies.dragon.Thyrah;
 import qot.entities.house.Barrel;
 import qot.entities.house.Chair;
+import qot.entities.house.Chest;
 import qot.entities.house.Crate;
 import qot.entities.house.Stool;
 import qot.entities.player.QoT_Player;
@@ -63,6 +64,8 @@ public enum EntityList {
 	SHOPKEEPER(23), // please let this be the last damn one of these..
 	PATHFINDER_TEST(24),
 	FALL_BIRCH(25),
+	
+	CHEST(26),
 	;
 	
 	public final int ID;
@@ -113,6 +116,8 @@ public enum EntityList {
 		case SHOPKEEPER: return new ShopGuy();
 		case PATHFINDER_TEST: return new PathfindingTestEntity();
 		case FALL_BIRCH: return new FallBirch();
+		
+		case CHEST: return new Chest();
 		default: return null;
 		}
 	}

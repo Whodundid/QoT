@@ -126,6 +126,7 @@ public class EntityRenderer extends RenderingComponent {
 	protected int checkIfCameraTargetIsBehind(WorldCamera camera, int color) {
 	    if (!makeTransparentIfInFront) return color;
 	    
+	    
         GameObject target = camera.getFocusedObject();
         if (target == null) return color;
         if (target == theEntity) return color;
@@ -200,8 +201,10 @@ public class EntityRenderer extends RenderingComponent {
 		
 		drawFlash(brightness);
 		
+		theObject.preDraw(camera, dims, mouseOver);
 		if (theObject.getSprite() != null) drawEntityTexture();
-		theEntity.draw(camera, dims, mouseOver);
+		theEntity.postDraw(camera, dims, mouseOver);
+		
 		theEntity.healthBar.setDimensions(x, y - 7, w, 7);
 		theEntity.healthBar.drawObject(0, Mouse.getMx(), Mouse.getMy());
 		
@@ -253,21 +256,26 @@ public class EntityRenderer extends RenderingComponent {
 	
 	public void drawChatbox(double x, double y, double w, double h) {
 	    if (EStringUtil.isNotPopulated(theEntity.activeChat)) return;
+
+	    double zoom = Envision.levelManager.getCameraZoom();
+	    double scale = 0.225;
+        zoom *= scale;
 	    
 	    final String chat = theEntity.activeChat;
 	    final var world = theEntity.world;
-	    double chatWidth = FontRenderer.strWidth(chat);
+	    double chatWidth = FontRenderer.strWidth(chat, zoom);
 	    
 	    double midX = (x + w * 0.5);
-	    double dx = midX - (chatWidth * 0.6);
-        double dy = y - h * 0.10;
-        double dw = (chatWidth * 1.2);
-        double dh = 40;
+	    double dx = midX - (chatWidth * 0.52);
+        double dy = y;
+        double dw = (chatWidth * 1.04);
+        double dh = 35 * zoom;
         
         //int ratio = 255 - ((255 * (world.getDayLength() / 2 - world.getTime()) / (world.getDayLength() / 2)));
         int ratio = 220;
         ratio = ENumUtil.clamp(ratio, 100, 255);
         int textRatio = ENumUtil.clamp(ratio, 220, 255);
+        
         
         final var camEntity = Envision.levelManager.getCamera().getFocusedObject();
         if (camEntity != null) {
@@ -285,9 +293,11 @@ public class EntityRenderer extends RenderingComponent {
         var backBr = EColors.dsteel.brightnessOpacity(ratio + 30, ratio);
         var textBr = EColors.white.opacity(textRatio);
 	    
+        double dty = dy + dh / 1.75 - FontRenderer.strHalfHeight(zoom); // draw text y
+        
 	    RenderingManager.drawHRect(dx, dy, dx + dw, dy + dh, 2, blackBr);
         RenderingManager.drawRect(dx + 1, dy + 1, dx + dw - 1, dy + dh - 1, backBr);
-        RenderingManager.drawStringC(chat, midX, dy + dh / 2 - FontRenderer.HALF_FH + 2, textBr);
+        RenderingManager.drawStringC(chat, midX, dty, zoom, zoom, textBr);
 	}
 	
 	public void drawFlash(int brightness) {

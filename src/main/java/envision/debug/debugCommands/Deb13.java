@@ -2,7 +2,7 @@ package envision.debug.debugCommands;
 
 import envision.Envision;
 import envision.debug.testStuff.HuntDistanceMap;
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 
 @SuppressWarnings("unused")
 public class Deb13 extends DebugCommand {

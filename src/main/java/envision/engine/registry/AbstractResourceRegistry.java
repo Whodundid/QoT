@@ -8,20 +8,26 @@ import eutil.datatypes.util.EList;
 public abstract class AbstractResourceRegistry<T extends IGameResource> {
     
     protected final ConcurrentMap<String, T> resources = new ConcurrentHashMap<>();
+    protected final String registryName;
     
     //==============
     // Constructors
     //==============
     
-    protected AbstractResourceRegistry() {}
+    protected AbstractResourceRegistry(String registryName) {
+        this.registryName = registryName;
+    }
+    
+    //===========
+    // Abstracts
+    //===========
+    
+    public abstract void loadResources();
+    public abstract void saveResources();
     
     //=========
     // Methods
     //=========
-    
-    public T registerResource(T resourceIn) {
-        return registerResource(resourceIn.getResourceName(), resourceIn);
-    }
     
     /**
      * Registers the given 'resource' under the given 'name'.
@@ -57,6 +63,14 @@ public abstract class AbstractResourceRegistry<T extends IGameResource> {
     
     public void unregisterAllResources() {
         resources.clear();
+    }
+    
+    //=========
+    // Getters
+    //=========
+    
+    public String getRegistryName() {
+        return registryName;
     }
     
 }

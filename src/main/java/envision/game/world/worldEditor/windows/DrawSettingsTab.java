@@ -98,16 +98,16 @@ public class DrawSettingsTab extends ContainerTab {
 			
 			final var settings = editor.getSettings();
 			
-			drawMapBorders.setIsChecked(settings.drawMapBorders);
-			drawCenterPosition.setIsChecked(settings.drawCenterPositionBox);
-			drawEntities.setIsChecked(settings.drawEntities);
-			drawRegions.setIsChecked(settings.drawRegions);
-			drawEntityOutlines.setIsChecked(settings.drawEntityOutlines);
-			drawEntityHitBoxes.setIsChecked(settings.drawEntityHitBoxes);
-			drawWallBox.setIsChecked(settings.drawWallBox);
-			drawFlatWalls.setIsChecked(settings.drawFlatWalls);
-			drawTileGrid.setIsChecked(settings.drawTileGrid);
-			lockToTileGrid.setIsChecked(settings.lockToTileGrid);
+			drawMapBorders.setChecked(settings.drawMapBorders);
+			drawCenterPosition.setChecked(settings.drawCenterPositionBox);
+			drawEntities.setChecked(settings.drawEntities);
+			drawRegions.setChecked(settings.drawRegions);
+			drawEntityOutlines.setChecked(settings.drawEntityOutlines);
+			drawEntityHitBoxes.setChecked(settings.drawEntityHitBoxes);
+			drawWallBox.setChecked(settings.drawWallBox);
+			drawFlatWalls.setChecked(settings.drawFlatWalls);
+			drawTileGrid.setChecked(settings.drawTileGrid);
+			lockToTileGrid.setChecked(settings.lockToTileGrid);
 			
 			list.addObjectToList(drawMapBorders, drawCenterPosition, drawEntities, drawRegions);
 			list.addObjectToList(drawEntityOutlines, drawEntityHitBoxes, drawWallBox, drawFlatWalls);
@@ -173,16 +173,16 @@ public class DrawSettingsTab extends ContainerTab {
 //			if (s.drawTileGrid) s.drawFlatWalls = true;
 //		}
 		
-		drawMapBorders.setIsChecked(s.drawMapBorders);
-		drawCenterPosition.setIsChecked(s.drawCenterPositionBox);
-		drawEntities.setIsChecked(s.drawEntities);
-		drawRegions.setIsChecked(s.drawRegions);
-		drawEntityOutlines.setIsChecked(s.drawEntityOutlines);
-		drawEntityHitBoxes.setIsChecked(s.drawEntityHitBoxes);
-		drawWallBox.setIsChecked(s.drawWallBox);
-		drawFlatWalls.setIsChecked(s.drawFlatWalls);
-		drawTileGrid.setIsChecked(s.drawTileGrid);
-		lockToTileGrid.setIsChecked(s.lockToTileGrid);
+		drawMapBorders.setChecked(s.drawMapBorders);
+		drawCenterPosition.setChecked(s.drawCenterPositionBox);
+		drawEntities.setChecked(s.drawEntities);
+		drawRegions.setChecked(s.drawRegions);
+		drawEntityOutlines.setChecked(s.drawEntityOutlines);
+		drawEntityHitBoxes.setChecked(s.drawEntityHitBoxes);
+		drawWallBox.setChecked(s.drawWallBox);
+		drawFlatWalls.setChecked(s.drawFlatWalls);
+		drawTileGrid.setChecked(s.drawTileGrid);
+		lockToTileGrid.setChecked(s.lockToTileGrid);
 		
 		DebugSettings.drawFlatWalls = s.drawFlatWalls;
 		DebugSettings.drawTileGrid = s.drawTileGrid;

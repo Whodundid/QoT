@@ -11,7 +11,7 @@ import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
-import envision.engine.windows.windowUtil.EObjectGroup;
+import envision.engine.windows.windowUtil.WindowObjectGroup;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectModifyType;
 import eutil.colors.EColors;
 import eutil.datatypes.points.Point2i;
@@ -132,7 +132,7 @@ public class WindowHeader extends WindowObject {
 			//set header title
 			title = (titleIn.isEmpty()) ? getParent().getObjectName() : titleIn;
 			
-			EObjectGroup group = new EObjectGroup(getParent());
+			WindowObjectGroup group = new WindowObjectGroup(getParent());
 			group.addObject(this, fileUpButton, pinButton, minimizeButton, maximizeButton, closeButton);
 			setObjectGroup(group);
 		}
@@ -177,7 +177,7 @@ public class WindowHeader extends WindowObject {
 		clickPos.set(mX, mY);
 		pressed = true;
 		
-		EObjectGroup group = getObjectGroup();
+		WindowObjectGroup group = getObjectGroup();
 		
 		if (group != null && group.getGroupParent() != null) {
 			IWindowObject groupParent = group.getGroupParent();

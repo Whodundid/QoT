@@ -1,13 +1,13 @@
 package envision.game.dialog;
 
-import envision.game.entities.Entity;
-import eutil.datatypes.EArrayList;
+import eutil.datatypes.util.EList;
 
 public class DialogSystem {
-	private EArrayList<EntityDialog> speakers;
+    
+	private EList<EntityDialog> speakers;
 	
 	public DialogSystem() {
-		speakers = new EArrayList<EntityDialog>();
+		speakers = EList.newList();
 	}
 	
 	public void speak() {

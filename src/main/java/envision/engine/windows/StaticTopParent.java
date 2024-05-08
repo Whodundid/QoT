@@ -4,9 +4,9 @@ import java.util.Deque;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.kernel.developerDesktop.taskbar.TaskBar;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.developerDesktop.taskbar.TaskBar;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.ITopParent;

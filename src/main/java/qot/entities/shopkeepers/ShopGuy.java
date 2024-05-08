@@ -3,9 +3,9 @@ package qot.entities.shopkeepers;
 import envision.Envision;
 import envision.engine.registry.types.Sprite;
 import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
+import envision.game.animations.AnimationHandler;
 import envision.game.component.ComponentType;
 import envision.game.component.types.OnClickComponent;
-import envision.game.effects.animations.AnimationHandler;
 import envision.game.entities.BasicRenderedEntity;
 import envision.game.entities.Enemy;
 import envision.game.entities.Entity;
@@ -13,7 +13,6 @@ import envision.game.entities.EntityRenderer;
 import envision.game.items.Item;
 import envision.game.shops.Shop;
 import envision.game.shops.Shopkeeper;
-import envision.game.world.GameWorld;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.Direction;
@@ -82,10 +81,10 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         var walkDown = animationHandler.createAnimationSet(AnimationHandler.WALKING_DOWN_1);
         var walkRight = animationHandler.createAnimationSet(AnimationHandler.WALKING_RIGHT_1);
         
-        walkUp.setUpdateInterval(10);
-        walkLeft.setUpdateInterval(10);
-        walkDown.setUpdateInterval(10);
-        walkRight.setUpdateInterval(10);
+        walkUp.setUpdateInterval(50);
+        walkLeft.setUpdateInterval(50);
+        walkDown.setUpdateInterval(50);
+        walkRight.setUpdateInterval(50);
         
         for (int i = 0; i < 9; i++) walkUp.addFrame(EntityTextures.walksheet.getSprite(i));
         for (int i = 9; i < 18; i++) walkLeft.addFrame(EntityTextures.walksheet.getSprite(i));
@@ -101,7 +100,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
 
     @Override
     public void onLivingUpdate(float dt) {
-        animationHandler.onRenderTick();
+        animationHandler.onRenderTick((long) dt);
         waitTime = ERandomUtil.getRoll(randShort, randLong);
         determineOverheadChat(dt);
         if (isCurrentlySelling()) {
@@ -110,7 +109,7 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
                 animationHandler.stop();
             }
         }
-        else if (timeSinceItemWasLastSold >= (60000 * 1.5)) {
+        else if (timeSinceItemWasLastSold >= (30000)) {
             //System.out.println(this + " RESTOCKED");
             this.setGold(ERandomUtil.getRoll(125, 1250));
             for (int i = 0; i < inventory.size(); i++) {
@@ -300,13 +299,17 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         timeSinceItemWasLastBought += (long) dt;
         timeSinceItemWasLastSold += (long) dt;
         
+        //if (!this.activeChat.equals("")) return;
+        
         if (timeSinceItemWasLastBought >= 100000000L) timeSinceItemWasLastBought = 100000L;
         if (timeSinceItemWasLastSold >= 100000000L) timeSinceItemWasLastSold = 100000L;
         if (lastDialogTime >= dialogTimeOut) this.activeChat = "";
         if (lastDialogTime >= dialogWaitTime) {
             lastDialogTime = 0l;
             dialogTimeOut = ERandomUtil.getRoll(3000, 5000);
+            //dialogTimeOut = 25000;
             dialogWaitTime = ERandomUtil.getRoll(dialogTimeOut + 2000, dialogTimeOut + 8000);
+            //dialogWaitTime = 25000;
         }
         else return;
         
@@ -401,7 +404,9 @@ public class ShopGuy extends BasicRenderedEntity implements Shopkeeper {
         activeChat = text;
         lastDialogTime = 0l;
         dialogTimeOut = ERandomUtil.getRoll(3000, 5000);
+        //dialogTimeOut = 25000;
         dialogWaitTime = ERandomUtil.getRoll(dialogTimeOut + 2000, dialogTimeOut + 8000);
+        //dialogWaitTime = 0;
     }
     
     protected void speak(String text, long minTime, long maxTime) {

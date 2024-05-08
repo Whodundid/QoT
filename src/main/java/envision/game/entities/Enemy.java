@@ -2,6 +2,7 @@ package envision.game.entities;
 
 import envision.Envision;
 import eutil.datatypes.util.EList;
+import eutil.debug.Broken;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
 
@@ -19,6 +20,10 @@ public abstract class Enemy extends BasicRenderedEntity {
     protected long waitTime = 0l;
     protected long lastMove = 0l;
     protected Direction lastDir = Direction.N;
+    
+    protected long lastDialogTime = 0l;
+    protected long dialogWaitTime = 0l;
+    protected long dialogTimeOut = 0l;
     
     protected EList<Entity> targets = EList.newList();
     protected Entity currentTarget;
@@ -52,12 +57,17 @@ public abstract class Enemy extends BasicRenderedEntity {
     
     @Override
     public void onLivingUpdate(float dt) {
-        long cur = System.currentTimeMillis();
+        lastDialogTime += dt;
+        timeLastAttacked += dt;
         
-        if (entityLastAttackedBy != null && cur - timeLastAttacked <= 4000) {
+        if (lastDialogTime >= dialogTimeOut) this.activeChat = "";
+        
+        if (entityLastAttackedBy != null && timeLastAttacked <= 4000) {
             currentTarget = entityLastAttackedBy;
         }
-        else if (currentTarget == null) determineTargets();
+        else if (currentTarget == null) {
+            determineTargets();
+        }
         else {
             double dist = world.getDistance(this, currentTarget);
             boolean los = this.hasDirectLineOfSightToObject(currentTarget);
@@ -80,7 +90,7 @@ public abstract class Enemy extends BasicRenderedEntity {
     public void attackedBy(Entity ent, int amount) {
         super.attackedBy(ent, amount);
         
-        timeLastAttacked = System.currentTimeMillis();
+        timeLastAttacked = 0;
         entityLastAttackedBy = ent;
         
         if (ent != currentTarget) {
@@ -91,31 +101,34 @@ public abstract class Enemy extends BasicRenderedEntity {
     protected void runPassiveAI(float dt) {}
     protected void runAggressiveAI(float dt) {}
     
-    protected void wander() {
-        if (System.currentTimeMillis() - lastMove >= waitTime + waitDelay) {
+    protected void wander(float dt) {
+        lastMove += dt;
+        if (lastMove >= waitTime + waitDelay) {
             waitTime = ERandomUtil.getRoll(randShort, randLong);
             moveTime = ERandomUtil.getRoll(randShort, randLong);
             waitDelay = ERandomUtil.getRoll(randShort, randLong);
-            lastMove = System.currentTimeMillis();
+            lastMove = 0;
             lastDir = ERandomUtil.randomDir(true);
         }
         
-        if (System.currentTimeMillis() - lastMove >= moveTime) {
+        if (lastMove >= moveTime) {
             move(lastDir);
         }
         
-//        boolean shouldMove = ERandomUtil.roll(10, 0, 10);
-//        
-//        if (shouldMove) {
-//            Direction dir = ERandomUtil.randomDir();
-//            move(dir);
-//        }
+        boolean shouldMove = ERandomUtil.roll(10, 0, 10);
+        
+        if (shouldMove) {
+            Direction dir = ERandomUtil.randomDir();
+            move(dir);
+        }
     }
     
+    @Broken(reason="There is some kind of processing leak going on in here... not sure why.......")
     protected void determineTargets() {
         targets.clear();
         EList<Entity> foundTargets = world.getAllEntitiesWithinDistance(this, agroRange);
         var it = foundTargets.iterator();
+        this.headText = "" + getFavorTracker().getFavorMap().size();
         while (it.hasNext()) {
             Entity e = it.next();
             var favor = getFavorDecider().isPositiveFavor(e);
@@ -123,12 +136,16 @@ public abstract class Enemy extends BasicRenderedEntity {
         }
         this.targets = foundTargets;
         
+        currentTarget = Envision.thePlayer;
         var inRange = getEntitiesWithinAgroRange(targets);
-        inRange = inRange.filter(e -> this.hasDirectLineOfSightToObject(e));
+        inRange = inRange(inRange);
         Entity lowestFavorTarget = getEntityWithLowestFavor(inRange);
         
         currentTarget = lowestFavorTarget;
-        //System.out.println(currentTarget + " : " + targets);
+    }
+    
+    protected EList<Entity> inRange(EList<Entity> in) {
+        return in.filter(e -> this.hasDirectLineOfSightToObject(e));
     }
     
     protected EList<Entity> getEntitiesWithinAgroRange(EList<Entity> entities) {
@@ -164,6 +181,20 @@ public abstract class Enemy extends BasicRenderedEntity {
         }
         
         return ent;
+    }
+    
+    protected void speak(String text) {
+        activeChat = text;
+        lastDialogTime = 0l;
+        dialogTimeOut = ERandomUtil.getRoll(3000, 5000);
+        dialogWaitTime = ERandomUtil.getRoll(dialogTimeOut + 2000, dialogTimeOut + 8000);
+    }
+    
+    protected void speak(String text, long minTime, long maxTime) {
+        activeChat = text;
+        lastDialogTime = 0l;
+        dialogTimeOut = ERandomUtil.getRoll(minTime, maxTime);
+        dialogWaitTime = ERandomUtil.getRoll(dialogTimeOut + 2000, dialogTimeOut + 15000);
     }
     
 }

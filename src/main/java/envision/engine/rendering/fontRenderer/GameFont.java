@@ -27,7 +27,7 @@ public class GameFont {
 	private String mappingPath;
 	private String fontPath;
 	private GameTexture fontImage;
-	private Map<Character, Integer> mapping;
+	private Map<String, Integer> mapping;
 	private int width, height;
 	private double scaleW, scaleH;
 	private double scaleSpace;
@@ -67,7 +67,7 @@ public class GameFont {
 			//read mapping
 			int i = 0;
 			while (reader.hasNextLine()) {
-				mapping.put(reader.nextLine().charAt(0), i++);
+				mapping.put(reader.nextLine(), i++);
 			}
 		}
 		catch (Exception e) {
@@ -90,7 +90,7 @@ public class GameFont {
 	public Box2<Integer, Integer> getCharImage(char charIn) {
 		if (charIn == FontRenderer.ERROR_CHAR) return getErrorChar();
 		if (charIn == FontRenderer.COPYRIGHT) return getCopyrightChar();
-		int pos = mapping.getOrDefault(charIn, -1);
+		int pos = mapping.getOrDefault(String.valueOf(charIn), -1);
 //		mapping.
 //		for (int i = 0; i < mapping.size(); i++) {
 //			if (mapping.get(i) == charIn) {
@@ -106,7 +106,7 @@ public class GameFont {
 	public Box2<Integer, Integer> getCopyrightChar() { return new Box2<>(15, 5); }
 	
 	public GameTexture getFontTexture() { return fontImage; }
-	public Map<Character, Integer> getMaping() { return mapping; }
+	public Map<String, Integer> getMaping() { return mapping; }
 	public boolean created() { return !failed; }
 	
 	public String getMapingFile() { return mappingPath; }

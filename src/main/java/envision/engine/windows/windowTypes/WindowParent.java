@@ -4,9 +4,9 @@ import java.util.Stack;
 
 import envision.Envision;
 import envision.debug.DebugFunctions;
+import envision.engine.kernel.developerDesktop.taskbar.TaskBar;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.developerDesktop.taskbar.TaskBar;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;

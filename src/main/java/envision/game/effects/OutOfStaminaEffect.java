@@ -9,4 +9,9 @@ public class OutOfStaminaEffect extends GenericStaminaEffect {
         this.effectDuration = 1500;
     }
     
+    public OutOfStaminaEffect(long duration) {
+        super(EFFECT_NAME);
+        this.effectDuration = duration;
+    }
+    
 }

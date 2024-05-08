@@ -1,12 +1,14 @@
 package envision.engine.windows.windowTypes;
 
+import java.util.function.Consumer;
+
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 
 //Author: Hunter Bragg
 
-public abstract class ActionObject extends WindowObject implements IActionObject {
+public abstract class ActionObject<T> extends WindowObject implements IActionObject {
 
 	//========
 	// Fields
@@ -16,6 +18,7 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 	protected boolean runActionOnRelease = false;
 	protected IWindowObject actionReceiver;
 	protected Runnable onPressAction = null;
+	protected Consumer<T> onPressConsumer = null;
 	
 	//==============
 	// Constructors
@@ -55,6 +58,13 @@ public abstract class ActionObject extends WindowObject implements IActionObject
 	public void setAction(Runnable action) {
 	    runActionOnPress = true;
 	    onPressAction = action;
+	    onPressConsumer = null;
+	}
+	
+	public void setActionWithArg(Consumer<T> action) {
+	    runActionOnPress = true;
+	    onPressAction = null;
+	    onPressConsumer = action;
 	}
 	
 	//===========================
@@ -68,6 +78,15 @@ public abstract class ActionObject extends WindowObject implements IActionObject
         if (p != null) p.bringToFront();
         actionReceiver.actionPerformed(this, args);
         if (onPressAction != null) onPressAction.run();
+        
+        if (onPressConsumer != null) {
+            T arg = null;
+            try {
+                if (args.length == 1) arg = (T) args[0];                
+            }
+            catch (ClassCastException e) {}
+            onPressConsumer.accept(arg);
+        }
 	}
 	
 	@Override

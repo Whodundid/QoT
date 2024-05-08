@@ -11,7 +11,6 @@ public class Water extends WorldTile {
 		super(TileIDs.WATER);
 		setBlocksMovement(true);
 		setSprite(new Sprite(WaterTextures.water));
-		setWall(true);
 		wallHeight = -0.05f;
 		setMiniMapColor(0xff0062A8);
 	}

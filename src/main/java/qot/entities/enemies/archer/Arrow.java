@@ -10,7 +10,7 @@ public class Arrow extends Projectile {
 		super("Arrow");
 		
         // 1.5 seconds
-        this.maxLifeSpan = 400.0f;
+        this.maxLifeSpan = 800.0f;
         
         init(0, 0, 32, 32);
         sprite = new Sprite(EntityTextures.arrow_projectile);

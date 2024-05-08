@@ -1,8 +1,8 @@
 package qot.world_tiles.categories.nature;
 
 import envision.engine.registry.types.Sprite;
-import envision.game.effects.animations.AnimationHandler;
-import envision.game.effects.animations.AnimationSet;
+import envision.game.animations.AnimationHandler;
+import envision.game.animations.AnimationSet;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.world.nature.water.WaterTextures;
@@ -15,11 +15,10 @@ public class BlueWater extends WorldTile {
 	public BlueWater() {
 		super(TileIDs.BLUE_WATER);
 		setBlocksMovement(true);
-		setWall(true);
 		wallHeight = -0.05f;
 		spriteStartIndex = 0;
 		spriteEndIndex = 4;
-		spriteAnimationInterval = 60;
+		spriteAnimationInterval = 350;
 		isAnimated = true;
 		
 		Sprite sprite = WaterTextures.blue_water_sheet.getSprite(0);

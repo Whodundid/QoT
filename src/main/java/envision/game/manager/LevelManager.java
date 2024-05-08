@@ -99,7 +99,7 @@ public class LevelManager {
             timeOfDay = 0;
         }
         
-        int minLight = 40; // the minimum brightness of the world
+        int minLight = 100; // the minimum brightness of the world
         int maxLight = 255; // the maximum brightness of the world
         int deltaLight = maxLight - minLight;
 

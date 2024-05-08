@@ -6,4 +6,9 @@ public abstract class GenericStaminaEffect extends Effect {
         super(nameIn, "STAMINA_MODIFIER");
     }
     
+    @Override
+    public Integer processEvent(Object... arguments) {
+        return null;
+    }
+    
 }

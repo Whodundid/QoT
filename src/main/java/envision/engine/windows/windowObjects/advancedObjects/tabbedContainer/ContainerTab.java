@@ -10,9 +10,9 @@ import eutil.math.dimensions.Dimension_d;
 
 public class ContainerTab extends WindowObject {
 	
-	//--------
-	// Fields
-	//--------
+	//========
+    // Fields
+    //========
 	
 	protected TabbedContainer parentContainer;
 	protected WindowButton tabButton;
@@ -27,9 +27,9 @@ public class ContainerTab extends WindowObject {
 	protected double tabWidth;
 	protected double tabHeight;
 	
-	//--------------
-	// Constructors
-	//--------------
+	//==============
+    // Constructors
+    //==============
 	
 	public ContainerTab(TabbedContainer parent) { this(parent, "New Tab"); }
 	public ContainerTab(TabbedContainer parent, String nameIn) {
@@ -39,9 +39,9 @@ public class ContainerTab extends WindowObject {
 		name = nameIn;
 	}
 	
-	//----------
+	//==========
 	// Tab Init
-	//----------
+	//==========
 	
 	void initTab(int tabIndexIn, double tabWidthIn, double tabHeightIn) {
 		//default values
@@ -64,12 +64,12 @@ public class ContainerTab extends WindowObject {
 			sX += (tabIndex - 1) * gap;
 		}
 		
-		tabButton.setDimensions(sX, sY, tabWidthIn, tabHeightIn);
+		tabButton.setDimensions(sX, sY, tabWidthIn, tabHeightIn - 1);
 	}
 	
-	//-----------
-	// Overrides
-	//-----------
+	//===========
+    // Overrides
+    //===========
 	
 	@Override
 	public void drawObject(float dt, int mXIn, int mYIn) {
@@ -103,9 +103,9 @@ public class ContainerTab extends WindowObject {
 		super.addObject(objects);
 	}
 	
-	//---------
-	// Methods
-	//---------
+	//=========
+    // Methods
+    //=========
 	
 	/**
 	 * Called by the parent tab container on each tab each time a current
@@ -133,23 +133,23 @@ public class ContainerTab extends WindowObject {
 		return parentContainer.getSelectedTab() == this;
 	}
 	
-	//---------
-	// Getters
-	//---------
+	//=========
+    // Getters
+    //=========
 	
 	public String getName() { return name; }
 	public double getTabIndex() { return tabIndex; }
 	public Dimension_d getTabDims() { return parentContainer.getTabDims().sub(8); }
 	
-	//---------
-	// Setters
-	//---------
+	//=========
+    // Setters
+    //=========
 	
 	public void setName(String nameIn) { name = nameIn; }
 	
-	//-----------------------
+	//=======================
 	// Static Helper Classes
-	//-----------------------
+	//=======================
 	
 	public class ContainerTabButton extends WindowButton {
 		

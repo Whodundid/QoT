@@ -5,6 +5,7 @@ import envision.game.GameObject;
 import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
 import envision.game.component.types.RenderingComponent;
+import envision.game.entities.GroundClutter;
 import envision.game.util.IDrawable;
 import envision.game.util.InsertionSort;
 import envision.game.world.IGameWorld;
@@ -94,14 +95,18 @@ public class WorldDrawLayer {
 		for (int i = 0; i < world.getHeight(); i++) {
 		    for (int j = 0; j < world.getWidth(); j++) {
 		        if (camLowerThanMax) {
-		            if (camLayer <= entLayer || j > entX + 5 || j < entX - 5 || i > entY + 5 || i < entY - 5)
+		            if (camLayer <= entLayer || j > entX + 5 || j < entX - 5 || i > entY + 5 || i < entY - 5) {
                         worldData.set(world.getTileAt(camLayer, j, i), j, i);
+		            }
 		        }
 		        else {
 		            worldData.set(world.getTileAt(camLayer, j, i), j, i);
 		        }
             }
 		}
+		
+//		System.out.println(camLayer);
+//		System.out.println(worldData);
 		
 		var entities = world.getEntitiesInWorld().filter(e -> e.getCameraLayer() == camLayer);
 		gameObjects.addAll(entities);
@@ -110,29 +115,38 @@ public class WorldDrawLayer {
 		for (int i = top; i <= bot; i++) {
 			for (int j = left; j <= right; j++) {
 				var tile = worldData.get(j, i);
-				if (tile == null && tile != VoidTile.instance) continue;
+				if (tile == null || tile == VoidTile.instance) continue;
 				if (tile.getRenderLayer() == layer) builtLayer.add(tile);
 			}
 		}
 		
-		double w_left = left * world.getTileWidth();
-		double w_top = top * world.getTileHeight();
-		double w_right = right * world.getTileWidth();
-		double w_bot = bot * world.getTileHeight();
+		double w_left = (left - 1) * world.getTileWidth();
+		double w_top = (top - 1) * world.getTileHeight();
+		double w_right = (right + 1) * world.getTileWidth();
+		double w_bot = (bot + 1) * world.getTileHeight();
 		
-		if (layer == 1) {
-		    //EList<GameObject> text = EList.newList();
-			//add all objects within the specified area
-			for (var obj : gameObjects) {
-				if (obj == Envision.thePlayer) {
-					builtLayer.add(obj);
-					continue;
-				}
-				if (obj.getDimensions().contains(w_left, w_top, w_right, w_bot)) {
-					builtLayer.add(obj);
-				}
-			}
-		}
+		//EList<GameObject> text = EList.newList();
+        //add all objects within the specified area
+        for (var obj : gameObjects) {
+            if (obj.sprite == null) continue;
+            
+            if (obj instanceof GroundClutter) {
+                if (layer == 0) {
+                    if (obj.getDimensions().contains(w_left, w_top, w_right, w_bot)) {
+                        builtLayer.add(obj);
+                    }
+                }
+            }
+            else {
+                if (obj == Envision.thePlayer) {
+                    builtLayer.add(obj);
+                    continue;
+                }
+                if (obj.getDimensions().contains(w_left, w_top, w_right, w_bot)) {
+                    builtLayer.add(obj);
+                }
+            }
+        }
 		
 		//System.out.println(builtLayer);
 		

@@ -10,6 +10,7 @@ import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import eutil.colors.EColors;
 import eutil.datatypes.boxes.Box2;
+import eutil.strings.EStringBuilder;
 
 public class FontRenderer {
     
@@ -102,11 +103,6 @@ public class FontRenderer {
     
     public static GameFont getCurrentFont() { return getInstance().currentFont; }
     
-    public static double strWidth(Object in) { return strWidth(String.valueOf(in)); }
-    public static double strWidth(String in) {
-        return EStringOutputFormatter.getStringWidth(in);
-    }
-    
     public static int getCharWidth() { return instance.currentFont.getWidth(); }
     public static double getScaleW() { return instance.currentFont.getScaleW(); }
     public static double getScaleH() { return instance.currentFont.getScaleH(); }
@@ -176,5 +172,42 @@ public class FontRenderer {
         }
         return s;
     }
+    
+    public static String removeColorCodes(String in) {
+        // remove EMC color codes
+        var sb = new EStringBuilder();
+        for (int i = 0, j = 0; i < in.length(); i++) {
+            char c = in.charAt(i);
+            
+            if (j > 0) {
+                if (++j >= 3) j = 0;
+            }
+            else if (c == 8750) { //the 'contour integral' character
+                j = 1;
+            }
+            else sb.a(c);
+        }
+        
+        return sb.toString();
+    }
+    
+    public static double strWidth(Object in) { return strWidth(String.valueOf(in), 1.0); }
+    public static double strWidth(String in) { return strWidth(in, 1.0); }
+    public static double strWidth(Object in, double scale) { return strWidth(String.valueOf(in), scale); }
+    public static double strWidth(String in, double scale) {
+        if (in == null) return -1;
+        
+        String removed = removeColorCodes(in);
+        double cw = getCharWidth() * scale;
+        double sp = getScaleSpace();
+        double gs = Envision.getGameScale();
+        
+        return removed.length() * (cw * sp / gs);
+    }
+    
+    public static double strHeight() { return FH; }
+    public static double strHeight(double scale) { return FH * scale; }
+    public static double strHalfHeight() { return HALF_FH; }
+    public static double strHalfHeight(double scale) { return HALF_FH * scale; }
     
 }

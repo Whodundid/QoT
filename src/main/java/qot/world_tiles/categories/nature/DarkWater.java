@@ -11,7 +11,6 @@ public class DarkWater extends WorldTile {
 		super(TileIDs.DARK_WATER);
 		setBlocksMovement(true);
 		setSprite(new Sprite(WaterTextures.dark_water));
-		setWall(true);
 		wallHeight = -0.05f;
 		setMiniMapColor(0xff181838);
 	}

@@ -1,18 +1,22 @@
 package envision.engine.rendering.textureSystem;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.nio.ByteBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
 
+import envision.Envision;
 import envision.engine.EngineSettings;
+import envision.engine.registry.IGameResource;
+import envision.engine.registry.ResourceType;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;
-import qot.settings.QoTSettings;
 
-public class GameTexture {
+public class GameTexture implements IGameResource {
 	
     public static final String rDir = EngineSettings.RESOURCES_DIR.toString();
     public static final String tDir = rDir + "/textures/";
@@ -70,6 +74,10 @@ public class GameTexture {
 		magFilter = magFilterIn;
 	}
 	
+	public GameTexture(File fileIn) {
+	    filePath = fileIn.getAbsolutePath();
+	}
+	
 	public GameTexture(BufferedImage imageIn) {
 	    image = imageIn;
 	}
@@ -79,10 +87,6 @@ public class GameTexture {
 	    minFilter = minFilterIn;
 	    magFilter = magFilterIn;
 	}
-//	
-//	public GameTexture(Sprite spriteIn) {
-//	    
-//	}
 	
 	//=========================
     // Internal Helper Methods
@@ -93,6 +97,20 @@ public class GameTexture {
 			systemIn.registerTexture(t);
 		}
 	}
+	
+	//===========
+    // Overrides
+    //===========
+    
+    @Override
+    public boolean isLoaded() {
+        return false;
+    }
+    
+    @Override
+    public ResourceType getResourceType() {
+        return ResourceType.TEXTURE;
+    }
 	
 	//=========
     // Methods
@@ -188,6 +206,56 @@ public class GameTexture {
 	public GameTexture getChild(int id) {
 		return children.getA(id);
 	}
+	
+	public BufferedImage convertToBufferedImage() {
+	    return convertToBufferedImage(this);
+	}
+	
+    public static BufferedImage convertToBufferedImage(GameTexture texture) {
+        int tWidth = texture.getWidth();
+        int tHeight = texture.getHeight();
+        
+        class Annoying {
+            int format;
+            
+            int getFormat(GameTexture texture) {
+                TextureSystem.getInstance().bind(texture);
+                var context = Envision.getRenderEngine().getRenderingContext();
+                context.call(() -> format = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_INTERNAL_FORMAT));
+                return format;
+            }
+        }
+        
+        
+        TextureSystem.getInstance().bind(texture);
+        int format = new Annoying().getFormat(texture);
+        int channels = (format == GL11.GL_RGB) ? 3 : 4;
+        
+        ByteBuffer buffer = BufferUtils.createByteBuffer(tWidth * tHeight * channels);
+        BufferedImage image = new BufferedImage(tWidth, tHeight, BufferedImage.TYPE_INT_ARGB);
+        
+        var context = Envision.getRenderEngine().getRenderingContext();
+        context.call(() -> {
+            TextureSystem.getInstance().bind(texture);
+            GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, format, GL11.GL_UNSIGNED_BYTE, buffer);
+        });
+        
+        for (int x = 0; x < tWidth; ++x) {
+            for (int y = 0; y < tHeight; ++y) {
+                int i = (x + y * tWidth) * channels;
+                
+                int r = buffer.get(i) & 0xFF;
+                int g = buffer.get(i + 1) & 0xFF;
+                int b = buffer.get(i + 2) & 0xFF;
+                int a = 255;
+                if (channels == 4) a = buffer.get(i + 3) & 0xFF;
+                
+                image.setRGB(x, y, (a << 24) | (r << 16) | (g << 8) | b);
+            }
+        }
+        
+        return image;
+    }
 	
 	//=========
 	// Setters

@@ -5,6 +5,7 @@ import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.input.KeyboardInputAcceptor;
 import envision.engine.windows.windowUtil.input.MouseInputAcceptor;
 import eutil.colors.EColors;
@@ -12,6 +13,7 @@ import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.math.dimensions.Dimension_i;
+import eutil.math.dimensions.IDimension;
 import eutil.misc.Rotation;
 import eutil.misc.ScreenLocation;
 
@@ -106,7 +108,13 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
 	public double drawStringC(String str, int color) { return drawStringC(str, midX, midY - FontRenderer.FONT_HEIGHT / 2, color); }
 	
 	public void scissor() { scissor(startX, startY, endX, endY); }
+	public void scissor(IDimension dims) { scissor(dims.startX().doubleValue(), dims.startY().doubleValue(), dims.endX().doubleValue(), dims.endY().doubleValue()); }
+	public void scissor(Dimension_d dims) { scissor(dims.startX, dims.startY, dims.endX, dims.endY); }
 	public void scissor(double offset) { scissor(startX + offset, startY + offset, endX - offset, endY - offset); }
+	public void scissor(IWindowObject obj) {
+	    Dimension_d dims = obj.getDimensions();
+	    scissor(dims.startX, dims.startY, dims.endX, dims.endY);
+	}
 	
 	public static double strWidth(Object text) { return FontRenderer.strWidth(String.valueOf(text)); }
 	

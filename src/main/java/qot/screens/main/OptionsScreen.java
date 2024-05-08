@@ -10,7 +10,7 @@ import envision.engine.windows.windowObjects.actionObjects.WindowCheckBox;
 import envision.engine.windows.windowObjects.actionObjects.WindowSlider;
 import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.effects.sounds.SoundEngine;
+import envision.game.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
 import qot.settings.QoTSettings;

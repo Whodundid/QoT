@@ -1,10 +1,8 @@
 package envision.engine.rendering.fontRenderer;
 
-import envision.Envision;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.debug.Broken;
-import eutil.strings.EStringBuilder;
 
 /** Used to concatenate 'EColors' color codes within drawn Strings. */
 public class EStringOutputFormatter {
@@ -19,7 +17,7 @@ public class EStringOutputFormatter {
 	public static double drawString(String s, double x, double y, double scaleX, double scaleY, int colorIn, boolean centered, boolean shadow) {
 		if (s == null) return -1.0;
 		
-		double lastX = (centered) ? x - (getStringWidth(s) / 2) : x;
+		double lastX = (centered) ? x - (FontRenderer.strWidth(s, scaleX) / 2) : x;
 		int i = 0;
 		String curString = "";
 		int curColor = colorIn;
@@ -34,7 +32,7 @@ public class EStringOutputFormatter {
 				if (hasCode) {
 					if (shadow) {
 						int br = EColors.changeBrightness(curColor, shadowColor);
-						FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+						FontRenderer.drawString(curString, lastX + 2, y + 2, br, scaleX, scaleY);
 					}
 					lastX = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
 					curString = "";
@@ -42,7 +40,7 @@ public class EStringOutputFormatter {
 				else {
 					if (shadow) {
 						int br = EColors.changeBrightness(curColor, shadowColor);
-						FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+						FontRenderer.drawString(curString, lastX + 2, y + 21, br, scaleX, scaleY);
 					}
 					double val = (double) FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY) - 1;
 					// duct tape fix
@@ -73,45 +71,19 @@ public class EStringOutputFormatter {
 		if (!hasCode) {
 			if (shadow) {
 				int br = EColors.changeBrightness(colorIn, shadowColor);
-				FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+				FontRenderer.drawString(curString, lastX + 2, y + 2, br, scaleX, scaleY);
 			}
 			lastX = FontRenderer.drawString(s, lastX, y, colorIn, scaleX, scaleY);
 		}
 		else {
 			if (shadow) {
 				int br = EColors.changeBrightness(colorIn, shadowColor);
-				FontRenderer.drawString(curString, lastX - 2, y + 2, br, scaleX, scaleY);
+				FontRenderer.drawString(curString, lastX + 2, y + 2, br, scaleX, scaleY);
 			}
 			lastX = FontRenderer.drawString(curString, lastX, y, curColor, scaleX, scaleY);
 		}
 		
 		return lastX;
-	}
-	
-	public static String removeColorCodes(String in) {
-	    // remove EMC color codes
-        var sb = new EStringBuilder();
-        for (int i = 0, j = 0; i < in.length(); i++) {
-            char c = in.charAt(i);
-            
-            if (j > 0) {
-                if (++j >= 3) j = 0;
-            }
-            else if (c == 8750) { //the 'contour integral' character
-                j = 1;
-            }
-            else sb.a(c);
-        }
-        
-        return sb.toString();
-	}
-	
-	public static double getStringWidth(String in) {
-		if (in == null) return -1;
-		
-		String removed = removeColorCodes(in);
-		
-		return removed.length() * (FontRenderer.getCharWidth() * FontRenderer.getScaleSpace() / Envision.getGameScale());
 	}
 	
 	/** Breaks a String into a list of smaller strings based on a set maximum line width. */
@@ -124,7 +96,7 @@ public class EStringOutputFormatter {
 		// don't care if the allotted width is less than the length of one character
 		if (widthMax < 10) return lines;
 		
-		boolean shouldWrap = getStringWidth(stringIn) > widthMax;
+		boolean shouldWrap = FontRenderer.strWidth(stringIn) > widthMax;
 		
 		try {
 		    
@@ -137,13 +109,13 @@ public class EStringOutputFormatter {
 			//CURRENTLY STUCK IN INFINITE LOOP HERE!
 			
 		    String restOfString = stringIn;
-            while (getStringWidth(restOfString) > widthMax) {
+            while (FontRenderer.strWidth(restOfString) > widthMax) {
                 int i = 0;
                 int iPos = 0;
                 char end = Character.MIN_VALUE;
                 String buildString = "";
                 
-                while (!(getStringWidth(buildString) >= widthMax) && i < restOfString.length() - 1) {
+                while (!(FontRenderer.strWidth(buildString) >= widthMax) && i < restOfString.length() - 1) {
                     buildString += restOfString.charAt(i);
                     i++;
                 }

@@ -1,6 +1,7 @@
 package envision.engine.windows.bundledWindows;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -117,68 +118,66 @@ public class TextureDisplayer extends WindowParent {
 			centered = (tex.getWidth() == tex.getHeight());
 		}
 		
-		if (path != null) {
-			try {
-				setObjectName(path.toString());
-				
-				//attempt to parse into image
-				tex = new GameTexture(path.toString());
-				TextureSystem.getInstance().registerTexture(tex);
-				if (tex.hasBeenRegistered()) {
-					centered = (tex.getWidth() == tex.getHeight());
-				}
-				
-				if (path.getParent() != null) {
-					EList<Path> unprocessed = Files.list(path.getParent()).collect(EList.toEList());
-					paths = unprocessed.stream().filter(p -> isImage(p.toString())).collect(EList.toEList());
-					
-					if (paths.size() > 1) {
-						navigationDrawn = true;
-						
-						int i = 0;
-						for (Path p : paths) {
-							if (p.equals(path)) break;
-							i++;
-						}
-						if (i < paths.size()) curPath = i;
-					}
-				}
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+		try {
+		    if (path != null) parsePath();
+		    if (file != null) parseFile();
 		}
-		
-		if (file != null) {
-			try {
-				setObjectName(file.getName());
-				
-				tex = new GameTexture(file.toString());
-				TextureSystem.getInstance().registerTexture(tex);
-				if (tex.hasBeenRegistered()) {
-					centered = (tex.getWidth() == tex.getHeight());
-				}
-				
-				if (file.getParentFile() != null) {
-					EList<File> unprocessed = EList.newList(file.getParentFile().listFiles());
-					files = unprocessed.filter(f -> isImage(f.getPath()));
-					
-					if (files.size() > 1) {
-						navigationDrawn = true;
-						
-						int i = 0;
-						for (File f : files) {
-							if (f.getPath().equals(file.getPath())) break;
-							i++;
-						}
-						if (i < files.size()) curFile = i;
-					}
-				}
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+		catch (IOException e) {
+		    e.printStackTrace();
 		}
+	}
+	
+	private void parsePath() throws IOException {
+	    setObjectName(path.toString());
+        
+        //attempt to parse into image
+        tex = new GameTexture(path.toString());
+        TextureSystem.getInstance().registerTexture(tex);
+        if (tex.hasBeenRegistered()) {
+            centered = (tex.getWidth() == tex.getHeight());
+        }
+        
+        if (path.getParent() != null) {
+            EList<Path> unprocessed = Files.list(path.getParent()).collect(EList.toEList());
+            paths = unprocessed.stream().filter(p -> isImage(p.toString())).collect(EList.toEList());
+            
+            if (paths.size() > 1) {
+                navigationDrawn = true;
+                
+                int i = 0;
+                for (Path p : paths) {
+                    if (p.equals(path)) break;
+                    i++;
+                }
+                if (i < paths.size()) curPath = i;
+            }
+        }
+	}
+	
+	private void parseFile() {
+	    setObjectName(file.getName());
+        
+        tex = new GameTexture(file.toString());
+        TextureSystem.getInstance().registerTexture(tex);
+        if (tex.hasBeenRegistered()) {
+            centered = (tex.getWidth() == tex.getHeight());
+        }
+        
+        if (file.getParentFile() != null) {
+            EList<File> unprocessed = EList.newList(file.getParentFile().listFiles());
+            files = unprocessed.filter(f -> isImage(f.getPath()));
+            
+            if (files.size() > 1) {
+                navigationDrawn = true;
+                
+                int i = 0;
+                for (File f : files) {
+                    if (f.getPath().equals(file.getPath())) break;
+                    i++;
+                }
+                if (i < files.size()) curFile = i;
+            }
+        }
 	}
 	
 	private void previousImage() {
@@ -213,23 +212,22 @@ public class TextureDisplayer extends WindowParent {
 	
 	private void loadImage(boolean isFile) {
 		if (isFile) {
-			if (files != null) {
-				try {
-					File newFile = files.get(curFile);
-					setObjectName(newFile.getName());
-					if (getHeader() != null) getHeader().setTitle(newFile.getName());
-					
-					tex = new GameTexture(newFile.toString());
-					TextureSystem.getInstance().registerTexture(tex);
-					if (tex.hasBeenRegistered()) {
-						centered = (tex.getWidth() == tex.getHeight());
-						imageBox.setImage(tex);
-					}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+		    if (files == null) return;
+		    try {
+                File newFile = files.get(curFile);
+                setObjectName(newFile.getName());
+                if (getHeader() != null) getHeader().setTitle(newFile.getName());
+                
+                tex = new GameTexture(newFile.toString());
+                TextureSystem.getInstance().registerTexture(tex);
+                if (tex.hasBeenRegistered()) {
+                    centered = (tex.getWidth() == tex.getHeight());
+                    imageBox.setImage(tex);
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
 		}
 		else if (paths != null) {	
 			try {

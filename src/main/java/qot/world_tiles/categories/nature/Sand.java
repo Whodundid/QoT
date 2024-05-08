@@ -10,7 +10,6 @@ public class Sand extends WorldTile {
 	public Sand() {
 		super(TileIDs.SAND);
 		setSprite(new Sprite(SandTextures.sand));
-		setWall(true);
 		wallHeight = 0.025f;
 		setMiniMapColor(0xffD8B668);
 	}

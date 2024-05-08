@@ -2,8 +2,8 @@ package envision.engine.windows.windowObjects.advancedObjects.textArea;
 
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowScrollBar;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;

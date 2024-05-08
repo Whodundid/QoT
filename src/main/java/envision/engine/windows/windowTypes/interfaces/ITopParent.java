@@ -2,9 +2,9 @@ package envision.engine.windows.windowTypes.interfaces;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Mouse;
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.kernel.developerDesktop.taskbar.TaskBar;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.windows.StaticTopParent;
-import envision.engine.windows.developerDesktop.taskbar.TaskBar;
 import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
 import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.OverlayWindow;

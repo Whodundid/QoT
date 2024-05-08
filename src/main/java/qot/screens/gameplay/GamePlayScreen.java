@@ -3,16 +3,16 @@ package qot.screens.gameplay;
 import envision.Envision;
 import envision.debug.DebugSettings;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.screens.GameScreen;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.basicObjects.WindowRect;
 import envision.engine.windows.windowObjects.basicObjects.WindowStatusBar;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.effects.sounds.SoundEngine;
 import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
+import envision.game.sounds.SoundEngine;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
 import envision.game.world.worldTiles.WorldTile;
@@ -241,6 +241,7 @@ public class GamePlayScreen extends GameScreen {
         if (worldX >= 0 && worldX < world.getWidth() && worldY >= 0 && worldY < world.getHeight()) {
             WorldTile tile = world.getTileAt(worldX, worldY);
             tile.onMousePress(mXIn, mYIn, button);
+            DebugSettings.lastClickedTile = tile;
         }
         
         EList<Entity> entitiesUnderMouse = new EArrayList<>(30);

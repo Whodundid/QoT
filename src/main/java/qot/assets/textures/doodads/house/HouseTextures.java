@@ -1,5 +1,6 @@
 package qot.assets.textures.doodads.house;
 
+import envision.engine.registry.types.SpriteSheet;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
@@ -35,8 +36,13 @@ public class HouseTextures extends TextureLoader {
 	oven = new GameTexture(textureDir, "oven.png"),
 	sink = new GameTexture(textureDir, "sink.png"),
 	stool = new GameTexture(textureDir, "stool.png"),
+	chest = new GameTexture(textureDir, "chest2.png"),
 	wall_mounted_pick = new GameTexture(textureDir, "wall_mounted_pick.png"),
 	wall_mounted_tools = new GameTexture(textureDir, "wall_mounted_tools.png");
+	
+	public static final SpriteSheet
+	
+	chest_sheet = new SpriteSheet(chest, 32, 32, 2, 0);
 	
 	//-----------
 	// Overrides
@@ -53,8 +59,11 @@ public class HouseTextures extends TextureLoader {
 		reg(sys, oven);
 		reg(sys, sink);
 		reg(sys, stool);
+		reg(sys, chest);
 		reg(sys, wall_mounted_pick);
 		reg(sys, wall_mounted_tools);
+		
+		reg(sys, "chest_sheet", chest_sheet);
 	}
 	
 }

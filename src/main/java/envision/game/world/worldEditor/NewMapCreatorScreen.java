@@ -67,9 +67,9 @@ public class NewMapCreatorScreen extends GameScreen {
 		
 		create = new WindowButton(this, midX - 100, tileSelection.endY + 50, 200, 45, "Create");
 		
-		tileSelection.setButtonTexture(fillTile.sprite);
+		tileSelection.setButtonSprite(fillTile.sprite);
 		
-		empty = emptyMap.getIsChecked();
+		empty = emptyMap.isChecked();
 		fillWithLabel.setVisible(!empty);
 		tileSelection.setVisible(!empty);
 		
@@ -101,7 +101,7 @@ public class NewMapCreatorScreen extends GameScreen {
 		if (object == back) closeScreen();
 		
 		if (object == emptyMap) {
-			empty = emptyMap.getIsChecked();
+			empty = emptyMap.isChecked();
 			fillWithLabel.setVisible(!empty);
 			tileSelection.setVisible(!empty);
 		}

@@ -5,6 +5,7 @@ import envision.engine.registry.types.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.entities.combat.EntityAttack;
+import envision.game.world.GameWorld;
 import eutil.datatypes.points.Point2i;
 import eutil.misc.Direction;
 import eutil.random.ERandomUtil;
@@ -24,6 +25,7 @@ public class TrollBoar extends Enemy {
 	private long startWait = -1;
 	private long waitAttackTime;
 	private boolean passedMoveLogic;
+	private GameWorld trollWorld;
 	
 	public static final SpeedEffect trollSpeed = new SpeedEffect("Troll Speed", 200);
 	
@@ -42,10 +44,6 @@ public class TrollBoar extends Enemy {
 		doesWaitAttack = ERandomUtil.randomBool();
 		waitAttackTime = ERandomUtil.getRoll(600, 4000);
 		
-		//this.setHeadText(doesWaitAttack + " : " + waitAttackTime);
-		
-        // item on death
-        
         var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
         itemOnDeath.setChance(1);
         
@@ -54,7 +52,7 @@ public class TrollBoar extends Enemy {
 	
 	@Override
 	public void onLivingUpdate(float dt) {
-		provideSpeedAura();
+		//provideSpeedAura();
 		
 		super.onLivingUpdate(dt);
 	}
@@ -66,7 +64,7 @@ public class TrollBoar extends Enemy {
     
     @Override
     protected void runAggressiveAI(float dt) {
-        doLogic();
+        doLogic(dt);
     }
 	
 	private boolean isPlayerClose() {
@@ -89,35 +87,31 @@ public class TrollBoar extends Enemy {
 		return (dist >= 0 && dist < 150);
 	}
 	
-	private void doLogic() {
-		movementLogic();
-		attackLogic();
+	private void doLogic(float dt) {
+		movementLogic(dt);
+		attackLogic(dt);
 	}
 	
-	private void movementLogic() {
-		var cur = System.currentTimeMillis();
+	private void movementLogic(float dt) {
 		var p = currentTarget;
 		
 		if (!passedMoveLogic) {
 			if (doesWaitAttack) {
 				if (!hasWaited) {
 					if (startWait >= 0) {
-						//this.headText = (cur - startWait) + " : " + waitAttackTime;
-						if (cur - startWait >= waitAttackTime) {
+					    startWait += dt;
+						if (startWait >= waitAttackTime) {
 							hasWaited = true;
 							passedMoveLogic = true;
 						}
 					}
 					else {
-						startWait = cur;
-						//this.headText += " : " + startWait;
+						startWait = 0;
 					}
 				}
 			}
 			else if (lastPlayerPoint != null) {
-				//this.headText = "old[" + lastPlayerPoint.x + "," + lastPlayerPoint.y + "] [" + p.worldX + "," + p.worldY + "]"; 
 				if (p.worldX == lastPlayerPoint.x && p.worldY == lastPlayerPoint.y) return;
-				//this.headText = "ATTACKING!";
 				passedMoveLogic = true;
 			}
 			else {
@@ -130,12 +124,12 @@ public class TrollBoar extends Enemy {
 		}
 	}
 	
-	private void attackLogic() {
+	private void attackLogic(float dt) {
 		//if (!passedMoveLogic) return;
-		var cur = System.currentTimeMillis();
-		
-		if (cur - lastAttack >= nextAttack) {
-			lastAttack = cur;
+	    
+		lastAttack += dt;
+		if (lastAttack >= nextAttack) {
+			lastAttack = 0;
 			determineNextAttack();
 			attack();
 		}
@@ -175,23 +169,31 @@ public class TrollBoar extends Enemy {
 		}
 	}
 	
-	private void provideSpeedAura() {
-		 var closeEntities = world.getAllEntitiesWithinDistance(this, 50);
-		 if (closeEntities == null) return;
-		 
-		 closeEntities = closeEntities.filter(e -> e instanceof Enemy);
-		 
-		 for (var e : closeEntities) {
-			 if (e.isDead()) continue;
-			 if (!e.activeEffectsTracker.hasEffect(trollSpeed)) {
-			     e.activeEffectsTracker.addEffect(trollSpeed);
-			 }
-		 }
-	}
+    private void provideSpeedAura() {
+        var closeEntities = world.getAllEntitiesWithinDistance(this, 50);
+        if (closeEntities == null) return;
+        
+        closeEntities = closeEntities.filter(e -> e instanceof Enemy);
+        
+        for (var e : closeEntities) {
+            if (e.isDead()) continue;
+            if (!e.activeEffectsTracker.hasEffect(trollSpeed)) {
+                e.activeEffectsTracker.addEffect(trollSpeed);
+            }
+        }
+    }
 	
 	@Override
 	public int getInternalSaveID() {
 		return EntityList.TROLLBOAR.ID;
+	}
+	
+	//==================
+    // Internal Methods
+    //==================
+	
+	protected void createTrollWorld() {
+	    
 	}
 	
 }

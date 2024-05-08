@@ -11,8 +11,7 @@ public interface IActionObject extends IWindowObject {
 	
 	/** Used to notify the action receiver object that this action object is performing its action. */
 	public void performAction(Object... args);
-	/** Event fired whenever the left mouse button presses this IActionObject. 
-	 * @param button TODO*/
+	/** Event fired whenever the left mouse button presses this IActionObject. */
 	public void press(int button);
 	/** Returns true if this object will perform its action when pressed by the left mouse button. (rising edge) */
 	public boolean runsActionOnPress();

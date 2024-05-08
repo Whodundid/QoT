@@ -1,7 +1,7 @@
 package envision.debug.debugCommands;
 
 import envision.Envision;
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.windows.windowBuilder.WindowBuilderScreen;
 
 @SuppressWarnings("unused")

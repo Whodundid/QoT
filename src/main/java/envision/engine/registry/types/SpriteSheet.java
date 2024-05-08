@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 import envision.engine.rendering.textureSystem.GameTexture;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_i;
+import eutil.random.ERandomUtil;
 
 public class SpriteSheet {
 	
@@ -72,6 +73,10 @@ public class SpriteSheet {
     
     public Sprite getRandom() {
         return sprites.getRandom();
+    }
+    
+    public Sprite getRandom(int start, int end) {
+         return sprites.get(ERandomUtil.getRoll(start, end));
     }
     
     public GameTexture getBaseTexture() {

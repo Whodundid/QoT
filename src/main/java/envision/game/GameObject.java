@@ -5,8 +5,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import envision.Envision;
 import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.Transform;
-import envision.game.effects.animations.AnimationHandler;
+import envision.engine.rendering.ObjectTransform;
+import envision.game.animations.AnimationHandler;
 import envision.game.util.IDrawable;
 import envision.game.world.IGameWorld;
 import eutil.colors.EColors;
@@ -43,8 +43,10 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	private static AtomicInteger internalIDCounter = new AtomicInteger();
 	public static String nextObjectID() { return String.valueOf(internalIDCounter.getAndIncrement()); }
 	
-	public Transform transform;
+	public ObjectTransform transform;
 	private int cameraLayer = 0;
+	
+	public boolean isMoving = false;
 	
 	//==============
     // Constructors
@@ -91,7 +93,9 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
     public void onKeyPress(char typedChar, int keyCode) {}
 	
 	/** Can be overridden in child classes to denote specific entity behavior. */
-	public void onLivingUpdate(float dt) {}
+	public void onLivingUpdate(float dt) {
+	    isMoving = false;
+	}
 	
 	/** Called by the world whenever this entity is added to it. */
 	public void onAddedToWorld(IGameWorld world) {}
@@ -146,7 +150,9 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
 	
 	@Override
 	public double getSortPoint() {
-		return startY + collisionBox.endY;
+	    //System.out.println(this + " : " + collisionBox);
+	    return endY - 1;
+		//return startY + collisionBox.endY - 1;
 	}
 	
 	protected int calcBrightness() { return calcBrightness(worldX, worldY); }

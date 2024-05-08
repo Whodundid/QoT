@@ -70,7 +70,7 @@ public class AssetSidePanel extends PaletteSidePanel {
 			double bx = psx + (bw * xPos) + (xPos * 2);
 			
 			if (item.getSprite() != null) b.setButtonTexture(item.getSprite().getTexture());
-			else b.setButtonTexture(item.getSprite());
+			else b.setButtonSprite(item.getSprite());
 			b.setHoverText(item.getName());
 			
 			//add to list first then dimension

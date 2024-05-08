@@ -85,7 +85,7 @@ public class Fireball extends BasicRenderedEntity {
 		if (!(x >= 0 && x < world.getWidth() && y >= 0 && y < world.getHeight())) return;
 		
 		var t = world.getTileAt(x, y);
-		if (t == null || t.isWall()) return;
+		if (t == null) return;
 		
 		var toSet = NatureTiles.dryPlainsGrass;
 		final int id = t.getID();

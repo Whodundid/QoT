@@ -2,7 +2,7 @@ package envision.engine.scripting;
 
 import java.io.File;
 
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 
 public class EnvisionScript {
 	

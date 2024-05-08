@@ -5,8 +5,6 @@ import static org.lwjgl.opengl.GL14.*;
 
 import org.lwjgl.opengl.GL11;
 
-import envision.Envision;
-
 // final to prevent extension
 public final class GLSettings {
 	

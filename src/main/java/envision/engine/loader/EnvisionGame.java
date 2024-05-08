@@ -4,12 +4,12 @@ import java.io.File;
 
 import envision.engine.events.GameEvent;
 import envision.engine.events.IEventListener;
+import envision.engine.kernel.terminal.TerminalCommandHandler;
 import envision.engine.loader.dtos.EnvisionGameDTO;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.screens.GameScreen;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.settings.config.EnvisionConfigFile;
-import envision.engine.terminal.TerminalCommandHandler;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherSettings;
 import eutil.datatypes.util.EList;

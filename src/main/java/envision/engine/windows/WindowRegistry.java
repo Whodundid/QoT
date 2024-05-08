@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import envision.debug.testStuff.SpriteSheetBuilder;
-import envision.debug.testStuff.TestTextureSheetBuilder;
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.creation.BlockWorkingArea;
+import envision.engine.creation.CreatorWindow;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.windows.bundledWindows.CalculatorWindow;
 import envision.engine.windows.bundledWindows.GLKeyChecker;
 import envision.engine.windows.bundledWindows.TextEditorWindow;
@@ -30,8 +31,10 @@ public class WindowRegistry {
         registerWindow("calculator", CalculatorWindow.class);
         registerWindow("keys", GLKeyChecker.class);
         registerWindow("colors", ColorPickerSimple.class);
-        registerWindow("test-texture-sheet-builder", TestTextureSheetBuilder.class);
+        //registerWindow("test-texture-sheet-builder", TestTextureSheetBuilder.class);
         registerWindow("sprite-sheet-builder", SpriteSheetBuilder.class);
+        registerWindow("creator", CreatorWindow.class);
+        registerWindow("block-area", BlockWorkingArea.class);
         
         LOADED = true;
     }

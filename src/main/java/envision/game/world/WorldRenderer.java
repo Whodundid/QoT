@@ -2,8 +2,8 @@ package envision.game.world;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.rendering.RenderingManager;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowUtil.EGui;
 import envision.game.world.layerSystem.WorldDrawLayer;
 import envision.game.world.worldTiles.WorldTile;
@@ -52,27 +52,32 @@ public class WorldRenderer extends EGui {
 	public synchronized void onWorldLoaded() {
 		onWindowResized();
 		if (world != null && !loaded) {
-			
-			
 			TEMP_createWorldLayers();
-			
 			//world.setCameraZoom(3);
-			
 			loaded = true;
 		}
 	}
 	
 	private void TEMP_createWorldLayers() {
-	    for (int l = 0; l < world.getNumberOfLayers(); l++) {
+	    worldLayers.clear();
+	    
+//	    System.out.println(world + " : " + world.getNumberOfLayers());
+	    
+	    final int layers = world.getNumberOfLayers();
+	    final int height = world.getHeight();
+	    final int width = world.getWidth();
+	    
+	    for (int l = 0; l < layers; l++) {
 	        WorldDrawLayer layerZero = new WorldDrawLayer(world, 0, l);
 	        WorldDrawLayer layerOne = new WorldDrawLayer(world, 1, l);
 	        //WorldLayer layerTwo = new WorldLayer(world, 2);
 	        
-	        for (int i = 0; i < world.getHeight(); i++) {
-	            for (int j = 0; j < world.getWidth(); j++) {
+	        for (int i = 0; i < height; i++) {
+	            for (int j = 0; j < width; j++) {
 	                WorldTile t = world.getTileAt(l, j, i);
 	                if (t == null) continue;
-	                else if (!t.isWall() || t.getWallHeight() < 0.20) {
+	                //else if (t.getWallHeight() < 0.20) {
+	                else if (t.getWallHeight() == 0.0) {
 	                    t.setRenderLayer(0);
 	                }
 	                else {
@@ -146,6 +151,8 @@ public class WorldRenderer extends EGui {
         
         renderMapLayers();
         
+        drawString(world.worldObjects.size(), 10, 50);
+        
 //      if (drawPosBox) {
 //          drawPosBox(x, y, w, h);
 //      }
@@ -189,6 +196,7 @@ public class WorldRenderer extends EGui {
 		final int size = worldLayers.size();
         for (int i = 0; i < size; i++) {
             final var layer = worldLayers.get(i);
+//            System.out.println(i + " : " + layer.hashCode());
             layer.buildLayer(left, top, right, bot);
             layer.renderLayer(world, cam);
         }

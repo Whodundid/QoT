@@ -3,9 +3,9 @@ package envision.engine.scripting;
 import java.io.File;
 
 import envision.Envision;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.screens.ScreenRepository;
-import envision.engine.terminal.window.ETerminalWindow;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.game.entities.Entity;
 import envision.game.items.Item;

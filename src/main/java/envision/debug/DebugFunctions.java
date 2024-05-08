@@ -21,7 +21,7 @@ import envision.debug.debugCommands.Deb7;
 import envision.debug.debugCommands.Deb8;
 import envision.debug.debugCommands.Deb9;
 import envision.debug.debugCommands.DebugCommand;
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import eutil.EUtil;
 import eutil.datatypes.util.EList;
 

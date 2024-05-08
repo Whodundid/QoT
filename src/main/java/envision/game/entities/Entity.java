@@ -11,6 +11,8 @@ import envision.game.effects.OutOfStaminaEffect;
 import envision.game.entities.combat.RayCaster;
 import envision.game.entities.inventory.ActiveEffectsTracker;
 import envision.game.entities.inventory.EntityInventory;
+import envision.game.entities.personality.EntityFavorDecider;
+import envision.game.entities.personality.EntityFavorTracker;
 import envision.game.entities.physics.EntityPhysicsHandler;
 import envision.game.entities.physics.MovementCollisionHelper;
 import envision.game.entities.player.EntityStats;
@@ -258,7 +260,7 @@ public abstract class Entity extends ComponentBasedObject {
         if (invincible) return;
         
         if (activeEffectsTracker.hasEffectType("DEFENSE_MODIFIER")) {
-            double effectTotal = activeEffectsTracker.getEffectTypeTotal("DEFENSE_MODIFIER");
+            double effectTotal = activeEffectsTracker.getEffectTypeTotal("DEFENSE_MODIFIER", amount);
             double reduce = Math.floor((double) amount * effectTotal);
             amount += reduce;
         }
@@ -450,6 +452,7 @@ public abstract class Entity extends ComponentBasedObject {
     }
     
     public void move(double x, double y) {
+        isMoving = true;
         //System.out.println("MOVING: " + x + " : " + y + " : " + Envision.getDeltaTime());
         collisionHelper.tryMove(x, y, Envision.getDeltaTime());
         

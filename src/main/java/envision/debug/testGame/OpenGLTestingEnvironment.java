@@ -11,8 +11,9 @@ import envision.engine.inputHandlers.IEnvisionInputReceiver;
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.inputHandlers.WindowResizeListener;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.loader.EnvisionGame;
-import envision.engine.rendering.Camera;
+import envision.engine.rendering.GLCamera;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.batching.BatchManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
@@ -22,7 +23,6 @@ import envision.engine.rendering.renderingAPI.error.RendererErrorReporter;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import envision.engine.screens.GameScreen;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherLogger;
 import envision.launcher.LauncherSettings;
@@ -89,7 +89,7 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
 		
 		// hack this in
 		//Envision.renderEngine = renderer;
-		Envision.getRenderEngine().orthoCamera = new Camera();
+		Envision.getRenderEngine().orthoCamera = new GLCamera();
 		
 		RendererErrorReporter.setReceiver(this);
 		

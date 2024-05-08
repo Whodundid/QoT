@@ -185,12 +185,21 @@ public class ActiveEffectsTracker {
         return r;
     }
     
-    public double getEffectTypeTotal(String effectType) {
+    public double getEffectTypeTotal(String effectType, Object... arguments) {
         double total = 0.0;
         if (effectType == null || effectType.isEmpty()) return total;
         for (String effectName : activeEffects.getAVals()) {
             Effect effect = nameToEffectMap.get(effectName);
-            if (EUtil.isEqual(effectType, effect.getEffectType())) total += effect.getEffectValue();
+            if (EUtil.isEqual(effectType, effect.getEffectType())) {
+                if (effect.isProcessable()) {
+                    Object value = effect.processEvent(arguments);
+                    if (value == null) continue;
+                    total += ((Number) value).doubleValue();
+                }
+                else {
+                    total += effect.getEffectValue();
+                }
+            }
         }
         return total;
     }

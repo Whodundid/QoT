@@ -9,7 +9,7 @@ import envision.Envision;
 import envision.engine.assets.TaskBarTextures;
 import envision.engine.assets.WindowTextures;
 import envision.engine.inputHandlers.Keyboard;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowObjects.actionObjects.WindowButton;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.TextAreaLine;
 import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea;

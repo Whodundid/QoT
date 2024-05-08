@@ -1,5 +1,6 @@
 package envision.engine.windows.windowObjects.advancedObjects.tabbedContainer;
 
+import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import eutil.EUtil;
@@ -47,7 +48,9 @@ public class TabbedContainer extends WindowObject {
 		calcTabWidth();
 		for (int i = 0; i < tabs.size(); i++) {
 			var t = tabs.get(i);
-			t.initTab(i, tabWidth, tabHeight);
+			String name = t.getName();
+            double w = FontRenderer.strWidth(name);
+			t.initTab(i, w + 10, tabHeight);
 		}
 	}
 	
@@ -78,6 +81,12 @@ public class TabbedContainer extends WindowObject {
 		//select by default if there are no tabs currently present
 		if (tabs.hasOne()) setSelectedTab(t);
 		return t;
+	}
+	
+	public ContainerTab addTab(String tabName, IWindowObject object) {
+	    ContainerTab tab = addTab(tabName);
+	    tab.addObject(object);
+	    return tab;
 	}
 	
 	/**
@@ -161,7 +170,11 @@ public class TabbedContainer extends WindowObject {
 		calcTabWidth();
 		for (int i = 0; i < tabs.size(); i++) {
 			var t = tabs.get(i);
-			if (t != null) t.initTab(i, tabWidth, tabHeight);
+			if (t != null) {
+			    String name = t.getName();
+			    double w = FontRenderer.strWidth(name);
+			    t.initTab(i, w + 10, tabHeight);
+			}
 		}
 	}
 	

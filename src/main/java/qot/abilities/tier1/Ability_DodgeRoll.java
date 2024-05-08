@@ -49,7 +49,8 @@ public class Ability_DodgeRoll extends Ability {
         dir.normalize();
         dir.mul(-1.0f);
         
-        dodgeRoller.performDodgeRoll(e, dir, 420, 0.30);
+        //dodgeRoller.performDodgeRoll(e, dir, 420, 0.12);
+        dodgeRoller.performDodgeRoll(e, dir, 320, 0.32);
         
         return true;
     }

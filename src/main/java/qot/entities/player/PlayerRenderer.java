@@ -34,7 +34,11 @@ public class PlayerRenderer extends EntityRenderer {
     
     @Override
     public void drawEntity(IGameWorld world, WorldCamera camera, double[] dims, int brightness, boolean mouseOver) {
-        boolean flip = player.facing == Rotation.RIGHT || player.facing == Rotation.DOWN;
+        boolean flip = false;
+        
+        if (flipTextureWhenMoving) {
+            flip = theObject.facing == Rotation.RIGHT || theObject.facing == Rotation.DOWN;
+        }
         
         double x = dims[0];
         double y = dims[1];
@@ -47,10 +51,12 @@ public class PlayerRenderer extends EntityRenderer {
         Rotation rot = (theObject.forcedRotation != null) ? theObject.forcedRotation : Rotation.UP;
         flip = (theObject.forceFlip) ? true : flip;
         
+        player.preDraw(camera, dims, mouseOver);
         RenderingManager.drawSprite(theObject.sprite, dims, flip, rot, brightness);
+        //RenderingManager.drawRectDimsArray(dims, EColors.red);
+        player.postDraw(camera, dims, mouseOver);
         
         //RenderingManager.drawSprite(player.sprite, dims, flip, brightness);
-        player.draw(camera, dims, mouseOver);
         //healthBar.setDimensions(x, y - 7, w, 7);
         //healthBar.drawObject(Mouse.getMx(), Mouse.getMy());
         

@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.jar.JarFile;
 
 import envision.Envision;
-import envision.engine.terminal.terminalUtil.ESystemInfo;
+import envision.engine.kernel.terminal.terminalUtil.ESystemInfo;
 import eutil.sys.OSType;
 
 public abstract class EnvisionGameInstaller {

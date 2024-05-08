@@ -1,7 +1,7 @@
 package envision.engine.events.eventTypes.sound;
 
 import envision.engine.events.EventType;
-import envision.game.effects.sounds.Audio;
+import envision.game.sounds.Audio;
 
 public class SoundStoppedEvent extends SoundEvent {
 	

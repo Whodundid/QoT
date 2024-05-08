@@ -4,10 +4,10 @@ import java.io.File;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.loader.dtos.WorldTileDTO;
 import envision.engine.loader.dtos.WorldTileListDTO;
 import envision.engine.registry.registries.WorldTileRegistry;
-import envision.engine.terminal.window.ETerminalWindow;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.util.EList;
 import qot.settings.QoTSettings;

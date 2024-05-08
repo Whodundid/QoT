@@ -26,6 +26,7 @@ import qot.entities.enemies.archer.Archer;
 import qot.entities.enemies.dragon.Thyrah;
 import qot.entities.house.Barrel;
 import qot.entities.house.Chair;
+import qot.entities.house.Chest;
 import qot.entities.house.Crate;
 import qot.entities.house.Stool;
 import qot.entities.player.QoT_Player;
@@ -68,6 +69,8 @@ public class GlobalAssetList {
 		assets.add(new ShopGuy());
 		assets.add(new PathfindingTestEntity());
 		assets.add(new FallBirch());
+		
+		assets.add(new Chest());
 	}
 	
 	public static EList<GameObject> getAssets() {

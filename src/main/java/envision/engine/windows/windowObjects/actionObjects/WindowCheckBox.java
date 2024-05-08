@@ -57,13 +57,13 @@ public class WindowCheckBox extends ActionObject {
 	//---------
 	
 	public boolean getDrawsX() { return drawX; }
-	public boolean getIsChecked() { return checked; }
+	public boolean isChecked() { return checked; }
 	
 	//---------
 	// Setters
 	//---------
 	
 	public void setDrawX(boolean val) { drawX = val; }
-	public void setIsChecked(boolean val) { checked = val; }
+	public void setChecked(boolean val) { checked = val; }
 	
 }

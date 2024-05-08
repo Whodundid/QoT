@@ -55,25 +55,28 @@ public class CircularDirectionalAttack {
             mag = maxRange;
         //}
         
-        double upperCos = Math.cos(rads);
-        double upperSin = Math.sin(rads);
-        double lowerCos = Math.cos(-rads);
-        double lowerSin = Math.sin(-rads);
+        double lowerCos = Math.cos(rads);
+        double lowerSin = Math.sin(rads);
+        double upperCos = Math.cos(-rads);
+        double upperSin = Math.sin(-rads);
         
         // determine resultant world pixel coordinates based on 2D rotation math
-        double upperPX = x * upperCos - y * upperSin + startX;
-        double upperPY = x * upperSin + y * upperCos + startY;
         double lowerPX = x * lowerCos - y * lowerSin + startX;
         double lowerPY = x * lowerSin + y * lowerCos + startY;
+        double upperPX = x * upperCos - y * upperSin + startX;
+        double upperPY = x * upperSin + y * upperCos + startY;
         
         final var camera = Envision.levelManager.getCamera();
-        double[] lower = camera.convertWorldPxToScreenPx(upperPX, upperPY);
-        double[] upper = camera.convertWorldPxToScreenPx(lowerPX, lowerPY);
+        double[] lower = camera.convertWorldPxToScreenPx(lowerPX, lowerPY);
+        double[] upper = camera.convertWorldPxToScreenPx(upperPX, upperPY);
         
         double upperX = upper[0];
         double upperY = upper[1];
         double lowerX = lower[0];
         double lowerY = lower[1];
+        //RenderingManager.drawString((float) lowerX + " : " + (float) lowerY, lowerX, lowerY);
+        //RenderingManager.drawString(camera.getMxPixelf() + " : " + camera.getMyPixelf(), lowerX, lowerY + 20);
+        //RenderingManager.drawString((float) lowerPX + " : " + (float) lowerPY, lowerX, lowerY + 40);
         
         double[] entityPos = camera.convertWorldPxToScreenPx(entity.midX, entity.midY);
         double midX = entityPos[0];
@@ -82,8 +85,10 @@ public class CircularDirectionalAttack {
         int lightLevel = entity.world.getAmbientLightLevel();
         int color = EColors.lgray.brightness(lightLevel);
         // could probably be more formalized..
-        RenderingManager.drawLine(midX, midY, lowerX, lowerY, 2, color);
-        RenderingManager.drawLine(midX, midY, upperX, upperY, 2, color);
+        //RenderingManager.drawLine(midX, midY, lowerX, lowerY, 2, color);
+        //RenderingManager.drawLine(midX, midY, upperX, upperY, 2, color);
+        
+        //RenderingManager.drawLine(midX, midY, )
     }
     
     /**

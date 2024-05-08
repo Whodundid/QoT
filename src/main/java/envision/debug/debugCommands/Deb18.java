@@ -2,7 +2,7 @@ package envision.debug.debugCommands;
 
 import java.util.PriorityQueue;
 
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import qot.entities.Cell;
 
 @SuppressWarnings("unused")

@@ -48,7 +48,7 @@ public class Whodundid extends Enemy {
 	
     @Override
     protected void runPassiveAI(float dt) {
-        wander();
+        wander(dt);
     }
 	
     @Override
@@ -59,13 +59,13 @@ public class Whodundid extends Enemy {
         if (testDim.partiallyContains(pDims)) {
             if (hit) {
                 //System.out.println(System.currentTimeMillis() - timeSinceLastHit);
-                if ((System.currentTimeMillis() - timeSinceLastHit) >= 200) {
+                if ((timeSinceLastHit += dt) >= 200) {
                     hit = false;
                 }
             }
             else {
                 hit = true;
-                timeSinceLastHit = System.currentTimeMillis();
+                timeSinceLastHit = 0;
                 int amount = EntityAttack.calculateMeleeAttackDamage(this);
                 currentTarget.attackedBy(this, amount);
             }

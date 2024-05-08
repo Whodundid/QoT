@@ -1,5 +1,7 @@
 package envision.debug;
 
+import envision.game.world.worldTiles.WorldTile;
+
 public class DebugSettings {
     
 	public static boolean drawFlatWalls = false;
@@ -12,6 +14,8 @@ public class DebugSettings {
 	public static boolean drawFocusedEntityAxis = false;
 	
 	public static boolean draw3DCursed = false;
+	
+	public static WorldTile lastClickedTile = null;
 	
 	private DebugSettings() {}
 	

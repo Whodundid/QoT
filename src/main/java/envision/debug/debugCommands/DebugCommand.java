@@ -1,6 +1,6 @@
 package envision.debug.debugCommands;
 
-import envision.engine.terminal.window.ETerminalWindow;
+import envision.engine.kernel.terminal.window.ETerminalWindow;
 import eutil.datatypes.ValueMap;
 
 public abstract class DebugCommand {

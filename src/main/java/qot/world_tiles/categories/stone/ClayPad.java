@@ -12,7 +12,6 @@ public class ClayPad extends WorldTile {
 		super(TileIDs.CLAY_PAD, id);
 		
 		meta = id;
-		setWall(true);
 		wallHeight = 0.1f;
 		numVariants = StoneFloorTextures.clay_pad.getChildren().size();
 		randomizeDrawFlipped = true;

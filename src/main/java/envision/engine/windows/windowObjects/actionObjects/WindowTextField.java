@@ -2,8 +2,8 @@ package envision.engine.windows.windowObjects.actionObjects;
 
 import envision.Envision;
 import envision.engine.inputHandlers.Keyboard;
+import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.developerDesktop.DeveloperDesktop;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
@@ -67,8 +67,11 @@ public class WindowTextField extends ActionObject {
 		if (scissoring) scissor();
 		
 		if (getEnableBackgroundDrawing()) {
-			drawHRect(borderColor);
-			drawRect(startX + 1, startY + 1, endX - 1, endY - 1, backgroundColor);
+		    drawRect((int) startX, (int) startY, (int) endX, (int) endY, borderColor);
+		    drawRect((int) startX + 1, (int) startY + 1, (int) endX - 1, (int) endY - 1, backgroundColor);
+		    //drawString(((float) startX) + " : " + ((float) startY));
+			//drawRect(borderColor);
+			//drawRect(backgroundColor, 1.5);
 		}
 		
 		if (textRecentlyEntered == true) {
@@ -211,7 +214,10 @@ public class WindowTextField extends ActionObject {
 					typedChar = (Keyboard.isShiftDown()) ? Keyboard.getUppercase(keyCode) : typedChar;
 					
 					if (onlyAcceptLetters && !Character.isLetter(typedChar)) return;
-					if (onlyAcceptNumbers && !Character.isDigit(typedChar)) return;
+					if (onlyAcceptNumbers) {
+					    if (text.isEmpty() && typedChar != '-') return;
+					    else if (!Character.isDigit(typedChar)) return;
+					}
 					
 					writeText(typedChar + "");
 				}

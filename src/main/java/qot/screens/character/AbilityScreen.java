@@ -89,8 +89,8 @@ public class AbilityScreen extends GameScreen {
         heal.setEnabled(Abilities.selfHeal.canEntityUpgrade(theEntity));
         fireball.setEnabled(Abilities.fireball.canEntityUpgrade(theEntity));
         
-        heal.setButtonTexture(new Sprite(AbilityTextures.cast_heal));
-        fireball.setButtonTexture(new Sprite(AbilityTextures.cast_fireball));
+        heal.setButtonSprite(new Sprite(AbilityTextures.cast_heal));
+        fireball.setButtonSprite(new Sprite(AbilityTextures.cast_fireball));
         
         heal.setAction(() -> theEntity.spellbook.upgradeAbility(Abilities.selfHeal));
         fireball.setAction(() -> {

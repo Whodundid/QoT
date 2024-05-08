@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL46;
 
 import envision.Envision;
 import envision.debug.DebugSettings;
-import envision.engine.rendering.Camera;
+import envision.engine.rendering.GLCamera;
 import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.shaders.ShaderProgram;
 import envision.engine.rendering.shaders.Shaders;
@@ -23,7 +23,7 @@ import eutil.math.vectors.Vec4f;
 public class RenderBatch {
 	
 	int vao, vbo, ibo;
-	ShaderProgram shader;
+	EList<ShaderProgram> shaderStack = EList.newList();
 	boolean alreadyDrawn = false;
 	boolean isScissorBatch = false;
 	double scissorX, scissorY, scissorWidth, scissorHeight;
@@ -39,11 +39,18 @@ public class RenderBatch {
 	int maxBatchSize;
 	float[] vertices;
 	
-	static final int VERTEX_SIZE = 10;
+	EList<BatchDrawInstruction> instructions = EList.newList();
+	
+	static final int VERTEX_SIZE = 11;
 	static final int POS_OFFSET = 0;
 	static final int COLOR_OFFSET = 3;
 	static final int TEX_COORD_OFFSET = 7;
 	static final int TEX_ID_OFFSET = 9;
+	static final int MODEL_ID_OFFSET = 10;
+	
+	//==============
+    // Constructors
+    //==============
 	
 	public RenderBatch() { this(100, 16, Shaders.basic); }
 	public RenderBatch(int maxIn, int texSlotsIn) { this(maxIn, 16, Shaders.basic); }
@@ -52,7 +59,7 @@ public class RenderBatch {
 		texSlots = new int[texSlotsIn];
 		vertices = new float[maxBatchSize * VERTEX_SIZE * Float.BYTES];
 		textures = EList.newList();
-		shader = shaderIn;
+		shaderStack.push(shaderIn);
 		
 		// load the texture slot array
 		for (int i = 0; i < texSlotsIn; i++) {
@@ -95,8 +102,8 @@ public class RenderBatch {
 		// setup VBO
 		
 		//we use 12 * Float.BYTES as our stride here so that we can fit all of the following bytes in one vertex buffer
-		// position (x, y, z) 		color (r, g, b, a) 				texture coord (tx, ty)		texture ID (tid)
-		// -1.5f, -0.5f, 0.0f, 		0.18f, 0.6f, 0.96f, 1.0f, 		0.0f, 0.0f,					0f
+		// position (x, y, z)     color (r, g, b, a)           texture coord (tx, ty)    texture ID (tid)    model ID (mid)
+		// -1.5f, -0.5f, 0.0f,    0.18f, 0.6f, 0.96f, 1.0f,    0.0f, 0.0f,               0f,                 0f
 		
 		int stride = VERTEX_SIZE * Float.BYTES;
 		
@@ -115,6 +122,10 @@ public class RenderBatch {
 		GL20.glVertexAttribPointer(3, 1, GL11.GL_FLOAT, false, stride, TEX_ID_OFFSET * Float.BYTES);
 		GL20.glEnableVertexAttribArray(3);
 		//36 because we are looking at the index of the starting point of (tid) at index (9)
+		
+		GL20.glVertexAttribPointer(4, 1, GL11.GL_FLOAT, false, stride, MODEL_ID_OFFSET * Float.BYTES);
+		GL20.glEnableVertexAttribArray(4);
+		//40
 	}
 	
 	//================
@@ -202,6 +213,9 @@ public class RenderBatch {
 	// Internal Methods
 	//==================
 	
+	public void addDrawInstruction(BatchDrawInstruction inst) {
+	    instructions.add(inst);
+	}
 	
 	void vert(float x, float y, float r, float g, float b, float f) {
 		vert(x, y, 0.0f, r, g, b, f, 0.0f, 0.0f, 0.0f);
@@ -233,6 +247,8 @@ public class RenderBatch {
 		nextVertOffset += VERTEX_SIZE;
 	}
 	
+	final Matrix4f dummyTransform = new Matrix4f();
+	
 	/**
 	 * Uploads the current buffer's contents to the internally managed VAO and
 	 * then draws them to the screen.
@@ -240,6 +256,8 @@ public class RenderBatch {
 	void flush(boolean force) {
 		if (!force && alreadyDrawn) return;
 		if (totalElements == 0) return;
+		
+		ShaderProgram shader = shaderStack.getFirst();
 		
 		shader.enableAttribs();
 		shader.bind();
@@ -258,7 +276,7 @@ public class RenderBatch {
 		
 		
 		// some bullshit camera stuff
-		Camera cam = Envision.getRenderEngine().getOrthoCamrea();
+		GLCamera cam = Envision.getRenderEngine().getOrthoCamrea();
 		
 		if (batchLayer == 0 && DebugSettings.draw3DCursed) {
 		    cam = Envision.getRenderEngine().getPerspectiveCamera();
@@ -270,17 +288,22 @@ public class RenderBatch {
 		
 		Matrix4f u_projection = cam.getProjection();
 		Matrix4f u_view = cam.getView();
+		//Matrix4f u_transform = new Matrix4f();
+		//u_transform.rotateXYZ(0.0f, 0.0f, 0f);
 		Vec2f playerPos = new Vec2f(); // default to (0, 0)
 		
 		float tileSize = (world != null) ? world.getTileWidth() : 32.0f;
 		float camZoom = (float) ((world != null) ? Envision.levelManager.getCameraZoom() : 1.0f);
-		float lightDist = 100000f; // really high because baller~
+		float lightDist = 10000f; // really high because baller~
 		float viewDist = 1000f; // the number of tiles that the entity can see out from it
 		
 		if (player != null) {
-			playerPos.set(Envision.getWidth() >> 1, Envision.getHeight() >> 1);
+		    var wcam = Envision.levelManager.getCamera();
+		    double[] screenPos = wcam.convertWorldPxToScreenPx(player.midX, player.startY);
+			//playerPos.set(Envision.getWidth() >> 1, Envision.getHeight() >> 1);
+		    playerPos.set((float) screenPos[0], (float) screenPos[1]);
 			if (Envision.isPaused()) viewDist = 1000f;
-			else viewDist = 7.5f;
+			else viewDist = 10.5f;
 		}
 		
 		if (underground) lightDist = viewDist * tileSize * camZoom;
@@ -288,9 +311,13 @@ public class RenderBatch {
 		shader.setUniform("texSamplers", texSlots);
 		shader.setUniform("u_projection", u_projection);
 		shader.setUniform("u_view", u_view);
+		shader.setUniform("u_transform", dummyTransform);
+		
 		shader.setUniform("u_playerPos", playerPos);
 		shader.setUniform("u_lightDist", lightDist);
-		shader.setUniform("u_bezierVals", new Vec4f(0.0, 0.1, 0.5, 1.0));
+		//shader.setUniform("u_lightPositions", );
+		//shader.setUniform("u_bezierVals", new Vec4f(0.15, 0.4, 0.5, 1.0));
+		shader.setUniform("u_bezierVals", new Vec4f(1, 1, 1, 1.0));
 		shader.setUniform("u_underground", underground == true ? 1 : 0);
 		
 		uploadToVBO();
@@ -335,6 +362,8 @@ public class RenderBatch {
 	private void uploadToVBO() {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, vertices);
+		//GL46.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL46.GL_STREAM_DRAW);
+		//GL46.glClearNamedBufferSubData(buffer, internalformat, offset, size, format, type, data);
 	}
 	
 	void resetBatch() {
@@ -357,12 +386,14 @@ public class RenderBatch {
 		Envision.getRenderEngine().getRenderingContext().call(r);
 	}
 	
-	public void setShader(ShaderProgram shaderIn) {
-		shader = shaderIn;
+	public void closeBatch() {
+	    isClosed = true;
+	    
 	}
 	
-	public void closeBatch() { isClosed = true; }
-	public void openBatch() { isClosed = false; }
+	public void openBatch() {
+	    isClosed = false;
+	}
 	
 	public int getBatchLayer() { return batchLayer; }
 	public int getBatchLayerIndex() { return batchLayerIndex; }

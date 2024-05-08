@@ -1,13 +1,13 @@
 package qot.doodads;
 
 import envision.engine.registry.types.Sprite;
-import envision.game.entities.Doodad;
+import envision.game.entities.GroundClutter;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.doodads.ground_clutter.GroundClutterTextures;
 import qot.entities.EntityList;
 
-public class WeedsGroundClutter extends Doodad {
+public class WeedsGroundClutter extends GroundClutter {
 	
 	public WeedsGroundClutter() { this(0, 0); }
 	public WeedsGroundClutter(int posX, int posY) {

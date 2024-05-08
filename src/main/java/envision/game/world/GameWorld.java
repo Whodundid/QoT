@@ -207,7 +207,13 @@ public class GameWorld implements IGameWorld {
 		if (toDelete.isNotEmpty()) {
 			for (GameObject o : toDelete) {
 				//if entity -- remove from entity data
-				if (o instanceof Entity e) entityData.remove(e);
+				if (o instanceof Entity e) {
+				    entityData.remove(e);
+				    for (Entity ent : entityData) {
+				       ent.getFavorTracker().removeFavorWithEntity(e.objectID);
+				    }
+				}
+//				System.out.println("REMOVING: " + o);
 				worldObjects.remove(o);
 			}
 			toDelete.clear();
@@ -226,14 +232,25 @@ public class GameWorld implements IGameWorld {
 	}
 	
 	public void updateEntities(float dt) {
+//	    GameObject longestDTObject = null;
+//	    long longestDT = 0;
 		for (int i = 0; i < entityData.size(); i++) {
 			GameObject e = entityData.get(i);
 			if (e != null) {
+//			    long start = System.nanoTime();
 				e.onGameTick(dt);
+//				long end = System.nanoTime() - start;
+//				if (end > longestDT) {
+//				    longestDT = end;
+//				    longestDTObject = e;
+//				}
 			}
 		}
+//		if (longestDTObject != null) {
+//		    System.out.println(longestDTObject + " : " + longestDTObject.hashCode() + " : " + longestDT);		    
+//		}
 		
-		//remove null entities
+		// remove null entities
 		int nullEntities = 0;
 		for (int i = 0; i < entityData.size(); i++) {
 			if (entityData.get(i) == null) {
@@ -414,7 +431,7 @@ public class GameWorld implements IGameWorld {
 		
 		int arrLen = worldObjects.size() / 4;
 		if (arrLen <= 10) arrLen = 10;
-		EList<Entity> r = new EArrayList<>(arrLen);
+		EList<Entity> r = new EArrayList<>();
 		
 		var list = worldObjects.stream()
 		                       .filter(e -> e != obj)
@@ -562,9 +579,9 @@ public class GameWorld implements IGameWorld {
 		return worldLayers.get(layer).getTileAt(xIn, yIn);
 	}
 	
-	@Override public EList<GameObject> getObjectsInWorld() { return worldObjects; }
-	@Override public EList<Entity> getEntitiesInWorld() { return entityData; }
-	public EList<EntitySpawn> getEntitySpawns() { return entitySpawns; }
+	@Override public EList<GameObject> getObjectsInWorld() { return worldObjects.toUnmodifiableList(); }
+	@Override public EList<Entity> getEntitiesInWorld() { return entityData.toUnmodifiableList(); }
+	public EList<EntitySpawn> getEntitySpawns() { return entitySpawns.toUnmodifiableList(); }
 	
 	/** Returns this world's rendering system. */
 	public WorldRenderer getWorldRenderer() { return worldRenderer; }

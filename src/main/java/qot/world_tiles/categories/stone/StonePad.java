@@ -10,7 +10,6 @@ public class StonePad extends WorldTile {
 	public StonePad() {
 		super(TileIDs.STONE_PAD);
 		setSprite(new Sprite(StoneFloorTextures.stone_pad));
-		setWall(true);
 		wallHeight = 0.1f;
 		randomizeRotation = true;
 		

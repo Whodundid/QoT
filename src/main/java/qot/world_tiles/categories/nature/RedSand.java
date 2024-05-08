@@ -10,7 +10,6 @@ public class RedSand extends WorldTile {
 	public RedSand() {
 		super(TileIDs.RED_SAND);
 		setSprite(new Sprite(SandTextures.red_sand));
-		setWall(true);
 		wallHeight = 0.05f;
 		setMiniMapColor(0xffA84E2F);
 	}

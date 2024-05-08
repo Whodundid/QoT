@@ -57,12 +57,12 @@ public class Main {
 		//-------------------------------------------
 		
 //		Envision.loadGame("C:/Users/Hunter/AppData/Roaming/Quest of Thyrah");
-		
+//		
 //		Envision.startEngine();
 		
         var settings = new LauncherSettings(QoT.instance());
         settings.setResourceDirectoriesToExtract("sounds", "shaders", "textures", "menuWorlds");
-//        
+        
         EnvisionGameLauncher.runLauncher(settings);
 		
 //		// if opting to use the launcher

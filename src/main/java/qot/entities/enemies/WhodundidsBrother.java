@@ -1,8 +1,8 @@
 package qot.entities.enemies;
 
 import envision.engine.registry.types.Sprite;
+import envision.game.animations.AnimationHandler;
 import envision.game.component.types.death.DropItemOnDeathComponent;
-import envision.game.effects.animations.AnimationHandler;
 import envision.game.entities.Enemy;
 import envision.game.entities.combat.EntityAttack;
 import eutil.math.dimensions.Dimension_d;
@@ -38,7 +38,7 @@ public class WhodundidsBrother extends Enemy {
 		
 		animationHandler = new AnimationHandler(this);
 		var att1 = animationHandler.createAnimationSet(AnimationHandler.ATTACK_1);
-		att1.setUpdateInterval(15);
+		att1.setUpdateInterval(50);
 		att1.addFrame(EntityTextures.whobro);
 		att1.addFrame(EntityTextures.whobro1);
 		att1.addFrame(EntityTextures.whobro2);
@@ -48,7 +48,7 @@ public class WhodundidsBrother extends Enemy {
 
 		
 		var idle1 = animationHandler.createAnimationSet(AnimationHandler.IDLE_ANIMATION_1);
-		idle1.setUpdateInterval(10);
+		idle1.setUpdateInterval(40);
 		idle1.addFrame(EntityTextures.whobro);
 		idle1.addFrame(EntityTextures.whobro_blink0);
 		idle1.addFrame(EntityTextures.whobro_blink1);
@@ -66,7 +66,7 @@ public class WhodundidsBrother extends Enemy {
 	
 	@Override
 	public void onLivingUpdate(float dt) {
-		animationHandler.onRenderTick();
+		animationHandler.onRenderTick((long) dt);
 		
 		super.onLivingUpdate(dt);
 	}
@@ -74,14 +74,15 @@ public class WhodundidsBrother extends Enemy {
     @Override
     protected void runPassiveAI(float dt) {
         if (!animationHandler.isAnimationLoaded()) {
-            if (System.currentTimeMillis() - timeSinceLastBlink >= delayTillNextBlink) {
-                timeSinceLastBlink = System.currentTimeMillis();
+            timeSinceLastBlink += dt;
+            if (timeSinceLastBlink >= delayTillNextBlink) {
+                timeSinceLastBlink = 0;
                 delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
                 animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.IDLE_ANIMATION_1);
             }
         }
         
-        wander();
+        wander(dt);
     }
 	
     @Override
@@ -94,8 +95,9 @@ public class WhodundidsBrother extends Enemy {
             animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.ATTACK_1);
         }
         else if (!animationHandler.isAnimationLoaded()) {
-            if (System.currentTimeMillis() - timeSinceLastBlink >= delayTillNextBlink) {
-                timeSinceLastBlink = System.currentTimeMillis();
+            timeSinceLastBlink += dt;
+            if (timeSinceLastBlink >= delayTillNextBlink) {
+                timeSinceLastBlink = 0;
                 delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
                 animationHandler.playOnceIfNotAlreadyPlaying(AnimationHandler.IDLE_ANIMATION_1);
             }
@@ -104,13 +106,14 @@ public class WhodundidsBrother extends Enemy {
         if (testDim.partiallyContains(pDims)) {
             if (hit) {
                 //System.out.println(System.currentTimeMillis() - timeSinceLastHit);
-                if ((System.currentTimeMillis() - timeSinceLastHit) >= 600) {
+                timeSinceLastHit += dt;
+                if (timeSinceLastHit >= 600) {
                     hit = false;
                 }
             }
             else {
                 hit = true;
-                timeSinceLastHit = System.currentTimeMillis();
+                timeSinceLastHit = 0;
                 int amount = EntityAttack.calculateMeleeAttackDamage(this);
                 currentTarget.attackedBy(this, amount);
             }

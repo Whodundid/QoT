@@ -1,5 +1,6 @@
 package qot.assets.textures.world.nature.grass;
 
+import envision.engine.registry.types.SpriteSheet;
 import envision.engine.rendering.textureSystem.GameTexture;
 import envision.engine.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
@@ -26,14 +27,13 @@ public class GrassTextures extends TextureLoader {
 	
 	public static final GameTexture
 	
-	dark_grass		 = new GameTexture(textureDir, "dark_grass.png"),
+	grassSheetTexture = new GameTexture(textureDir, "grass.png");
 	
-	grass			 = new Grass(),
-	biome_grass		 = new BiomeGrass(),
-	dry_grass		 = new DryGrass(),
-	leafy_grass		 = new LeafyGrass(),
-	light_grass		 = new LightGrass(),
-	dry_plains_grass = new GameTexture(textureDir, "dry_plains_grass.png");
+	public static final SpriteSheet
+	
+	grassSheet = new SpriteSheet(grassSheetTexture, 32, 32, 16, 0)
+	
+	;
 	
 	//-----------
 	// Overrides
@@ -41,14 +41,8 @@ public class GrassTextures extends TextureLoader {
 	
 	@Override
 	public void onRegister(TextureSystem sys) {
-		reg(sys, dark_grass);
-		
-		reg(sys, grass);
-		reg(sys, biome_grass);
-		reg(sys, dry_grass);
-		reg(sys, leafy_grass);
-		reg(sys, light_grass);
-		reg(sys, dry_plains_grass);
+	    reg(sys, grassSheetTexture);
+	    reg(sys, "grass_sheet", grassSheet);
 	}
 	
 }

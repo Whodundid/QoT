@@ -25,7 +25,6 @@ public class FarmPlot extends WorldTile {
 	public FarmPlot() {
 		super(TileIDs.FARM_PLOT);
 		blocksMovement = true;
-		setWall(true);
 		wallHeight = 0.20f;
 		setSprite(new Sprite(FarmTextures.farm_0));
 		setSideSprite(new Sprite(WoodFloorTextures.wood_siding));
