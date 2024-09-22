@@ -5,11 +5,11 @@ import qot.assets.textures.world.nature.grass.GrassTextures;
 import qot.world_tiles.TileIDs;
 
 public class Grass extends WorldTile {
-	
-	public Grass() { this(-1); }
-	public Grass(int id) {
-		super(TileIDs.GRASS, id);
-		numVariants = 3;
+    
+    public Grass() { this(-1); }
+    public Grass(int id) {
+        super(TileIDs.GRASS, id);
+        numVariants = 3;
         randomizeValues();
         setMiniMapColor(0xff10A500);
     }
@@ -24,9 +24,9 @@ public class Grass extends WorldTile {
         }
     }
     
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new Grass());
-	}
-	
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new Grass());
+    }
+    
 }

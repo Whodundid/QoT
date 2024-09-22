@@ -33,7 +33,8 @@ public class TextureRegistry extends AbstractResourceRegistry<GameTexture> {
         
         
         
-        System.out.println("LOL");
+        
+        System.out.println(resourcesDir);
     }
     
     @Override

@@ -9,13 +9,13 @@ import qot.world_tiles.categories.house.Roof;
 import qot.world_tiles.categories.house.Sink;
 
 public class HouseTiles implements TileCategory {
-	
-	private HouseTiles() {}
-	
-	public static final WorldTile counter_food = new Counter_Food();
-	public static final WorldTile counter = new Counter();
-	public static final WorldTile oven = new Oven();
-	public static final WorldTile sink = new Sink();
-	public static final WorldTile roof = new Roof();
-	
+    
+    private HouseTiles() {}
+    
+    public static final WorldTile counter_food = new Counter_Food();
+    public static final WorldTile counter = new Counter();
+    public static final WorldTile oven = new Oven();
+    public static final WorldTile sink = new Sink();
+    public static final WorldTile roof = new Roof();
+    
 }

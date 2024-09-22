@@ -8,13 +8,13 @@ package envision.game.entities.util;
  */
 public interface Sortable {
 
-	/**
-	 * Each Sortable object should return its endY coordinate
-	 * in order to determine which object should effectively
-	 * be drawn first.
-	 * 
-	 * @return This object's endY coordinate
-	 */
-	public double getYPos();
-	
+    /**
+     * Each Sortable object should return its endY coordinate
+     * in order to determine which object should effectively
+     * be drawn first.
+     * 
+     * @return This object's endY coordinate
+     */
+    public double getYPos();
+    
 }

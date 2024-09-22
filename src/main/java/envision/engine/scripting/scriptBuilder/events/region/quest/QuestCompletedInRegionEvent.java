@@ -6,14 +6,14 @@ import envision.game.world.GameWorld;
 import envision.game.world.Region;
 
 public class QuestCompletedInRegionEvent extends RegionEvent {
-	
-	private Quest quest;
-	
-	public QuestCompletedInRegionEvent(GameWorld theWorld, Region theRegion, Quest theQuest) {
-		super(theWorld, theRegion);
-		quest = theQuest;
-	}
-	
-	public Quest getQuest() { return quest; }
-	
+    
+    private Quest quest;
+    
+    public QuestCompletedInRegionEvent(GameWorld theWorld, Region theRegion, Quest theQuest) {
+        super(theWorld, theRegion);
+        quest = theQuest;
+    }
+    
+    public Quest getQuest() { return quest; }
+    
 }

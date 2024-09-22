@@ -8,23 +8,23 @@ import eutil.datatypes.util.EList;
 //Author: Hunter Bragg
 
 public class CMD_Version extends TerminalCommand {
-	
-	public CMD_Version() {
-		setCategory("System");
-		expectedArgLength = 1;
-	}
-	
-	@Override public String getName() { return "version"; }
-	@Override public EList<String> getAliases() { return EList.of("ver", "v"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "displays the version of the provided argument."; }
-	@Override public String getUsage() { return "ex: v"; }
+    
+    public CMD_Version() {
+        setCategory("System");
+        expectedArgLength = 1;
+    }
+    
+    @Override public String getName() { return "version"; }
+    @Override public EList<String> getAliases() { return EList.of("ver", "v"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "displays the version of the provided argument."; }
+    @Override public String getUsage() { return "ex: v"; }
     @Override public byte requiredPermissionLevel() { return 0; }
-	
-	@Override
-	public void runCommand() {
-		writeln(EColors.seafoam, "Envision Game Engine");
-		writeln(EColors.yellow, "Build Date: ", EColors.skyblue, Envision.VERSION_DATE);
-		writeln(EColors.yellow, "Build Num: ", EColors.mc_lightpurple, Envision.VERSION_BUILD);
-	}
-	
+    
+    @Override
+    public void runCommand() {
+        writeln(EColors.seafoam, "Envision Game Engine");
+        writeln(EColors.yellow, "Build Date: ", EColors.skyblue, Envision.VERSION_DATE);
+        writeln(EColors.yellow, "Build Num: ", EColors.mc_lightpurple, Envision.VERSION_BUILD);
+    }
+    
 }

@@ -6,18 +6,18 @@ import qot.assets.textures.world.nature.water.WaterTextures;
 import qot.world_tiles.TileIDs;
 
 public class DarkWater extends WorldTile {
-	
-	public DarkWater() {
-		super(TileIDs.DARK_WATER);
-		setBlocksMovement(true);
-		setSprite(new Sprite(WaterTextures.dark_water));
-		wallHeight = -0.05f;
-		setMiniMapColor(0xff181838);
-	}
-	
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new DarkWater());
-	}
-	
+    
+    public DarkWater() {
+        super(TileIDs.DARK_WATER);
+        setBlocksMovement(true);
+        setSprite(new Sprite(WaterTextures.dark_water));
+        wallHeight = -0.05f;
+        setMiniMapColor(0xff181838);
+    }
+    
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new DarkWater());
+    }
+    
 }

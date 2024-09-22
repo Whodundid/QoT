@@ -2,6 +2,7 @@ package envision.engine.scripting;
 
 import java.io.File;
 
+import envision.CurrentGame;
 import envision.Envision;
 import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.screens.ScreenLevel;
@@ -17,7 +18,6 @@ import eutil.EUtil;
 import eutil.datatypes.util.EList;
 import qot.entities.player.QoT_Player;
 import qot.screens.gameplay.GamePlayScreen;
-import qot.settings.QoTSettings;
 
 @EClass
 public class LangAPI {
@@ -240,7 +240,7 @@ public class LangAPI {
     }
     
     private GameWorld getWorldFromName(String worldName) {
-        File f = new File(QoTSettings.getEditorWorldsDir(), worldName);
+        File f = new File(CurrentGame.getEditorWorldsDir(), worldName);
         return new GameWorld(f);
     }
     

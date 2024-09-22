@@ -7,9 +7,9 @@ import envision.engine.windows.windowBuilder.WindowBuilderScreen;
 @SuppressWarnings("unused")
 public class Deb6 extends DebugCommand {
 
-	@Override
-	public void run(ETerminalWindow termIn, Object... args) {
-		Envision.displayScreen(new WindowBuilderScreen());
-	}
+    @Override
+    public void run(ETerminalWindow termIn, Object... args) {
+        Envision.displayScreen(new WindowBuilderScreen());
+    }
 
 }

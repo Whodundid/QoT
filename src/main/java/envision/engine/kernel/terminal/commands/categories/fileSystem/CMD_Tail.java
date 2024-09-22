@@ -11,15 +11,15 @@ import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
 public class CMD_Tail extends AbstractFileCommand {
-	
-	public CMD_Tail() {
-		expectedArgLength = 1;
-	}
-	
-	@Override public String getName() { return "tail"; }
-	@Override public String getHelpInfo(boolean runVisually) { return "Displays the last few specified lines of a file. By default it displays 10 lines."; }
-	@Override public String getUsage() { return "ex: tail 'file path' 10"; }
-	
+    
+    public CMD_Tail() {
+        expectedArgLength = 1;
+    }
+    
+    @Override public String getName() { return "tail"; }
+    @Override public String getHelpInfo(boolean runVisually) { return "Displays the last few specified lines of a file. By default it displays 10 lines."; }
+    @Override public String getUsage() { return "ex: tail 'file path' 10"; }
+    
     @Override
     public void runCommand() throws IOException {
         expectBetween(1, 2);

@@ -21,7 +21,8 @@ public class DoubleConfigSetting extends ConfigSetting<Double> {
     @Override public DoubleConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public DoubleConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public double getDouble() { return value; }
+    public int getInt() { return value.intValue(); }
+    public double getDouble() { return value.doubleValue(); }
     public double getDefaultDouble() { return defaultValue; }
     
     public void setDouble(double val) { this.value = val; }

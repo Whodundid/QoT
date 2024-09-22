@@ -63,15 +63,15 @@ public class PlayerRenderer extends EntityRenderer {
         if ((player.recentlyAttacked || player.healthChanged) &&
             !player.invincible &&
             (player.health < player.maxHealth)) {
-            //			EDimension draw = new EDimension(x + 20, y - 7, x + w - 20, y);
-            //			
-            //			var cur = health;
-            //			var percent = (double) cur / (double) maxHealth;
-            //			var pw = (draw.width * percent);
-            //			
-            //			drawRect(draw.add(1), EColors.black);
-            //			var end = (this == Envision.thePlayer) ? 4 : 1;
-            //			drawRect(draw.startX, draw.startY, draw.startX + pw, draw.endY - end, EColors.mc_darkred);
+            //            EDimension draw = new EDimension(x + 20, y - 7, x + w - 20, y);
+            //            
+            //            var cur = health;
+            //            var percent = (double) cur / (double) maxHealth;
+            //            var pw = (draw.width * percent);
+            //            
+            //            drawRect(draw.add(1), EColors.black);
+            //            var end = (this == Envision.thePlayer) ? 4 : 1;
+            //            drawRect(draw.startX, draw.startY, draw.startX + pw, draw.endY - end, EColors.mc_darkred);
             
             //healthBar.keepDrawing();
         }

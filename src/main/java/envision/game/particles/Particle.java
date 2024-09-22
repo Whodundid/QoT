@@ -4,7 +4,7 @@ import envision.Envision;
 import envision.game.entities.Doodad;
 
 public abstract class Particle extends Doodad {
-	
+    
     //========
     // Fields
     //========
@@ -16,18 +16,18 @@ public abstract class Particle extends Doodad {
     // Constructors
     //==============
     
-	protected Particle() { this(null, 1000); }
-	protected Particle(String nameIn, long timeToLiveIn) {
-	    super(nameIn);
-	    
-	    timeToLive = timeToLiveIn;
-	    setInvincible(true);
-	}
-	
-	//===========
+    protected Particle() { this(null, 1000); }
+    protected Particle(String nameIn, long timeToLiveIn) {
+        super(nameIn);
+        
+        timeToLive = timeToLiveIn;
+        setInvincible(true);
+    }
+    
+    //===========
     // Overrides
     //===========
-	
+    
     @Override
     public void onLivingUpdate(float dt) {
         if (animationHandler != null) {
@@ -44,5 +44,5 @@ public abstract class Particle extends Doodad {
     public int getInternalSaveID() {
         return -1;
     }
-	
+    
 }

@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import envision.CurrentGame;
+import envision.Envision;
 import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.loader.dtos.WorldTileListDTO;
 import envision.game.world.worldTiles.WorldTile;
@@ -16,17 +18,17 @@ import qot.world_tiles.GlobalTileList;
 @SuppressWarnings("unused")
 public class Deb16 extends DebugCommand {
 
-	@Override
-	public void run(ETerminalWindow termIn, Object... args) {
-		
-	    File tileListFile = new File(QoTSettings.getLocalGameDir(), "tileList.json");
-	    
-	    var tiles = GlobalTileList.getTiles().map(WorldTile::toDTO);
-	    WorldTileListDTO tilesDTO = new WorldTileListDTO(tiles);
-	    
-	    ObjectMapper mapper = new ObjectMapper();
-	    
-	    try {
+    @Override
+    public void run(ETerminalWindow termIn, Object... args) {
+        
+        File tileListFile = new File(CurrentGame.getInstallDir(), "tileList.json");
+        
+        var tiles = GlobalTileList.getTiles().map(WorldTile::toDTO);
+        WorldTileListDTO tilesDTO = new WorldTileListDTO(tiles);
+        
+        ObjectMapper mapper = new ObjectMapper();
+        
+        try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(tileListFile, tilesDTO);
             termIn.writeln("Tiles written to: " + tileListFile);
         }
@@ -39,7 +41,7 @@ public class Deb16 extends DebugCommand {
         catch (IOException e) {
             e.printStackTrace();
         }
-	    
-	}
+        
+    }
 
 }

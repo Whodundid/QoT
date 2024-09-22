@@ -7,9 +7,9 @@ import envision.engine.kernel.terminal.window.ETerminalWindow;
 @SuppressWarnings("unused")
 public class Deb3 extends DebugCommand {
 
-	@Override
-	public void run(ETerminalWindow termIn, Object... args) {
-		Envision.getDeveloperDesktop().displayWindow(new TestWindow(100, 100, 700, 500));
-	}
+    @Override
+    public void run(ETerminalWindow termIn, Object... args) {
+        Envision.getDeveloperDesktop().displayWindow(new TestWindow(100, 100, 700, 500));
+    }
 
 }

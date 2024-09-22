@@ -91,7 +91,7 @@ public class DesktopShortcut_Command extends DesktopShortcut {
             termToRunOn = DeveloperDesktop.openTerminal();
         }
         
-        termToRunOn.setDrawsNewLineBetweenCommands(false);
+        //termToRunOn.setDrawsNewLineBetweenCommands(false);
         termToRunOn.writeln(EColors.yellow, "Running DesktopShortcut Command: ",
                             EColors.yellow, "'",
                             EColors.green, shortcutName,
@@ -99,7 +99,7 @@ public class DesktopShortcut_Command extends DesktopShortcut {
         if (args.isEmpty()) termToRunOn.runCommand(commandName);
         else termToRunOn.runCommand(commandName, args);
         termToRunOn.writeln();
-        termToRunOn.setDrawsNewLineBetweenCommands(true);
+        //termToRunOn.setDrawsNewLineBetweenCommands(true);
     }
     
     @Override

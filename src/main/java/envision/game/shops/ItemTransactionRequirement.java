@@ -11,14 +11,14 @@ package envision.game.shops;
  * @author Hunter Bragg
  */
 public enum ItemTransactionRequirement {
-	/** Item can be bought with gold. */
-	GOLD_AMOUNT,
-	/** Item can be traded for with specified item(s). */
-	TRADE_FOR_ITEM,
-	/** Item can only be bought if buying entity has completed the specified quest(s). */
-	HAS_COMPLETED_QUEST,
-	/** Item can only be bought if buying entity has completed the specified quest objective(s). */
-	HAS_COMPLETED_QUEST_OBJECTIVE,
-	/** Item can only be bought if some variable [global/script] requirement has been met. */
-	VARIABLE_CHECK,
+    /** Item can be bought with gold. */
+    GOLD_AMOUNT,
+    /** Item can be traded for with specified item(s). */
+    TRADE_FOR_ITEM,
+    /** Item can only be bought if buying entity has completed the specified quest(s). */
+    HAS_COMPLETED_QUEST,
+    /** Item can only be bought if buying entity has completed the specified quest objective(s). */
+    HAS_COMPLETED_QUEST_OBJECTIVE,
+    /** Item can only be bought if some variable [global/script] requirement has been met. */
+    VARIABLE_CHECK,
 }

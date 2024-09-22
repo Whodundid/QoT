@@ -33,7 +33,7 @@ public class CMD_CreateDungeon extends TerminalCommand {
             return;
         }
         
-        String size = (oneArg()) ? arg(0) : "small";
+        String size = (!oneArg()) ? arg(0) : "small";
         DungeonSize dungSize = DungeonSize.fromString(size);
         
         DungeonBuilderSettings settings = new DungeonBuilderSettings();

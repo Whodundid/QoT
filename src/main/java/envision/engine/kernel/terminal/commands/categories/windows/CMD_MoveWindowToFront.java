@@ -8,29 +8,29 @@ import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class CMD_MoveWindowToFront extends TerminalCommand {
-	
-	public CMD_MoveWindowToFront() {
-		setCategory("Windows");
-		expectedArgLength = 1;
-	}
+    
+    public CMD_MoveWindowToFront() {
+        setCategory("Windows");
+        expectedArgLength = 1;
+    }
 
-	@Override public String getName() { return "tofront"; }
-	@Override public EList<String> getAliases() { return EList.of("front"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Brings a window to the front"; }
-	@Override public String getUsage() { return "ex: tofront 4 (where 4 is the window pid)"; }
-	@Override public byte requiredPermissionLevel() { return 2; }
-	
-	@Override
-	public void runCommand() {
-	    expectNoMoreThan(1);
-	    
-	    if (noArgs()) {
-	        term().bringToFront();
+    @Override public String getName() { return "tofront"; }
+    @Override public EList<String> getAliases() { return EList.of("front"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "Brings a window to the front"; }
+    @Override public String getUsage() { return "ex: tofront 4 (where 4 is the window pid)"; }
+    @Override public byte requiredPermissionLevel() { return 2; }
+    
+    @Override
+    public void runCommand() {
+        expectNoMoreThan(1);
+        
+        if (noArgs()) {
+            term().bringToFront();
             writeln("Window: [" + term().getObjectName() + " | " + term().getObjectID() + "] brought to front.", EColors.green);
-	        return;
-	    }
-	    
-	    try {
+            return;
+        }
+        
+        try {
             long pid = Long.parseLong(firstArg());
             EList<IWindowParent> windows = getTopParent().getAllActiveWindows();
             
@@ -67,6 +67,6 @@ public class CMD_MoveWindowToFront extends TerminalCommand {
                 error(q);
             }
         }
-	}
-	
+    }
+    
 }

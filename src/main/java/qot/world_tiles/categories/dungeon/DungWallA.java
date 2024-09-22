@@ -6,18 +6,18 @@ import qot.assets.textures.world.walls.dungeon.DungeonWallTextures;
 import qot.world_tiles.TileIDs;
 
 public class DungWallA extends WorldTile {
-	
-	public DungWallA() {
-		super(TileIDs.DUNG_WALL_A);
-		setBlocksMovement(true);
-		wallHeight = 0.5f;
-		setSprite(new Sprite(DungeonWallTextures.dung_wall_a));
-		setMiniMapColor(0xff161616);
-	}
-	
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new DungWallA());
-	}
-	
+    
+    public DungWallA() {
+        super(TileIDs.DUNG_WALL_A);
+        setBlocksMovement(true);
+        wallHeight = 0.5f;
+        setSprite(new Sprite(DungeonWallTextures.dung_wall_a));
+        setMiniMapColor(0xff161616);
+    }
+    
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new DungWallA());
+    }
+    
 }

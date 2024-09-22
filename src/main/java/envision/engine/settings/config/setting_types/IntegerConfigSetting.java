@@ -21,7 +21,8 @@ public class IntegerConfigSetting extends ConfigSetting<Integer> {
     @Override public IntegerConfigSetting setIgnoreConfigRead(boolean val) { ignoreConfigRead = val; return this; }
     @Override public IntegerConfigSetting setIgnoreConfigWrite(boolean val) { ignoreConfigWrite = val; return this; }
     
-    public int getInt() { return value; }
+    public int getInt() { return value.intValue(); }
+    public double getDouble() { return value.doubleValue(); }
     public int getDefaultInt() { return defaultValue; }
     
     public void setInt(int val) { this.value = val; }

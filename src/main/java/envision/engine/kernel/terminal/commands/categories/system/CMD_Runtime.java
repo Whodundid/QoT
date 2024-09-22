@@ -5,23 +5,23 @@ import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 
 public class CMD_Runtime extends TerminalCommand {
-	
-	public CMD_Runtime() {
-		setCategory("System");
-		expectedArgLength = 0;
-	}
+    
+    public CMD_Runtime() {
+        setCategory("System");
+        expectedArgLength = 0;
+    }
 
-	@Override public String getName() { return "runtime"; }
-	@Override public EList<String> getAliases() { return EList.of("rt"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Gets info on the current system run time"; }
-	@Override public String getUsage() { return "ex: runtime"; }
-	@Override public byte requiredPermissionLevel() { return 2; }
-	
-	@Override
-	public void runCommand() {
-	    expectNoArgs();
-	    
-	    Runtime rt = Runtime.getRuntime();
+    @Override public String getName() { return "runtime"; }
+    @Override public EList<String> getAliases() { return EList.of("rt"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "Gets info on the current system run time"; }
+    @Override public String getUsage() { return "ex: runtime"; }
+    @Override public byte requiredPermissionLevel() { return 2; }
+    
+    @Override
+    public void runCommand() {
+        expectNoArgs();
+        
+        Runtime rt = Runtime.getRuntime();
         
         double memJVMTotal = (rt.maxMemory() / 1024D / 1024D / 1024D);
         double memJVMUsed = (rt.totalMemory() / 1024D / 1024D / 1024D);
@@ -50,7 +50,7 @@ public class CMD_Runtime extends TerminalCommand {
         writeln(usedMem, EColors.cyan);
         writeln(freeMem, EColors.cyan);
         //termIn.writeln(divider, EColors.lgray);
-		
-	}
-	
+        
+    }
+    
 }

@@ -6,16 +6,16 @@ import qot.assets.textures.world.floors.stone.StoneFloorTextures;
 import qot.world_tiles.TileIDs;
 
 public class BlueDungTile extends WorldTile {
-	
-	public BlueDungTile() {
-		super(TileIDs.BLUE_DUNG_TILE);
-		setSprite(new Sprite(StoneFloorTextures.blue_dung_tile));
-		setMiniMapColor(0xff004748);
-	}
-	
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new BlueDungTile());
-	}
-	
+    
+    public BlueDungTile() {
+        super(TileIDs.BLUE_DUNG_TILE);
+        setSprite(new Sprite(StoneFloorTextures.blue_dung_tile));
+        setMiniMapColor(0xff004748);
+    }
+    
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new BlueDungTile());
+    }
+    
 }

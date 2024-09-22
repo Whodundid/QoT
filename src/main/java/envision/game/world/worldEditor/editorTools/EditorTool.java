@@ -89,7 +89,7 @@ public abstract class EditorTool extends RenderingManager {
         
         //System.out.println(ent + " : " + ent.worldX + " : " + ent.worldY);
         editor.getEditorWorld().addEntity(ent);
-        //		editor.getEditorWorld().addEntitySpawn(ent);
+        //        editor.getEditorWorld().addEntitySpawn(ent);
     }
     
     protected void setTile(WorldTile t) {
@@ -186,9 +186,9 @@ public abstract class EditorTool extends RenderingManager {
             }
         }
         
-        //		if (pressed) {
+        //        if (pressed) {
         
-        //		}
+        //        }
     }
     
     private void updateWorldPoint() {

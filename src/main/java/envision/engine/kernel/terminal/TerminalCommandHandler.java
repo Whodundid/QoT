@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import envision.Envision;
+import envision.engine.EngineSettings;
 import envision.engine.kernel.EnvisionKernel;
 import envision.engine.kernel.terminal.commands.CommandResult;
 import envision.engine.kernel.terminal.commands.TerminalCommand;
@@ -39,7 +40,9 @@ import envision.engine.kernel.terminal.commands.categories.fileSystem.CMD_Mv;
 import envision.engine.kernel.terminal.commands.categories.fileSystem.CMD_OpenFile;
 import envision.engine.kernel.terminal.commands.categories.fileSystem.CMD_Pwd;
 import envision.engine.kernel.terminal.commands.categories.fileSystem.CMD_Rm;
+import envision.engine.kernel.terminal.commands.categories.fileSystem.CMD_Source;
 import envision.engine.kernel.terminal.commands.categories.fileSystem.CMD_Tail;
+import envision.engine.kernel.terminal.commands.categories.fileSystem.CMD_Touch;
 import envision.engine.kernel.terminal.commands.categories.game.CMD_CreateDungeon;
 import envision.engine.kernel.terminal.commands.categories.game.CMD_GiveItem;
 import envision.engine.kernel.terminal.commands.categories.game.CMD_God;
@@ -102,56 +105,57 @@ import eutil.strings.EStringUtil;
 
 public class TerminalCommandHandler {
 
-	public static final String TERMINAL_HANDLER_VERSION = "1.0";
-	
-	//========
+    public static final String TERMINAL_HANDLER_VERSION = "1.0";
+    
+    //========
     // Fields
     //========
-	
-	protected BoxList<String, TerminalCommand> commands;
-	public Map<String, String> commandAliases = new HashMap<>();
-	protected EList<TerminalCommand> commandList;
-	public boolean drawSpace = true;
-	public EList<String> cmdHistory = EList.newList();
-	
-	//==============
+    
+    protected BoxList<String, TerminalCommand> commands;
+    public Map<String, String> commandAliases = new HashMap<>();
+    public Map<String, String> variables = new HashMap<>();
+    protected EList<TerminalCommand> commandList;
+    public boolean drawSpace = true;
+    public EList<String> cmdHistory = EList.newList();
+    
+    //==============
     // Constructors
     //==============
-	
-	public TerminalCommandHandler() {
-		commands = new BoxList<>();
-		commandList = EList.newList();
-	}
-	
-	//=========
+    
+    public TerminalCommandHandler() {
+        commands = new BoxList<>();
+        commandList = EList.newList();
+    }
+    
+    //=========
     // Methods
     //=========
-	
-	public void initCommands() {
-		registerBaseCommands(false);
-	}
-	
-	/** Dynamically finds terminal commands within the given classpath directory.
-	 * 
-	 *  NOTE: THIS ONLY WORKS WHEN RUNNING OUT OF ECLIPSE!!!
-	 */
-//	private EList<TerminalCommand> findCommands() {
-//		String commandDir = "engine.terminal.terminalCommand";
-//		
-//		EList<Class<TerminalCommand>> getCommands = ClassFinder.findClassesOfType(commandDir, TerminalCommand.class);
-//		EList<TerminalCommand> commands = EList.newList();
-//		
-//		for (Class<TerminalCommand> c : getCommands) {
-//			EModifier mods = EModifier.of(c.getModifiers());
-//			if (!mods.isAbstract() && mods.isPublic()) {
-//				try { commands.add(c.getConstructor().newInstance()); }
-//				catch (Exception e) { e.printStackTrace(); break; }
-//			}
-//		}
-//		
-//		return commands;
-//	}
-	
+    
+    public void initCommands() {
+        registerBaseCommands(false);
+    }
+    
+    /** Dynamically finds terminal commands within the given classpath directory.
+     * 
+     *  NOTE: THIS ONLY WORKS WHEN RUNNING OUT OF ECLIPSE!!!
+     */
+//    private EList<TerminalCommand> findCommands() {
+//        String commandDir = "engine.terminal.terminalCommand";
+//        
+//        EList<Class<TerminalCommand>> getCommands = ClassFinder.findClassesOfType(commandDir, TerminalCommand.class);
+//        EList<TerminalCommand> commands = EList.newList();
+//        
+//        for (Class<TerminalCommand> c : getCommands) {
+//            EModifier mods = EModifier.of(c.getModifiers());
+//            if (!mods.isAbstract() && mods.isPublic()) {
+//                try { commands.add(c.getConstructor().newInstance()); }
+//                catch (Exception e) { e.printStackTrace(); break; }
+//            }
+//        }
+//        
+//        return commands;
+//    }
+    
     private void registerBaseCommands(boolean runVisually) { registerBaseCommands(null, runVisually); }
     private void registerBaseCommands(ETerminalWindow termIn, boolean runVisually) {
         //findCommands().filter(c -> c.shouldRegister()).forEach(c -> registerCommand(c, termIn, runVisually));
@@ -194,6 +198,7 @@ public class TerminalCommandHandler {
         registerCommand(new CMD_Tail(), termIn, runVisually);
         registerCommand(new CMD_Edit(), termIn, runVisually);
         registerCommand(new CMD_OpenFile(), termIn, runVisually);
+        registerCommand(new CMD_Touch(), termIn, runVisually);
         
         //game
         registerCommand(new CMD_CreateDungeon(), termIn, runVisually);
@@ -234,6 +239,7 @@ public class TerminalCommandHandler {
         registerCommand(new CMD_Runtime(), termIn, runVisually);
         registerCommand(new CMD_PS(), termIn, runVisually);
         registerCommand(new CMD_Shutdown(), termIn, runVisually);
+        registerCommand(new CMD_Source(), termIn, runVisually);
         registerCommand(new CMD_System(), termIn, runVisually);
         registerCommand(new CMD_SU(), termIn, runVisually);
         registerCommand(new CMD_Unalias(), termIn, runVisually);        
@@ -249,93 +255,87 @@ public class TerminalCommandHandler {
         registerCommand(new CMD_ShowWindow(), termIn, runVisually);
         registerCommand(new CMD_TermID(), termIn, runVisually);
     }
-	
-	public void registerCommand(TerminalCommand command, boolean runVisually) { registerCommand(command, null, runVisually); }
-	public void registerCommand(TerminalCommand command, ETerminalWindow termIn, boolean runVisually) {
-		// only register commands which specifically are marked with 'shouldRegister'
-		if (command == null || !command.shouldRegister()) return;
-		
-		// add the command to the command map
-		commandList.add(command);
-		commands.put(command.getName(), command);
-		if (termIn != null && runVisually) termIn.writeln("Registering command call: " + command.getName(), 0xffffff00);
-		if (command.getAliases() != null) {
-			for (int i = 0; i < command.getAliases().size(); i++) {
-				commands.put(command.getAliases().get(i), command);
-				if (termIn != null && runVisually) termIn.writeln("Registering command alias: " + command.getAliases().get(i), 0xff55ff55);
-			}
-		}
-	}
-	
-	public CommandResult executeCommand(ETerminalWindow termIn, String cmd) { return executeCommand(termIn, cmd, false); }
-	public CommandResult executeCommand(ETerminalWindow termIn, String cmd, boolean tab) {
-		cmd = cmd.trim();
-		
-		// separate multiple commands in one line from one another
-		EList<String> splitCommands = parseIndividualCommands(cmd);
-		
-		CommandResult lastResult = null;
-		
-		// run each command
-		for (String singleCommand : splitCommands) {
-		    String[] commandParts = singleCommand.split(" ");
-	        EList<String> commandArguments = EList.newList();
-	        String baseCommand = "";
-	        
-	        if (commandParts.length == 0) {
-	            termIn.writeln("Unrecognized command.\n", 0xffff5555);
-	            return null;
-	        }
-	        
-	        // parse out arguments from input string
-	        baseCommand = commandParts[0].toLowerCase();
-	        commandArguments.addFrom(commandParts, 1);
-	        
-	        // search for '|' in arguments
-//	        for (int i = 0; i < commandArguments.size(); i++) {
-//	            String arg = commandArguments.get(i);
-//	            if (EUtil.isEqual("|", arg)) {
-//	                commandArguments = EList.of(commandArguments.subList(0, i));
-//	            }
-//	        }
-	        
-	        lastResult = executeCommand(termIn, cmd, baseCommand, commandArguments, tab);
-		}
-		
-		return lastResult;
-	}
-	
+    
+    public void registerCommand(TerminalCommand command, boolean runVisually) { registerCommand(command, null, runVisually); }
+    public void registerCommand(TerminalCommand command, ETerminalWindow termIn, boolean runVisually) {
+        // only register commands which specifically are marked with 'shouldRegister'
+        if (command == null || !command.shouldRegister()) return;
+        
+        // add the command to the command map
+        commandList.add(command);
+        commands.put(command.getName(), command);
+        if (termIn != null && runVisually) termIn.writeln("Registering command call: " + command.getName(), 0xffffff00);
+        if (command.getAliases() != null) {
+            for (int i = 0; i < command.getAliases().size(); i++) {
+                commands.put(command.getAliases().get(i), command);
+                if (termIn != null && runVisually) termIn.writeln("Registering command alias: " + command.getAliases().get(i), 0xff55ff55);
+            }
+        }
+    }
+    
+    public CommandResult executeCommand(ETerminalWindow termIn, String cmd) { return executeCommand(termIn, cmd, false); }
+    public CommandResult executeCommand(ETerminalWindow termIn, String cmd, boolean tab) {
+        cmd = cmd.trim();
+        
+        // separate multiple commands in one line from one another
+        EList<String> splitCommands = parseIndividualCommands(cmd);
+        
+        CommandResult lastResult = null;
+        
+        // run each command
+        for (String singleCommand : splitCommands) {
+            String[] commandParts = singleCommand.split(" ");
+            EList<String> commandArguments = EList.newList();
+            String baseCommand = "";
+            
+            if (commandParts.length == 0) {
+                termIn.writeln("Unrecognized command.\n", 0xffff5555);
+                return null;
+            }
+            
+            // parse out arguments from input string
+            baseCommand = commandParts[0].toLowerCase();
+            commandArguments.addFrom(commandParts, 1);
+            
+            // search for '|' in arguments
+//            for (int i = 0; i < commandArguments.size(); i++) {
+//                String arg = commandArguments.get(i);
+//                if (EUtil.isEqual("|", arg)) {
+//                    commandArguments = EList.of(commandArguments.subList(0, i));
+//                }
+//            }
+            
+            lastResult = executeCommand(termIn, cmd, baseCommand, commandArguments, tab);
+        }
+        
+        return lastResult;
+    }
+    
     public CommandResult executeCommand(ETerminalWindow termIn, String cmd, String commandName, EList<String> arguments) {
         return executeCommand(termIn, cmd, commandName, arguments, false);
     }
-	public CommandResult executeCommand(ETerminalWindow termIn, String cmd, String commandName, EList<String> commandArguments, boolean tab) {
-        // try to find a registered command that matches
-        final var foundCommand = commands.getBoxWithA(commandName);
+    public CommandResult executeCommand(ETerminalWindow termIn, String cmd, String commandName, EList<String> commandArguments, boolean tab) {
+        // first, try to find a registered alias for the given command name
+        final String foundAlias = commandAliases.get(commandName);
         
-        if (foundCommand == null) {
-            // try to find a command alias instead
-            final String foundAlias = commandAliases.get(commandName);
-            
-            // check if this was an alias and execute its replacement if it was
-            if (foundAlias != null) {
-                var aliasCommand = new EStringBuilder(foundAlias);
-                aliasCommand.a(" ");
-                aliasCommand.a(EStringUtil.combineAll(commandArguments, " "));
-                return executeCommand(termIn, aliasCommand.toString(), tab);
-            }
-            
-            termIn.writeln("Unrecognized command.\n", 0xffff5555);
-            return null;
+        // if we have an alias, execute its replacement instead
+        if (foundAlias != null && !foundAlias.startsWith(commandName)) {
+            var aliasCommand = new EStringBuilder(foundAlias);
+            aliasCommand.a(" ");
+            aliasCommand.a(EStringUtil.combineAll(commandArguments, " "));
+            return executeCommand(termIn, aliasCommand.toString(), tab);
         }
         
         // extract the associated command
-        TerminalCommand command = commands.getBoxWithA(commandName).getB();
+        Box2<String, TerminalCommand> foundCommand = commands.getBoxWithA(commandName);
         
-        if (command == null) {
+        if (foundCommand == null) {
             termIn.error("Unrecognized command.");
-            termIn.writeln();
+            if (EngineSettings.termCmdNewLines.getBoolean()) termIn.writeln();
             return null;
         }
+        
+        TerminalCommand command = foundCommand.getB();
         
         boolean runVisually = false;
         var it = commandArguments.iterator();
@@ -379,19 +379,19 @@ public class TerminalCommandHandler {
             
             //-----------------------------------------------
             
-            if (!termIn.getDrawNewLineBetweenCommands()) {
+            if (!EngineSettings.termCmdNewLines.getBoolean()) {
                 return result;
             }
             
             if (drawSpace && !command.getName().equals("clear")) {
-                termIn.writeln();
+                if (EngineSettings.termCmdNewLines.getBoolean()) termIn.writeln();
                 drawSpace = true;
             }
         }
         
         return result;
-	}
-	
+    }
+    
     /**
      * Parses out individual commands that are separated by a ';' but only when
      * the ';' is not in a string
@@ -400,90 +400,90 @@ public class TerminalCommandHandler {
      * 
      * @return parsed individual commands from the input line
      */
-	private EList<String> parseIndividualCommands(String input) {
-	    EList<String> individualCommands = EList.newList();
-	    var curCommand = new EStringBuilder();
-	    
-	    char prevChar = '\0';
-	    boolean inStr = false;
-	    
-	    final int len = input.length();
-	    for (int i = 0; i < len; i++) {
-	        char c = input.charAt(i);
-	        
-	        switch (c) {
-	        case '\'':
-	        case '"':
-	            if (prevChar != '\\') inStr = !inStr;
-	            break;
-	        case ';':
-	            if (!inStr) {
-	                individualCommands.add(curCommand.toString());
-	                curCommand.clear();
-	                prevChar = c;
-	                continue;
-	            }
-	            break;
-	        default:
-	            break;
-	        }
-	        
-	        curCommand.a(c);
-	        prevChar = c;
-	    }
-	    
-	    // get the last command off of the buffer
-	    if (!curCommand.isEmpty()) {
-	        individualCommands.add(curCommand.toString());
-	    }
-	        
-	    return individualCommands;
-	}
-	
-	public synchronized void reregisterAllCommands(boolean runVisually) { reregisterAllCommands(null, runVisually); }
-	public synchronized void reregisterAllCommands(ETerminalWindow termIn, boolean runVisually) {
-		Iterator<TerminalCommand> a = commandList.iterator();
-		while (a.hasNext()) {
-			String commandName = a.next().getName();
-			if (termIn != null && runVisually) { termIn.writeln("Unregistering command: " + commandName, 0xffb2b2b2); }
-			a.remove();
-		}
-		
-		Iterator<Box2<String, TerminalCommand>> b = commands.iterator();
-		while (b.hasNext()) {
-			String commandName = b.next().getA();
-			if (termIn != null && runVisually) { termIn.writeln("Unregistering command alias: " + commandName, 0xffb2b2b2); }
-			b.remove();
-		}
-		
-		registerBaseCommands(termIn, runVisually);
-	}
-	
-	public TerminalCommand getCommand(String commandName) {
-		Box2<String, TerminalCommand> box = commands.getBoxWithA(commandName);
-		if (box != null) {
-			return commands.getBoxWithA(commandName).getB();
-		}
-		return null;
-	}
-	
-	public TerminalCommand getRegisteredCommand(String commandName) {
-	    return getCommand(commandName);
-	}
-	
-	public TerminalCommand tabCompleteCommand(String input) {
-	    if (input == null || input.isBlank()) return null;
-	    
-	    for (var cmd : getCommandList()) {
-	        String name = cmd.getName();
-	        var aliases = cmd.getAliases();
-	        
-	        if (input.equals(name)) return cmd;
-	        if (EStringUtil.startsWithAny(input, aliases)) return cmd;
-	    }
-	    
-	    return null;
-	}
+    private EList<String> parseIndividualCommands(String input) {
+        EList<String> individualCommands = EList.newList();
+        var curCommand = new EStringBuilder();
+        
+        char prevChar = '\0';
+        boolean inStr = false;
+        
+        final int len = input.length();
+        for (int i = 0; i < len; i++) {
+            char c = input.charAt(i);
+            
+            switch (c) {
+            case '\'':
+            case '"':
+                if (prevChar != '\\') inStr = !inStr;
+                break;
+            case ';':
+                if (!inStr) {
+                    individualCommands.add(curCommand.toString());
+                    curCommand.clear();
+                    prevChar = c;
+                    continue;
+                }
+                break;
+            default:
+                break;
+            }
+            
+            curCommand.a(c);
+            prevChar = c;
+        }
+        
+        // get the last command off of the buffer
+        if (!curCommand.isEmpty()) {
+            individualCommands.add(curCommand.toString());
+        }
+            
+        return individualCommands;
+    }
+    
+    public synchronized void reregisterAllCommands(boolean runVisually) { reregisterAllCommands(null, runVisually); }
+    public synchronized void reregisterAllCommands(ETerminalWindow termIn, boolean runVisually) {
+        Iterator<TerminalCommand> a = commandList.iterator();
+        while (a.hasNext()) {
+            String commandName = a.next().getName();
+            if (termIn != null && runVisually) { termIn.writeln("Unregistering command: " + commandName, 0xffb2b2b2); }
+            a.remove();
+        }
+        
+        Iterator<Box2<String, TerminalCommand>> b = commands.iterator();
+        while (b.hasNext()) {
+            String commandName = b.next().getA();
+            if (termIn != null && runVisually) { termIn.writeln("Unregistering command alias: " + commandName, 0xffb2b2b2); }
+            b.remove();
+        }
+        
+        registerBaseCommands(termIn, runVisually);
+    }
+    
+    public TerminalCommand getCommand(String commandName) {
+        Box2<String, TerminalCommand> box = commands.getBoxWithA(commandName);
+        if (box != null) {
+            return commands.getBoxWithA(commandName).getB();
+        }
+        return null;
+    }
+    
+    public TerminalCommand getRegisteredCommand(String commandName) {
+        return getCommand(commandName);
+    }
+    
+    public TerminalCommand tabCompleteCommand(String input) {
+        if (input == null || input.isBlank()) return null;
+        
+        for (var cmd : getCommandList()) {
+            String name = cmd.getName();
+            var aliases = cmd.getAliases();
+            
+            if (input.equals(name)) return cmd;
+            if (EStringUtil.startsWithAny(input, aliases)) return cmd;
+        }
+        
+        return null;
+    }
     
     /**
      * Finds and returns a list of all possible command names or aliases that
@@ -527,84 +527,84 @@ public class TerminalCommandHandler {
         return returnList;
     }
     
-	public EList<String> getSortedCommandNames(UserProfile profile) {
-		EList<String> cmds = EList.newList();
-		BoxList<String, EList<TerminalCommand>> sortedAll = getSortedCommands(profile);
-		
-		for (var box : sortedAll) {
-			var catCommands = box.getB();
-			for (TerminalCommand command : catCommands) {
-				if (command.showInHelp()) {
-					cmds.add(command.getName());
-				}
-			}
-		}
-		
-		return cmds;
-	}
-	
-	public BoxList<String, EList<TerminalCommand>> getSortedCommands(UserProfile profile) {
-		// the sorted list to be returned
-		BoxList<String, EList<TerminalCommand>> sortedCommands = new BoxList<>();
-		
-		//---------------------------
-		// sort commands by category
-		//---------------------------
-		
-		// keep track of commands without a specified category
-		EList<TerminalCommand> noneCat = new EArrayList<>();
-		
-		for (var command : getCommandList()) {
-		    // only display command if the user has the permissions to even run it
-		    if (profile.getPermissionLevel() < command.requiredPermissionLevel()) continue;
-		    
-			// get commands declared category
-			String category = command.getCategory();
-			
-			// check if the command actually has a set category, if not, use 'none' by default
-			category = (category != null) ? category : "none";
-			
-			// if category is none, track separately
-			if ("none".equals(category)) {
-				noneCat.add(command);
-				continue;
-			}
-			
-			// get the command list for the current type
-			var typeCommands = sortedCommands.get(category);
-			
-			// check if there is already a command list for the type
-			if (typeCommands != null) {
-				typeCommands.add(command);
-			}
-			// otherwise, create a new list, add the current command, and
-			// then add the type/list to the BoxList
-			else {
-				typeCommands = new EArrayList<>();
-				typeCommands.add(command);
-				sortedCommands.add(category, typeCommands);
-			}
-		}
-		
-		// add 'none' category to end of categories
-		if (noneCat.isNotEmpty()) sortedCommands.add("No Category", noneCat);
-		
-		//--------------------------------
-		// sort categories alphabetically
-		//--------------------------------
-		
-		// sort the intermediate BoxList by category name alphabetically
-		sortedCommands.sort((a, b) -> EStringUtil.compare(a.getA(), b.getA()));
-		
-		// alphabetically sort each category's command list 
-		for (var category : sortedCommands) {
-			var catCommands = category.getB();
-			catCommands.sort((a, b) -> EStringUtil.compare(a.getName(), b.getName()));
-		}
-		
-		return sortedCommands;
-	}
-	
+    public EList<String> getSortedCommandNames(UserProfile profile) {
+        EList<String> cmds = EList.newList();
+        BoxList<String, EList<TerminalCommand>> sortedAll = getSortedCommands(profile);
+        
+        for (var box : sortedAll) {
+            var catCommands = box.getB();
+            for (TerminalCommand command : catCommands) {
+                if (command.showInHelp()) {
+                    cmds.add(command.getName());
+                }
+            }
+        }
+        
+        return cmds;
+    }
+    
+    public BoxList<String, EList<TerminalCommand>> getSortedCommands(UserProfile profile) {
+        // the sorted list to be returned
+        BoxList<String, EList<TerminalCommand>> sortedCommands = new BoxList<>();
+        
+        //---------------------------
+        // sort commands by category
+        //---------------------------
+        
+        // keep track of commands without a specified category
+        EList<TerminalCommand> noneCat = new EArrayList<>();
+        
+        for (var command : getCommandList()) {
+            // only display command if the user has the permissions to even run it
+            if (profile.getPermissionLevel() < command.requiredPermissionLevel()) continue;
+            
+            // get commands declared category
+            String category = command.getCategory();
+            
+            // check if the command actually has a set category, if not, use 'none' by default
+            category = (category != null) ? category : "none";
+            
+            // if category is none, track separately
+            if ("none".equals(category)) {
+                noneCat.add(command);
+                continue;
+            }
+            
+            // get the command list for the current type
+            var typeCommands = sortedCommands.get(category);
+            
+            // check if there is already a command list for the type
+            if (typeCommands != null) {
+                typeCommands.add(command);
+            }
+            // otherwise, create a new list, add the current command, and
+            // then add the type/list to the BoxList
+            else {
+                typeCommands = new EArrayList<>();
+                typeCommands.add(command);
+                sortedCommands.add(category, typeCommands);
+            }
+        }
+        
+        // add 'none' category to end of categories
+        if (noneCat.isNotEmpty()) sortedCommands.add("No Category", noneCat);
+        
+        //--------------------------------
+        // sort categories alphabetically
+        //--------------------------------
+        
+        // sort the intermediate BoxList by category name alphabetically
+        sortedCommands.sort((a, b) -> EStringUtil.compare(a.getA(), b.getA()));
+        
+        // alphabetically sort each category's command list 
+        for (var category : sortedCommands) {
+            var catCommands = category.getB();
+            catCommands.sort((a, b) -> EStringUtil.compare(a.getName(), b.getName()));
+        }
+        
+        return sortedCommands;
+    }
+    
     public void executeOnTerminal(ETerminalWindow termIn, String commandName, EList<String> arguments) {
         executeCommand(termIn, "", commandName, arguments);
     }
@@ -612,33 +612,33 @@ public class TerminalCommandHandler {
     public void executeOnTerminal(ETerminalWindow termIn, String commandName, EList<String> arguments, boolean tab) {
         executeCommand(termIn, "", commandName, arguments, tab);
     }
-	
-	public void addCommandAlias(String aliasIn, String valueIn) {
-	    if (aliasIn == null || aliasIn.isBlank()) return;
-	    commandAliases.put(aliasIn, valueIn);
-	}
-	
-	public void removeCommandAlias(String aliasIn) {
-	    commandAliases.remove(aliasIn);
-	}
-	
-	public EList<TerminalCommand> getCommandList() { return commandList; }
-	public Map<String, String> getCommandAliases() { return commandAliases; }
-	public EList<String> getCommandNames() { return commands.getAVals(); }
-	public EList<String> getCommandAliasNames() { return EList.of(commandAliases.keySet()); }
-	public EList<String> getHistory() { return cmdHistory; }
-	public TerminalCommandHandler clearHistory() { cmdHistory.clear(); return this; }
-	
-	/**
-	 * Searches for the first terminal instance on the top renderer and returns it.
-	 * If there is no terminal instance found, a new one is created and returned.
-	 * 
-	 * @return The active terminal instance on the top renderer
-	 */
-	public static ETerminalWindow getActiveTerminal() {
-		ETerminalWindow term = Envision.getDeveloperDesktop().getTerminalInstance();
-		if (term == null) term = new ETerminalWindow();
-		return term;
-	}
-	
+    
+    public void addCommandAlias(String aliasIn, String valueIn) {
+        if (aliasIn == null || aliasIn.isBlank()) return;
+        commandAliases.put(aliasIn, valueIn);
+    }
+    
+    public void removeCommandAlias(String aliasIn) {
+        commandAliases.remove(aliasIn);
+    }
+    
+    public EList<TerminalCommand> getCommandList() { return commandList; }
+    public Map<String, String> getCommandAliases() { return commandAliases; }
+    public EList<String> getCommandNames() { return commands.getAVals(); }
+    public EList<String> getCommandAliasNames() { return EList.of(commandAliases.keySet()); }
+    public EList<String> getHistory() { return cmdHistory; }
+    public TerminalCommandHandler clearHistory() { cmdHistory.clear(); return this; }
+    
+    /**
+     * Searches for the first terminal instance on the top renderer and returns it.
+     * If there is no terminal instance found, a new one is created and returned.
+     * 
+     * @return The active terminal instance on the top renderer
+     */
+    public static ETerminalWindow getActiveTerminal() {
+        ETerminalWindow term = Envision.getDeveloperDesktop().getTerminalInstance();
+        if (term == null) term = new ETerminalWindow();
+        return term;
+    }
+    
 }

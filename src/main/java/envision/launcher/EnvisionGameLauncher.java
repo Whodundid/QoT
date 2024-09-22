@@ -33,628 +33,628 @@ import eutil.swing.ActionPerformer;
 import eutil.swing.LeftClick;
 
 public abstract class EnvisionGameLauncher extends JFrame {
-	
+    
     static EnvisionGameLauncher launcher;
     
-	static String mainPath;
-	static boolean inJar = false;
-	static String resourcePath = "";
-	
-	//===============
-	// Static Runner
-	//===============
-	
-	/** The actual launcher runner. */
-	public static void runLauncher(LauncherSettings settings) {
-		// this line is used to specifically grab the class system's file structure to determine
-		// what kind of environment the game is being executed from (an IDE or a Jar)
-		String main = Envision.class.getSimpleName() + ".class";
-		mainPath = Envision.class.getResource(main).getFile();
-		
-		//System.out.println("MAIN PATH: '" + mainPath);
-		
-		// if the main path starts with 'file:/' then the game is being run in a strange way
-		// remove 'file:' portion and attempt to continue and assume running in jar
-		if (mainPath.startsWith("file:/")) {
-			// index 4 = '/' in main path
-			mainPath = mainPath.substring(5);
-			//System.out.println("NEW MAIN PATH: '" + mainPath);
-			inJar = true;
-		}
-		
-		// if path does not start with a '/' then it's very likely a jar file!
-		else if (!mainPath.startsWith("/")) {
-			inJar = true;
-			resourcePath = "resources/";
-		}
-		
-		// attempt to create launcher directory
-		if (!LauncherDir.setupLauncherDir(settings)) return;
-		
-		ensureInstallationDirectoryName(settings);
-		
-		LauncherLogger.log("Starting '" + settings.getGameName() + "' Launcher!");
-		LauncherLogger.log("runLauncher=" + LauncherDir.runLauncher);
-		
-		if (LauncherDir.runLauncher) {
-		    var game = settings.getGame();
-			launcher = game.createGameLauncher(settings);
-		}
-	}
-	
-	
-	//=====================================================================================
-	//=====================================================================================
-	
-	
-	//========
-	// Fields
-	//========
-	
-	/**
-	 * Keeps track of whether or not the game is actually installed to the current
-	 * install dir.
-	 */
-	private boolean installed = false;
-	
-	/**
-	 * The active working settings for which the game will be installed using and run with.
-	 */
-	private LauncherSettings launcherSettings;
-	
-	// Launcher window stuff -- can probably be made better!
-	private JPanel contentPane;
-	private JPanel backgroundPanel;
-	private JPanel mainSelectionPanel;
-	
-	private JButton runOrInstall;
-	private JButton changeInstallDir;
-	private JButton settings;
-	private JButton settings_back;
-	private JCheckBox forceReinstall;
-	
-	private JLabel qotLogo;
-	private JLabel logoLabel;
-	private JLabel runLabel;
-	private JLabel lblSettings;
-	private JLabel installDirMenuLabel;
-	private JLabel backLabel;
-	private JLabel installDirOutputLabel;
-	
-	private JFileChooser fileChooser;
-	
-	//=================
-	// image resources
-	//=================
-	
-	private BufferedImage
-	programIcon,
-	logo,
-	background,
-	selectionsBackground,
-	
-	playButton,
-	playButtonSel,
-	runText,
-	installText,
-	
-	settingsButton,
-	settingsButtonSel,
-	settingsText,
-	
-	folderButton,
-	folderButtonSel,
-	installDirText,
-	
-	backButton,
-	backButtonSel,
-	backText;
-	
-	//==============
-	// Constructors
-	//==============
-	
-//	private EnvisionGameLauncher() {
-//		//create launcher settings and grab the install dir from launcher settings
-//		launcherSettings = new LauncherSettings();
-//		launcherSettings.INSTALL_DIR = LauncherDir.getInstallDir();
-//		launcherSettings.IN_JAR = inJar;
-//		LauncherLogger.log("Parsed install dir of: '" + launcherSettings.INSTALL_DIR + "'");
-//		
-//		loadLauncherResources();
-//		
-//		//init launcher window
-//		init();
-//	}
-	
-	protected EnvisionGameLauncher(LauncherSettings settings) {
-		launcherSettings = settings;
-		
-		LauncherLogger.log("Parsed install dir of: '" + launcherSettings.INSTALL_DIR + "'");
-		
-		loadLauncherResources();
-		
-		//init launcher window
-		init();
-	}
-	
-	//==================
-	// Resource Helpers
-	//==================
-	
-	protected abstract void launchGame(LauncherSettings settings);
-	
-	private void loadLauncherResources() {
-		try {
-			LauncherLogger.log("Loading launcher resources...");
-			
-			// Attempt to load first resource: 'programIcon'
-			// try to read the current dir -- if it fails revert to non-resources path
-			var box = tryFirstLoad("textures/launcher/", "whodundid_base.png");
-			if (box == null) throw new IllegalStateException("Failed to load resources!");
-			
-			// if load was successful, grab the dir out of the return
-			String dir = box.getA();
-			programIcon = box.getB();
-			
-			// load additional resources
-			logo = loadResource(dir, "qot_logo.png");
-			background = loadResource(dir, "background.png");
-			selectionsBackground = loadResource(dir, "options_back.png");
-		
-			playButton = loadResource(dir, "play.png");
-			playButtonSel = loadResource(dir, "play_sel.png");
-			runText = loadResource(dir, "run_text.png");
-			installText = loadResource(dir, "install_text.png");
-		
-			settingsButton = loadResource(dir, "settings.png");
-			settingsButtonSel = loadResource(dir, "settings_sel.png");
-			settingsText = loadResource(dir, "settings_text.png");
-		
-			folderButton = loadResource(dir, "folder.png");
-			folderButtonSel = loadResource(dir, "folder_sel.png");
-			installDirText = loadResource(dir, "install_dir_text.png");
-		
-			backButton = loadResource(dir, "back.png");
-			backButtonSel = loadResource(dir, "back_sel.png");
-			backText = loadResource(dir, "back_text.png");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Attempts to read the very first resource.
-	 * 
-	 * @param base
-	 * @param file
-	 * @return the file path last attempted
-	 */
-	private Box2<String, BufferedImage> tryFirstLoad(final String dirIn, final String resourceName) {
-		//String dir = "/" + resourcePath + dirIn;
-		String dir = resourcePath + dirIn;
-		
-		// try to load resource
-		BufferedImage img = loadResource(dir, resourceName, false);
-		
-		// if the resource loaded successfully, then this method can exit safely
-		if (img != null) {
-			return new Box2<>(dir, img);
-		}
-		
-		// if the resource is null, then attempt to modify the path
-		
-		if (inJar) {
-			LauncherLogger.logError("Failed to read using 'resources' path! Attempting fallback..");
-			dir = "/" + (resourcePath = "") + dirIn;
-			//inJar = false;
-		}
-		else {
-			LauncherLogger.logError("Failed to read not using 'resources' path! Attempting fallback..");
-			dir = "/" + (resourcePath = "resources/") + "textures/launcher/";
-			//inJar = true;
-		}
-		
-		// try read again
-		img = loadResource(dir, resourceName, false);
-		
-		// if it's still null, then there is something else wrong altogether!
-		if (img == null) {
-			LauncherLogger.logError("Loading resources continued to fail! Aborting resource loading process!");
-			return null;
-		}
-		
-		return new Box2<>(dir, img);
-	}
-	
-	protected BufferedImage loadResource(String base, String file) {
-		return loadResource(base, file, true);
-	}
-	
-	protected BufferedImage loadResource(String base, String file, boolean printError) {
-		try {
-			if (base.endsWith("/") && file.startsWith("/")) file = file.substring(0, file.length() - 1);
-			if (!base.endsWith("/") && !file.startsWith("/")) base += "/";
-			String resourcePath = base + file;
-			var resource = ClassLoader.getSystemResource(resourcePath);
-			//System.out.println("Reading resource: '" + resourcePath + "'");
-			LauncherLogger.log(LauncherLogLevel.DEBUG, "Reading resource: '" + resourcePath + "'");
-			return ImageIO.read(resource);
-		}
-		catch (Exception e) {
-			if (printError) e.printStackTrace();
-			return null;
-		}
-	}
-	
-	//==============
-	// Init Methods
-	//==============
-	
-	private void init() {
-		LauncherLogger.log("Initializing launcher...");
-		
-		// populate with default path if null
-		if (launcherSettings.INSTALL_DIR == null) {
-			launcherSettings.INSTALL_DIR = new File(EnvisionGameInstaller.getDefaultInstallDir());
-		}
-		
-		// check if the game is already installed at the given installation directory
-		checkInstalled();
-		
-		//init
-		try {
-			initWindow();
-			initObjects();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			LauncherLogger.logError(e);
-		}
-		
-		//show
-		setVisible(true);
-	}
-	
-	private void initWindow() throws Exception {
-		setResizable(false);
-		setIconImage(programIcon);
-		setTitle(launcherSettings.getGameName() + " Launcher");
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    static String mainPath;
+    static boolean inJar = false;
+    static String resourcePath = "";
+    
+    //===============
+    // Static Runner
+    //===============
+    
+    /** The actual launcher runner. */
+    public static void runLauncher(LauncherSettings settings) {
+        // this line is used to specifically grab the class system's file structure to determine
+        // what kind of environment the game is being executed from (an IDE or a Jar)
+        String main = Envision.class.getSimpleName() + ".class";
+        mainPath = Envision.class.getResource(main).getFile();
+        
+        //System.out.println("MAIN PATH: '" + mainPath);
+        
+        // if the main path starts with 'file:/' then the game is being run in a strange way
+        // remove 'file:' portion and attempt to continue and assume running in jar
+        if (mainPath.startsWith("file:/")) {
+            // index 4 = '/' in main path
+            mainPath = mainPath.substring(5);
+            //System.out.println("NEW MAIN PATH: '" + mainPath);
+            inJar = true;
+        }
+        
+        // if path does not start with a '/' then it's very likely a jar file!
+        else if (!mainPath.startsWith("/")) {
+            inJar = true;
+            resourcePath = "resources/";
+        }
+        
+        // attempt to create launcher directory
+        if (!LauncherDir.setupLauncherDir(settings)) return;
+        
+        ensureInstallationDirectoryName(settings);
+        
+        LauncherLogger.log("Starting '" + settings.getGameName() + "' Launcher!");
+        LauncherLogger.log("runLauncher=" + LauncherDir.runLauncher);
+        
+        if (LauncherDir.runLauncher) {
+            var game = settings.getGame();
+            launcher = game.createGameLauncher(settings);
+        }
+    }
+    
+    
+    //=====================================================================================
+    //=====================================================================================
+    
+    
+    //========
+    // Fields
+    //========
+    
+    /**
+     * Keeps track of whether or not the game is actually installed to the current
+     * install dir.
+     */
+    private boolean installed = false;
+    
+    /**
+     * The active working settings for which the game will be installed using and run with.
+     */
+    private LauncherSettings launcherSettings;
+    
+    // Launcher window stuff -- can probably be made better!
+    private JPanel contentPane;
+    private JPanel backgroundPanel;
+    private JPanel mainSelectionPanel;
+    
+    private JButton runOrInstall;
+    private JButton changeInstallDir;
+    private JButton settings;
+    private JButton settings_back;
+    private JCheckBox forceReinstall;
+    
+    private JLabel qotLogo;
+    private JLabel logoLabel;
+    private JLabel runLabel;
+    private JLabel lblSettings;
+    private JLabel installDirMenuLabel;
+    private JLabel backLabel;
+    private JLabel installDirOutputLabel;
+    
+    private JFileChooser fileChooser;
+    
+    //=================
+    // image resources
+    //=================
+    
+    private BufferedImage
+    programIcon,
+    logo,
+    background,
+    selectionsBackground,
+    
+    playButton,
+    playButtonSel,
+    runText,
+    installText,
+    
+    settingsButton,
+    settingsButtonSel,
+    settingsText,
+    
+    folderButton,
+    folderButtonSel,
+    installDirText,
+    
+    backButton,
+    backButtonSel,
+    backText;
+    
+    //==============
+    // Constructors
+    //==============
+    
+//    private EnvisionGameLauncher() {
+//        //create launcher settings and grab the install dir from launcher settings
+//        launcherSettings = new LauncherSettings();
+//        launcherSettings.INSTALL_DIR = LauncherDir.getInstallDir();
+//        launcherSettings.IN_JAR = inJar;
+//        LauncherLogger.log("Parsed install dir of: '" + launcherSettings.INSTALL_DIR + "'");
+//        
+//        loadLauncherResources();
+//        
+//        //init launcher window
+//        init();
+//    }
+    
+    protected EnvisionGameLauncher(LauncherSettings settings) {
+        launcherSettings = settings;
+        
+        LauncherLogger.log("Parsed install dir of: '" + launcherSettings.INSTALL_DIR + "'");
+        
+        loadLauncherResources();
+        
+        //init launcher window
+        init();
+    }
+    
+    //==================
+    // Resource Helpers
+    //==================
+    
+    protected abstract void launchGame(LauncherSettings settings);
+    
+    private void loadLauncherResources() {
+        try {
+            LauncherLogger.log("Loading launcher resources...");
+            
+            // Attempt to load first resource: 'programIcon'
+            // try to read the current dir -- if it fails revert to non-resources path
+            var box = tryFirstLoad("textures/launcher/", "whodundid_base.png");
+            if (box == null) throw new IllegalStateException("Failed to load resources!");
+            
+            // if load was successful, grab the dir out of the return
+            String dir = box.getA();
+            programIcon = box.getB();
+            
+            // load additional resources
+            logo = loadResource(dir, "qot_logo.png");
+            background = loadResource(dir, "background.png");
+            selectionsBackground = loadResource(dir, "options_back.png");
+        
+            playButton = loadResource(dir, "play.png");
+            playButtonSel = loadResource(dir, "play_sel.png");
+            runText = loadResource(dir, "run_text.png");
+            installText = loadResource(dir, "install_text.png");
+        
+            settingsButton = loadResource(dir, "settings.png");
+            settingsButtonSel = loadResource(dir, "settings_sel.png");
+            settingsText = loadResource(dir, "settings_text.png");
+        
+            folderButton = loadResource(dir, "folder.png");
+            folderButtonSel = loadResource(dir, "folder_sel.png");
+            installDirText = loadResource(dir, "install_dir_text.png");
+        
+            backButton = loadResource(dir, "back.png");
+            backButtonSel = loadResource(dir, "back_sel.png");
+            backText = loadResource(dir, "back_text.png");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Attempts to read the very first resource.
+     * 
+     * @param base
+     * @param file
+     * @return the file path last attempted
+     */
+    private Box2<String, BufferedImage> tryFirstLoad(final String dirIn, final String resourceName) {
+        //String dir = "/" + resourcePath + dirIn;
+        String dir = resourcePath + dirIn;
+        
+        // try to load resource
+        BufferedImage img = loadResource(dir, resourceName, false);
+        
+        // if the resource loaded successfully, then this method can exit safely
+        if (img != null) {
+            return new Box2<>(dir, img);
+        }
+        
+        // if the resource is null, then attempt to modify the path
+        
+        if (inJar) {
+            LauncherLogger.logError("Failed to read using 'resources' path! Attempting fallback..");
+            dir = "/" + (resourcePath = "") + dirIn;
+            //inJar = false;
+        }
+        else {
+            LauncherLogger.logError("Failed to read not using 'resources' path! Attempting fallback..");
+            dir = "/" + (resourcePath = "resources/") + "textures/launcher/";
+            //inJar = true;
+        }
+        
+        // try read again
+        img = loadResource(dir, resourceName, false);
+        
+        // if it's still null, then there is something else wrong altogether!
+        if (img == null) {
+            LauncherLogger.logError("Loading resources continued to fail! Aborting resource loading process!");
+            return null;
+        }
+        
+        return new Box2<>(dir, img);
+    }
+    
+    protected BufferedImage loadResource(String base, String file) {
+        return loadResource(base, file, true);
+    }
+    
+    protected BufferedImage loadResource(String base, String file, boolean printError) {
+        try {
+            if (base.endsWith("/") && file.startsWith("/")) file = file.substring(0, file.length() - 1);
+            if (!base.endsWith("/") && !file.startsWith("/")) base += "/";
+            String resourcePath = base + file;
+            var resource = ClassLoader.getSystemResource(resourcePath);
+            //System.out.println("Reading resource: '" + resourcePath + "'");
+            LauncherLogger.log(LauncherLogLevel.DEBUG, "Reading resource: '" + resourcePath + "'");
+            return ImageIO.read(resource);
+        }
+        catch (Exception e) {
+            if (printError) e.printStackTrace();
+            return null;
+        }
+    }
+    
+    //==============
+    // Init Methods
+    //==============
+    
+    private void init() {
+        LauncherLogger.log("Initializing launcher...");
+        
+        // populate with default path if null
+        if (launcherSettings.INSTALL_DIR == null) {
+            launcherSettings.INSTALL_DIR = new File(EnvisionGameInstaller.getDefaultInstallDir());
+        }
+        
+        // check if the game is already installed at the given installation directory
+        checkInstalled();
+        
+        //init
+        try {
+            initWindow();
+            initObjects();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            LauncherLogger.logError(e);
+        }
+        
+        //show
+        setVisible(true);
+    }
+    
+    private void initWindow() throws Exception {
+        setResizable(false);
+        setIconImage(programIcon);
+        setTitle(launcherSettings.getGameName() + " Launcher");
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-		int width = 700;
-		int height = 550;
-		Rectangle res = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-		setBounds(res.width / 2 - width / 2, res.height / 2 - height /2, width, height);
-		
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.GRAY);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-	}
-	
-	private void initObjects() throws Exception {
-		logoLabel = new JLabel();
-		logoLabel.setForeground(Color.WHITE);
-		logoLabel.setBackground(Color.LIGHT_GRAY);
-		logoLabel.setIcon(new ImageIcon(logo));
-		logoLabel.setBounds(236, 56, 500, 154);
-		contentPane.add(logoLabel);
-		
-		mainSelectionPanel = new JPanel() {
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.drawImage(selectionsBackground, 0, 0, getWidth(), getHeight(), this);
-			}
-		};
-		mainSelectionPanel.setBorder(new CompoundBorder(new LineBorder(new Color(0, 0, 0)), null));
-		mainSelectionPanel.setBounds(207, 253, 266, 210);
-		contentPane.add(mainSelectionPanel);
-		mainSelectionPanel.setLayout(null);
-		
-		changeInstallDir = new JButton();
-		ActionPerformer.applyOn(changeInstallDir, this::openDirSelection);
-		changeInstallDir.setToolTipText("Modify installation directory");
-		changeInstallDir.setIcon(new ImageIcon(folderButton));
-		changeInstallDir.setPressedIcon(new ImageIcon(folderButtonSel));
-		changeInstallDir.setOpaque(false);
-		changeInstallDir.setFocusPainted(false);
-		changeInstallDir.setContentAreaFilled(false);
-		changeInstallDir.setBorderPainted(false);
-		changeInstallDir.setBounds(20, 61, 40, 40);
-		changeInstallDir.setVisible(false);
-		mainSelectionPanel.add(changeInstallDir);
-		
-		installDirMenuLabel = new JLabel();
-		installDirMenuLabel.setBounds(20, 15, 500, 29);
-		installDirMenuLabel.setIcon(new ImageIcon(installDirText));
-		installDirMenuLabel.setVisible(false);
-		mainSelectionPanel.add(installDirMenuLabel);
-		
-		runOrInstall = new JButton();
-		ActionPerformer.applyOn(runOrInstall, this::tryRunOrInstall);
-		runOrInstall.setBounds(50, 61, 40, 40);
-		runOrInstall.setOpaque(false);
-		runOrInstall.setFocusPainted(false);
-		runOrInstall.setContentAreaFilled(false);
-		runOrInstall.setBorderPainted(false);
-		runOrInstall.setIcon(new ImageIcon(playButton));
-		runOrInstall.setPressedIcon(new ImageIcon(playButtonSel));
-		mainSelectionPanel.add(runOrInstall);
-		
-		runLabel = new JLabel();
-		LeftClick.applyOn(runLabel, this::tryRunOrInstall);
-		runLabel.setBounds(100, 61, 129, 40);
-		if (installed) runLabel.setIcon(new ImageIcon(runText));
-		else runLabel.setIcon(new ImageIcon(installText));
-		runLabel.setForeground(Color.gray.brighter());
-		mainSelectionPanel.add(runLabel);
-		
-		settings = new JButton();
-		ActionPerformer.applyOn(settings, () -> openSettingsMenu(true));
-		settings.setToolTipText("Modify installation properties");
-		settings.setBounds(50, 124, 40, 40);
-		settings.setOpaque(false);
-		settings.setFocusPainted(false);
-		settings.setContentAreaFilled(false);
-		settings.setBorderPainted(false);
-		settings.setIcon(new ImageIcon(settingsButton));
-		settings.setPressedIcon(new ImageIcon(settingsButtonSel));
-		mainSelectionPanel.add(settings);
-		
-		lblSettings = new JLabel();
-		LeftClick.applyOn(lblSettings, () -> openSettingsMenu(true));
-		lblSettings.setToolTipText("Modify installation properties");
-		lblSettings.setBounds(100, 124, 500, 40);
-		lblSettings.setIcon(new ImageIcon(settingsText));
-		lblSettings.setForeground(Color.gray.brighter());
-		mainSelectionPanel.add(lblSettings);
-		
-		installDirOutputLabel = new JLabel(String.valueOf(launcherSettings.INSTALL_DIR));
-		LeftClick.applyOn(installDirOutputLabel, this::openDirSelection);
-		installDirOutputLabel.setToolTipText(String.valueOf(launcherSettings.INSTALL_DIR));
-		installDirOutputLabel.setForeground(Color.LIGHT_GRAY);
-		installDirOutputLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		installDirOutputLabel.setFont(new Font("Verdana", Font.PLAIN, 12));
-		installDirOutputLabel.setBounds(70, 61, 183, 40);
-		installDirOutputLabel.setVisible(false);
-		mainSelectionPanel.add(installDirOutputLabel);
-		
-		settings_back = new JButton();
-		ActionPerformer.applyOn(settings_back, () -> openSettingsMenu(false));
-		settings_back.setOpaque(false);
-		settings_back.setFocusPainted(false);
-		settings_back.setContentAreaFilled(false);
-		settings_back.setBorderPainted(false);
-		settings_back.setBounds(50, 150, 40, 40);
-		settings_back.setIcon(new ImageIcon(backButton));
-		settings_back.setPressedIcon(new ImageIcon(backButtonSel));
-		settings_back.setVisible(false);
-		mainSelectionPanel.add(settings_back);
-		
-		backLabel = new JLabel();
-		LeftClick.applyOn(backLabel, () -> openSettingsMenu(false));
-		backLabel.setIcon(new ImageIcon(backText));
-		backLabel.setBounds(100, 150, 129, 40);
-		backLabel.setVisible(false);
-		mainSelectionPanel.add(backLabel);
-		
-		forceReinstall = new JCheckBox("Force Re-Install");
-		forceReinstall.setToolTipText("Overwrites any custom resources within the install path");
-		forceReinstall.setBounds(70, 112, 199, 23);
-		forceReinstall.setVisible(false);
-		forceReinstall.setOpaque(false);
-		forceReinstall.setForeground(Color.LIGHT_GRAY);
-		mainSelectionPanel.add(forceReinstall);
-		
-		backgroundPanel = new JPanel() {
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
-			}
-		};
-		backgroundPanel.setBounds(0, 0, 684, 511);
-		backgroundPanel.setLayout(null);
-		contentPane.add(backgroundPanel);
-		
-		updateForceReinstallVisibility();
-	}
-	
-	//=========================
-	// Internal Window Methods
-	//=========================
-	
-	/**
-	 * Garbage way of 'changing' the current """screen""". Smile :)
-	 * 
-	 * @param val True if switching to the settings screen
-	 */
-	private void openSettingsMenu(boolean val) {
-		runLabel.setVisible(!val);
-		runOrInstall.setVisible(!val);
-		settings.setVisible(!val);
-		lblSettings.setVisible(!val);
-		
-		changeInstallDir.setVisible(val);
-		installDirMenuLabel.setVisible(val);
-		settings_back.setVisible(val);
-		installDirOutputLabel.setVisible(val);
-		forceReinstall.setVisible(installed && val);
-		backLabel.setVisible(val);
-	}
-	
-	private void updateForceReinstallVisibility() {
-		if (installed) {
-			settings_back.setBounds(50, 150, 40, 40);
-			backLabel.setBounds(100, 150, 129, 40);
-		}
-		else {
-			settings_back.setBounds(50, 124, 40, 40);
-			backLabel.setBounds(100, 124, 129, 40);
-		}
-	}
-	
-	private void openDirSelection() {
-		File curDir = launcherSettings.INSTALL_DIR;
-		
-		//if the path already ends with 'QoT' use the parent directory instead
-		if (launcherSettings.INSTALL_DIR.getName().endsWith(launcherSettings.getGameName())) {
-			if (launcherSettings.INSTALL_DIR.getParentFile() != null) {
-				curDir = launcherSettings.INSTALL_DIR.getParentFile();
-			}
-		}
-		
-		fileChooser = new JFileChooser(curDir) {
-			@Override
-			protected JDialog createDialog(Component parent) throws HeadlessException {
-				JDialog dialog = super.createDialog(parent);
-				dialog.setModalityType(ModalityType.DOCUMENT_MODAL);
-				return dialog;
-			}
-		};
-		//fileChooser.setCurrentDirectory(new File(Installer.getDefaultInstallDir()));
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setApproveButtonText("Select");
-		fileChooser.setDialogTitle("Select Install Directory");
-		fileChooser.showOpenDialog(EnvisionGameLauncher.this);
-		
-		File file = fileChooser.getSelectedFile();
-		if (file != null) {
-			//append 'QoT' to the end of the path if it doesn't already have it
-			//System.out.println("FILE NAME: " + file.getName());
-			//if (!file.getName().endsWith("QoT")) file = new File(file, "QoT");
-			
-			//set path as install dir
-			LauncherLogger.log("Changing install path to: '" + file + "'");
-			launcherSettings.INSTALL_DIR = file;
-			checkInstalled();
-			if (installed) runLabel.setIcon(new ImageIcon(runText));
-			else runLabel.setIcon(new ImageIcon(installText));
-			installDirOutputLabel.setText(file.getAbsolutePath());
-			
-			//update button positions and force reinstall checkbox visibility
-			updateForceReinstallVisibility();
-			
-			//attempt to update settings file path
-			try {
-				LauncherDir.updateLauncherSettingsFile(launcherSettings);
-			}
-			catch (Exception ee) {
-				ee.printStackTrace();
-				LauncherLogger.logError(ee);
-			}
-		}
-	}
-	
-	//==================
-	// Internal Methods
-	//==================
-	
-	private void tryRunOrInstall() {
-		if (forceReinstall != null && forceReinstall.isSelected()) {
-			LauncherLogger.log("\nAttempting to reinstall and launch after...");
-			tryInstall(true);
-		}
-		else if (!checkInstalled()) {
-			LauncherLogger.log("\nAttempting to install...");
-			tryInstall(false);
-		}
-		else {
-			LauncherLogger.log("\nAttempting to launch game...");
-			closeLauncher();
-			launchGame(launcherSettings);
-		}
-	}
-	
-	private void tryInstall(boolean runAfter) {
-		try {
-			switch (EnvisionGameInstaller.createInstallDir(launcherSettings, launcherSettings.INSTALL_DIR)) {
-			case SUCCESS:
-				if (checkInstalled()) {
-					LauncherLogger.logWithDialogBox("Installation success", "Installation complete!");
-					installed = true;
-					runLabel.setIcon(new ImageIcon(runText));
-					
-					if (runAfter) {
-						closeLauncher();
-						launchGame(launcherSettings);
-					}
-				}
-				else {
-					LauncherLogger.logWithDialogBox("Something went wrong!", "Verify Error", "Was not actually able to verify install!");
-				}
-				break;
-			case FAILED:
-				LauncherLogger.logErrorWithDialogBox("Failed to create game local directory!", "Installation Error");
-				break;
-			default:
-				break;
-			}
-		}
-		catch (Exception ee) {
-			LauncherLogger.logErrorWithDialogBox(ee,
-								  "Something went wrong!",
-								  "Installation Error",
-								  "Check the error log at: '" + LauncherDir.getLauncherDir() + "'");
-		}
-		
-		updateForceReinstallVisibility();
-	}
-	
+        int width = 700;
+        int height = 550;
+        Rectangle res = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+        setBounds(res.width / 2 - width / 2, res.height / 2 - height /2, width, height);
+        
+        contentPane = new JPanel();
+        contentPane.setBackground(Color.GRAY);
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+    }
+    
+    private void initObjects() throws Exception {
+        logoLabel = new JLabel();
+        logoLabel.setForeground(Color.WHITE);
+        logoLabel.setBackground(Color.LIGHT_GRAY);
+        logoLabel.setIcon(new ImageIcon(logo));
+        logoLabel.setBounds(236, 56, 500, 154);
+        contentPane.add(logoLabel);
+        
+        mainSelectionPanel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(selectionsBackground, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        mainSelectionPanel.setBorder(new CompoundBorder(new LineBorder(new Color(0, 0, 0)), null));
+        mainSelectionPanel.setBounds(207, 253, 266, 210);
+        contentPane.add(mainSelectionPanel);
+        mainSelectionPanel.setLayout(null);
+        
+        changeInstallDir = new JButton();
+        ActionPerformer.applyOn(changeInstallDir, this::openDirSelection);
+        changeInstallDir.setToolTipText("Modify installation directory");
+        changeInstallDir.setIcon(new ImageIcon(folderButton));
+        changeInstallDir.setPressedIcon(new ImageIcon(folderButtonSel));
+        changeInstallDir.setOpaque(false);
+        changeInstallDir.setFocusPainted(false);
+        changeInstallDir.setContentAreaFilled(false);
+        changeInstallDir.setBorderPainted(false);
+        changeInstallDir.setBounds(20, 61, 40, 40);
+        changeInstallDir.setVisible(false);
+        mainSelectionPanel.add(changeInstallDir);
+        
+        installDirMenuLabel = new JLabel();
+        installDirMenuLabel.setBounds(20, 15, 500, 29);
+        installDirMenuLabel.setIcon(new ImageIcon(installDirText));
+        installDirMenuLabel.setVisible(false);
+        mainSelectionPanel.add(installDirMenuLabel);
+        
+        runOrInstall = new JButton();
+        ActionPerformer.applyOn(runOrInstall, this::tryRunOrInstall);
+        runOrInstall.setBounds(50, 61, 40, 40);
+        runOrInstall.setOpaque(false);
+        runOrInstall.setFocusPainted(false);
+        runOrInstall.setContentAreaFilled(false);
+        runOrInstall.setBorderPainted(false);
+        runOrInstall.setIcon(new ImageIcon(playButton));
+        runOrInstall.setPressedIcon(new ImageIcon(playButtonSel));
+        mainSelectionPanel.add(runOrInstall);
+        
+        runLabel = new JLabel();
+        LeftClick.applyOn(runLabel, this::tryRunOrInstall);
+        runLabel.setBounds(100, 61, 129, 40);
+        if (installed) runLabel.setIcon(new ImageIcon(runText));
+        else runLabel.setIcon(new ImageIcon(installText));
+        runLabel.setForeground(Color.gray.brighter());
+        mainSelectionPanel.add(runLabel);
+        
+        settings = new JButton();
+        ActionPerformer.applyOn(settings, () -> openSettingsMenu(true));
+        settings.setToolTipText("Modify installation properties");
+        settings.setBounds(50, 124, 40, 40);
+        settings.setOpaque(false);
+        settings.setFocusPainted(false);
+        settings.setContentAreaFilled(false);
+        settings.setBorderPainted(false);
+        settings.setIcon(new ImageIcon(settingsButton));
+        settings.setPressedIcon(new ImageIcon(settingsButtonSel));
+        mainSelectionPanel.add(settings);
+        
+        lblSettings = new JLabel();
+        LeftClick.applyOn(lblSettings, () -> openSettingsMenu(true));
+        lblSettings.setToolTipText("Modify installation properties");
+        lblSettings.setBounds(100, 124, 500, 40);
+        lblSettings.setIcon(new ImageIcon(settingsText));
+        lblSettings.setForeground(Color.gray.brighter());
+        mainSelectionPanel.add(lblSettings);
+        
+        installDirOutputLabel = new JLabel(String.valueOf(launcherSettings.INSTALL_DIR));
+        LeftClick.applyOn(installDirOutputLabel, this::openDirSelection);
+        installDirOutputLabel.setToolTipText(String.valueOf(launcherSettings.INSTALL_DIR));
+        installDirOutputLabel.setForeground(Color.LIGHT_GRAY);
+        installDirOutputLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        installDirOutputLabel.setFont(new Font("Verdana", Font.PLAIN, 12));
+        installDirOutputLabel.setBounds(70, 61, 183, 40);
+        installDirOutputLabel.setVisible(false);
+        mainSelectionPanel.add(installDirOutputLabel);
+        
+        settings_back = new JButton();
+        ActionPerformer.applyOn(settings_back, () -> openSettingsMenu(false));
+        settings_back.setOpaque(false);
+        settings_back.setFocusPainted(false);
+        settings_back.setContentAreaFilled(false);
+        settings_back.setBorderPainted(false);
+        settings_back.setBounds(50, 150, 40, 40);
+        settings_back.setIcon(new ImageIcon(backButton));
+        settings_back.setPressedIcon(new ImageIcon(backButtonSel));
+        settings_back.setVisible(false);
+        mainSelectionPanel.add(settings_back);
+        
+        backLabel = new JLabel();
+        LeftClick.applyOn(backLabel, () -> openSettingsMenu(false));
+        backLabel.setIcon(new ImageIcon(backText));
+        backLabel.setBounds(100, 150, 129, 40);
+        backLabel.setVisible(false);
+        mainSelectionPanel.add(backLabel);
+        
+        forceReinstall = new JCheckBox("Force Re-Install");
+        forceReinstall.setToolTipText("Overwrites any custom resources within the install path");
+        forceReinstall.setBounds(70, 112, 199, 23);
+        forceReinstall.setVisible(false);
+        forceReinstall.setOpaque(false);
+        forceReinstall.setForeground(Color.LIGHT_GRAY);
+        mainSelectionPanel.add(forceReinstall);
+        
+        backgroundPanel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        backgroundPanel.setBounds(0, 0, 684, 511);
+        backgroundPanel.setLayout(null);
+        contentPane.add(backgroundPanel);
+        
+        updateForceReinstallVisibility();
+    }
+    
+    //=========================
+    // Internal Window Methods
+    //=========================
+    
+    /**
+     * Garbage way of 'changing' the current """screen""". Smile :)
+     * 
+     * @param val True if switching to the settings screen
+     */
+    private void openSettingsMenu(boolean val) {
+        runLabel.setVisible(!val);
+        runOrInstall.setVisible(!val);
+        settings.setVisible(!val);
+        lblSettings.setVisible(!val);
+        
+        changeInstallDir.setVisible(val);
+        installDirMenuLabel.setVisible(val);
+        settings_back.setVisible(val);
+        installDirOutputLabel.setVisible(val);
+        forceReinstall.setVisible(installed && val);
+        backLabel.setVisible(val);
+    }
+    
+    private void updateForceReinstallVisibility() {
+        if (installed) {
+            settings_back.setBounds(50, 150, 40, 40);
+            backLabel.setBounds(100, 150, 129, 40);
+        }
+        else {
+            settings_back.setBounds(50, 124, 40, 40);
+            backLabel.setBounds(100, 124, 129, 40);
+        }
+    }
+    
+    private void openDirSelection() {
+        File curDir = launcherSettings.INSTALL_DIR;
+        
+        //if the path already ends with 'QoT' use the parent directory instead
+        if (launcherSettings.INSTALL_DIR.getName().endsWith(launcherSettings.getGameName())) {
+            if (launcherSettings.INSTALL_DIR.getParentFile() != null) {
+                curDir = launcherSettings.INSTALL_DIR.getParentFile();
+            }
+        }
+        
+        fileChooser = new JFileChooser(curDir) {
+            @Override
+            protected JDialog createDialog(Component parent) throws HeadlessException {
+                JDialog dialog = super.createDialog(parent);
+                dialog.setModalityType(ModalityType.DOCUMENT_MODAL);
+                return dialog;
+            }
+        };
+        //fileChooser.setCurrentDirectory(new File(Installer.getDefaultInstallDir()));
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setApproveButtonText("Select");
+        fileChooser.setDialogTitle("Select Install Directory");
+        fileChooser.showOpenDialog(EnvisionGameLauncher.this);
+        
+        File file = fileChooser.getSelectedFile();
+        if (file != null) {
+            //append 'QoT' to the end of the path if it doesn't already have it
+            //System.out.println("FILE NAME: " + file.getName());
+            //if (!file.getName().endsWith("QoT")) file = new File(file, "QoT");
+            
+            //set path as install dir
+            LauncherLogger.log("Changing install path to: '" + file + "'");
+            launcherSettings.INSTALL_DIR = file;
+            checkInstalled();
+            if (installed) runLabel.setIcon(new ImageIcon(runText));
+            else runLabel.setIcon(new ImageIcon(installText));
+            installDirOutputLabel.setText(file.getAbsolutePath());
+            
+            //update button positions and force reinstall checkbox visibility
+            updateForceReinstallVisibility();
+            
+            //attempt to update settings file path
+            try {
+                LauncherDir.updateLauncherSettingsFile(launcherSettings);
+            }
+            catch (Exception ee) {
+                ee.printStackTrace();
+                LauncherLogger.logError(ee);
+            }
+        }
+    }
+    
+    //==================
+    // Internal Methods
+    //==================
+    
+    private void tryRunOrInstall() {
+        if (forceReinstall != null && forceReinstall.isSelected()) {
+            LauncherLogger.log("\nAttempting to reinstall and launch after...");
+            tryInstall(true);
+        }
+        else if (!checkInstalled()) {
+            LauncherLogger.log("\nAttempting to install...");
+            tryInstall(false);
+        }
+        else {
+            LauncherLogger.log("\nAttempting to launch game...");
+            closeLauncher();
+            launchGame(launcherSettings);
+        }
+    }
+    
+    private void tryInstall(boolean runAfter) {
+        try {
+            switch (EnvisionGameInstaller.createInstallDir(launcherSettings, launcherSettings.INSTALL_DIR)) {
+            case SUCCESS:
+                if (checkInstalled()) {
+                    LauncherLogger.logWithDialogBox("Installation success", "Installation complete!");
+                    installed = true;
+                    runLabel.setIcon(new ImageIcon(runText));
+                    
+                    if (runAfter) {
+                        closeLauncher();
+                        launchGame(launcherSettings);
+                    }
+                }
+                else {
+                    LauncherLogger.logWithDialogBox("Something went wrong!", "Verify Error", "Was not actually able to verify install!");
+                }
+                break;
+            case FAILED:
+                LauncherLogger.logErrorWithDialogBox("Failed to create game local directory!", "Installation Error");
+                break;
+            default:
+                break;
+            }
+        }
+        catch (Exception ee) {
+            LauncherLogger.logErrorWithDialogBox(ee,
+                                  "Something went wrong!",
+                                  "Installation Error",
+                                  "Check the error log at: '" + LauncherDir.getLauncherDir() + "'");
+        }
+        
+        updateForceReinstallVisibility();
+    }
+    
     /**
      * Makes several checks against the mapped installation directory to
      * confirm that the chosen directory is actually valid and ends with the
      * name of the game being installed.
      */
-	private static void ensureInstallationDirectoryName(LauncherSettings settings) {
-		// if any of the following checks regarding the current installation directory
-		// fail, then the install directory will be reset to the default one
-		
-	    File defaultDir = new File(EnvisionGameInstaller.getDefaultInstallDir(), settings.getGameName());
-	    
-		// grab the current directory && ensure the directory actually exists
-		if (settings.INSTALL_DIR == null) {
-		    settings.INSTALL_DIR = defaultDir;
-		}
-		
-		// ensure that the directory is not actually empty
-		String path = settings.INSTALL_DIR.getAbsolutePath();
-		if (path.isBlank() || path.isEmpty()) {
-			settings.INSTALL_DIR = defaultDir;
-		}
-	}
-	
-	/**
-	 * Determines if QoT is actually installed at the current installation directory
-	 */
-	private boolean checkInstalled() {
-		//verify that the dir is valid -- to some extent..
-		ensureInstallationDirectoryName(launcherSettings);
-		
-		//check that dir exists and whether or not it is actually installed
-		if (EnvisionGameInstaller.doesInstallDirExist(launcherSettings, launcherSettings.INSTALL_DIR)) {
-			installed = EnvisionGameInstaller.verifyActuallyInstalled(launcherSettings, launcherSettings.INSTALL_DIR);
-			return installed;
-		}
-		
-		return false;
-	}
-	
-	//================
-	// Static Methods
-	//================
-	
-	/**
-	 * Closes the launcher.
-	 */
-	public static void closeLauncher() {
-		if (launcher == null) return;
-		LauncherLogger.log("Closing launcher! Have a nice day :)\n");
-		launcher.dispatchEvent(new WindowEvent(launcher, WindowEvent.WINDOW_CLOSING));
-		launcher.dispose();
-		launcher = null;
-	}
-	
+    private static void ensureInstallationDirectoryName(LauncherSettings settings) {
+        // if any of the following checks regarding the current installation directory
+        // fail, then the install directory will be reset to the default one
+        
+        File defaultDir = new File(EnvisionGameInstaller.getDefaultInstallDir(), settings.getGameName());
+        
+        // grab the current directory && ensure the directory actually exists
+        if (settings.INSTALL_DIR == null) {
+            settings.INSTALL_DIR = defaultDir;
+        }
+        
+        // ensure that the directory is not actually empty
+        String path = settings.INSTALL_DIR.getAbsolutePath();
+        if (path.isBlank() || path.isEmpty()) {
+            settings.INSTALL_DIR = defaultDir;
+        }
+    }
+    
+    /**
+     * Determines if QoT is actually installed at the current installation directory
+     */
+    private boolean checkInstalled() {
+        //verify that the dir is valid -- to some extent..
+        ensureInstallationDirectoryName(launcherSettings);
+        
+        //check that dir exists and whether or not it is actually installed
+        if (EnvisionGameInstaller.doesInstallDirExist(launcherSettings, launcherSettings.INSTALL_DIR)) {
+            installed = EnvisionGameInstaller.verifyActuallyInstalled(launcherSettings, launcherSettings.INSTALL_DIR);
+            return installed;
+        }
+        
+        return false;
+    }
+    
+    //================
+    // Static Methods
+    //================
+    
+    /**
+     * Closes the launcher.
+     */
+    public static void closeLauncher() {
+        if (launcher == null) return;
+        LauncherLogger.log("Closing launcher! Have a nice day :)\n");
+        launcher.dispatchEvent(new WindowEvent(launcher, WindowEvent.WINDOW_CLOSING));
+        launcher.dispose();
+        launcher = null;
+    }
+    
 }

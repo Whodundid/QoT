@@ -9,18 +9,18 @@ import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherSettings;
 
 public class TestGame extends EnvisionGame {
-	
+    
     private TestGameSettings settings = new TestGameSettings();
     private TestGameWorldCreator worldCreator = new TestGameWorldCreator(this);
     
-	@Override
-	public void onPostEngineLoad() {
-		//Envision.displayScreen(new MainMenuScreen());
-		//Envision.displayScreen(new GameScreen());
-		
-		Envision.displayWindow(ScreenLevel.SCREEN, new TestWindow(200, 200, 300, 300), ObjectPosition.EXISTING_OBJECT_INDENT);
-		Envision.displayWindow(ScreenLevel.SCREEN, new TestWindow(800, 200, 300, 300), ObjectPosition.EXISTING_OBJECT_INDENT);
-	}
+    @Override
+    public void onPostEngineLoad() {
+        //Envision.displayScreen(new MainMenuScreen());
+        //Envision.displayScreen(new GameScreen());
+        
+        Envision.displayWindow(ScreenLevel.SCREEN, new TestWindow(200, 200, 300, 300), ObjectPosition.EXISTING_OBJECT_INDENT);
+        Envision.displayWindow(ScreenLevel.SCREEN, new TestWindow(800, 200, 300, 300), ObjectPosition.EXISTING_OBJECT_INDENT);
+    }
 
     @Override
     public String getGameName() { return "Test Game"; }
@@ -46,5 +46,5 @@ public class TestGame extends EnvisionGame {
             }
         };
     }
-	
+    
 }

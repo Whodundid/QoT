@@ -10,13 +10,13 @@ import qot.screens.main.MainMenuScreen;
 @SuppressWarnings("unused")
 public class Deb1 extends DebugCommand {
 
-	@Override
-	public void run(ETerminalWindow termIn, Object... args) {
-		QoT_Player p = new QoT_Player();
-		System.out.println(p.getSprite().getWidth());
-		CharacterScreen charScreen = new CharacterScreen(new Goblin());
-		
-		Envision.displayScreen(charScreen, new MainMenuScreen());
-	}
+    @Override
+    public void run(ETerminalWindow termIn, Object... args) {
+        QoT_Player p = new QoT_Player();
+        System.out.println(p.getSprite().getWidth());
+        CharacterScreen charScreen = new CharacterScreen(new Goblin());
+        
+        Envision.displayScreen(charScreen, new MainMenuScreen());
+    }
 
 }

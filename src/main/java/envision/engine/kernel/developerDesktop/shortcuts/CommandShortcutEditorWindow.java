@@ -2,9 +2,9 @@ package envision.engine.kernel.developerDesktop.shortcuts;
 
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.kernel.developerDesktop.DeveloperDesktop;
-import envision.engine.windows.windowObjects.actionObjects.WindowButton;
-import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
-import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
+import envision.engine.windows.windowObjects.action.WindowButton;
+import envision.engine.windows.windowObjects.action.WindowTextField;
+import envision.engine.windows.windowObjects.basic.WindowLabel;
 import envision.engine.windows.windowTypes.WindowParent;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;

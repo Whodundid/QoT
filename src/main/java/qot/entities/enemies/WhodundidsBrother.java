@@ -14,63 +14,63 @@ import qot.items.Items;
 
 public class WhodundidsBrother extends Enemy {
 
-	private boolean hit = false;
-	private long timeSinceLastHit;
-	private long timeSinceLastBlink;
-	private long delayTillNextBlink;
-	
-	public WhodundidsBrother() { this(0, 0); }
-	public WhodundidsBrother(int posX, int posY) {
-		super("Whodundid's Brother");
-		init(posX, posY, 64, 64);
-		
-		sprite = new Sprite(EntityTextures.whobro);
-		setBaseMeleeDamage(2);
-		setMaxHealth(10);
-		setHealth(10);
-		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
-		setExperienceRewardedOnKill(50);
-		
-		randShort = 1500;
-		randLong = 3000;
-		
-		delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
-		
-		animationHandler = new AnimationHandler(this);
-		var att1 = animationHandler.createAnimationSet(AnimationHandler.ATTACK_1);
-		att1.setUpdateInterval(50);
-		att1.addFrame(EntityTextures.whobro);
-		att1.addFrame(EntityTextures.whobro1);
-		att1.addFrame(EntityTextures.whobro2);
-		att1.addFrame(EntityTextures.whobro3);
-		att1.addFrame(EntityTextures.whobro2);
-		att1.addFrame(EntityTextures.whobro1);
+    private boolean hit = false;
+    private long timeSinceLastHit;
+    private long timeSinceLastBlink;
+    private long delayTillNextBlink;
+    
+    public WhodundidsBrother() { this(0, 0); }
+    public WhodundidsBrother(int posX, int posY) {
+        super("Whodundid's Brother");
+        init(posX, posY, 64, 64);
+        
+        sprite = new Sprite(EntityTextures.whobro);
+        setBaseMeleeDamage(2);
+        setMaxHealth(10);
+        setHealth(10);
+        setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
+        setExperienceRewardedOnKill(50);
+        
+        randShort = 1500;
+        randLong = 3000;
+        
+        delayTillNextBlink = ERandomUtil.getRoll(5000, 9000);
+        
+        animationHandler = new AnimationHandler(this);
+        var att1 = animationHandler.createAnimationSet(AnimationHandler.ATTACK_1);
+        att1.setUpdateInterval(50);
+        att1.addFrame(EntityTextures.whobro);
+        att1.addFrame(EntityTextures.whobro1);
+        att1.addFrame(EntityTextures.whobro2);
+        att1.addFrame(EntityTextures.whobro3);
+        att1.addFrame(EntityTextures.whobro2);
+        att1.addFrame(EntityTextures.whobro1);
 
-		
-		var idle1 = animationHandler.createAnimationSet(AnimationHandler.IDLE_ANIMATION_1);
-		idle1.setUpdateInterval(40);
-		idle1.addFrame(EntityTextures.whobro);
-		idle1.addFrame(EntityTextures.whobro_blink0);
-		idle1.addFrame(EntityTextures.whobro_blink1);
-		idle1.addFrame(EntityTextures.whobro_blink2);
-		idle1.addFrame(EntityTextures.whobro_blink1);
-		idle1.addFrame(EntityTextures.whobro_blink0);
-		
+        
+        var idle1 = animationHandler.createAnimationSet(AnimationHandler.IDLE_ANIMATION_1);
+        idle1.setUpdateInterval(40);
+        idle1.addFrame(EntityTextures.whobro);
+        idle1.addFrame(EntityTextures.whobro_blink0);
+        idle1.addFrame(EntityTextures.whobro_blink1);
+        idle1.addFrame(EntityTextures.whobro_blink2);
+        idle1.addFrame(EntityTextures.whobro_blink1);
+        idle1.addFrame(EntityTextures.whobro_blink0);
+        
         // item on death
         
         var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
         itemOnDeath.setChance(7);
         
         addComponent(itemOnDeath);
-	}
-	
-	@Override
-	public void onLivingUpdate(float dt) {
-		animationHandler.onRenderTick((long) dt);
-		
-		super.onLivingUpdate(dt);
-	}
-	
+    }
+    
+    @Override
+    public void onLivingUpdate(float dt) {
+        animationHandler.onRenderTick((long) dt);
+        
+        super.onLivingUpdate(dt);
+    }
+    
     @Override
     protected void runPassiveAI(float dt) {
         if (!animationHandler.isAnimationLoaded()) {
@@ -84,7 +84,7 @@ public class WhodundidsBrother extends Enemy {
         
         wander(dt);
     }
-	
+    
     @Override
     protected void runAggressiveAI(float dt) {
         Dimension_d testDim = getCollisionDims();
@@ -129,10 +129,10 @@ public class WhodundidsBrother extends Enemy {
             //headText = "";
         }
     }
-	
-	@Override
-	public int getInternalSaveID() {
-		return EntityList.WHODUNDIDS_BROTHER.ID;
-	}
-	
+    
+    @Override
+    public int getInternalSaveID() {
+        return EntityList.WHODUNDIDS_BROTHER.ID;
+    }
+    
 }

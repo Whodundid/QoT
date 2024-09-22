@@ -7,13 +7,13 @@ import qot.world_tiles.TileIDs;
 
 public class Roof extends WorldTile {
     
-	public Roof() {
-		super(TileIDs.ROOF);
-		setBlocksMovement(true);
-		randomizeValues();
-		setMiniMapColor(0xff5a5753);
-	}
-	
+    public Roof() {
+        super(TileIDs.ROOF);
+        setBlocksMovement(true);
+        randomizeValues();
+        setMiniMapColor(0xff5a5753);
+    }
+    
     @Override
     public void randomizeValues() {
         if (meta < 0) {
@@ -23,10 +23,10 @@ public class Roof extends WorldTile {
             setSprite(new Sprite(RoofTextures.gray_roof.getChild(meta)));
         }
     }
-	
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new Roof());
-	}
-	
+    
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new Roof());
+    }
+    
 }

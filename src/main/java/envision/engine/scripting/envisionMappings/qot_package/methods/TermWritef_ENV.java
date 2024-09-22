@@ -10,22 +10,22 @@ import envision_lang.lang.natives.Primitives;
 
 /** Creates a mapping between Envision and the QoT terminal. */
 public class TermWritef_ENV extends EnvisionFunction {
-	
-	public TermWritef_ENV() {
-		super(Primitives.VOID, "writef");
-	}
-	
-	@Override
-	public void invoke(EnvisionInterpreter interpreter, EnvisionObject[] args) {
-		ETerminalWindow term = (ETerminalWindow) Envision.getDeveloperDesktop().getWindowInstance(ETerminalWindow.class);
-		if (term == null) return;
-		
-		if (args.length == 0) {
-			term.writeln();
-			return;
-		}
-		
-		term.writeln(EnvisionStringFormatter.formatPrint(interpreter, args, true));
-	}
-	
+    
+    public TermWritef_ENV() {
+        super(Primitives.VOID, "writef");
+    }
+    
+    @Override
+    public void invoke(EnvisionInterpreter interpreter, EnvisionObject[] args) {
+        ETerminalWindow term = (ETerminalWindow) Envision.getDeveloperDesktop().getWindowInstance(ETerminalWindow.class);
+        if (term == null) return;
+        
+        if (args.length == 0) {
+            term.writeln();
+            return;
+        }
+        
+        term.writeln(EnvisionStringFormatter.formatPrint(interpreter, args, true));
+    }
+    
 }

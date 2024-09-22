@@ -10,33 +10,33 @@ import eutil.datatypes.util.EList;
 //Author: Hunter Bragg
 
 public class CMD_DisplayScreen extends TerminalCommand {
-	
-	public CMD_DisplayScreen() {
-		setCategory("Engine");
-		expectedArgLength = -1;
-	}
-	
-	@Override public String getName() { return "openscreen"; }
-	@Override public EList<String> getAliases() { return EList.of("os"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Command used for opening game screens."; }
-	@Override public String getUsage() { return "ex: os MainMenuScreen"; }
-	
-	@Override
-	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
-		
-	}
-	
-	@Override
-	public void runCommand() {
-	    expectAtLeast(1);
-		
-		if (firstArg().equals("null")) {
-			if (Envision.getWorld() != null) Envision.loadLevel(null);
-			Envision.displayScreen(null);
-			return;
-		}
-		
-		GameScreen s = ScreenRepository.getScreen(firstArg().toLowerCase());
+    
+    public CMD_DisplayScreen() {
+        setCategory("Engine");
+        expectedArgLength = -1;
+    }
+    
+    @Override public String getName() { return "openscreen"; }
+    @Override public EList<String> getAliases() { return EList.of("os"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "Command used for opening game screens."; }
+    @Override public String getUsage() { return "ex: os MainMenuScreen"; }
+    
+    @Override
+    public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
+        
+    }
+    
+    @Override
+    public void runCommand() {
+        expectAtLeast(1);
+        
+        if (firstArg().equals("null")) {
+            if (Envision.getWorld() != null) Envision.loadLevel(null);
+            Envision.displayScreen(null);
+            return;
+        }
+        
+        GameScreen s = ScreenRepository.getScreen(firstArg().toLowerCase());
         if (s == null) {
             error("Unrecognized screen name!");
             return;
@@ -44,6 +44,6 @@ public class CMD_DisplayScreen extends TerminalCommand {
         
         if (Envision.getWorld() != null) Envision.loadLevel(null);
         Envision.displayScreen(s);
-	}
-	
+    }
+    
 }

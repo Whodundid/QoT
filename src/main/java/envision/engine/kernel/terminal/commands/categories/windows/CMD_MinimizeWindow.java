@@ -8,23 +8,23 @@ import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class CMD_MinimizeWindow extends TerminalCommand {
-	
-	public CMD_MinimizeWindow() {
-		setCategory("Windows");
-		expectedArgLength = 1;
-	}
+    
+    public CMD_MinimizeWindow() {
+        setCategory("Windows");
+        expectedArgLength = 1;
+    }
 
-	@Override public String getName() { return "minimize"; }
-	@Override public EList<String> getAliases() { return EList.of("min"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Minimizes or unminimzes a specified window on the hud."; }
-	@Override public String getUsage() { return "ex: minimize 4 (where 4 is the window pid)"; }
-	@Override public byte requiredPermissionLevel() { return 2; }
-	
-	@Override
-	public void runCommand() {
-	    expectAtLeast(1);
-	    
-	    try {
+    @Override public String getName() { return "minimize"; }
+    @Override public EList<String> getAliases() { return EList.of("min"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "Minimizes or unminimzes a specified window on the hud."; }
+    @Override public String getUsage() { return "ex: minimize 4 (where 4 is the window pid)"; }
+    @Override public byte requiredPermissionLevel() { return 2; }
+    
+    @Override
+    public void runCommand() {
+        expectAtLeast(1);
+        
+        try {
             long pid = Long.parseLong(firstArg());
             EList<IWindowParent> windows = getTopParent().getAllActiveWindows();
             
@@ -65,6 +65,6 @@ public class CMD_MinimizeWindow extends TerminalCommand {
                 error(q);
             }
         }
-	}
-	
+    }
+    
 }

@@ -7,13 +7,13 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.EventType;
 //Author: Hunter Bragg
 
 public class EventRedraw extends ObjectEvent {
-	
-	//--------------
-	// Constructors
-	//--------------
-	
-	public EventRedraw(IWindowObject parentObjectIn) {
-		super(parentObjectIn, EventType.REDRAW, true);
-	}
-	
+    
+    //--------------
+    // Constructors
+    //--------------
+    
+    public EventRedraw(IWindowObject parentObjectIn) {
+        super(parentObjectIn, EventType.REDRAW, true);
+    }
+    
 }

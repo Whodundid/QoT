@@ -5,11 +5,12 @@ import envision.engine.EngineSettings;
 import envision.engine.assets.TaskBarTextures;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowObjects.actionObjects.WindowButton;
-import envision.engine.windows.windowObjects.actionObjects.WindowSlider;
-import envision.engine.windows.windowObjects.advancedObjects.WindowScrollList;
-import envision.engine.windows.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;
-import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
+import envision.engine.windows.windowObjects.action.WindowButton;
+import envision.engine.windows.windowObjects.action.WindowCheckBox;
+import envision.engine.windows.windowObjects.action.WindowSlider;
+import envision.engine.windows.windowObjects.advanced.WindowScrollList;
+import envision.engine.windows.windowObjects.advanced.colorPicker.ColorPickerSimple;
+import envision.engine.windows.windowObjects.basic.WindowLabel;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
@@ -21,6 +22,8 @@ public class TerminalOptionsWindow extends WindowParent {
     WindowScrollList settings;
     WindowButton drawLineNumbers, backColor, maxLines;
     WindowSlider opacitySlider;
+    WindowCheckBox addNewLineBetweenCommands;
+    WindowSlider scrollRateSlider;
     
     public TerminalOptionsWindow() {
         aliases.add("termoptions", "toptions");
@@ -49,11 +52,12 @@ public class TerminalOptionsWindow extends WindowParent {
         
         //Visual label
         WindowLabel visual = new WindowLabel(settings, startX + 8, startY + 10, "Visual", EColors.orange);
-        
         settings.addObjectToList(false, visual);
         
         //buttons
         drawLineNumbers = new WindowButton(settings, startX + 12, visual.endY + 20, 130, 30, EngineSettings.termLineNumbers);
+        drawLineNumbers.setAction(this::lineNumbers);
+        
         backColor = new WindowButton(settings, startX + 13, drawLineNumbers.endY + 15, 20, 20) {
             @Override
             public void drawObject(float dt, int mXIn, int mYIn) {
@@ -69,13 +73,25 @@ public class TerminalOptionsWindow extends WindowParent {
         
         opacitySlider = new WindowSlider(settings, startX + 12, opacityLbl.endY + 5, 250, 30, 0, 255, false);
         opacitySlider.setUseIntegers(true);
-        opacitySlider.setSliderValue(EngineSettings.termOpacity.get());
+        opacitySlider.setSliderValue(EngineSettings.termOpacity);
+        opacitySlider.setAction(this::changeOpacity);
+        
+        addNewLineBetweenCommands = new WindowCheckBox(settings, startX + 12, opacitySlider.endY + 15, 20, 20);
+        var addNewLineLabel = new WindowLabel(settings, addNewLineBetweenCommands.endX + 12, addNewLineBetweenCommands.midY - fh, "Add new line between commands", EColors.lgray);
+        addNewLineBetweenCommands.setAction(this::toggleAddNewLines);
+        addNewLineBetweenCommands.setChecked(EngineSettings.termCmdNewLines);
+        
+        var scrollRateLbl = new WindowLabel(settings, startX + 12, addNewLineBetweenCommands.endY + 35, "Terminal Scroll Rate", EColors.lgray);
+        scrollRateSlider = new WindowSlider(settings, startX + 12, scrollRateLbl.endY + 5, 250, 30, 10, 255, false);
+        scrollRateSlider.setUseIntegers(true);
+        scrollRateSlider.setSliderValue(EngineSettings.termScrollRate);
+        scrollRateSlider.setAction(this::changeScrollRate);
         
         backColor.setDrawBackground(true);
-        backColor.setBackgroundColor(EngineSettings.termBackground.get());
+        backColor.setBackgroundColor(EngineSettings.termBackground);
         backColor.setTextures(null, null);
         
-        IActionObject.setActionReceiver(this, drawLineNumbers, backColor, opacitySlider);
+        IActionObject.setActionReceiver(this, backColor);
         
         //labels
         WindowLabel numberLabel = new WindowLabel(settings, drawLineNumbers.endX + 20, drawLineNumbers.midY - fh, "Draw line numbers", EColors.lgray);
@@ -83,10 +99,12 @@ public class TerminalOptionsWindow extends WindowParent {
         
         IWindowObject.setHoverText("Displays line numbers in terminals", numberLabel, drawLineNumbers);
         IWindowObject.setHoverText("Sets the background color in terminals", background, backColor);
+        //IWindowObject.setHoverText("Modifies the rate at which the scroll wheel will advance through the terminal history", scrollRateLbl, scrollRateSlider);
+        IWindowObject.setHoverText("An empty line is added after any command is executed in terminals", addNewLineLabel);
         
         //add to list
-        settings.addObjectToList(false, drawLineNumbers, backColor, opacitySlider);
-        settings.addObjectToList(false, numberLabel, background, opacityLbl);
+        settings.addObjectToList(false, drawLineNumbers, backColor, opacitySlider, addNewLineBetweenCommands, scrollRateSlider);
+        settings.addObjectToList(false, numberLabel, background, opacityLbl, addNewLineLabel, scrollRateLbl);
         
         settings.fitItemsInList();
         
@@ -95,6 +113,7 @@ public class TerminalOptionsWindow extends WindowParent {
     
     @Override
     public void drawObject(float dt, int mXIn, int mYIn) {
+        super.drawObject(dt, mXIn, mYIn);
         drawDefaultBackground();
         //System.out.println(this.getDimensions());
     }
@@ -144,7 +163,7 @@ public class TerminalOptionsWindow extends WindowParent {
     }
     
     private void changeColor() {
-        Envision.getDeveloperDesktop().displayWindow(new ColorPickerSimple(this, EngineSettings.termBackground.get()));
+        Envision.getDeveloperDesktop().displayWindow(new ColorPickerSimple(this, EngineSettings.termBackground));
     }
     
     private void changeOpacity() {
@@ -159,6 +178,21 @@ public class TerminalOptionsWindow extends WindowParent {
             var c = EColors.changeOpacity(background, opacity);
             t.history.setBackgroundColor(c);
             t.inputField.setBackgroundColor(c);
+        }
+    }
+    
+    private void toggleAddNewLines() {
+        EngineSettings.termCmdNewLines.toggle();
+        Envision.saveEngineConfig();
+    }
+    
+    private void changeScrollRate() {
+        EngineSettings.termScrollRate.set((int) scrollRateSlider.getSliderValue());
+        Envision.saveEngineConfig();
+        
+        var terms = Envision.getDeveloperDesktop().getAllWindowInstances(ETerminalWindow.class);;
+        for (var t : terms) {
+            t.setTerminalScrollRate(scrollRateSlider.getSliderValue());
         }
     }
     

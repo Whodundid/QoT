@@ -6,11 +6,11 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 
 import envision.Envision;
+import envision.engine.kernel.developerDesktop.windows.TextEditorWindow;
+import envision.engine.kernel.developerDesktop.windows.TextureDisplayer;
+import envision.engine.kernel.developerDesktop.windows.fileExplorer.FileExplorerWindow;
 import envision.engine.kernel.terminal.window.ETerminalWindow;
-import envision.engine.windows.bundledWindows.TextEditorWindow;
-import envision.engine.windows.bundledWindows.TextureDisplayer;
-import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
-import envision.engine.windows.windowObjects.utilityObjects.ErrorDialogBox;
+import envision.engine.windows.windowObjects.utility.ErrorDialogBox;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import envision.engine.windows.windowUtil.ObjectPosition;
 import eutil.datatypes.util.EList;

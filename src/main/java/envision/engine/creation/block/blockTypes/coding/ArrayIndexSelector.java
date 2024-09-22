@@ -9,8 +9,8 @@ import envision.engine.creation.block.PointLocation;
 import envision.engine.registry.types.Sprite;
 import envision.engine.rendering.fontRenderer.FontRenderer;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
-import envision.engine.windows.windowObjects.basicObjects.WindowImageBox;
+import envision.engine.windows.windowObjects.action.WindowTextField;
+import envision.engine.windows.windowObjects.basic.WindowImageBox;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 

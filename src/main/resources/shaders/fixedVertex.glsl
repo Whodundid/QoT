@@ -18,13 +18,13 @@ out float debugY;
 out float debugZ;
 
 void main(void) {
-	gl_Position = u_projection * u_view * vec4(in_position, 1.0);
-	
-	debugX = gl_Position.x;
-	debugY = gl_Position.y;
-	debugZ = gl_Position.z;
-	
-	pass_color = in_color;
-	pass_texCoord = in_texCoord;
-	pass_texIndex = in_texIndex;
+    gl_Position = u_projection * u_view * vec4(in_position, 1.0);
+    
+    debugX = gl_Position.x;
+    debugY = gl_Position.y;
+    debugZ = gl_Position.z;
+    
+    pass_color = in_color;
+    pass_texCoord = in_texCoord;
+    pass_texIndex = in_texIndex;
 }

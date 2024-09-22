@@ -31,30 +31,30 @@ public class DragonShield extends Item {
         };
     };
     
-	public DragonShield() {
-		super("Dragon Shield", ItemList.DRAGON_SHIELD.ID);
-		this.setUsable(false);
+    public DragonShield() {
+        super("Dragon Shield", ItemList.DRAGON_SHIELD.ID);
+        this.setUsable(false);
         this.setSprite(new Sprite(ItemTextures.dragon_shield));
         this.setDescription("Bestows its weilder with a 20% chance to take 50% less incoming damage when attacked");
         this.setBasePrice(70);
-	}
+    }
 
-	@Override
-	public Item copy() {
-		return new DragonShield();
-	}
+    @Override
+    public Item copy() {
+        return new DragonShield();
+    }
 
-	@Override
-	public int getInternalSaveID() { return ItemList.DRAGON_SHIELD.ID; }
-	
-	@Override
-	public void onItemEquip(Entity user) {
-	    user.activeEffectsTracker.addEffect(defenseEffect);
-	}
-	
-	@Override
-	public void onItemUnequip(Entity user) {
-	    user.activeEffectsTracker.removeEffect(defenseEffect);
-	}
-	
+    @Override
+    public int getInternalSaveID() { return ItemList.DRAGON_SHIELD.ID; }
+    
+    @Override
+    public void onItemEquip(Entity user) {
+        user.activeEffectsTracker.addEffect(defenseEffect);
+    }
+    
+    @Override
+    public void onItemUnequip(Entity user) {
+        user.activeEffectsTracker.removeEffect(defenseEffect);
+    }
+    
 }

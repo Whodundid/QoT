@@ -8,7 +8,7 @@ import eutil.math.dimensions.Dimension_i;
 import eutil.random.ERandomUtil;
 
 public class SpriteSheet {
-	
+    
     private GameTexture baseTexture;
     private final EList<Sprite> sprites;
     private final int spriteWidth;
@@ -84,5 +84,5 @@ public class SpriteSheet {
     }
     
     public int getNumberOfSprites() { return numSprites; }
-	
+    
 }

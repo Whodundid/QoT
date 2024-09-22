@@ -6,17 +6,17 @@ import qot.assets.textures.doodads.house.HouseTextures;
 import qot.world_tiles.TileIDs;
 
 public class Counter extends WorldTile {
-	
-	public Counter() {
-		super(TileIDs.COUNTER);
-		setSprite(new Sprite(HouseTextures.counter));
-		blocksMovement = true;
-		setMiniMapColor(0xff6B7585);
-	}
-	
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new Counter());
-	}
-	
+    
+    public Counter() {
+        super(TileIDs.COUNTER);
+        setSprite(new Sprite(HouseTextures.counter));
+        blocksMovement = true;
+        setMiniMapColor(0xff6B7585);
+    }
+    
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new Counter());
+    }
+    
 }

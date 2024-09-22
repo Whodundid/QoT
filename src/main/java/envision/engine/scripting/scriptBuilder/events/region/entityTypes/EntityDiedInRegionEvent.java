@@ -6,9 +6,9 @@ import envision.game.world.GameWorld;
 import envision.game.world.Region;
 
 public class EntityDiedInRegionEvent extends EntityRegionEvent {
-	
-	public EntityDiedInRegionEvent(GameWorld theWorld, Region theRegion, Entity theEntity) {
-		super(theWorld, theRegion, theEntity);
-	}
-	
+    
+    public EntityDiedInRegionEvent(GameWorld theWorld, Region theRegion, Entity theEntity) {
+        super(theWorld, theRegion, theEntity);
+    }
+    
 }

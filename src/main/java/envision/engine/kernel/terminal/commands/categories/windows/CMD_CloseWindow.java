@@ -8,25 +8,25 @@ import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class CMD_CloseWindow extends TerminalCommand {
-	
-	public CMD_CloseWindow() {
-		setCategory("Windows");
-		expectedArgLength = 1;
-	}
+    
+    public CMD_CloseWindow() {
+        setCategory("Windows");
+        expectedArgLength = 1;
+    }
 
-	@Override public String getName() { return "close"; }
-	@Override public String getHelpInfo(boolean runVisually) { return "Attempts to close a specific window"; }
-	@Override public String getUsage() { return "ex: close 23 (where 23 is the window pid)"; }
-	@Override public byte requiredPermissionLevel() { return 2; }
-	
-	@Override
-	public void runCommand() {
-	    if (noArgs()) {
-	        term().close();
-	        return;
-	    }
-	    
-	    try {
+    @Override public String getName() { return "close"; }
+    @Override public String getHelpInfo(boolean runVisually) { return "Attempts to close a specific window"; }
+    @Override public String getUsage() { return "ex: close 23 (where 23 is the window pid)"; }
+    @Override public byte requiredPermissionLevel() { return 2; }
+    
+    @Override
+    public void runCommand() {
+        if (noArgs()) {
+            term().close();
+            return;
+        }
+        
+        try {
             long pid = Long.parseLong(firstArg());
             EList<IWindowParent> windows = getTopParent().getAllActiveWindows();
             
@@ -76,6 +76,6 @@ public class CMD_CloseWindow extends TerminalCommand {
                 error(q);
             }
         }
-	}
-	
+    }
+    
 }

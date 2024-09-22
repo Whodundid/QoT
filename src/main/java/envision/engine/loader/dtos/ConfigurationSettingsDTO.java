@@ -6,6 +6,7 @@ import java.util.List;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.settings.config.ConfigSettingDTO;
 import eutil.datatypes.util.EList;
+import eutil.strings.EToStringBuilder;
 
 public record ConfigurationSettingsDTO(List<ConfigSettingDTO> settings) {
     
@@ -19,6 +20,19 @@ public record ConfigurationSettingsDTO(List<ConfigSettingDTO> settings) {
     
     public ConfigurationSettingsDTO(EList<ConfigSettingDTO> setting) {
         this(setting.toArrayList());
+    }
+    
+    //===========
+    // Overrides
+    //===========
+    
+    @Override
+    public String toString() {
+        EToStringBuilder sb = new EToStringBuilder(this);
+        for (var s : settings) {
+            sb.a(s.name(), s.defaultValue());
+        }
+        return sb.toString();
     }
     
     //=======================

@@ -7,9 +7,9 @@ import envision.engine.kernel.developerDesktop.shortcuts.CommandShortcutEditorWi
 import envision.engine.kernel.developerDesktop.shortcuts.DesktopShortcut_Command;
 import envision.engine.kernel.developerDesktop.shortcuts.DesktopShortcut_File;
 import envision.engine.kernel.developerDesktop.util.DesktopUtil;
+import envision.engine.kernel.developerDesktop.windows.fileExplorer.FileExplorerWindow;
 import envision.engine.kernel.terminal.window.ETerminalWindow;
-import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
-import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
+import envision.engine.windows.windowObjects.utility.RightClickMenu;
 import envision.engine.windows.windowUtil.ObjectPosition;
 
 public class DesktopRCM extends RightClickMenu {

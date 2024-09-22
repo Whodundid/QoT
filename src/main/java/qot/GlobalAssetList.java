@@ -34,47 +34,47 @@ import qot.entities.shopkeepers.ShopGuy;
 
 public class GlobalAssetList {
 
-	private static final EList<GameObject> assets = new EArrayList<>();
-	
-	static {
-		assets.add(new Goblin());
-		assets.add(new QoT_Player());
-		assets.add(new Thyrah());
-		assets.add(new TrollBoar());
-		assets.add(new Whodundid());
-		assets.add(new PineTree());
-		assets.add(new PlayerSpawnPoint());
-		assets.add(new WhodundidsBrother());
-		
-		assets.add(new Barrel());
-		assets.add(new Chair());
-		assets.add(new Crate());
-		assets.add(new Stool());
-		
-		assets.add(new BirchTree());
-		assets.add(new Bush0());
-		assets.add(new StoneGroundClutter());
-		assets.add(new PineTree2());
-		
-		assets.add(new BushyTree0());
-		assets.add(new BushyTree1());
-		assets.add(new BushyTree2());
-		
-		assets.add(new WeedsGroundClutter());
-		assets.add(new LeavesGroundClutter());
-		assets.add(new SticksGroundClutter());
-		
-		assets.add(new Archer());
-		assets.add(new Spawner());
-		assets.add(new ShopGuy());
-		assets.add(new PathfindingTestEntity());
-		assets.add(new FallBirch());
-		
-		assets.add(new Chest());
-	}
-	
-	public static EList<GameObject> getAssets() {
-		return new EArrayList<>(assets);
-	}
-	
+    private static final EList<GameObject> assets = new EArrayList<>();
+    
+    static {
+        assets.add(new Goblin());
+        assets.add(new QoT_Player());
+        assets.add(new Thyrah());
+        assets.add(new TrollBoar());
+        assets.add(new Whodundid());
+        assets.add(new PineTree());
+        assets.add(new PlayerSpawnPoint());
+        assets.add(new WhodundidsBrother());
+        
+        assets.add(new Barrel());
+        assets.add(new Chair());
+        assets.add(new Crate());
+        assets.add(new Stool());
+        
+        assets.add(new BirchTree());
+        assets.add(new Bush0());
+        assets.add(new StoneGroundClutter());
+        assets.add(new PineTree2());
+        
+        assets.add(new BushyTree0());
+        assets.add(new BushyTree1());
+        assets.add(new BushyTree2());
+        
+        assets.add(new WeedsGroundClutter());
+        assets.add(new LeavesGroundClutter());
+        assets.add(new SticksGroundClutter());
+        
+        assets.add(new Archer());
+        assets.add(new Spawner());
+        assets.add(new ShopGuy());
+        assets.add(new PathfindingTestEntity());
+        assets.add(new FallBirch());
+        
+        assets.add(new Chest());
+    }
+    
+    public static EList<GameObject> getAssets() {
+        return new EArrayList<>(assets);
+    }
+    
 }

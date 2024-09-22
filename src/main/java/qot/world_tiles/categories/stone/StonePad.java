@@ -6,20 +6,20 @@ import qot.assets.textures.world.floors.stone.StoneFloorTextures;
 import qot.world_tiles.TileIDs;
 
 public class StonePad extends WorldTile {
-	
-	public StonePad() {
-		super(TileIDs.STONE_PAD);
-		setSprite(new Sprite(StoneFloorTextures.stone_pad));
-		wallHeight = 0.1f;
-		randomizeRotation = true;
-		
-		randomizeValues();
-		setMiniMapColor(0xff808080);
-	}
-	
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new StonePad());
-	}
-	
+    
+    public StonePad() {
+        super(TileIDs.STONE_PAD);
+        setSprite(new Sprite(StoneFloorTextures.stone_pad));
+        wallHeight = 0.1f;
+        randomizeRotation = true;
+        
+        randomizeValues();
+        setMiniMapColor(0xff808080);
+    }
+    
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new StonePad());
+    }
+    
 }

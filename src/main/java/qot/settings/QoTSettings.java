@@ -8,9 +8,9 @@ import envision.Envision;
 import envision.engine.loader.GameSettings;
 import envision.engine.settings.config.ConfigSetting;
 import envision.engine.settings.config.setting_types.BooleanConfigSetting;
-import envision.engine.settings.config.setting_types.IntegerConfigSetting;
 import eutil.datatypes.util.EList;
 
+@Deprecated
 public class QoTSettings extends GameSettings {
     
     //=================
@@ -31,15 +31,15 @@ public class QoTSettings extends GameSettings {
     
     public static final BooleanConfigSetting
     
-    animatedMainMenu    = boolSetting("animatedMainMenu", "Animated Main Menu", true),
-    camreaEdgeLocking   = boolSetting("cameraEdgeLocking", "Enable Camera Edge Locking", true);
+    animatedMainMenu    = boolSetting("animatedMainMenu", "Animated Main Menu", true);
+    //camreaEdgeLocking   = boolSetting("cameraEdgeLocking", "Enable Camera Edge Locking", true);
     
     //-------------------------------------------------------------------------------
     
-    public static final IntegerConfigSetting
-    
-    musicVolume         = intSetting("musicVolume", "Music Volume", 30),
-    sfxVolume           = intSetting("sfxVolume", "SFX Volume", 50);
+//    public static final IntegerConfigSetting
+//    
+//    musicVolume         = intSetting("musicVolume", "Music Volume", 30),
+//    sfxVolume           = intSetting("sfxVolume", "SFX Volume", 50);
     
     //--------------------------------------------------------------------------------
     
@@ -67,10 +67,10 @@ public class QoTSettings extends GameSettings {
     static {
         // BOOLEANS
         settings.add(animatedMainMenu);
-        settings.add(camreaEdgeLocking);
+//        settings.add(camreaEdgeLocking);
         
         // INTEGERS
-        settings.add(musicVolume);
+//        settings.add(musicVolume);
         
         // STRINGS
         // ;

@@ -7,28 +7,28 @@ import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
 public class CMD_TPS extends TerminalCommand {
-	
-	public CMD_TPS() {
-		setCategory("Engine");
-		expectedArgLength = 0;
-	}
+    
+    public CMD_TPS() {
+        setCategory("Engine");
+        expectedArgLength = 0;
+    }
 
-	@Override public String getName() { return "tps"; }
-	@Override public EList<String> getAliases() { return EList.of("ticks"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Displays the current engine ticks per second."; }
-	@Override public String getUsage() { return "ex: tps"; }
+    @Override public String getName() { return "tps"; }
+    @Override public EList<String> getAliases() { return EList.of("ticks"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "Displays the current engine ticks per second."; }
+    @Override public String getUsage() { return "ex: tps"; }
     @Override public byte requiredPermissionLevel() { return 0; }
-	
-	@Override
-	public void runCommand() {
-	    expectNoMoreThan(1);
-	    
-		if (noArgs()) {
-	         writeln(EColors.yellow, "target: ", Envision.getTargetTPS());
-	         writeln(EColors.green, "actual: ", Envision.getTPS());
-	         return;
-		}
-		
+    
+    @Override
+    public void runCommand() {
+        expectNoMoreThan(1);
+        
+        if (noArgs()) {
+             writeln(EColors.yellow, "target: ", Envision.getTargetTPS());
+             writeln(EColors.green, "actual: ", Envision.getTPS());
+             return;
+        }
+        
         try {
             int val = Integer.parseInt(firstArg());
             val = ENumUtil.clamp(val, 1, Integer.MAX_VALUE);
@@ -39,6 +39,6 @@ public class CMD_TPS extends TerminalCommand {
             error(e);
             error("Expected a valid integer value!");
         }
-	}
-	
+    }
+    
 }

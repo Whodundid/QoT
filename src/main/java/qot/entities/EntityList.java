@@ -32,113 +32,113 @@ import qot.entities.player.QoT_Player;
 import qot.entities.shopkeepers.ShopGuy;
 
 public enum EntityList {
-	PLAYER(0),
-	GOBLIN(1),
-	WHODUNDID(2),
-	TROLLBOAR(3),
-	THYRAH(4),
-	PINE_TREE(5),
-	WHODUNDIDS_BROTHER(6),
-	
-	BARREL(7),
-	CHAIR(8),
-	CRATE(9),
-	STOOL(10),
-	
-	BIRCH(11),
-	BUSH0(12),
-	STONE_GROUND_CLUTTER(13),
-	PINE_TREE_2(14),
-	
-	BUSHY_TREE_0(15),
-	BUSHY_TREE_1(16),
-	BUSHY_TREE_2(17),
-	
-	WEEDS(18),
-	LEAVES(19),
-	STICKS(20),
-	
-	ARCHER(21),
-	
-	SPAWNER(22),
-	SHOPKEEPER(23), // please let this be the last damn one of these..
-	PATHFINDER_TEST(24),
-	FALL_BIRCH(25),
-	
-	CHEST(26),
-	;
-	
-	public final int ID;
-	
-	private EntityList(int idIn) {
-		ID = idIn;
-	}
-	
-	public static EntityList randomType() {
-		return values()[ERandomUtil.getRoll(1, values().length - 1)];
-	}
-	
-	public static Entity randomEntity() {
-		return getEntity(values()[ERandomUtil.getRoll(1, values().length - 1)]);
-	}
-	
-	public static Entity getEntity(int idIn) { return getEntity(getType(idIn)); }
-	public static Entity getEntity(EntityList typeIn) {
-		switch (typeIn) {
-		case PLAYER: return new QoT_Player();
-		case GOBLIN: return new Goblin();
-		case WHODUNDID: return new Whodundid();
-		case TROLLBOAR: return new TrollBoar();
-		case THYRAH: return new Thyrah();
-		case PINE_TREE: return new PineTree();
-		case WHODUNDIDS_BROTHER: return new WhodundidsBrother();
-		
-		case BARREL: return new Barrel();
-		case CHAIR: return new Chair();
-		case CRATE: return new Crate();
-		case STOOL: return new Stool();
-		
-		case BIRCH: return new BirchTree();
-		case BUSH0: return new Bush0();
-		case STONE_GROUND_CLUTTER: return new StoneGroundClutter();
-		case PINE_TREE_2: return new PineTree2();
-		
-		case BUSHY_TREE_0: return new BushyTree0();
-		case BUSHY_TREE_1: return new BushyTree1();
-		case BUSHY_TREE_2: return new BushyTree2();
-		
-		case WEEDS: return new WeedsGroundClutter();
-		case LEAVES: return new LeavesGroundClutter();
-		case STICKS: return new SticksGroundClutter();
-		
-		case ARCHER: return new Archer();
-		case SPAWNER: return new Spawner();
-		case SHOPKEEPER: return new ShopGuy();
-		case PATHFINDER_TEST: return new PathfindingTestEntity();
-		case FALL_BIRCH: return new FallBirch();
-		
-		case CHEST: return new Chest();
-		default: return null;
-		}
-	}
-	
-	public static EntityList getType(int idIn) {
-		if (idIn < 0) return null;
-		int len = values().length;
-		if (idIn >= len) return null;
-		return values()[idIn];
-	}
-	
-	public static EList<EntityList> spawnable() {
-	    EList<EntityList> list = EList.newList();
-	    list.add(ARCHER);
-	    list.add(SPAWNER);
-	    list.add(GOBLIN);
-	    list.add(WHODUNDID);
-	    list.add(TROLLBOAR);
-	    list.add(THYRAH);
-	    list.add(WHODUNDIDS_BROTHER);
-	    return list;
-	}
-	
+    PLAYER(0),
+    GOBLIN(1),
+    WHODUNDID(2),
+    TROLLBOAR(3),
+    THYRAH(4),
+    PINE_TREE(5),
+    WHODUNDIDS_BROTHER(6),
+    
+    BARREL(7),
+    CHAIR(8),
+    CRATE(9),
+    STOOL(10),
+    
+    BIRCH(11),
+    BUSH0(12),
+    STONE_GROUND_CLUTTER(13),
+    PINE_TREE_2(14),
+    
+    BUSHY_TREE_0(15),
+    BUSHY_TREE_1(16),
+    BUSHY_TREE_2(17),
+    
+    WEEDS(18),
+    LEAVES(19),
+    STICKS(20),
+    
+    ARCHER(21),
+    
+    SPAWNER(22),
+    SHOPKEEPER(23), // please let this be the last damn one of these..
+    PATHFINDER_TEST(24),
+    FALL_BIRCH(25),
+    
+    CHEST(26),
+    ;
+    
+    public final int ID;
+    
+    private EntityList(int idIn) {
+        ID = idIn;
+    }
+    
+    public static EntityList randomType() {
+        return values()[ERandomUtil.getRoll(1, values().length - 1)];
+    }
+    
+    public static Entity randomEntity() {
+        return getEntity(values()[ERandomUtil.getRoll(1, values().length - 1)]);
+    }
+    
+    public static Entity getEntity(int idIn) { return getEntity(getType(idIn)); }
+    public static Entity getEntity(EntityList typeIn) {
+        switch (typeIn) {
+        case PLAYER: return new QoT_Player();
+        case GOBLIN: return new Goblin();
+        case WHODUNDID: return new Whodundid();
+        case TROLLBOAR: return new TrollBoar();
+        case THYRAH: return new Thyrah();
+        case PINE_TREE: return new PineTree();
+        case WHODUNDIDS_BROTHER: return new WhodundidsBrother();
+        
+        case BARREL: return new Barrel();
+        case CHAIR: return new Chair();
+        case CRATE: return new Crate();
+        case STOOL: return new Stool();
+        
+        case BIRCH: return new BirchTree();
+        case BUSH0: return new Bush0();
+        case STONE_GROUND_CLUTTER: return new StoneGroundClutter();
+        case PINE_TREE_2: return new PineTree2();
+        
+        case BUSHY_TREE_0: return new BushyTree0();
+        case BUSHY_TREE_1: return new BushyTree1();
+        case BUSHY_TREE_2: return new BushyTree2();
+        
+        case WEEDS: return new WeedsGroundClutter();
+        case LEAVES: return new LeavesGroundClutter();
+        case STICKS: return new SticksGroundClutter();
+        
+        case ARCHER: return new Archer();
+        case SPAWNER: return new Spawner();
+        case SHOPKEEPER: return new ShopGuy();
+        case PATHFINDER_TEST: return new PathfindingTestEntity();
+        case FALL_BIRCH: return new FallBirch();
+        
+        case CHEST: return new Chest();
+        default: return null;
+        }
+    }
+    
+    public static EntityList getType(int idIn) {
+        if (idIn < 0) return null;
+        int len = values().length;
+        if (idIn >= len) return null;
+        return values()[idIn];
+    }
+    
+    public static EList<EntityList> spawnable() {
+        EList<EntityList> list = EList.newList();
+        list.add(ARCHER);
+        list.add(SPAWNER);
+        list.add(GOBLIN);
+        list.add(WHODUNDID);
+        list.add(TROLLBOAR);
+        list.add(THYRAH);
+        list.add(WHODUNDIDS_BROTHER);
+        return list;
+    }
+    
 }

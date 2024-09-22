@@ -5,10 +5,10 @@ import envision.game.entities.Projectile;
 import qot.assets.textures.entity.EntityTextures;
 
 public class Arrow extends Projectile {
-	
-	public Arrow() {
-		super("Arrow");
-		
+    
+    public Arrow() {
+        super("Arrow");
+        
         // 1.5 seconds
         this.maxLifeSpan = 800.0f;
         
@@ -17,11 +17,11 @@ public class Arrow extends Projectile {
         setCollisionBox(startX + 5, startY + 5, endX - 5, endY - 5);
         
         setSpeed(400);
-	}
-	
-	@Override
-	public int getInternalSaveID() {
-		return 0;
-	}
-	
+    }
+    
+    @Override
+    public int getInternalSaveID() {
+        return 0;
+    }
+    
 }

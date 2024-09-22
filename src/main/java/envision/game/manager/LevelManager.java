@@ -194,9 +194,9 @@ public class LevelManager {
         }
         
         // preserve current world time
-        //		int curTime = 0;
-        //		if (activeWorld != null) curTime = activeWorld.getTime();
-        //		else if (worldIn != null) curTime = worldIn.getInitialTime();
+        //        int curTime = 0;
+        //        if (activeWorld != null) curTime = activeWorld.getTime();
+        //        else if (worldIn != null) curTime = worldIn.getInitialTime();
         
         // preserve current camera zoom
 //        double curZoom = 2.0;

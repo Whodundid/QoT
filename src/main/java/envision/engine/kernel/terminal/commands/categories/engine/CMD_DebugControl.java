@@ -10,33 +10,33 @@ import eutil.datatypes.util.EList;
 //Author: Hunter Bragg
 
 public class CMD_DebugControl extends TerminalCommand {
-	
-	public CMD_DebugControl() {
-		setCategory("System");
-		expectedArgLength = 1;
-	}
+    
+    public CMD_DebugControl() {
+        setCategory("System");
+        expectedArgLength = 1;
+    }
 
-	@Override public String getName() { return "debug"; }
-	@Override public boolean showInHelp() { return true; }
-	@Override public EList<String> getAliases() { return EList.of("deb", "dev"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Toggles debug mode for EMC."; }
-	@Override public String getUsage() { return "ex: deb init"; }
+    @Override public String getName() { return "debug"; }
+    @Override public boolean showInHelp() { return true; }
+    @Override public EList<String> getAliases() { return EList.of("deb", "dev"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "Toggles debug mode for EMC."; }
+    @Override public String getUsage() { return "ex: deb init"; }
     @Override public byte requiredPermissionLevel() { return 2; }
-	
-	@Override
-	public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
-	    basicTabComplete(termIn, args, "init", "pid", "dims", "drawinfo");
-	}
-	
-	@Override
-	public void runCommand() {
-	    if (noArgs()) {
+    
+    @Override
+    public void handleTabComplete(ETerminalWindow termIn, EList<String> args) {
+        basicTabComplete(termIn, args, "init", "pid", "dims", "drawinfo");
+    }
+    
+    @Override
+    public void runCommand() {
+        if (noArgs()) {
             Envision.setDebugMode(!Envision.isDebugMode());
             writeln(((Envision.isDebugMode()) ? "Enabled" : "Disabled") + " debug mode.", EColors.yellow);
             return;
         }
-	    
-	    try {
+        
+        try {
             String arg = firstArg().toLowerCase();
             
             if (arg.equals("init")) {
@@ -133,6 +133,6 @@ public class CMD_DebugControl extends TerminalCommand {
             e.printStackTrace();
             error(term(), e);
         }
-	}
-	
+    }
+    
 }

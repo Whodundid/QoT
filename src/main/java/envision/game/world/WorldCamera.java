@@ -1,13 +1,13 @@
 package envision.game.world;
 
 import envision.Envision;
+import envision.engine.EngineSettings;
 import envision.engine.inputHandlers.Mouse;
 import envision.game.GameObject;
 import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.math.dimensions.Dimension_i;
-import qot.settings.QoTSettings;
 
 public class WorldCamera {
     
@@ -198,7 +198,7 @@ public class WorldCamera {
         double topEdgeY = viewablePixelsForHalfHeight - th * 1;// - th * 3;
         double botEdgeY = (wh * th - viewablePixelsForHalfHeight) + (th - eh);
         
-        if (QoTSettings.camreaEdgeLocking.getBoolean() && vw <= ww && vh <= wh) {
+        if (EngineSettings.camreaEdgeLocking.getBoolean() && vw <= ww && vh <= wh) {
             xCoordToSet = Math.floor(ENumUtil.clamp(xCoordToSet, leftCoordEdge, rightCoordEdge));
             yCoordToSet = Math.floor(ENumUtil.clamp(yCoordToSet, topCoordEdge, botCoordEdge));
             xToSet = ENumUtil.clamp(xToSet, leftEdgeX, rightEdgeX);
@@ -339,11 +339,11 @@ public class WorldCamera {
     /**
      * @return the size (in pixels) for the width of each tile in the world.
      */
-    //	public double getScaledTileWidth() { return theWorld.getTileWidth() * zoom; }
+    //    public double getScaledTileWidth() { return theWorld.getTileWidth() * zoom; }
     /**
      * @return the size (in pixels) for the height of each tile in the world.
      */
-    //	public double getScaledTileHeight() { return theWorld.getTileHeight() * zoom; }
+    //    public double getScaledTileHeight() { return theWorld.getTileHeight() * zoom; }
     
     /**
      * @return the X location of where the camera is in terms of decimal world
@@ -498,7 +498,7 @@ public class WorldCamera {
         double min = minZoom;
         double max = maxZoom;
         
-        if (QoTSettings.camreaEdgeLocking.getBoolean()) {
+        if (EngineSettings.camreaEdgeLocking.getBoolean()) {
             min = calcMinEdgeLockZoom();
             min = ENumUtil.clamp(min, minZoom, 1000);
             max = ENumUtil.clamp(max, min, max);
@@ -531,11 +531,13 @@ public class WorldCamera {
     public void setMaxZoom(double zoomIn) { maxZoom = zoomIn; }
     
     public void setEdgeLocked(boolean val) {
-        QoTSettings.camreaEdgeLocking.set(val);
-        QoTSettings.saveConfig();
+        EngineSettings.camreaEdgeLocking.set(val);
+        Envision.saveEngineConfig();
     }
     
-    public boolean isEdgeLocked() { return QoTSettings.camreaEdgeLocking.getBoolean(); }
+    public boolean isEdgeLocked() {
+        return EngineSettings.camreaEdgeLocking.getBoolean();
+    }
     
     public synchronized void setActiveWorld(IGameWorld world) {
         this.theWorld = world;

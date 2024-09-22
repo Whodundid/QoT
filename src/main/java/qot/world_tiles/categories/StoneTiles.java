@@ -8,12 +8,12 @@ import qot.world_tiles.categories.stone.StonePaver;
 import qot.world_tiles.categories.stone.StoneWall;
 
 public class StoneTiles implements TileCategory {
-	
-	private StoneTiles() {}
-	
-	public static final WorldTile clayPad = new ClayPad();
-	public static final WorldTile stonePad = new StonePad();
-	public static final WorldTile stoneWall = new StoneWall();
-	public static final WorldTile stonePaver = new StonePaver();
-	
+    
+    private StoneTiles() {}
+    
+    public static final WorldTile clayPad = new ClayPad();
+    public static final WorldTile stonePad = new StonePad();
+    public static final WorldTile stoneWall = new StoneWall();
+    public static final WorldTile stonePaver = new StonePaver();
+    
 }

@@ -2,7 +2,7 @@ package qot.screens.gameplay;
 
 import envision.Envision;
 import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.actionObjects.WindowButton;
+import envision.engine.windows.windowObjects.action.WindowButton;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.FutureTaskEventType;
@@ -11,69 +11,69 @@ import qot.screens.main.MainMenuScreen;
 import qot.screens.main.OptionsScreen;
 
 public class GamePauseWindow extends WindowParent {
-	
-	private GameScreen parent;
-	
-	private WindowButton<?> quit, resume;
-	private WindowButton<?> options;
-	
-	public GamePauseWindow(GameScreen parentScreen, int x, int y) {
-		init(parentScreen, x, y, 300, 200);
-		setMaxDims(400, 200);
-		setMinDims(200, 100);
-		setMinimizable(false);
-		setResizeable(false);
-		setMoveable(false);
-		
-		parent = parentScreen;
-	}
-	
-	@Override
-	public void initChildren() {
-		Envision.pause();
-		
-		//defaultHeader();
-		
-		var w = width - 60;
-		var sX = midX - w / 2;
-		var gap = 5;
-		
-		resume = new WindowButton<>(this, sX, startY + 20, w, 50, "Resume Game");
-		options = new WindowButton<>(this, sX, resume.endY + gap, w, 50, "Options");
-		quit = new WindowButton<>(this, sX, options.endY + gap, w, 50, "Quit");
-		
-		// Makes it so confirm and deny send an action to this confirmation window
-		IActionObject.setActionReceiver(this, quit, options, resume);
-		
-		addObject(quit, options, resume);
-	}
-	
-	@Override
-	public void drawObject(float dt, int mXIn, int mYIn) {
-		drawRect(0, 0, Envision.getWidth(), Envision.getHeight(), EColors.vdgray.opacity(150));
-		drawDefaultBackground();
-	}
-	
-	@Override
-	public void actionPerformed(IActionObject object, Object... args) {
-		if (object == quit) {
-			Envision.loadLevel(null); // Unload current world
-			Envision.displayScreen(new MainMenuScreen()); // Display main menu
-		}
-		
-		if (object == options) {
-			var opScreen = Envision.displayScreen(new OptionsScreen());
-			if (parent instanceof GamePlayScreen g) {
-				opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, g::openPauseWindowIfNotOpen);
-			}
-		}
-		
-		if (object == resume) close();
-	}
-	
-	@Override
-	public void onClosed() {
-		Envision.unpause();
-	}
-	
+    
+    private GameScreen parent;
+    
+    private WindowButton<?> quit, resume;
+    private WindowButton<?> options;
+    
+    public GamePauseWindow(GameScreen parentScreen, int x, int y) {
+        init(parentScreen, x, y, 300, 200);
+        setMaxDims(400, 200);
+        setMinDims(200, 100);
+        setMinimizable(false);
+        setResizeable(false);
+        setMoveable(false);
+        
+        parent = parentScreen;
+    }
+    
+    @Override
+    public void initChildren() {
+        Envision.pause();
+        
+        //defaultHeader();
+        
+        var w = width - 60;
+        var sX = midX - w / 2;
+        var gap = 5;
+        
+        resume = new WindowButton<>(this, sX, startY + 20, w, 50, "Resume Game");
+        options = new WindowButton<>(this, sX, resume.endY + gap, w, 50, "Options");
+        quit = new WindowButton<>(this, sX, options.endY + gap, w, 50, "Quit");
+        
+        // Makes it so confirm and deny send an action to this confirmation window
+        IActionObject.setActionReceiver(this, quit, options, resume);
+        
+        addObject(quit, options, resume);
+    }
+    
+    @Override
+    public void drawObject(float dt, int mXIn, int mYIn) {
+        drawRect(0, 0, Envision.getWidth(), Envision.getHeight(), EColors.vdgray.opacity(150));
+        drawDefaultBackground();
+    }
+    
+    @Override
+    public void actionPerformed(IActionObject object, Object... args) {
+        if (object == quit) {
+            Envision.loadLevel(null); // Unload current world
+            Envision.displayScreen(new MainMenuScreen()); // Display main menu
+        }
+        
+        if (object == options) {
+            var opScreen = Envision.displayScreen(new OptionsScreen());
+            if (parent instanceof GamePlayScreen g) {
+                opScreen.addFutureTask(FutureTaskEventType.ON_CLOSED, g::openPauseWindowIfNotOpen);
+            }
+        }
+        
+        if (object == resume) close();
+    }
+    
+    @Override
+    public void onClosed() {
+        Envision.unpause();
+    }
+    
 }

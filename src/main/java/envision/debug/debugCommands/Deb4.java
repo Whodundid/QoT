@@ -6,10 +6,10 @@ import envision.engine.kernel.terminal.window.ETerminalWindow;
 
 @SuppressWarnings("unused")
 public class Deb4 extends DebugCommand {
-	
-	@Override
-	public void run(ETerminalWindow termIn, Object... args) {
-	    Envision.displayScreen(new TestScreen());
-	}
-	
+    
+    @Override
+    public void run(ETerminalWindow termIn, Object... args) {
+        Envision.displayScreen(new TestScreen());
+    }
+    
 }

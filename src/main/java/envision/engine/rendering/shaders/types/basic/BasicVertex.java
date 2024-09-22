@@ -4,13 +4,13 @@ import envision.engine.rendering.shaders.util.VertexShader;
 
 /** Basic vertex shader. */
 public class BasicVertex extends VertexShader {
-	
-	//--------------
-	// Constructors
-	//--------------
-	
-	public BasicVertex() {
-		super("BasicVertex", "src/main/resources/shaders/basicVertex.glsl");
-	}
-	
+    
+    //--------------
+    // Constructors
+    //--------------
+    
+    public BasicVertex() {
+        super("BasicVertex", "src/main/resources/shaders/basicVertex.glsl");
+    }
+    
 }

@@ -47,8 +47,10 @@ public class EngineSettings {
     fullscreen          = boolSetting("fullscreen", "Fullscreen", false),
     vsync               = boolSetting("vSync", "V-Sync", false),
     termLineNumbers     = boolSetting("termLineNumbers", "Show Terminal Line Numbers", false),
+    termCmdNewLines     = boolSetting("termCmdNewLines", "Add Empty Lines Between Commands", true),
     batchRendering      = boolSetting("batchRendering", "Enable Batch Rendering", true),
-    closeHudWhenEmpty   = boolSetting("closeHudWhenEmpty", "Close Hud when Empty", true);
+    closeHudWhenEmpty   = boolSetting("closeHudWhenEmpty", "Close Hud when Empty", true),
+    camreaEdgeLocking   = boolSetting("cameraEdgeLocking", "Enable Camera Edge Locking", true);
     
     //-------------------------------------------------------------------------------
     
@@ -59,7 +61,10 @@ public class EngineSettings {
     resolutionScale     = intSetting("resScale", "Resolution Scale", 1),
     termBackground      = intSetting("termBackground", "Terminal Background Color", 0xff000000),
     hoverTextColor      = intSetting("hoverTextColor", "Text Hover Color", EColors.aquamarine.intVal),
-    termOpacity         = intSetting("termOpacity", "Terminal Opacity", 255).setRange(0, 255);
+    termOpacity         = intSetting("termOpacity", "Terminal Opacity", 255).setRange(0, 255),
+    termScrollRate      = intSetting("termScrollRate", "Terminal Scroll Rate", 30).setRange(10, 255),
+    musicVolume         = intSetting("musicVolume", "Music Volume", 30),
+    sfxVolume           = intSetting("sfxVolume", "SFX Volume", 50);
     
     //public static final IntegerConfigSetting
     
@@ -98,6 +103,7 @@ public class EngineSettings {
             settings.add(termLineNumbers);
             settings.add(closeHudWhenEmpty);
             settings.add(batchRendering);
+            settings.add(camreaEdgeLocking);
             
             // INTEGERS
             settings.add(targetFPS);
@@ -106,6 +112,8 @@ public class EngineSettings {
             settings.add(termBackground);
             settings.add(hoverTextColor);
             settings.add(termOpacity);
+            settings.add(musicVolume);
+            settings.add(sfxVolume);
             
             // STRINGS
             settings.add(taskBarSide);

@@ -2,7 +2,7 @@ package envision.game.world.worldTiles;
 
 /** Tile material indicates what kind of sound is played when the tile is stepped on. */
 public class TileMaterial {
-	
+    
     //========
     // Fields
     //========
@@ -16,7 +16,7 @@ public class TileMaterial {
     //=========
     // Getters
     //=========
-	
+    
     public String getMaterialName() { return materialName; }
     
 }

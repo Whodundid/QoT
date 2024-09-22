@@ -9,18 +9,18 @@ import envision_lang.lang.natives.Primitives;
 
 /** Creates a mapping between Envision and the QoT terminal. */
 public class TermCall_ENV extends EnvisionFunction {
-	
-	public TermCall_ENV() {
-		super(Primitives.VAR, "term");
-	}
-	
-	@Override
-	public void invoke(EnvisionInterpreter interpreter, EnvisionObject[] args) {
-		ETerminalWindow term = (ETerminalWindow) Envision.getDeveloperDesktop().getWindowInstance(ETerminalWindow.class);
-		if (term != null && args.length > 0) {
-			//String s = EStringUtil.combineAll(args, " ");
-			//TerminalCommandHandler.getInstance().executeCommand(term, s, false);
-		}
-	}
-	
+    
+    public TermCall_ENV() {
+        super(Primitives.VAR, "term");
+    }
+    
+    @Override
+    public void invoke(EnvisionInterpreter interpreter, EnvisionObject[] args) {
+        ETerminalWindow term = (ETerminalWindow) Envision.getDeveloperDesktop().getWindowInstance(ETerminalWindow.class);
+        if (term != null && args.length > 0) {
+            //String s = EStringUtil.combineAll(args, " ");
+            //TerminalCommandHandler.getInstance().executeCommand(term, s, false);
+        }
+    }
+    
 }

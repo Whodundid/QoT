@@ -128,7 +128,6 @@ public abstract class Enemy extends BasicRenderedEntity {
         targets.clear();
         EList<Entity> foundTargets = world.getAllEntitiesWithinDistance(this, agroRange);
         var it = foundTargets.iterator();
-        this.headText = "" + getFavorTracker().getFavorMap().size();
         while (it.hasNext()) {
             Entity e = it.next();
             var favor = getFavorDecider().isPositiveFavor(e);

@@ -7,9 +7,9 @@ import envision.engine.kernel.terminal.window.ETerminalWindow;
 @SuppressWarnings("unused")
 public class Deb9 extends DebugCommand {
 
-	@Override
-	public void run(ETerminalWindow termIn, Object... args) {
-		Envision.displayScreen(new HuntDistanceMap());
-	}
+    @Override
+    public void run(ETerminalWindow termIn, Object... args) {
+        Envision.displayScreen(new HuntDistanceMap());
+    }
 
 }

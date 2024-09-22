@@ -2,14 +2,14 @@ package envision.engine.kernel.developerDesktop.shortcuts;
 
 public enum ShortcutType {
     
-	FILE("FILE"),
-	COMMAND("COMMAND"),
-	SCRIPT("SCRIPT"),
-	WINDOW("WINDOW"),
-	
-	UNKNOWN("");
-	
-	public final String text;
+    FILE("FILE"),
+    COMMAND("COMMAND"),
+    SCRIPT("SCRIPT"),
+    WINDOW("WINDOW"),
+    
+    UNKNOWN("");
+    
+    public final String text;
     
     private ShortcutType(String textIn) {
         this.text = textIn;

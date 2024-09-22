@@ -38,7 +38,7 @@ public class CMD_SU extends TerminalCommand {
         if (profile != null) {
             term().switchUser(profile);
             EColors uc = UserProfileRegistry.getProfileEColor(user());
-            writeln(uc, term().getActiveUser().getName(), EColors.white, " >");
+            writeln(uc, term().getActiveUser().getName(), EColors.white, ":");
         }
         else {
             term.writeln(EColors.lred, "Cannot switch to a NULL user!");

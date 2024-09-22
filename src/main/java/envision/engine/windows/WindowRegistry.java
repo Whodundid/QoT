@@ -6,13 +6,13 @@ import java.util.Map;
 
 import envision.debug.testStuff.SpriteSheetBuilder;
 import envision.engine.creation.BlockWorkingArea;
-import envision.engine.creation.CreatorWindow;
+import envision.engine.creation.creatorWindow.CreatorWindow;
+import envision.engine.kernel.developerDesktop.windows.CalculatorWindow;
+import envision.engine.kernel.developerDesktop.windows.GLKeyChecker;
+import envision.engine.kernel.developerDesktop.windows.TextEditorWindow;
+import envision.engine.kernel.developerDesktop.windows.fileExplorer.FileExplorerWindow;
 import envision.engine.kernel.terminal.window.ETerminalWindow;
-import envision.engine.windows.bundledWindows.CalculatorWindow;
-import envision.engine.windows.bundledWindows.GLKeyChecker;
-import envision.engine.windows.bundledWindows.TextEditorWindow;
-import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
-import envision.engine.windows.windowObjects.advancedObjects.colorPicker.ColorPickerSimple;
+import envision.engine.windows.windowObjects.advanced.colorPicker.ColorPickerSimple;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
 import eutil.datatypes.util.EList;
 

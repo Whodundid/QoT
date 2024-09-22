@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
 
+import envision.CurrentGame;
 import envision.Envision;
 import envision.engine.EngineSettings;
 import envision.engine.inputHandlers.Keyboard;
@@ -18,9 +19,9 @@ import envision.engine.kernel.developerDesktop.config.DesktopConfigParser;
 import envision.engine.kernel.developerDesktop.shortcuts.DesktopShortcut;
 import envision.engine.kernel.developerDesktop.taskbar.TaskBar;
 import envision.engine.kernel.developerDesktop.util.DesktopUtil;
+import envision.engine.kernel.developerDesktop.windows.fileExplorer.FileExplorerWindow;
 import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.bundledWindows.fileExplorer.FileExplorerWindow;
 import envision.engine.windows.windowTypes.TopWindowParent;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowParent;
@@ -30,12 +31,11 @@ import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
 import eutil.math.dimensions.Dimension_d;
-import qot.settings.QoTSettings;
 
 public class DeveloperDesktop extends TopWindowParent {
     
     /** The directory for where content for this desktop is located. */
-    public static final File DESKTOP_DIR = new File(QoTSettings.getLocalGameDir(), "desktop");
+    public static final File DESKTOP_DIR = new File(CurrentGame.getInstallDir(), "desktop");
     /** The main config file location for the developer desktop. */
     public static final File DESKTOP_CONFIG_FILE = new File(DeveloperDesktop.DESKTOP_DIR, "desktop_config.ini");
     /** A script file that is executed on each terminal when it is opened. Similar to .bashrc */

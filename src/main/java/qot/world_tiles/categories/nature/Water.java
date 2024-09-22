@@ -6,18 +6,18 @@ import qot.assets.textures.world.nature.water.WaterTextures;
 import qot.world_tiles.TileIDs;
 
 public class Water extends WorldTile {
-	
-	public Water() {
-		super(TileIDs.WATER);
-		setBlocksMovement(true);
-		setSprite(new Sprite(WaterTextures.water));
-		wallHeight = -0.05f;
-		setMiniMapColor(0xff0062A8);
-	}
-	
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new Water());
-	}
-	
+    
+    public Water() {
+        super(TileIDs.WATER);
+        setBlocksMovement(true);
+        setSprite(new Sprite(WaterTextures.water));
+        wallHeight = -0.05f;
+        setMiniMapColor(0xff0062A8);
+    }
+    
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new Water());
+    }
+    
 }

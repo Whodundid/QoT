@@ -1,9 +1,9 @@
 package envision.engine.kernel.terminal.commands.categories.engine;
 
 import envision.Envision;
+import envision.engine.kernel.developerDesktop.windows.GameOptionsWindow;
 import envision.engine.kernel.terminal.commands.TerminalCommand;
 import envision.engine.screens.ScreenLevel;
-import envision.engine.windows.bundledWindows.GameOptionsWindow;
 import eutil.datatypes.util.EList;
 
 public class CMD_RenderSettings extends TerminalCommand {

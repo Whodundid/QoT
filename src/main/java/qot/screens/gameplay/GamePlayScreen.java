@@ -6,9 +6,9 @@ import envision.engine.inputHandlers.Keyboard;
 import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.rendering.RenderingManager;
 import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.actionObjects.WindowButton;
-import envision.engine.windows.windowObjects.basicObjects.WindowRect;
-import envision.engine.windows.windowObjects.basicObjects.WindowStatusBar;
+import envision.engine.windows.windowObjects.action.WindowButton;
+import envision.engine.windows.windowObjects.basic.WindowRect;
+import envision.engine.windows.windowObjects.basic.WindowStatusBar;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.entities.Entity;
 import envision.game.entities.player.Player;
@@ -187,11 +187,11 @@ public class GamePlayScreen extends GameScreen {
                 }
             }
             
-            //			double moveSpeed = 1;
-            //			if (Keyboard.isWDown()) p.move(0, -moveSpeed);
-            //			if (Keyboard.isSDown()) p.move(0, moveSpeed);
-            //			if (Keyboard.isADown()) p.move(-moveSpeed, 0);		
-            //			if (Keyboard.isDDown()) p.move(moveSpeed, 0);
+            //            double moveSpeed = 1;
+            //            if (Keyboard.isWDown()) p.move(0, -moveSpeed);
+            //            if (Keyboard.isSDown()) p.move(0, moveSpeed);
+            //            if (Keyboard.isADown()) p.move(-moveSpeed, 0);        
+            //            if (Keyboard.isDDown()) p.move(moveSpeed, 0);
         }
     }
     
@@ -271,11 +271,11 @@ public class GamePlayScreen extends GameScreen {
         double curZoom = cam.getZoom();
         
         //if (Keyboard.isCtrlDown()) {
-        if (c > 0 && curZoom == 0.25) z = 0.05;		//if at 0.25 and zooming out -- 0.05x
-        else if (curZoom < 1.0) z = c * 0.1;	//if less than 1 zoom by 0.1x
-        else if (c > 0) z = 0.25;		//if greater than 1 zoom by 0.25x
-        else if (curZoom == 1.0) z = c * 0.1;	//if at 1.0 and zooming in -- 0.1x
-        else z = c * 0.25;	//otherwise always zoom by 0.25x
+        if (c > 0 && curZoom == 0.25) z = 0.05;        //if at 0.25 and zooming out -- 0.05x
+        else if (curZoom < 1.0) z = c * 0.1;    //if less than 1 zoom by 0.1x
+        else if (c > 0) z = 0.25;        //if greater than 1 zoom by 0.25x
+        else if (curZoom == 1.0) z = c * 0.1;    //if at 1.0 and zooming in -- 0.1x
+        else z = c * 0.25;    //otherwise always zoom by 0.25x
         
         z = ENumUtil.round(curZoom + z, 2);
         cam.setZoom(z);

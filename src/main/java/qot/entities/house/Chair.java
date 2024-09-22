@@ -7,25 +7,25 @@ import qot.entities.EntityList;
 
 public class Chair extends BasicRenderedEntity {
 
-	public Chair() { this(0, 0); }
-	public Chair(int x, int y) {
-		super("Chair");
-		init(x, y, 32, 32);
-		sprite = new Sprite(HouseTextures.chair);
-		invincible = true;
+    public Chair() { this(0, 0); }
+    public Chair(int x, int y) {
+        super("Chair");
+        init(x, y, 32, 32);
+        sprite = new Sprite(HouseTextures.chair);
+        invincible = true;
         this.canBeMoved = true;
         this.canBeCarried = true;
         this.canMoveEntities = true;
-	}
-	
-	@Override
-	public void onLivingUpdate(float dt) {
-		
-	}
-	
-	@Override
-	public int getInternalSaveID() {
-		return EntityList.CHAIR.ID;
-	}
-	
+    }
+    
+    @Override
+    public void onLivingUpdate(float dt) {
+        
+    }
+    
+    @Override
+    public int getInternalSaveID() {
+        return EntityList.CHAIR.ID;
+    }
+    
 }

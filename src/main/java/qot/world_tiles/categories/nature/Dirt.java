@@ -6,16 +6,16 @@ import qot.assets.textures.world.nature.NatureTextures;
 import qot.world_tiles.TileIDs;
 
 public class Dirt extends WorldTile {
-	
-	public Dirt() {
-		super(TileIDs.DIRT);
-		setSprite(new Sprite(NatureTextures.dirt));
-		setMiniMapColor(0xffAD6637);
-	}
-	
-	@Override
-	public WorldTile copy() {
-		return copyFields(this, new Dirt());
-	}
-	
+    
+    public Dirt() {
+        super(TileIDs.DIRT);
+        setSprite(new Sprite(NatureTextures.dirt));
+        setMiniMapColor(0xffAD6637);
+    }
+    
+    @Override
+    public WorldTile copy() {
+        return copyFields(this, new Dirt());
+    }
+    
 }

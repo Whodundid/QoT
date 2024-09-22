@@ -9,22 +9,22 @@ import eutil.strings.EStringUtil;
 //Author: Hunter Bragg
 
 public class CMD_ForLoop extends TerminalCommand {
-	
-	public CMD_ForLoop() {
-		setCategory("System");
-		expectedArgLength = 2;
-	}
+    
+    public CMD_ForLoop() {
+        setCategory("System");
+        expectedArgLength = 2;
+    }
 
-	@Override public String getName() { return "for"; }
-	@Override public String getHelpInfo(boolean runVisually) { return "Runs a command n number of times in given range replacing any '#' arguments with current value."; }
-	@Override public String getUsage() { return "ex: for 0-9-1 'cmd'"; }
-	@Override public byte requiredPermissionLevel() { return 2; }
-	
-	@Override
-	public void runCommand() {
-	    expectExactly(3, "Expected at least 2 int arguments and one command target for loop!");
-	    
-	    String vals = firstArg();
+    @Override public String getName() { return "for"; }
+    @Override public String getHelpInfo(boolean runVisually) { return "Runs a command n number of times in given range replacing any '#' arguments with current value."; }
+    @Override public String getUsage() { return "ex: for 0-9-1 'cmd'"; }
+    @Override public byte requiredPermissionLevel() { return 2; }
+    
+    @Override
+    public void runCommand() {
+        expectExactly(3, "Expected at least 2 int arguments and one command target for loop!");
+        
+        String vals = firstArg();
         
         EList<String> otherArgs = EList.of(args().subList(1, argLength()));
         
@@ -86,47 +86,47 @@ public class CMD_ForLoop extends TerminalCommand {
         else if (type == String.class) {
             
         }
-	}
-	
-	private Class<?> checkClasses(String firstArg, String secondArg, String thirdArg) {
-		try {
-			Class<?> first = String.class;
-			Class<?> second = String.class;
-			Class<?> third = String.class;
-			
-			if (ENumUtil.isInteger(firstArg, 10)) { first = Integer.class; }
-			if (ENumUtil.isInteger(secondArg, 10)) { second = Integer.class; }
-			if (ENumUtil.isInteger(thirdArg, 10)) { third = Integer.class; }
-			
-			if (!first.equals(second) || !first.equals(third)) { return Exception.class; } //error and return if the parsed range types are not the same
-			else if (first == Integer.class) { return Integer.class; } //try for integer range
-			else if (first == String.class) { return String.class; } //try for character range instead
-			
-		}
-		catch (Exception e) {
-			error(e);
-		}
-		return null;
-	}
-	
-	private void runLoop(Object curVal, EList<String> argsIn) {
-		String cmd = replaceValsInArgs(argsIn, curVal);
-		writeln("> " + cmd);
-		term().getCommandHandler().executeCommand(term(), cmd, false);
-	}
-	
-	private String replaceValsInArgs(EList<String> argsIn, Object curVal) {
-		var cmd = new EStringBuilder();
-		for (String s : argsIn) {
-			s = s.replace("\\#", "" + curVal);
-			cmd.a(s + " ");
-		}
-		
-		if (argsIn.isNotEmpty() && cmd.length() > 0) {
-		    cmd.setString(cmd.substring(0, cmd.length() - 1));
-		}
-		
-		return cmd.toString();
-	}
-	
+    }
+    
+    private Class<?> checkClasses(String firstArg, String secondArg, String thirdArg) {
+        try {
+            Class<?> first = String.class;
+            Class<?> second = String.class;
+            Class<?> third = String.class;
+            
+            if (ENumUtil.isInteger(firstArg, 10)) { first = Integer.class; }
+            if (ENumUtil.isInteger(secondArg, 10)) { second = Integer.class; }
+            if (ENumUtil.isInteger(thirdArg, 10)) { third = Integer.class; }
+            
+            if (!first.equals(second) || !first.equals(third)) { return Exception.class; } //error and return if the parsed range types are not the same
+            else if (first == Integer.class) { return Integer.class; } //try for integer range
+            else if (first == String.class) { return String.class; } //try for character range instead
+            
+        }
+        catch (Exception e) {
+            error(e);
+        }
+        return null;
+    }
+    
+    private void runLoop(Object curVal, EList<String> argsIn) {
+        String cmd = replaceValsInArgs(argsIn, curVal);
+        writeln("> " + cmd);
+        term().getCommandHandler().executeCommand(term(), cmd, false);
+    }
+    
+    private String replaceValsInArgs(EList<String> argsIn, Object curVal) {
+        var cmd = new EStringBuilder();
+        for (String s : argsIn) {
+            s = s.replace("\\#", "" + curVal);
+            cmd.a(s + " ");
+        }
+        
+        if (argsIn.isNotEmpty() && cmd.length() > 0) {
+            cmd.setString(cmd.substring(0, cmd.length() - 1));
+        }
+        
+        return cmd.toString();
+    }
+    
 }

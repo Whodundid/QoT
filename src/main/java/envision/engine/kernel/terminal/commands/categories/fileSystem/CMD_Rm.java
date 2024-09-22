@@ -10,39 +10,39 @@ import envision.engine.kernel.terminal.terminalUtil.TerminalCommandError;
 import eutil.colors.EColors;
 
 public class CMD_Rm extends AbstractFileCommand {
-	
-	public CMD_Rm() {
-		expectedArgLength = 1;
-		setAcceptedModifiers("-r");
-	}
-	
-	@Override public String getName() { return "rm"; }
-	@Override public String getHelpInfo(boolean runVisually) { return "Deletes a file from the file system."; }
-	@Override public String getUsage() { return "ex: rm 'dir'"; }
-	
-	@Override
-	public void runCommand() throws IOException {
-	    expectAtLeast(1);
-	    
-	    boolean recursive = hasModifier("-r");
-	    
-	    for (String toDelete : args()) {
-	        try {
-	            File f = parseFilePath(toDelete);
-	            deleteFile(f, recursive);
-	        }
-	        catch (TerminalCommandError e) {
-	            error(e.getMessage());
-	        }
-	        catch (Exception e) {
-	            error(e);
-	        }
-	    }
-	    
-	    DeveloperDesktop.reloadFileExplorers();
-	}
-	
-	private void deleteFile(File file, boolean recursive) throws TerminalCommandError, IOException {
+    
+    public CMD_Rm() {
+        expectedArgLength = 1;
+        setAcceptedModifiers("r");
+    }
+    
+    @Override public String getName() { return "rm"; }
+    @Override public String getHelpInfo(boolean runVisually) { return "Deletes a file from the file system."; }
+    @Override public String getUsage() { return "ex: rm 'dir'"; }
+    
+    @Override
+    public void runCommand() throws IOException {
+        expectAtLeast(1);
+        
+        boolean recursive = hasModifier("r");
+        
+        for (String toDelete : args()) {
+            try {
+                File f = parseFilePath(toDelete);
+                deleteFile(f, recursive);
+            }
+            catch (TerminalCommandError e) {
+                error(e.getMessage());
+            }
+            catch (Exception e) {
+                error(e);
+            }
+        }
+        
+        DeveloperDesktop.reloadFileExplorers();
+    }
+    
+    private void deleteFile(File file, boolean recursive) throws TerminalCommandError, IOException {
         expectFileNotNull(file);
         expectFileExists(file);
         
@@ -56,6 +56,6 @@ public class CMD_Rm extends AbstractFileCommand {
         
         if (!file.delete()) error("Could not delete file: '", file.getName(), "'");
         else writeln(EColors.yellow, "Deleting file: ", EColors.mc_aqua, file.getName());
-	}
-	
+    }
+    
 }

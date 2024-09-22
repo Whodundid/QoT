@@ -2,9 +2,9 @@ package envision.game.shops;
 
 import envision.engine.inputHandlers.Keyboard;
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowObjects.actionObjects.WindowButton;
-import envision.engine.windows.windowObjects.basicObjects.WindowImageBox;
-import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
+import envision.engine.windows.windowObjects.action.WindowButton;
+import envision.engine.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.windows.windowObjects.basic.WindowLabel;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;

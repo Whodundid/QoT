@@ -1,7 +1,7 @@
 package envision.engine.creation.block.blockTypes.constants;
 
 import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowObjects.actionObjects.WindowCheckBox;
+import envision.engine.windows.windowObjects.action.WindowCheckBox;
 
 public class ConstBooleanBlock extends ConstantValueBlock<Boolean> {
 

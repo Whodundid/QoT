@@ -7,14 +7,14 @@ import envision.game.world.GameWorld;
 import envision.game.world.Region;
 
 public class EntityUsedItemInRegionEvent extends EntityRegionEvent {
-	
-	Item item;
-	
-	public EntityUsedItemInRegionEvent(GameWorld theWorld, Region theRegion, Entity theEntity, Item theItem) {
-		super(theWorld, theRegion, theEntity);
-		item = theItem;
-	}
-	
-	public Item getItem() { return item; }
-	
+    
+    Item item;
+    
+    public EntityUsedItemInRegionEvent(GameWorld theWorld, Region theRegion, Entity theEntity, Item theItem) {
+        super(theWorld, theRegion, theEntity);
+        item = theItem;
+    }
+    
+    public Item getItem() { return item; }
+    
 }

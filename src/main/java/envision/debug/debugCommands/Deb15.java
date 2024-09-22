@@ -4,6 +4,8 @@ import java.io.File;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import envision.CurrentGame;
+import envision.Envision;
 import envision.engine.kernel.terminal.window.ETerminalWindow;
 import envision.engine.loader.dtos.WorldTileDTO;
 import envision.engine.loader.dtos.WorldTileListDTO;
@@ -19,7 +21,7 @@ public class Deb15 extends DebugCommand {
     public void run(ETerminalWindow termIn, Object... args) throws Exception {
         EList<WorldTile> tiles = EList.newList();
         
-        File tileListFile = new File(QoTSettings.getLocalGameDir(), "tileList.json");
+        File tileListFile = new File(CurrentGame.getInstallDir(), "tileList.json");
         ObjectMapper mapper = new ObjectMapper();
         WorldTileListDTO tileListDTO = mapper.readValue(tileListFile, WorldTileListDTO.class);
         

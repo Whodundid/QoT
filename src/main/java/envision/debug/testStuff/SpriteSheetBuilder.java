@@ -1,12 +1,12 @@
 package envision.debug.testStuff;
 
 import envision.engine.registry.types.SpriteSheet;
-import envision.engine.windows.windowObjects.actionObjects.WindowButton;
-import envision.engine.windows.windowObjects.actionObjects.WindowTextField;
-import envision.engine.windows.windowObjects.advancedObjects.menuBar.WindowMenuBar;
-import envision.engine.windows.windowObjects.advancedObjects.tabbedContainer.TabbedContainer;
-import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea2;
-import envision.engine.windows.windowObjects.basicObjects.WindowLabel;
+import envision.engine.windows.windowObjects.action.WindowButton;
+import envision.engine.windows.windowObjects.action.WindowTextField;
+import envision.engine.windows.windowObjects.advanced.menuBar.WindowMenuBar;
+import envision.engine.windows.windowObjects.advanced.tabbedContainer.TabbedContainer;
+import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea2;
+import envision.engine.windows.windowObjects.basic.WindowLabel;
 import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.WindowParent;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;

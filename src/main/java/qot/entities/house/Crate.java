@@ -9,18 +9,18 @@ import qot.items.Items;
 
 public class Crate extends BasicRenderedEntity {
 
-	public Crate() { this(0, 0); }
-	public Crate(int x, int y) {
-		super("Crate");
-		init(x, y, 32, 32);
-		sprite = new Sprite(HouseTextures.crate);
-		
-		setMaxHealth(5);
-		setHealth(5);
-		
-		setCollisionBox(startX + 2, startY + 14, endX - 2, endY - 1);
-		setExperienceRewardedOnKill(2);
-		
+    public Crate() { this(0, 0); }
+    public Crate(int x, int y) {
+        super("Crate");
+        init(x, y, 32, 32);
+        sprite = new Sprite(HouseTextures.crate);
+        
+        setMaxHealth(5);
+        setHealth(5);
+        
+        setCollisionBox(startX + 2, startY + 14, endX - 2, endY - 1);
+        setExperienceRewardedOnKill(2);
+        
         // item on death
         
         var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
@@ -31,16 +31,16 @@ public class Crate extends BasicRenderedEntity {
         this.canBeMoved = true;
         this.canBeCarried = true;
         this.canMoveEntities = true;
-	}
-	
-	@Override
-	public void onLivingUpdate(float dt) {
-		
-	}
-	
-	@Override
-	public int getInternalSaveID() {
-		return EntityList.CRATE.ID;
-	}
-	
+    }
+    
+    @Override
+    public void onLivingUpdate(float dt) {
+        
+    }
+    
+    @Override
+    public int getInternalSaveID() {
+        return EntityList.CRATE.ID;
+    }
+    
 }

@@ -14,115 +14,115 @@ import eutil.math.ENumUtil;
 
 /** Handles rendering GameWorlds. */
 public class WorldRenderer extends EGui {
-	
-	//--------
-	// Fields
-	//--------
-	
-	private GameWorld world;
-	private int distX = 22;
-	private int distY = 22;
+    
+    //--------
+    // Fields
+    //--------
+    
+    private GameWorld world;
+    private int distX = 22;
+    private int distY = 22;
 
-	/** the world coordinates at the center of the screen. */
-	public int midDrawX, midDrawY;
-	
-	//private int viewDist = 18;
-	
-	public static boolean drawPosBox = false;
-	public static boolean drawEntityHitboxes = false;
-	public static boolean drawEntityOutlines = false;
-	
-	/** Temporary list for testing world layers. */
-	private EList<WorldDrawLayer> worldLayers = EList.newList();
-	
-	private boolean loaded = false;
-	
-	//--------------
-	// Constructors
-	//--------------
-	
-	public WorldRenderer(GameWorld worldIn) {
-		world = worldIn;
-	}
-	
-	/**
-	 * Called when the world has just been loaded and just before it is about
-	 * to be rendered.
-	 */
-	public synchronized void onWorldLoaded() {
-		onWindowResized();
-		if (world != null && !loaded) {
-			TEMP_createWorldLayers();
-			//world.setCameraZoom(3);
-			loaded = true;
-		}
-	}
-	
-	private void TEMP_createWorldLayers() {
-	    worldLayers.clear();
-	    
-//	    System.out.println(world + " : " + world.getNumberOfLayers());
-	    
-	    final int layers = world.getNumberOfLayers();
-	    final int height = world.getHeight();
-	    final int width = world.getWidth();
-	    
-	    for (int l = 0; l < layers; l++) {
-	        WorldDrawLayer layerZero = new WorldDrawLayer(world, 0, l);
-	        WorldDrawLayer layerOne = new WorldDrawLayer(world, 1, l);
-	        //WorldLayer layerTwo = new WorldLayer(world, 2);
-	        
-	        for (int i = 0; i < height; i++) {
-	            for (int j = 0; j < width; j++) {
-	                WorldTile t = world.getTileAt(l, j, i);
-	                if (t == null) continue;
-	                //else if (t.getWallHeight() < 0.20) {
-	                else if (t.getWallHeight() == 0.0) {
-	                    t.setRenderLayer(0);
-	                }
-	                else {
-	                    t.setRenderLayer(1);
-	                }
-	            }
-	        }
-	        
-//	      for (var ent : world.getEntitiesInWorld()) {
-//	          ent.setRenderLayer(2);
-//	      }
-	        
-	        worldLayers.add(layerZero);
-	        worldLayers.add(layerOne);
-	        //worldLayers.add(layerTwo);
-	    }
-	}
-	
-	//------------------------
-	// Overrides : GameScreen
-	//------------------------
-	
-	@Override
-	public void keyPressed(char typedChar, int keyCode) {
-		if (!DeveloperDesktop.isOpen() && !(Keyboard.isCtrlDown() || Keyboard.isAltDown() || Keyboard.isShiftDown())) {
-			if (typedChar == 'h') drawEntityHitboxes = !drawEntityHitboxes;
-			if (typedChar == 'p') drawPosBox = !drawPosBox;
-			if (typedChar == 'o') drawEntityOutlines = !drawEntityOutlines;
-			//if (typedChar == '.') viewDist++;
-			//if (typedChar == ',') viewDist--;
-		}
-	}
-	
-	//---------
-	// Methods
-	//---------
-	
-	/**
-	 * Should be called from main game render tick, every tick.
-	 */
-	public void onRenderTick(float partialTicks) {
-		Envision.levelManager.getCamera().onRenderTick(partialTicks);
-		renderWorld(partialTicks);
-	}
-	
+    /** the world coordinates at the center of the screen. */
+    public int midDrawX, midDrawY;
+    
+    //private int viewDist = 18;
+    
+    public static boolean drawPosBox = false;
+    public static boolean drawEntityHitboxes = false;
+    public static boolean drawEntityOutlines = false;
+    
+    /** Temporary list for testing world layers. */
+    private EList<WorldDrawLayer> worldLayers = EList.newList();
+    
+    private boolean loaded = false;
+    
+    //--------------
+    // Constructors
+    //--------------
+    
+    public WorldRenderer(GameWorld worldIn) {
+        world = worldIn;
+    }
+    
+    /**
+     * Called when the world has just been loaded and just before it is about
+     * to be rendered.
+     */
+    public synchronized void onWorldLoaded() {
+        onWindowResized();
+        if (world != null && !loaded) {
+            TEMP_createWorldLayers();
+            //world.setCameraZoom(3);
+            loaded = true;
+        }
+    }
+    
+    private void TEMP_createWorldLayers() {
+        worldLayers.clear();
+        
+//        System.out.println(world + " : " + world.getNumberOfLayers());
+        
+        final int layers = world.getNumberOfLayers();
+        final int height = world.getHeight();
+        final int width = world.getWidth();
+        
+        for (int l = 0; l < layers; l++) {
+            WorldDrawLayer layerZero = new WorldDrawLayer(world, 0, l);
+            WorldDrawLayer layerOne = new WorldDrawLayer(world, 1, l);
+            //WorldLayer layerTwo = new WorldLayer(world, 2);
+            
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    WorldTile t = world.getTileAt(l, j, i);
+                    if (t == null) continue;
+                    //else if (t.getWallHeight() < 0.20) {
+                    else if (t.getWallHeight() == 0.0) {
+                        t.setRenderLayer(0);
+                    }
+                    else {
+                        t.setRenderLayer(1);
+                    }
+                }
+            }
+            
+//          for (var ent : world.getEntitiesInWorld()) {
+//              ent.setRenderLayer(2);
+//          }
+            
+            worldLayers.add(layerZero);
+            worldLayers.add(layerOne);
+            //worldLayers.add(layerTwo);
+        }
+    }
+    
+    //------------------------
+    // Overrides : GameScreen
+    //------------------------
+    
+    @Override
+    public void keyPressed(char typedChar, int keyCode) {
+        if (!DeveloperDesktop.isOpen() && !(Keyboard.isCtrlDown() || Keyboard.isAltDown() || Keyboard.isShiftDown())) {
+            if (typedChar == 'h') drawEntityHitboxes = !drawEntityHitboxes;
+            if (typedChar == 'p') drawPosBox = !drawPosBox;
+            if (typedChar == 'o') drawEntityOutlines = !drawEntityOutlines;
+            //if (typedChar == '.') viewDist++;
+            //if (typedChar == ',') viewDist--;
+        }
+    }
+    
+    //---------
+    // Methods
+    //---------
+    
+    /**
+     * Should be called from main game render tick, every tick.
+     */
+    public void onRenderTick(float partialTicks) {
+        Envision.levelManager.getCamera().onRenderTick(partialTicks);
+        renderWorld(partialTicks);
+    }
+    
     private void renderWorld(float partialTicks) {
         if (world == null) {
             RenderingManager.drawStringC("Failed to load!", midX, midY);
@@ -174,70 +174,70 @@ public class WorldRenderer extends EGui {
 //            RenderingManager.drawHRect(drawX, drawY, drawX + drawW, drawY + drawH, 1, EColors.blue);
 //        }
     }
-	
-	private void renderMapLayers() {
-		final var cam = Envision.levelManager.getCamera();
-		final var worldWidth = world.getWidth();
-		final var worldHeight = world.getHeight();
-		
-		// keep the player at the center of the world
-		midDrawX = cam.getWorldX();
-		midDrawY = cam.getWorldY();
-		
-		// calculations to determine how many tiles to draw out in each direction from the mid of the screen
-		int left = ENumUtil.clamp(midDrawX - distX, 0, worldWidth - 1);
-		int top = ENumUtil.clamp(midDrawY - distY, 0, worldHeight - 1);
-		int right = ENumUtil.clamp(midDrawX + distX, left, worldWidth - 1);
-		int bot = ENumUtil.clamp(midDrawY + distY, top, worldHeight - 1);
-		
-		//int camLayer = 2 + cam.getUpperCameraLayer() * 2;
-		//System.out.println(camLayer);
-		
-		final int size = worldLayers.size();
+    
+    private void renderMapLayers() {
+        final var cam = Envision.levelManager.getCamera();
+        final var worldWidth = world.getWidth();
+        final var worldHeight = world.getHeight();
+        
+        // keep the player at the center of the world
+        midDrawX = cam.getWorldX();
+        midDrawY = cam.getWorldY();
+        
+        // calculations to determine how many tiles to draw out in each direction from the mid of the screen
+        int left = ENumUtil.clamp(midDrawX - distX, 0, worldWidth - 1);
+        int top = ENumUtil.clamp(midDrawY - distY, 0, worldHeight - 1);
+        int right = ENumUtil.clamp(midDrawX + distX, left, worldWidth - 1);
+        int bot = ENumUtil.clamp(midDrawY + distY, top, worldHeight - 1);
+        
+        //int camLayer = 2 + cam.getUpperCameraLayer() * 2;
+        //System.out.println(camLayer);
+        
+        final int size = worldLayers.size();
         for (int i = 0; i < size; i++) {
             final var layer = worldLayers.get(i);
 //            System.out.println(i + " : " + layer.hashCode());
             layer.buildLayer(left, top, right, bot);
             layer.renderLayer(world, cam);
         }
-	}
-	
-//	private void drawPosBox(double x, double y, double w, double h) {
-//		Player p = Envision.thePlayer;
-//		
-//		double drawX = x + w * distX;
-//		double drawY = y + h * distY;
-//		
-//		double offsetX = (p.startX % world.getTileWidth());
-//		double offsetY = (p.startY % world.getTileHeight());
-//		
-//		drawX -= offsetX * world.getCameraZoom();
-//		drawY -= offsetY * world.getCameraZoom();
-//		
-//		double sX = drawX;
-//		double sY = drawY;
-//		double eX = sX + w;
-//		double eY = sY + h;
-//		GLObject.drawHRect(sX, sY, eX, eY, 2, EColors.red);
-//	}
-	
-	public void onWindowResized() {
-		res = Envision.getWindowDims();
-		setDimensions(0, 0, res.width, res.height);
-	}
-	
-	//---------
-	// Getters
-	//---------
-	
-	public int getDistX() { return distX; }
-	public int getDistY() { return distY; }
-	
-	//---------
-	// Setters
-	//---------
-	
-	public void setDistX(int in) { distX = in; }
-	public void setDistY(int in) { distY = in; }
-	
+    }
+    
+//    private void drawPosBox(double x, double y, double w, double h) {
+//        Player p = Envision.thePlayer;
+//        
+//        double drawX = x + w * distX;
+//        double drawY = y + h * distY;
+//        
+//        double offsetX = (p.startX % world.getTileWidth());
+//        double offsetY = (p.startY % world.getTileHeight());
+//        
+//        drawX -= offsetX * world.getCameraZoom();
+//        drawY -= offsetY * world.getCameraZoom();
+//        
+//        double sX = drawX;
+//        double sY = drawY;
+//        double eX = sX + w;
+//        double eY = sY + h;
+//        GLObject.drawHRect(sX, sY, eX, eY, 2, EColors.red);
+//    }
+    
+    public void onWindowResized() {
+        res = Envision.getWindowDims();
+        setDimensions(0, 0, res.width, res.height);
+    }
+    
+    //---------
+    // Getters
+    //---------
+    
+    public int getDistX() { return distX; }
+    public int getDistY() { return distY; }
+    
+    //---------
+    // Setters
+    //---------
+    
+    public void setDistX(int in) { distX = in; }
+    public void setDistY(int in) { distY = in; }
+    
 }

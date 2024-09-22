@@ -18,31 +18,31 @@ import eutil.misc.Rotation;
 import eutil.strings.EStringUtil;
 
 public class EntityRenderer extends RenderingComponent {
-	
-	protected Entity theEntity;
-	
-	// Transparency
-	
-	protected boolean makeTransparentIfInFront = false;
-	/** True if this entity is current blocking the focused camera entity and will be drawn transparent. */
-	protected boolean isTransparent;
-	protected boolean fadeBack;
-	/** the tick that transparency fading started on. */
-	protected long transparencyStartTick;
-	/** 60 ticks for 1 second. */
-	protected long transparencyTransitionTickDuration = 10;
-	
-	protected boolean flipTextureWhenMoving = true;
-	
-	protected int flashColor;
-	protected long flashStart;
-	protected long flashDurration;
-	protected boolean drawFlash = false;
-	
-	//==============
-	// Constructors
-	//==============
-	
+    
+    protected Entity theEntity;
+    
+    // Transparency
+    
+    protected boolean makeTransparentIfInFront = false;
+    /** True if this entity is current blocking the focused camera entity and will be drawn transparent. */
+    protected boolean isTransparent;
+    protected boolean fadeBack;
+    /** the tick that transparency fading started on. */
+    protected long transparencyStartTick;
+    /** 60 ticks for 1 second. */
+    protected long transparencyTransitionTickDuration = 10;
+    
+    protected boolean flipTextureWhenMoving = true;
+    
+    protected int flashColor;
+    protected long flashStart;
+    protected long flashDurration;
+    protected boolean drawFlash = false;
+    
+    //==============
+    // Constructors
+    //==============
+    
     public EntityRenderer(Entity entityIn) {
         super(entityIn);
         theEntity = entityIn;
@@ -54,17 +54,17 @@ public class EntityRenderer extends RenderingComponent {
         makeTransparentIfInFront = drawTransparentIfBlockingCamera;
     }
     
-	//=========
-	// Methods
-	//=========
-	
-	/**
-	 * Calculates screen drawing positions up front so that they can be
-	 * extracted out from the actual entity drawing logic.
-	 */
+    //=========
+    // Methods
+    //=========
+    
+    /**
+     * Calculates screen drawing positions up front so that they can be
+     * extracted out from the actual entity drawing logic.
+     */
     @Override
-	public void draw(IGameWorld world, WorldCamera camera) {
-	    final double zoom = camera.getZoom();
+    public void draw(IGameWorld world, WorldCamera camera) {
+        final double zoom = camera.getZoom();
         final double[] draw = camera.calculateDrawDimensions(theEntity);
         boolean mouseOver = camera.isMouseOverObject(theEntity);
 
@@ -121,12 +121,12 @@ public class EntityRenderer extends RenderingComponent {
             RenderingManager.drawRect(xPos, 0, xPos + 1, camera.getDrawableAreaHeight(), EColors.green);
             RenderingManager.drawRect(0, yPos, camera.getDrawableAreaWidth(), yPos + 1, EColors.green);
         }
-	}
-	
-	protected int checkIfCameraTargetIsBehind(WorldCamera camera, int color) {
-	    if (!makeTransparentIfInFront) return color;
-	    
-	    
+    }
+    
+    protected int checkIfCameraTargetIsBehind(WorldCamera camera, int color) {
+        if (!makeTransparentIfInFront) return color;
+        
+        
         GameObject target = camera.getFocusedObject();
         if (target == null) return color;
         if (target == theEntity) return color;
@@ -184,57 +184,57 @@ public class EntityRenderer extends RenderingComponent {
         }
         
         return color;
-	}
-	
-	public void drawEntity(IGameWorld world, WorldCamera camera, double[] dims, int brightness, boolean mouseOver) {
-	    double x = dims[0];
-	    double y = dims[1];
-	    double w = dims[2];
-	    double h = dims[3];
-	    
-	    lastDrawX = x;
-		lastDrawY = y;
-		lastDrawW = w;
-		lastDrawH = h;
-		lastDrawBrightness = brightness;
-		lastDrawMouseOver = mouseOver;
-		
-		drawFlash(brightness);
-		
-		theObject.preDraw(camera, dims, mouseOver);
-		if (theObject.getSprite() != null) drawEntityTexture();
-		theEntity.postDraw(camera, dims, mouseOver);
-		
-		theEntity.healthBar.setDimensions(x, y - 7, w, 7);
-		theEntity.healthBar.drawObject(0, Mouse.getMx(), Mouse.getMy());
-		
-		var recentlyAttacked = theEntity.recentlyAttacked;
-		var healthChanged = theEntity.healthChanged;
-		var invincible = theEntity.invincible;
-		var health = theEntity.health;
-		var maxHealth = theEntity.maxHealth;
-		
-		if ((recentlyAttacked || healthChanged) && !invincible && (health < maxHealth)) {
-			theEntity.healthBar.keepDrawing();
-		}
-		
-		// hide upper layers if under roof
-		checkIfCameraIsUnderRoof(world, camera);
-		
-		// draw chat box (if there is one)
-		drawChatbox(x, y, w, h);
+    }
+    
+    public void drawEntity(IGameWorld world, WorldCamera camera, double[] dims, int brightness, boolean mouseOver) {
+        double x = dims[0];
+        double y = dims[1];
+        double w = dims[2];
+        double h = dims[3];
         
-		// draw head text
-		RenderingManager.drawStringC(theEntity.headText, x + w * 0.5, y - h * 0.25);
-	}
-	
-	public void checkIfCameraIsUnderRoof(IGameWorld world, WorldCamera camera) {
-	    if (theEntity != camera.getFocusedObject()) return;
-	    
-	    int camLayer = theEntity.getCameraLayer();
-	    if (camLayer >= world.getNumberOfLayers() - 1) return;
-	    
-	    var colDims = theEntity.getCollisionDims();
+        lastDrawX = x;
+        lastDrawY = y;
+        lastDrawW = w;
+        lastDrawH = h;
+        lastDrawBrightness = brightness;
+        lastDrawMouseOver = mouseOver;
+        
+        drawFlash(brightness);
+        
+        theObject.preDraw(camera, dims, mouseOver);
+        if (theObject.getSprite() != null) drawEntityTexture();
+        theEntity.postDraw(camera, dims, mouseOver);
+        
+        theEntity.healthBar.setDimensions(x, y - 7, w, 7);
+        theEntity.healthBar.drawObject(0, Mouse.getMx(), Mouse.getMy());
+        
+        var recentlyAttacked = theEntity.recentlyAttacked;
+        var healthChanged = theEntity.healthChanged;
+        var invincible = theEntity.invincible;
+        var health = theEntity.health;
+        var maxHealth = theEntity.maxHealth;
+        
+        if ((recentlyAttacked || healthChanged) && !invincible && (health < maxHealth)) {
+            theEntity.healthBar.keepDrawing();
+        }
+        
+        // hide upper layers if under roof
+        checkIfCameraIsUnderRoof(world, camera);
+        
+        // draw chat box (if there is one)
+        drawChatbox(x, y, w, h);
+        
+        // draw head text
+        RenderingManager.drawStringC(theEntity.headText, x + w * 0.5, y - h * 0.25);
+    }
+    
+    public void checkIfCameraIsUnderRoof(IGameWorld world, WorldCamera camera) {
+        if (theEntity != camera.getFocusedObject()) return;
+        
+        int camLayer = theEntity.getCameraLayer();
+        if (camLayer >= world.getNumberOfLayers() - 1) return;
+        
+        var colDims = theEntity.getCollisionDims();
         int worldMidX = (int) (colDims.midX / world.getTileWidth());
         int worldMidY = (int) (colDims.midY / world.getTileHeight());
         WorldTile above = null;
@@ -252,21 +252,21 @@ public class EntityRenderer extends RenderingComponent {
         }
         
         camera.setUpperCameraLayer(upper);
-	}
-	
-	public void drawChatbox(double x, double y, double w, double h) {
-	    if (EStringUtil.isNotPopulated(theEntity.activeChat)) return;
+    }
+    
+    public void drawChatbox(double x, double y, double w, double h) {
+        if (EStringUtil.isNotPopulated(theEntity.activeChat)) return;
 
-	    double zoom = Envision.levelManager.getCameraZoom();
-	    double scale = 0.225;
+        double zoom = Envision.levelManager.getCameraZoom();
+        double scale = 0.225;
         zoom *= scale;
-	    
-	    final String chat = theEntity.activeChat;
-	    final var world = theEntity.world;
-	    double chatWidth = FontRenderer.strWidth(chat, zoom);
-	    
-	    double midX = (x + w * 0.5);
-	    double dx = midX - (chatWidth * 0.52);
+        
+        final String chat = theEntity.activeChat;
+        final var world = theEntity.world;
+        double chatWidth = FontRenderer.strWidth(chat, zoom);
+        
+        double midX = (x + w * 0.5);
+        double dx = midX - (chatWidth * 0.52);
         double dy = y;
         double dw = (chatWidth * 1.04);
         double dh = 35 * zoom;
@@ -292,50 +292,50 @@ public class EntityRenderer extends RenderingComponent {
         var blackBr = EColors.white.brightnessOpacity(ratio - 30, ratio);
         var backBr = EColors.dsteel.brightnessOpacity(ratio + 30, ratio);
         var textBr = EColors.white.opacity(textRatio);
-	    
+        
         double dty = dy + dh / 1.75 - FontRenderer.strHalfHeight(zoom); // draw text y
         
-	    RenderingManager.drawHRect(dx, dy, dx + dw, dy + dh, 2, blackBr);
+        RenderingManager.drawHRect(dx, dy, dx + dw, dy + dh, 2, blackBr);
         RenderingManager.drawRect(dx + 1, dy + 1, dx + dw - 1, dy + dh - 1, backBr);
         RenderingManager.drawStringC(chat, midX, dty, zoom, zoom, textBr);
-	}
-	
-	public void drawFlash(int brightness) {
-	    if (!drawFlash) return;
-	    
-	    if (System.currentTimeMillis() - flashStart >= flashDurration) {
-	        drawFlash = false;
-	    }
-	    
-	    int color = flashColor;
-	    color = EColors.changeBrightness(color, theEntity.world.getAmbientLightLevel());
-	    lastDrawBrightness = color;
-	}
-	
-	public void drawEntityTexture() {
-	    boolean flip = false;
-	    
-	    if (flipTextureWhenMoving) {
-	        flip = theObject.facing == Rotation.RIGHT || theObject.facing == Rotation.DOWN;
-	    }
-	    
-	    Rotation rot = (theObject.forcedRotation != null) ? theObject.forcedRotation : Rotation.UP;
-	    flip = (theObject.forceFlip) ? true : flip;
-	    
-	    RenderingManager.drawSprite(theObject.sprite, lastDrawX, lastDrawY, lastDrawW, lastDrawH, flip, rot, lastDrawBrightness);
-	}
-	
-	public EntityRenderer setFlipTextureWhenMoving(boolean val) { flipTextureWhenMoving = val; return this; }
-	
-	
-	public void flashColor(EColors color, long durration) {
-	    flashColor(color.intVal, durration);
-	}
-	public void flashColor(int color, long durration) {
-	    flashColor = color;
-	    flashDurration = durration;
-	    flashStart = System.currentTimeMillis();
-	    drawFlash = true;
-	}
-	
+    }
+    
+    public void drawFlash(int brightness) {
+        if (!drawFlash) return;
+        
+        if (System.currentTimeMillis() - flashStart >= flashDurration) {
+            drawFlash = false;
+        }
+        
+        int color = flashColor;
+        color = EColors.changeBrightness(color, theEntity.world.getAmbientLightLevel());
+        lastDrawBrightness = color;
+    }
+    
+    public void drawEntityTexture() {
+        boolean flip = false;
+        
+        if (flipTextureWhenMoving) {
+            flip = theObject.facing == Rotation.RIGHT || theObject.facing == Rotation.DOWN;
+        }
+        
+        Rotation rot = (theObject.forcedRotation != null) ? theObject.forcedRotation : Rotation.UP;
+        flip = (theObject.forceFlip) ? true : flip;
+        
+        RenderingManager.drawSprite(theObject.sprite, lastDrawX, lastDrawY, lastDrawW, lastDrawH, flip, rot, lastDrawBrightness);
+    }
+    
+    public EntityRenderer setFlipTextureWhenMoving(boolean val) { flipTextureWhenMoving = val; return this; }
+    
+    
+    public void flashColor(EColors color, long durration) {
+        flashColor(color.intVal, durration);
+    }
+    public void flashColor(int color, long durration) {
+        flashColor = color;
+        flashDurration = durration;
+        flashStart = System.currentTimeMillis();
+        drawFlash = true;
+    }
+    
 }

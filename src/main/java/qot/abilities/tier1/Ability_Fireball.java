@@ -13,34 +13,34 @@ import qot.entities.projectiles.FireballProjectile;
 
 public class Ability_Fireball extends Ability {
     
-	public Ability_Fireball() {
-		super("Fireball", AbilityTextures.cast_fireball);
-		
-		setNumTiers(3);
-		
-		tier(0).manaCost(4).castTime(3 * 60).cooldown(5 * 60).requiresLevel(5);
-		tier(1).manaCost(10).castTime(3 * 60).cooldown(5 * 60).requiresLevel(10);
-		tier(2).manaCost(15).castTime(3 * 60).cooldown(5 * 60).requiresLevel(15);
-	}
+    public Ability_Fireball() {
+        super("Fireball", AbilityTextures.cast_fireball);
+        
+        setNumTiers(3);
+        
+        tier(0).manaCost(4).castTime(3 * 60).cooldown(5 * 60).requiresLevel(5);
+        tier(1).manaCost(10).castTime(3 * 60).cooldown(5 * 60).requiresLevel(10);
+        tier(2).manaCost(15).castTime(3 * 60).cooldown(5 * 60).requiresLevel(15);
+    }
 
-	@Override
-	public boolean use(Entity e, int tierIn) {
-		if (!canEntityUse(e, tierIn)) return false;
-		
-		int level = e.getSpellbook().getAbilityLevel(this);
-		AbilityTier tier = tier(level);
-		
-		if (tier == null) {
-			System.out.println(this + " does not have tier: '" + level + "' !");
-			return false;
-		}
-		
-		int manaCost = tier.manaCost();
-		if (!e.manaCheck(manaCost)) return false;
-		
-		e.drainMana(manaCost);
-		
-		final var cam = Envision.levelManager.getCamera();
+    @Override
+    public boolean use(Entity e, int tierIn) {
+        if (!canEntityUse(e, tierIn)) return false;
+        
+        int level = e.getSpellbook().getAbilityLevel(this);
+        AbilityTier tier = tier(level);
+        
+        if (tier == null) {
+            System.out.println(this + " does not have tier: '" + level + "' !");
+            return false;
+        }
+        
+        int manaCost = tier.manaCost();
+        if (!e.manaCheck(manaCost)) return false;
+        
+        e.drainMana(manaCost);
+        
+        final var cam = Envision.levelManager.getCamera();
         if (cam == null) return false;
         final double mpx = cam.getMxPixel();
         final double mpy = cam.getMyPixel();
@@ -84,12 +84,12 @@ public class Ability_Fireball extends Ability {
                 spawnFireball(e, dir.rotateZ((float) (i * angle * Math.PI / 180), new Vector3f()), level);
             }
         }
-		
-		return true;
-	}
-	
-	protected void spawnFireball(Entity e, Vector3f direction, int level) {
-	    int minDamage = switch (level) {
+        
+        return true;
+    }
+    
+    protected void spawnFireball(Entity e, Vector3f direction, int level) {
+        int minDamage = switch (level) {
         case 0 -> 5;
         case 1 -> 10;
         case 2 -> 15;
@@ -137,29 +137,29 @@ public class Ability_Fireball extends Ability {
         fb.setFiringEntity(e);
         
         e.world.addEntity(fb);
-	}
+    }
 
-	@Override
-	public boolean canEntityUse(Entity e, int tierIn) {
-		var sb = e.getSpellbook();
-		
-		if (!sb.knowsAbility(this)) return false;
-		if (sb.getAbilityLevel(this) < tierIn) return false;
-		
-		return true;
-	}
+    @Override
+    public boolean canEntityUse(Entity e, int tierIn) {
+        var sb = e.getSpellbook();
+        
+        if (!sb.knowsAbility(this)) return false;
+        if (sb.getAbilityLevel(this) < tierIn) return false;
+        
+        return true;
+    }
 
-	@Override
-	public boolean canEntityUpgrade(Entity e) {
-		var sb = e.getSpellbook();
-		if (!sb.knowsAbility(this)) return false;
-		
-		int tierLevel = sb.getAbilityLevel(this);
-		if (tierLevel >= maxTiers) return false;
-		
-		var tier = tier(tierLevel + 1);
-		if (tier.requiresLevel() > e.getMagicLevel()) return false;
-		
-		return true;
-	}
+    @Override
+    public boolean canEntityUpgrade(Entity e) {
+        var sb = e.getSpellbook();
+        if (!sb.knowsAbility(this)) return false;
+        
+        int tierLevel = sb.getAbilityLevel(this);
+        if (tierLevel >= maxTiers) return false;
+        
+        var tier = tier(tierLevel + 1);
+        if (tier.requiresLevel() > e.getMagicLevel()) return false;
+        
+        return true;
+    }
 }

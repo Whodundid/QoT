@@ -5,23 +5,23 @@ import envision.game.world.worldEditor.editorTools.EditorTool;
 
 public class Tool_MagicWand extends EditorTool {
 
-	public Tool_MagicWand(MapEditorScreen in) {
-		super(in);
-	}
+    public Tool_MagicWand(MapEditorScreen in) {
+        super(in);
+    }
 
-	@Override
-	public void onPress() {
-		
-	}
+    @Override
+    public void onPress() {
+        
+    }
 
-	@Override
-	public void onRelease() {
-		
-	}
+    @Override
+    public void onRelease() {
+        
+    }
 
-	@Override
-	public void onUpdate() {
-		
-	}
-	
+    @Override
+    public void onUpdate() {
+        
+    }
+    
 }

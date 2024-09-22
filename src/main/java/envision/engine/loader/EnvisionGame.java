@@ -16,7 +16,7 @@ import eutil.datatypes.util.EList;
 import eutil.strings.EStringUtil;
 
 public class EnvisionGame implements IEventListener {
-	
+    
     //========
     // Fields
     //========
@@ -124,29 +124,29 @@ public class EnvisionGame implements IEventListener {
     
     public void onRenderTick() {}
     public void onGameTick() {}
-	
+    
     public void onMouseInput(int action, int mX, int mY, int button, int change) {}
     public void onMousePress(int mX, int mY, int button) {}
     public void onMouseRelease(int mX, int mY, int button) {}
-	
+    
     public void onKeyInput(int action, char typedChar, int keyCode) {}
     public void onKeyPress(char typedChar, int keyCode) {}
     public void onKeyRelease(char typedChar, int keyCode) {}
-	
+    
     public void onWindowResized() {}
-	
+    
     public void onEvent(GameEvent e) {}
-	
+    
     public void onTerminalLoad(TerminalCommandHandler handler) {}
-	
+    
     public void onPreEngineLoad() {}
     public void onPostEngineLoad() {}
     public void onPreEngineUnload() {}
     public void onPostEngineUnload() {}
-	
+    
     public void onPreGameUnload() {}
     public void onPostGameUnload() {}
-	
+    
     public void onRegisterInternalTextures(TextureSystem textureSystem) {}
-	
+    
 }

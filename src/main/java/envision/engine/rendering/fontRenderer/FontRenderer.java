@@ -27,15 +27,17 @@ public class FontRenderer {
     public static final char ERROR_CHAR = '\u0000';
     
     public static GameFont defaultFont = GameFont.createFont("default", "font_map.txt", "font.png");
-    public static GameFont newFont = GameFont.createFont("new", "control_map.txt", "font_test_fix.png");
+    public static GameFont newFont = GameFont.createFont("new", "control_map.txt", "font_plain.png", "font_test_fix.png");
     public static GameFont font8 = GameFont.createFont("8-bit", "font_map_8x8.txt", "font_8x8.png");
     public static GameFont courier = GameFont.createFont("courier", "courier_map.txt", "courier.png");
     
-    public static GameFont smooth = GameFont.createFont("smooth", "control_map.txt", "font_test_fix.png", GL11.GL_LINEAR, GL11.GL_LINEAR);
+    public static GameFont smooth = GameFont.createFont("smooth", "control_map.txt", "font_plain.png", "font_test_fix.png", GL11.GL_LINEAR, GL11.GL_LINEAR);
     
     private static final Map<String, GameFont> REGISTERED_FONTS = new HashMap<>();
     
     static {
+        newFont.setFlipBold(true);
+        
         REGISTERED_FONTS.put(defaultFont.getFontName().toLowerCase(), defaultFont);
         REGISTERED_FONTS.put(newFont.getFontName().toLowerCase(), newFont);
         REGISTERED_FONTS.put(font8.getFontName().toLowerCase(), font8);
@@ -66,35 +68,11 @@ public class FontRenderer {
         final var ts = TextureSystem.getInstance();
         ts.reg(defaultFont.getFontTexture());
         ts.reg(newFont.getFontTexture());
+        ts.reg(newFont.getBoldFontTexture());
         ts.reg(font8.getFontTexture());
         ts.reg(courier.getFontTexture());
         ts.reg(smooth.getFontTexture());
         currentFont = newFont;
-    }
-    
-    //=========
-    // Methods
-    //=========
-    
-    public static double drawString(Object in, double xIn, double yIn, double scaleX, double scaleY) {
-        return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff, scaleX, scaleY);
-    }
-    public static double drawString(String in, double xIn, double yIn, double scaleX, double scaleY) {
-        return drawString(in, xIn, yIn, 0xffffffff, scaleX, scaleY);
-    }
-    
-    public static double drawString(Object in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY) {
-        return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY);
-    }
-    public static double drawString(Object in, double xIn, double yIn, int colorIn, double scaleX, double scaleY) {
-        return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn, scaleX, scaleY);
-    }
-    
-    public static double drawString(String in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY) {
-        return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY);
-    }
-    public static double drawString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY) {
-        return instance.createString(in, xIn, yIn, colorIn, scaleX, scaleY);
     }
     
     //=========
@@ -104,9 +82,15 @@ public class FontRenderer {
     public static GameFont getCurrentFont() { return getInstance().currentFont; }
     
     public static int getCharWidth() { return instance.currentFont.getWidth(); }
+    public static int CW() { return getCharWidth(); }
     public static double getScaleW() { return instance.currentFont.getScaleW(); }
     public static double getScaleH() { return instance.currentFont.getScaleH(); }
     public static double getScaleSpace() { return instance.currentFont.getScaleSpace(); }
+    
+    public static boolean isCurrentDefaultBold() {
+        if (instance.currentFont != null) return instance.currentFont.isDefaultBold();
+        return false;
+    }
     
     //=========
     // Setters
@@ -118,13 +102,43 @@ public class FontRenderer {
         else Envision.error("Font '" + fontIn.getFontFile() + "' failed to load!");
     }
     
+    public static void flipCurrentFontBold(boolean val) {
+        if (instance.currentFont == null) return;
+        instance.currentFont.setFlipBold(val);
+    }
+    
+    //=========
+    // Methods
+    //=========
+    
+    public static double drawString(Object in, double xIn, double yIn, double scaleX, double scaleY, boolean italic, boolean bold, boolean underline) {
+        return drawString(in != null ? in.toString() : "null", xIn, yIn, 0xffffffff, scaleX, scaleY, italic, bold, underline);
+    }
+    public static double drawString(String in, double xIn, double yIn, double scaleX, double scaleY, boolean italic, boolean bold, boolean underline) {
+        return drawString(in, xIn, yIn, 0xffffffff, scaleX, scaleY, italic, bold, underline);
+    }
+    
+    public static double drawString(Object in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY, boolean italic, boolean bold, boolean underline) {
+        return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY, italic, bold, underline);
+    }
+    public static double drawString(Object in, double xIn, double yIn, int colorIn, double scaleX, double scaleY, boolean italic, boolean bold, boolean underline) {
+        return drawString(in != null ? in.toString() : "null", xIn, yIn, colorIn, scaleX, scaleY, italic, bold, underline);
+    }
+    
+    public static double drawString(String in, double xIn, double yIn, EColors colorIn, double scaleX, double scaleY, boolean italic, boolean bold, boolean underline) {
+        return drawString(in, xIn, yIn, colorIn.intVal, scaleX, scaleY, italic, bold, underline);
+    }
+    public static double drawString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY, boolean italic, boolean bold, boolean underline) {
+        return instance.createString(in, xIn, yIn, colorIn, scaleX, scaleY, italic, bold, underline);
+    }
+    
     //==================
     // Internal Methods
     //==================
     
-    private double createString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY) {
+    private double createString(String in, double xIn, double yIn, int colorIn, double scaleX, double scaleY, boolean italic, boolean bold, boolean underline) {
         if (in == null || in.isEmpty()) return 0.0;
-        
+        //System.out.println(in);
         double sX = xIn;
         for (int i = 0; i < in.length(); i++) {
             char c = in.charAt(i);
@@ -135,24 +149,34 @@ public class FontRenderer {
             int xPos = loc.getA() * w;
             int yPos = loc.getB() * h;
             
-            drawChar(sX, yIn, xPos, yPos, colorIn, scaleX, scaleY);
+            drawChar(sX, yIn, xPos, yPos, colorIn, scaleX, scaleY, italic, bold, underline);
             sX += (w * currentFont.getScaleSpace() / Envision.getGameScale()) * scaleX;
         }
         
         return sX;
     }
     
-    private void drawChar(double posX, double posY, int tX, int tY, int color, double scaleX, double scaleY) {
+    private void drawChar(double posX, double posY, int tx, int ty, int color, double scaleX, double scaleY, boolean italic, boolean bold, boolean underline) {
         final double w = currentFont.getWidth();
         final double h = currentFont.getHeight();
         final double sw = currentFont.getScaleW() * scaleX;
         final double sh = currentFont.getScaleH() * scaleY;
-        final double draw_w = w * sw;
-        final double draw_h = h * sh;
+        final double dw = w * sw;
+        final double dh = h * sh;
         
-        final var font = currentFont.getFontTexture();
+        var f = currentFont;
+        var font = (bold) ? f.getBoldFontTexture() : f.getFontTexture();
+        if (f.isFlipBold()) font = f.getBoldFontTexture();
         
-        RenderingManager.drawTexture(font, posX, posY, draw_w, draw_h, tX, tY, w, h, color, false);
+        double x0 = posX + (italic ? 7 : 0)      , y0 = posY;
+        double x1 = posX + (italic ? -7 : 0)      , y1 = posY + dh;
+        double x2 = posX + dw + (italic ? -7 : 0) , y2 = posY + dh;
+        double x3 = posX + dw + (italic ? 7 : 0) , y3 = posY;
+        
+        //System.out.println("[" + x0 + ", " + y0 + "] [" + x1 + ", " + y1 + "] [" + x2 + ", " + y2 + "] [" + x3 + ", " + y3 + "]");
+        
+        RenderingManager.drawTexture(font, x0, y0, x1, y1, x2, y2, x3, y3, tx, ty, w, h, color, false);
+        if (underline) RenderingManager.drawRect(posX, posY + FH - 5, posX + getCharWidth(), posY + FH - 3, color);
     }
     
     //================

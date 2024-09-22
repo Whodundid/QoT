@@ -13,39 +13,39 @@ import qot.entities.EntityList;
 import qot.items.Items;
 
 public class Goblin extends Enemy {
-	
-	private boolean hit = false;
-	private long timeSinceLastHit;
-	
-	public Goblin() { this(0, 0); }
-	public Goblin(int posX, int posY) {
-		super("Goblin");
-		
-		setBaseMeleeDamage(1);
-		setMaxHealth(10);
-		setHealth(10);
-		setSpeed(32.0 * 3.0);
-		agroRange = 200;
-		
-		init(posX, posY, 64, 64);
-		sprite = new Sprite(EntityTextures.goblin);
-		
-		setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
-		setExperienceRewardedOnKill(25);
-		
+    
+    private boolean hit = false;
+    private long timeSinceLastHit;
+    
+    public Goblin() { this(0, 0); }
+    public Goblin(int posX, int posY) {
+        super("Goblin");
+        
+        setBaseMeleeDamage(1);
+        setMaxHealth(10);
+        setHealth(10);
+        setSpeed(32.0 * 3.0);
+        agroRange = 200;
+        
+        init(posX, posY, 64, 64);
+        sprite = new Sprite(EntityTextures.goblin);
+        
+        setCollisionBox(startX + 16, endY - 15, endX - 16, endY);
+        setExperienceRewardedOnKill(25);
+        
         // item on death
         
         var itemOnDeath = DropItemOnDeathComponent.setItem(this, Items.random());
         itemOnDeath.setChance(10);
         
         addComponent(itemOnDeath);
-	}
-	
-	@Override
-	public void onLivingUpdate(float dt) {
-		super.onLivingUpdate(dt);
-	}
-	
+    }
+    
+    @Override
+    public void onLivingUpdate(float dt) {
+        super.onLivingUpdate(dt);
+    }
+    
     @Override
     protected void runPassiveAI(float dt) {
         wander(dt);
@@ -89,10 +89,10 @@ public class Goblin extends Enemy {
             }
         }
     }
-	
-	@Override
-	public int getInternalSaveID() {
-		return EntityList.GOBLIN.ID;
-	}
-	
+    
+    @Override
+    public int getInternalSaveID() {
+        return EntityList.GOBLIN.ID;
+    }
+    
 }

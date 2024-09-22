@@ -14,7 +14,7 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.EventType;
  * @author Hunter Bragg
  */
 public class EventDragAndDrop extends ObjectEvent {
-	
+    
     //========
     // Fields
     //========
@@ -24,22 +24,22 @@ public class EventDragAndDrop extends ObjectEvent {
     /** The destination object that the drag-and-drop object is being dropped onto. */
     private final IWindowObject target;
     
-	//==============
-	// Constructors
-	//==============
-	
-	public EventDragAndDrop(DragAndDropObject objectBeingDroppedIn, IWindowObject targetIn) {
-		super(objectBeingDroppedIn, EventType.DRAG_AND_DROP, true);
-		
-		objectBeingDropped = objectBeingDroppedIn;
-		target = targetIn;
-	}
-	
-	//=========
-	// Getters
-	//=========
-	
-	public DragAndDropObject getObjectBeingDropped() { return objectBeingDropped; }
-	public IWindowObject getTargetObject() { return target; }
-	
+    //==============
+    // Constructors
+    //==============
+    
+    public EventDragAndDrop(DragAndDropObject objectBeingDroppedIn, IWindowObject targetIn) {
+        super(objectBeingDroppedIn, EventType.DRAG_AND_DROP, true);
+        
+        objectBeingDropped = objectBeingDroppedIn;
+        target = targetIn;
+    }
+    
+    //=========
+    // Getters
+    //=========
+    
+    public DragAndDropObject getObjectBeingDropped() { return objectBeingDropped; }
+    public IWindowObject getTargetObject() { return target; }
+    
 }

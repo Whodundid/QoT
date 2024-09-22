@@ -5,30 +5,30 @@ import envision.engine.kernel.terminal.commands.TerminalCommand;
 import eutil.colors.EColors;
 
 public class CMD_PauseGame extends TerminalCommand {
-	
-	public CMD_PauseGame() {
-		setCategory("Game");
-		expectedArgLength = 0;
-	}
+    
+    public CMD_PauseGame() {
+        setCategory("Game");
+        expectedArgLength = 0;
+    }
 
-	@Override public String getName() { return "pause"; }
-	@Override public String getHelpInfo(boolean runVisually) { return "Pauses or resumes the game"; }
-	@Override public String getUsage() { return "ex: pause"; }
-	
-	@Override
-	public void runCommand() {
-	    expectNoArgs();
-	    
-		boolean paused = Envision.isPaused();
-		
-		if (paused) {
-			Envision.unpause();
-			writeln("Game Resumed", EColors.yellow);
-		}
-		else {
-			Envision.pause();
-			writeln("Game Paused", EColors.yellow);
-		}
-	}
-	
+    @Override public String getName() { return "pause"; }
+    @Override public String getHelpInfo(boolean runVisually) { return "Pauses or resumes the game"; }
+    @Override public String getUsage() { return "ex: pause"; }
+    
+    @Override
+    public void runCommand() {
+        expectNoArgs();
+        
+        boolean paused = Envision.isPaused();
+        
+        if (paused) {
+            Envision.unpause();
+            writeln("Game Resumed", EColors.yellow);
+        }
+        else {
+            Envision.pause();
+            writeln("Game Paused", EColors.yellow);
+        }
+    }
+    
 }

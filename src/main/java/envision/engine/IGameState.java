@@ -10,14 +10,14 @@ package envision.engine;
  * @author Hunter Bragg
  */
 public enum IGameState {
-	
-	IN_GAME,
-	IN_MENU,
-	IN_DIALOG,
-	IN_GAME_GUI, //shops and stuff
-	
-	WORLD_LOADING,
-	WORLD_UNLOADING,
-	
+    
+    IN_GAME,
+    IN_MENU,
+    IN_DIALOG,
+    IN_GAME_GUI, //shops and stuff
+    
+    WORLD_LOADING,
+    WORLD_UNLOADING,
+    
 }
 

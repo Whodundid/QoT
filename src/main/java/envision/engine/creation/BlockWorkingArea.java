@@ -2,9 +2,9 @@ package envision.engine.creation;
 
 import envision.engine.assets.WindowTextures;
 import envision.engine.creation.block.CreatorBlock;
-import envision.engine.windows.windowObjects.actionObjects.WindowButton;
-import envision.engine.windows.windowObjects.advancedObjects.menuBar.WindowMenuBar;
-import envision.engine.windows.windowObjects.advancedObjects.textArea.WindowTextArea;
+import envision.engine.windows.windowObjects.action.WindowButton;
+import envision.engine.windows.windowObjects.advanced.menuBar.WindowMenuBar;
+import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea;
 import envision.engine.windows.windowTypes.WindowParent;
 import eutil.datatypes.util.EList;
 
@@ -99,7 +99,7 @@ public class BlockWorkingArea extends WindowParent {
         }
     }
     
-    public void createNewSpace() {}
+    public void createNewSpace() { System.out.println("LOLOL"); }
     public void loadSpace() {}
     public void saveSpace() {}
     public void closeCurrentSpace() {}

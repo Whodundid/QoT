@@ -420,9 +420,9 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         try {
             WorldTile r = in.getClass().getConstructor().newInstance();
             //Sprite tex = in.getSprite();
-            //			if (tex != null && tex.hasParent()) {
-            //				r.setTexture(tex.getParent().getRandVariant());
-            //			}
+            //            if (tex != null && tex.hasParent()) {
+            //                r.setTexture(tex.getParent().getRandVariant());
+            //            }
             return r;
         }
         catch (Exception e) {
@@ -450,9 +450,9 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         to.worldY = from.worldY;
         to.hasSideBrightness = from.hasSideBrightness;
         to.sideBrightness = from.sideBrightness;
-        //		to.entitiesOnTile = from.entitiesOnTile;
-        //		to.entitiesAdding = from.entitiesAdding;
-        //		to.entitiesRemoving = from.entitiesRemoving;
+        //        to.entitiesOnTile = from.entitiesOnTile;
+        //        to.entitiesAdding = from.entitiesAdding;
+        //        to.entitiesRemoving = from.entitiesRemoving;
         to.rotationDir = from.rotationDir;
         to.drawFlipped = from.drawFlipped;
         

@@ -8,29 +8,29 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.ObjectEventType
 //Author: Hunter Bragg
 
 public class EventObjects extends ObjectEvent {
-	
-	//--------
-	// Fields
-	//--------
-	
-	private final ObjectEventType type;
-	private final IWindowObject targetObject;
-	
-	//--------------
-	// Constructors
-	//--------------
-	
-	public EventObjects(IWindowObject parentIn, IWindowObject targetObjectIn, ObjectEventType typeIn) {
-		super(parentIn, EventType.OBJECT, true);
-		targetObject = targetObjectIn;
-		type = typeIn;
-	}
-	
-	//---------
-	// Getters
-	//---------
-	
-	public ObjectEventType getObjectEventType() { return type; }
-	public IWindowObject getTargetObject() { return targetObject; }
-	
+    
+    //--------
+    // Fields
+    //--------
+    
+    private final ObjectEventType type;
+    private final IWindowObject targetObject;
+    
+    //--------------
+    // Constructors
+    //--------------
+    
+    public EventObjects(IWindowObject parentIn, IWindowObject targetObjectIn, ObjectEventType typeIn) {
+        super(parentIn, EventType.OBJECT, true);
+        targetObject = targetObjectIn;
+        type = typeIn;
+    }
+    
+    //---------
+    // Getters
+    //---------
+    
+    public ObjectEventType getObjectEventType() { return type; }
+    public IWindowObject getTargetObject() { return targetObject; }
+    
 }

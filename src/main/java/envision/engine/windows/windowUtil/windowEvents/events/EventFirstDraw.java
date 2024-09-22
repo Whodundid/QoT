@@ -7,13 +7,13 @@ import envision.engine.windows.windowUtil.windowEvents.eventUtil.EventType;
 //Author: Hunter Bragg
 
 public class EventFirstDraw extends ObjectEvent {
-	
-	//--------------
-	// Constructors
-	//--------------
-	
-	public EventFirstDraw(IWindowObject parentObjectIn) {
-		super(parentObjectIn, EventType.FIRSTDRAW, true);
-	}
-	
+    
+    //--------------
+    // Constructors
+    //--------------
+    
+    public EventFirstDraw(IWindowObject parentObjectIn) {
+        super(parentObjectIn, EventType.FIRSTDRAW, true);
+    }
+    
 }

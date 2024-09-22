@@ -31,29 +31,29 @@ float bezier4(float p1, float p2, float p3, float p4, float t);
 //======
 
 void main(void) {
-	int index = int(pass_texIndex);
-	
-	// render the color if index if zero
-	if (index == 0) {
-		out_color = pass_color;
-	}
-	else {
-		//offset indexes by 1 to account for array start position
-		index = index - 1;
-		
-		//multiply texture color by passed color for texture lighting
-		vec4 texture_color = texture(texSamplers[index], pass_texCoord);
-		//out_color = pass_color * texture(texSamplers[index], pass_texCoord);
-		
-		// spicy lighting
-		vec2 pixel = gl_FragCoord.xy;
-		float dist = distance(u_playerPos, pixel);
-		float max_dist = u_lightDist;
-		float percent = clamp(1.0f - dist / max_dist, 0.0f, 1.0f);
-		percent = bezier4(u_bezierVals.x, u_bezierVals.y, u_bezierVals.z, u_bezierVals.w, percent);
-		
-		out_color = texture_color * pass_color * vec4(percent, percent, percent, 1.0);
-	}
+    int index = int(pass_texIndex);
+    
+    // render the color if index if zero
+    if (index == 0) {
+        out_color = pass_color;
+    }
+    else {
+        //offset indexes by 1 to account for array start position
+        index = index - 1;
+        
+        //multiply texture color by passed color for texture lighting
+        vec4 texture_color = texture(texSamplers[index], pass_texCoord);
+        //out_color = pass_color * texture(texSamplers[index], pass_texCoord);
+        
+        // spicy lighting
+        vec2 pixel = gl_FragCoord.xy;
+        float dist = distance(u_playerPos, pixel);
+        float max_dist = u_lightDist;
+        float percent = clamp(1.0f - dist / max_dist, 0.0f, 1.0f);
+        percent = bezier4(u_bezierVals.x, u_bezierVals.y, u_bezierVals.z, u_bezierVals.w, percent);
+        
+        out_color = texture_color * pass_color * vec4(percent, percent, percent, 1.0);
+    }
 }
 
 //===========

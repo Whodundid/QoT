@@ -9,7 +9,7 @@ import envision.engine.inputHandlers.Keyboard;
 import envision.engine.inputHandlers.Mouse;
 import envision.engine.kernel.developerDesktop.DeveloperDesktop;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.windowObjects.utilityObjects.RightClickMenu;
+import envision.engine.windows.windowObjects.utility.RightClickMenu;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
@@ -98,12 +98,8 @@ public abstract class DesktopShortcut extends WindowObject {
             else drawRect(color.opacity(60));
         }
         
-        double scale = 0.8;
-        double nameWidth = strWidth(shortcutName);
-        double drawX = midX + (nameWidth - nameWidth * scale);
-        
         //draw description text below icon
-        drawStringC(shortcutName, drawX, endY + 6, scale, scale, EColors.chalk);
+        drawStringC(shortcutName, midX, endY + 6, EColors.chalk);
         
         checkMouseMove();
     }

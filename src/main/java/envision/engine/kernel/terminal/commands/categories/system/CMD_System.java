@@ -8,22 +8,22 @@ import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 
 public class CMD_System extends TerminalCommand {
-	
-	public CMD_System() {
-		setCategory("System");
-		expectedArgLength = 0;
-	}
+    
+    public CMD_System() {
+        setCategory("System");
+        expectedArgLength = 0;
+    }
 
-	@Override public String getName() { return "system"; }
-	@Override public EList<String> getAliases() { return EList.of("sys"); }
-	@Override public String getHelpInfo(boolean runVisually) { return "Displays information on the system"; }
-	@Override public String getUsage() { return "ex: sys"; }
-	@Override public byte requiredPermissionLevel() { return 2; }
-	
-	@Override
-	public void runCommand() {
-	    expectNoArgs();
-	    
+    @Override public String getName() { return "system"; }
+    @Override public EList<String> getAliases() { return EList.of("sys"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "Displays information on the system"; }
+    @Override public String getUsage() { return "ex: sys"; }
+    @Override public byte requiredPermissionLevel() { return 2; }
+    
+    @Override
+    public void runCommand() {
+        expectNoArgs();
+        
         //os
         writeln("OS:", EColors.orange);
         
@@ -135,6 +135,6 @@ public class CMD_System extends TerminalCommand {
             error("Error fetching system drive values..");
             error(q);
         }
-	}
-	
+    }
+    
 }

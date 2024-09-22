@@ -3,7 +3,7 @@ package envision.engine.creation.block;
 import java.util.HashMap;
 import java.util.Map;
 
-import envision.engine.windows.windowObjects.advancedObjects.header.WindowHeader;
+import envision.engine.windows.windowObjects.advanced.header.WindowHeader;
 import envision.engine.windows.windowTypes.WindowObject;
 import eutil.datatypes.util.EList;
 
