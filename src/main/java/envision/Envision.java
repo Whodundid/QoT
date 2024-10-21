@@ -744,6 +744,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
                     currentScreen.onPreInit();
                     currentScreen.setWindowSize();
                     currentScreen.initScreen();
+                    currentScreen.onInit_i();
                     currentScreen.reInitChildren();
                     currentScreen.onPostInit();
                 }
@@ -754,6 +755,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
                     currentScreen.onPreInit();
                     currentScreen.setWindowSize();
                     currentScreen.initScreen();
+                    currentScreen.onInit_i();
                     currentScreen.reInitChildren();
                     currentScreen.onPostInit();
                 }

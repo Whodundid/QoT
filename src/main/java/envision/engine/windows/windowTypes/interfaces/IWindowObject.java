@@ -15,11 +15,13 @@ import envision.engine.windows.windowTypes.DragAndDropObject;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.WindowObjectProperties;
 import envision.engine.windows.windowTypes.WindowParent;
-import envision.engine.windows.windowUtil.WindowObjectGroup;
 import envision.engine.windows.windowUtil.FutureTaskEventType;
 import envision.engine.windows.windowUtil.FutureTaskManager;
+import envision.engine.windows.windowUtil.WindowObjectGroup;
 import envision.engine.windows.windowUtil.input.KeyboardInputAcceptor;
 import envision.engine.windows.windowUtil.input.MouseInputAcceptor;
+import envision.engine.windows.windowUtil.layouts.IWindowLayout;
+import envision.engine.windows.windowUtil.layouts.LayoutConstraint;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEventHandler;
 import envision.engine.windows.windowUtil.windowEvents.eventUtil.FocusType;
@@ -88,9 +90,23 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
         properties().childrenToBeAdded.clear();
         properties().objectHeader = null;
         initChildren();
+        onApplyLayout_i();
         postReInit();
         properties().areChildrenInit = true;
     }
+    
+    //=================
+    // Layout Managers
+    //=================
+    
+    /** Returns this object's layout constraint. */
+    public default LayoutConstraint getLayoutConstraint() { return properties().layoutConstraints; }
+    /** Specifies a constraint on this object for a corresponding window layout. */
+    public default void setLayoutConstraint(LayoutConstraint constraint) { properties().layoutConstraints = constraint; }
+    /** Returns this object's active layout manager. */
+    public default IWindowLayout getLayout() { return properties().layoutManager; }
+    /** Specifies the layout manager that this component will use to automatically scale and position its children. */
+    public default void setLayout(IWindowLayout layoutManager) { properties().layoutManager = layoutManager; }
     
     //=========================
     // Basic Object Properties
@@ -124,7 +140,12 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
     /** Sets this object to be drawn regardless of it being visible or enabled. */
     public default void setAlwaysVisible(boolean val) { properties().isAlwaysVisible = val; }
     /** Sets this object to always be drawn on top. */
-    public default void setAlwaysOnTop(boolean val) { properties().isAlwaysOnTop = val; }
+    public default void setAlwaysOnTop(boolean val) {
+        properties().isAlwaysOnTop = val;
+        if (val && getTopParent() != null) {
+            getTopParent().bringObjectToFront(this);
+        }
+    }
     /** Sets whether this object can be resized or not. */
     public default void setResizeable(boolean val) { properties().isResizeable = val; }
     /** Sets this object's position as unmodifiable. */
@@ -236,6 +257,25 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
         onChildrenInit();
         var ftm = getFutureTaskManager();
         if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_CHILDREN_INIT);
+    }
+    
+    /**
+     * Internal event fired when this object initially applies its layout
+     * to its child components.
+     * <p>
+     * Most developers will probably want to override the non-internal
+     * 'onLayoutApplied' method instead of this one.
+     * <p>
+     * If this method is overridden, future tasks will not be propagated
+     * and internal object properties will not be set unless manually set.
+     */
+    public default void onApplyLayout_i() {
+        properties().hasAppliedLayout = true;
+        final IWindowLayout layout = getLayout();
+        if (layout != null) layout.applyLayout(instance(), getCombinedChildren());
+        onLayoutApplied();
+        var ftm = getFutureTaskManager();
+        if (ftm != null) ftm.runTaskType(FutureTaskEventType.ON_LAYOUT_APPLIED);
     }
     
     /**
@@ -354,6 +394,8 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
     public default void onInit() {}
     /** Called immediately <b>AFTER</b> this object initializes its children. */
     public default void onChildrenInit() {}
+    /** Called immediately <b>AFTER</b> this object applies its layout to its child components. */
+    public default void onLayoutApplied() {}
     /** Called <b>RIGHT_BEFORE</b> this object is about to be drawn for the first time. */
     public default void onFirstDraw() {}
     /** Called immediately <b>AFTER</b> this object first receives focus. */
@@ -375,20 +417,20 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
         try {
             if (!willBeDrawn()) return;
             
-            //draw this object first
+            // draw this object first
             drawObject(dt, mXIn, mYIn);
             
-            //now draw all child objects on top of parent
+            // now draw all child objects on top of parent
             for (var o : getChildren()) {
-                //only draw if the object is actually visible
+                // only draw if the object is actually visible
                 if (!o.willBeDrawn() || o.isHidden()) continue;
                 
-                //notify object on first draw
+                // notify object that its about to get its first draw
                 if (!o.hasFirstDraw()) o.onFirstDraw_i();
-                //actually draw the child object
+                // actually draw the child object
                 o.drawObject_i(dt, mXIn, mYIn);
                 
-                //draw grayed out overlay over everything if a focus lock object is present
+                // draw grayed out overlay over everything if a focus lock object is present
                 var top = getTopParent();
                 if (top == null) continue;
                 
@@ -616,44 +658,45 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
      * <p>
      * Specifically useful for maintaining object aspect ratio when screen dimensions are changed.
      */
-    public default Dimension_d getUnboundedDimensions() { return instance().getUnboundedDimensions(); }
+    public default Dimension_d getUnboundedDimensions() { return instance().getGuiUnboundedDimensions(); }
     /** Returns the current dimensions of this object. */
-    public default Dimension_d getDimensions() { return instance().getDimensions(); }
+    public default Dimension_d getDimensions() { return instance().getGuiDimensions(); }
     /** Returns the current position of this object. */
     public default Point2d getPosition() { return instance().getGuiPosition(); }
     /** Returns the position this object will relocate to when reset. */
     public default Point2d getInitialPosition() { return instance().getGuiInitialPosition(); }
     /** Returns the minimum width and height that this object can have. */
-    public default Point2d getMinDims() { return instance().getMinDims(); }
+    public default Point2d getMinDims() { return instance().getGuiMinDims(); }
     /** Returns the maximum width and height that this object can have. */
-    public default Point2d getMaxDims() { return instance().getMaxDims(); }
+    public default Point2d getMaxDims() { return instance().getGuiMaxDims(); }
     /** Returns the minimum width that this object can have. */
-    public default double getMinWidth() { return instance().getMinWidth(); }
+    public default double getMinWidth() { return instance().getGuiMinWidth(); }
     /** Returns the minimum height that this object can have. */
-    public default double getMinHeight() { return instance().getMinHeight(); }
+    public default double getMinHeight() { return instance().getGuiMinHeight(); }
     /** Returns the maximum width that this object can have. */
-    public default double getMaxWidth() { return instance().getMaxWidth(); }
+    public default double getMaxWidth() { return instance().getGuiMaxWidth(); }
     /** Returns the maximum height that this object can have. */
-    public default double getMaxHeight() { return instance().getMaxHeight(); }
+    public default double getMaxHeight() { return instance().getGuiMaxHeight(); }
     
     /** Specifies this objects position, width, and height using an EDimension object. */
-    public default void setDimensions(Dimension_d dimIn) { instance().setDimensions(dimIn); }
+    public default void setDimensions(Dimension_d dimIn) { setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
     /** Specifies this objects position, width, and height. (x, y, width, height) */
-    public default void setDimensions(double x, double y, double w, double h) { instance().setDimensions(x, y, w, h); }
+    public default void setDimensions(double x, double y, double w, double h) { instance().setGuiDimensions(x, y, w, h); }
+    
     /** Specifies the position this object will relocate to when its' position is reset. */
     public default void setInitialPosition(double x, double y) { instance().setGuiInitialPosition(x, y); }
     /** Sets both the minimum width and height for this object. */
-    public default void setMinDims(double w, double h) { instance().setMinDims(w, h); }
+    public default void setMinDims(double w, double h) { instance().setGuiMinDims(w, h); }
     /** Sets both the maximum width and height for this object. */
-    public default void setMaxDims(double w, double h) { instance().setMaxDims(w, h); }
+    public default void setMaxDims(double w, double h) { instance().setGuiMaxDims(w, h); }
     /** Sets the minimum width for this object when resizing. */
-    public default void setMinWidth(double w) { instance().setMinWidth(w); }
+    public default void setMinWidth(double w) { instance().setGuiMinWidth(w); }
     /** Sets the minimum height for this object when resizing. */
-    public default void setMinHeight(double h) { instance().setMinHeight(h); }
+    public default void setMinHeight(double h) { instance().setGuiMinHeight(h); }
     /** Sets the maximum width for this object when resizing. */
-    public default void setMaxWidth(double w) { instance().setMaxWidth(w); }
+    public default void setMaxWidth(double w) { instance().setGuiMaxWidth(w); }
     /** Sets the maximum height for this object when resizing. */
-    public default void setMaxHeight(double h) { instance().setMaxHeight(h); }
+    public default void setMaxHeight(double h) { instance().setGuiMaxHeight(h); }
     /** Specifies this object's width and height based on the current starting position. */
     public default void setSize(double widthIn, double heightIn) { instance().setGuiSize(widthIn, heightIn); }
     
@@ -706,9 +749,16 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
      * by the given Direction.
      */
     public default void resize(double xIn, double yIn, ScreenLocation areaIn) {
-        postEvent(new EventModify(this, this, ObjectModifyType.RESIZE)); //post an event
-        //make sure that there is actually a change in the cursor position
+        postEvent(new EventModify(this, this, ObjectModifyType.RESIZE)); // post an event
+        // make sure that there is actually a change in the cursor position
         if (xIn == 0 && yIn == 0) return;
+        
+        // check to see if this object has a layout manager
+        //final IWindowLayout layout = getLayout();
+        
+        // if we do have a layout manager, force this false
+        // until we have re-applied the layout after resizing
+        //if (layout != null) properties().hasAppliedLayout = false;
         
         Dimension_d d = getUnboundedDimensions();
         double minW = getMinWidth();
@@ -718,7 +768,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
         double x = 0, y = 0, w = 0, h = 0;
         
         //boolean e = false, s = false;
-        //perform resizing on different sides depending on the side that's being resized
+        // perform resizing on different sides depending on the side that's being resized
         switch (areaIn) {
         case TOP:       x = d.startX;       y = d.startY + yIn; w = d.width;       h = d.height - yIn; break;
         case BOT:       x = d.startX;       y = d.startY;       w = d.width;       h = d.height + yIn; break;
@@ -731,7 +781,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
         default: break;
         }
         
-        //restrict the object to its allowed minimum width
+        // restrict the object to its allowed minimum width
         if (w < minW) {
             w = minW;
             switch (areaIn) {
@@ -741,7 +791,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
             }
         }
         
-        //restrict the object to its allowed maximum width
+        // restrict the object to its allowed maximum width
         if (w > maxW) {
             w = maxW;
             switch (areaIn) {
@@ -751,7 +801,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
             }
         }
         
-        //restrict the object to its allowed minimum height
+        // restrict the object to its allowed minimum height
         if (h < minH) {
             h = minH;
             switch (areaIn) {
@@ -761,7 +811,7 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
             }
         }
         
-        //restrict the object to its allowed maximum height
+        // restrict the object to its allowed maximum height
         if (h > maxH) {
             h = maxH;
             switch (areaIn) {
@@ -771,11 +821,15 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
             }
         }
         
-        //set the dimensions of the object to the resized dimensions
+        // set the dimensions of the object to the resized dimensions
         setDimensions(x, y, w, h);
         
-        //(lazy approach) re-make all the children based on the resized dimensions
+        // (lazy approach) re-make all the children based on the resized dimensions
         reInitChildren();
+        //if (layout == null) reInitChildren();
+        // otherwise, utilize the layout manager to rescale/position children
+        //else onApplyLayout_i();
+        
         var top = getTopParent();
         if (top != null) top.setFocusedObject(this);
     }
@@ -963,49 +1017,68 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
      */
     public default void addObject(IWindowObject... objs) {
         for (var o : objs) {
+            // perform the add logic functionality
+            addObject(o);
+        }
+    }
+    
+    /**
+     * Adds a child IWindowObject to this object. The object is added
+     * before the next draw cycle.
+     * <p>
+     * This method starts the process of adding a child to this object.
+     * Children are fully added on the next draw cycle. There is an issue
+     * where a child of a child can be added to the parent again.
+     * 
+     * @param objs The objects to add as children
+     */
+    public default void addObject(IWindowObject object) {
+        addObject(object, (LayoutConstraint) null);
+    }
+    
+    public default void addObject(IWindowObject object, LayoutConstraint layoutConstraint) {
+        try {
             // prevent null additions
-            if (o == null) continue;
+            if (object == null) return;
             // prevent self additions
-            if (o == this) continue;
+            if (object == this) return;
             // don't add if already being removed
-            if (getRemovingChildren().contains(o)) continue;
+            if (getRemovingChildren().contains(object)) return;
             // don't add if the object is either being added or is already in the object
             // this only goes 1 layer deep however!
-            if (getCombinedChildren().contains(o)) {
-                System.out.println(this + " already contains " + o + "!");
-                continue;
+            if (getCombinedChildren().contains(object)) {
+                System.out.println(this + " already contains " + object + "!");
+                return;
             }
             
-            try {
-                o.properties().isBeingAdded = true;
-                
-                // prevent multiple headers being added
-                if (o instanceof WindowHeader h) {
-                    if (hasHeader()) continue;
-                    else properties().objectHeader = h;
-                }
-                
-                // if it's a window, do its init
-                if (o instanceof WindowParent p && !o.isInitialized()) p.initWindow();
-                
-                // initialize all of the children's children
-                o.setParent(this);
-                o.onPreInit();
-                o.initChildren();
-                o.onChildrenInit_i();
-                
-                // if the parent has a boundary enforcer, apply it to the child as well
-                if (isBoundaryEnforced()) o.setBoundaryEnforcer(getBoundaryEnforcer());
-                
-                // give the processed child to the parent so that it will be added
-                getAddingChildren().add(o);
-                // tell the child that it has been fully initialized and that it is ready to be added on the next draw cycle
-                o.onInit_i();
-                o.onPostInit();
+            // prevent multiple headers being added
+            if (object instanceof WindowHeader h) {
+                if (hasHeader()) return;
+                else properties().objectHeader = h;
             }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            
+            // if it's a window, do its init
+            if (object instanceof WindowParent p && !object.isInitialized()) p.initWindow();
+            
+            // initialize all of the children's children
+            object.setParent(this);
+            object.onPreInit();
+            object.setLayoutConstraint(layoutConstraint);
+            object.initChildren();
+            object.onChildrenInit_i();
+            object.onApplyLayout_i();
+            
+            // if the parent has a boundary enforcer, apply it to the child as well
+            if (isBoundaryEnforced()) object.setBoundaryEnforcer(getBoundaryEnforcer());
+            
+            // give the processed child to the parent so that it will be added
+            getAddingChildren().add(object);
+            // tell the child that it has been fully initialized and that it is ready to be added on the next draw cycle
+            object.onInit_i();
+            object.onPostInit();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
@@ -1017,14 +1090,6 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
     public default void removeObject(IWindowObject... objs) {
         EUtil.filterNullForEach(objs, o -> o.properties().isBeingRemoved = true);
         getRemovingChildren().add(objs);
-    }
-    
-    /**
-     * Returns a list combining the objects currently within within this
-     * object as well as the ones being added.
-     */
-    public default EList<IWindowObject> getCurrentCombinedChildren() {
-        return EList.combineLists(getChildren(), getAddingChildren());
     }
     
     /**
@@ -1256,12 +1321,12 @@ public interface IWindowObject extends KeyboardInputAcceptor, MouseInputAcceptor
         // check if there is a boundary enforcer limiting the overall area
         if (isBoundaryEnforced()) {
             final Dimension_d b = getBoundaryEnforcer();
-            return mX >= startX && mX >= b.startX && mX <= endX && mX <= b.endX &&
-                   mY >= startY && mY >= b.startY && mY <= endY && mY <= b.endY;
+            return mX >= startX && mX >= b.startX && mX < endX && mX < b.endX &&
+                   mY >= startY && mY >= b.startY && mY < endY && mY < b.endY;
         }
         
         // otherwise just check if the mouse is within the object's boundaries
-        return mX >= startX && mX <= endX && mY >= startY && mY <= endY;
+        return mX >= startX && mX < endX && mY >= startY && mY < endY;
     }
     
     /**

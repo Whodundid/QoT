@@ -14,7 +14,7 @@ public abstract class SidePanel extends EGui {
         panel = panelIn;
         editor = in;
         type = typeIn;
-        setDimensions(panel.getPanelDims()); //match dimensions of the panel
+        setGuiDimensions(panel.getPanelDims()); //match dimensions of the panel
     }
     
     public abstract void loadTool();

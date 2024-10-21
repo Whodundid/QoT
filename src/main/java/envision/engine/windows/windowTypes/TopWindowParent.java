@@ -220,8 +220,8 @@ public class TopWindowParent extends WindowObject implements ITopParent {
     @Override public void drawDebugInfo() { StaticTopParent.drawDebugInfo(this); }
     
     //draw order
-    @Override public void bringObjectToFront(IWindowParent objIn) { toFront = objIn; }
-    @Override public void sendObjectToBack(IWindowParent objIn) { toBack = objIn; }
+    @Override public void bringObjectToFront(IWindowObject objIn) { toFront = objIn; }
+    @Override public void sendObjectToBack(IWindowObject objIn) { toBack = objIn; }
     
     //hovering text
     @Override public void setHoveringObject(IWindowObject objIn) { hoveringTextObject = objIn;}
@@ -289,11 +289,11 @@ public class TopWindowParent extends WindowObject implements ITopParent {
         checkMouseHover();
         oldMousePos.set(mX, mY);
         
-        //update objects
-        //remove all children scheduled to be removed
+        // update objects
+        // remove all children scheduled to be removed
         if (!properties().childrenToBeRemoved.isEmpty()) {
             for (var o : properties().childrenToBeRemoved) {
-                //prevent null removals, self removals, and non-children from being removed
+                // prevent null removals, self removals, and non-children from being removed
                 if (o == null || o == this || !getChildren().contains(o)) continue;
                 
                 o.properties().isBeingRemoved = true;
@@ -305,10 +305,10 @@ public class TopWindowParent extends WindowObject implements ITopParent {
             properties().childrenToBeRemoved.clear();
         }
         
-        //add all children scheduled to be added
+        // add all children scheduled to be added
         if (!properties().childrenToBeAdded.isEmpty()) {
             for (var o : properties().childrenToBeAdded) {
-                //prevent null additions, self additions, and already existing children from being added
+                // prevent null additions, self additions, and already existing children from being added
                 if (o == null || o == this || getChildren().contains(o)) continue;
                 
                 o.properties().isBeingAdded = true;
@@ -322,7 +322,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
         
         if (escapeStopper != null && getAllChildren().notContains(escapeStopper)) escapeStopper = null;
         
-        //update object states
+        // update object states
         updateZLayers();
         updateFocus();
         
@@ -405,13 +405,13 @@ public class TopWindowParent extends WindowObject implements ITopParent {
     
     protected void updateZLayers() {
         if (toFront != null) {
-            //move the 'toFront' object to the front
+            // move the 'toFront' object to the front
             if (getChildren().contains(toFront)) {
                 getChildren().remove(toFront);
                 getChildren().add(toFront);
             }
             
-            //move things that should always be at the top to the top
+            // move things that should always be at the top to the top
             var atTop = getChildren().filter(o -> o.isAlwaysOnTop());
             for (var o : atTop) {
                 getChildren().remove(o);
@@ -422,17 +422,13 @@ public class TopWindowParent extends WindowObject implements ITopParent {
         }
         
         if (toBack != null) {
-            //move the 'toBack' object to the back
+            // move the 'toBack' object to the back
             if (getChildren().contains(toBack)) {
-                //EArrayList<IWindowObject> objects = new EArrayList();
                 getChildren().remove(toBack);
-                //objects.addAll(guiObjects);
-                //guiObjects.clear();
                 getChildren().add(getChildren().size() - 1, toBack);
-                //guiObjects.addAll(objects);
             }
             
-            //move things that should always be at the top to the top
+            // move things that should always be at the top to the top
             var atTop = getChildren().filter(o -> o.isAlwaysOnTop());
             for (var o : atTop) {
                 getChildren().remove(o);
@@ -444,7 +440,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
     }
     
     public void onScreenResized() {
-        //handle windows
+        // handle windows
         var oldW = res.width;
         var oldH = res.height;
         var newW = Envision.getWidth();
@@ -471,7 +467,7 @@ public class TopWindowParent extends WindowObject implements ITopParent {
     }
     
    protected void drawWindowObject(float dt, IWindowObject o) {
-        //only draw if the object is actually visible
+        // only draw if the object is actually visible
         if (!o.willBeDrawn() || o.isHidden()) return;
         boolean draw = true;
         
@@ -482,12 +478,12 @@ public class TopWindowParent extends WindowObject implements ITopParent {
         
         if (!draw) return;
         
-        //notify object on first draw
+        // notify object on first draw
         if (!o.hasFirstDraw()) o.onFirstDraw_i();
-        //actually draw the child object
+        // actually draw the child object
         o.drawObject_i(dt, mX, mY);
         
-        //draw grayed out overlay over everything if a focus lock object is present
+        // draw grayed out overlay over everything if a focus lock object is present
         if (focusLockObject != null && !o.equals(focusLockObject)) {
             if (o.isVisible()) {
                 drawRect(o.getDimensions(), 0x77000000);

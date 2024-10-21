@@ -10,9 +10,14 @@ import envision.engine.windows.windowObjects.action.WindowScrollBar;
 import envision.engine.windows.windowTypes.WindowObject;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
 import envision.engine.windows.windowUtil.windowEvents.events.EventFocus;
+import envision_lang.tokenizer.EnvisionTokenizer;
+import envision_lang.tokenizer.Operator;
+import envision_lang.tokenizer.ReservedWord;
+import envision_lang.tokenizer.Token;
 import eutil.colors.EColors;
 import eutil.datatypes.boxes.BoxList;
 import eutil.datatypes.points.Point2i;
+import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 import eutil.misc.ScreenLocation;
 import eutil.strings.EStringBuilder;
@@ -46,7 +51,7 @@ public class WindowTextArea2 extends WindowObject implements DocumentChangeListe
     private int lineNumbersColor = EColors.lgray.intVal;
     private int lineNumbersAreaBackground = EColors.dgray.intVal;
     private int lineNumbersSeparatorBackground = EColors.lsteel.intVal;
-    private int currentLineHighlightColor = EColors.dgray.intVal;
+    private int currentLineHighlightColor = EColors.steel.intVal;
     private int highlightForegroundColor = EColors.chalk.intVal;
     private int highlightBackgroundColor = EColors.blue.brightness(200);
     private int cursorColor = EColors.white.intVal;
@@ -214,10 +219,10 @@ public class WindowTextArea2 extends WindowObject implements DocumentChangeListe
             }
             getParent().getHeader().setTitle(line + " : " + lineIndex + " : " + cursorPos + " : " + c);
             
-            drawString("colr: " + document.colorChangeLocations.getAVals(), startX, endY + 3);
-            drawString("ital: " + document.italicisedLocations, startX, endY + 23);
-            drawString("bold: " + document.boldLocations, startX, endY + 43);
-            drawString("undr: " + document.underlinedLocations, startX, endY + 63);
+//            drawString("colr: " + document.colorChangeLocations.getAVals(), startX, endY + 3);
+//            drawString("ital: " + document.italicisedLocations, startX, endY + 23);
+//            drawString("bold: " + document.boldLocations, startX, endY + 43);
+//            drawString("undr: " + document.underlinedLocations, startX, endY + 63);
         }
         
         lastVScrollPos = vScrollPos;
@@ -391,6 +396,7 @@ public class WindowTextArea2 extends WindowObject implements DocumentChangeListe
         if (documentStartLength != document.length()) {
             determineTextAreaDimensions();
             determineScrollableDimensions();
+            formatDocumentForEnvision();
         }
         
         makeCursorVisible();
@@ -439,6 +445,7 @@ public class WindowTextArea2 extends WindowObject implements DocumentChangeListe
     public void onDocumentChanged() {
         determineTextAreaDimensions();
         determineScrollableDimensions();
+        formatDocumentForEnvision();
         makeCursorVisible();
     }
     
@@ -777,6 +784,95 @@ public class WindowTextArea2 extends WindowObject implements DocumentChangeListe
      */
     public boolean isMouseInTextArea(int mX, int mY) {
         return mX >= textAreaStartX && mX <= textAreaEndX && mY >= textAreaStartY && mY <= textAreaEndY;
+    }
+    
+    public void formatDocumentForEnvision() {
+        document.colorChangeLocations.clear();
+        document.boldLocations.clear();
+        document.italicisedLocations.clear();
+        document.underlinedLocations.clear();
+        
+        EList<Token<?>> tokens = null;
+        
+        String out = document.getInternalDocument().toString();
+        for (int i = 0; i < out.length(); i++) {
+            char c = out.charAt(i);
+            System.out.println(i + ": " + ((c == '\n') ? "\\n" : c));
+        }
+        
+        try {
+            EnvisionTokenizer tokenizer = new EnvisionTokenizer();
+            tokens = tokenizer.getTokens();
+            tokenizer.tokenizeLine(document.getInternalDocument().toString());
+        }
+        catch (Exception e) {
+            // do nothing
+        }
+        
+        final int size = tokens.length();
+        for (int i = 0; i < size; i++) {
+            Token<?> t = tokens.get(i);
+            int start = t.getCharacterIndex();
+            int end = start + t.getLexeme().length();
+            
+            if (t.isReservedWord()) {
+                ReservedWord w = t.asReservedWord();
+                int color = EColors.borange.intVal;
+                boolean bold = false;
+                
+                switch (w) {
+                case NEWLINE:
+                case EOF:
+                    continue;
+                case INT_LITERAL:
+                case DOUBLE_LITERAL:
+                    color = EColors.skyblue.intVal;
+                    break;
+                case STRING_LITERAL:
+                case CHAR_LITERAL:
+                    color = EColors.dgreen.intVal;
+                    break;
+                case IDENTIFIER:
+                    color = 0xffffff88;
+                    if ((i + 1) < size) {
+                        Token testToken = tokens.get(i + 1);
+                        if (!(testToken != null && testToken.getKeyword().isOperator() && testToken.asOperator() == Operator.PAREN_L)) {
+                            break;
+                        }
+                        int j = i + 2;
+                        int pStack = 1;
+                        while (j < size) {
+                            Token tt = tokens.get(j);
+                            if (tt.isKeyword() && tt.getKeyword().isOperator()) {
+                                Operator o = tt.asOperator();
+                                if (o == Operator.PAREN_L) pStack++;
+                                else if (o == Operator.PAREN_R) {
+                                    pStack--;
+                                    if (pStack == 0) {
+                                        color = EColors.lime.intVal;
+                                        break;
+                                    }
+                                }
+                            }
+                            j++;
+                        }
+                    }
+                    break;
+                default:
+                    bold = true;
+                    break;
+                }
+                if (w == ReservedWord.NEWLINE) continue;
+                
+                end = ENumUtil.clamp(end, 0, document.getInternalDocument().length());
+//                if (end == document.getInternalDocument().length() - 1) {
+//                    end += 1;
+//                }
+                
+                document.setSectionColor(color, start, end);
+                if (bold) document.setBold(start, end - 1);
+            }
+        }
     }
     
     //=========

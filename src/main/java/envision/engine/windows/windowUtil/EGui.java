@@ -148,7 +148,7 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
             height = sHeight;
         }
         
-        setDimensions(startX, startY, width, height); //apply the dimensions to the gui
+        setGuiDimensions(startX, startY, width, height); //apply the dimensions to the gui
     }
     
     /** Returns the ScreenLocation area the mouse is currently on for an object. */
@@ -193,26 +193,26 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
     
     public Point2d getGuiPosition() { return new Point2d(startX, startY); }
     public Point2d getGuiInitialPosition() { return new Point2d(startXPos, startYPos); }
-    public Dimension_d getDimensions() { return new Dimension_d(startX, startY, endX, endY); }
-    public Dimension_d getUnboundedDimensions() { return new Dimension_d(startX, startY, startX + unboundedWidth, startY + unboundedHeight); }
+    public Dimension_d getGuiDimensions() { return new Dimension_d(startX, startY, endX, endY); }
+    public Dimension_d getGuiUnboundedDimensions() { return new Dimension_d(startX, startY, startX + unboundedWidth, startY + unboundedHeight); }
     
-    public Point2d getMinDims() { return new Point2d(minWidth, minHeight); }
-    public Point2d getMaxDims() { return new Point2d(maxWidth, maxHeight); }
-    public double getMinWidth() { return minWidth; }
-    public double getMinHeight() { return minHeight; }
-    public double getMaxWidth() { return maxWidth; }
-    public double getMaxHeight() { return maxHeight; }
+    public Point2d getGuiMinDims() { return new Point2d(minWidth, minHeight); }
+    public Point2d getGuiMaxDims() { return new Point2d(maxWidth, maxHeight); }
+    public double getGuiMinWidth() { return minWidth; }
+    public double getGuiMinHeight() { return minHeight; }
+    public double getGuiMaxWidth() { return maxWidth; }
+    public double getGuiMaxHeight() { return maxHeight; }
     
     //=========
     // Setters
     //=========
     
-    public void setGuiPosition(double newX, double newY) { setDimensions(newX, newY, width, height); }
+    public void setGuiPosition(double newX, double newY) { setGuiDimensions(newX, newY, width, height); }
     public void setGuiInitialPosition(double xIn, double yIn) { startXPos = xIn; startYPos = yIn; }
-    public void setGuiSize(double widthIn, double heightIn) { setDimensions(startX, startY, widthIn, heightIn); }
+    public void setGuiSize(double widthIn, double heightIn) { setGuiDimensions(startX, startY, widthIn, heightIn); }
     
-    public void setDimensions(Dimension_d dimIn) { setDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
-    public void setDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
+    public void setGuiDimensions(Dimension_d dimIn) { setGuiDimensions(dimIn.startX, dimIn.startY, dimIn.width, dimIn.height); }
+    public void setGuiDimensions(double startXIn, double startYIn, double widthIn, double heightIn) {
         startX = startXIn;
         startY = startYIn;
         unboundedWidth = widthIn;
@@ -225,11 +225,11 @@ public abstract class EGui extends RenderingManager implements KeyboardInputAcce
         midY = startY + height / 2.0;
     }
     
-    public void setMinDims(double widthIn, double heightIn) { minWidth = widthIn; minHeight = heightIn; }
-    public void setMaxDims(double widthIn, double heightIn) { maxWidth = widthIn; maxHeight = heightIn; }
-    public void setMinWidth(double widthIn) { minWidth = widthIn; }
-    public void setMinHeight(double heightIn) { minHeight = heightIn; }
-    public void setMaxWidth(double widthIn) { maxWidth = widthIn; }
-    public void setMaxHeight(double heightIn) { maxHeight = heightIn; }
+    public void setGuiMinDims(double widthIn, double heightIn) { minWidth = widthIn; minHeight = heightIn; }
+    public void setGuiMaxDims(double widthIn, double heightIn) { maxWidth = widthIn; maxHeight = heightIn; }
+    public void setGuiMinWidth(double widthIn) { minWidth = widthIn; }
+    public void setGuiMinHeight(double heightIn) { minHeight = heightIn; }
+    public void setGuiMaxWidth(double widthIn) { maxWidth = widthIn; }
+    public void setGuiMaxHeight(double heightIn) { maxHeight = heightIn; }
     
 }

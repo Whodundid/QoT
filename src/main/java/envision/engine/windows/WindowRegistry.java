@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import envision.debug.testStuff.SpriteSheetBuilder;
-import envision.engine.creation.BlockWorkingArea;
+import envision.engine.creation.BlockAreaEditorWindow;
 import envision.engine.creation.creatorWindow.CreatorWindow;
 import envision.engine.kernel.developerDesktop.windows.CalculatorWindow;
 import envision.engine.kernel.developerDesktop.windows.GLKeyChecker;
@@ -34,7 +34,7 @@ public class WindowRegistry {
         //registerWindow("test-texture-sheet-builder", TestTextureSheetBuilder.class);
         registerWindow("sprite-sheet-builder", SpriteSheetBuilder.class);
         registerWindow("creator", CreatorWindow.class);
-        registerWindow("block-area", BlockWorkingArea.class);
+        registerWindow("block-area", BlockAreaEditorWindow.class);
         
         LOADED = true;
     }

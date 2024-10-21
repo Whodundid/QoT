@@ -2,8 +2,10 @@ package envision.engine.windows.windowTypes;
 
 import envision.engine.windows.windowObjects.advanced.header.WindowHeader;
 import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.engine.windows.windowUtil.WindowObjectGroup;
 import envision.engine.windows.windowUtil.FutureTaskManager;
+import envision.engine.windows.windowUtil.WindowObjectGroup;
+import envision.engine.windows.windowUtil.layouts.IWindowLayout;
+import envision.engine.windows.windowUtil.layouts.LayoutConstraint;
 import envision.engine.windows.windowUtil.windowEvents.ObjectEventHandler;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
@@ -63,6 +65,15 @@ public class WindowObjectProperties {
     /** The header of this object. (if there is one) */
     public WindowHeader objectHeader;
     
+    //==================
+    // Fields : Layouts
+    //==================
+    
+    /** Any constraints for this object to adhere to when used in combination with a layout manager. */
+    public LayoutConstraint layoutConstraints;
+    /** The layout manager that is responsible for scaling and positioning the children of this component. */
+    public IWindowLayout layoutManager;
+    
     //=====================
     // Fields : Object IDs
     //=====================
@@ -107,6 +118,8 @@ public class WindowObjectProperties {
     public volatile boolean hasFirstDraw = false;
     /** Tracked state of whether or not this object has received focus at least once. */
     public volatile boolean hasReceivedFocus = false;
+    /** Tracked state of whether or not this object has applied its layout to its components. */
+    public volatile boolean hasAppliedLayout = false;
     /** Tracked state of whether or not this object is currently being added to some parent object. */
     public volatile boolean isBeingAdded = false;
     /** Tracked state of whether or not this object has been fully added to its parent. */

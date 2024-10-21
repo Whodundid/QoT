@@ -223,7 +223,7 @@ public class WorldRenderer extends EGui {
     
     public void onWindowResized() {
         res = Envision.getWindowDims();
-        setDimensions(0, 0, res.width, res.height);
+        setGuiDimensions(0, 0, res.width, res.height);
     }
     
     //---------

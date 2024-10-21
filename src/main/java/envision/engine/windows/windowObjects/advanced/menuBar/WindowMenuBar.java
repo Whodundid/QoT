@@ -24,7 +24,7 @@ public class WindowMenuBar extends WindowObject {
     //==============
     
     public WindowMenuBar(WindowObject parent) {
-        this.setDimensions(parent.startX, parent.startY, parent.width, 26);
+        setDimensions(parent.startX, parent.startY, parent.width, 26);
     }
     
     //===========
@@ -95,7 +95,7 @@ public class WindowMenuBar extends WindowObject {
      *         existed under that name
      */
     public WindowMenuCategory addMenuCategory(String catNameIn) {
-        WindowMenuCategory cat = new WindowMenuCategory(catNameIn);
+        WindowMenuCategory cat = new WindowMenuCategory(this, catNameIn);
         if (addMenuCategory(cat)) return cat;
         return null;
     }
@@ -133,9 +133,9 @@ public class WindowMenuBar extends WindowObject {
                 final double w = strWidth(name) + 20;
                 catButton.setDimensions(lastX, startY, w, height);
                 catButton.setGenericObject(i); // annoying index transfer workaround
-                catButton.setAction(() -> openCategory((int) catButton.getGenericObject()));
                 cat.setPosition(lastX, endY);
-                lastX += w - 1;
+                //lastX += w - 1;
+                lastX += w;
             }
         }
     }
@@ -172,23 +172,26 @@ public class WindowMenuBar extends WindowObject {
         WindowButton catButton = getCategoryButton(catName);
         if (catButton != null) return catButton;
         
-        catButton = new WindowButton(this, catName) {
+        final WindowButton createdButton = new WindowButton(this, catName) {
             @Override
             public void drawObject(float dt, int mXIn, int mYIn) {
                 super.drawObject(dt, mXIn, mYIn);
                 
+                //System.out.println(catName + ": " + currentlyOpenCategory + " : " + focusCheck);
+                //drawString(catName + ": " + currentlyOpenCategory + " : " + focusCheck, 5, midY + 30 * (int) getGenericObject());
                 if (currentlyOpenCategory == null) return;
                 if (!focusCheck) return;
                 
                 boolean mouseIn = isMouseInside();
-                if (mouseIn) {
+                if (!currentlyOpenCategory.categoryName.equals(catName) && mouseIn) {
                     var cat = getCategoryByName(catName);
                     if (cat != null) {
+                        //System.out.println("HOVER: " + catName + this.getDimensions() + " : " + Mouse.getMx() + "," + Mouse.getMy());
                         openCategory(cat);
                     }
                 }
                 
-                drawStringC(mouseIn);
+                //drawStringC(mouseIn);
             }
             
             @Override
@@ -198,11 +201,15 @@ public class WindowMenuBar extends WindowObject {
             }
         };
         
-        catButton.setObjectName(catName);
-        addObject(catButton);
-        catButtons.add(catButton);
+        createdButton.setAction(() -> {
+            //System.out.println("PRESS: " + createdButton);
+            openCategory((int) createdButton.getGenericObject());
+        });
+        createdButton.setObjectName(catName);
+        addObject(createdButton);
+        catButtons.add(createdButton);
         
-        return catButton;
+        return createdButton;
     }
     
     public void removeCategory(String catName) {
@@ -229,7 +236,10 @@ public class WindowMenuBar extends WindowObject {
         if (category == null) return;
         if (categories.notContains(category)) return;
         // if currently open, close category
-        if (category == currentlyOpenCategory) return;
+        if (category == currentlyOpenCategory) {
+            closeAllCategories();
+            return;
+        }
         
         // close every category
         var old = currentlyOpenCategory;
@@ -241,11 +251,14 @@ public class WindowMenuBar extends WindowObject {
             currentlyOpenCategory = null;
         }
         else currentlyOpenCategory.setSelected(true);
+        
+        updateFocusCheck();
     }
     
     public void closeAllCategories() {
         categories.forEach(o -> o.setSelected(false));
         currentlyOpenCategory = null;
+        updateFocusCheck();
     }
     
 }

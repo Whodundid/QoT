@@ -133,7 +133,11 @@ public class DeveloperDesktop extends TopWindowParent {
     
     private DeveloperDesktop() {
         res = Envision.getWindowDims();
+        onPreInit();
         initChildren();
+        onChildrenInit_i();
+        onInit_i();
+        onPostInit();
     }
     
     public void onRenderTick(long dt) {
@@ -167,7 +171,7 @@ public class DeveloperDesktop extends TopWindowParent {
             int mX = Mouse.getMx();
             int mY = Mouse.getMy();
             
-            //reset highlighted
+            // reset highlighted
             highlightedWindows.clear();
             
             if (!hasFirstDraw()) onFirstDraw_i();
@@ -185,7 +189,7 @@ public class DeveloperDesktop extends TopWindowParent {
                 drawHRect(pressPoint.x, pressPoint.y, mX, mY, 1, EColors.lgray);
             }
             
-            //now draw all child objects on top of parent
+            // now draw all child objects on top of parent
             for (var o : getChildren()) {
                 //don't draw this here
                 if (o instanceof DesktopShortcut) continue;
@@ -193,29 +197,32 @@ public class DeveloperDesktop extends TopWindowParent {
                 drawWindowObject(dt, o);
             }
             
-            //draw highlighted window borders
+            // draw highlighted window borders
             for (IWindowParent p : highlightedWindows) {
                 if (p == null) continue;
                 p.drawHighlightBorder();
             }
             
-            //notify hover object
+            // notify hover object
             var hoveringObject = getHoveringObject();
             if (hoveringObject != null) hoveringObject.onMouseHover(Mouse.getMx(), Mouse.getMy());
         }
         
-        //draw debug stuff
+        // draw debug stuff
         if (Envision.isDebugMode()) drawDebugInfo();
         
-        //draw taskbar on top everything
+        // draw taskbar on top everything
         //if (taskBar != null) taskBar.drawObject_i(mX, mY);
         
-        //draw game fps
+        // draw game fps
         if (EngineSettings.drawFPS.getBoolean()) {
             String s = "FPS: " + Envision.getFPS();
             double s_width = FontRenderer.strWidth(s);
             drawString(s, Envision.getWidth() - 10.0 - s_width, 10.0);
         }
+        
+        // notify object on first draw
+        if (!hasFirstDraw()) onFirstDraw_i();
     }
     
     @Override

@@ -37,9 +37,9 @@ public interface ITopParent extends IWindowObject {
     //============
     
     /** Specifies a window to be brought to the front on the hud. */
-    void bringObjectToFront(IWindowParent objIn);
+    void bringObjectToFront(IWindowObject objIn);
     /** Specifies a window to be sent to the back on the hud. */
-    void sendObjectToBack(IWindowParent objIn);
+    void sendObjectToBack(IWindowObject objIn);
     
     //===============
     // Hovering Text
@@ -236,8 +236,7 @@ public interface ITopParent extends IWindowObject {
     /** Displays the specified window parent with variable arguments. */
     default <T extends IWindowParent> T displayWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory) { return displayWindow(windowIn, oldObject, transferFocus, closeOld, transferHistory, ObjectPosition.OBJECT_CENTER); }
     /** Displays the specified window parent with variable arguments. */
-    default <T extends IWindowParent> T displayWindow(T windowIn, IWindowParent oldObject, boolean transferFocus,
-        boolean closeOld, boolean transferHistory, ObjectPosition loc) {
+    default <T extends IWindowParent> T displayWindow(T windowIn, IWindowParent oldObject, boolean transferFocus, boolean closeOld, boolean transferHistory, ObjectPosition loc) {
         if (windowIn == null) return null;
         
         // import window history

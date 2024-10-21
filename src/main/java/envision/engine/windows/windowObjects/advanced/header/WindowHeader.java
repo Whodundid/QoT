@@ -20,8 +20,6 @@ import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 import eutil.misc.ScreenLocation;
 
-//Author: Hunter Bragg
-
 /**
  * A header that can be added to window parents allowing them to be
  * moved, closed, maximized, and cycled through.
@@ -32,18 +30,18 @@ import eutil.misc.ScreenLocation;
  */
 public class WindowHeader extends WindowObject {
     
-    //---------------
+    //===============
     // Static Fields
-    //---------------
+    //===============
     
     /** Default header height in pixels. */
     public static int defaultHeight = 35;
     /** Default header button width in pixels. (also button height) */
     public static int buttonWidth = 32;
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     /** The parent window for which this header pertains to. */
     protected IWindowParent window;
@@ -90,9 +88,9 @@ public class WindowHeader extends WindowObject {
     /** Used to dynamically keep track of the last created header button position. */
     private int buttonPos = buttonWidth + 2;
     
-    //------------
+    //============
     // Tab Fields
-    //------------
+    //============
     
     /** Used to denote whether or not this header has tabs or not. */
     private boolean isTabHeader = false;
@@ -101,9 +99,9 @@ public class WindowHeader extends WindowObject {
     /** The currently selected header tab. */
     private HeaderTab currentTab;
     
-    //--------------
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     /**
      * Parameterless constructor for custom creation.
@@ -139,9 +137,9 @@ public class WindowHeader extends WindowObject {
         else title = titleIn;
     }
     
-    //-----------
+    //===========
     // Overrides
-    //-----------
+    //===========
     
     @Override
     public void drawObject_i(float dt, int mX, int mY) {
@@ -263,9 +261,9 @@ public class WindowHeader extends WindowObject {
         if (object == fileUpButton)     handleFileUp();
     }
     
-    //------------------
+    //==================
     // Internal Methods
-    //------------------
+    //==================
     
     protected void drawHeader() {
         boolean anyFocus = alwaysDrawFocused || (drawParentFocus) ? anyFocused() : false;
@@ -424,9 +422,9 @@ public class WindowHeader extends WindowObject {
         getTopParent().setMaximizingWindow(window, ScreenLocation.OUT, true);
     }
     
-    //---------
+    //=========
     // Methods
-    //---------
+    //=========
     
     /**
      * Performs logic calls based on this header's host parent to
@@ -539,9 +537,9 @@ public class WindowHeader extends WindowObject {
         else if (getTopParent() != null) getTopParent().close(true);
     }
     
-    //------------------
+    //==================
     // Function Buttons
-    //------------------
+    //==================
     
     protected void addCloseButton() {
         closeButton = new WindowButton(this, endX - buttonPos, startY + 2, buttonWidth, buttonWidth);
@@ -609,9 +607,9 @@ public class WindowHeader extends WindowObject {
         //buttonPos += (buttonWidth + 1);
     }
     
-    //---------
+    //=========
     // Getters
-    //---------
+    //=========
     
     public int getTitleColor() { return titleColor; }
     public String getTitle() { return title; }
@@ -619,9 +617,9 @@ public class WindowHeader extends WindowObject {
     public boolean isHeaderMoveable() { return headerMoveable; }
     public boolean isHeaderMoving() { return moving; }
     
-    //---------
+    //=========
     // Setters
-    //---------
+    //=========
     
     public void setDrawButtons(boolean val) {
         if (minimizeButton != null) minimizeButton.setVisible(val);

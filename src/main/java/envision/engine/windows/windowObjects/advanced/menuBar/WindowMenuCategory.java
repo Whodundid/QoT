@@ -13,6 +13,7 @@ public class WindowMenuCategory extends WindowObject {
     // Fields
     //========
     
+    protected WindowMenuBar menuBar;
     protected String categoryName;
     protected final EList<WindowMenuEntry> entries = EList.newList();
     
@@ -29,7 +30,8 @@ public class WindowMenuCategory extends WindowObject {
     // Constructors
     //==============
     
-    public WindowMenuCategory(String nameIn) {
+    public WindowMenuCategory(WindowMenuBar menuBarIn, String nameIn) {
+        menuBar = menuBarIn;
         categoryName = nameIn;
         setSelected(false);
     }
@@ -56,8 +58,16 @@ public class WindowMenuCategory extends WindowObject {
     public void actionPerformed(IActionObject object, Object... args) {
         if (object instanceof WindowMenuEntry e) {
             if (!entries.contains(e)) return;
-            if (isSelected) setSelected(false);
+            if (isSelected) {
+                setSelected(false);
+                menuBar.closeAllCategories();
+            }
         }
+    }
+    
+    @Override
+    public String toString() {
+        return categoryName;
     }
     
     //=========
@@ -79,6 +89,7 @@ public class WindowMenuCategory extends WindowObject {
             entryIn.setPosition(startX, startY + (entries.size() - 1) * entryHeight);
             entryIn.setVisible(false);
             addObject(entryIn);
+            entryIn.setAlwaysOnTop(true);
             double longestWidth = 0;
             for (var e : entries) {
                 if (e.width > longestWidth) {

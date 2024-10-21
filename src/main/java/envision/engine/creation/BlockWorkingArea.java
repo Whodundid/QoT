@@ -1,109 +1,146 @@
 package envision.engine.creation;
 
-import envision.engine.assets.WindowTextures;
-import envision.engine.creation.block.CreatorBlock;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.advanced.menuBar.WindowMenuBar;
-import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea;
-import envision.engine.windows.windowTypes.WindowParent;
-import eutil.datatypes.util.EList;
+import java.io.File;
 
-public class BlockWorkingArea extends WindowParent {
+import envision.engine.creation.block.CreatorBlock;
+import envision.engine.windows.windowTypes.WindowObject;
+import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import eutil.datatypes.util.EList;
+import eutil.math.dimensions.Dimension_i;
+
+public class BlockWorkingArea extends WindowObject {
     
+    public static final int INITIAL_WIDTH = 1000;
+    public static final int INITIAL_HEIGHT = 1000;
+
     //========
     // Fields
     //========
     
-    private double zoom = 1.0;
-    private final EList<CreatorBlock> blocks = EList.newList();
-    private final int INITIAL_WIDTH = 1000;
-    private final int INITIAL_HEIGHT = 1000;
-    private int areaWidth = INITIAL_WIDTH;
-    private int areaHeight = INITIAL_HEIGHT;
-    private int currentX = 0;
-    private int currentY = 0;
+    protected double zoom = 1.0;
     
-    private WindowMenuBar menuBar;
-    private WindowButton createBlock;
-    private WindowTextArea blockList;
+    /** All blocks actively within this block working area. */
+    protected final EList<CreatorBlock> blockList = EList.newList();
+    /** Blocks that are actively selected. */
+    protected final EList<CreatorBlock> currentSelection = EList.newList();
+    /** Clipboard memory. */
+    protected final EList<CreatorBlock> blockClipboard = EList.newList();
+    
+    protected Dimension_i areaSpace;
+    protected Dimension_i currentView;
     
     //==============
     // Constructors
     //==============
     
-    public BlockWorkingArea() {
-        this.windowIcon = WindowTextures.refresh;
+    public BlockWorkingArea() {}
+    public BlockWorkingArea(File designToLoad) {
+        areaSpace = new Dimension_i();
+        currentView = new Dimension_i();
+    }
+
+    public BlockWorkingArea(BlockWorkingArea areaIn) {
+        areaSpace = new Dimension_i(areaIn.areaSpace);
+        currentView = new Dimension_i(areaIn.currentView);
+        
+        blockList.addAll(areaIn.blockList);
+        
+        zoom = areaIn.zoom;
     }
     
-    //===========================
-    // Overrides : IWindowParent
-    //===========================
-    
-    @Override
-    public void initWindow() {
-        setObjectName("New Window");
-        setSize(400, 400);
-        setMinDims(200, 200);
-        setResizeable(true);
-        setMaximizable(true);
-    }
-    
-    //===========================
-    // Overrides : IWindowObject
-    //===========================
+    //===========
+    // Overrides
+    //===========
     
     @Override
     public void initChildren() {
-        defaultHeader();
-        
-        menuBar = new WindowMenuBar(this);
-        var fileMenu = menuBar.addMenuCategory("File");
-        var editMenu = menuBar.addMenuCategory("Edit");
-        
-        fileMenu.addMenuEntry("New", this::createNewSpace);
-        fileMenu.addMenuEntry("Load", this::loadSpace);
-        fileMenu.addMenuEntry("Save", this::saveSpace);
-        fileMenu.addMenuEntry("Close", this::closeCurrentSpace);
-        fileMenu.addMenuEntry("Close All", this::closeAllSpaces);
-        
-        editMenu.addMenuEntry("Undo", this::undoAction);
-        editMenu.addMenuEntry("Redo", this::redoAction);
-        editMenu.addMenuEntry("Copy", this::copyBlocks);
-        editMenu.addMenuEntry("Cut", this::cutBlocks);
-        editMenu.addMenuEntry("Paste", this::pasteBlocks);
-        
-        addObject(menuBar);
+        super.initChildren();
     }
     
     @Override
     public void drawObject_i(float dt, int mXIn, int mYIn) {
-        drawDefaultBackground();
-        
         super.drawObject_i(dt, mXIn, mYIn);
+    }
+    
+    @Override
+    public void mousePressed(int mX, int mY, int button) {
+        super.mousePressed(mX, mY, button);
+    }
+    
+    @Override
+    public void mouseDragged(int mX, int mY, int button, long timeSinceLastClick) {
+        super.mouseDragged(mX, mY, button, timeSinceLastClick);
+    }
+    
+    @Override
+    public void mouseReleased(int mX, int mY, int button) {
+        super.mouseReleased(mX, mY, button);
+    }
+    
+    @Override
+    public void keyPressed(char typedChar, int keyCode) {
+        super.keyPressed(typedChar, keyCode);
+    }
+    
+    @Override
+    public void keyReleased(char typedChar, int keyCode) {
+        super.keyReleased(typedChar, keyCode);
+    }
+    
+    @Override
+    public void actionPerformed(IActionObject object, Object... args) {
+        super.actionPerformed(object, args);
     }
     
     //==================
     // Internal Methods
     //==================
     
-    protected void panArea(int mXIn, int mYIn) {
-        int dX = currentX - mXIn;
-        int dY = currentY - mYIn;
-        currentX += dX;
-        currentY += dY;
+    protected void panArea(int dx, int dy) {
+        currentView.translate(dx, dy);
         
-        boolean blocked = false;
-        // move all blocks
-        for (var block : blocks) {
-            
+        // shift all blocks
+        for (var block : blockList) {
+            block.move(dx, dy);
         }
     }
     
-    public void createNewSpace() { System.out.println("LOLOL"); }
-    public void loadSpace() {}
-    public void saveSpace() {}
-    public void closeCurrentSpace() {}
-    public void closeAllSpaces() {}
+    //=========
+    // Methods
+    //=========
+    
+    public CreatorBlock addBlock(CreatorBlock blockIn, int x, int y) {
+        if (blockIn == null) return null;
+        
+        blockList.add(blockIn);
+        blockIn.setPosition(x, y);
+        
+        return blockIn;
+    }
+    
+    public EList<CreatorBlock> removeBlocks(EList<CreatorBlock> toRemove) {
+        if (toRemove == null) return null;
+        if (toRemove.isEmpty()) return toRemove;
+        
+        EList<CreatorBlock> removed = EList.newList();
+        
+        synchronized (blockList) {
+            for (CreatorBlock b : toRemove) {
+                var block = blockList.getAndRemove(b);
+                removed.addIfNotNull(block);
+            }
+        }
+        
+        return removed;
+    }
+    
+    public EList<CreatorBlock> getSelectedBlocks() {
+        return currentSelection.copy();
+    }
+    
+    public void deleteSelectedBlocks() {
+        
+    }
     
     public void undoAction() {}
     public void redoAction() {}

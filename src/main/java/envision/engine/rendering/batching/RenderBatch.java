@@ -15,11 +15,9 @@ import envision.engine.rendering.GLSettings;
 import envision.engine.rendering.shaders.ShaderProgram;
 import envision.engine.rendering.shaders.Shaders;
 import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
 import eutil.datatypes.util.EList;
 import eutil.math.vectors.Vec2f;
 import eutil.math.vectors.Vec4f;
-import eutil.strings.EStringUtil;
 
 public class RenderBatch {
     
@@ -241,7 +239,7 @@ public class RenderBatch {
         vertices[v + 6] = f;
         // texture coords
         vertices[v + 7] = tx;
-        vertices[v + 8] = ty - 0.00001f;
+        vertices[v + 8] = ty;// - 0.00001f;
         // texture id
         vertices[v + 9] = tid;
         

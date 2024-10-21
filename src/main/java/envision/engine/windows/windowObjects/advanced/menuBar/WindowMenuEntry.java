@@ -5,8 +5,6 @@ import envision.engine.windows.windowObjects.action.WindowButton;
 import envision.engine.windows.windowObjects.basic.WindowImageBox;
 import envision.engine.windows.windowTypes.ActionObject;
 import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import eutil.colors.EColors;
-import eutil.math.ENumUtil;
 
 public class WindowMenuEntry extends ActionObject {
     

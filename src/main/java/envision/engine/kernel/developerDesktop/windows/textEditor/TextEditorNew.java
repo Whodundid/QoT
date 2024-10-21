@@ -1,11 +1,83 @@
 package envision.engine.kernel.developerDesktop.windows.textEditor;
 
-import envision.engine.windows.windowTypes.WindowObject;
-import eutil.datatypes.EArrayList;
-import eutil.datatypes.util.EList;
+import envision.engine.windows.windowObjects.action.WindowButton;
+import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea2;
+import envision.engine.windows.windowObjects.basic.WindowLabel;
+import envision.engine.windows.windowTypes.WindowParent;
 
-public class TextEditorNew extends WindowObject {
+public class TextEditorNew extends WindowParent {
     
-    private EList lines = new EArrayList<>();
+    private WindowTextArea2 textArea;
+    
+    private WindowButton toggleBoldButton;
+    private WindowButton toggleItalicButton;
+    private WindowButton toggleUnderlineButton;
+    private WindowButton applyFontColorButton;
+    private WindowButton changeFontColorButton;
+    
+    private WindowLabel currentFileLabel;
+    private WindowLabel cursorPosLabel;
+    
+    private EditorMode editorMode;
+    
+    public static enum EditorMode {
+        TEXT,
+        CODE
+    }
+    
+    //==================
+    // Internal Methods
+    //==================
+    
+    private void determineEditorMode() {
+        
+    }
+    
+    //=========
+    // Setters
+    //=========
+    
+    public void setEditorMode(EditorMode mode) {
+        
+    }
+    
+    //=========
+    // Getters
+    //=========
+    
+    public EditorMode getEditorMode() {
+        return editorMode;
+    }
+    
+    //===========================
+    // Overrides : IWindowParent
+    //===========================
+    
+    @Override
+    public void initWindow() {
+        setObjectName("New Window");
+        setSize(400, 400);
+        setMinDims(200, 200);
+        setResizeable(true);
+        setMaximizable(true);
+    }
+    
+    //===========================
+    // Overrides : IWindowObject
+    //===========================
+    
+    @Override
+    public void initChildren() {
+        defaultHeader();
+        
+    }
+    
+    @Override
+    public void drawObject(float dt, int mXIn, int mYIn) {
+        drawDefaultBackground();
+        
+    }
+
+
     
 }

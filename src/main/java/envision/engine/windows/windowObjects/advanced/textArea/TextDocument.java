@@ -813,13 +813,14 @@ public class TextDocument {
         determineCurrentPosition();
     }
     
-    public void setSectionColor(EColors color, int start) { setSectionColor(color, start, -1); }
-    public void setSectionColor(EColors color, int start, int end) {
+    public void setSectionColor(EColors color, int start) { setSectionColor(color.intVal, start, -1); }
+    public void setSectionColor(EColors color, int start, int end) { setSectionColor(color.intVal, start, end); }
+    public void setSectionColor(int color, int start) { setSectionColor(color, start, -1); }
+    public void setSectionColor(int color, int start, int end) {
         assertValidIndex(start);
         // override existing value or add new
-        colorChangeLocations.put(start, color.intVal);
+        colorChangeLocations.put(start, color);
         if (end >= 0) {
-            assertValidIndex(end);
             colorChangeLocations.put(end, EColors.white.intVal);
         }
 //        if (end >= 0) {
@@ -1178,7 +1179,7 @@ public class TextDocument {
     }
     
     protected void updateFormattingIndicies(int changeIndex, int offset) {
-        System.out.println(changeIndex + " : " + offset);
+//        System.out.println(changeIndex + " : " + offset);
         var it = colorChangeLocations.iterator();
         while (it.hasNext()) {
             var l = it.next();
