@@ -1,8 +1,8 @@
 package envision.game.animations;
 
-import envision.engine.registry.types.Sprite;
-import envision.engine.registry.types.SpriteSheet;
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.Sprite;
+import envision.engine.loader.built.game.SpriteSheet;
 import eutil.datatypes.util.EList;
 
 /**
@@ -25,8 +25,7 @@ public class AnimationSet {
     /** The set of frames for this animation. */
     private final EList<Sprite> frames = EList.newList();
     /** 40 game ticks by default -- can be modified. */
-    private long updateInterval = 40;
-    
+    private long updateInterval = 40;    
     //==============
     // Constructors
     //==============
@@ -44,8 +43,7 @@ public class AnimationSet {
         setName = setNameIn;
         frames.addAll(framesIn);
         updateInterval = updateIntervalIn;
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -81,8 +79,7 @@ public class AnimationSet {
     
     public void clearFrames() {
         frames.clear();
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -95,8 +92,7 @@ public class AnimationSet {
     public long getUpdateInterval() { return updateInterval; }
     public EList<Sprite> getFrames() { return frames; }
     public int getNumberOfFrames() { return frames.size(); }
-    public Sprite getFrameAtIndex(int index) { return frames.get(index); }
-    
+    public Sprite getFrameAtIndex(int index) { return frames.get(index); }    
     //=========
     // Setters
     //=========

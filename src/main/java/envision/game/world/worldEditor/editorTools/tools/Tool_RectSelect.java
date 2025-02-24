@@ -1,9 +1,9 @@
 package envision.game.world.worldEditor.editorTools.tools;
 
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.game.entities.Entity;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.loader.built.game.Entity;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
@@ -14,21 +14,19 @@ import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 
 public class Tool_RectSelect extends EditorTool {
-
+    
     //========
     // Fields
     //========
     
-    private int clickX, clickY;
-    
+    private int clickX, clickY;    
     //==============
     // Constructors
     //==============
     
     public Tool_RectSelect(MapEditorScreen in) {
         super(in);
-    }
-
+    }    
     //===========
     // Overrides
     //===========

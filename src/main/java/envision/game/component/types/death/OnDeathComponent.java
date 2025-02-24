@@ -1,9 +1,9 @@
 package envision.game.component.types.death;
 
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.EntityComponent;
 import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
-import envision.game.component.EntityComponent;
-import envision.game.entities.Entity;
 
 public class OnDeathComponent extends EntityComponent {
     

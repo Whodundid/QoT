@@ -1,6 +1,6 @@
 package envision.engine.events.eventTypes.engine;
 
-import envision.engine.events.EventType;
+import envision.engine.events.EnvisionEventType;
 
 public class EngineLoadedConfigEvent extends EngineEvent {
     
@@ -8,7 +8,7 @@ public class EngineLoadedConfigEvent extends EngineEvent {
     private final Object config;
     
     public EngineLoadedConfigEvent(Object configIn) {
-        super(EventType.ENGINE_LOADED_CONFIG, true);
+        super(EnvisionEventType.ENGINE_LOADED_CONFIG, true);
         config = configIn;
     }
     

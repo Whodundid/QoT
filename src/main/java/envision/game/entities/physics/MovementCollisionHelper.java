@@ -1,7 +1,7 @@
 package envision.game.entities.physics;
 
+import envision.engine.loader.built.game.Entity;
 import envision.game.effects.OutOfStaminaEffect;
-import envision.game.entities.Entity;
 import envision.game.entities.Projectile;
 import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
@@ -23,11 +23,10 @@ public class MovementCollisionHelper {
     
     public MovementCollisionHelper(Entity entity) {
         theEntity = entity;
-    }
-    
-    //=========
-    // Methods
-    //=========
+    }    
+    //==============
+    // Constructors
+    //==============
     
     public void tryMovePixel(double moveX, double moveY) {
         var e = theEntity;
@@ -209,7 +208,7 @@ public class MovementCollisionHelper {
             
             if (isMovingX) {
                 for (var t : getCollidingTilesForXAxis(left)) {
-                    if (isProjectile && t.wallHeight <= 0.2) continue;
+                    if (isProjectile && t.tileHeight <= 0.2) continue;
                     
                     double tsx = t.worldX * world.getTileWidth();
                     double tsy = t.worldY * world.getTileWidth();
@@ -230,7 +229,7 @@ public class MovementCollisionHelper {
             
             if (isMovingY) {
                 for (var t : getCollidingTilesForYAxis(up)) {
-                    if (isProjectile && t.wallHeight <= 0.2) continue;
+                    if (isProjectile && t.tileHeight <= 0.2) continue;
                     
                     double tsx = t.worldX * world.getTileWidth();
                     double tsy = t.worldY * world.getTileWidth();
@@ -354,7 +353,7 @@ public class MovementCollisionHelper {
             
             // if the entity can move across low walls, allow the movement
             if (theEntity.canMoveAcrossLowMovementBlockingWalls) {
-                if (t.wallHeight < 0.0) continue;
+                if (t.tileHeight < 0.0) continue;
             }
             
             tiles.add(t);
@@ -395,15 +394,14 @@ public class MovementCollisionHelper {
             
             // if the entity can move across low walls, allow the movement
             if (theEntity.canMoveAcrossLowMovementBlockingWalls) {
-                if (t.wallHeight < 0.0) continue;
+                if (t.tileHeight < 0.0) continue;
             }
             
             tiles.add(t);
         }
         
         return tiles;
-    }
-    
+    }    
     //=========
     // Getters
     //=========

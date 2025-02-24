@@ -1,9 +1,9 @@
 package envision.game.component.types;
 
 import envision.Envision;
+import envision.engine.loader.built.game.EntityComponent;
 import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
-import envision.game.component.EntityComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
@@ -21,16 +21,14 @@ public abstract class RenderingComponent extends EntityComponent {
     protected double lastDrawH;
     protected double lastZoom;
     protected int lastDrawBrightness;
-    protected boolean lastDrawMouseOver;
-    
+    protected boolean lastDrawMouseOver;    
     //==============
     // Constructors
     //==============
     
     protected RenderingComponent(ComponentBasedObject objectIn) {
         super(objectIn, ComponentType.RENDERING);
-    }
-    
+    }    
     //=========
     // Methods
     //=========

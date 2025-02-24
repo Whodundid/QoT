@@ -31,16 +31,14 @@ public class LauncherSettings {
      * A list of all directories to extract/install from.
      */
     private final EList<String> directoriesToExtract = EList.newList();
-    private final EList<String> resourceDirectoriesToExtract = EList.newList();
-    
+    private final EList<String> resourceDirectoriesToExtract = EList.newList();    
     //==============
     // Constructors
     //==============
     
     public LauncherSettings(EnvisionGame gameIn) {
         this.game = gameIn;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -61,10 +59,10 @@ public class LauncherSettings {
     
     public void setInstallationDir(File dirIn) { INSTALL_DIR = dirIn; }
     
-    public void setAdditionalDirectoriesToExtract(String... directories) { directoriesToExtract.clearThenAdd(directories); }
+    public void setAdditionalDirectoriesToExtract(String... directories) { directoriesToExtract.clearThenAddA(directories); }
     public void setAdditionalDirectoriesToExtract(EList<String> directories) { directoriesToExtract.clearThenAddAll(directories); }
     
-    public void setResourceDirectoriesToExtract(String... directories) { resourceDirectoriesToExtract.clearThenAdd(directories); }
+    public void setResourceDirectoriesToExtract(String... directories) { resourceDirectoriesToExtract.clearThenAddA(directories); }
     public void setResourceDirectoriesToExtract(EList<String> directories) { resourceDirectoriesToExtract.clearThenAddAll(directories); }
     
 }

@@ -1,7 +1,7 @@
 package envision.engine.events.eventTypes.entity;
 
-import envision.engine.events.EventType;
-import envision.game.entities.Entity;
+import envision.engine.events.EnvisionEventType;
+import envision.engine.loader.built.game.Entity;
 import envision.game.world.GameWorld;
 
 public class EntityIsAttackingEvent extends EntityEvent {
@@ -11,7 +11,7 @@ public class EntityIsAttackingEvent extends EntityEvent {
     private final Entity entToAttack;
     
     public EntityIsAttackingEvent(GameWorld worldIn, Entity entIn, Entity entityToAttack) {
-        super(EventType.ENTITY_IS_ATTACKING, true);
+        super(EnvisionEventType.ENTITY_IS_ATTACKING, true);
         world = worldIn;
         ent = entIn;
         entToAttack = entityToAttack;

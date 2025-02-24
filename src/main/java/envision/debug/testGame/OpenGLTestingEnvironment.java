@@ -6,23 +6,23 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.glfw.GLFW;
 
 import envision.Envision;
-import envision.engine.assets.EngineTextures;
-import envision.engine.inputHandlers.IEnvisionInputReceiver;
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.inputHandlers.WindowResizeListener;
-import envision.engine.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.internal.assets.EngineTextures;
+import envision.engine.internal.inputHandlers.IEnvisionInputReceiver;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.internal.inputHandlers.WindowResizeListener;
+import envision.engine.internal.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.internal.rendering.GLCamera;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.rendering.batching.BatchManager;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.rendering.renderingAPI.error.ErrorReportingLevel;
+import envision.engine.internal.rendering.renderingAPI.error.IRendererErrorReceiver;
+import envision.engine.internal.rendering.renderingAPI.error.RendererErrorReporter;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
 import envision.engine.loader.EnvisionGame;
-import envision.engine.rendering.GLCamera;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.batching.BatchManager;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.renderingAPI.error.ErrorReportingLevel;
-import envision.engine.rendering.renderingAPI.error.IRendererErrorReceiver;
-import envision.engine.rendering.renderingAPI.error.RendererErrorReporter;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.screens.GameScreen;
+import envision.engine.loader.built.game.GameScreen;
+import envision.engine.loader.built.game.GameTexture;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherLogger;
 import envision.launcher.LauncherSettings;
@@ -76,7 +76,7 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
         Envision.loadGame(settings);
         Envision.setWindowIcon(EngineTextures.noscreens);
         Envision.setTargetFPS(240);
-        Envision.setTargetUPS(150);
+        Envision.setTargetTPS(150);
         Envision.startGame();
     }
     
@@ -518,9 +518,9 @@ public class OpenGLTestingEnvironment implements IRendererErrorReceiver, IEnvisi
         //projection = MatrixBuilder.projection(70.0f, (float) width / (float) height, 0.1f, 1000.0f);
     }
     
-    //-----------
+    //===========
     // Overrides
-    //-----------
+    //===========
     
     public void onRenderErrorReporterMessage(String msg, ErrorReportingLevel reportingLevel) {
         if (reportingLevel == ErrorReportingLevel.HIGH) {

@@ -1,6 +1,6 @@
 package qot.entities.projectiles;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.entities.Projectile;
 import eutil.EUtil;
 import qot.assets.textures.entity.EntityTextures;

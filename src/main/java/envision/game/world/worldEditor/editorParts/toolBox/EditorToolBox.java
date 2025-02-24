@@ -2,13 +2,13 @@ package envision.game.world.worldEditor.editorParts.toolBox;
 
 import static envision.game.world.worldEditor.editorTools.EditorToolType.*;
 
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowSlider;
-import envision.engine.windows.windowObjects.advanced.header.WindowHeader;
-import envision.engine.windows.windowObjects.basic.WindowRect;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowSlider;
+import envision.engine.internal.windows.windowObjects.advanced.header.WindowHeader;
+import envision.engine.internal.windows.windowObjects.basic.WindowRect;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IWindowObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorTools.EditorToolType;
 import eutil.EUtil;
@@ -16,6 +16,10 @@ import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 
 public class EditorToolBox extends WindowObject {
+    
+    //========
+    // Fields
+    //========
     
     public final ToolCategory selector = ToolCategory.from("Selection", SELECTOR, RECTSELECT);
     
@@ -30,8 +34,7 @@ public class EditorToolBox extends WindowObject {
     /** The maximum number of tools displayed on each row. */
     int rowWidth = 2;
     
-    WindowSlider sizeSlider;
-    
+    WindowSlider sizeSlider;    
     //==============
     // Constructors
     //==============
@@ -39,8 +42,7 @@ public class EditorToolBox extends WindowObject {
     public EditorToolBox(MapEditorScreen in) {
         editor = in;
         init(in, 5, editor.getTopHeader().endY + 15);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

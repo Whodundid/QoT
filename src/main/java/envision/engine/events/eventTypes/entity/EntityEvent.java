@@ -1,17 +1,17 @@
 package envision.engine.events.eventTypes.entity;
 
-import envision.engine.events.EventType;
+import envision.engine.events.EnvisionEventType;
 import envision.engine.events.GameEvent;
 
 public abstract class EntityEvent extends GameEvent {
     
-    private final EventType entityEventType;
+    private final EnvisionEventType entityEventType;
     
-    protected EntityEvent(EventType entityEventTypeIn, boolean canBeCancelled) {
-        super(EventType.ENTITY, canBeCancelled);
+    protected EntityEvent(EnvisionEventType entityEventTypeIn, boolean canBeCancelled) {
+        super(EnvisionEventType.ENTITY, canBeCancelled);
         entityEventType = entityEventTypeIn;
     }
     
-    public EventType getEntityEvent() { return entityEventType; }
+    public EnvisionEventType getEntityEvent() { return entityEventType; }
     
 }

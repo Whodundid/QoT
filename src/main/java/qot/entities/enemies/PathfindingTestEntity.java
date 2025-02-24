@@ -1,7 +1,7 @@
 package qot.entities.enemies;
 
 import envision.debug.DebugSettings;
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.entities.BasicRenderedEntity;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.util.EList;
@@ -12,7 +12,7 @@ import qot.entities.EntityList;
 import qot.entities.EntityPathfinder;
 
 public class PathfindingTestEntity extends BasicRenderedEntity {
-
+    
     //========
     // Fields
     //========
@@ -23,8 +23,7 @@ public class PathfindingTestEntity extends BasicRenderedEntity {
     private WorldTile lastTile;
     
     private boolean pathMade = false;
-    private boolean hasNextCell = false;
-    
+    private boolean hasNextCell = false;    
     //==============
     // Constructors
     //==============
@@ -62,7 +61,7 @@ public class PathfindingTestEntity extends BasicRenderedEntity {
         
         //var cdims = this.getCollisionDims();
         lastTile = tile;
-        pathCells = pathfinder.findPath(tile, false, -1).reverse();
+        pathCells = pathfinder.findPath(tile, false, -1).reversed();
         
 //        for (var c : pathCells) {
 //            System.out.println(c);

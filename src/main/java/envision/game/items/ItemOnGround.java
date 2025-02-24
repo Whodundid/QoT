@@ -3,7 +3,8 @@ package envision.game.items;
 import java.text.DecimalFormat;
 
 import envision.Envision;
-import envision.engine.inputHandlers.Mouse;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.loader.built.game.Item;
 import envision.game.entities.BasicRenderedEntity;
 import envision.game.world.IGameWorld;
 import eutil.colors.EColors;

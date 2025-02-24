@@ -1,6 +1,6 @@
 package qot.assets.textures.doodads;
 
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 import qot.assets.textures.doodads.bushes.BushTextures;
 import qot.assets.textures.doodads.ground_clutter.GroundClutterTextures;
@@ -25,10 +25,10 @@ public class DoodadTextures extends TextureLoader {
     public static HouseTextures houseTextures = HouseTextures.instance();
     public static TreeTextures treeTextures = TreeTextures.instance();
     public static BushTextures bushTextures = BushTextures.instance();
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

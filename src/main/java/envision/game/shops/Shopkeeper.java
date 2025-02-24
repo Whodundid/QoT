@@ -1,7 +1,8 @@
 package envision.game.shops;
 
-import envision.game.entities.Entity;
-import envision.game.items.Item;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
+import envision.engine.loader.built.game.Shop;
 
 public interface Shopkeeper {
     

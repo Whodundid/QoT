@@ -2,7 +2,7 @@ package envision.debug.debugCommands;
 
 import envision.Envision;
 import envision.debug.testStuff.TestWindow;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
 
 @SuppressWarnings("unused")
 public class Deb3 extends DebugCommand {

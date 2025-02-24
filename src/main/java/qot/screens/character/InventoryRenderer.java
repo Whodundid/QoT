@@ -1,15 +1,15 @@
 package qot.screens.character;
 
 import envision.Envision;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
-import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
-import envision.game.entities.Entity;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowUtil.windowEvents.WindowObjectEvent;
+import envision.engine.internal.windows.windowUtil.windowEvents.eventUtil.MouseType;
+import envision.engine.internal.windows.windowUtil.windowEvents.events.EventMouse;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import envision.game.entities.inventory.EntityInventory;
-import envision.game.items.Item;
 import eutil.colors.EColors;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
@@ -43,8 +43,7 @@ public class InventoryRenderer extends WindowObject {
     public int slotBackColor = EColors.dgray.intVal;
     public int slotHoverColor = EColors.yellow.intVal;
     public int slotMovingItemColor = EColors.chalk.opacity(50);
-    public int slotFillerColor = EColors.pdgray.intVal;
-    
+    public int slotFillerColor = EColors.pdgray.intVal;    
     //==============
     // Constructors
     //==============
@@ -72,8 +71,7 @@ public class InventoryRenderer extends WindowObject {
         itemTextX = midX;
         itemTextY = startY - 40;
         
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -120,7 +118,7 @@ public class InventoryRenderer extends WindowObject {
     }
     
     @Override
-    public void onEvent(ObjectEvent e) {
+    public void onEvent(WindowObjectEvent e) {
         if (e.getEventParent() == Envision.getCurrentScreen()) {
             if (e instanceof EventMouse me && me.getMouseType() == MouseType.RELEASED) {
                 var ms = getMovingSlot();
@@ -148,8 +146,7 @@ public class InventoryRenderer extends WindowObject {
         
         itemTextX += newX;
         itemTextY += newY;
-    }
-    
+    }    
     //=========
     // Methods
     //=========

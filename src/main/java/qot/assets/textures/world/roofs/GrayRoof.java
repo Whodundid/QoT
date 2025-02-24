@@ -1,6 +1,6 @@
 package qot.assets.textures.world.roofs;
 
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.loader.built.game.GameTexture;
 
 public class GrayRoof extends GameTexture {
     

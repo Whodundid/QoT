@@ -11,7 +11,7 @@ public class VoidTile extends WorldTile {
     
     public VoidTile() { this(0, 0); }
     public VoidTile(int x, int y) {
-        tileName = "VOID";
+        name = "VOID";
         worldX = x;
         worldY = y;
         setBlocksMovement(true);

@@ -1,11 +1,11 @@
 package qot.entities.buildings;
 
 import envision.Envision;
-import envision.engine.registry.types.Sprite;
-import envision.game.component.EntityComponent;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.EntityComponent;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.component.types.timing.RandomTimeEventComponent;
-import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
 import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;

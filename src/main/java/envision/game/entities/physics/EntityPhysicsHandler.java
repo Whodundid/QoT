@@ -2,7 +2,7 @@ package envision.game.entities.physics;
 
 import org.joml.Vector3f;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 import eutil.datatypes.util.EList;
 
 // referenced 'GamesWithGabe' - https://github.com/codingminecraft/MarioYoutube
@@ -25,8 +25,7 @@ public class EntityPhysicsHandler {
     private ForceRegistry forceRegistry;
     private EList<RigidBody3D> rigidBodies = EList.newList();
     private Gravity3D gravity;
-    private float fixedUpdate;
-    
+    private float fixedUpdate;    
     //==============
     // Constructors
     //==============
@@ -37,8 +36,7 @@ public class EntityPhysicsHandler {
         forceRegistry = new ForceRegistry();
         fixedUpdate = 1.0f / 60.0f;
         gravity = new Gravity3D(new Vector3f(0.0f, 0.0f, -9.81f));
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -107,15 +105,13 @@ public class EntityPhysicsHandler {
     public void removeRigidBody(RigidBody3D body) {
         rigidBodies.remove(body);
         forceRegistry.remove(body, gravity);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
     
     public Entity getEntity() { return theEntity; }
-    public float getFixedUpdateRate() { return fixedUpdate; }
-    
+    public float getFixedUpdateRate() { return fixedUpdate; }    
     //=========
     // Setters
     //=========

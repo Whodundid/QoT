@@ -13,16 +13,14 @@ public class ForceRegistry {
     // Fields
     //========
     
-    private EList<ForceRegistration> registry;
-    
+    private EList<ForceRegistration> registry;    
     //==============
     // Constructors
     //==============
     
     public ForceRegistry() {
         registry = EList.newList();
-    }
-    
+    }    
     //=========
     // Methods
     //=========

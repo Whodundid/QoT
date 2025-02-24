@@ -1,12 +1,12 @@
 package envision.game.world.worldEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowTextField;
-import envision.engine.windows.windowObjects.advanced.colorPicker.ColorPickerSimple;
-import envision.engine.windows.windowObjects.advanced.textArea.TextAreaLine;
-import envision.engine.windows.windowObjects.utility.ColorButton;
-import envision.engine.windows.windowTypes.WindowParent;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowObjects.advanced.colorPicker.ColorPickerSimple;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.TextAreaLine;
+import envision.engine.internal.windows.windowObjects.utility.ColorButton;
+import envision.engine.internal.windows.windowTypes.WindowParent;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.Region;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;

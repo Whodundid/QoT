@@ -1,12 +1,12 @@
 package envision.game.world.worldEditor.editorParts.sidePanel.toolPanels.regionTool;
 
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.advanced.textArea.TextAreaLine;
-import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea;
-import envision.engine.windows.windowObjects.utility.WindowDialogueBox;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.engine.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.TextAreaLine;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.WindowTextArea;
+import envision.engine.internal.windows.windowObjects.utility.WindowDialogueBox;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IWindowParent;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
 import envision.game.world.Region;

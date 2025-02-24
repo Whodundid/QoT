@@ -2,6 +2,7 @@ package envision.game.component;
 
 import java.util.Objects;
 
+import envision.engine.loader.built.game.EntityComponent;
 import eutil.datatypes.util.EList;
 
 public class EntityComponentSystem {
@@ -37,8 +38,7 @@ public class EntityComponentSystem {
                 renderTickListeners.get(i).onRenderTick(deltaTime);
             }
         }
-    }
-    
+    }    
     //=========
     // Methods
     //=========

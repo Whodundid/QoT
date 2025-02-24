@@ -2,9 +2,9 @@ package envision.game.component.types.timing;
 
 import java.util.UUID;
 
+import envision.engine.loader.built.game.EntityComponent;
 import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
-import envision.game.component.EntityComponent;
 
 public abstract class TimeEventComponent extends EntityComponent {
     
@@ -15,8 +15,7 @@ public abstract class TimeEventComponent extends EntityComponent {
     /** The time on which this timer's last timer event was triggered on. */
     protected float lastEventTime;
     /** Indicates whether or not this timing component is currently counting. */
-    protected boolean isPaused = false;
-    
+    protected boolean isPaused = false;    
     //==============
     // Constructors
     //==============
@@ -34,8 +33,7 @@ public abstract class TimeEventComponent extends EntityComponent {
     //===========
     
     // outlines that children of this component must specify the 'onGametime' method
-    public abstract void onGameTick(float deltaTime);
-    
+    public abstract void onGameTick(float deltaTime);    
     //=========
     // Methods
     //=========
@@ -52,8 +50,7 @@ public abstract class TimeEventComponent extends EntityComponent {
     
     public void setPaused(boolean val) {
         isPaused = val;
-    }
-    
+    }    
     //=========
     // Getters
     //=========

@@ -1,8 +1,8 @@
 package qot.items.armor;
 
-import envision.engine.registry.types.Sprite;
-import envision.game.entities.Entity;
-import envision.game.items.Item;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
+import envision.engine.loader.built.game.Sprite;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.item.ItemTextures;
 import qot.effects.DamageMitigationEffect;

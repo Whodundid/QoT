@@ -15,8 +15,7 @@ public class TradingInventorySlot extends InventorySlot {
     // Fields
     //========
     
-    private TradingInventoryRenderer inventory;
-    
+    private TradingInventoryRenderer inventory;    
     //==============
     // Constructors
     //==============
@@ -24,8 +23,7 @@ public class TradingInventorySlot extends InventorySlot {
     public TradingInventorySlot(TradingInventoryRenderer inventoryIn, int slotIn) {
         super(inventoryIn, slotIn);
         inventory = inventoryIn;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -57,18 +55,15 @@ public class TradingInventorySlot extends InventorySlot {
     @Override
     public void mouseReleased(int mXIn, int mYIn, int button) {
         super.mouseReleased(mXIn, mYIn, button);
-    }
-    
+    }    
     //=========
     // Methods
-    //=========
-    
+    //=========    
     //=========
     // Getters
     //=========
     
-    public TradingInventoryRenderer getTradingInventory() { return inventory; }
-    
+    public TradingInventoryRenderer getTradingInventory() { return inventory; }    
     //=========
     // Setters
     //=========

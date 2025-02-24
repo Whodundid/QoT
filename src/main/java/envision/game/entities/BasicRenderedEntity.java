@@ -1,5 +1,7 @@
 package envision.game.entities;
 
+import envision.engine.loader.built.game.Entity;
+
 /** An entity that has a standard entity renderer component and nothing else. */
 public abstract class BasicRenderedEntity extends Entity {
     

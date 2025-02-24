@@ -1,7 +1,7 @@
 package envision.debug.debugCommands;
 
 import envision.Envision;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
 import qot.entities.enemies.Goblin;
 import qot.entities.player.QoT_Player;
 import qot.screens.character.CharacterScreen;

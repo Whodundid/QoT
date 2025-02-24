@@ -24,8 +24,7 @@ public class GameRules {
     /** True if the player has infinite stamina. */
     private boolean infiniteStamina = false;
     
-    private final Map<String, GameRule<?>> rules = new HashMap<>();
-    
+    private final Map<String, GameRule<?>> rules = new HashMap<>();    
     //=========
     // Methods
     //=========
@@ -54,8 +53,7 @@ public class GameRules {
     
     public GameRule<?> getRule(String ruleName) {
         return rules.get(ruleName);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -134,8 +132,7 @@ public class GameRules {
     public Map<String, GameRule<?>> getInternalRuleMap() { return rules; }
     
     /** Returns a copy of this list of game rules. */
-    public EList<GameRule<?>> getRules() { return EList.of(rules.values()); }
-    
+    public EList<GameRule<?>> getRules() { return EList.of(rules.values()); }    
     //=========
     // Setters
     //=========

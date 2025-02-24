@@ -1,5 +1,6 @@
 package envision.engine.creation.block;
 
+import envision.debug.testStuff.TestTextureSheetBuilder;
 import envision.engine.creation.block.blockTypes.DisplayBlock;
 import envision.engine.creation.block.blockTypes.EnvisionCodeBlock;
 import envision.engine.creation.block.blockTypes.coding.ArrayGrouper;
@@ -23,8 +24,7 @@ public class BlockRegistry {
     // Fields
     //========
     
-    private static final EList<Class<? extends CreatorBlock>> blockList = EList.newList();
-    
+    private static final EList<Class<? extends CreatorBlock>> blockList = EList.newList();    
     //==============
     // Constructors
     //==============
@@ -51,6 +51,7 @@ public class BlockRegistry {
         blockList.add(TextureSplitterBlock.class);
         blockList.add(ArrayIndexSelector.class);
         blockList.add(ArrayGrouper.class);
+        blockList.add(TestTextureSheetBuilder.class);
     }
     
     public static EList<Class<? extends CreatorBlock>> getBlockTypeList() {

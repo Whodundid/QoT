@@ -2,9 +2,9 @@ package envision.debug.testGame;
 
 import envision.Envision;
 import envision.debug.testStuff.TestWindow;
+import envision.engine.internal.windows.windowUtil.ObjectPosition;
 import envision.engine.loader.EnvisionGame;
 import envision.engine.screens.ScreenLevel;
-import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherSettings;
 

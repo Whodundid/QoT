@@ -1,8 +1,8 @@
 package qot.screens.character;
 
-import envision.engine.windows.windowObjects.utility.RightClickMenu;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.game.items.Item;
+import envision.engine.internal.windows.windowObjects.utility.RightClickMenu;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.loader.built.game.Item;
 
 public class InventorySlot extends WindowObject {
     

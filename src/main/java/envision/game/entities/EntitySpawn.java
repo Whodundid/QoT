@@ -1,6 +1,7 @@
 package envision.game.entities;
 
-import envision.game.items.Item;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import envision.game.world.IGameWorld;
 import eutil.datatypes.util.EList;
 import eutil.misc.Rotation;
@@ -8,20 +9,19 @@ import qot.entities.EntityList;
 
 public class EntitySpawn {
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     private int x, y;
     private int type;
     private EList<Item> spawnItems = EList.newList();
     private int initHealth = -1;
     private int initMana = -1;
-    private Rotation initFacing = Rotation.LEFT;
-    
-    //--------------
+    private Rotation initFacing = Rotation.LEFT;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     protected EntitySpawn() {}
     public EntitySpawn(int xIn, int yIn, Entity entIn) {

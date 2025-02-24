@@ -1,8 +1,8 @@
 package envision.game.world.worldEditor.windows;
 
 import envision.Envision;
-import envision.engine.windows.windowTypes.WindowParent;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowTypes.WindowParent;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import eutil.colors.EColors;
 

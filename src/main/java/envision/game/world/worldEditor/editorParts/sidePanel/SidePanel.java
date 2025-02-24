@@ -1,7 +1,7 @@
 package envision.game.world.worldEditor.editorParts.sidePanel;
 
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowUtil.EGui;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowUtil.EGui;
 import envision.game.world.worldEditor.MapEditorScreen;
 
 public abstract class SidePanel extends EGui {

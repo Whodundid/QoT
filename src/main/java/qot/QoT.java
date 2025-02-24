@@ -1,11 +1,11 @@
 package qot;
 
 import envision.Envision;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.settings.GameSettings;
+import envision.engine.internal.settings.config.EnvisionConfigFile;
 import envision.engine.loader.AbstractWorldCreator;
 import envision.engine.loader.EnvisionGame;
-import envision.engine.loader.GameSettings;
-import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.settings.config.EnvisionConfigFile;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherSettings;
 import qot.assets.textures.GameTextures;
@@ -13,6 +13,7 @@ import qot.assets.textures.entity.EntityTextures;
 import qot.screens.main.MainMenuScreen;
 import qot.settings.QoTSettings;
 
+@Deprecated
 public class QoT extends EnvisionGame {
     
     //========
@@ -20,8 +21,7 @@ public class QoT extends EnvisionGame {
     //========
     
     public static final String version = "Quest of Thyrah: March 3rd, 2023";
-    private static QoT instance;
-    
+    private static QoT instance;    
     //==============
     // Constructors
     //==============
@@ -33,8 +33,7 @@ public class QoT extends EnvisionGame {
     public static QoT instance() {
         if (instance == null) instance = new QoT();
         return instance;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -79,7 +78,7 @@ public class QoT extends EnvisionGame {
                 Envision.loadGame(settings);
                 Envision.setWindowIcon(EntityTextures.whodundid);
                 Envision.setTargetFPS(240);
-                Envision.setTargetUPS(150);
+                Envision.setTargetTPS(150);
                 Envision.startGame();
             }
         };
@@ -88,8 +87,7 @@ public class QoT extends EnvisionGame {
     @Override
     public void onRegisterInternalTextures(TextureSystem textureSystem) {
         GameTextures.instance().onRegister(textureSystem);
-    }
-    
+    }    
     //================
     // Static Methods
     //================

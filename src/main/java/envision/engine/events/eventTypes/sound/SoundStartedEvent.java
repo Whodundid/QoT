@@ -1,6 +1,6 @@
 package envision.engine.events.eventTypes.sound;
 
-import envision.engine.events.EventType;
+import envision.engine.events.EnvisionEventType;
 import envision.game.sounds.Audio;
 
 public class SoundStartedEvent extends SoundEvent {
@@ -8,7 +8,7 @@ public class SoundStartedEvent extends SoundEvent {
     private final Audio theSound;
     
     public SoundStartedEvent(Audio theSoundIn) {
-        super(EventType.SOUND_STARTED, true);
+        super(EnvisionEventType.SOUND_STARTED, true);
         theSound = theSoundIn;
     }
     

@@ -1,16 +1,15 @@
 package envision.engine.creation.block.blockTypes.constants;
 
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowObjects.action.WindowCheckBox;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.action.WindowCheckBox;
 
 public class ConstBooleanBlock extends ConstantValueBlock<Boolean> {
-
+    
     //========
     // Fields
     //========
     
-    private WindowCheckBox checkbox;
-    
+    private WindowCheckBox checkbox;    
     //==============
     // Constructors
     //==============
@@ -22,8 +21,7 @@ public class ConstBooleanBlock extends ConstantValueBlock<Boolean> {
         super(blockName, value);
         
         setSize(170, 40);
-    }
-
+    }    
     //===========
     // Overrides
     //===========

@@ -1,17 +1,21 @@
 package envision.game.world.worldEditor.editorParts.topHeader;
 
 import envision.Envision;
-import envision.engine.assets.WindowTextures;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowToggleSetting;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.assets.WindowTextures;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowToggleSetting;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import eutil.colors.EColors;
 import qot.entities.player.QoT_Player;
 import qot.screens.gameplay.GamePlayScreen;
 
 public class EditorScreenBotHeader extends WindowObject {
+    
+    //========
+    // Fields
+    //========
     
     private MapEditorScreen editor;
     private WindowButton testMap;
@@ -20,6 +24,10 @@ public class EditorScreenBotHeader extends WindowObject {
     private WindowButton addLayerAbove, addLayerBelow;
     private WindowButton deleteLayer;
     public double headerHeight = 40.0;
+    
+    //==============
+    // Constructors
+    //==============
     
     public EditorScreenBotHeader(MapEditorScreen editorIn) {
         editor = editorIn;
@@ -127,8 +135,7 @@ public class EditorScreenBotHeader extends WindowObject {
         if (object == deleteLayer) {
             editor.removeCurrentLayer();
         }
-    }
-    
+    }    
     //=========
     // Methods
     //=========

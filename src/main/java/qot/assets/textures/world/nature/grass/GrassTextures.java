@@ -1,8 +1,8 @@
 package qot.assets.textures.world.nature.grass;
 
-import envision.engine.registry.types.SpriteSheet;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.SpriteSheet;
 import qot.assets.TextureLoader;
 
 public class GrassTextures extends TextureLoader {
@@ -34,10 +34,10 @@ public class GrassTextures extends TextureLoader {
     grassSheet = new SpriteSheet(grassSheetTexture, 32, 32, 16, 0)
     
     ;
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

@@ -1,6 +1,6 @@
 package envision.game.world.layerSystem;
 
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IWindowObject;
 import eutil.datatypes.util.EList;
 
 public class ScreenLayer {

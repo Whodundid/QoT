@@ -1,7 +1,7 @@
 package qot.items.potions.healing;
 
-import envision.engine.registry.types.Sprite;
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.items.Potion;
 import qot.assets.textures.item.ItemTextures;
 import qot.items.ItemList;

@@ -1,12 +1,12 @@
 package envision.game.component;
 
+import envision.engine.loader.built.game.EntityComponent;
 import envision.game.GameObject;
 
 public abstract class ComponentBasedObject extends GameObject {
     
     /** The internal component system for this object. */
-    public EntityComponentSystem ecs;
-    
+    public EntityComponentSystem ecs;    
     //==============
     // Constructors
     //==============
@@ -16,8 +16,7 @@ public abstract class ComponentBasedObject extends GameObject {
         super(nameIn);
         
         ecs = new EntityComponentSystem();
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -32,8 +31,7 @@ public abstract class ComponentBasedObject extends GameObject {
     public void onRenderTick(float deltaTime) {
         super.onRenderTick(deltaTime);
         ecs.onRenderTick(deltaTime);
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -50,7 +48,7 @@ public abstract class ComponentBasedObject extends GameObject {
      * Used by components to notify the object when an event related to some
      * specific component has occurred.
      */
-    protected void onComponentEvent(EntityComponent theComponent, String id, Object... args) {
+    public void onComponentEvent(EntityComponent theComponent, String id, Object... args) {
         // do nothing by default;
     }
     
@@ -106,8 +104,7 @@ public abstract class ComponentBasedObject extends GameObject {
     /** @see EntityComponentSystem#hasComponent(String) */
     public boolean hasComponent(String componentName) {
         return ecs.hasComponent(componentName);
-    }
-    
+    }    
     //=========
     // Getters
     //=========

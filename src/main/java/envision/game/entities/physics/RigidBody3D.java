@@ -29,8 +29,7 @@ public class RigidBody3D {
     public float rotation = 0.0f;
     /** kg */
     public float mass = 0.0f;
-    public float inverseMass = 0.0f;
-    
+    public float inverseMass = 0.0f;    
     //=========
     // Methods
     //=========
@@ -62,8 +61,7 @@ public class RigidBody3D {
     
     public void addForce(Vector3f force) {
         forceAccumulator.add(force);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -72,8 +70,7 @@ public class RigidBody3D {
     public float getRotation() { return rotation; }
     public float getMass() { return mass; }
     public float getLinearDamping() { return linearDamping; }
-    public float getAngularDamping() { return angularDamping; }
-    
+    public float getAngularDamping() { return angularDamping; }    
     //=========
     // Setters
     //=========

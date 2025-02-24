@@ -1,23 +1,19 @@
 package envision.engine.creation;
 
-import envision.engine.screens.GameScreen;
+import envision.engine.loader.built.game.GameScreen;
 
 public class ObjectCreationScreen extends GameScreen {
     
     //========
     // Fields
-    //========
-    
-    
-    
+    //========    
     //==============
     // Constructors
     //==============
     
     public ObjectCreationScreen() {
         
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -25,16 +21,13 @@ public class ObjectCreationScreen extends GameScreen {
     @Override
     public void drawScreen(float dt, int mXIn, int mYIn) {
         
-    }
-    
+    }    
     //=========
     // Methods
-    //=========
-    
+    //=========    
     //=========
     // Getters
-    //=========
-    
+    //=========    
     //=========
     // Setters
     //=========

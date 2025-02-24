@@ -2,49 +2,40 @@ package envision.game.world.layerSystem;
 
 import java.util.Iterator;
 
-import envision.engine.inputHandlers.Mouse;
+import envision.engine.internal.inputHandlers.Mouse;
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.util.EList;
 
 public class LayerSystem implements Iterable<ScreenLayer> {
     
-    //------------------
-    // Static Singleton
-    //------------------
-    
-    //private static final LayerHandler instance = new LayerHandler();
-    //public static LayerHandler getInstance() { return instance; }
-    //private LayerHandler() {}
-    
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     private final EList<ScreenLayer> layers = new EArrayList<>();
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public Iterator<ScreenLayer> iterator() {
         return layers.iterator();
     }
     
-    //--------
+    //========
     // Render
-    //--------
+    //========
     
     public void onRenderTick(long dt) {
         for (int i = 0; i < layers.size(); i++) {
             ScreenLayer l = layers.get(i);
             l.renderLayer(dt, Mouse.getMx(), Mouse.getMy());
         }
-    }
-    
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     public ScreenLayer pushLayer() {
         return layers.pushR(new ScreenLayer());
@@ -64,11 +55,10 @@ public class LayerSystem implements Iterable<ScreenLayer> {
         for (int i = 0; i < num; i++) {
             pushLayer();
         }
-    }
-    
-    //---------
+    }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     public int getLayerNum() {
         return layers.size();

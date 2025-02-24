@@ -1,6 +1,6 @@
 package qot.assets.textures.doodads.ground_clutter;
 
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.loader.built.game.GameTexture;
 
 public class WeedClutter extends GameTexture {
     

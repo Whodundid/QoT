@@ -1,0 +1,46 @@
+package envision.engine.internal.windows;
+
+import envision.Envision;
+
+public class WindowSize {
+    
+    //========
+    // Fields
+    //========
+    
+    private final int width;
+    private final int height;    
+    //==============
+    // Constructors
+    //==============
+    
+    public WindowSize() {
+        width = Envision.getWidth();
+        height = Envision.getHeight();
+    }
+    
+    public WindowSize(int widthIn, int heightIn) {
+        width = widthIn;
+        height = heightIn;
+    }
+    
+    //===========
+    // Overrides
+    //===========
+    
+    @Override public String toString() { return width + ", " + height; }    
+    //=========
+    // Getters
+    //=========
+    
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
+    
+    //================
+    // Static Getters
+    //================
+    
+    public static int width() { return Envision.getWidth(); }
+    public static int height() { return Envision.getHeight(); }
+
+}

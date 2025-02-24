@@ -1,6 +1,6 @@
 package envision.game.entities.combat;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 import eutil.random.ERandomUtil;
 
 public class EntityAttack {

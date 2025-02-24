@@ -1,6 +1,6 @@
 package qot.entities.enemies.archer;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.entities.Projectile;
 import qot.assets.textures.entity.EntityTextures;
 

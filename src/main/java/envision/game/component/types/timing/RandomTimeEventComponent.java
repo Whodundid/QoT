@@ -23,8 +23,7 @@ public class RandomTimeEventComponent extends TimeEventComponent {
     /** The current, randomly decided, interval (in ms) for this timer. */
     protected float currentInterval;
     /** A specified amount of ms that must pass before time intervals are measured. */
-    protected float startDelay;
-    
+    protected float startDelay;    
     //==============
     // Constructors
     //==============
@@ -86,8 +85,7 @@ public class RandomTimeEventComponent extends TimeEventComponent {
         startDelay = delay;
         
         currentInterval = generateRandomInterval();
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -110,8 +108,7 @@ public class RandomTimeEventComponent extends TimeEventComponent {
             currentTime = 0F;
             lastEventTime = 0F;
         }
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -122,8 +119,7 @@ public class RandomTimeEventComponent extends TimeEventComponent {
     
     public float generateRandomInterval(float min, float max) {
         return ERandomUtil.getRoll(min, max);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -131,8 +127,7 @@ public class RandomTimeEventComponent extends TimeEventComponent {
     public float getMinTimeInterval() { return minTimeInterval; }
     public float getMaxTimeInterval() { return maxTimeInterval; }
     public float getCurrentInterval() { return currentInterval; }
-    public float getStartDelay() { return startDelay; }
-    
+    public float getStartDelay() { return startDelay; }    
     //=========
     // Setters
     //=========

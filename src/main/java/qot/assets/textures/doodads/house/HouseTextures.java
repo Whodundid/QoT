@@ -1,8 +1,8 @@
 package qot.assets.textures.doodads.house;
 
-import envision.engine.registry.types.SpriteSheet;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.SpriteSheet;
 import qot.assets.TextureLoader;
 
 public class HouseTextures extends TextureLoader {
@@ -43,10 +43,10 @@ public class HouseTextures extends TextureLoader {
     public static final SpriteSheet
     
     chest_sheet = new SpriteSheet(chest, 32, 32, 2, 0);
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

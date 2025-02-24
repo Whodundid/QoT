@@ -1,8 +1,8 @@
 package qot.assets.textures.effects;
 
-import envision.engine.registry.types.SpriteSheet;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.SpriteSheet;
 import qot.assets.TextureLoader;
 
 public class EffectsTextures extends TextureLoader {
@@ -36,8 +36,7 @@ public class EffectsTextures extends TextureLoader {
     
     static_effect_spritesheet = new SpriteSheet(static_effect, 64, 64, 16, 0),
     explosion_effect_spritesheet = new SpriteSheet(explosion_effect, 128, 128, 16, 0),
-    fire_effect_spritesheet = new SpriteSheet(fire_effect, 128, 256, 32, 0);
-    
+    fire_effect_spritesheet = new SpriteSheet(fire_effect, 128, 256, 32, 0);    
     //===========
     // Overrides
     //===========

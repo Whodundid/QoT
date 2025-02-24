@@ -1,19 +1,19 @@
 package envision.debug.testStuff;
 
 import envision.Envision;
-import envision.engine.windows.windowObjects.advanced.WindowScrollList;
-import envision.engine.windows.windowObjects.advanced.tabbedContainer.TabbedContainer;
-import envision.engine.windows.windowObjects.advanced.textArea.TextDocument;
-import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea2;
-import envision.engine.windows.windowTypes.WindowParent;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowObjects.advanced.WindowScrollList;
+import envision.engine.internal.windows.windowObjects.advanced.tabPane.WindowTabPane;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.TextDocument;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.WindowTextArea2;
+import envision.engine.internal.windows.windowTypes.WindowParent;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.dialog.TextWriterOverTime;
 import eutil.colors.EColors;
 
 public class TestWindow extends WindowParent {
     
     private WindowScrollList scrollList;
-    private TabbedContainer container;
+    private WindowTabPane container;
     
     private TextDocument document;
     private TextWriterOverTime text;

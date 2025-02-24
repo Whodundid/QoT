@@ -1,12 +1,12 @@
 package envision.game.world.worldEditor;
 
 import envision.Envision;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowCheckBox;
-import envision.engine.windows.windowObjects.action.WindowTextField;
-import envision.engine.windows.windowObjects.basic.WindowLabel;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowCheckBox;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowObjects.basic.WindowLabel;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.GameScreen;
 import envision.game.world.GameWorld;
 import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;

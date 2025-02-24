@@ -1,7 +1,7 @@
 package qot.assets.textures.world.nature;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 import qot.assets.textures.world.nature.grass.GrassTextures;
 import qot.assets.textures.world.nature.rock.RockTextures;
@@ -46,10 +46,10 @@ public class NatureTextures extends TextureLoader {
     sandy_dirt             = new GameTexture(textureDir, "sandy_dirt.png"),
     smooth_dirt            = new GameTexture(textureDir, "smooth_dirt.png"),
     dry_cracked_dirt     = new GameTexture(textureDir, "dry_cracked_dirt.png");
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

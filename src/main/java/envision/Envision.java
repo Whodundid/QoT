@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.ZonedDateTime;
 
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -12,38 +11,39 @@ import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import envision.debug.Profiler;
 import envision.engine.EngineConfig;
 import envision.engine.EngineSettings;
-import envision.engine.assets.EngineTextures;
 import envision.engine.events.EventHandler;
 import envision.engine.events.GameEvent;
 import envision.engine.events.eventTypes.engine.EngineLoadedEvent;
-import envision.engine.inputHandlers.IEnvisionInputReceiver;
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.inputHandlers.WindowResizeListener;
-import envision.engine.kernel.EnvisionKernel;
-import envision.engine.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.internal.assets.EngineTextures;
+import envision.engine.internal.inputHandlers.IEnvisionInputReceiver;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.internal.inputHandlers.WindowResizeListener;
+import envision.engine.internal.kernel.EnvisionKernel;
+import envision.engine.internal.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.internal.kernel.notifications.NotificationHandler;
+import envision.engine.internal.kernel.notifications.util.NotificationType;
+import envision.engine.internal.rendering.GameWindow;
+import envision.engine.internal.rendering.RenderEngine;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.rendering.batching.BatchManager;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.rendering.renderingAPI.error.ErrorReportingLevel;
+import envision.engine.internal.rendering.renderingAPI.error.IRendererErrorReceiver;
+import envision.engine.internal.rendering.renderingAPI.error.RendererErrorReporter;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.windows.windowTypes.TopWindowParent;
+import envision.engine.internal.windows.windowTypes.interfaces.IWindowParent;
+import envision.engine.internal.windows.windowUtil.ObjectPosition;
 import envision.engine.loader.EnvisionGame;
 import envision.engine.loader.GameLoader;
 import envision.engine.loader.LoadedGameDirectory;
-import envision.engine.notifications.NotificationHandler;
-import envision.engine.notifications.util.NotificationType;
-import envision.engine.rendering.GameWindow;
-import envision.engine.rendering.RenderEngine;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.batching.BatchManager;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.renderingAPI.error.ErrorReportingLevel;
-import envision.engine.rendering.renderingAPI.error.IRendererErrorReceiver;
-import envision.engine.rendering.renderingAPI.error.RendererErrorReporter;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.screens.GameScreen;
+import envision.engine.loader.built.game.GameScreen;
+import envision.engine.loader.built.game.GameTexture;
 import envision.engine.screens.ScreenLevel;
-import envision.engine.windows.windowTypes.TopWindowParent;
-import envision.engine.windows.windowTypes.interfaces.IWindowParent;
-import envision.engine.windows.windowUtil.ObjectPosition;
 import envision.game.entities.player.Player;
 import envision.game.manager.LevelManager;
 import envision.game.sounds.SoundEngine;
@@ -57,7 +57,6 @@ import envision_lang.lang.java.annotations.EClass;
 import eutil.datatypes.points.Point2i;
 import eutil.datatypes.util.EList;
 import eutil.file.FileOpener;
-import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_i;
 import qot.assets.textures.GameTextures;
 
@@ -131,6 +130,10 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     /** The game's active player object. */
     public static Player thePlayer;
     
+    // general tick stuff
+    private long fpsTimer;
+    private long loopStartTime;
+    
     // Game tick stuff
     private long TPS = 60;
     private double timeT = 1000.0 / TPS;
@@ -154,9 +157,18 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     private int frames = 0;
     private int curFrameRate = 0;
     
-    public static long deltaGameTick;
-    public static long deltaFrameTick;
+    public static final String GAME_LOOP_INIT_PROFILER_NAME = "GAME_LOOP_INIT";
+    public static final String GAME_LOOP_PROFILER_NAME = "GAME_LOOP";
+    private Profiler GAME_LOOP_INIT_PROFILER;
+    private Profiler GAME_LOOP_PROFILER;
+    private Profiler GAME_TICK_PROFILER;
+    private Profiler FRAME_TICK_PROFILER;
+    public static Profiler LAST_GAME_LOOP_PROFILER;
+    public static Profiler LAST_GAME_TICK_PROFILER;
+    public static Profiler LAST_FRAME_TICK_PROFILER;
     
+    public static long deltaGameTick;
+    public static long deltaFrameTick;    
     //===========
     // Overrides
     //===========
@@ -283,8 +295,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
         GLFW.glfwSetWindowIcon(gameWindow.getWindowHandle(), imagebf);
         image.free();
         imagebf.free();
-    }
-    
+    }    
     //==============
     // Constructors
     //==============
@@ -296,6 +307,10 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
         
         init = true;
     }
+    
+    //==================
+    // Internal Methods
+    //==================
     
     private void setupGLFW() {
         GLFWErrorCallback.createPrint(System.err).set();
@@ -403,82 +418,175 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     //===================
     
     private void runGameLoop() {
-        //ignore if already running
+        // ignore if already running
         if (running) return;
         running = true;
         
-        //prepare timers
-        startTime = System.currentTimeMillis();
-        oldTime = startTime;
-        long timer = startTime;
-        long initialTime = System.currentTimeMillis();
-        
-        GLFW.glfwMakeContextCurrent(getGameWindow().getWindowHandle());
+        // initialize the game loop
+        initializeGameLoop();
         
         while (running) {
+            GAME_LOOP_PROFILER = Profiler.getAndStartProfiler(GAME_LOOP_PROFILER_NAME);
+            
             // check if the game should shutdown via window closed
+            GAME_LOOP_PROFILER.startSection("CHECK_SHOULD_WINDOW_CLOSE");
             if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) break;
+            GAME_LOOP_PROFILER.endSection();
             
             try {
-                long currentTime = System.currentTimeMillis();
-                deltaT += (currentTime - initialTime) / timeT;
-                deltaF += (currentTime - initialTime) / timeF;
-                initialTime = currentTime;
+                // setup for next game loop
+                GAME_LOOP_PROFILER.startSection("SETUP_FOR_NEXT_GAME_LOOP");
+                setupForNextGameLoop();
+                GAME_LOOP_PROFILER.endSection("SETUP_FOR_NEXT_GAME_LOOP");
                 
-                if (deltaT >= 1) {
-                    oldTime = curTime;
-                    curTime = System.currentTimeMillis();
-                    
-                    // 'dt' is ms :)
-                    dt = curTime - oldTime;
-                    
-                    if (dt > 15.0f) dt = 15.0f;
-                    
-                    //update inputs
-                    GLFW.glfwPollEvents();
-                    if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
-                        running = false;
-                        break;
-                    }
-                    
-                    long startGameTick = System.nanoTime();
-                    runGameTick(dt);
-                    deltaGameTick = System.nanoTime() - startGameTick;
-                    
-                    if (totalRunningTicks == Long.MAX_VALUE) totalRunningTicks = 0;
-                    else totalRunningTicks++;
-                    
-                    deltaT--;
-                }
+                // update game ticks
+                GAME_LOOP_PROFILER.startSection("UPDATE_GAME_TICKS");
+                if (!updateGameTicks()) break;
+                GAME_LOOP_PROFILER.endSection("UPDATE_GAME_TICKS");
                 
-                if (deltaF >= 1) {
-                    long startRenderTick = System.nanoTime();
-                    runRenderTick(currentTime - oldTime);
-                    deltaFrameTick = System.nanoTime() - startRenderTick;
-                    frames++;
-                    deltaF--;
-                }
+                // update frame ticks
+                GAME_LOOP_PROFILER.startSection("UPDATE_FRAME_TICKS");
+                updateFrameTicks();
+                GAME_LOOP_PROFILER.endSection("UPDATE_FRAME_TICKS");
                 
-                // measures fps
-                if (currentTime - timer > 1000) {
-                    curFrameRate = frames;
-                    curNumTicks = ticks;
-                    frames = 0;
-                    ticks = 0;
-                    timer += 1000;
-                }
-                
+                // make sure both ticks don't lag significantly behind either
                 if (deltaT > 3 || deltaF > 5) {
                     deltaT = 0;
                     deltaF = 0;
                 }
+                
+                GAME_LOOP_PROFILER.stopProfiler();
+                LAST_GAME_LOOP_PROFILER = GAME_LOOP_PROFILER;
+                Profiler.STATIC_PROFILERS.remove(GAME_LOOP_PROFILER_NAME);
             }
             catch (Exception e) {
                 e.printStackTrace();
+                
+                if (GAME_LOOP_PROFILER != null) {
+                    GAME_LOOP_PROFILER.stopProfiler();
+                }
             }
         }
         
+        GAME_LOOP_PROFILER.stopProfiler();
+        
         onShutdown();
+    }
+    
+    /**
+     * Sets up all timers for tick tracking and regulation.
+     * <p>
+     * Also makes the game window the active GLFW context.
+     */
+    private void initializeGameLoop() {
+        GAME_LOOP_INIT_PROFILER = Profiler.getAndStartProfiler(GAME_LOOP_INIT_PROFILER_NAME);
+        
+        // prepare timers
+        GAME_LOOP_INIT_PROFILER.startSection("SETUP_TIMERS");
+        startTime = System.currentTimeMillis();
+        oldTime = startTime;
+        fpsTimer = startTime;
+        loopStartTime = startTime;
+        GAME_LOOP_INIT_PROFILER.endSection();
+        
+        GAME_LOOP_INIT_PROFILER.startSection("MAKE_GLFW_CONTEXT_CURRENT");
+        GLFW.glfwMakeContextCurrent(getGameWindow().getWindowHandle());
+        GAME_LOOP_INIT_PROFILER.endSection();
+        GAME_LOOP_INIT_PROFILER.stopProfiler();
+    }
+    
+    /**
+     * Advances game loop time to the present and adjusts tick deltas.
+     */
+    private void setupForNextGameLoop() {
+        long currentTime = System.currentTimeMillis();
+        deltaT += (currentTime - loopStartTime) / timeT;
+        deltaF += (currentTime - loopStartTime) / timeF;
+        loopStartTime = currentTime;
+    }
+    
+    /**
+     * Determines whether or not to update internal game logic based on active
+     * game tick deltas. These tick updates advance all back-end logic for
+     * things like engine physics, ability timings, and event triggers.
+     * <p>
+     * Overall engine TPS (Ticks Per Second) is measured during this time.
+     * <p>
+     * This method returns either true or false to signal that upon polling
+     * input states that the game window should close.
+     * 
+     * @return True if the game loop should continue, False if it should end
+     */
+    private boolean updateGameTicks() {
+        if (deltaT < 1) return true;
+        
+        GAME_TICK_PROFILER = Profiler.getAndStartProfiler("GAME_TICK");
+        
+        oldTime = curTime;
+        curTime = loopStartTime;
+        
+        // 'dt' is ms :)
+        dt = curTime - oldTime;
+        if (dt > 15.0f) dt = 15.0f;
+        
+        // update inputs
+        GAME_TICK_PROFILER.startSection("poll events");
+        GLFW.glfwPollEvents();
+        if (GLFW.glfwWindowShouldClose(gameWindow.getWindowHandle())) {
+            GAME_TICK_PROFILER.endSection("poll events");
+            running = false;
+            return false;
+        }
+        GAME_TICK_PROFILER.endSection("poll events");
+        
+        GAME_TICK_PROFILER.startSection("run game tick");
+        long startGameTick = System.nanoTime();
+        runGameTick(dt);
+        deltaGameTick = System.nanoTime() - startGameTick;
+        GAME_TICK_PROFILER.endSection("run game tick");
+        
+        if (totalRunningTicks == Long.MAX_VALUE) totalRunningTicks = 0;
+        else totalRunningTicks++;
+        
+        deltaT--;
+        
+        GAME_TICK_PROFILER.stopProfiler();
+        LAST_GAME_TICK_PROFILER = GAME_TICK_PROFILER;
+        Profiler.STATIC_PROFILERS.remove("GAME_TICK");
+        
+        return true;
+    }
+    
+    /**
+     * Determines whether or not to update the game window visually based on
+     * active frame tick deltas. Effectively, a frame tick updates what is
+     * actively displayed on the screen.
+     * <p>
+     * Overall engine FPS (Frames Per Second) is measured during this time.
+     */
+    private void updateFrameTicks() {
+        if (deltaF >= 1) {
+            FRAME_TICK_PROFILER = Profiler.getAndStartProfiler("FRAME_TICK");
+            FRAME_TICK_PROFILER.startSection("render frame");
+            long startRenderTick = System.nanoTime();
+            runRenderTick(loopStartTime - oldTime);
+            deltaFrameTick = System.nanoTime() - startRenderTick;
+            frames++;
+            deltaF--;
+            FRAME_TICK_PROFILER.endSection("render frame");
+            FRAME_TICK_PROFILER.stopProfiler();
+            LAST_FRAME_TICK_PROFILER = FRAME_TICK_PROFILER;
+            Profiler.STATIC_PROFILERS.remove("FRAME_TICK");
+        }
+        
+        // measures fps
+        if (loopStartTime - fpsTimer > 1000) {
+            curFrameRate = frames;
+            curNumTicks = ticks;
+            frames = 0;
+            ticks = 0;
+            fpsTimer += 1000;
+        }
     }
     
     //=========================
@@ -486,28 +594,39 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     //=========================
     
     private void runGameTick(float dt) {
+        GAME_TICK_PROFILER.startSection("update counter");
         if (updateCounter >= 100000000) updateCounter = -1;
         updateCounter++;
-        //if (updateCounter % 500 == 0 && BatchManager.isEnabled()) System.out.println(getFPS());
+        GAME_TICK_PROFILER.endSection("update counter");
         
         // update the kernel's process map
+        GAME_TICK_PROFILER.startSection("kernel");
         kernel.update();
+        GAME_TICK_PROFILER.endSection("kernel");
         
         // process game events
+        GAME_TICK_PROFILER.startSection("event handler");
         eventHandler.onGameTick();
+        GAME_TICK_PROFILER.endSection("event handler");
         
-        // update current screen (if there is one)
-        if (currentScreen != null) currentScreen.onGameTick(dt);
+        // update the developer desktop
+        GAME_TICK_PROFILER.startSection("update desktop");
         developerDesktop.onTickUpdate_i(dt);
+        GAME_TICK_PROFILER.endSection("update desktop");
+
+        // update current screen (if there is one)
+        if (currentScreen != null) {
+            GAME_TICK_PROFILER.startSection("update screen");
+            currentScreen.onGameTick(dt);
+            GAME_TICK_PROFILER.endSection("update screen");
+        }
         
         // update current world (if there is one, and it's loaded, and the engine is not paused)
         if (levelManager != null && !pause) {
+            GAME_TICK_PROFILER.startSection("level manager");
             levelManager.onGameTick(dt);
+            GAME_TICK_PROFILER.endSection("level manager");
         }
-        
-//        if (theWorld != null && theWorld.isLoaded() && !pause) {
-//            theWorld.onGameTick(dt);
-//        }
     }
     
     // TODO: TEMP: REMOVE THIS!
@@ -516,75 +635,87 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     private void runRenderTick(long dt) {
         if (!running) return;
         if (!BatchManager.isEnabled()) {
+            FRAME_TICK_PROFILER.startSection("old batch");
+            
+            FRAME_TICK_PROFILER.startSection("world tick");
             if (theWorld != null && theWorld.isLoaded() && renderWorld) {
                 theWorld.onRenderTick(dt);
             }
+            FRAME_TICK_PROFILER.endSection("world tick");
             
+            FRAME_TICK_PROFILER.startSection("render screen");
             if (currentScreen != null) {
                 currentScreen.drawObject_i(dt, Mouse.getMx(), Mouse.getMy());
-                //currentScreen.drawString("deltaF: " + deltaF, 0, currentScreen.endY - currentScreen.midY / 2, EColors.aquamarine);
-                //currentScreen.drawString("deltaU: " + deltaU, 0, currentScreen.endY - currentScreen.midY / 2 + 25, EColors.aquamarine);
             }
             else {
                 RenderingManager.drawTexture(EngineTextures.noscreens, 128, 128, 384, 384);
                 RenderingManager.drawString("No Screens?", 256, 256);
             }
+            FRAME_TICK_PROFILER.endSection("render screen");
             
+            FRAME_TICK_PROFILER.startSection("render desktop");
             developerDesktop.onRenderTick(dt);
-            //renderEngine.getRenderingContext().swapBuffers();
+            FRAME_TICK_PROFILER.endSection("render desktop");
+            
+            FRAME_TICK_PROFILER.startSection("end frame");
             renderEngine.endFrame();
+            FRAME_TICK_PROFILER.endSection("end frame");
+            
+            FRAME_TICK_PROFILER.endSection("old batch");
         }
         else {
-            Vector3f pos = null;
-            if (!DeveloperDesktop.isOpen()) {
-                pos = RenderEngine.getInstance().perspectiveCamera.position;
-                final var rot = RenderEngine.getInstance().perspectiveCamera.rotation;
-                final float speed = 6.0f;
-                
-                // press
-                //if (Keyboard.isKeyDown(Keyboard.KEY_W)) pos.y -= speed;
-                //if (Keyboard.isKeyDown(Keyboard.KEY_D)) pos.x += speed;
-                //if (Keyboard.isKeyDown(Keyboard.KEY_S)) pos.y += speed;
-                //if (Keyboard.isKeyDown(Keyboard.KEY_A)) pos.x -= speed;
-                if (Keyboard.isKeyDown(Keyboard.KEY_UP)) pos.y -= speed;
-                if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) pos.x += speed;
-                if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) pos.y += speed;
-                if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) pos.x -= speed;
-                if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) pos.z += speed;
-                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) pos.z -= speed;
-                if (Keyboard.isKeyDown(Keyboard.KEY_PERIOD)) rot.x += 0.0025;
-                if (Keyboard.isKeyDown(Keyboard.KEY_COMMA)) rot.x -= 0.0025;
-                if (Keyboard.isKeyDown(Keyboard.KEY_K)) rot.y += 0.005;
-                if (Keyboard.isKeyDown(Keyboard.KEY_L)) rot.y -= 0.005;
-                if (Keyboard.isKeyDown(Keyboard.KEY_E)) rot.z += 0.005;
-                if (Keyboard.isKeyDown(Keyboard.KEY_Q)) rot.z -= 0.005;
-                if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-                    System.out.println("reset");
-                    rot.set(0, 2, 0);
-                    pos.z = 0;
-                }
-                
-                //RenderingManager.drawString(pos, 50, 150);
-                
-//                int mX = Mouse.getMx();
-//                int mY = Mouse.getMy();
+//            Vector3f pos = null;
+//            if (!DeveloperDesktop.isOpen()) {
+//                pos = RenderEngine.getInstance().perspectiveCamera.position;
+//                final var rot = RenderEngine.getInstance().perspectiveCamera.rotation;
+//                final float speed = 6.0f;
 //                
-//                float dX = (float) (mX - mX_old);
-//                float dY = (float) (mY - mY_old);
-                
-//                mX_old = mX;
-//                mY_old = mY;
-                
-                ///rot.add(new Vector3f(dY * 0.001f, dX * 0.001f, 0), rot);
-                rot.set(ENumUtil.clamp(rot.x, -90, 90), rot.y, 0);
-                
-//                System.out.println(pos + " : " + rot);
-            }
-            
-            
+//                // press
+//                //if (Keyboard.isKeyDown(Keyboard.KEY_W)) pos.y -= speed;
+//                //if (Keyboard.isKeyDown(Keyboard.KEY_D)) pos.x += speed;
+//                //if (Keyboard.isKeyDown(Keyboard.KEY_S)) pos.y += speed;
+//                //if (Keyboard.isKeyDown(Keyboard.KEY_A)) pos.x -= speed;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_UP)) pos.y -= speed;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) pos.x += speed;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) pos.y += speed;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) pos.x -= speed;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) pos.z += speed;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) pos.z -= speed;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_PERIOD)) rot.x += 0.0025;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_COMMA)) rot.x -= 0.0025;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_K)) rot.y += 0.005;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_L)) rot.y -= 0.005;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_E)) rot.z += 0.005;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_Q)) rot.z -= 0.005;
+//                if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+//                    System.out.println("reset");
+//                    rot.set(0, 2, 0);
+//                    pos.z = 0;
+//                }
+//                
+//                //RenderingManager.drawString(pos, 50, 150);
+//                
+////                int mX = Mouse.getMx();
+////                int mY = Mouse.getMy();
+////                
+////                float dX = (float) (mX - mX_old);
+////                float dY = (float) (mY - mY_old);
+//                
+////                mX_old = mX;
+////                mY_old = mY;
+//                
+//                ///rot.add(new Vector3f(dY * 0.001f, dX * 0.001f, 0), rot);
+//                rot.set(ENumUtil.clamp(rot.x, -90, 90), rot.y, 0);
+//                
+////                System.out.println(pos + " : " + rot);
+//            }
+            FRAME_TICK_PROFILER.startSection("render engine");
             renderEngine.draw(dt);
-            //if (pos != null) RenderingManager.drawString(pos, 50, 150);
+            FRAME_TICK_PROFILER.endSection("render engine");
+            
+            FRAME_TICK_PROFILER.startSection("end frame");
             renderEngine.endFrame();
+            FRAME_TICK_PROFILER.endSection("end frame");
         }
     }
     
@@ -634,10 +765,10 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     //=======================
     
     private long getTargetFPSi() { return FPS; }
-    private long getTargetUPSi() { return TPS; }
+    private long getTargetTPSi() { return TPS; }
     
-    private void setTargetUPSi(int upsIn) {
-        TPS = upsIn;
+    private void setTargetTPSi(int tpsIn) {
+        TPS = tpsIn;
         timeT = 1000.0 / TPS;
         deltaT = 0;
         deltaF = 0;
@@ -826,8 +957,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     public static void pause() { pause = true; }
     public static void unpause() { pause = false; }
     public static void pauseWorldRender() { renderWorld = false; }
-    public static void unpauseWorldRender() { renderWorld = true; }
-    
+    public static void unpauseWorldRender() { renderWorld = true; }    
     //=========
     // Getters
     //=========
@@ -853,7 +983,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     /** Returns the FPS target that the window is trying to run at. */
     public static int getTargetFPS() { return (int) instance.getTargetFPSi(); }
     /** Returns the UPS (updates per second) that the game is trying to run at. */
-    public static int getTargetTPS() { return (int) instance.getTargetUPSi(); }
+    public static int getTargetTPS() { return (int) instance.getTargetTPSi(); }
     /** Returns the change in time between ticks. */
     public static float getDeltaTime() { return instance.dt; }
     
@@ -904,8 +1034,7 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     public static int getHeight() { return gameWindow.getHeight(); }
     /** Returns the game window's draw scale. 1 is default. */
     public static double getGameScale() { return EngineSettings.resolutionScale.get(); }
-    public static long getWindowHandle() { return gameWindow.getWindowHandle(); }
-    
+    public static long getWindowHandle() { return gameWindow.getWindowHandle(); }    
     //=========
     // Setters
     //=========
@@ -921,6 +1050,6 @@ public final class Envision implements IRendererErrorReceiver, IEnvisionInputRec
     /** Used to specify the FPS (frames per second) that the game window will try to run at. */
     public static void setTargetFPS(int fpsIn) { instance.setTargetFPSi(fpsIn); }
     /** Used to specify the UPS (updates per second) that the game will try to run at. */
-    public static void setTargetUPS(int upsIn) { instance.setTargetUPSi(upsIn); }
+    public static void setTargetTPS(int tpsIn) { instance.setTargetTPSi(tpsIn); }
     
 }

@@ -1,8 +1,8 @@
 package envision.debug.testStuff;
 
 import envision.engine.events.GameEvent;
-import envision.engine.registry.types.Sprite;
-import envision.engine.screens.GameScreen;
+import envision.engine.loader.built.game.GameScreen;
+import envision.engine.loader.built.game.Sprite;
 import eutil.colors.EColors;
 import eutil.datatypes.ValueMap;
 import eutil.misc.Rotation;

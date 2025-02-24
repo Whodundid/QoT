@@ -1,5 +1,7 @@
 package envision.game.entities;
 
+import envision.engine.loader.built.game.Entity;
+
 /** An entity that will never draw transparent even if the camera's entity is behind it. */
 public abstract class GroundClutter extends Entity {
     

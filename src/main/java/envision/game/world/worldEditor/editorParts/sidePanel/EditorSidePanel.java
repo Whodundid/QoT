@@ -1,8 +1,8 @@
 package envision.game.world.worldEditor.editorParts.sidePanel;
 
 import envision.Envision;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.minimap.EditorMiniMap;
 import envision.game.world.worldEditor.editorParts.sidePanel.toolPanels.assetTool.AssetSidePanel;
@@ -15,28 +15,27 @@ import eutil.math.dimensions.Dimension_d;
 
 public class EditorSidePanel extends WindowObject {
     
-    //-------
+    //=======
     // Tools
-    //-------
+    //=======
     
     protected final TerrainSidePanel terrainTool;
     protected final AssetSidePanel assetTool;
     protected final RegionSidePanel regionTool;
     protected final ScriptSidePanel scriptTool;
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     protected MapEditorScreen editor;
     protected EditorMiniMap miniMap;
     protected Dimension_d panelDims;
     
-    protected SidePanel currentPanel = null, lastPanel = null;
-    
-    //--------------
+    protected SidePanel currentPanel = null, lastPanel = null;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public EditorSidePanel(MapEditorScreen in) {
         editor = in;
@@ -58,10 +57,10 @@ public class EditorSidePanel extends WindowObject {
         regionTool = new RegionSidePanel(this, in);
         scriptTool = new ScriptSidePanel(this, in);
     }
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void initChildren() {
@@ -81,26 +80,21 @@ public class EditorSidePanel extends WindowObject {
     @Override
     public void actionPerformed(IActionObject object, Object... args) {
         EUtil.nullDo(getCurrentPanel(), p -> p.onAction(object, args));
-    }
-    
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
-    
-    
-    
-    //---------
+    //=========    
+    //=========
     // Getters
-    //---------
+    //=========
     
     public SidePanelType getCurrentPanelType() { return (currentPanel != null) ? currentPanel.type : SidePanelType.NONE; }
     public MapEditorScreen getEditor() { return editor; }
     public Dimension_d getPanelDims() { return panelDims; }
-    public EditorMiniMap getMiniMap() { return miniMap; }
-    
-    //---------
+    public EditorMiniMap getMiniMap() { return miniMap; }    
+    //=========
     // Setters
-    //---------
+    //=========
     
     public SidePanel getCurrentPanel() { return currentPanel; }
     public EditorSidePanel setCurrentPanel(SidePanelType type) { return setCurrentPanel(type, true); }

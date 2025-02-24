@@ -1,19 +1,19 @@
 package envision.game.world.worldEditor.windows;
 
 import envision.debug.DebugSettings;
-import envision.engine.assets.WindowTextures;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowCheckBox;
-import envision.engine.windows.windowObjects.advanced.WindowScrollList;
-import envision.engine.windows.windowObjects.advanced.tabbedContainer.ContainerTab;
-import envision.engine.windows.windowObjects.basic.WindowLabel;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.assets.WindowTextures;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowCheckBox;
+import envision.engine.internal.windows.windowObjects.advanced.WindowScrollList;
+import envision.engine.internal.windows.windowObjects.basic.WindowLabel;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import eutil.colors.EColors;
 
-public class DrawSettingsTab extends ContainerTab {
-
+public class DrawSettingsTab extends WindowObject {
+    
     //========
     // Fields
     //========
@@ -28,27 +28,24 @@ public class DrawSettingsTab extends ContainerTab {
     private WindowCheckBox drawMapBorders, drawCenterPosition, drawEntities, drawRegions;
     private WindowCheckBox drawEntityOutlines, drawEntityHitBoxes, drawWallBox, drawFlatWalls;
     private WindowCheckBox drawTileGrid;
-    private WindowCheckBox lockToTileGrid;
-    
+    private WindowCheckBox lockToTileGrid;    
     //==============
     // Constructors
     //==============
     
     public DrawSettingsTab(EditorTabs parent, MapEditorScreen editorIn) {
-        super(parent, "Draw");
         editor = editorIn;
-        tabTextColor = EColors.seafoam.intVal;
-    }
-    
+//        tabTextColor = EColors.seafoam.intVal;
+    }    
     //===========
     // Overrides
     //===========
     
     @Override
     public void initChildren() {
-        var dims = getTabDims();
+        //var dims = getTabDims();
         
-        list = new WindowScrollList(this, dims.startX, dims.startY, dims.width, dims.height);
+        list = new WindowScrollList(this, startX, startY, width, height);
         list.setBackgroundColor(EColors.pdgray);
         
         distX = new WindowLabel(list, 20, 20, "Draw Dist X: " + editor.drawDistX);

@@ -17,8 +17,7 @@ public class TextWriterOverTime {
     private String lastChar;
     
     // double integral symbol
-    public static final char PAUSE_CHAR = '\u222c';
-    
+    public static final char PAUSE_CHAR = '\u222c';    
     //==============
     // Constructors
     //==============
@@ -27,8 +26,7 @@ public class TextWriterOverTime {
         theStringToWrite = theString;
         timeToWrite = writeTime;
         previouslyGenerated = "";
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -51,8 +49,7 @@ public class TextWriterOverTime {
     public void reset() {
         curTime = 0.0f;
         done = false;
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -99,8 +96,7 @@ public class TextWriterOverTime {
     
     public boolean isDone() {
         return done;
-    }
-    
+    }    
     //=========
     // Setters
     //=========

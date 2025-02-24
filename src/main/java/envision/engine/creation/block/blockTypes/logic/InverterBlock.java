@@ -6,14 +6,13 @@ import envision.engine.creation.block.PointLocation;
 import eutil.colors.EColors;
 
 public class InverterBlock extends FunctionBlock {
-
+    
     //========
     // Fields
     //========
     
     protected final BlockConnectionPoint<Boolean> input;
-    protected final BlockConnectionPoint<Boolean> output;
-    
+    protected final BlockConnectionPoint<Boolean> output;    
     //==============
     // Constructors
     //==============
@@ -26,8 +25,7 @@ public class InverterBlock extends FunctionBlock {
         output = createOutputPoint("Output", PointLocation.RIGHT);
         
         setSize(160, 50);
-    }
-
+    }    
     //===========
     // Overrides
     //===========

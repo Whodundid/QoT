@@ -1,6 +1,6 @@
 package envision.game.entities.player;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 
 public abstract class Player extends Entity {
 

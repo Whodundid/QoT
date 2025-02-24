@@ -5,14 +5,14 @@ import java.io.File;
 import envision.CurrentGame;
 import envision.Envision;
 import envision.engine.EngineSettings;
-import envision.engine.assets.EditorTextures;
-import envision.engine.kernel.developerDesktop.windows.fileExplorer.FileExplorerWindow;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowTextField;
-import envision.engine.windows.windowObjects.basic.WindowLabel;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowUtil.ObjectPosition;
+import envision.engine.internal.assets.EditorTextures;
+import envision.engine.internal.kernel.developerDesktop.windows.fileExplorer.FileExplorerWindow;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowObjects.basic.WindowLabel;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowUtil.ObjectPosition;
+import envision.engine.loader.built.game.GameScreen;
 import eutil.colors.EColors;
 
 public class MapMenuScreen extends GameScreen {

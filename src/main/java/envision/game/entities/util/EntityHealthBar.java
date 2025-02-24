@@ -1,12 +1,16 @@
 package envision.game.entities.util;
 
 import envision.Envision;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.game.entities.Entity;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.loader.built.game.Entity;
 import eutil.colors.EColors;
 
 public class EntityHealthBar extends WindowObject {
+    
+    //========
+    // Fields
+    //========
     
     private Entity theEntity;
     private boolean shouldDraw = false;
@@ -14,6 +18,10 @@ public class EntityHealthBar extends WindowObject {
     private long countDownDuration = 0l;
     private long fadeOutStart;
     private long fadeOutDuration = 600l;
+    
+    //==============
+    // Constructors
+    //==============
     
     public EntityHealthBar(Entity entityIn) {
         init(Envision.currentScreen);
@@ -25,9 +33,9 @@ public class EntityHealthBar extends WindowObject {
         theEntity = entityIn;
     }
     
-    //---------------------------
+    //===========================
     // Overrides : IWindowObject
-    //---------------------------
+    //===========================
     
     @Override
     public void drawObject(float dt, int mXIn, int mYIn) {
@@ -57,16 +65,19 @@ public class EntityHealthBar extends WindowObject {
             var end = (theEntity == Envision.thePlayer) ? 4 : 1;
             RenderingManager.drawRect(startX, startY, startX + pw, endY - end, EColors.mc_darkred.opacity(opacity));
         }
-    }
-
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     public void keepDrawing() {
         shouldDraw = true;
         countDownStart = System.currentTimeMillis();
     }
+    
+    //=========
+    // Setters
+    //=========
     
     public void setCountDownDuration(long in) { countDownDuration = in; }
     public void setFadeOutDuration(long in) { fadeOutDuration = in; }

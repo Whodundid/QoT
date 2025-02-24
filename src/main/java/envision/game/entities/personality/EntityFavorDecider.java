@@ -1,6 +1,6 @@
 package envision.game.entities.personality;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 
 public class EntityFavorDecider {
     
@@ -9,8 +9,7 @@ public class EntityFavorDecider {
     //========
     
     protected Entity theEntity;
-    protected EntityFavorTracker tracker;
-    
+    protected EntityFavorTracker tracker;    
     //==============
     // Constructors
     //==============
@@ -18,8 +17,7 @@ public class EntityFavorDecider {
     public EntityFavorDecider(Entity theEntityIn) {
         theEntity = theEntityIn;
         if (theEntity != null) tracker = theEntity.getFavorTracker();
-    }
-    
+    }    
     //=========
     // Methods
     //=========

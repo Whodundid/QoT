@@ -1,6 +1,6 @@
 package qot.assets.textures;
 
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 import qot.assets.textures.ability.AbilityTextures;
 import qot.assets.textures.doodads.DoodadTextures;
@@ -35,8 +35,7 @@ public class GameTextures extends TextureLoader {
     public static ItemTextures itemTextures = ItemTextures.instance();
     public static WorldTextures worldTextures = WorldTextures.instance();
     
-    //-------------------------------
-    
+    //-------------------------------    
     //===========
     // Overrides
     //===========

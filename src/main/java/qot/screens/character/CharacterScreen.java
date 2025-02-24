@@ -1,15 +1,15 @@
 package qot.screens.character;
 
 import envision.Envision;
-import envision.engine.assets.WindowTextures;
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.game.entities.Entity;
+import envision.engine.internal.assets.WindowTextures;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.GameScreen;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.entities.util.EntityLevel;
 import eutil.EUtil;
 import eutil.colors.EColors;
@@ -35,8 +35,7 @@ public class CharacterScreen extends GameScreen {
     private WindowButton upHealth, upStrength, upMana;
     private WindowButton abilities;
     
-    private InventoryRenderer inventory;
-    
+    private InventoryRenderer inventory;    
     //==============
     // Constructors
     //==============
@@ -67,8 +66,7 @@ public class CharacterScreen extends GameScreen {
         fH = dH + (dH / 2);
         fX = midX - (fW / 2);
         fY = midY - (fH / 2) - (height / 10);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

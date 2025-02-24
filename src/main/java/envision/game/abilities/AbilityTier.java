@@ -22,8 +22,7 @@ public class AbilityTier {
      */
     private int castTime;
     /** The amount of game ticks that this ability lasts for before going on cooldown. */
-    private int duration;
-    
+    private int duration;    
     //==============
     // Constructors
     //==============

@@ -1,7 +1,7 @@
 package envision.game.world.worldEditor.editorTools.tools;
 
 import envision.Envision;
-import envision.engine.inputHandlers.Mouse;
+import envision.engine.internal.inputHandlers.Mouse;
 import envision.game.world.Region;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;

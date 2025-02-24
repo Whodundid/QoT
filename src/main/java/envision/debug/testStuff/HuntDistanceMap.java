@@ -1,11 +1,11 @@
 package envision.debug.testStuff;
 
-import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.basic.WindowImageBox;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.GameScreen;
 import eutil.colors.EColors;
 import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;

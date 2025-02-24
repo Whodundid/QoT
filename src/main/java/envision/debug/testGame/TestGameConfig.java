@@ -2,7 +2,7 @@ package envision.debug.testGame;
 
 import java.io.File;
 
-import envision.engine.settings.config.EnvisionConfigFile;
+import envision.engine.internal.settings.config.EnvisionConfigFile;
 
 public class TestGameConfig extends EnvisionConfigFile {
 

@@ -10,8 +10,7 @@ public abstract class Particle extends Doodad {
     //========
     
     protected long timeAlive;
-    protected long timeToLive;
-    
+    protected long timeToLive;    
     //==============
     // Constructors
     //==============
@@ -22,8 +21,7 @@ public abstract class Particle extends Doodad {
         
         timeToLive = timeToLiveIn;
         setInvincible(true);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

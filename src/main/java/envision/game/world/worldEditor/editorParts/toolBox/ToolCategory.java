@@ -2,7 +2,7 @@ package envision.game.world.worldEditor.editorParts.toolBox;
 
 import java.util.List;
 
-import envision.engine.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
 import envision.game.world.worldEditor.editorTools.EditorToolType;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;

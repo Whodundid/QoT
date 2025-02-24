@@ -14,8 +14,7 @@ public class ObjectTransform {
     //========
     
     public Vector3f position;
-    public Vector3f scale;
-    
+    public Vector3f scale;    
     //==============
     // Constructors
     //==============
@@ -39,8 +38,7 @@ public class ObjectTransform {
     public void init(Vector3f positionIn, Vector3f scaleIn) {
         position = positionIn;
         scale = scaleIn;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -52,8 +50,7 @@ public class ObjectTransform {
         
         ObjectTransform t = (ObjectTransform) o;
         return t.position.equals(position) && t.scale.equals(scale);
-    }
-    
+    }    
     //=========
     // Methods
     //=========

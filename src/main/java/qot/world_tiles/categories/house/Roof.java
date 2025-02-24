@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.house;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.roofs.RoofTextures;
 import qot.world_tiles.TileIDs;

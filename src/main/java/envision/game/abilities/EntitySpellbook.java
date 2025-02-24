@@ -1,10 +1,11 @@
 package envision.game.abilities;
 
-import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.screens.GameScreen;
-import envision.game.entities.Entity;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.loader.built.game.Ability;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.GameScreen;
+import envision.engine.loader.built.game.GameTexture;
 import eutil.colors.EColors;
 import eutil.datatypes.Result;
 import eutil.datatypes.boxes.Box2;
@@ -25,8 +26,7 @@ public class EntitySpellbook {
     private Entity theEntity;
     
     /** [Ability, Level] */
-    private BoxList<Ability, Integer> unlockedAbilities = new BoxList<>();
-    
+    private BoxList<Ability, Integer> unlockedAbilities = new BoxList<>();    
     //==============
     // Constructors
     //==============
@@ -85,8 +85,7 @@ public class EntitySpellbook {
 
             RenderingManager.drawString(level, sx + width * 0.5 - sw, sy + height * 0.75, EColors.green);
         }
-    }
-    
+    }    
     //=========
     // Methods
     //=========

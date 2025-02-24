@@ -4,6 +4,7 @@ import eutil.colors.EColors;
 
 /** A global enum to keep track of every tile's ID.
  *  These are hardcoded to maintain consistency between versions. */
+@Deprecated
 public enum TileIDs {
     
     STONE(0, "Stone", EColors.gray),

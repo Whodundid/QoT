@@ -86,7 +86,6 @@ public abstract class EnvisionGameLauncher extends JFrame {
     //=====================================================================================
     //=====================================================================================
     
-    
     //========
     // Fields
     //========
@@ -148,8 +147,7 @@ public abstract class EnvisionGameLauncher extends JFrame {
     
     backButton,
     backButtonSel,
-    backText;
-    
+    backText;    
     //==============
     // Constructors
     //==============
@@ -640,8 +638,7 @@ public abstract class EnvisionGameLauncher extends JFrame {
         }
         
         return false;
-    }
-    
+    }    
     //================
     // Static Methods
     //================

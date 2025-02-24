@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.stone;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.walls.stone.StoneWallTextures;
 import qot.world_tiles.TileIDs;
@@ -11,7 +11,7 @@ public class StoneWall extends WorldTile {
     public StoneWall(int id) {
         super(TileIDs.STONE_WALL, id);
         
-        wallHeight = 0.75f;
+        tileHeight = 0.75f;
         blocksMovement = true;
         numVariants = StoneWallTextures.stone_wall.getChildren().size();
         

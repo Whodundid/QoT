@@ -10,29 +10,27 @@ package envision.engine.events;
  */
 public abstract class GameEvent {
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     /** The type of event this is. */
-    private final EventType type;
+    private final EnvisionEventType type;
     /** True if this event can actually be cancelled as not all can. */
     private final boolean canBeCancelled;
     /** True if this event has in fact been cancelled. */
-    private boolean isCancelled = false;
-    
-    //--------------
+    private boolean isCancelled = false;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
-    protected GameEvent(EventType typeIn, boolean canBeCancelledIn) {
+    protected GameEvent(EnvisionEventType typeIn, boolean canBeCancelledIn) {
         type = typeIn;
         canBeCancelled = canBeCancelledIn;
-    }
-    
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     /**
      * Marks this event as cancelled. If this event cannot actually be
@@ -43,14 +41,13 @@ public abstract class GameEvent {
     public void setCancelled(boolean val) {
         if (val && !canBeCancelled) throw new IllegalStateException("Event '" + type + "' cannot be cancelled!");
         isCancelled = val;
-    }
-    
-    //---------
+    }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     /** Returns this event's type. */
-    public EventType getType() { return type; }
+    public EnvisionEventType getType() { return type; }
     /** Returns true if this event has been cancelled. */
     public boolean isCancelled() { return isCancelled; }
     

@@ -1,10 +1,14 @@
 package envision.engine.creation;
 
-import envision.engine.assets.WindowTextures;
-import envision.engine.windows.windowObjects.advanced.menuBar.WindowMenuBar;
-import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea;
-import envision.engine.windows.windowTypes.WindowParent;
-import envision.engine.windows.windowUtil.layouts.WindowBorderLayout;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import envision.engine.internal.assets.WindowTextures;
+import envision.engine.internal.windows.windowObjects.advanced.menuBar.WindowMenuBar;
+import envision.engine.internal.windows.windowObjects.advanced.tabPane.WindowTabPane;
+import envision.engine.internal.windows.windowTypes.WindowParent;
+import envision.engine.internal.windows.windowUtil.layouts.WindowBorderLayout;
 
 public class BlockAreaEditorWindow extends WindowParent {
     
@@ -13,7 +17,9 @@ public class BlockAreaEditorWindow extends WindowParent {
     //========
     
     private WindowMenuBar menuBar;
-    private WindowTextArea blockList;
+    private WindowTabPane<BlockWorkingArea> blockAreaTabs;
+    
+    private Map<File, BlockWorkingArea> activeTabs = new HashMap<>();
     
     //==============
     // Constructors
@@ -62,6 +68,9 @@ public class BlockAreaEditorWindow extends WindowParent {
         editMenu.addMenuEntry("Cut", this::cutBlocks);
         editMenu.addMenuEntry("Paste", this::pasteBlocks);
         
+        blockAreaTabs = new WindowTabPane();
+        
+        addObject(blockAreaTabs, WindowBorderLayout.CENTER);
         addObject(menuBar, WindowBorderLayout.NORTH);
     }
     
@@ -72,11 +81,34 @@ public class BlockAreaEditorWindow extends WindowParent {
         super.drawObject_i(dt, mXIn, mYIn);
     }
     
+    //=========
+    // Methods
+    //=========
+    
+    protected void createBlockWorkingArea() { createBlockWorkingArea(null); }
+    protected void createBlockWorkingArea(File file) {
+        BlockWorkingArea area;
+        if (file != null) area = new BlockWorkingArea(file);
+        else area = new BlockWorkingArea();
+        
+        blockAreaTabs.addTab("New Working Area", area);
+    }
+    
+    protected void openFileSelectorWindow() {
+        
+    }
+    
+    public BlockWorkingArea getActiveWorkingArea() {
+        if (activeTabs.isEmpty()) return null;
+        
+        return blockAreaTabs.getSelectedTab();
+    }
+    
     //==================
     // Internal Methods
     //==================
     
-    public void createNewSpace() { System.out.println("LOLOL"); }
+    public void createNewSpace() { createBlockWorkingArea(); }
     public void loadSpace() {}
     public void saveSpace() {}
     public void closeCurrentSpace() {}

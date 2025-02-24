@@ -1,6 +1,7 @@
 package envision.engine.screens;
 
-import envision.engine.windows.windowUtil.EGui;
+import envision.engine.internal.windows.windowUtil.EGui;
+import envision.engine.loader.built.game.GameScreen;
 import eutil.colors.EColors;
 
 public class ScreenFadeManager extends EGui {

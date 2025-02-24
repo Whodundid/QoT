@@ -2,10 +2,10 @@ package envision.game.world;
 
 import java.io.File;
 
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import envision.game.GameObject;
-import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
-import envision.game.items.Item;
 import envision.game.items.ItemOnGround;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 import envision.game.world.worldTiles.WorldTile;

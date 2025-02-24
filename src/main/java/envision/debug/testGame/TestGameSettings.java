@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import envision.engine.loader.GameSettings;
-import envision.engine.settings.config.ConfigSetting;
+import envision.engine.internal.settings.GameSettings;
+import envision.engine.loader.built.engine.ConfigSetting;
 import eutil.datatypes.util.EList;
 
 public class TestGameSettings extends GameSettings {

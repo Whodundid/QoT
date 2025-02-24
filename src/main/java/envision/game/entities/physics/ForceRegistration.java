@@ -12,8 +12,7 @@ public class ForceRegistration {
     //========
     
     public ForceGenerator fg;
-    public RigidBody3D rb;
-    
+    public RigidBody3D rb;    
     //==============
     // Constructors
     //==============
@@ -21,8 +20,7 @@ public class ForceRegistration {
     public ForceRegistration(ForceGenerator fgIn, RigidBody3D rbIn) {
         fg = fgIn;
         rb = rbIn;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

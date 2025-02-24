@@ -1,7 +1,7 @@
 package envision.game.entities.inventory;
 
-import envision.game.entities.Entity;
-import envision.game.items.Item;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import eutil.datatypes.util.EList;
 
 public class EntityInventory {
@@ -14,8 +14,7 @@ public class EntityInventory {
     private int inventorySize = 3; // 3 by default
     private int maxCarryWeight = -1;
     private boolean usesCarryWeight = false;
-    private Entity theEntity;
-
+    private Entity theEntity;    
     //==============
     // Constructors
     //==============
@@ -30,8 +29,7 @@ public class EntityInventory {
         theEntity = theEntityIn;
         inventorySize = inventorySizeIn;
         setSize(inventorySize);
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -46,8 +44,7 @@ public class EntityInventory {
         }
         
         return false;
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -102,8 +99,7 @@ public class EntityInventory {
     public int size() { return inventorySize; }
     
     public int getMaxCarryWeight() { return maxCarryWeight; }
-    public int getWeight() { return -1; }
-    
+    public int getWeight() { return -1; }    
     //=========
     // Setters
     //=========

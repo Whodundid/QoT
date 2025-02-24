@@ -11,8 +11,7 @@ public class EditAction_AddBlock extends BaseEditAction<CreatorBlock, BlockWorki
     // Fields
     //========
     
-    private BoxList<Integer, Integer> blockPositions;
-    
+    private BoxList<Integer, Integer> blockPositions;    
     //==============
     // Constructors
     //==============
@@ -21,8 +20,7 @@ public class EditAction_AddBlock extends BaseEditAction<CreatorBlock, BlockWorki
         super("Add Block" + (items.hasOne() ? "" : "s"), target, items);
         
         blockPositions = new BoxList<>(blockPositionsIn);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -37,7 +35,7 @@ public class EditAction_AddBlock extends BaseEditAction<CreatorBlock, BlockWorki
             var pos = blockPositions.get(i);
             int x = pos.getA();
             int y = pos.getB();
-            target.addBlock(block, x, y);
+            //target.addBlock(block, x, y);
         }
     }
 
@@ -46,7 +44,7 @@ public class EditAction_AddBlock extends BaseEditAction<CreatorBlock, BlockWorki
         BlockWorkingArea target = getTarget();
         EList<CreatorBlock> items = getItems();
         
-        target.removeBlocks(items);
+        //target.removeBlocks(items);
     }
     
 }

@@ -28,16 +28,14 @@ public class MapEditorSettings {
     public boolean drawEntityHitBoxes = false;
     public boolean lockToTileGrid = false;
     
-    public EditorToolType currentTool;
-    
+    public EditorToolType currentTool;    
     //==============
     // Constructors
     //==============
     
     public MapEditorSettings(MapEditorScreen editorIn) {
         editor = editorIn;
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -48,8 +46,7 @@ public class MapEditorSettings {
     public EditorObject getPrimaryPalette() { return primaryPalette; }
     public EditorObject getSecondaryPalette() { return secondaryPalette; }
     
-    public EditorToolType getCurrentTool() { return currentTool; }
-    
+    public EditorToolType getCurrentTool() { return currentTool; }    
     //=========
     // Setters
     //=========

@@ -1,7 +1,7 @@
 package envision.engine.scripting.envisionMappings;
 
 import envision.Envision;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
 import envision_lang._launch.EnvisionLangErrorCallBack;
 import envision_lang.lang.language_errors.EnvisionLangError;
 

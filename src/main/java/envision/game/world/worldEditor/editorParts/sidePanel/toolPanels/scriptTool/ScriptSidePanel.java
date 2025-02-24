@@ -1,6 +1,6 @@
 package envision.game.world.worldEditor.editorParts.sidePanel.toolPanels.scriptTool;
 
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.EditorSidePanel;
 import envision.game.world.worldEditor.editorParts.sidePanel.SidePanel;

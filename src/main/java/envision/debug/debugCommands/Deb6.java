@@ -1,8 +1,8 @@
 package envision.debug.debugCommands;
 
 import envision.Envision;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
-import envision.engine.windows.windowBuilder.WindowBuilderScreen;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.windows.windowBuilder.WindowBuilderScreen;
 
 @SuppressWarnings("unused")
 public class Deb6 extends DebugCommand {

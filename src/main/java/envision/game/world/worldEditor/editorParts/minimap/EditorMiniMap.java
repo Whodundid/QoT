@@ -2,11 +2,11 @@ package envision.game.world.worldEditor.editorParts.minimap;
 
 import java.awt.image.BufferedImage;
 
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.GameTexture;
 import envision.game.world.IGameWorld;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.EditorSidePanel;

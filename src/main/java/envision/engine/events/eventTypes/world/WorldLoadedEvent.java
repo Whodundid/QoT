@@ -1,6 +1,6 @@
 package envision.engine.events.eventTypes.world;
 
-import envision.engine.events.EventType;
+import envision.engine.events.EnvisionEventType;
 import envision.game.world.GameWorld;
 
 public class WorldLoadedEvent extends WorldEvent {
@@ -8,7 +8,7 @@ public class WorldLoadedEvent extends WorldEvent {
     private final GameWorld world;
     
     public WorldLoadedEvent(GameWorld worldIn) {
-        super(EventType.WORLD_LOADED, true);
+        super(EnvisionEventType.WORLD_LOADED, true);
         world = worldIn;
     }
     

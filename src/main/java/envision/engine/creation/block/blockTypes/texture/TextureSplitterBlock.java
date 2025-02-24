@@ -5,11 +5,11 @@ import org.joml.Vector2f;
 import envision.engine.creation.block.BlockConnectionPoint;
 import envision.engine.creation.block.FunctionBlock;
 import envision.engine.creation.block.PointLocation;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.windowObjects.action.WindowTextField;
-import envision.engine.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.Sprite;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
@@ -36,8 +36,7 @@ public class TextureSplitterBlock extends FunctionBlock {
     private double elementsY;
     
     private WindowImageBox textureDisplayer;
-    private WindowTextField widthField, heightField;
-    
+    private WindowTextField widthField, heightField;    
     //==============
     // Constructors
     //==============
@@ -52,8 +51,7 @@ public class TextureSplitterBlock extends FunctionBlock {
         setSize(300, 300);
         setMinDims(300, 300);
         setResizeable(true);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

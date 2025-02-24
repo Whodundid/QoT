@@ -6,14 +6,13 @@ import envision.engine.creation.block.PointLocation;
 import eutil.colors.EColors;
 
 public class BufferBlock extends FunctionBlock {
-
+    
     //========
     // Fields
     //========
     
     protected final BlockConnectionPoint input;
-    protected final BlockConnectionPoint output;
-    
+    protected final BlockConnectionPoint output;    
     //==============
     // Constructors
     //==============
@@ -26,8 +25,7 @@ public class BufferBlock extends FunctionBlock {
         output = createOutputPoint("Output", PointLocation.RIGHT);
         
         setSize(150, 50);
-    }
-
+    }    
     //===========
     // Overrides
     //===========

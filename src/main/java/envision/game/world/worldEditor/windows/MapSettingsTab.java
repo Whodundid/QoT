@@ -1,18 +1,18 @@
 package envision.game.world.worldEditor.windows;
 
-import envision.engine.assets.WindowTextures;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.advanced.WindowScrollList;
-import envision.engine.windows.windowObjects.advanced.tabbedContainer.ContainerTab;
-import envision.engine.windows.windowObjects.basic.WindowLabel;
-import envision.engine.windows.windowObjects.basic.WindowTextBox;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.assets.WindowTextures;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.advanced.WindowScrollList;
+import envision.engine.internal.windows.windowObjects.basic.WindowLabel;
+import envision.engine.internal.windows.windowObjects.basic.WindowTextBox;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import eutil.colors.EColors;
 import eutil.misc.Direction;
 
-public class MapSettingsTab extends ContainerTab {
-
+public class MapSettingsTab extends WindowObject {
+    
     //========
     // Fields
     //========
@@ -27,41 +27,39 @@ public class MapSettingsTab extends ContainerTab {
     private WindowTextBox widthBox, heightBox;
     
     private WindowButton iN, iNE, iE, iSE, iS, iSW, iW, iNW;
-    private WindowButton dN, dNE, dE, dSE, dS, dSW, dW, dNW;
-    
+    private WindowButton dN, dNE, dE, dSE, dS, dSW, dW, dNW;    
     //==============
     // Constructors
     //==============
     
     public MapSettingsTab(EditorTabs parent, MapEditorScreen editorIn) {
-        super(parent, "Map");
+        //super(parent, "Map");
         editor = editorIn;
         tabbedContainer = parent;
-        tabTextColor = EColors.seafoam.intVal;
-    }
-    
+        //tabTextColor = EColors.seafoam.intVal;
+    }    
     //===========
     // Overrides
     //===========
     
     @Override
     public void initChildren() {
-        var dims = getTabDims();
+//        var dims = getTabDims();
         
         //list = new WindowScrollList(this, dims.startX, dims.startY, dims.width, dims.height);
         //list.setBackgroundColor(EColors.pdgray);
         
-        var x = dims.midX + 100;
-        var y = dims.midY - 50;
-        
-        mapWidth = new WindowLabel(this, x, y, "Map Width: " + editor.getEditorWorld().getWidth());
-        mapHeight = new WindowLabel(this, x, y + 100, "Map Height: " + editor.getEditorWorld().getHeight());
+//        var x = dims.midX + 100;
+//        var y = dims.midY - 50;
+//        
+//        mapWidth = new WindowLabel(this, x, y, "Map Width: " + editor.getEditorWorld().getWidth());
+//        mapHeight = new WindowLabel(this, x, y + 100, "Map Height: " + editor.getEditorWorld().getHeight());
 //        incWidth = new WindowButton(this, mapWidth.startX, mapWidth.startY + 30, 50, 50);
 //        decWidth = new WindowButton(this, incWidth.endX + 6, mapWidth.startY + 30, 50, 50);
         
-        addObject(mapWidth, mapHeight);
-        
-        buildMapResizer();
+//        addObject(mapWidth, mapHeight);
+//        
+//        buildMapResizer();
         
 //        incWidth.setTextures(WindowTextures.plus, WindowTextures.plus_sel);
 //        decWidth.setTextures(WindowTextures.minimize, WindowTextures.minimize_sel);
@@ -83,51 +81,51 @@ public class MapSettingsTab extends ContainerTab {
     }
     
     private void buildMapResizer() {
-        var dims = getTabDims();
-        
-        midX = dims.midX - 200;
-        midY = dims.midY;
-        
-        int midW = 300;
-        int midH = 300;
-        int midW2 = midW / 2;
-        int midH2 = midH / 2;
-        int dist = 18;
-        
-        // North
-        iN = button(midX, midY - midH2 - dist, true);
-        dN = button(midX, midY - midH2 + dist, false);
-        
-        // North East
-        iNE = button(midX + midW2 + dist, midY - midH2 - dist, true);
-        dNE = button(midX + midW2 - dist, midY - midH2 + dist, false);
-        
-        // East
-        iE = button(midX + midW2 + dist, midY, true);
-        dE = button(midX + midW2 - dist, midY, false);
-        
-        // South East
-        iSE = button(midX + midW2 + dist, midY + midH2 + dist, true);
-        dSE = button(midX + midW2 - dist, midY + midH2 - dist, false);
-        
-        // South
-        iS = button(midX, midY + midH2 + dist, true);
-        dS = button(midX, midY + midH2 - dist, false);
-        
-        // South West
-        iSW = button(midX - midW2 - dist, midY + midH2 + dist, true);
-        dSW = button(midX - midW2 + dist, midY + midH2 - dist, false);
-        
-        // West
-        iW = button(midX - midW2 - dist, midY, true);
-        dW = button(midX - midW2 + dist, midY, false);
-        
-        // North West
-        iNW = button(midX - midW2 - dist, midY - midH2 - dist, true);
-        dNW = button(midX - midW2 + dist, midY - midH2 + dist, false);
-        
-        addObject(iN, iNE, iE, iSE, iS, iSW, iW, iNW);
-        addObject(dN, dNE, dE, dSE, dS, dSW, dW, dNW);
+//        var dims = getTabDims();
+//        
+//        midX = dims.midX - 200;
+//        midY = dims.midY;
+//        
+//        int midW = 300;
+//        int midH = 300;
+//        int midW2 = midW / 2;
+//        int midH2 = midH / 2;
+//        int dist = 18;
+//        
+//        // North
+//        iN = button(midX, midY - midH2 - dist, true);
+//        dN = button(midX, midY - midH2 + dist, false);
+//        
+//        // North East
+//        iNE = button(midX + midW2 + dist, midY - midH2 - dist, true);
+//        dNE = button(midX + midW2 - dist, midY - midH2 + dist, false);
+//        
+//        // East
+//        iE = button(midX + midW2 + dist, midY, true);
+//        dE = button(midX + midW2 - dist, midY, false);
+//        
+//        // South East
+//        iSE = button(midX + midW2 + dist, midY + midH2 + dist, true);
+//        dSE = button(midX + midW2 - dist, midY + midH2 - dist, false);
+//        
+//        // South
+//        iS = button(midX, midY + midH2 + dist, true);
+//        dS = button(midX, midY + midH2 - dist, false);
+//        
+//        // South West
+//        iSW = button(midX - midW2 - dist, midY + midH2 + dist, true);
+//        dSW = button(midX - midW2 + dist, midY + midH2 - dist, false);
+//        
+//        // West
+//        iW = button(midX - midW2 - dist, midY, true);
+//        dW = button(midX - midW2 + dist, midY, false);
+//        
+//        // North West
+//        iNW = button(midX - midW2 - dist, midY - midH2 - dist, true);
+//        dNW = button(midX - midW2 + dist, midY - midH2 + dist, false);
+//        
+//        addObject(iN, iNE, iE, iSE, iS, iSW, iW, iNW);
+//        addObject(dN, dNE, dE, dSE, dS, dSW, dW, dNW);
     }
     
     private WindowButton button(double x, double y, boolean inc) {
@@ -143,10 +141,10 @@ public class MapSettingsTab extends ContainerTab {
         super.drawObject(dt, mXIn, mYIn);
         if (this != tabbedContainer.getSelectedTab()) return;
         
-        var dims = getTabDims();
-        
-        midX = dims.midX - 200;
-        midY = dims.midY;
+//        var dims = getTabDims();
+//        
+//        midX = dims.midX - 200;
+//        midY = dims.midY;
         
         int midW = 300;
         int midH = 300;
@@ -178,29 +176,29 @@ public class MapSettingsTab extends ContainerTab {
         super.actionPerformed(object, args);
         
         // North ----------------------------------------------------------------------------
-        if (object == iN)     {                                resizeH(Direction.N, 1);    }
-        if (object == dN)    {                                resizeH(Direction.N, -1);    }
+        if (object == iN)  {                                resizeH(Direction.N, 1);    }
+        if (object == dN)  {                                resizeH(Direction.N, -1);   }
         // North East -----------------------------------------------------------------------
-        if (object == iNE)     {    resizeW(Direction.E, 1);     resizeH(Direction.N, 1);     }
-        if (object == dNE)     {    resizeW(Direction.E, -1);    resizeH(Direction.N, -1);     }
+        if (object == iNE) {    resizeW(Direction.E, 1);    resizeH(Direction.N, 1);    }
+        if (object == dNE) {    resizeW(Direction.E, -1);   resizeH(Direction.N, -1);   }
         // East -----------------------------------------------------------------------------
-        if (object == iE)    {    resizeW(Direction.E, 1);                                }
-        if (object == dE)    {    resizeW(Direction.E, -1);                                }
+        if (object == iE)  {    resizeW(Direction.E, 1);                                }
+        if (object == dE)  {    resizeW(Direction.E, -1);                               }
         // South East -----------------------------------------------------------------------
-        if (object == iSE)    {    resizeW(Direction.E, 1);    resizeH(Direction.S, 1);    }
-        if (object == dSE)    {    resizeW(Direction.E, -1);    resizeH(Direction.S, -1);    }
+        if (object == iSE) {    resizeW(Direction.E, 1);    resizeH(Direction.S, 1);    }
+        if (object == dSE) {    resizeW(Direction.E, -1);   resizeH(Direction.S, -1);   }
         // South ----------------------------------------------------------------------------
-        if (object == iS)    {                                resizeH(Direction.S, 1);    }
-        if (object == dS)    {                                resizeH(Direction.S, -1);    }
+        if (object == iS)  {                                resizeH(Direction.S, 1);    }
+        if (object == dS)  {                                resizeH(Direction.S, -1);   }
         // South West -----------------------------------------------------------------------
-        if (object == iSW)    {    resizeW(Direction.W, 1);    resizeH(Direction.S, 1);    }
-        if (object == dSW)    {    resizeW(Direction.W, -1);    resizeH(Direction.S, -1);    }
+        if (object == iSW) {    resizeW(Direction.W, 1);    resizeH(Direction.S, 1);    }
+        if (object == dSW) {    resizeW(Direction.W, -1);   resizeH(Direction.S, -1);   }
         // West -----------------------------------------------------------------------------
-        if (object == iW)    {    resizeW(Direction.W, 1);                                }
-        if (object == dW)    {    resizeW(Direction.W, -1);                                }
+        if (object == iW)  {    resizeW(Direction.W, 1);                                }
+        if (object == dW)  {    resizeW(Direction.W, -1);                               }
         // North West -----------------------------------------------------------------------
-        if (object == iNW)    {    resizeW(Direction.W, 1);    resizeH(Direction.N, 1);    }
-        if (object == dNW)    {    resizeW(Direction.W, -1);    resizeH(Direction.N, -1);    }
+        if (object == iNW) {    resizeW(Direction.W, 1);    resizeH(Direction.N, 1);    }
+        if (object == dNW) {    resizeW(Direction.W, -1);   resizeH(Direction.N, -1);   }
     }
     
     private void resizeW(Direction dir, int w) {

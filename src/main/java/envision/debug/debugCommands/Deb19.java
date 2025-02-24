@@ -16,7 +16,7 @@ import envision.engine.creation.block.blockTypes.logic.OrBlock;
 import envision.engine.creation.block.blockTypes.logic.XorBlock;
 import envision.engine.creation.block.blockTypes.texture.TextureInputBlock;
 import envision.engine.creation.block.blockTypes.texture.TextureSplitterBlock;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
 import eutil.math.ENumUtil;
 
 @SuppressWarnings("unused")

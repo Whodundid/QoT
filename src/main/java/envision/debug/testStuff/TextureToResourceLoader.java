@@ -1,7 +1,7 @@
 package envision.debug.testStuff;
 
-import envision.engine.windows.windowTypes.WindowParent;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowTypes.WindowParent;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 
 public class TextureToResourceLoader extends WindowParent {
     

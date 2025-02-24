@@ -1,14 +1,14 @@
 package envision.engine.events.eventTypes.screen;
 
-import envision.engine.events.EventType;
-import envision.engine.screens.GameScreen;
+import envision.engine.events.EnvisionEventType;
+import envision.engine.loader.built.game.GameScreen;
 
 public class ScreenOpenedEvent extends ScreenEvent {
 
     private final GameScreen screen;
     
     public ScreenOpenedEvent(GameScreen screenIn) {
-        super(EventType.SCREEN_OPENED, true);
+        super(EnvisionEventType.SCREEN_OPENED, true);
         screen = screenIn;
     }
     

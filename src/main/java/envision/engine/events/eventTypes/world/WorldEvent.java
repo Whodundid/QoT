@@ -1,17 +1,17 @@
 package envision.engine.events.eventTypes.world;
 
-import envision.engine.events.EventType;
+import envision.engine.events.EnvisionEventType;
 import envision.engine.events.GameEvent;
 
 public abstract class WorldEvent extends GameEvent {
     
-    private final EventType worldEventType;
+    private final EnvisionEventType worldEventType;
     
-    protected WorldEvent(EventType worldEventTypeIn, boolean canBeCancelled) {
-        super(EventType.WORLD, canBeCancelled);
+    protected WorldEvent(EnvisionEventType worldEventTypeIn, boolean canBeCancelled) {
+        super(EnvisionEventType.WORLD, canBeCancelled);
         worldEventType = worldEventTypeIn;
     }
     
-    public EventType getWorldEventType() { return worldEventType; }
+    public EnvisionEventType getWorldEventType() { return worldEventType; }
     
 }

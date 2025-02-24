@@ -8,24 +8,24 @@ import eutil.math.ENumUtil;
 
 /**
  * A static utility class which manages all playable sounds/songs
- * within QoT.
+ * within the EnvisionEngine.
  * 
  * @author Hunter Bragg
  */
 public class SoundEngine {
-
-    //------------------
+    
+    //==================
     // Static Singleton
-    //------------------
+    //==================
     
     private static final SoundEngine instance = new SoundEngine();
     public static SoundEngine getInstance() { return instance; }
     //private to prevent instance instantiation
     private SoundEngine() {}
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     /** A list containing all audio tracks currently being played. */
     private static EList<Audio> currentlyPlaying = new EArrayList<>();

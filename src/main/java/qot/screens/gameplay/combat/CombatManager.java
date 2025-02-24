@@ -1,6 +1,6 @@
 package qot.screens.gameplay.combat;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 import eutil.datatypes.EArrayList;
 
 /** Keeps track of fighting entities of two teams over the course of a fight. */
@@ -21,21 +21,19 @@ public class CombatManager {
     // True if teamA won.
     private boolean aWon = false;
     // True if teamB won.
-    private boolean bWon = false;
-    
-    //--------------
+    private boolean bWon = false;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public CombatManager(Entity aIn, Entity bIn) { this(new EArrayList<Entity>(aIn), new EArrayList<Entity>(bIn)); }
     public CombatManager(EArrayList<Entity> aIn, EArrayList<Entity> bIn) {
         teamA = aIn;
         teamB = bIn;
-    }
-    
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     public void endTurn() {
         //switch turn

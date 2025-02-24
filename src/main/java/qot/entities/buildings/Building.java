@@ -1,6 +1,6 @@
 package qot.entities.buildings;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 import envision.game.entities.EntityRenderer;
 
 public abstract class Building extends Entity {

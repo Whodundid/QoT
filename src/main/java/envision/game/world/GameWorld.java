@@ -4,9 +4,11 @@ import java.io.File;
 
 import envision.Envision;
 import envision.engine.events.eventTypes.world.WorldAddedEntityEvent;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.dtos.IEngineResource;
+import envision.engine.loader.dtos.game.GameWorldDTO;
 import envision.game.GameObject;
 import envision.game.entities.Doodad;
-import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
 import envision.game.world.layerSystem.LayerSystem;
 import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
@@ -22,7 +24,11 @@ import eutil.math.dimensions.Dimension_d;
 import eutil.math.dimensions.Dimension_i;
 import eutil.misc.Direction;
 
-public class GameWorld implements IGameWorld {
+public class GameWorld implements IGameWorld, IEngineResource {
+    
+    //========
+    // Fields
+    //========
     
     //-------------------------------------------------------------
     
@@ -65,8 +71,7 @@ public class GameWorld implements IGameWorld {
     private EList<GameObject> toAdd = EList.newList();
     
     public int lastPlayerWorldX, lastPlayerWorldY;
-    public double lastPlayerStartX, lastPlayerStartY;
-    
+    public double lastPlayerStartX, lastPlayerStartY;    
     //==============
     // Constructors
     //==============
@@ -121,18 +126,18 @@ public class GameWorld implements IGameWorld {
         worldObjects = EList.newList();
         entityData = EList.newList();
         
-        //copy tile data
+        // copy tile data
         
         for (int i = 0; i < worldIn.worldLayers.size(); i++) {
             worldLayers.add(worldIn.worldLayers.get(i).copyLayer());
         }
         
-        //copy entity data
+        // copy entity data
         for (GameObject obj : worldIn.worldObjects) worldObjects.add(obj);
         for (EntitySpawn spawn : worldIn.entitySpawns) entitySpawns.add(new EntitySpawn(spawn));
         for (Entity ent : worldIn.entityData) entityData.add(ent);
         
-        //copy region data
+        // copy region data
         for (Region r : worldIn.regionData) regionData.add(r);
         
         worldFileSystem = new WorldFileSystem(this);
@@ -153,6 +158,14 @@ public class GameWorld implements IGameWorld {
         worldObjects = EList.newList();
         entityData = EList.newList();
         fileLoaded = false;
+    }    
+    //===========
+    // Overrides
+    //===========
+    
+    @Override
+    public GameWorldDTO toDto() {
+        return null;
     }
     
     //=========
@@ -193,20 +206,20 @@ public class GameWorld implements IGameWorld {
     }
     
     public synchronized void onGameTick(float dt) {
-        //add all incoming game objects
+        // add all incoming game objects
         if (toAdd.isNotEmpty()) {
             for (GameObject o : toAdd) {
-                //if entity -- add to entity data
+                // if entity -- add to entity data
                 if (o instanceof Entity e) addEntityInternal(e);
                 worldObjects.add(o);
             }
             toAdd.clear();
         }
         
-        //remove all outgoing objects
+        // remove all outgoing objects
         if (toDelete.isNotEmpty()) {
             for (GameObject o : toDelete) {
-                //if entity -- remove from entity data
+                // if entity -- remove from entity data
                 if (o instanceof Entity e) {
                     entityData.remove(e);
                     for (Entity ent : entityData) {
@@ -263,7 +276,7 @@ public class GameWorld implements IGameWorld {
             Envision.warn("'" + nullEntities + "' were null in world: '" + getWorldName() + "' and have been removed!");
         }
         
-        //temporary world tile update
+        // temporary world tile update
         
         int size = worldLayers.size();
         for (int i = 0; i < size; i++) {
@@ -277,19 +290,19 @@ public class GameWorld implements IGameWorld {
      */
     @Inefficient(reason="Could impact performance if there are too many regions/entities in world")
     protected void updateRegions(float dt) {
-        //this is not efficient. :')
+        // this is not efficient. :')
         
         for (Region r : regionData) {
             Dimension_i rDims = r.getRegionDimensions();
-            //re-evaluate current region data
+            // re-evaluate current region data
             r.updateRegion(dt);
             
-            //check if any entities are in a region or are entering or exiting one
+            // check if any entities are in a region or are entering or exiting one
             for (Entity ent : entityData) {
                 Dimension_d entDims = ent.getCollisionDims();
                 
                 if (rDims.partiallyContains(entDims)) {
-                    //check if 'r' already contains the entity
+                    // check if 'r' already contains the entity
                     if (r.containsEntity(ent)) continue;
                     r.addEntity(ent);
                 }
@@ -299,8 +312,8 @@ public class GameWorld implements IGameWorld {
     
     // Any GameObject
     @Override public synchronized <E extends GameObject> E addObjectToWorld(E ent) { return (E) toAdd.addR(ent); }
-    @Override public synchronized <E extends GameObject> void addObjectToWorld(E... ents) { toAdd.add(ents); }
-    @Override public synchronized <E extends GameObject> void removeObjectFromWorld(E... ents) { toDelete.add(ents); }
+    @Override public synchronized <E extends GameObject> void addObjectToWorld(E... ents) { toAdd.addA(ents); }
+    @Override public synchronized <E extends GameObject> void removeObjectFromWorld(E... ents) { toDelete.addA(ents); }
     
     // Entity specific
     @Override public synchronized Entity addEntity(Entity ent) { return addObjectToWorld(ent); }
@@ -431,7 +444,7 @@ public class GameWorld implements IGameWorld {
         
         int arrLen = worldObjects.size() / 4;
         if (arrLen <= 10) arrLen = 10;
-        EList<Entity> r = new EArrayList<>();
+        EList<Entity> r = EList.newList();
         
         var list = worldObjects.stream()
                                .filter(e -> e != obj)
@@ -495,16 +508,18 @@ public class GameWorld implements IGameWorld {
     /**
      * Sets all world tiles to have a light level of 0.
      */
+    @Deprecated
     public void resetLighting() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 WorldTile t = getTileAt(j, i);
                 if (t == null) continue;
-                t.setLightLevel(0);
+//                t.setLightLevel(0);
             }
         }
     }
     
+    @Deprecated
     public void calculateWorldBrightness() {
         resetLighting();
         
@@ -536,11 +551,10 @@ public class GameWorld implements IGameWorld {
     //--------------------------
     
     public synchronized boolean loadWorld() { return worldFileSystem.loadWorld(); }
-    public synchronized boolean saveWorldToFile() { return worldFileSystem.saveWorldToFile(); }
-    
-    //---------
+    public synchronized boolean saveWorldToFile() { return worldFileSystem.saveWorldToFile(); }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     @Override public EList<Region> getRegionData() { return regionData; }
     @Override public boolean isFileLoaded() { return fileLoaded; }
@@ -593,8 +607,7 @@ public class GameWorld implements IGameWorld {
         int level = Envision.levelManager.getAmbientLightLevel();
         if (underground) return 100;
         return level;
-    }
-    
+    }    
     //=========
     // Setters
     //=========

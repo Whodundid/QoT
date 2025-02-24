@@ -2,8 +2,8 @@ package envision.engine;
 
 import java.io.File;
 
-import envision.engine.settings.config.ConfigSetting;
-import envision.engine.settings.config.EnvisionConfigFile;
+import envision.engine.internal.settings.config.EnvisionConfigFile;
+import envision.engine.loader.built.engine.ConfigSetting;
 import eutil.datatypes.util.EList;
 
 public class EngineConfig extends EnvisionConfigFile {

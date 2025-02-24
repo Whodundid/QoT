@@ -1,7 +1,7 @@
 package qot.assets.textures.world.floors.wood;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class WoodFloorTextures extends TextureLoader {
@@ -31,10 +31,10 @@ public class WoodFloorTextures extends TextureLoader {
     wood_siding = new GameTexture(textureDir, "wood_siding.png"),
     
     wood_slats = new WoodSlats();
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

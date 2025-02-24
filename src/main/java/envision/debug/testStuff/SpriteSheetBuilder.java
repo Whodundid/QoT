@@ -1,15 +1,15 @@
 package envision.debug.testStuff;
 
-import envision.engine.registry.types.SpriteSheet;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowTextField;
-import envision.engine.windows.windowObjects.advanced.menuBar.WindowMenuBar;
-import envision.engine.windows.windowObjects.advanced.tabbedContainer.TabbedContainer;
-import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea2;
-import envision.engine.windows.windowObjects.basic.WindowLabel;
-import envision.engine.windows.windowTypes.DragAndDropObject;
-import envision.engine.windows.windowTypes.WindowParent;
-import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowObjects.advanced.menuBar.WindowMenuBar;
+import envision.engine.internal.windows.windowObjects.advanced.tabPane.WindowTabPane;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.WindowTextArea2;
+import envision.engine.internal.windows.windowObjects.basic.WindowLabel;
+import envision.engine.internal.windows.windowTypes.DragAndDropObject;
+import envision.engine.internal.windows.windowTypes.WindowParent;
+import envision.engine.internal.windows.windowUtil.windowEvents.WindowObjectEvent;
+import envision.engine.loader.built.game.SpriteSheet;
 import eutil.datatypes.util.EList;
 
 public class SpriteSheetBuilder extends WindowParent {
@@ -29,7 +29,7 @@ public class SpriteSheetBuilder extends WindowParent {
     /** Button used to either rebuild or reload the JSON file for the current sprite sheet. */
     private WindowButton reloadBtn;
     /** 1st tab is the sprite sheet image and editor, 2nd tab is the JSON built from the sheet. */
-    private TabbedContainer tabContainer;
+    private WindowTabPane tabContainer;
     /** Used to both display and edit the JSON of the spritesheet. */
     private WindowTextArea2 jsonEditor;
     /** Used to set/modify the name of this sprite sheet. */
@@ -46,8 +46,7 @@ public class SpriteSheetBuilder extends WindowParent {
     private boolean isSaved = false;
     
     public final int defaultSpritePixelWidth = 64;
-    public final int defaultSpritePixelHeight = 64;
-    
+    public final int defaultSpritePixelHeight = 64;    
     //==============
     // Constructors
     //==============
@@ -62,8 +61,7 @@ public class SpriteSheetBuilder extends WindowParent {
         this.setSize(600, 400);
         this.setResizeable(true);
         this.setMaximizable(true);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -99,7 +97,7 @@ public class SpriteSheetBuilder extends WindowParent {
     }
     
     @Override
-    public void onGroupNotification(ObjectEvent e) {
+    public void onGroupNotification(WindowObjectEvent e) {
         
     }
     
@@ -116,8 +114,7 @@ public class SpriteSheetBuilder extends WindowParent {
     @Override
     public void postReInit() {
         
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -136,14 +133,12 @@ public class SpriteSheetBuilder extends WindowParent {
     
     public void createNewSheet() {
         
-    }
-    
+    }    
     //=========
     // Getters
     //=========
     
-    public SpriteSheet getSheet() { return currentSheet; }
-    
+    public SpriteSheet getSheet() { return currentSheet; }    
     //=========
     // Setters
     //=========

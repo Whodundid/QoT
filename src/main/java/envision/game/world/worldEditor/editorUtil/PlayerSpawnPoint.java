@@ -1,7 +1,7 @@
 package envision.game.world.worldEditor.editorUtil;
 
-import envision.engine.assets.EditorTextures;
-import envision.engine.registry.types.Sprite;
+import envision.engine.internal.assets.EditorTextures;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.GameObject;
 import envision.game.world.GameWorld;
 

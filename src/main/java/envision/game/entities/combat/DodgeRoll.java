@@ -2,7 +2,7 @@ package envision.game.entities.combat;
 
 import org.joml.Vector3f;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 import eutil.misc.Rotation;
 
 public class DodgeRoll {
@@ -19,8 +19,7 @@ public class DodgeRoll {
     private double rollSpeed = 50;
     private boolean isRollingLeft = false;
     private int previousState = 0;
-    private boolean wasInvincibleBefore = false;
-    
+    private boolean wasInvincibleBefore = false;    
     //=========
     // Methods
     //=========
@@ -82,8 +81,7 @@ public class DodgeRoll {
         
         Vector3f move = rollingDir.mul((float) rollSpeed * dt, new Vector3f());
         ent.physicsHandler.applyImpulse(move.x, move.y);
-    }
-    
+    }    
     //=========
     // Getters
     //=========

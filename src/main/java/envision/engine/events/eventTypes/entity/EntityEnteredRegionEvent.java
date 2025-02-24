@@ -1,7 +1,7 @@
 package envision.engine.events.eventTypes.entity;
 
-import envision.engine.events.EventType;
-import envision.game.entities.Entity;
+import envision.engine.events.EnvisionEventType;
+import envision.engine.loader.built.game.Entity;
 import envision.game.world.IGameWorld;
 import envision.game.world.Region;
 
@@ -13,9 +13,9 @@ import envision.game.world.Region;
  */
 public class EntityEnteredRegionEvent extends EntityEvent {
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     /** The world that this took place in. */
     private final IGameWorld world;
@@ -24,24 +24,22 @@ public class EntityEnteredRegionEvent extends EntityEvent {
     /** The region being entered. */
     private final Region region;
     /** The X and Y coordinates that the entity entered the region at. */
-    private final double x, y;
-    
-    //--------------
+    private final double x, y;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public EntityEnteredRegionEvent(IGameWorld worldIn, Entity entIn, Region regionIn, double xIn, double yIn) {
-        super(EventType.ENTITY_ENTERED_REGION, true);
+        super(EnvisionEventType.ENTITY_ENTERED_REGION, true);
         world = worldIn;
         ent = entIn;
         region = regionIn;
         x = xIn;
         y = yIn;
-    }
-    
-    //---------
+    }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     /** Returns the world that this event took place in. */
     public IGameWorld getWorld() { return world; }

@@ -3,8 +3,8 @@ package envision.game.entities.inventory;
 import java.util.HashMap;
 import java.util.Map;
 
-import envision.game.effects.Effect;
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Effect;
+import envision.engine.loader.built.game.Entity;
 import eutil.EUtil;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.boxes.BoxList;
@@ -23,16 +23,14 @@ public class ActiveEffectsTracker {
     private final Map<String, Long> effectUpdateTracker = new HashMap<>();
     private final Map<String, Effect> nameToEffectMap = new HashMap<>();
     
-    private final EList<String> effectsToRemove = EList.newList();
-    
+    private final EList<String> effectsToRemove = EList.newList();    
     //==============
     // Constructors
     //==============
     
     public ActiveEffectsTracker(Entity entityIn) {
         theEntity = entityIn;
-    }
-    
+    }    
     //=========
     // Methods
     //=========

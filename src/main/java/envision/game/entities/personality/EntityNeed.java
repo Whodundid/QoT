@@ -11,8 +11,7 @@ public class EntityNeed {
     /** IE: If this need is positive, then the lack of this will incur negative effects. */
     public boolean isPositive;
     /** The point at which this need will either start to have an effect on the entity. */
-    public float threshold;
-    
+    public float threshold;    
     //==============
     // Constructors
     //==============
@@ -23,8 +22,7 @@ public class EntityNeed {
         needName = nameIn;
         isPositive = isPositiveIn;
         threshold = thresholdIn;
-    }
-    
+    }    
     //=========
     // Getters
     //=========

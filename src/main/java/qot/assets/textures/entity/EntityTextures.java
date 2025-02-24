@@ -1,8 +1,8 @@
 package qot.assets.textures.entity;
 
-import envision.engine.registry.types.SpriteSheet;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.SpriteSheet;
 import qot.assets.TextureLoader;
 
 public class EntityTextures extends TextureLoader {
@@ -55,8 +55,7 @@ public class EntityTextures extends TextureLoader {
     public static final SpriteSheet
     
     walksheet = new SpriteSheet(shopkeepWalksheetTexture, 64, 64, 36, 0),
-    amyIdleWalkSheet = new SpriteSheet(amyIdleWalkTexture, 32, 32, 64, 0);
-    
+    amyIdleWalkSheet = new SpriteSheet(amyIdleWalkTexture, 32, 32, 64, 0);    
     //===========
     // Overrides
     //===========

@@ -2,15 +2,15 @@ package qot.screens.gameplay;
 
 import envision.Envision;
 import envision.debug.DebugSettings;
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.kernel.developerDesktop.DeveloperDesktop;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.basic.WindowRect;
-import envision.engine.windows.windowObjects.basic.WindowStatusBar;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.entities.Entity;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.basic.WindowRect;
+import envision.engine.internal.windows.windowObjects.basic.WindowStatusBar;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.GameScreen;
 import envision.game.entities.player.Player;
 import envision.game.sounds.SoundEngine;
 import envision.game.world.IGameWorld;
@@ -46,8 +46,7 @@ public class GamePlayScreen extends GameScreen {
     public int worldXPos, worldYPos; //the world coordinates under the mouse
     
     private GamePauseWindow pauseWindow;
-    private boolean openPause = false;
-    
+    private boolean openPause = false;    
     //==============
     // Constructors
     //==============
@@ -59,8 +58,7 @@ public class GamePlayScreen extends GameScreen {
         
         openPause = openPauseOnStart;
         if (world != null) Envision.levelManager.getCamera().setMinZoom(2);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

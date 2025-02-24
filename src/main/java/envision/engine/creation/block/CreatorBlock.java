@@ -3,11 +3,11 @@ package envision.engine.creation.block;
 import java.util.HashMap;
 import java.util.Map;
 
-import envision.engine.windows.windowObjects.advanced.header.WindowHeader;
-import envision.engine.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowObjects.advanced.header.WindowHeader;
+import envision.engine.internal.windows.windowTypes.WindowParent;
 import eutil.datatypes.util.EList;
 
-public class CreatorBlock extends WindowObject {
+public class CreatorBlock extends WindowParent {
     
     //========
     // Fields
@@ -18,8 +18,7 @@ public class CreatorBlock extends WindowObject {
     
     protected String blockName;
     protected final EList<BlockConnectionPoint<?>> inputPoints = EList.newList();
-    protected final EList<BlockConnectionPoint<?>> outputPoints = EList.newList();
-    
+    protected final EList<BlockConnectionPoint<?>> outputPoints = EList.newList();    
     //==============
     // Constructors
     //==============
@@ -29,11 +28,11 @@ public class CreatorBlock extends WindowObject {
         blockName = blockNameIn;
         
         setObjectName(blockName);
-        setResizeable(false);
+        setMoveWithParent(true);
+        setResizeable(true);
         //setMaximizable(false);
-        //setMinimizable(false);
-    }
-    
+        setMinimizable(false);
+    }    
     //===========
     // Overrides
     //===========
@@ -82,8 +81,7 @@ public class CreatorBlock extends WindowObject {
                 i--;
             }
         }
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -105,21 +103,25 @@ public class CreatorBlock extends WindowObject {
     public void addInputPoint(BlockConnectionPoint<?> input) {
         inputPoints.add(input);
         addObject(input);
+        positionPoints();
     }
     
     public void removeInputPoint(BlockConnectionPoint<?> input) {
         inputPoints.remove(input);
         removeObject(input);
+        positionPoints();
     }
     
     public void addOutputPoint(BlockConnectionPoint<?> output) {
         outputPoints.add(output);
         addObject(output);
+        positionPoints();
     }
     
     public void removeOutputPoint(BlockConnectionPoint<?> output) {
         outputPoints.remove(output);
-        addObject(output);
+        removeObject(output);
+        positionPoints();
     }
     
     public void clearInputs() {
@@ -240,7 +242,7 @@ public class CreatorBlock extends WindowObject {
                 // draw on left/right
                 double x = (location == PointLocation.LEFT) ? sx : ex;
                 // offset if even
-                double y = (midY - getHeader().height / 2) - (list.size() * pointHeight - ((list.size() % 2 == 1) ? pointHeight * 0.5 : 0));
+                double y = (midY /*- getHeader().height / 2*/) - (list.size() * pointHeight - ((list.size() % 2 == 1) ? pointHeight * 0.5 : 0));
                 for (var p : list) p.setPosition(x, y + (i++ * gap));
                 break;
             }
@@ -248,8 +250,7 @@ public class CreatorBlock extends WindowObject {
                 break;
             }
         }
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -299,8 +300,7 @@ public class CreatorBlock extends WindowObject {
         BlockConnectionPoint<?> output = getOutputConnection(point);
         if (output == null) return null;
         return output.getConnections();
-    }
-    
+    }    
     //=========
     // Setters
     //=========

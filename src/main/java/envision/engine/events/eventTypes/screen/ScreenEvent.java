@@ -1,17 +1,17 @@
 package envision.engine.events.eventTypes.screen;
 
-import envision.engine.events.EventType;
+import envision.engine.events.EnvisionEventType;
 import envision.engine.events.GameEvent;
 
 public abstract class ScreenEvent extends GameEvent {
     
-    private final EventType screenEventType;
+    private final EnvisionEventType screenEventType;
     
-    protected ScreenEvent(EventType screenEventTypeIn, boolean canBeCancelled) {
-        super(EventType.SCREEN, canBeCancelled);
+    protected ScreenEvent(EnvisionEventType screenEventTypeIn, boolean canBeCancelled) {
+        super(EnvisionEventType.SCREEN, canBeCancelled);
         screenEventType = screenEventTypeIn;
     }
     
-    public EventType getScreenEventType() { return screenEventType; }
+    public EnvisionEventType getScreenEventType() { return screenEventType; }
     
 }

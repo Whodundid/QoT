@@ -2,21 +2,25 @@ package envision.game.world.worldTiles;
 
 import envision.Envision;
 import envision.debug.DebugSettings;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.batching.BatchManager;
-import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.rendering.batching.BatchManager;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.GameObject;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
+import eutil.strings.EStringBuilder;
 
 public class WorldTileRenderer extends RenderingComponent {
     
-    public WorldTile theTile;
+    //========
+    // Fields
+    //========
     
+    public WorldTile theTile;    
     //==============
     // Constructors
     //==============
@@ -24,8 +28,7 @@ public class WorldTileRenderer extends RenderingComponent {
     public WorldTileRenderer(WorldTile tileIn) {
         super(tileIn);
         theTile = tileIn;
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -91,16 +94,16 @@ public class WorldTileRenderer extends RenderingComponent {
         double w = dims[2];
         double h = dims[3];
         
-        float wallHeight = theTile.wallHeight;
-        if (DebugSettings.drawFlatWalls) wallHeight = 0.0f;
-        double wh = h * wallHeight; //wh == 'wallHeight'
+        float tileHeight = theTile.tileHeight;
+        if (DebugSettings.drawFlatWalls) tileHeight = 0.0f;
+        double wh = h * tileHeight; //wh == 'tileHeight'
         
         //---------------------------------------------------------------------------------------------
         
         double yPos;
-        boolean northCheck = (VoidTile.notVoid(tn) && tn.wallHeight > theTile.wallHeight);
-        boolean southCheck = (VoidTile.isVoid(ts) || ts != null && ts.wallHeight < theTile.wallHeight);
-        boolean aboveCheck = (VoidTile.isVoid(ta) || theTile.wallHeight < 1.0);
+        boolean northCheck = (VoidTile.notVoid(tn) && tn.tileHeight > theTile.tileHeight);
+        boolean southCheck = (VoidTile.isVoid(ts) || ts != null && ts.tileHeight < theTile.tileHeight);
+        boolean aboveCheck = (VoidTile.isVoid(ta) || theTile.tileHeight < 1.0);
         boolean darkerAboveCheck = (VoidTile.notVoid(ta));
         boolean aboveAllCheck = (taa != null && taa != VoidTile.instance);
         
@@ -121,19 +124,21 @@ public class WorldTileRenderer extends RenderingComponent {
             }
         }
         
+        southCheck &= (theTile.worldY < world.getHeight() - 1);
+        
         //StackTraceElement[] elems = Thread.currentThread().getStackTrace();
         //System.out.println(EStringUtil.toString(elems, " <- "));
         
 //        var sb = new EStringBuilder();
-//        sb.a(theTile, "<", theTile.worldX, ",", theTile.worldY, "> ", theTile.wallHeight, ":");
+//        sb.a(theTile, "<", theTile.worldX, ",", theTile.worldY, "> ", theTile.tileHeight, ":");
 //        sb.a("       [N-" + tn + ":" + northCheck);
-//        if (tn != null) sb.a("|" + (tn.wallHeight > wallHeight) + ":" + tn.wallHeight + ":" + wallHeight + "]");
+//        if (tn != null) sb.a("|" + (tn.tileHeight > tileHeight) + ":" + tn.tileHeight + ":" + tileHeight + "]");
 //        sb.a("       [S-" + ts + ":" + southCheck);
-//        if (ts != null) sb.a("|" + (ts.wallHeight < theTile.wallHeight) + ":" + ts.wallHeight + ":" + wallHeight + "]");
+//        if (ts != null) sb.a("|" + (ts.tileHeight < theTile.tileHeight) + ":" + ts.tileHeight + ":" + tileHeight + "]");
 //        System.out.println(sb);
         
         // only draw side if necessary
-        if (wallHeight != 0 && (northCheck || southCheck)) {
+        if (tileHeight != 0 && (northCheck || southCheck)) {
             // use the appropriate tile texture
             WorldTile tile = theTile;
             if (wh < 0 && tn != null) tile = tn;
@@ -151,7 +156,7 @@ public class WorldTileRenderer extends RenderingComponent {
         }
         
         // draw bottom of map edge or if right above a tile with no texture/void
-        if ((ts == null || !ts.hasSprite()) && theTile.getCameraLayer() == 0) {
+        if ((VoidTile.isVoid(ts) || (ts != null && !ts.hasSprite()))) {
             RenderingManager.drawSprite(theTile.sprite, x, y + h, w, h / 2, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
         }
         
@@ -191,7 +196,7 @@ public class WorldTileRenderer extends RenderingComponent {
 //                wallBrightness = EColors.changeBrightness(brightness, 165);
 //                
 //                //draw wall side slightly below
-//                if ((ts == null || ts == VoidTile.instance || !ts.isWall) || (ts.wallHeight != theTile.wallHeight)) {
+//                if ((ts == null || ts == VoidTile.instance || !ts.isWall) || (ts.tileHeight != theTile.tileHeight)) {
 ////                    if (ta != null && ta != VoidTile.instance) {
 ////                        yPos = y + h;
 ////                        RenderingManager.drawSprite(side, x, y, w, h, theTile.drawFlipped, rot, wallBrightness);
@@ -216,7 +221,7 @@ public class WorldTileRenderer extends RenderingComponent {
 //                //but
 //                //I also don't want to draw if tn is a wall and has the same wall height as this one
 //                
-//                if (tn != null && (!tn.isWall || ((h * tn.wallHeight) != -wh))) {
+//                if (tn != null && (!tn.isWall || ((h * tn.tileHeight) != -wh))) {
 //                    Sprite side = (theTile.sideTex != null) ? theTile.sideTex : theTile.sprite;
 //                    
 //                    wallBrightness = EColors.changeBrightness(brightness, 145);
@@ -230,7 +235,7 @@ public class WorldTileRenderer extends RenderingComponent {
 //                    //tiles yPos
 //                    
 //                    //if (ta.isWall) {
-//                    //    if (ta.wallHeight < 0)
+//                    //    if (ta.tileHeight < 0)
 //                    //}
 //                    
 //                    //draw wall side slightly above
@@ -270,7 +275,7 @@ public class WorldTileRenderer extends RenderingComponent {
 //        RenderingManager.drawSprite(side, x, yPos + h, w, h * 0.5, theTile.drawFlipped, rot, EColors.changeBrightness(brightness, 145));
 //        
         if (mouseOver) {
-            if (theTile.wallHeight != 0) {
+            if (theTile.tileHeight != 0) {
                 RenderingManager.drawHRect(x, y - wh, x + w, y - wh + h, 1, EColors.chalk);
                 RenderingManager.drawHRect(x, y + h - wh - 1, x + w, y + h, 1, EColors.chalk);
             }
@@ -317,11 +322,11 @@ public class WorldTileRenderer extends RenderingComponent {
         // check if the tile underneath this one is either void or transparent (we don't have that yet)
         WorldTile tileAtSameLayer = world.getTileAt(focusedCameraObject.getCameraLayer(), theTile.worldX, theTile.worldY);
         
-        boolean drawTransparent = VoidTile.isVoid(tileAtSameLayer) || tileAtSameLayer.wallHeight <= 0.2;
+        boolean drawTransparent = VoidTile.isVoid(tileAtSameLayer) || tileAtSameLayer.tileHeight <= 0.2;
         
 //        System.out.println(camLayer + " : " + focusedCameraObject.renderLayer +
-//                           " : " + theTile + " : " + tileAtSameLayer + " : " + tileAtSameLayer.wallHeight +
-//                           " : " + (tileAtSameLayer.wallHeight <= 0.2) + " : " + drawTransparent);
+//                           " : " + theTile + " : " + tileAtSameLayer + " : " + tileAtSameLayer.tileHeight +
+//                           " : " + (tileAtSameLayer.tileHeight <= 0.2) + " : " + drawTransparent);
         
         return drawTransparent;
     }

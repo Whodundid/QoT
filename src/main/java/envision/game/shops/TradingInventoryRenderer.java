@@ -1,13 +1,13 @@
 package envision.game.shops;
 
 import envision.Envision;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
-import envision.engine.windows.windowUtil.windowEvents.eventUtil.MouseType;
-import envision.engine.windows.windowUtil.windowEvents.events.EventMouse;
-import envision.game.entities.Entity;
-import envision.game.items.Item;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowUtil.windowEvents.WindowObjectEvent;
+import envision.engine.internal.windows.windowUtil.windowEvents.eventUtil.MouseType;
+import envision.engine.internal.windows.windowUtil.windowEvents.events.EventMouse;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import eutil.datatypes.EArrayList;
 import eutil.math.ENumUtil;
 import qot.screens.character.InventoryRenderer;
@@ -23,8 +23,7 @@ public class TradingInventoryRenderer extends InventoryRenderer {
     protected double itemPriceX, itemPriceY;
     protected boolean drawItemPrice = false;
     
-    protected double priceModifier = 1.00;
-    
+    protected double priceModifier = 1.00;    
     //==============
     // Constructors
     //==============
@@ -42,8 +41,7 @@ public class TradingInventoryRenderer extends InventoryRenderer {
         itemPriceY = startY - 30;
         
         allowItemMoving = false;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -105,7 +103,7 @@ public class TradingInventoryRenderer extends InventoryRenderer {
     }
     
     @Override
-    public void onEvent(ObjectEvent e) {
+    public void onEvent(WindowObjectEvent e) {
         if (e.getEventParent() == Envision.getCurrentScreen()) {
             if (e instanceof EventMouse me && me.getMouseType() == MouseType.RELEASED) {
                 
@@ -165,16 +163,14 @@ public class TradingInventoryRenderer extends InventoryRenderer {
             
             colPos++;
         }
-    }
-    
+    }    
     //=========
     // Methods
     //=========
     
     protected void onItemSlotClicked(int slotIn) {
         shop.onInventoryClick(this, slotIn);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -200,8 +196,7 @@ public class TradingInventoryRenderer extends InventoryRenderer {
         if (lastClickedSlot == null) return null;
         int index = lastClickedSlot.getSlotIndex();
         return getItemAtIndex(index);
-    }
-    
+    }    
     //=========
     // Setters
     //=========

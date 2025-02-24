@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.stone;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
 import qot.world_tiles.TileIDs;
@@ -12,7 +12,7 @@ public class ClayPad extends WorldTile {
         super(TileIDs.CLAY_PAD, id);
         
         meta = id;
-        wallHeight = 0.1f;
+        tileHeight = 0.1f;
         numVariants = StoneFloorTextures.clay_pad.getChildren().size();
         randomizeDrawFlipped = true;
         

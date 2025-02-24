@@ -1,7 +1,7 @@
 package qot.assets.textures.world.nature.rock;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class RockTextures extends TextureLoader {
@@ -29,10 +29,10 @@ public class RockTextures extends TextureLoader {
     stone            = new GameTexture(textureDir, "stone.png"),
     rocky_stone        = new GameTexture(textureDir, "rocky_stone.png"),
     rough_rocky     = new GameTexture(textureDir, "rough_rocky.png");
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

@@ -1,8 +1,8 @@
 package qot.abilities.tier1;
 
-import envision.game.abilities.Ability;
+import envision.engine.loader.built.game.Ability;
+import envision.engine.loader.built.game.Entity;
 import envision.game.abilities.AbilityTier;
-import envision.game.entities.Entity;
 import qot.assets.textures.ability.AbilityTextures;
 
 /**

@@ -1,6 +1,7 @@
 package envision.engine.events;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import eutil.datatypes.EArrayList;
 import eutil.datatypes.boxes.BoxList;
@@ -8,12 +9,20 @@ import eutil.datatypes.util.EList;
 
 public class EventHandler {
     
-    //------------------
+    //==================
     // Static Singleton
-    //------------------
+    //==================
     
     private static final EventHandler instance = new EventHandler();
-    public static EventHandler getInstance() { return instance; }
+    
+    public static EventHandler getInstance() {
+        return instance;
+    }
+    
+    //==============
+    // Constructors
+    //==============
+    
     // Constructor -- private
     private EventHandler() {}
     
@@ -28,42 +37,41 @@ public class EventHandler {
     /**
      * Maps event types to the subscriber(s) who are interested in them.
      */
-    private final HashMap<EventType, EList<IEventListener>> subscriberMap = new HashMap<>();
+    private final Map<EnvisionEventType, EList<IEventListener>> subscriberMap = new HashMap<>();
     
-    private final BoxList<IEventListener, EventType> toSubscribe = new BoxList<>();
-    private final BoxList<IEventListener, EventType> toUnsubscribe = new BoxList<>();
-    
-    //---------
+    private final BoxList<IEventListener, EnvisionEventType> toSubscribe = new BoxList<>();
+    private final BoxList<IEventListener, EnvisionEventType> toUnsubscribe = new BoxList<>();    
+    //=========
     // Methods
-    //---------
+    //=========
     
     /**
      * Processes events in the order in which they were received.
      */
     public synchronized void onGameTick() {
-        //process any subscribers scheduled to be added
+        // process any subscribers scheduled to be added
         if (toSubscribe.isNotEmpty()) addSubscribers();
-        //process any subscribers scheduled to be removed
+        // process any subscribers scheduled to be removed
         if (toUnsubscribe.isNotEmpty()) removeSubscribers();
         
-        //ignore if there are no events to process
+        // ignore if there are no events to process
         if (eventQueue.isEmpty()) return;
         
-        //process next event on event queue
+        // process next event on event queue
         GameEvent e = eventQueue.removeFirst();
-        EventType type = e.getType();
+        EnvisionEventType type = e.getType();
         
-        //grab subscriber list for the current event
+        // grab subscriber list for the current event
         EList<IEventListener> subscribers = subscriberMap.get(type);
         if (subscribers == null) return;
         
-        //distribute event to subscribers
+        // distribute event to subscribers
         if (subscribers.isNotEmpty()) {
             for (var s : subscribers) {
-                //if the subscriber is in the process of unsubscribing from
-                //this exact event type, don't notify them
+                // if the subscriber is in the process of unsubscribing from
+                // this exact event type, don't notify them
                 if (toUnsubscribe.containsBoth(s, type)) continue;
-                //otherwise, notify subscriber of the new event
+                // otherwise, notify subscriber of the new event
                 s.onEvent(e);
             }
         }
@@ -84,7 +92,7 @@ public class EventHandler {
      * @param subscriber The object subscribing to the given event type
      * @param eventToSubscribeOn The event type the object wants to listen for
      */
-    public synchronized void addSubscriber(IEventListener subscriber, EventType eventToSubscribeOn) {
+    public synchronized void addSubscriber(IEventListener subscriber, EnvisionEventType eventToSubscribeOn) {
         toSubscribe.add(subscriber, eventToSubscribeOn);
     }
     
@@ -97,7 +105,7 @@ public class EventHandler {
      * @param subscriber The object subscribing to the given event type
      * @param eventToSubscribeOn The event type the object wants to listen for
      */
-    public synchronized void unsubscribe(IEventListener subscriber, EventType eventToUnsubscribeOn) {
+    public synchronized void unsubscribe(IEventListener subscriber, EnvisionEventType eventToUnsubscribeOn) {
         toUnsubscribe.add(subscriber, eventToUnsubscribeOn);
     }
     
@@ -108,14 +116,14 @@ public class EventHandler {
      * @param subscriber The object unsubscribing from all event types
      */
     public synchronized void unsubscribeFromAll(IEventListener subscriber) {
-        //iterate across subscriber map to determine which events the given subscriber listens in on
+        // iterate across subscriber map to determine which events the given subscriber listens in on
         var it = subscriberMap.entrySet().iterator();
         while (it.hasNext()) {
             var eventList = it.next();
             var eventType = eventList.getKey();
             var subscribers = eventList.getValue();
-            //if the given subscriber exists on the current event's
-            //subscriber list -- schedule for removal
+            // if the given subscriber exists on the current event's
+            // subscriber list -- schedule for removal
             if (subscribers.contains(subscriber)) {
                 toUnsubscribe.add(subscriber, eventType);
             }
@@ -131,35 +139,35 @@ public class EventHandler {
      * @param type The event type
      * @return The list of subscribers listening in on the given event type.
      */
-    public EList<IEventListener> getSubscriberList(EventType type) {
+    public EList<IEventListener> getSubscriberList(EnvisionEventType type) {
         return subscriberMap.getOrDefault(type, new EArrayList<IEventListener>());
     }
     
     /**
      * Returns this EventHandler's entire subscriber map.
      */
-    public HashMap<EventType, EList<IEventListener>> getSubscriberMap() {
+    public Map<EnvisionEventType, EList<IEventListener>> getSubscriberMap() {
         return subscriberMap;
     }
     
-    //--------------------------
-    // Internal Handler Methods
-    //--------------------------
+    //=========================
+    // Internal Helper Methods
+    //=========================
     
     private void addSubscribers() {
         for (var toSub : toSubscribe) {
             var sub = toSub.getA();
             var event = toSub.getB();
             
-            //grab current subscriber list for the given event type
+            // grab current subscriber list for the given event type
             var subList = subscriberMap.get(event);
-            //if there are not any subscribers currently -- create new list and add subscriber to it
+            // if there are not any subscribers currently -- create new list and add subscriber to it
             if (subList == null) {
                 subList = new EArrayList<IEventListener>();
                 subList.add(sub);
                 subscriberMap.put(event, subList);
             }
-            //otherwise, add the subscriber to the existing list if they aren't already in it
+            // otherwise, add the subscriber to the existing list if they aren't already in it
             else {
                 subList.addIfNotContains(sub);
             }

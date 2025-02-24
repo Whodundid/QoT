@@ -2,15 +2,14 @@ package envision;
 
 import java.io.File;
 
+import envision.engine.internal.settings.GameSettings;
+import envision.engine.internal.settings.config.EnvisionConfigFile;
 import envision.engine.loader.AbstractWorldCreator;
-import envision.engine.loader.GameSettings;
-import envision.engine.screens.GameScreen;
-import envision.engine.settings.config.ConfigSetting;
-import envision.engine.settings.config.EnvisionConfigFile;
+import envision.engine.loader.built.engine.ConfigSetting;
+import envision.engine.loader.built.game.GameScreen;
 import eutil.datatypes.util.EList;
 
-public final class CurrentGame {
-    
+public final class CurrentGame {    
     //==============
     // Constructors
     //==============

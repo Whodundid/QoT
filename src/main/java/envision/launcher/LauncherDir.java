@@ -20,9 +20,9 @@ import eutil.strings.EStringUtil;
  */
 public class LauncherDir {
     
-    //----------------------------------
+    //==================================
     // Settings File - Launcher Options
-    //----------------------------------
+    //==================================
     
     public static final String SEPARATOR = FileSystems.getDefault().getSeparator();
     
@@ -32,9 +32,9 @@ public class LauncherDir {
     
     public static final String SETTINGS_FILE_NAME = "settings.ini";
 
-    //---------------
+    //===============
     // Static Fields
-    //---------------
+    //===============
     
     /** The path to the launcher dir. */
     private static File launcherDir;
@@ -47,16 +47,16 @@ public class LauncherDir {
     /** The parsed log level from the launcher settings file -- defaults to 'ONLY_ERRORS'. */
     static LogOutputLevel logLevel = LogOutputLevel.ONLY_ERRORS;
     
-    //----------------
+    //================
     // Static Getters
-    //----------------
+    //================
     
     public static File getLauncherDir() { return launcherDir; }
     public static File getLauncherSettingsFile() { return launcherSettingsFile; }
     
-    //----------------------------
+    //============================
     // Launcher Dir Setup Methods
-    //----------------------------
+    //============================
     
     /**
      * Attempts to create the launchers directory and settings file to keep track of install path.
@@ -149,9 +149,9 @@ public class LauncherDir {
         return getConfigSetting(INSTALL_PATH_SETTING, File.class, null);
     }
     
-    //------------------
+    //==================
     // Internal Methods
-    //------------------
+    //==================
     
     /**
      * Attempts to parse a config value from the Launcher Settings Config

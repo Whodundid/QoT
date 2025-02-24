@@ -1,14 +1,14 @@
 package envision.engine.events.eventTypes.window;
 
-import envision.engine.events.EventType;
-import envision.engine.windows.windowTypes.WindowParent;
+import envision.engine.events.EnvisionEventType;
+import envision.engine.internal.windows.windowTypes.WindowParent;
 
 public class WindowOpenedEvent extends WindowEvent {
 
     private final WindowParent window;
     
     public WindowOpenedEvent(WindowParent windowIn) {
-        super(EventType.WINDOW_OPENED, true);
+        super(EnvisionEventType.WINDOW_OPENED, true);
         window = windowIn;
     }
     

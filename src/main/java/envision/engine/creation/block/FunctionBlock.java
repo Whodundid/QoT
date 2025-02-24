@@ -6,8 +6,7 @@ package envision.engine.creation.block;
  * 
  * @author Hunter
  */
-public abstract class FunctionBlock extends CreatorBlock {
-    
+public abstract class FunctionBlock extends CreatorBlock {    
     //==============
     // Constructors
     //==============

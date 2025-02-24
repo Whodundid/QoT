@@ -2,10 +2,11 @@ package envision.game.entities;
 
 import envision.Envision;
 import envision.debug.DebugSettings;
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.batching.BatchManager;
-import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.rendering.batching.BatchManager;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.loader.built.game.Entity;
 import envision.game.GameObject;
 import envision.game.component.types.RenderingComponent;
 import envision.game.world.IGameWorld;
@@ -18,6 +19,10 @@ import eutil.misc.Rotation;
 import eutil.strings.EStringUtil;
 
 public class EntityRenderer extends RenderingComponent {
+    
+    //========
+    // Fields
+    //========
     
     protected Entity theEntity;
     
@@ -37,8 +42,7 @@ public class EntityRenderer extends RenderingComponent {
     protected int flashColor;
     protected long flashStart;
     protected long flashDurration;
-    protected boolean drawFlash = false;
-    
+    protected boolean drawFlash = false;    
     //==============
     // Constructors
     //==============
@@ -52,8 +56,7 @@ public class EntityRenderer extends RenderingComponent {
         super(entityIn);
         theEntity = entityIn;
         makeTransparentIfInFront = drawTransparentIfBlockingCamera;
-    }
-    
+    }    
     //=========
     // Methods
     //=========

@@ -1,8 +1,8 @@
 package qot.entities.player;
 
-import envision.engine.rendering.GLObject;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.batching.BatchManager;
+import envision.engine.internal.rendering.GLObject;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.rendering.batching.BatchManager;
 import envision.game.entities.EntityRenderer;
 import envision.game.world.IGameWorld;
 import envision.game.world.WorldCamera;
@@ -17,8 +17,7 @@ public class PlayerRenderer extends EntityRenderer {
     // Fields
     //========
     
-    protected QoT_Player player;
-    
+    protected QoT_Player player;    
     //==============
     // Constructors
     //==============
@@ -26,8 +25,7 @@ public class PlayerRenderer extends EntityRenderer {
     public PlayerRenderer(QoT_Player playerIn) {
         super(playerIn, true);
         player = playerIn;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

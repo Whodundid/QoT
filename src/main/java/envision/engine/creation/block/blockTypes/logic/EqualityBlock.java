@@ -3,7 +3,7 @@ package envision.engine.creation.block.blockTypes.logic;
 import envision.engine.creation.block.BlockConnectionPoint;
 import envision.engine.creation.block.FunctionBlock;
 import envision.engine.creation.block.PointLocation;
-import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
 import eutil.EUtil;
 
 public class EqualityBlock extends FunctionBlock {
@@ -14,8 +14,7 @@ public class EqualityBlock extends FunctionBlock {
     
     protected final BlockConnectionPoint<?> inputA;
     protected final BlockConnectionPoint<?> inputB;
-    protected final BlockConnectionPoint<Boolean> output;
-    
+    protected final BlockConnectionPoint<Boolean> output;    
     //==============
     // Constructors
     //==============
@@ -33,8 +32,7 @@ public class EqualityBlock extends FunctionBlock {
         
         setSize(170, 70);
         setResizeable(false);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

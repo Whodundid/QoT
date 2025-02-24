@@ -1,7 +1,7 @@
 package qot.assets.textures.general;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class GeneralTextures extends TextureLoader {
@@ -31,10 +31,10 @@ public class GeneralTextures extends TextureLoader {
     hunt_lawson = new GameTexture(textureDir, "hunt_lawson.png"),
     hunt_desalle = new GameTexture(textureDir, "hunt_desalle.png")
     ;
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

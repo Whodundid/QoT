@@ -1,7 +1,7 @@
 package qot.assets.textures.world.floors.stone;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class StoneFloorTextures extends TextureLoader {
@@ -33,10 +33,10 @@ public class StoneFloorTextures extends TextureLoader {
     
     clay_pad = new ClayPad(),
     stone_paver = new StonePaver();
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

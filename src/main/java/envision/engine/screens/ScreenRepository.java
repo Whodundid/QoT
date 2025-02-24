@@ -2,6 +2,7 @@ package envision.engine.screens;
 
 import java.lang.reflect.Constructor;
 
+import envision.engine.loader.built.game.GameScreen;
 import envision.game.world.worldEditor.MapMenuScreen;
 import eutil.datatypes.util.EList;
 import qot.screens.main.MainMenuScreen;
@@ -101,11 +102,10 @@ public class ScreenRepository {
             if (a.equalsIgnoreCase(alias)) return true;
         }
         return false;
-    }
-    
-    //---------
+    }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     /**
      * @return A copy of the registered screens list

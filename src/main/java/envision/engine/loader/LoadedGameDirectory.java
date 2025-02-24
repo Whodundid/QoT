@@ -11,16 +11,24 @@ import org.json.simple.parser.JSONParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import envision.engine.loader.dtos.ConfigurationSettingsDTO;
-import envision.engine.loader.dtos.EngineSettingsDTO;
-import envision.engine.loader.dtos.EnvisionGameDTO;
-import envision.engine.loader.dtos.WindowSettingsDTO;
+import envision.engine.loader.dtos.engine.ConfigurationSettingsDTO;
+import envision.engine.loader.dtos.engine.EngineSettingsDTO;
+import envision.engine.loader.dtos.engine.EnvisionGameDTO;
+import envision.engine.loader.dtos.engine.WindowSettingsDTO;
 import eutil.datatypes.util.EList;
 import eutil.file.EFileUtil;
 
 public class LoadedGameDirectory {
     
+    //===============
+    // Static Fields
+    //===============
+    
     private static final ObjectMapper mapper = new ObjectMapper();
+    
+    //========
+    // Fields
+    //========
     
     private EnvisionGameDTO envisionGame;
     private EngineSettingsDTO engineSettings;
@@ -31,15 +39,30 @@ public class LoadedGameDirectory {
     private File gameLoadFile;
     private Map<String, File> gameDirectory = new HashMap<>();
     
+    //==============
+    // Constructors
+    //==============
+    
     public LoadedGameDirectory(File gameDirIn) {
+        this(gameDirIn, null);
+    }
+    
+    public LoadedGameDirectory(File gameDirIn, File gameLoadFileIn) {
         gameDir = gameDirIn;
+        gameLoadFile = gameLoadFileIn;
         
         exploreDirectory();
         parseGameFile();
     }
     
+    //==================
+    // Internal Methods
+    //==================
+    
     private void exploreDirectory() {
-        gameLoadFile = EFileUtil.findFile(gameDir, "envision_game.json");
+        if (gameLoadFile == null) {
+            gameLoadFile = EFileUtil.findFile(gameDir, "envision_game.json");
+        }
         
         final var files = gameDir.listFiles();
         
@@ -110,8 +133,7 @@ public class LoadedGameDirectory {
     
     private ConfigurationSettingsDTO parseConfigurationSettings(Object value) throws Exception {
         return mapper.readValue(String.valueOf(value), ConfigurationSettingsDTO.class);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -128,6 +150,8 @@ public class LoadedGameDirectory {
         return EList.wrap(List.copyOf(gameDirectory.values()));
     }
     
-    public File getAdditionalFileByName(String name) { return gameDirectory.get(name); }
+    public File getAdditionalFileByName(String name) {
+        return gameDirectory.get(name);
+    }
     
 }

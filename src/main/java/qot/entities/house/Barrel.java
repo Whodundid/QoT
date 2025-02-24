@@ -1,6 +1,6 @@
 package qot.entities.house;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.BasicRenderedEntity;
 import qot.assets.textures.doodads.house.HouseTextures;

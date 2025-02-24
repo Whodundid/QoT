@@ -1,13 +1,13 @@
 package qot.settings;
 
-import static envision.engine.settings.config.ConfigSetting.*;
+import static envision.engine.loader.built.engine.ConfigSetting.*;
 
 import java.io.File;
 
 import envision.Envision;
-import envision.engine.loader.GameSettings;
-import envision.engine.settings.config.ConfigSetting;
-import envision.engine.settings.config.setting_types.BooleanConfigSetting;
+import envision.engine.internal.settings.GameSettings;
+import envision.engine.internal.settings.config.setting_types.BooleanConfigSetting;
+import envision.engine.loader.built.engine.ConfigSetting;
 import eutil.datatypes.util.EList;
 
 @Deprecated

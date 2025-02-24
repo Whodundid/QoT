@@ -1,11 +1,11 @@
 package envision.game.world.worldEditor.editorParts.topHeader;
 
 import envision.Envision;
-import envision.engine.assets.WindowTextures;
+import envision.engine.internal.assets.WindowTextures;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.engine.screens.ScreenLevel;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
 import envision.game.world.worldEditor.EditorWorld;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.EditorSidePanel;

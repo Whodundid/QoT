@@ -4,12 +4,12 @@ import java.io.File;
 
 import envision.CurrentGame;
 import envision.Envision;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.windows.windowTypes.WindowParent;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import envision.engine.screens.ScreenLevel;
 import envision.engine.screens.ScreenRepository;
-import envision.engine.windows.windowTypes.WindowParent;
-import envision.game.entities.Entity;
-import envision.game.items.Item;
 import envision.game.world.GameWorld;
 import envision.game.world.Region;
 import envision.game.world.worldTiles.WorldTile;
@@ -37,16 +37,14 @@ public class LangAPI {
     // Fields
     //========
     
-    public boolean isPaused;
-    
+    public boolean isPaused;    
     //==============
     // Constructors
     //==============
     
     private LangAPI() {
         
-    }
-    
+    }    
     //=========
     // Methods
     //=========

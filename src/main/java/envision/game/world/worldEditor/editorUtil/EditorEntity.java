@@ -1,7 +1,7 @@
 package envision.game.world.worldEditor.editorUtil;
 
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.game.entities.Entity;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.loader.built.game.Entity;
 
 public class EditorEntity extends WindowObject {
     

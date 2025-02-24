@@ -2,7 +2,7 @@ package envision.debug.debugCommands;
 
 import envision.Envision;
 import envision.debug.testStuff.DebugScriptRunner;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
 import envision.engine.scripting.LangAPI;
 import envision_lang._launch.EnvisionProgram;
 import envision_lang._launch.EnvisionProgramRunner;

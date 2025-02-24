@@ -1,9 +1,9 @@
 package envision.game.world.worldEditor.editorTools;
 
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.RenderingManager;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.loader.built.game.Entity;
 import envision.game.GameObject;
-import envision.game.entities.Entity;
 import envision.game.world.WorldCamera;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.MapEditorSettings;
@@ -27,8 +27,7 @@ public abstract class EditorTool extends RenderingManager {
     protected Point2i oldPoint = new Point2i(-1, -1);
     protected int button = -1;
     protected boolean pressed = false;
-    protected int wx, wy;
-    
+    protected int wx, wy;    
     //==============
     // Constructors
     //==============
@@ -36,8 +35,7 @@ public abstract class EditorTool extends RenderingManager {
     protected EditorTool(MapEditorScreen in) {
         editor = in;
         settings = in.getSettings();
-    }
-    
+    }    
     //=========
     // Methods
     //=========

@@ -1,5 +1,7 @@
 package envision.game.items;
 
+import envision.engine.loader.built.game.Item;
+
 public abstract class Weapon extends Item {
     
     private int baseDamage;

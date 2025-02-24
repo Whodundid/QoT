@@ -1,7 +1,7 @@
 package envision.debug.debugCommands;
 
-import envision.engine.kernel.terminal.window.ETerminalWindow;
-import envision.engine.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
 
 @SuppressWarnings("unused")
 public class Deb5 extends DebugCommand {

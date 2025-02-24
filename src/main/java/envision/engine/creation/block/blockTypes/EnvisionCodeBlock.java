@@ -1,13 +1,13 @@
 package envision.engine.creation.block.blockTypes;
 
-import envision.engine.assets.WindowBuilderTextures;
-import envision.engine.assets.WindowTextures;
 import envision.engine.creation.block.BlockConnectionPoint;
 import envision.engine.creation.block.CreatorBlock;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.advanced.textArea.TextDocument;
-import envision.engine.windows.windowObjects.advanced.textArea.WindowTextArea2;
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.internal.assets.WindowBuilderTextures;
+import envision.engine.internal.assets.WindowTextures;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.TextDocument;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.WindowTextArea2;
+import envision.engine.internal.windows.windowTypes.interfaces.IWindowObject;
 import envision_lang._launch.EnvisionConsoleOutputReceiver;
 import envision_lang._launch.EnvisionLangErrorCallBack;
 import envision_lang._launch.EnvisionProgram;
@@ -42,8 +42,7 @@ public class EnvisionCodeBlock extends CreatorBlock implements EnvisionConsoleOu
     public final BlockConnectionPoint<Object> out0, out1, out2, out3, out4, out5, out6, out7, out8, out9;
     
     protected TextDocument codeDocument;
-    protected TextDocument consoleDocument;
-    
+    protected TextDocument consoleDocument;    
     //==============
     // Constructors
     //==============
@@ -76,8 +75,7 @@ public class EnvisionCodeBlock extends CreatorBlock implements EnvisionConsoleOu
         
         setSize(700, 500);
         setResizeable(true);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -180,8 +178,7 @@ public class EnvisionCodeBlock extends CreatorBlock implements EnvisionConsoleOu
     @Override
     public void onEnvisionPrintln(String line) {
         consoleDocument.addLine(line);
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -231,6 +228,7 @@ public class EnvisionCodeBlock extends CreatorBlock implements EnvisionConsoleOu
         runner = new EnvisionProgramRunner(program);
     }
     
+    @EFunction public synchronized boolean inBool(int point) { return ((Boolean) getInputValue(point)).booleanValue(); }
     @EFunction public synchronized long inInt(int point) { return ((Number) getInputValue(point)).longValue(); }
     @EFunction public synchronized double inDouble(int point) { return ((Number) getInputValue(point)).doubleValue(); }
     @EFunction public synchronized String inString(int point) { return String.valueOf(getInputValue(point)); }

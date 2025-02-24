@@ -14,8 +14,7 @@ public class FixedTimeEventComponent extends TimeEventComponent {
     /** The interval (in ms) between each time event. Begins after the initial delay is over. */
     protected float timeInterval;
     /** A specified duration (in ms) that must pass before time intervals are measured. */
-    protected float startDelay;
-    
+    protected float startDelay;    
     //==============
     // Constructors
     //==============
@@ -72,8 +71,7 @@ public class FixedTimeEventComponent extends TimeEventComponent {
         
         timeInterval = interval;
         startDelay = delay;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -95,20 +93,17 @@ public class FixedTimeEventComponent extends TimeEventComponent {
             currentTime = 0F;
             lastEventTime = 0F;
         }
-    }
-    
+    }    
     //=========
     // Getters
     //=========
     
     public float getTimeInterval() { return timeInterval; }
-    public float getStartDelay() { return startDelay; }
-    
+    public float getStartDelay() { return startDelay; }    
     //=========
     // Setters
     //=========
     
     public void setTimeInterval(float intervalIn) { timeInterval = intervalIn; }
-    
     
 }

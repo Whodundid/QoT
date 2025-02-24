@@ -1,25 +1,24 @@
 package envision.engine;
 
-import static envision.engine.settings.config.ConfigSetting.*;
+import static envision.engine.loader.built.engine.ConfigSetting.*;
 import static envision.launcher.EnvisionGameInstaller.*;
 
 import java.io.File;
 import java.nio.file.Files;
 
-import envision.engine.kernel.terminal.terminalUtil.ESystemInfo;
-import envision.engine.settings.config.ConfigSetting;
-import envision.engine.settings.config.setting_types.BooleanConfigSetting;
-import envision.engine.settings.config.setting_types.IntegerConfigSetting;
-import envision.engine.settings.config.setting_types.StringConfigSetting;
+import envision.engine.internal.kernel.terminal.terminalUtil.ESystemInfo;
+import envision.engine.internal.settings.config.setting_types.BooleanConfigSetting;
+import envision.engine.internal.settings.config.setting_types.IntegerConfigSetting;
+import envision.engine.internal.settings.config.setting_types.StringConfigSetting;
+import envision.engine.loader.built.engine.ConfigSetting;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.sys.OSType;
 
-public class EngineSettings {
-    
-    //==============
-    // Constructors
-    //==============
+public class EngineSettings {    
+    //================
+    // Static Methods
+    //================
     
     private EngineSettings() {}
     
@@ -57,7 +56,7 @@ public class EngineSettings {
     public static final IntegerConfigSetting
     
     targetFPS           = intSetting("targetFPS", "Target FPS", 60),
-    targetUPS           = intSetting("targetUPS", "Target UPS", 150),
+    targetUPS           = intSetting("targetUPS", "Target UPS", 60),
     resolutionScale     = intSetting("resScale", "Resolution Scale", 1),
     termBackground      = intSetting("termBackground", "Terminal Background Color", 0xff000000),
     hoverTextColor      = intSetting("hoverTextColor", "Text Hover Color", EColors.aquamarine.intVal),
@@ -146,8 +145,7 @@ public class EngineSettings {
         }
         
         return dir;
-    }
-    
+    }    
     //=========
     // Getters
     //=========

@@ -1,7 +1,7 @@
 package envision.engine.events.eventTypes.entity;
 
-import envision.engine.events.EventType;
-import envision.game.entities.Entity;
+import envision.engine.events.EnvisionEventType;
+import envision.engine.loader.built.game.Entity;
 import envision.game.world.GameWorld;
 
 public class EntityDiedEvent extends EntityEvent {
@@ -10,7 +10,7 @@ public class EntityDiedEvent extends EntityEvent {
     private final Entity ent;
     
     public EntityDiedEvent(GameWorld worldIn, Entity entIn) {
-        super(EventType.ENTITY_DIED, true);
+        super(EnvisionEventType.ENTITY_DIED, true);
         world = worldIn;
         ent = entIn;
     }

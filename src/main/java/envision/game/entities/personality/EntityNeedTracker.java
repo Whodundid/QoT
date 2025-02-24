@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 
 public class EntityNeedTracker {
     
@@ -13,16 +13,14 @@ public class EntityNeedTracker {
     //========
     
     public Entity theEntity;
-    public Map<EntityNeed, Float> needTrackerMap = new HashMap<>();
-    
+    public Map<EntityNeed, Float> needTrackerMap = new HashMap<>();    
     //==============
     // Constructors
     //==============
     
     public EntityNeedTracker(Entity entityIn) {
         theEntity = entityIn;
-    }
-    
+    }    
     //=========
     // Methods
     //=========

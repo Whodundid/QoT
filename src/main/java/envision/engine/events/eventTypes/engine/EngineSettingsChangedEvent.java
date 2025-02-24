@@ -1,7 +1,7 @@
 package envision.engine.events.eventTypes.engine;
 
-import envision.engine.events.EventType;
-import envision.engine.settings.config.ConfigSetting;
+import envision.engine.events.EnvisionEventType;
+import envision.engine.loader.built.engine.ConfigSetting;
 
 public class EngineSettingsChangedEvent extends EngineEvent {
     
@@ -10,7 +10,7 @@ public class EngineSettingsChangedEvent extends EngineEvent {
     private final Object oldValue;
     
     public <E> EngineSettingsChangedEvent(ConfigSetting<E> settingIn, E oldValueIn) {
-        super(EventType.ENGINE_LOADED_CONFIG, true);
+        super(EnvisionEventType.ENGINE_LOADED_CONFIG, true);
         setting = settingIn;
         oldValue = oldValueIn;
     }

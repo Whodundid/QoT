@@ -1,7 +1,7 @@
 package qot.assets.textures.doodads.ground_clutter;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class GroundClutterTextures extends TextureLoader {
@@ -30,10 +30,10 @@ public class GroundClutterTextures extends TextureLoader {
     weeds = new WeedClutter(),
     leaves = new LeavesClutter(),
     sticks = new SticksClutter();
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

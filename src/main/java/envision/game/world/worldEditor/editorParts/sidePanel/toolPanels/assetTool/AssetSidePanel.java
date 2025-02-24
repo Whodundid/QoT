@@ -2,8 +2,8 @@ package envision.game.world.worldEditor.editorParts.sidePanel.toolPanels.assetTo
 
 import static envision.game.world.worldEditor.editorTools.EditorToolType.*;
 
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
 import envision.game.GameObject;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.MapEditorSettings;

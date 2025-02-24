@@ -1,7 +1,7 @@
 package qot.entities.enemies;
 
 import envision.Envision;
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.Enemy;
 import envision.game.entities.combat.EntityAttack;
@@ -16,6 +16,10 @@ import qot.items.Items;
 
 public class TrollBoar extends Enemy {
     
+    //========
+    // Fields
+    //========
+    
     private long lastAttack;
     private long nextAttack;
     private Point2i lastPlayerPoint;
@@ -28,6 +32,10 @@ public class TrollBoar extends Enemy {
     private GameWorld trollWorld;
     
     public static final SpeedEffect trollSpeed = new SpeedEffect("Troll Speed", 200);
+    
+    //==============
+    // Constructors
+    //==============
     
     public TrollBoar() { this(0, 0); }
     public TrollBoar(int posX, int posY) {
@@ -49,6 +57,10 @@ public class TrollBoar extends Enemy {
         
         addComponent(itemOnDeath);
     }
+    
+    //===========
+    // Overrides
+    //===========
     
     @Override
     public void onLivingUpdate(float dt) {

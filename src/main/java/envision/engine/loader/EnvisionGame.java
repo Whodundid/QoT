@@ -4,12 +4,15 @@ import java.io.File;
 
 import envision.engine.events.GameEvent;
 import envision.engine.events.IEventListener;
-import envision.engine.kernel.terminal.TerminalCommandHandler;
-import envision.engine.loader.dtos.EnvisionGameDTO;
-import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.screens.GameScreen;
-import envision.engine.settings.config.ConfigSetting;
-import envision.engine.settings.config.EnvisionConfigFile;
+import envision.engine.internal.kernel.terminal.TerminalCommandHandler;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.settings.GameSettings;
+import envision.engine.internal.settings.config.EnvisionConfigFile;
+import envision.engine.loader.built.engine.ConfigSetting;
+import envision.engine.loader.built.game.GameScreen;
+import envision.engine.loader.dtos.engine.EnvisionGameDTO;
+import envision.engine.loader.parser.objects.ParsedGameDefinition;
+import envision.engine.loader.registry.GameResourceRegistry;
 import envision.launcher.EnvisionGameLauncher;
 import envision.launcher.LauncherSettings;
 import eutil.datatypes.util.EList;
@@ -40,6 +43,12 @@ public class EnvisionGame implements IEventListener {
     private GameScreen mainMenuScreen;
     private GameScreen newGameScreen;
     
+    
+    
+    private GameResourceRegistry resourceRegistry;
+    private ParsedGameDefinition gameDefinition;
+    
+        
     //==============
     // Constructors
     //==============
@@ -47,29 +56,39 @@ public class EnvisionGame implements IEventListener {
     public EnvisionGame() {}
     
     public EnvisionGame(LoadedGameDirectory dirIn) throws Exception {
+        assignFromLoadedGameDirectory(dirIn);
+    }
+    
+    protected void initializeFromDTO() throws Exception {
+        gameName = dto.gameName();
+        gameVersion = dto.gameVersion();
+        
+        installationDirectory = gameDirectory.getDirectory();
+        resourcesDirectory = new File(installationDirectory, dto.resourcesDir());
+        
+        if (dto.savesDir() != null) savedGamesDirectory = new File(installationDirectory, dto.savesDir());
+        if (dto.mainConfigFile() != null) configFile = new File(installationDirectory, dto.mainConfigFile());
+        
+        gameSettings = new GameSettings(gameDirectory.getConfigurationSettings());
+        gameConfig = new GameConfig(this);
+        gameConfig.tryLoad();
+        
+        // setup 
+    }
+    
+    //=========
+    // Methods
+    //=========
+    
+    public void assignFromLoadedGameDirectory(LoadedGameDirectory dirIn) throws Exception {
         gameDirectory = dirIn;
         dto = gameDirectory.getGameDTO();
         initializeFromDTO();
     }
     
-    protected void initializeFromDTO() throws Exception {
-        gameName = dto.getGameName();
-        gameVersion = dto.getGameVersion();
-        
-        installationDirectory = gameDirectory.getDirectory();
-        resourcesDirectory = new File(installationDirectory, dto.getResourcesDir());
-        savedGamesDirectory = new File(installationDirectory, dto.getSavesDir());
-        
-        String configName = dto.getMainConfigFile();
-        if (configName != null) {
-            configFile = new File(installationDirectory, dto.getMainConfigFile());
-        }
-        
-        gameSettings = new GameSettings(gameDirectory.getConfigurationSettings());
-        gameConfig = new GameConfig(this);
-        gameConfig.tryLoad();
-    }
-    
+    public void assignResourceRegistry(GameResourceRegistry registryIn) {
+        this.resourceRegistry = registryIn;
+    }    
     //=========
     // Getters
     //=========
@@ -88,6 +107,8 @@ public class EnvisionGame implements IEventListener {
     public File getInstallationDirectory() { return installationDirectory; }
     public File getSavedGamesDirectory() { return savedGamesDirectory; }
     public File getEditorWorldsDirectory() { return new File(installationDirectory, "editorWorlds"); }
+    
+    public GameResourceRegistry getResourceRegistry() { return resourceRegistry; }
     
     public String getResourcesPath() { return EStringUtil.toString(resourcesDirectory); }
     public String getInstallationPath() { return EStringUtil.toString(installationDirectory); }
@@ -110,14 +131,10 @@ public class EnvisionGame implements IEventListener {
     /** Returns this game's new game screen. */
     public GameScreen getNewGameScreen() {
         return null;
-    }
-    
+    }    
     //=========
     // Setters
-    //=========
-    
-    
-    
+    //=========    
     //=========
     // Methods
     //=========

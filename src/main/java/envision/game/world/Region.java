@@ -7,8 +7,8 @@ import envision.CurrentGame;
 import envision.Envision;
 import envision.engine.events.eventTypes.entity.EntityEnteredRegionEvent;
 import envision.engine.events.eventTypes.entity.EntityExitedRegionEvent;
+import envision.engine.loader.built.game.Entity;
 import envision.game.GameObject;
-import envision.game.entities.Entity;
 import envision_lang._launch.EnvisionProgram;
 import eutil.colors.EColors;
 import eutil.datatypes.points.Point2d;
@@ -18,10 +18,18 @@ import eutil.math.dimensions.Dimension_i;
 
 public class Region extends GameObject {
     
+    //========
+    // Fields
+    //========
+    
     protected int regionColor;
     protected boolean onlyRenderInEditor = true;
     protected EList<Entity> entitiesInside = EList.newList();
     protected EnvisionProgram regionScript;
+    
+    //==============
+    // Constructors
+    //==============
     
     public Region(IGameWorld worldIn, String nameIn) { this(worldIn, nameIn, 0, 0, 0, 0, 0xff55ff55); }
     public Region(IGameWorld worldIn, String nameIn, EColors colorIn) { this(worldIn, nameIn, 0, 0, 0, 0, colorIn.intVal); }
@@ -35,7 +43,15 @@ public class Region extends GameObject {
         regionColor = colorIn;
     }
     
+    //===========
+    // Overrides
+    //===========
+    
     @Override public String toString() { return toSaveString(); }
+    
+    //=========
+    // Methods
+    //=========
     
     public void updateRegion(float dt) {
         //check to see if the entities that are said to be inside are still actually inside

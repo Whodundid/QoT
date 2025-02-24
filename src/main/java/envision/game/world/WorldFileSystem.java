@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import envision.CurrentGame;
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.entities.EntitySpawn;
 import envision.game.world.worldFileSystem.WorldSavingSystem;
 import envision.game.world.worldTiles.VoidTile;
@@ -30,8 +30,7 @@ public class WorldFileSystem {
     /** True if the world's primary directories have been created. */
     private boolean created = false;
     /** True if the world has been successfully loaded. */
-    private boolean fileLoaded = false;
-    
+    private boolean fileLoaded = false;    
     //==============
     // Constructors
     //==============
@@ -39,8 +38,7 @@ public class WorldFileSystem {
     public WorldFileSystem(GameWorld worldIn) {
         if (worldIn == null) throw new RuntimeException("Null game world!");
         theWorld = worldIn;
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -332,8 +330,7 @@ public class WorldFileSystem {
             e.printStackTrace();
         }
         return true;
-    }
-    
+    }    
     //=========
     // Getters
     //=========

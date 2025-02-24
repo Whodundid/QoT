@@ -3,9 +3,9 @@ package qot.abilities.tier1;
 import org.joml.Vector3f;
 
 import envision.Envision;
-import envision.game.abilities.Ability;
+import envision.engine.loader.built.game.Ability;
+import envision.engine.loader.built.game.Entity;
 import envision.game.abilities.AbilityTier;
-import envision.game.entities.Entity;
 import eutil.math.ENumUtil;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.ability.AbilityTextures;

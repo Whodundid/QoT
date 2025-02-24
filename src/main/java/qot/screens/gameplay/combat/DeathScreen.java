@@ -1,10 +1,10 @@
 package qot.screens.gameplay.combat;
 
 import envision.Envision;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.GameScreen;
 import envision.game.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;

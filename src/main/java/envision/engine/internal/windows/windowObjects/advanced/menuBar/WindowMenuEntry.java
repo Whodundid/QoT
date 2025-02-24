@@ -1,0 +1,87 @@
+package envision.engine.internal.windows.windowObjects.advanced.menuBar;
+
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.internal.windows.windowTypes.ActionObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.Sprite;
+
+public class WindowMenuEntry extends ActionObject {
+    
+    //========
+    // Fields
+    //========
+    
+    private WindowButton entryButton;
+    private WindowImageBox entrySpriteDisplay;
+    
+    private String entryTitle;
+    private Sprite entrySprite;
+    
+    public static final String DEFAULT_ENTRY_TITLE = "New Entry";
+    public static final int DEFAULT_ENTRY_PIXEL_HEIGHT = 30;    
+    //==============
+    // Constructors
+    //==============
+    
+    public WindowMenuEntry() { this(DEFAULT_ENTRY_TITLE, null, null); }
+    public WindowMenuEntry(String titleIn) { this(titleIn, null, null); }
+    public WindowMenuEntry(String titleIn, Runnable pressActionIn) { this(titleIn, null, pressActionIn); }
+    public WindowMenuEntry(String titleIn, Sprite entrySpriteIn) { this(titleIn, entrySpriteIn, null); }
+    public WindowMenuEntry(String titleIn, Sprite entrySpriteIn, Runnable pressActionIn) {
+        this.entryTitle = titleIn;
+        this.setObjectName(titleIn);
+        this.entrySprite = entrySpriteIn;
+        this.onPressAction = pressActionIn;
+        this.setRunActionOnPress(true);
+    }    
+    //===========
+    // Overrides
+    //===========
+    
+    @Override
+    public void initChildren() {
+        double h = DEFAULT_ENTRY_PIXEL_HEIGHT;
+        double w = ((entrySprite != null) ? DEFAULT_ENTRY_PIXEL_HEIGHT : 0) + strWidth(entryTitle) + 20;
+        setSize(w, h);
+        
+        entrySpriteDisplay = new WindowImageBox(this, startX, startY, height, height);
+        if (entrySprite != null) entrySpriteDisplay.setSprite(entrySprite);
+        entrySpriteDisplay.setVisible(entrySprite != null);
+        
+        double bWidth = (entrySprite != null) ? endX - entrySpriteDisplay.endX : w;
+        double sx = (entrySprite != null) ? entrySpriteDisplay.endX : 0;
+        
+        entryButton = new WindowButton(this, sx, startY, bWidth, height, entryTitle);
+        entryButton.setDrawBackground(false);
+        entryButton.setAction(onPressAction);
+        entryButton.setActionReceiver(this);
+        
+        addObject(entrySpriteDisplay, entryButton);
+    }
+    
+    @Override
+    public void drawObject(float dt, int mXIn, int mYIn) {
+        //System.out.println(entrySpriteDisplay.getDimensions());
+        //System.out.println(getDimensions());
+        //drawHRect(EColors.red);
+        //drawRect(endX, startY, endX + 1, endY, EColors.red);
+    }
+    
+    @Override
+    public void actionPerformed(IActionObject object, Object... args) {
+        var p = getParent();
+        if (p != null) p.actionPerformed(this, args);
+    }    
+    //=========
+    // Getters
+    //=========
+    
+    public String getEntryTitle() { return entryTitle; }    
+    //=========
+    // Setters
+    //=========
+    
+    public void setEntryTitle(String titleIn) { entryTitle = titleIn; }
+    
+}

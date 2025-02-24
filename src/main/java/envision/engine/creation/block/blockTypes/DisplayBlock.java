@@ -1,10 +1,10 @@
 package envision.engine.creation.block.blockTypes;
 
 import envision.engine.creation.block.blockTypes.logic.BufferBlock;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.Sprite;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
@@ -14,8 +14,7 @@ public class DisplayBlock extends BufferBlock {
     // Fields
     //========
     
-    private WindowImageBox textureDisplay;
-    
+    private WindowImageBox textureDisplay;    
     //==============
     // Constructors
     //==============
@@ -27,8 +26,7 @@ public class DisplayBlock extends BufferBlock {
         setSize(200, 200);
         setMinDims(100, 50);
         setResizeable(true);
-    }
-
+    }    
     //===========
     // Overrides
     //===========

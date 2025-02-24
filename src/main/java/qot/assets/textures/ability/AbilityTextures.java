@@ -1,7 +1,7 @@
 package qot.assets.textures.ability;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class AbilityTextures extends TextureLoader {
@@ -30,9 +30,9 @@ public class AbilityTextures extends TextureLoader {
     cast_fireball = new GameTexture(textureDir, "Cast_Fireball.png"),
     cast_kick = new GameTexture(textureDir, "kick.png");
     
-    //-----------
+    //===========
     // Overrides
-    //-----------
+    //===========
     
     @Override
     public void onRegister(TextureSystem sys) {

@@ -1,6 +1,6 @@
 package qot.items;
 
-import envision.game.items.Item;
+import envision.engine.loader.built.game.Item;
 import envision.game.items.Potion;
 import envision.game.items.Weapon;
 import eutil.datatypes.util.EList;

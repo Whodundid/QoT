@@ -2,7 +2,7 @@ package envision.debug.debugCommands;
 
 import envision.Envision;
 import envision.debug.testStuff.HuntDistanceMap;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
 import envision.game.entities.util.EntityLevel;
 
 @SuppressWarnings("unused")

@@ -1,8 +1,8 @@
 package envision.game.component.types;
 
+import envision.engine.loader.built.game.EntityComponent;
 import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
-import envision.game.component.EntityComponent;
 
 public class OnClickComponent extends EntityComponent {
 

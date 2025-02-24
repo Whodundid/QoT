@@ -1,21 +1,20 @@
 package qot.entities.house;
 
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import envision.game.component.types.death.DropItemOnDeathComponent;
 import envision.game.entities.BasicRenderedEntity;
-import envision.game.entities.Entity;
-import envision.game.items.Item;
 import qot.assets.textures.doodads.house.HouseTextures;
 import qot.entities.EntityList;
 import qot.items.Items;
 
 public class Chest extends BasicRenderedEntity {
-
+    
     //========
     // Fields
     //========
     
-    private Item item;
-    
+    private Item item;    
     //==============
     // Constructors
     //==============

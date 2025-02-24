@@ -56,8 +56,7 @@ public class LevelManager {
     protected boolean isDay = false;
     protected boolean isNight = false;
     protected boolean isSunrise = false;
-    protected boolean isSunset = false;
-    
+    protected boolean isSunset = false;    
     //==============
     // Constructors
     //==============
@@ -73,8 +72,7 @@ public class LevelManager {
         worlds.addIfNotNull(startingWorld);
         
         camera = new WorldCamera();
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -99,7 +97,7 @@ public class LevelManager {
             timeOfDay = 0;
         }
         
-        int minLight = 100; // the minimum brightness of the world
+        int minLight = 40; // the minimum brightness of the world
         int maxLight = 255; // the maximum brightness of the world
         int deltaLight = maxLight - minLight;
 

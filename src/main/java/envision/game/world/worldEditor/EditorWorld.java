@@ -2,8 +2,8 @@ package envision.game.world.worldEditor;
 
 import java.io.File;
 
+import envision.engine.loader.built.game.Entity;
 import envision.game.GameObject;
-import envision.game.entities.Entity;
 import envision.game.entities.EntitySpawn;
 import envision.game.world.GameWorld;
 import envision.game.world.IGameWorld;
@@ -45,8 +45,7 @@ public class EditorWorld implements IGameWorld {
     private final EList<Region> regionData = new EArrayList<>();
     private PlayerSpawnPoint playerSpawn;
     private boolean underground = false;
-    protected LayerSystem layers = new LayerSystem();
-    
+    protected LayerSystem layers = new LayerSystem();    
     //==============
     // Constructors
     //==============
@@ -69,8 +68,7 @@ public class EditorWorld implements IGameWorld {
     public EditorWorld(GameWorld worldIn) {
         actualWorld = worldIn;
         loadWorld();
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -95,8 +93,7 @@ public class EditorWorld implements IGameWorld {
     }
     @Override public void onRenderTick(float partialTicks) {}
     @Override public WorldRenderer getWorldRenderer() { return null; }
-    @Override public File getWorldFile() { return actualWorld.getWorldFile(); }
-    
+    @Override public File getWorldFile() { return actualWorld.getWorldFile(); }    
     //=========
     // Methods
     //=========
@@ -310,8 +307,7 @@ public class EditorWorld implements IGameWorld {
         }
         
         return actualWorld.saveWorldToFile();
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -353,8 +349,7 @@ public class EditorWorld implements IGameWorld {
     @Override public int getTileHeight() { return tileHeight; }
     
     @Override public boolean isUnderground() { return underground; }
-    @Override public void setUnderground(boolean val) { underground = val; }
-    
+    @Override public void setUnderground(boolean val) { underground = val; }    
     //=========
     // Setters
     //=========

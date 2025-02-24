@@ -1,8 +1,8 @@
 package envision.engine.scripting.scriptBuilder.events.region.entityTypes;
 
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import envision.engine.scripting.scriptBuilder.events.region.EntityRegionEvent;
-import envision.game.entities.Entity;
-import envision.game.items.Item;
 import envision.game.world.GameWorld;
 import envision.game.world.Region;
 

@@ -8,21 +8,21 @@ import envision.Envision;
 import envision.engine.creation.block.BlockConnectionPoint;
 import envision.engine.creation.block.FunctionBlock;
 import envision.engine.creation.block.PointLocation;
-import envision.engine.kernel.developerDesktop.windows.fileExplorer.FileExplorerWindow;
-import envision.engine.kernel.developerDesktop.windows.fileExplorer.MovingFileObject;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.rendering.textureSystem.TextureUtil;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowCheckBox;
-import envision.engine.windows.windowObjects.action.WindowTextField;
-import envision.engine.windows.windowObjects.basic.WindowImageBox;
-import envision.engine.windows.windowTypes.DragAndDropObject;
-import envision.engine.windows.windowUtil.ObjectPosition;
-import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
-import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
+import envision.engine.internal.kernel.developerDesktop.windows.fileExplorer.FileExplorerWindow;
+import envision.engine.internal.kernel.developerDesktop.windows.fileExplorer.MovingFileObject;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureUtil;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowCheckBox;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.internal.windows.windowTypes.DragAndDropObject;
+import envision.engine.internal.windows.windowUtil.ObjectPosition;
+import envision.engine.internal.windows.windowUtil.windowEvents.WindowObjectEvent;
+import envision.engine.internal.windows.windowUtil.windowEvents.events.EventDragAndDrop;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.Sprite;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
@@ -68,8 +68,7 @@ public class TextureInputBlock extends FunctionBlock {
     private WindowTextField elementField;
     
     protected WindowImageBox textureDisplayer;
-    protected WindowButton setTexture, clearTexture;
-    
+    protected WindowButton setTexture, clearTexture;    
     //==============
     // Constructors
     //==============
@@ -92,8 +91,7 @@ public class TextureInputBlock extends FunctionBlock {
         setSize(302, 302);
         setMinDims(200, 200);
         setResizeable(true);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -331,7 +329,7 @@ public class TextureInputBlock extends FunctionBlock {
     }
     
     @Override
-    public void onGroupNotification(ObjectEvent e) {
+    public void onGroupNotification(WindowObjectEvent e) {
         if (e instanceof EventDragAndDrop d) {
             onDragAndDrop(d.getObjectBeingDropped());
         }

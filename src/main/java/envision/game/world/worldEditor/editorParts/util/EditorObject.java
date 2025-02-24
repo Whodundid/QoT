@@ -1,8 +1,8 @@
 package envision.game.world.worldEditor.editorParts.util;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.GameObject;
-import envision.game.entities.Entity;
 import envision.game.util.IDrawable;
 import envision.game.world.worldTiles.WorldTile;
 
@@ -19,8 +19,7 @@ public class EditorObject implements IDrawable {
     
     private GameObject theObject;
     private EditorObjectType type;
-    private boolean isSelected = false;
-    
+    private boolean isSelected = false;    
     //==============
     // Constructors
     //==============
@@ -38,8 +37,7 @@ public class EditorObject implements IDrawable {
     protected EditorObject(GameObject objectIn, EditorObjectType typeIn) {
         theObject = objectIn;
         type = typeIn;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -52,8 +50,7 @@ public class EditorObject implements IDrawable {
     @Override
     public double getSortPoint() {
         return theObject.getSortPoint();
-    }
-    
+    }    
     //=========
     // Methods
     //=========

@@ -1,6 +1,6 @@
 package qot.assets.textures.world.floors;
 
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 import qot.assets.textures.world.floors.stone.StoneFloorTextures;
 import qot.assets.textures.world.floors.wood.WoodFloorTextures;
@@ -21,10 +21,10 @@ public class FloorTextures extends TextureLoader {
     
     public static StoneFloorTextures stone_floors = StoneFloorTextures.instance();
     public static WoodFloorTextures wood_floors = WoodFloorTextures.instance();
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

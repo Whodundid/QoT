@@ -1,10 +1,10 @@
 package envision.game.world.worldEditor.editorTools.tools;
 
 import envision.Envision;
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.registry.types.Sprite;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.GameObject;
-import envision.game.entities.Entity;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorParts.sidePanel.SidePanelType;
 import envision.game.world.worldEditor.editorParts.util.EditorObject;
@@ -13,16 +13,18 @@ import envision.game.world.worldEditor.editorUtil.PlayerSpawnPoint;
 
 public class Tool_Place extends EditorTool {
     
-    private EditorObject object;
+    //========
+    // Fields
+    //========
     
+    private EditorObject object;    
     //==============
     // Constructors
     //==============
     
     public Tool_Place(MapEditorScreen in) {
         super(in);
-    }
-
+    }    
     //===========
     // Overrides
     //===========

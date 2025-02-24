@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.jar.JarFile;
 
 import envision.Envision;
-import envision.engine.kernel.terminal.terminalUtil.ESystemInfo;
+import envision.engine.internal.kernel.terminal.terminalUtil.ESystemInfo;
 import eutil.sys.OSType;
 
 public abstract class EnvisionGameInstaller {
@@ -24,11 +24,10 @@ public abstract class EnvisionGameInstaller {
     // Helper Enum
     //=============
     
-    protected enum InstallerStatus { SUCCESS, FAILED; }
-
-    //==============
-    // Constructors
-    //==============
+    protected enum InstallerStatus { SUCCESS, FAILED; }    
+    //================
+    // Static Methods
+    //================
     
     private EnvisionGameInstaller() {}
     
@@ -36,8 +35,7 @@ public abstract class EnvisionGameInstaller {
     // Abstract Methods
     //==================
     
-    public abstract File getInstallationDirectory();
-    
+    public abstract File getInstallationDirectory();    
     //================
     // Static Methods
     //================

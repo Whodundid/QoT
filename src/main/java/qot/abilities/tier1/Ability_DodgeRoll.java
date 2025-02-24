@@ -3,8 +3,8 @@ package qot.abilities.tier1;
 import org.joml.Vector3f;
 
 import envision.Envision;
-import envision.game.abilities.Ability;
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Ability;
+import envision.engine.loader.built.game.Entity;
 import envision.game.entities.combat.DodgeRoll;
 import qot.assets.textures.ability.AbilityTextures;
 
@@ -14,8 +14,7 @@ public class Ability_DodgeRoll extends Ability {
     // Fields
     //========
     
-    public final DodgeRoll dodgeRoller = new DodgeRoll();
-    
+    public final DodgeRoll dodgeRoller = new DodgeRoll();    
     //==============
     // Constructors
     //==============
@@ -26,8 +25,7 @@ public class Ability_DodgeRoll extends Ability {
         setNumTiers(1);
         
         tier(0).staminaCost(25).cooldown(50);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

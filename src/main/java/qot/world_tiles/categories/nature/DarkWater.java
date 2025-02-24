@@ -1,6 +1,6 @@
 package qot.world_tiles.categories.nature;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import qot.assets.textures.world.nature.water.WaterTextures;
 import qot.world_tiles.TileIDs;
@@ -11,7 +11,7 @@ public class DarkWater extends WorldTile {
         super(TileIDs.DARK_WATER);
         setBlocksMovement(true);
         setSprite(new Sprite(WaterTextures.dark_water));
-        wallHeight = -0.05f;
+        tileHeight = -0.05f;
         setMiniMapColor(0xff181838);
     }
     

@@ -1,17 +1,17 @@
 package qot.entities.shopkeepers;
 
 import envision.Envision;
-import envision.engine.registry.types.Sprite;
-import envision.engine.windows.windowObjects.utility.RightClickMenu;
+import envision.engine.internal.windows.windowObjects.utility.RightClickMenu;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
+import envision.engine.loader.built.game.Shop;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.animations.AnimationHandler;
 import envision.game.component.ComponentType;
 import envision.game.component.types.OnClickComponent;
 import envision.game.entities.BasicRenderedEntity;
 import envision.game.entities.Enemy;
-import envision.game.entities.Entity;
 import envision.game.entities.EntityRenderer;
-import envision.game.items.Item;
-import envision.game.shops.Shop;
 import envision.game.shops.Shopkeeper;
 import eutil.datatypes.util.EList;
 import eutil.math.dimensions.Dimension_d;

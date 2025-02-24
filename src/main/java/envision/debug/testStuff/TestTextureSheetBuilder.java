@@ -9,23 +9,23 @@ import javax.imageio.ImageIO;
 import envision.engine.creation.block.BlockConnectionPoint;
 import envision.engine.creation.block.FunctionBlock;
 import envision.engine.creation.block.PointLocation;
-import envision.engine.kernel.developerDesktop.DeveloperDesktop;
-import envision.engine.kernel.developerDesktop.windows.fileExplorer.MovingFileObject;
-import envision.engine.kernel.terminal.terminalUtil.FileType;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowTextField;
-import envision.engine.windows.windowObjects.basic.WindowImageBox;
-import envision.engine.windows.windowObjects.utility.ErrorDialogBox;
-import envision.engine.windows.windowObjects.utility.InfoDialogBox;
-import envision.engine.windows.windowTypes.DragAndDropObject;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowUtil.WindowObjectGroup;
-import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
-import envision.engine.windows.windowUtil.windowEvents.events.EventDragAndDrop;
+import envision.engine.internal.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.internal.kernel.developerDesktop.windows.fileExplorer.MovingFileObject;
+import envision.engine.internal.kernel.terminal.terminalUtil.FileType;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.internal.windows.windowObjects.utility.ErrorDialogBox;
+import envision.engine.internal.windows.windowObjects.utility.InfoDialogBox;
+import envision.engine.internal.windows.windowTypes.DragAndDropObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowUtil.WindowObjectGroup;
+import envision.engine.internal.windows.windowUtil.windowEvents.WindowObjectEvent;
+import envision.engine.internal.windows.windowUtil.windowEvents.events.EventDragAndDrop;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.Sprite;
 import eutil.colors.EColors;
 import eutil.datatypes.Grid;
 import eutil.datatypes.util.EList;
@@ -129,13 +129,13 @@ public class TestTextureSheetBuilder extends FunctionBlock {
             if (allTextures) {
                 synchronized (texturesToProcess) {
                     for (var o : list)
-                        texturesToProcess.add((GameTexture) o);                    
+                        texturesToProcess.add((GameTexture) o);
                 }
             }
             else if (allSprites) {
                 synchronized (spritesToProcess) {
                     for (var o : list)
-                        spritesToProcess.add((Sprite) o);                    
+                        spritesToProcess.add((Sprite) o);
                 }
             }
         }
@@ -319,7 +319,7 @@ public class TestTextureSheetBuilder extends FunctionBlock {
     }
     
     @Override
-    public void onGroupNotification(ObjectEvent e) {
+    public void onGroupNotification(WindowObjectEvent e) {
         if (e instanceof EventDragAndDrop d) {
             onDragAndDrop(d.getObjectBeingDropped());
         }

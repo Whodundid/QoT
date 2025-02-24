@@ -1,6 +1,6 @@
 package qot.assets.textures.world;
 
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
 import qot.assets.TextureLoader;
 import qot.assets.textures.world.farmland.FarmTextures;
 import qot.assets.textures.world.floors.FloorTextures;
@@ -29,10 +29,10 @@ public class WorldTextures extends TextureLoader {
     public static WallTextures wallTextures = WallTextures.instance();
     
     //-------------------------------
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

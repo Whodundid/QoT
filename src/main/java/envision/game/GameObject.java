@@ -3,9 +3,9 @@ package envision.game;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import envision.Envision;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.rendering.ObjectTransform;
+import envision.engine.internal.rendering.ObjectTransform;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.animations.AnimationHandler;
 import envision.game.util.IDrawable;
 import envision.game.world.IGameWorld;
@@ -16,9 +16,12 @@ import eutil.misc.Rotation;
 
 public abstract class GameObject extends RenderingManager implements IDrawable {
     
+    //========
+    // Fields
+    //========
+    
     public IGameWorld world;
     public Sprite sprite;
-    //public GameTexture tex;
     public double startX, startY, endX, endY;
     public double midX, midY;
     public double width, height;
@@ -40,14 +43,15 @@ public abstract class GameObject extends RenderingManager implements IDrawable {
     /** The layer that this object is rendered at. Zero by default. */
     public int renderLayer = 0;
     
-    private static AtomicInteger internalIDCounter = new AtomicInteger();
-    public static String nextObjectID() { return String.valueOf(internalIDCounter.getAndIncrement()); }
-    
     public ObjectTransform transform;
     private int cameraLayer = 0;
     
     public boolean isMoving = false;
     
+    //-------------------------------------------------
+        private static AtomicInteger internalIDCounter = new AtomicInteger();
+    public static String nextObjectID() { return String.valueOf(internalIDCounter.getAndIncrement()); }
+
     //==============
     // Constructors
     //==============

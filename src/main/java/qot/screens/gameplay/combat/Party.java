@@ -1,6 +1,6 @@
 package qot.screens.gameplay.combat;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 
 /**
  * Used to keep track of all entities on one team.
@@ -13,11 +13,10 @@ public class Party {
     //max of 4 entities in a party
     private Entity[] partyList = new Entity[4];
     //keeps track of non null party members
-    private int partySize = 0;
-    
-    //--------------
+    private int partySize = 0;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public Party() {}
     public Party(Entity... entities) {
@@ -27,11 +26,10 @@ public class Party {
             partyList[i] = entities[i];
             partySize++;
         }
-    }
-    
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     /**
      * Updates the total number of entities still ALIVE within this party.
@@ -46,11 +44,10 @@ public class Party {
     /** Returns the total number of ALIVE party members. */
     public int getPartySize() { return partySize; }
     /** Returns true if there is no one left ALIVE in the party -- (everyone's null) */
-    public boolean isDead() { return partySize == 0; }
-    
-    //---------
+    public boolean isDead() { return partySize == 0; }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     /**
      * Returns the entity at the given slot -- Does not account for bad
@@ -63,11 +60,10 @@ public class Party {
     public Entity getSlot1() { return partyList[0]; }
     public Entity getSlot2() { return partyList[1]; }
     public Entity getSlot3() { return partyList[2]; }
-    public Entity getSlot4() { return partyList[3]; }
-    
-    //---------
+    public Entity getSlot4() { return partyList[3]; }    
+    //=========
     // Setters
-    //---------
+    //=========
     
     /**
      * Assigns the entity at the given slot -- Does not account for bad

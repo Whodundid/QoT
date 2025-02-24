@@ -2,7 +2,7 @@ package envision.game.world;
 
 import envision.Envision;
 import envision.engine.EngineSettings;
-import envision.engine.inputHandlers.Mouse;
+import envision.engine.internal.inputHandlers.Mouse;
 import envision.game.GameObject;
 import eutil.datatypes.points.Point2d;
 import eutil.math.ENumUtil;
@@ -73,8 +73,7 @@ public class WorldCamera {
     private final Dimension_d drawArea = new Dimension_d();
     
     private int currentLayer = -1;
-    private int upperCameraLayer = 0;
-    
+    private int upperCameraLayer = 0;    
     //==============
     // Constructors
     //==============
@@ -219,8 +218,7 @@ public class WorldCamera {
         focusedPoint.y = yToSet;
         offsetX = entityPixelX;
         offsetY = entityPixelY;
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -304,8 +302,7 @@ public class WorldCamera {
         r[3] = (endY + pixelOffsetY - focusedPoint.y) * zoom + drawArea.midY;
         
         return r;
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -476,15 +473,13 @@ public class WorldCamera {
         int mX = Mouse.getMx();
         int mY = Mouse.getMy();
         return (mX >= draw[0] && mX <= draw[0] + draw[2] && mY >= draw[1] && mY <= draw[1] + draw[3]);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
     
     public int getCurrentLayer() { return currentLayer; }
-    public int getUpperCameraLayer() { return upperCameraLayer; }
-    
+    public int getUpperCameraLayer() { return upperCameraLayer; }    
     //=========
     // Setters
     //=========

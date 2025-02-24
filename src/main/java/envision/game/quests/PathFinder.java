@@ -1,5 +1,7 @@
 package envision.game.quests;
 
+import envision.engine.loader.built.game.Quest;
+
 public class PathFinder {
     
     private Quest quest;

@@ -1,6 +1,7 @@
 package envision.game.abilities;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Ability;
+import envision.engine.loader.built.game.Entity;
 import eutil.datatypes.boxes.Box2;
 import eutil.datatypes.util.EList;
 import eutil.debug.Broken;
@@ -22,8 +23,7 @@ public class ActiveAbilityTracker {
     private int maxNumberOfAbilities = 5;
     /** [On cooldown, number of game ticks still left in cooldown] */
     private Box2<Boolean, Integer>[] cooldownTracker;
-    private boolean anyOnCooldown = false;
-    
+    private boolean anyOnCooldown = false;    
     //==============
     // Constructors
     //==============
@@ -37,8 +37,7 @@ public class ActiveAbilityTracker {
         for (int i = 0; i < maxIn; i++) {
             cooldownTracker[i] = new Box2<>(false, 0);
         }
-    }
-    
+    }    
     //=========
     // Methods
     //=========

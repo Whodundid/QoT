@@ -1,16 +1,15 @@
 package envision.engine.creation.block.blockTypes.constants;
 
-import envision.engine.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
 import eutil.math.ENumUtil;
 
 public class ConstNumberBlock extends ConstantValueBlock<Number> {
-
+    
     //========
     // Fields
     //========
     
-    private WindowTextField entryBox;
-    
+    private WindowTextField entryBox;    
     //==============
     // Constructors
     //==============
@@ -23,8 +22,7 @@ public class ConstNumberBlock extends ConstantValueBlock<Number> {
         
         setSize(170, 50);
         setResizeable(true);
-    }
-
+    }    
     //===========
     // Overrides
     //===========

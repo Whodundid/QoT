@@ -3,7 +3,7 @@ package envision.game.animations;
 import java.util.HashMap;
 import java.util.Map;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.GameObject;
 import eutil.datatypes.util.EList;
 
@@ -34,9 +34,9 @@ public class AnimationHandler {
     public static final String ATTACK_2 = "att2";
     public static final String ATTACK_3 = "att3";
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     /** The entity for which this animation pertains to. */
     private final GameObject theObject;
@@ -58,20 +58,18 @@ public class AnimationHandler {
     /** Indicates that the current animation will be unloaded after it finishes playing. */
     private boolean stopAtEnd;
     
-    //-------------------------------------
-    
-    //--------------
+    //-------------------------------------    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public AnimationHandler(GameObject entIn) {
         theObject = entIn;
         origTex = theObject.getSprite();
-    }
-    
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     /**
      * Returns the current keyframe aligning with the current animation
@@ -83,10 +81,10 @@ public class AnimationHandler {
     }
     
     private Sprite update(long dt) {
-        //If there is no animation to play, just return the entity's base texture
+        // If there is no animation to play, just return the entity's base texture
         if (currentAnimation == null) return origTex;
         
-        //if the animation is actively playing, continue to update animation frames
+        // if the animation is actively playing, continue to update animation frames
         if (playing) {
             curGameTick += dt;
             if (curGameTick >= currentAnimation.getUpdateInterval()) {
@@ -166,11 +164,10 @@ public class AnimationHandler {
     public void switchToAnimationSet(String set) {
         if (isPlaying(set)) return;
         playIfNotAlreadyPlaying(set);
-    }
-    
-    //---------
+    }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     /**
      * Returns the entity for which this animation handler pertains to.
@@ -281,11 +278,10 @@ public class AnimationHandler {
         for (var s : animationSets.entrySet())
             r.add(s.getValue());
         return r;
-    }
-    
-    //---------
+    }    
+    //=========
     // Setters
-    //---------
+    //=========
     
     /**
      * Attempts to set the current animation set for this handler. A
@@ -351,9 +347,9 @@ public class AnimationHandler {
         }
     }
     
-    //------------------
+    //==================
     // Internal Methods
-    //------------------
+    //==================
     
     private boolean changeWorkingSet(String newSet) {
         unloadCurrentWorkingSet();

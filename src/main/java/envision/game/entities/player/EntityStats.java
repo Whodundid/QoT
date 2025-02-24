@@ -1,7 +1,7 @@
 package envision.game.entities.player;
 
-import envision.game.entities.Entity;
-import envision.game.quests.Quest;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Quest;
 import eutil.datatypes.util.EList;
 
 public class EntityStats {
@@ -14,8 +14,7 @@ public class EntityStats {
     private int enemiesKilled;
     private int friendshipPoints; // what is ??
     private EList<Quest> completedQuests = EList.newList();
-    private EList<Quest> startedQuests = EList.newList();
-    
+    private EList<Quest> startedQuests = EList.newList();    
     //==============
     // Constructors
     //==============
@@ -24,8 +23,7 @@ public class EntityStats {
         entity = entityIn;
         enemiesKilled = 0;
         friendshipPoints = 0;
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -44,8 +42,7 @@ public class EntityStats {
     public EntityStats startQuest(Quest questIn) { startedQuests.addNullContains(questIn); return this; }
     
     public boolean hasStartedQuest(Quest questIn) { return startedQuests.contains(questIn); }
-    public boolean hasCompletedQuest(Quest questIn) { return completedQuests.contains(questIn); }
-    
+    public boolean hasCompletedQuest(Quest questIn) { return completedQuests.contains(questIn); }    
     //=========
     // Getters
     //=========
@@ -57,8 +54,7 @@ public class EntityStats {
     public int getNumQuestsCompleted() { return completedQuests.size(); }
     
     public EList<Quest> getCompletedQuests() { return completedQuests; }
-    public EList<Quest> getStartedQuests() { return startedQuests; }
-    
+    public EList<Quest> getStartedQuests() { return startedQuests; }    
     //=========
     // Setters
     //=========

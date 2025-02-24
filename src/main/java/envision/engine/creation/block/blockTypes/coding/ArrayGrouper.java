@@ -6,9 +6,9 @@ import java.util.Collection;
 import envision.engine.creation.block.BlockConnectionPoint;
 import envision.engine.creation.block.FunctionBlock;
 import envision.engine.creation.block.PointLocation;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.Sprite;
 import eutil.datatypes.util.EList;
 import eutil.math.ENumUtil;
 
@@ -25,8 +25,7 @@ public class ArrayGrouper extends FunctionBlock {
     protected final BlockConnectionPoint inputE;
     protected final BlockConnectionPoint arrayOutput;
     
-    protected final EList<Object> outputList = EList.newList();
-    
+    protected final EList<Object> outputList = EList.newList();    
     //==============
     // Constructors
     //==============
@@ -45,8 +44,7 @@ public class ArrayGrouper extends FunctionBlock {
         setSize(200, 100);
         setMinDims(100, 50);
         setResizeable(true);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

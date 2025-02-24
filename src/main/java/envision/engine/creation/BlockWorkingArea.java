@@ -2,52 +2,50 @@ package envision.engine.creation;
 
 import java.io.File;
 
+import envision.engine.creation.block.BlockRegistry;
 import envision.engine.creation.block.CreatorBlock;
-import envision.engine.windows.windowTypes.WindowObject;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import eutil.datatypes.util.EList;
-import eutil.math.dimensions.Dimension_i;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.advanced.textArea.WindowTextArea;
+import envision.engine.internal.windows.windowObjects.basic.WindowPanel;
+import envision.engine.internal.windows.windowTypes.WindowObject;
+import envision.engine.internal.windows.windowUtil.layouts.WindowBorderLayout;
+import eutil.colors.EColors;
 
 public class BlockWorkingArea extends WindowObject {
     
-    public static final int INITIAL_WIDTH = 1000;
-    public static final int INITIAL_HEIGHT = 1000;
-
     //========
     // Fields
     //========
     
-    protected double zoom = 1.0;
+    protected File workingFile;
     
-    /** All blocks actively within this block working area. */
-    protected final EList<CreatorBlock> blockList = EList.newList();
-    /** Blocks that are actively selected. */
-    protected final EList<CreatorBlock> currentSelection = EList.newList();
-    /** Clipboard memory. */
-    protected final EList<CreatorBlock> blockClipboard = EList.newList();
-    
-    protected Dimension_i areaSpace;
-    protected Dimension_i currentView;
+    private WindowTextArea<Class<? extends CreatorBlock>> blockListPanel;
+    private WindowPanel leftPanel;
+    private WindowButton create, delete;
+    private BlockAreaPanel blockArea;
     
     //==============
     // Constructors
     //==============
     
-    public BlockWorkingArea() {}
-    public BlockWorkingArea(File designToLoad) {
-        areaSpace = new Dimension_i();
-        currentView = new Dimension_i();
+    public BlockWorkingArea() {
+        this((File) null);
+    }
+    
+    public BlockWorkingArea(File FileToLoad) {
+        workingFile = FileToLoad;
     }
 
     public BlockWorkingArea(BlockWorkingArea areaIn) {
-        areaSpace = new Dimension_i(areaIn.areaSpace);
-        currentView = new Dimension_i(areaIn.currentView);
+        workingFile = areaIn.workingFile;
         
-        blockList.addAll(areaIn.blockList);
+//        areaSpace = new Dimension_i(areaIn.areaSpace);
+//        currentView = new Dimension_i(areaIn.currentView);
         
-        zoom = areaIn.zoom;
-    }
-    
+//        blockList.addAll(areaIn.blockList);
+//        
+//        zoom = areaIn.zoom;
+    }    
     //===========
     // Overrides
     //===========
@@ -55,91 +53,96 @@ public class BlockWorkingArea extends WindowObject {
     @Override
     public void initChildren() {
         super.initChildren();
+        
+        setLayout(new WindowBorderLayout());
+        
+        double w = width / 5;
+
+        leftPanel = new WindowPanel(new WindowBorderLayout());
+        leftPanel.setBackground(EColors.black);
+        leftPanel.setMinWidth(w);
+        
+        int bGap = 5;
+        int botGap = 40;
+        blockListPanel = new WindowTextArea(this, startX, startY, w, (endY - botGap) - startY);
+        
+        blockListPanel.setDrawLineNumbers(true);
+        for (var b : BlockRegistry.getBlockTypeList()) {
+            blockListPanel.addTextLine(b.getSimpleName(), b);
+        }
+        
+        blockListPanel.fitItemsInList();
+        
+        double by = blockListPanel.endY + bGap;
+        double bw = w / 2 - bGap * 2 + 3;
+        double bh = botGap - (bGap * 2);
+        create = new WindowButton(this, startX + bGap, by, bw, bh, "Create");
+        delete = new WindowButton(this, create.endX + bGap, by, bw, bh, "Delete");
+        
+        create.setAction(this::createBlock);
+        delete.setAction(this::deleteBlocks);
+        
+        create.setEnabled(false);
+        delete.setEnabled(false);
+        
+        var topLeft = new WindowPanel();
+        var botLeft = new WindowPanel();
+        
+        topLeft.setMinHeight(botGap);
+        botLeft.setMinHeight(botGap);
+        
+        botLeft.addObject(create);
+        botLeft.addObject(delete);
+        //leftPanel.addObject(topLeft, WindowBorderLayout.NORTH);
+        leftPanel.addObject(botLeft, WindowBorderLayout.SOUTH);
+        leftPanel.addObject(blockListPanel, WindowBorderLayout.CENTER);
+        
+        blockArea = new BlockAreaPanel();
+        
+        addObject(blockArea, WindowBorderLayout.CENTER);
+        addObject(leftPanel, WindowBorderLayout.WEST);
+    }
+    
+    @Override
+    public void preReInit() {
+        super.preReInit();
+    }
+    
+    @Override
+    public void postReInit() {
+        super.postReInit();
     }
     
     @Override
     public void drawObject_i(float dt, int mXIn, int mYIn) {
         super.drawObject_i(dt, mXIn, mYIn);
-    }
-    
-    @Override
-    public void mousePressed(int mX, int mY, int button) {
-        super.mousePressed(mX, mY, button);
-    }
-    
-    @Override
-    public void mouseDragged(int mX, int mY, int button, long timeSinceLastClick) {
-        super.mouseDragged(mX, mY, button, timeSinceLastClick);
-    }
-    
-    @Override
-    public void mouseReleased(int mX, int mY, int button) {
-        super.mouseReleased(mX, mY, button);
-    }
-    
-    @Override
-    public void keyPressed(char typedChar, int keyCode) {
-        super.keyPressed(typedChar, keyCode);
-    }
-    
-    @Override
-    public void keyReleased(char typedChar, int keyCode) {
-        super.keyReleased(typedChar, keyCode);
-    }
-    
-    @Override
-    public void actionPerformed(IActionObject object, Object... args) {
-        super.actionPerformed(object, args);
-    }
-    
-    //==================
-    // Internal Methods
-    //==================
-    
-    protected void panArea(int dx, int dy) {
-        currentView.translate(dx, dy);
         
-        // shift all blocks
-        for (var block : blockList) {
-            block.move(dx, dy);
-        }
+        create.setEnabled(blockListPanel.getCurrentLine() != null);
+        delete.setEnabled(blockArea.currentSelection.isNotEmpty());
     }
     
     //=========
     // Methods
     //=========
     
-    public CreatorBlock addBlock(CreatorBlock blockIn, int x, int y) {
-        if (blockIn == null) return null;
-        
-        blockList.add(blockIn);
-        blockIn.setPosition(x, y);
-        
-        return blockIn;
-    }
-    
-    public EList<CreatorBlock> removeBlocks(EList<CreatorBlock> toRemove) {
-        if (toRemove == null) return null;
-        if (toRemove.isEmpty()) return toRemove;
-        
-        EList<CreatorBlock> removed = EList.newList();
-        
-        synchronized (blockList) {
-            for (CreatorBlock b : toRemove) {
-                var block = blockList.getAndRemove(b);
-                removed.addIfNotNull(block);
-            }
+    protected void createBlock() {
+        try {
+            var line = blockListPanel.getCurrentLine();
+            if (line == null) return;
+            
+            Class<? extends CreatorBlock> c = line.getGenericObject();
+            var con = c.getConstructor();
+            
+            var b = con.newInstance();
+            blockArea.addBlock(b, blockArea.currentView.midX, blockArea.currentView.midY);
         }
-        
-        return removed;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
-    public EList<CreatorBlock> getSelectedBlocks() {
-        return currentSelection.copy();
-    }
-    
-    public void deleteSelectedBlocks() {
-        
+    protected void deleteBlocks() {
+        blockArea.deleteSelectedBlocks();
     }
     
     public void undoAction() {}

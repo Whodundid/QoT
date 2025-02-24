@@ -2,8 +2,8 @@ package envision.engine.creation.block;
 
 import java.util.Collection;
 
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowTypes.WindowObject;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowTypes.WindowObject;
 import eutil.EUtil;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
@@ -30,8 +30,7 @@ public class BlockConnectionPoint<T> extends WindowObject {
     protected PointLocation pointLocation = PointLocation.LEFT;
     protected int maxPointConnections = Integer.MAX_VALUE;
     protected EList<BlockConnectionPoint> connections = EList.newList();
-    protected T value;
-    
+    protected T value;    
     //==============
     // Constructors
     //==============
@@ -46,8 +45,7 @@ public class BlockConnectionPoint<T> extends WindowObject {
         
         setObjectName(nameIn);
         setSize(10, 10);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -108,8 +106,7 @@ public class BlockConnectionPoint<T> extends WindowObject {
         }
         
         super.mousePressed(mX, mY, button);
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -144,8 +141,7 @@ public class BlockConnectionPoint<T> extends WindowObject {
     
     public void clearConnections() {
         connections.clear();
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -157,8 +153,7 @@ public class BlockConnectionPoint<T> extends WindowObject {
     public PointLocation getPointLocation() { return pointLocation; }
     public int getMaxPointConnections() { return maxPointConnections; }
     public EList<BlockConnectionPoint> getConnections() { return connections; }
-    public T getValue() { return value; }
-    
+    public T getValue() { return value; }    
     //=========
     // Setters
     //=========

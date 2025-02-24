@@ -1,7 +1,7 @@
 package qot.assets.textures.world.nature.sand;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class SandTextures extends TextureLoader {
@@ -31,10 +31,10 @@ public class SandTextures extends TextureLoader {
     wet_sand        = new GameTexture(textureDir, "wet_sand.png"),
     
     coarse_sand        = new Texture_CoarseSand();
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

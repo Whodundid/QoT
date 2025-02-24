@@ -1,0 +1,47 @@
+package envision.engine.internal.kernel.notifications.window;
+
+import envision.Envision;
+import envision.engine.internal.assets.WindowTextures;
+import envision.engine.internal.kernel.notifications.util.NotificationObject;
+import envision.engine.internal.windows.windowObjects.utility.RightClickMenu;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowUtil.ObjectPosition;
+
+//Author: Hunter Bragg
+
+public class NotificationRCM extends RightClickMenu {
+
+    private NotificationObject note = null;
+    
+    public NotificationRCM() { this(null); }
+    public NotificationRCM(NotificationObject noteIn) {
+        super();
+        note = noteIn;
+    }
+    
+    @Override
+    public void initWindow() {
+        if (note != null) { addOption("Close", WindowTextures.close); }
+        addOption("Settings", WindowTextures.settings);
+
+        setRunActionOnPress(true);
+        setActionReceiver(this);
+        
+        setTitle("Notifications");
+    }
+    
+    @Override
+    public void actionPerformed(IActionObject object, Object... args) {
+        if (object == this && args.length > 0) {
+            switch ((String) args[0]) {
+            case "Close": note.close(); break;
+            case "Settings": openSettings(); break;
+            }
+        }
+    }
+    
+    private void openSettings() {
+        Envision.getDeveloperDesktop().displayWindow(new NotificationWindow(), ObjectPosition.SCREEN_CENTER);
+    }
+    
+}

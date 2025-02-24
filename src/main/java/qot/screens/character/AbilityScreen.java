@@ -1,12 +1,12 @@
 package qot.screens.character;
 
 import envision.Envision;
-import envision.engine.registry.types.Sprite;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.advanced.WindowScrollList;
-import envision.engine.windows.windowObjects.basic.WindowLabel;
-import envision.game.entities.Entity;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.advanced.WindowScrollList;
+import envision.engine.internal.windows.windowObjects.basic.WindowLabel;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.GameScreen;
+import envision.engine.loader.built.game.Sprite;
 import eutil.colors.EColors;
 import qot.abilities.Abilities;
 import qot.assets.textures.ability.AbilityTextures;
@@ -31,16 +31,14 @@ public class AbilityScreen extends GameScreen {
     WindowButton rapidBlows;
     WindowButton bloodLust;
     WindowButton evasion;
-    WindowButton barder;
-    
+    WindowButton barder;    
     //==============
     // Constructors
     //==============
     
     public AbilityScreen(Entity theEntityIn) {
         theEntity = theEntityIn;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

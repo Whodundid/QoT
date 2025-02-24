@@ -1,23 +1,23 @@
 package envision.game.world.worldEditor;
 
-import static envision.engine.inputHandlers.Keyboard.*;
+import static envision.engine.internal.inputHandlers.Keyboard.*;
 
 import java.io.File;
 import java.util.Collection;
 
 import envision.Envision;
 import envision.debug.DebugSettings;
-import envision.engine.assets.EditorTextures;
 import envision.engine.events.GameEvent;
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.kernel.developerDesktop.DeveloperDesktop;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.utility.WindowDialogueBox;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.assets.EditorTextures;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.internal.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.utility.WindowDialogueBox;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.GameScreen;
 import envision.game.component.ComponentType;
-import envision.game.entities.Entity;
 import envision.game.entities.EntityRenderer;
 import envision.game.manager.LevelManager;
 import envision.game.sounds.SoundEngine;
@@ -44,7 +44,7 @@ import eutil.math.ENumUtil;
 import eutil.math.dimensions.Dimension_d;
 
 public class MapEditorScreen extends GameScreen {
-
+    
     //================
     // Fields : World
     //================
@@ -129,8 +129,7 @@ public class MapEditorScreen extends GameScreen {
     public int tileWidth;
     public int tileHeight;
     
-    public int curLayer = 0;
-    
+    public int curLayer = 0;    
     //==============
     // Constructors
     //==============
@@ -143,8 +142,7 @@ public class MapEditorScreen extends GameScreen {
     public MapEditorScreen(GameWorld worldIn) {
         actualWorld = worldIn;
         setDefaultDims();
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

@@ -1,6 +1,6 @@
 package envision.game.world.worldEditor.editorTools;
 
-import envision.engine.inputHandlers.Mouse;
+import envision.engine.internal.inputHandlers.Mouse;
 import envision.game.world.worldEditor.MapEditorScreen;
 import envision.game.world.worldEditor.editorTools.tools.Tool_Brush;
 import envision.game.world.worldEditor.editorTools.tools.Tool_Eraser;
@@ -17,7 +17,7 @@ import envision.game.world.worldEditor.editorTools.tools.Tool_Selector;
 import envision.game.world.worldEditor.editorTools.tools.Tool_Shape;
 
 public class ToolHandler {
-
+    
     //========
     // Fields
     //========
@@ -45,8 +45,7 @@ public class ToolHandler {
     private final Tool_Selector selectorTool;
     private final Tool_Shape shapeTool;
     private final Tool_Place placeTool;
-    private final Tool_RectSelect rectSelectTool;
-    
+    private final Tool_RectSelect rectSelectTool;    
     //==============
     // Constructors
     //==============

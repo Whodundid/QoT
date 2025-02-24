@@ -2,6 +2,7 @@ package envision.game.entities;
 
 import org.joml.Vector3f;
 
+import envision.engine.loader.built.game.Entity;
 import qot.particles.FloatingTextEntity;
 
 public abstract class Projectile extends BasicRenderedEntity {
@@ -29,8 +30,7 @@ public abstract class Projectile extends BasicRenderedEntity {
     /** The maximum number of enemies this projectile can damage before dying. */
     protected int maxDamageCount;
     /** The current number of entities this projectile has damaged. */
-    protected int damageCount;
-    
+    protected int damageCount;    
     //==============
     // Constructors
     //==============
@@ -42,8 +42,7 @@ public abstract class Projectile extends BasicRenderedEntity {
         canBeMoved = false;
         canMoveEntities = false;
         canBeCarried = false;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -98,8 +97,7 @@ public abstract class Projectile extends BasicRenderedEntity {
             killProjectile();
             return;
         }
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -107,15 +105,13 @@ public abstract class Projectile extends BasicRenderedEntity {
     public void killProjectile() {
         kill();
         world.removeEntity(this);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
     
     public float getMaxLifeSpan() { return maxLifeSpan; }
-    public float getCurrentLifeSpan() { return currentLifeSpan; }
-    
+    public float getCurrentLifeSpan() { return currentLifeSpan; }    
     //=========
     // Setters
     //=========

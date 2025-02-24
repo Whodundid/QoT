@@ -1,8 +1,8 @@
 package envision.game.component.types.timing;
 
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.EntityComponent;
 import envision.game.component.ComponentType;
-import envision.game.component.EntityComponent;
-import envision.game.entities.Entity;
 
 public class DamageOverTimeComponent extends EntityComponent {
     

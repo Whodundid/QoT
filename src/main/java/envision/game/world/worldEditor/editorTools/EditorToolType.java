@@ -1,7 +1,7 @@
 package envision.game.world.worldEditor.editorTools;
 
-import envision.engine.assets.EditorTextures;
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.internal.assets.EditorTextures;
+import envision.engine.loader.built.game.GameTexture;
 
 public enum EditorToolType {
     

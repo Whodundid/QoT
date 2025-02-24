@@ -1,7 +1,7 @@
 package qot.assets.textures.world.farmland;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class FarmTextures extends TextureLoader {
@@ -30,10 +30,10 @@ public class FarmTextures extends TextureLoader {
     farm_1 = new GameTexture(textureDir, "farm1.png"),
     farm_2 = new GameTexture(textureDir, "farm2.png"),
     farm_3 = new GameTexture(textureDir, "farm3.png");
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

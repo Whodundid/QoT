@@ -20,6 +20,7 @@ import qot.world_tiles.categories.NatureTiles;
 import qot.world_tiles.categories.StoneTiles;
 
 /** Keeps track of all world tiles in the game. */
+@Deprecated
 public class GlobalTileList {
     
     //========
@@ -29,8 +30,7 @@ public class GlobalTileList {
     private static EList<WorldTile> tiles = EList.newList();
     
     private static Map<String, WorldTile> tileNameMap = new HashMap<>();
-    private static Map<Integer, WorldTile> tileIDMap = new HashMap<>();
-    
+    private static Map<Integer, WorldTile> tileIDMap = new HashMap<>();    
     //==============
     // Constructors
     //==============

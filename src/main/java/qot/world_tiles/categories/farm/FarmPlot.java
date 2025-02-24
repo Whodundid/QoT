@@ -1,10 +1,10 @@
 package qot.world_tiles.categories.farm;
 
 import envision.Envision;
-import envision.engine.registry.types.Sprite;
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.windows.windowObjects.utility.RightClickMenu;
-import envision.game.entities.Entity;
+import envision.engine.internal.windows.windowObjects.utility.RightClickMenu;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.GameTexture;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.random.ERandomUtil;
 import qot.assets.textures.world.farmland.FarmTextures;
@@ -16,8 +16,7 @@ public class FarmPlot extends WorldTile {
     private int growState;
     private int curGrowAmount = 0;
     private int nextGrowStage = 5000;
-    private boolean fullyGrown = false;
-    
+    private boolean fullyGrown = false;    
     //==============
     // Constructors
     //==============
@@ -25,14 +24,13 @@ public class FarmPlot extends WorldTile {
     public FarmPlot() {
         super(TileIDs.FARM_PLOT);
         blocksMovement = true;
-        wallHeight = 0.20f;
+        tileHeight = 0.20f;
         setSprite(new Sprite(FarmTextures.farm_0));
         setSideSprite(new Sprite(WoodFloorTextures.wood_siding));
         
         growState = ERandomUtil.getRoll(0, 3);
         setMiniMapColor(0xff8E5C39);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -63,8 +61,6 @@ public class FarmPlot extends WorldTile {
         }
     }
     
-    @Override public boolean hasVariation() { return true; }
-    
     @Override
     public WorldTile copy() {
         return copyFields(this, new FarmPlot());
@@ -88,8 +84,7 @@ public class FarmPlot extends WorldTile {
         }
         
         setSprite(new Sprite(tex));
-    }
-    
+    }    
     //=========
     // Methods
     //=========

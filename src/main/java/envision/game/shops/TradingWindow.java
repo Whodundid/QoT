@@ -1,19 +1,20 @@
 package envision.game.shops;
 
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.basic.WindowImageBox;
-import envision.engine.windows.windowObjects.basic.WindowLabel;
-import envision.engine.windows.windowTypes.WindowParent;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.engine.windows.windowTypes.interfaces.IWindowObject;
-import envision.engine.windows.windowUtil.WindowObjectGroup;
-import envision.engine.windows.windowUtil.windowEvents.ObjectEvent;
-import envision.engine.windows.windowUtil.windowEvents.eventUtil.EventType;
-import envision.engine.windows.windowUtil.windowEvents.events.EventKeyboard;
-import envision.game.entities.Entity;
-import envision.game.items.Item;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.basic.WindowImageBox;
+import envision.engine.internal.windows.windowObjects.basic.WindowLabel;
+import envision.engine.internal.windows.windowTypes.WindowParent;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.windows.windowTypes.interfaces.IWindowObject;
+import envision.engine.internal.windows.windowUtil.WindowObjectGroup;
+import envision.engine.internal.windows.windowUtil.windowEvents.WindowObjectEvent;
+import envision.engine.internal.windows.windowUtil.windowEvents.eventUtil.WindowEventType;
+import envision.engine.internal.windows.windowUtil.windowEvents.events.EventKeyboard;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
+import envision.engine.loader.built.game.Shop;
 import eutil.EUtil;
 import eutil.colors.EColors;
 
@@ -50,8 +51,7 @@ public class TradingWindow extends WindowParent {
     protected double gap = 30.0;
     protected double imaginaryEndPosition;
     protected double itemTextX, itemTextY;
-    protected double itemPriceX, itemPriceY;
-    
+    protected double itemPriceX, itemPriceY;    
     //==============
     // Constructors
     //==============
@@ -261,8 +261,8 @@ public class TradingWindow extends WindowParent {
     }
     
     @Override
-    public void onGroupNotification(ObjectEvent e) {
-        if (e.getEventType() == EventType.KEYBOARD) {
+    public void onGroupNotification(WindowObjectEvent e) {
+        if (e.getEventType() == WindowEventType.KEYBOARD) {
             EventKeyboard keyEvent = (EventKeyboard) e;
             int keyCode = keyEvent.getEventKey();
             
@@ -292,8 +292,7 @@ public class TradingWindow extends WindowParent {
     @Override
     public void onClosed() {
         if (shopkeeper != null) shopkeeper.setCurrentlySelling(false);
-    }
-
+    }    
     //=========
     // Methods
     //=========
@@ -343,8 +342,7 @@ public class TradingWindow extends WindowParent {
         sell.setEnabled(false);
         
         shopkeeper.itemWasBought(tradingEntity, item);
-    }
-    
+    }    
     //=========
     // Getters
     //=========

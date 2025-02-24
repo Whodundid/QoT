@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 import envision.game.world.IGameWorld;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.ExpandableGrid;

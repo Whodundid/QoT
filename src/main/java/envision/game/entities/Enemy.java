@@ -1,6 +1,7 @@
 package envision.game.entities;
 
 import envision.Envision;
+import envision.engine.loader.built.game.Entity;
 import eutil.datatypes.util.EList;
 import eutil.debug.Broken;
 import eutil.misc.Direction;
@@ -31,8 +32,7 @@ public abstract class Enemy extends BasicRenderedEntity {
     
     protected long timeSinceMoved = 0l;
     protected long timeLastAttacked = 0;
-    protected Entity entityLastAttackedBy = null;
-    
+    protected Entity entityLastAttackedBy = null;    
     //==============
     // Constructors
     //==============
@@ -49,8 +49,7 @@ public abstract class Enemy extends BasicRenderedEntity {
         if (Envision.thePlayer != null) {
             favorTracker.decreaseFavorWithEntity(Envision.thePlayer, 75);
         }
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

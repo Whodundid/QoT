@@ -1,8 +1,8 @@
 package envision.engine.events.eventTypes.terminal;
 
-import envision.engine.events.EventType;
-import envision.engine.kernel.terminal.commands.TerminalCommand;
-import envision.engine.kernel.terminal.window.ETerminalWindow;
+import envision.engine.events.EnvisionEventType;
+import envision.engine.internal.kernel.terminal.commands.TerminalCommand;
+import envision.engine.internal.kernel.terminal.window.ETerminalWindow;
 import eutil.datatypes.EArrayList;
 
 public class TerminalCommandEvent extends TerminalEvent {
@@ -12,7 +12,7 @@ public class TerminalCommandEvent extends TerminalEvent {
     private final EArrayList<String> args;
     
     public TerminalCommandEvent(ETerminalWindow terminalIn, TerminalCommand commandIn, EArrayList<String> argsIn) {
-        super(EventType.TERMINAL_COMMAND, true);
+        super(EnvisionEventType.TERMINAL_COMMAND, true);
         terminal = terminalIn;
         command = commandIn;
         args = argsIn;

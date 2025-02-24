@@ -1,6 +1,6 @@
 package qot.doodads;
 
-import envision.engine.registry.types.Sprite;
+import envision.engine.loader.built.game.Sprite;
 import envision.game.entities.GroundClutter;
 import eutil.misc.Rotation;
 import eutil.random.ERandomUtil;

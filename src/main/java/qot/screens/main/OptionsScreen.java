@@ -3,14 +3,14 @@ package qot.screens.main;
 import envision.CurrentGame;
 import envision.Envision;
 import envision.engine.EngineSettings;
-import envision.engine.inputHandlers.Mouse;
-import envision.engine.rendering.fontRenderer.FontRenderer;
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowObjects.action.WindowCheckBox;
-import envision.engine.windows.windowObjects.action.WindowSlider;
-import envision.engine.windows.windowObjects.action.WindowTextField;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.internal.inputHandlers.Mouse;
+import envision.engine.internal.rendering.fontRenderer.FontRenderer;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowObjects.action.WindowCheckBox;
+import envision.engine.internal.windows.windowObjects.action.WindowSlider;
+import envision.engine.internal.windows.windowObjects.action.WindowTextField;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.GameScreen;
 import envision.game.sounds.SoundEngine;
 import eutil.colors.EColors;
 import eutil.math.ENumUtil;
@@ -28,8 +28,7 @@ public class OptionsScreen extends GameScreen {
     private WindowTextField upsInput;
     private WindowCheckBox vSync, animatedMainMenu;
     private WindowButton resolution;
-    private boolean changed = false;
-    
+    private boolean changed = false;    
     //==============
     // Constructors
     //==============
@@ -150,7 +149,7 @@ public class OptionsScreen extends GameScreen {
             upsInput.setText(ups);
             
             EngineSettings.targetUPS.set((int) ups);
-            Envision.setTargetUPS(ups);
+            Envision.setTargetTPS(ups);
             changed = true;
         }
         catch (Exception e) {

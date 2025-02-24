@@ -20,9 +20,9 @@ public class RayCaster {
      * @return
      */
     public static RayCastResult checkRaycastHit(IGameWorld world,
-                                                 GameObject a,
-                                                 GameObject b,
-                                                 double maxDist)
+                                                GameObject a,
+                                                GameObject b,
+                                                double maxDist)
     {
         return checkRaycastHit(world, a, b, maxDist, true);
     }
@@ -36,10 +36,10 @@ public class RayCaster {
      * @return
      */
     public static RayCastResult checkRaycastHit(IGameWorld world,
-                                                 GameObject a,
-                                                 GameObject b,
-                                                 double maxDist,
-                                                 boolean ignoreNegativeHeightWalls)
+                                                GameObject a,
+                                                GameObject b,
+                                                double maxDist,
+                                                boolean ignoreNegativeHeightWalls)
     {
         var ad = a.getCollisionDims();
         var bd = b.getCollisionDims();
@@ -144,7 +144,7 @@ public class RayCaster {
                 WorldTile testTile = world.getTileAt(tileX, tileY);
                 
                 if (testTile != null && testTile.blocksMovement) {
-                    boolean ignore = (ignoreNegativeHeightWalls && (testTile.wallHeight < 0 || testTile == VoidTile.instance));
+                    boolean ignore = (ignoreNegativeHeightWalls && (testTile.tileHeight < 0 || testTile == VoidTile.instance));
                     if (!ignore) {
                         tileFound = true;
                         theTile = testTile;
@@ -171,8 +171,7 @@ public class RayCaster {
         public final WorldTile tile;
         public final float distance;
         public final Vector3f intersection;
-        public final boolean collided;
-        
+        public final boolean collided;        
         //==============
         // Constructors
         //==============
@@ -189,8 +188,7 @@ public class RayCaster {
             distance = distanceIn;
             intersection = intersectionIn;
             collided = true;
-        }
-        
+        }        
         //===========
         // Overrides
         //===========
@@ -202,8 +200,7 @@ public class RayCaster {
                 hit += " : " + tile + "=" +tile.worldX+","+tile.worldY + " : " + distance + " : " + intersection;
             }
             return hit;
-        }
-        
+        }        
         //================
         // Static Methods
         //================

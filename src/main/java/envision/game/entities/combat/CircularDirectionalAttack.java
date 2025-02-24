@@ -1,8 +1,8 @@
 package envision.game.entities.combat;
 
 import envision.Envision;
-import envision.engine.rendering.RenderingManager;
-import envision.game.entities.Entity;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.loader.built.game.Entity;
 import envision.game.world.IGameWorld;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;

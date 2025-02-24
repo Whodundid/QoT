@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import envision.game.entities.Entity;
+import envision.engine.loader.built.game.Entity;
 
 public class EntityFavorTracker {
     
@@ -17,16 +17,14 @@ public class EntityFavorTracker {
     private final ConcurrentMap<String, Integer> favorMap = new ConcurrentHashMap<>();
     
     private volatile long timeSinceLastFavorChange;
-    private long favorUpdateInterval = 10000;
-    
+    private long favorUpdateInterval = 10000;    
     //==============
     // Constructors
     //==============
     
     public EntityFavorTracker(Entity entityIn) {
         theEntity = entityIn;
-    }
-    
+    }    
     //=========
     // Methods
     //=========
@@ -104,16 +102,14 @@ public class EntityFavorTracker {
     
     public void removeFavorWithEntity(String entityID) {
         favorMap.remove(entityID);
-    }
-    
+    }    
     //=========
     // Getters
     //=========
     
     public Entity getEntity() { return theEntity; }
     public long getFavorUpdateInterval() { return favorUpdateInterval; }
-    public Map<String, Integer> getFavorMap() { return favorMap; }
-    
+    public Map<String, Integer> getFavorMap() { return favorMap; }    
     //=========
     // Setters
     //=========

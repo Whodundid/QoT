@@ -1,7 +1,7 @@
 package qot.assets.textures.world.walls.dungeon;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class DungeonWallTextures extends TextureLoader {
@@ -30,10 +30,10 @@ public class DungeonWallTextures extends TextureLoader {
     dung_wall_b         = new GameTexture(textureDir, "dung_wall_b.png"),
     dung_wall_m_a         = new GameTexture(textureDir, "dung_wall_m_a.png"),
     dung_wall_m_b         = new GameTexture(textureDir, "dung_wall_m_b.png");
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

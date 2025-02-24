@@ -1,7 +1,7 @@
 package envision.engine.scripting.scriptBuilder.events.region.quest;
 
+import envision.engine.loader.built.game.Quest;
 import envision.engine.scripting.scriptBuilder.events.region.RegionEvent;
-import envision.game.quests.Quest;
 import envision.game.world.GameWorld;
 import envision.game.world.Region;
 

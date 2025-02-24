@@ -1,7 +1,8 @@
 package envision.game.entities;
 
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import envision.game.items.ArmorSlotType;
-import envision.game.items.Item;
 import eutil.datatypes.util.EList;
 
 public class EntityArmor {
@@ -25,16 +26,14 @@ public class EntityArmor {
     
     public Item beltSlot;
     public Item legSlot;
-    public Item bootsSlot;
-    
+    public Item bootsSlot;    
     //==============
     // Constructors
     //==============
     
     public EntityArmor(Entity entityIn) {
         theEntity = entityIn;
-    }
-    
+    }    
     //=========
     // Methods
     //=========

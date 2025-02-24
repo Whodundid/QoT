@@ -1,7 +1,7 @@
 package envision.engine.events.eventTypes.world;
 
-import envision.engine.events.EventType;
-import envision.game.entities.Entity;
+import envision.engine.events.EnvisionEventType;
+import envision.engine.loader.built.game.Entity;
 import envision.game.world.GameWorld;
 
 public class WorldRemovedEntityEvent extends WorldEvent {
@@ -10,7 +10,7 @@ public class WorldRemovedEntityEvent extends WorldEvent {
     private final Entity ent;
     
     public WorldRemovedEntityEvent(GameWorld worldIn, Entity entIn) {
-        super(EventType.WORLD_REMOVED_ENTITY, true);
+        super(EnvisionEventType.WORLD_REMOVED_ENTITY, true);
         world = worldIn;
         ent = entIn;
     }

@@ -2,8 +2,8 @@ package envision.engine.loader;
 
 import java.io.File;
 
-import envision.engine.settings.config.ConfigSetting;
-import envision.engine.settings.config.EnvisionConfigFile;
+import envision.engine.internal.settings.config.EnvisionConfigFile;
+import envision.engine.loader.built.engine.ConfigSetting;
 import eutil.datatypes.util.EList;
 
 public class GameConfig extends EnvisionConfigFile {
@@ -12,8 +12,7 @@ public class GameConfig extends EnvisionConfigFile {
     // Fields
     //========
     
-    private EnvisionGame game;
-    
+    private EnvisionGame game;    
     //==============
     // Constructors
     //==============
@@ -33,8 +32,7 @@ public class GameConfig extends EnvisionConfigFile {
         }
         
         this.configTitleLine = game.getGameName() + " Config";
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

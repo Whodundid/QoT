@@ -1,10 +1,11 @@
 package envision.game.world;
 
 import envision.Envision;
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.kernel.developerDesktop.DeveloperDesktop;
-import envision.engine.rendering.RenderingManager;
-import envision.engine.windows.windowUtil.EGui;
+import envision.debug.Profiler;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.kernel.developerDesktop.DeveloperDesktop;
+import envision.engine.internal.rendering.RenderingManager;
+import envision.engine.internal.windows.windowUtil.EGui;
 import envision.game.world.layerSystem.WorldDrawLayer;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.util.EList;
@@ -15,9 +16,9 @@ import eutil.math.ENumUtil;
 /** Handles rendering GameWorlds. */
 public class WorldRenderer extends EGui {
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     private GameWorld world;
     private int distX = 22;
@@ -35,11 +36,10 @@ public class WorldRenderer extends EGui {
     /** Temporary list for testing world layers. */
     private EList<WorldDrawLayer> worldLayers = EList.newList();
     
-    private boolean loaded = false;
-    
-    //--------------
+    private boolean loaded = false;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public WorldRenderer(GameWorld worldIn) {
         world = worldIn;
@@ -109,18 +109,24 @@ public class WorldRenderer extends EGui {
             //if (typedChar == '.') viewDist++;
             //if (typedChar == ',') viewDist--;
         }
-    }
-    
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     /**
      * Should be called from main game render tick, every tick.
      */
     public void onRenderTick(float partialTicks) {
+        var p = Profiler.getProfiler("FRAME_TICK");
+        
+        p.startSection("camera tick");
         Envision.levelManager.getCamera().onRenderTick(partialTicks);
+        p.endSection("camera tick");
+        
+        p.startSection("render world");
         renderWorld(partialTicks);
+        p.endSection("render world");
     }
     
     private void renderWorld(float partialTicks) {
@@ -151,7 +157,7 @@ public class WorldRenderer extends EGui {
         
         renderMapLayers();
         
-        drawString(world.worldObjects.size(), 10, 50);
+        //drawString(world.worldObjects.size(), 10, 50);
         
 //      if (drawPosBox) {
 //          drawPosBox(x, y, w, h);
@@ -190,16 +196,22 @@ public class WorldRenderer extends EGui {
         int right = ENumUtil.clamp(midDrawX + distX, left, worldWidth - 1);
         int bot = ENumUtil.clamp(midDrawY + distY, top, worldHeight - 1);
         
-        //int camLayer = 2 + cam.getUpperCameraLayer() * 2;
-        //System.out.println(camLayer);
+        var p = Profiler.getProfiler("FRAME_TICK");
         
+        p.startSection("render map layers");
         final int size = worldLayers.size();
         for (int i = 0; i < size; i++) {
             final var layer = worldLayers.get(i);
-//            System.out.println(i + " : " + layer.hashCode());
+            
+            p.startSection("build layer: " + i);
             layer.buildLayer(left, top, right, bot);
+            p.endSection("build layer: " + i);
+            
+            p.startSection("render layer: " + i);
             layer.renderLayer(world, cam);
+            p.endSection("render layer: " + i);
         }
+        p.endSection("render map layers");
     }
     
 //    private void drawPosBox(double x, double y, double w, double h) {
@@ -224,18 +236,16 @@ public class WorldRenderer extends EGui {
     public void onWindowResized() {
         res = Envision.getWindowDims();
         setGuiDimensions(0, 0, res.width, res.height);
-    }
-    
-    //---------
+    }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     public int getDistX() { return distX; }
-    public int getDistY() { return distY; }
-    
-    //---------
+    public int getDistY() { return distY; }    
+    //=========
     // Setters
-    //---------
+    //=========
     
     public void setDistX(int in) { distX = in; }
     public void setDistY(int in) { distY = in; }

@@ -5,13 +5,12 @@ import envision.engine.creation.block.FunctionBlock;
 import envision.engine.creation.block.PointLocation;
 
 public abstract class ConstantValueBlock<T> extends FunctionBlock {
-
+    
     //========
     // Fields
     //========
     
-    protected final BlockConnectionPoint<T> output;
-    
+    protected final BlockConnectionPoint<T> output;    
     //==============
     // Constructors
     //==============
@@ -23,8 +22,7 @@ public abstract class ConstantValueBlock<T> extends FunctionBlock {
         output = createOutputPoint("Output");
         output.setPointLocation(PointLocation.RIGHT);
         output.setValue(value);
-    }
-
+    }    
     //===========
     // Overrides
     //===========
@@ -37,16 +35,14 @@ public abstract class ConstantValueBlock<T> extends FunctionBlock {
     @Override
     public void drawObject(float dt, int mXIn, int mYIn) {
         drawDefaultBackground();
-    }
-    
+    }    
     //=========
     // Getters
     //=========
     
     public T getValue() {
         return output.getValue();
-    }
-    
+    }    
     //=========
     // Setters
     //=========

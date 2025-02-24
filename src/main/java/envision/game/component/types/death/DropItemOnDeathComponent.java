@@ -2,29 +2,31 @@ package envision.game.component.types.death;
 
 import java.util.Collection;
 
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 import envision.game.component.ComponentBasedObject;
-import envision.game.entities.Entity;
-import envision.game.items.Item;
 import envision.game.world.IGameWorld;
 import eutil.datatypes.util.EList;
 import eutil.random.ERandomUtil;
 
 public class DropItemOnDeathComponent extends OnDeathComponent {
-
+    
+    //========
+    // Fields
+    //========
+    
     private final EList<Item> itemsToDrop = EList.newList();
     
     private boolean random = false;
     private boolean hasChance = false;
-    private int chance;
-    
+    private int chance;    
     //==============
     // Constructors
     //==============
     
     protected DropItemOnDeathComponent(ComponentBasedObject theEntityWhoWillDie) {
         super(theEntityWhoWillDie);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========

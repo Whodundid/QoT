@@ -1,6 +1,6 @@
 package qot.assets.textures.world.nature.grass;
 
-import envision.engine.rendering.textureSystem.GameTexture;
+import envision.engine.loader.built.game.GameTexture;
 
 public class DryGrass extends GameTexture {
     

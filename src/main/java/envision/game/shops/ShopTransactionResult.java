@@ -1,7 +1,7 @@
 package envision.game.shops;
 
-import envision.game.entities.Entity;
-import envision.game.items.Item;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Item;
 
 /**
  * Wraps the result of a shop transaction where an item was either bought
@@ -19,8 +19,7 @@ public class ShopTransactionResult {
     private Item theItem;
     private boolean itemWasBought;
     private boolean wasSuccessful = true;
-    private String failureReason;
-    
+    private String failureReason;    
     //==============
     // Constructors
     //==============
@@ -29,8 +28,7 @@ public class ShopTransactionResult {
     public ShopTransactionResult(Entity buyerIn, Entity sellerIn) {
         buyingEntity = buyerIn;
         sellingEntity = sellerIn;
-    }
-    
+    }    
     //=========
     // Getters
     //=========
@@ -40,8 +38,7 @@ public class ShopTransactionResult {
     public Item item() { return theItem; }
     public boolean wasBought() { return itemWasBought; }
     public boolean wasSuccessful() { return wasSuccessful; }
-    public String failureReason() { return failureReason; }
-    
+    public String failureReason() { return failureReason; }    
     //=========
     // Setters
     //=========

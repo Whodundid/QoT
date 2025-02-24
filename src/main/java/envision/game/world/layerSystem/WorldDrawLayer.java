@@ -1,6 +1,7 @@
 package envision.game.world.layerSystem;
 
 import envision.Envision;
+import envision.debug.Profiler;
 import envision.game.GameObject;
 import envision.game.component.ComponentBasedObject;
 import envision.game.component.ComponentType;
@@ -13,40 +14,37 @@ import envision.game.world.WorldCamera;
 import envision.game.world.worldTiles.VoidTile;
 import envision.game.world.worldTiles.WorldTile;
 import eutil.datatypes.EArrayList;
-import eutil.datatypes.ExpandableGrid;
 import eutil.datatypes.util.EList;
 
 public class WorldDrawLayer {
     
-    //--------
+    //========
     // Fields
-    //--------
+    //========
     
     private int layer = 0;
     public int camLayer = 0;
     
     private IGameWorld world;
-    private ExpandableGrid<WorldTile> worldData;
+    private WorldTile[][] worldData;
     private EList<GameObject> gameObjects;
     
     private EList<IDrawable> builtLayer = new EArrayList<>();
-    private boolean built = false;
-    
-    //--------------
+    private boolean built = false;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public WorldDrawLayer(IGameWorld worldIn, int layerIn, int camLayerIn) {
         world = worldIn;
         layer = layerIn;
         camLayer = camLayerIn;
-        worldData = new ExpandableGrid<>(world.getWidth(), world.getHeight());
-        gameObjects = new EArrayList<>();
-    }
-    
-    //---------
+        worldData = new WorldTile[world.getHeight()][world.getWidth()];
+        gameObjects = EList.newList();
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     /**
      * Gathers all world tiles and entities within the given region to be
@@ -60,11 +58,11 @@ public class WorldDrawLayer {
      * @param bot
      */
     public void buildLayer(int left, int top, int right, int bot) {
+        var p = Profiler.getProfiler("FRAME_TICK");
+        
         built = false;
         builtLayer.clear();
-        
-        //get data
-        worldData.clear();
+        //worldData.clear();
         gameObjects.clear();
         
         // this code should be completely rethought
@@ -81,52 +79,53 @@ public class WorldDrawLayer {
             entX = (int) (colDims.midX / world.getTileWidth());
             entY = (int) (colDims.midY / world.getTileHeight());
             entLayer = theEntity.getCameraLayer();
-            //entX = theEntity.worldX;
-            //entY = theEntity.worldY;
         }
         int max = world.getNumberOfLayers() - 1;
         
-        //System.out.println(entY + " : " + camLayer + " : " + cameraUpper);
+        //p.startSection("build tiles");
         boolean camLowerThanMax = cameraUpper != max;
-        //boolean isHigherThanCamera = camLayer > cameraUpper;
+        final int width = world.getWidth();
+        final int height = world.getHeight();
         
-        //System.out.println(camLayer + " : " + cameraUpper + " | " + entLayer + " : " + camCheck);
-        
-        for (int i = 0; i < world.getHeight(); i++) {
-            for (int j = 0; j < world.getWidth(); j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 if (camLowerThanMax) {
                     if (camLayer <= entLayer || j > entX + 5 || j < entX - 5 || i > entY + 5 || i < entY - 5) {
-                        worldData.set(world.getTileAt(camLayer, j, i), j, i);
+                        worldData[i][j] = world.getTileAt(camLayer, j, i);
                     }
                 }
                 else {
-                    worldData.set(world.getTileAt(camLayer, j, i), j, i);
+                    worldData[i][j] = world.getTileAt(camLayer, j, i);
                 }
             }
         }
+        //p.endSection("build tiles");
         
-//        System.out.println(camLayer);
-//        System.out.println(worldData);
-        
+        //p.startSection("filter entities");
+        //p.startSection("filter");
         var entities = world.getEntitiesInWorld().filter(e -> e.getCameraLayer() == camLayer);
         gameObjects.addAll(entities);
+        //p.endSection();
         
         // add all world tiles within the specified area
+        //p.startSection("arr");
         for (int i = top; i <= bot; i++) {
             for (int j = left; j <= right; j++) {
-                var tile = worldData.get(j, i);
+                var tile = worldData[i][j];
                 if (tile == null || tile == VoidTile.instance) continue;
                 if (tile.getRenderLayer() == layer) builtLayer.add(tile);
             }
         }
+        //p.endSection();
         
         double w_left = (left - 1) * world.getTileWidth();
         double w_top = (top - 1) * world.getTileHeight();
         double w_right = (right + 1) * world.getTileWidth();
         double w_bot = (bot + 1) * world.getTileHeight();
+        //p.endSection("filter entities");
         
-        //EList<GameObject> text = EList.newList();
-        //add all objects within the specified area
+        // add all objects within the specified area
+        //p.startSection("add entities");
         for (var obj : gameObjects) {
             if (obj.sprite == null) continue;
             
@@ -147,6 +146,7 @@ public class WorldDrawLayer {
                 }
             }
         }
+        //p.endSection("add entities");
         
         //System.out.println(builtLayer);
         
@@ -170,6 +170,7 @@ public class WorldDrawLayer {
         if (!built) return;
         
         //sort the layer before draw
+        
         InsertionSort.sort(builtLayer);
 //        if (layer == 1) {
 //            for (var e : builtLayer) {
@@ -180,7 +181,7 @@ public class WorldDrawLayer {
         //if (layer == 1) System.out.println(builtLayer);
         //System.out.println(builtLayer);
         
-        //draw each object on the layer
+        // draw each object on the layer
         final int size = builtLayer.size();
         for (int i = 0; i < size; i++) {
             var obj = builtLayer.get(i);
@@ -193,25 +194,23 @@ public class WorldDrawLayer {
     
     public void addObject(GameObject object) {
         gameObjects.add(object);
-    }
-    
-    //---------
+    }    
+    //=========
     // Getters
-    //---------
+    //=========
     
     public IGameWorld getWorld() { return world; }
     public int getLayer() { return layer; }
-    public ExpandableGrid<WorldTile> getWorldData() { return worldData; }
+    public WorldTile[][] getWorldData() { return worldData; }
     public EList<GameObject> getGameObjects() { return gameObjects; }
     public EList<IDrawable> getDrawnObjects() { return builtLayer; }
-    public boolean isBuilt() { return built; }
-    
-    //---------
+    public boolean isBuilt() { return built; }    
+    //=========
     // Setters
-    //---------
+    //=========
     
     public void setTileAt(WorldTile in, int xIn, int yIn) {
-        worldData.set(in, xIn, yIn);
+        worldData[yIn][xIn] = in;
     }
     
 }

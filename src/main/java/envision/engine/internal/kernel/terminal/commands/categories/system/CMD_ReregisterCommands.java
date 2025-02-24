@@ -1,0 +1,28 @@
+package envision.engine.internal.kernel.terminal.commands.categories.system;
+
+import envision.engine.internal.kernel.terminal.commands.TerminalCommand;
+import eutil.datatypes.util.EList;
+
+//Author: Hunter Bragg
+
+public class CMD_ReregisterCommands extends TerminalCommand {
+    
+    public CMD_ReregisterCommands() {
+        setCategory("System");
+        expectedArgLength = 0;
+    }
+    
+    @Override public String getName() { return "rebuild"; }
+    @Override public EList<String> getAliases() { return EList.of("rrac", "reb", "rebuildcommands", "rebuildcmds"); }
+    @Override public String getHelpInfo(boolean runVisually) { return "Rebuilds the commands in the terminal's command handler."; }
+    @Override public String getUsage() { return "ex: rrac -i"; }
+    @Override public byte requiredPermissionLevel() { return 2; }
+    
+    @Override
+    public void runCommand() {
+        expectNoArgs();
+        writeln("Rebuilding command list..", 0xffffaa00);
+        termHandler().reregisterAllCommands(term(), runVisually());
+    }
+    
+}

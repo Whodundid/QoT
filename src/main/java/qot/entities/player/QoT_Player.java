@@ -1,10 +1,10 @@
 package qot.entities.player;
 
 import envision.Envision;
-import envision.engine.inputHandlers.Keyboard;
-import envision.engine.registry.types.Sprite;
-import envision.engine.registry.types.SpriteSheet;
-import envision.engine.windows.windowObjects.utility.RightClickMenu;
+import envision.engine.internal.inputHandlers.Keyboard;
+import envision.engine.internal.windows.windowObjects.utility.RightClickMenu;
+import envision.engine.loader.built.game.Sprite;
+import envision.engine.loader.built.game.SpriteSheet;
 import envision.game.animations.AnimationHandler;
 import envision.game.component.ComponentType;
 import envision.game.effects.OutOfStaminaEffect;
@@ -20,8 +20,16 @@ import qot.items.Items;
 
 public class QoT_Player extends Player {
     
+    //========
+    // Fields
+    //========
+    
     private long timeSinceLastBlink;
     private long delayTillNextBlink;
+    
+    //==============
+    // Constructors
+    //==============
     
     public QoT_Player() { this("Player", 0, 0); }
     public QoT_Player(String nameIn) { this(nameIn, 0, 0); }
@@ -103,8 +111,7 @@ public class QoT_Player extends Player {
         canBeMoved = false;
         canRegenHealth = true;
         canRegenStamina = true;
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -148,15 +155,15 @@ public class QoT_Player extends Player {
         //if (!isMoving) playIdleAnimation();
         //else playMoveAnimation();
         
-        if (!spellbook.knowsAbility(Abilities.ringOfFire)) {
-            this.spellbook.learnAbility(Abilities.ringOfFire);
-            this.abilityTracker.addAbility(Abilities.ringOfFire);
-        }
+//        if (!spellbook.knowsAbility(Abilities.ringOfFire)) {
+//            this.spellbook.learnAbility(Abilities.ringOfFire);
+//            this.abilityTracker.addAbility(Abilities.ringOfFire);
+//        }
         
-        if (!spellbook.knowsAbility(Abilities.dodgeroll)) {
-            this.spellbook.learnAbility(Abilities.dodgeroll);
-            this.abilityTracker.addAbility(Abilities.dodgeroll);
-        }
+//        if (!spellbook.knowsAbility(Abilities.dodgeroll)) {
+//            this.spellbook.learnAbility(Abilities.dodgeroll);
+//            this.abilityTracker.addAbility(Abilities.dodgeroll);
+//        }
         
         if (!spellbook.knowsAbility(Abilities.fireball) && magicLevel >= 5) {
             this.spellbook.learnAbility(Abilities.fireball);

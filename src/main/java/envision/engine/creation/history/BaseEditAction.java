@@ -18,8 +18,7 @@ public abstract class BaseEditAction<T, O> implements IEditAction<T, O> {
     /** The items that this edit action is targeting. */
     protected final EList<T> items = EList.newList();
     /** Any arguments that support the edit action */
-    protected final EList<Object> modifiers = EList.newList();
-    
+    protected final EList<Object> modifiers = EList.newList();    
     //==============
     // Constructors
     //==============
@@ -33,8 +32,7 @@ public abstract class BaseEditAction<T, O> implements IEditAction<T, O> {
         targetObject = targetObjectIn;
         items.addAll(itemsIn);
         modifiers.addAll(modifiersIn);
-    }
-    
+    }    
     //===========
     // Overrides
     //===========
@@ -52,8 +50,7 @@ public abstract class BaseEditAction<T, O> implements IEditAction<T, O> {
     @Override
     public EList<Object> getModifiers() {
         return modifiers;
-    }
-    
+    }    
     //=========
     // Getters
     //=========

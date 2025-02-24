@@ -1,7 +1,7 @@
 package qot.assets.textures.doodads.bushes;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class BushTextures extends TextureLoader {
@@ -27,10 +27,10 @@ public class BushTextures extends TextureLoader {
     public static final GameTexture
     
     bush_0 = new GameTexture(textureDir, "bush_0.png");
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

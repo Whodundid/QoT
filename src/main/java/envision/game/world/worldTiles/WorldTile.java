@@ -3,14 +3,12 @@ package envision.game.world.worldTiles;
 import java.util.List;
 
 import envision.Envision;
-import envision.engine.loader.dtos.WorldTileDTO;
-import envision.engine.registry.IGameResource;
-import envision.engine.registry.ResourceType;
-import envision.engine.registry.types.Sprite;
-import envision.engine.registry.types.SpriteSheet;
+import envision.engine.loader.built.game.Effect;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.Sprite;
+import envision.engine.loader.dtos.IEngineResource;
+import envision.engine.loader.dtos.game.WorldTileDTO;
 import envision.game.component.ComponentBasedObject;
-import envision.game.effects.Effect;
-import envision.game.entities.Entity;
 import eutil.colors.EColors;
 import eutil.datatypes.util.EList;
 import eutil.misc.Rotation;
@@ -18,75 +16,62 @@ import eutil.random.ERandomUtil;
 import qot.world_tiles.GlobalTileList;
 import qot.world_tiles.TileIDs;
 
-public class WorldTile extends ComponentBasedObject implements Comparable<WorldTile> {
+public class WorldTile extends ComponentBasedObject implements Comparable<WorldTile>, IEngineResource {
     
     //========
     // Fields
     //========
     
-    /**
-     * The human-readable name of this tile.
-     */
-    public String tileName;
-    public String spriteSheetName;
-    public EList<String> passiveEffectNames = EList.newList();
-    public String movementModifierName;
-    public String materialName;
+    /** The human-readable name of this tile. */
+    public String name;
+    public String tileMaterialName;
     public String rotation;
+    
     /** Whether or not the tile will draw flipped. */
     public boolean drawFlipped = false;
-    public boolean isAnimated;
-    public boolean isSideAnimated;
     /**
      * True if this tile should prevent entities from being able to enter the
      * boundaries of this tile.
      */
     public boolean blocksMovement = false;
-    /**
-     * True if this tile has additional vertical depth.
-     * <p>
-     * Note: Wall tiles do not inherently block movement as that modifier must
-     * be specified separately.
-     */
-    //public boolean isWall = false;
-    public boolean randomizeWallHeight;
+    public boolean randomizeStartSprite;
+    public boolean randomizeStartSideSprite;
+    public boolean randomizeTileHeight;
     public boolean randomizeRotation;
     public boolean randomizeDrawFlipped;
-    /** If true, light cannot move through. */
-    public boolean blocksLight = true;
-    public int spriteStartIndex;
-    public int spriteEndIndex;
-    public int sideSpriteStartIndex;
-    public int sideSpriteEndIndex;
-    public int spriteAnimationInterval;
-    public int sideSpriteAnimationInterval;
+    
     public int minimapColor = 0xff000000;
-    /** 0 by default -- really dark. */
-    public int lightLevel = 0;
+    
     /**
      * Represents the physical height of this tile raised above (or below) the
      * standard terrain level of zero (0.0).
      * 
-     * <li>Note: This value is ignored unless 'isWall' is true
      * <li>Note: Standard height ranges from [-1.0, 1.0]
      */
-    public float wallHeight = 0.0f;
-    public float minWallHeight = -1.0f;
-    public float maxWallHeight = 1.0f;
-    
+    public float tileHeight = 0.0f;
+    public float minTileHeight = -1.0f;
+    public float maxTileHeight = 1.0f;
 
+    public EList<String> sprites = EList.newList();
+    public EList<String> sideSprites = EList.newList();
+    public EList<Float> spriteFrameTimings = EList.newList();
+    public EList<Float> sideSpriteFrameTimings = EList.newList();
+    public EList<String> passiveEffectNames = EList.newList();
+    
     
     
     //--------------------------------------------
     
     
     /** The metadata id of this tile. */
+    @Deprecated
     public int meta;
     
     /**
      * The id of this tile which is primarily used for saving/loading world
      * data.
      */
+    @Deprecated
     protected TileIDs id;
     
     /**
@@ -99,12 +84,14 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
      * or below the primary texture in order to give additional depth to the
      * terrain.
      */
+    @Deprecated
     public Sprite sideTex;
     
     /**
      * For tiles that can have multiple variations, I.E. Grass, this number
      * keeps track of the total number of variations there are.
      */
+    @Deprecated
     public int numVariants = 1;
     
     /**
@@ -113,11 +100,8 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
      * randomly decide which texture it will display based on its provided
      * number of variants.
      */
+    @Deprecated
     public boolean wildCardTexture = false;
-    
-
-    
-
     
     /**
      * A tile's material is used to determine a variety of things ranging from:
@@ -135,7 +119,9 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
      */
     public TileMaterial material = new TileMaterial();
     
+    @Deprecated
     public boolean hasSideBrightness = false;
+    @Deprecated
     public int sideBrightness = 255;
     
     /** This tile's rotation. */
@@ -144,123 +130,83 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
     
     // Resource Assigned Fields
     
-    private SpriteSheet spriteSheet;
     private List<Effect> passiveEffects;
-    private TileMaterial tileMaterial;
     
     //==============
     // Constructors
     //==============
     
     public WorldTile() {}
+    @Deprecated
     protected WorldTile(TileIDs idIn) {
         this(idIn, -1);
     }
+    @Deprecated
     protected WorldTile(TileIDs idIn, int metaIn) {
         id = idIn;
         meta = metaIn;
-        tileName = id.name;
+        name = id.name;
         
         addComponent(new WorldTileRenderer(this));
     }
     
+    public WorldTile(WorldTileDTO dto) {
+        name = dto.name();
+        tileMaterialName = dto.tileMaterial();
+        rotation = dto.rotation();
+        drawFlipped = dto.drawFlipped();
+        blocksMovement = dto.blocksMovement();
+        randomizeTileHeight = dto.randTileHeight();
+        randomizeRotation = dto.randRotation();
+        randomizeDrawFlipped = dto.randDrawFlipped();
+        minimapColor = dto.minimapColor();
+        tileHeight = dto.tileHeight();
+        minTileHeight = dto.minTileHeight();
+        maxTileHeight = dto.maxTileHeight();
+        passiveEffectNames = EList.of(dto.passiveEffects());
+    }    
     //===========
     // Overrides
     //===========
     
     @Override
     public String toString() {
-        return tileName;
+        return name;
     }
     
     @Override
+    @Deprecated
     public int compareTo(WorldTile in) {
         return Integer.compare(id.tileID, in.id.tileID);
     }
     
     @Override
+    @Deprecated
     public int getInternalSaveID() { return id.tileID; }
+    
+    @Override
+    public WorldTileDTO toDto() {
+        return new WorldTileDTO(name, tileMaterialName, (rotationDir != null) ? rotationDir.toString() : rotation,
+                                drawFlipped, blocksMovement, randomizeStartSprite, randomizeStartSideSprite,
+                                randomizeTileHeight, randomizeRotation, randomizeDrawFlipped, minimapColor, tileHeight,
+                                minTileHeight, maxTileHeight, sprites, sideSprites, spriteFrameTimings,
+                                sideSpriteFrameTimings, passiveEffectNames);
+    }
     
     @Override
     public double getSortPoint() {
         final double p = (worldY) * Envision.theWorld.getTileHeight();
-        //System.out.println(p);
         return p;
-    }
-    
+    }    
     //=========
     // Methods
     //=========
-    
-    public WorldTileDTO toDTO() {
-        WorldTileDTO dto = new WorldTileDTO();
-        
-        dto.setTileName(tileName);
-        dto.setSpriteSheetName(spriteSheetName);
-        dto.setPassiveEffectNames(passiveEffectNames);
-        dto.setMaterialName(materialName);
-        dto.setRotation((rotationDir != null) ? rotationDir.toString() : rotation);
-        dto.setDrawFlipped(drawFlipped);
-        dto.setAnimated(isAnimated);
-        dto.setSideAnimated(isSideAnimated);
-        dto.setBlocksMovement(blocksMovement);
-        //dto.setWall(isWall);
-        dto.setRandomizeWallHeight(randomizeWallHeight);
-        dto.setRandomizeRotation(randomizeRotation);
-        dto.setRandomizeDrawFlipped(randomizeDrawFlipped);
-        dto.setBlocksLight(blocksLight);
-        dto.setSpriteStartIndex(sideSpriteStartIndex);
-        dto.setSpriteEndIndex(sideSpriteEndIndex);
-        dto.setSideSpriteStartIndex(sideSpriteStartIndex);
-        dto.setSideSpriteEndIndex(sideSpriteEndIndex);
-        dto.setSpriteAnimationInterval(spriteAnimationInterval);
-        dto.setSideSpriteAnimationInterval(sideSpriteAnimationInterval);
-        dto.setMinimapColor(minimapColor);
-        dto.setLightLevel(lightLevel);
-        dto.setWallHeight(wallHeight);
-        dto.setMinWallHeight(minWallHeight);
-        dto.setMaxWallHeight(maxWallHeight);
-        
-        return dto;
-    }
-    
-    public static WorldTile fromDTO(WorldTileDTO dto) {
-        WorldTile tile = new WorldTile();
-        
-        tile.tileName = dto.getTileName();
-        tile.spriteSheetName = dto.getSpriteSheetName();
-        tile.passiveEffectNames = EList.of(dto.getPassiveEffectNames());
-        tile.materialName = dto.getMaterialName();
-        tile.rotation = dto.getRotation();
-        tile.drawFlipped = dto.drawFlipped();
-        tile.isAnimated = dto.isAnimated();
-        tile.isSideAnimated = dto.isSideAnimated();
-        tile.blocksMovement = dto.isBlocksMovement();
-        tile.blocksLight = dto.isBlocksLight();
-        //tile.isWall = dto.isWall();
-        tile.randomizeWallHeight = dto.isRandomizeWallHeight();
-        tile.randomizeRotation = dto.isRandomizeRotation();
-        tile.randomizeDrawFlipped = dto.isRandomizeDrawFlipped();
-        tile.spriteStartIndex = dto.getSpriteStartIndex();
-        tile.spriteEndIndex = dto.getSpriteEndIndex();
-        tile.sideSpriteStartIndex = dto.getSideSpriteStartIndex();
-        tile.sideSpriteEndIndex = dto.getSideSpriteEndIndex();
-        tile.spriteAnimationInterval = dto.getSpriteAnimationInterval();
-        tile.sideSpriteAnimationInterval = dto.getSideSpriteAnimationInterval();
-        tile.minimapColor = dto.getMinimapColor();
-        tile.lightLevel = dto.getLightLevel();
-        tile.wallHeight = dto.getWallHeight();
-        tile.minWallHeight = dto.getMinWallHeight();
-        tile.maxWallHeight = dto.getMaxWallHeight();
-        
-        return tile;
-    }
     
     /**
      * Called every time the world updates.
      */
     public void onWorldTick() {
-        if (isAnimated) animationHandler.onRenderTick((long) Envision.getDeltaTime());
+        //if (isAnimated) animationHandler.onRenderTick((long) Envision.getDeltaTime());
     }
     
     /**
@@ -273,38 +219,31 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
     
     public void randomizeValues() {
         if (randomizeDrawFlipped) drawFlipped = ERandomUtil.randomBool();
-        if (randomizeWallHeight) wallHeight = ERandomUtil.getRoll(minWallHeight, maxWallHeight);
+        if (randomizeTileHeight) tileHeight = ERandomUtil.getRoll(minTileHeight, maxTileHeight);
         if (randomizeRotation) rotationDir = Rotation.random();
-    }
-    
-    public boolean hasVariation() {
-        return false;
-    }
-    
+    }    
+    public boolean hasSprite() { return sprite != null; }
+
     //=========
     // Getters
     //=========
     
-    public SpriteSheet getSpriteSheet() { return spriteSheet; }
     public List<Effect> getPassiveEffects() { return passiveEffects; }
-    public TileMaterial getTileMaterial() { return tileMaterial; }
     
-    public boolean hasSprite() {
-        return sprite != null;
-    }
-    public boolean blocksMovement() {
-        return blocksMovement;
-    }
+    public boolean blocksMovement() { return blocksMovement; }
+    @Deprecated
     public boolean isWildCard() { return wildCardTexture; }
-    //public boolean isWall() { return isWall; }
-    public double getWallHeight() { return wallHeight; }
+    public double getWallHeight() { return tileHeight; }
     
+    @Deprecated
     public int getID() { return id.tileID; }
-    public String getName() { return tileName; }
+    public String getName() { return name; }
     public TileMaterial getMaterial() { return material; }
     public int getMapColor() { return minimapColor; }
+    @Deprecated
     public int getNumVariants() { return numVariants; }
     
+    @Deprecated
     public String getAdditionalValues() {
         String r = "";
         
@@ -314,15 +253,13 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         return r;
     }
     
-    public int getLightLevel() { return lightLevel; }
-    
     //=========
     // Setters
     //=========
     
-    public void setSpriteSheet(SpriteSheet sheet) { spriteSheet = sheet; }
-    public void setPassiveEffects(List<Effect> effects) { passiveEffects = effects; }
-    public void setTileMaterial(TileMaterial material) { tileMaterial = material; }
+    public void setPassiveEffects(List<Effect> effects) {
+        passiveEffects = effects;
+    }
     
     public WorldTile setSprite(Sprite texIn) {
         sprite = texIn;
@@ -336,10 +273,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         blocksMovement = val;
         return this;
     }
-//    public WorldTile setWall(boolean val) {
-//        isWall = val;
-//        return this;
-//    }
+    @Deprecated
     public WorldTile setWildCard(boolean val) {
         wildCardTexture = val;
         return this;
@@ -367,6 +301,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         return this;
     }
     
+    @Deprecated
     public WorldTile setAdditional(String in) {
         if (in != null) {
             String[] values = in.split(" ");
@@ -382,26 +317,27 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         return this;
     }
     
-    public void setLightLevel(int level) { lightLevel = level; }
-    
     //================
     // Static Methods
     //================
     
+    @Deprecated
     public static WorldTile getTileFromID(int id) {
         return getTileFromID(id, 0);
     }
+    @Deprecated
     public static WorldTile getTileFromID(int id, int texNum) {
         return GlobalTileList.getTileFromID(id, texNum);
     }
-    
+    @Deprecated
     public static int getIDFromTile(WorldTile in) {
         return (in != null) ? in.getID() : -1;
     }
-    
+    @Deprecated
     public static WorldTile getTileFromName(String nameIn) {
         return getTileFromArgs(nameIn, null);
     }
+    @Deprecated
     public static WorldTile getTileFromArgs(String nameIn, String additional) {
         if (nameIn != null) {
             WorldTile t = GlobalTileList.getTileFromName(nameIn);
@@ -414,7 +350,7 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
         }
         return null;
     }
-    
+    @Deprecated
     public static WorldTile randVariant(WorldTile in) {
         if (in == null) return null;
         try {
@@ -437,14 +373,14 @@ public class WorldTile extends ComponentBasedObject implements Comparable<WorldT
     
     protected WorldTile copyFields(WorldTile from, WorldTile to) {
         to.id = from.id;
-        to.tileName = from.tileName;
+        to.name = from.name;
         to.sprite = from.sprite;
         to.sideTex = from.sideTex;
         to.numVariants = from.numVariants;
         to.blocksMovement = from.blocksMovement;
         to.wildCardTexture = from.wildCardTexture;
         //to.isWall = from.isWall;
-        to.wallHeight = from.wallHeight;
+        to.tileHeight = from.tileHeight;
         to.material = from.material;
         to.worldX = from.worldX;
         to.worldY = from.worldY;

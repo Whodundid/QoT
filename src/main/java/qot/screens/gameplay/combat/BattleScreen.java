@@ -1,9 +1,9 @@
 package qot.screens.gameplay.combat;
 
-import envision.engine.screens.GameScreen;
-import envision.engine.windows.windowObjects.action.WindowButton;
-import envision.engine.windows.windowTypes.interfaces.IActionObject;
-import envision.game.entities.Entity;
+import envision.engine.internal.windows.windowObjects.action.WindowButton;
+import envision.engine.internal.windows.windowTypes.interfaces.IActionObject;
+import envision.engine.loader.built.game.Entity;
+import envision.engine.loader.built.game.GameScreen;
 import eutil.colors.EColors;
 import eutil.misc.Rotation;
 
@@ -20,11 +20,10 @@ public class BattleScreen extends GameScreen {
     private Entity curAEntity;
     private Entity curBEntity;
     
-    private WindowButton tempNextTurn;
-    
-    //--------------
+    private WindowButton tempNextTurn;    
+    //==============
     // Constructors
-    //--------------
+    //==============
     
     public BattleScreen(Entity a, Entity b) {
         A = new Party(a);
@@ -42,10 +41,10 @@ public class BattleScreen extends GameScreen {
         A = a;
         B = b;
     }
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void initScreen() {
@@ -132,11 +131,10 @@ public class BattleScreen extends GameScreen {
     @Override
     public void actionPerformed(IActionObject object, Object... args) {
         if (object ==  tempNextTurn) advanceTurn();
-    }
-    
-    //---------
+    }    
+    //=========
     // Methods
-    //---------
+    //=========
     
     public void advanceTurn() {
         //first check if either team is completely dead

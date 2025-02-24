@@ -1,7 +1,7 @@
 package qot.assets.textures.item;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class ItemTextures extends TextureLoader {
@@ -35,10 +35,10 @@ public class ItemTextures extends TextureLoader {
     major_mana = new GameTexture(textureDir, "major_mana.png"),
     boots_of_speed = new GameTexture(textureDir, "boots_of_speed.png"),
     loot_bag = new GameTexture(textureDir, "loot_bag.png");
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

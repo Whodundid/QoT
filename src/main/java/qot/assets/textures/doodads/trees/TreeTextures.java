@@ -1,7 +1,7 @@
 package qot.assets.textures.doodads.trees;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class TreeTextures extends TextureLoader {
@@ -33,8 +33,7 @@ public class TreeTextures extends TextureLoader {
     bushy_tree_0 = new GameTexture(textureDir, "bushy_tree_0.png"),
     bushy_tree_1 = new GameTexture(textureDir, "bushy_tree_1.png"),
     bushy_tree_2 = new GameTexture(textureDir, "bushy_tree_2.png"),
-    fall_birch = new GameTexture(textureDir, "fall_birch.png");
-    
+    fall_birch = new GameTexture(textureDir, "fall_birch.png");    
     //===========
     // Overrides
     //===========

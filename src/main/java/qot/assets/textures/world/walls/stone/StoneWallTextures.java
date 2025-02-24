@@ -1,7 +1,7 @@
 package qot.assets.textures.world.walls.stone;
 
-import envision.engine.rendering.textureSystem.GameTexture;
-import envision.engine.rendering.textureSystem.TextureSystem;
+import envision.engine.internal.rendering.textureSystem.TextureSystem;
+import envision.engine.loader.built.game.GameTexture;
 import qot.assets.TextureLoader;
 
 public class StoneWallTextures extends TextureLoader {
@@ -23,10 +23,10 @@ public class StoneWallTextures extends TextureLoader {
     public static final GameTexture
     
     stone_wall = new StoneWall();
-    
-    //-----------
+
+    //==========
     // Overrides
-    //-----------
+    //==========
     
     @Override
     public void onRegister(TextureSystem sys) {

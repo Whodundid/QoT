@@ -1,6 +1,12 @@
 package qot;
 
-import envision.Envision;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import envision.engine.loader.parser.EngineStructureFileParser;
+import eutil.file.EFileUtil;
+import eutil.sys.OSType;
 import eutil.sys.TracingPrintStream;
 
 public class Main {
@@ -54,9 +60,37 @@ public class Main {
         
         //-------------------------------------------
         
-        Envision.loadGame("C:/Users/Hunter/AppData/Roaming/Quest of Thyrah");
+//        String dir = "C:/Users/Hunter/AppData/Roaming/Quest of Thyrah/resources/textures/world/nature/grass";
+//        String fileName = "grass.png";
+//        File outFile = new File(dir, fileName);
+//        
+//        EList<TextureResourceDTO> textures = EList.newList();
+//        for (int i = 0; i < 1; i++) {
+//            String n = RandomNames.get();
+//            textures.add(new TextureResourceDTO(n, outFile.getAbsolutePath(), "GL_NEAREST", "GL_NEAREST"));
+//        }
+//        
+//        JsonReaderAndWriter<TextureResourceDTO> writer = new JsonReaderAndWriter<>(TextureResourceDTO.class);
+//        File jsonOut = new File(dir, "grass.json");
+//        writer.writeToFile(jsonOut, textures.toList());
         
-        Envision.startEngine();
+        //------------------------------------------------------------------
+        
+        File gameDir = new File("C:/Users/Hunter/AppData/Roaming/Quest of Thyrah");
+        File gameFile = new File(gameDir, "game.ini");
+        
+        Map<String, String> varMap = new HashMap<>();
+        varMap.put("user.dir", EFileUtil.userDir().toString().replace(OSType.getSystemFileSeparator(), "/"));
+        varMap.put("gameDir", gameDir.toString().replace(OSType.getSystemFileSeparator(), "/"));
+        varMap.put("operatingSystem", OSType.getSystemOS().toString());
+        
+        EngineStructureFileParser parser = new EngineStructureFileParser(gameDir, gameFile, varMap);
+        
+        parser.parseRootFile();
+        
+//        Envision.loadGame("C:/Users/Hunter/AppData/Roaming/Quest of Thyrah");
+//        
+//        Envision.startEngine();
         
 //        var settings = new LauncherSettings(QoT.instance());
 //        settings.setResourceDirectoriesToExtract("sounds", "shaders", "textures", "menuWorlds");

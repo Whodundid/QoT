@@ -4,8 +4,7 @@ import envision.game.animations.AnimationHandler;
 import envision.game.particles.Particle;
 import qot.assets.textures.effects.EffectsTextures;
 
-public class ExplosionEffect extends Particle {
-    
+public class ExplosionEffect extends Particle {    
     //==============
     // Constructors
     //==============
